@@ -1,0 +1,137 @@
+<div id="description-details" class="box">
+  <h3 class="title is-3">
+    Description
+  </h3>
+  <models4insight-description> </models4insight-description>
+</div>
+
+<div class="box">
+  <nav class="level">
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#related-systems">
+            Systems
+          </a>
+        </p>
+        <p class="title">{{ systemCount$ | async }}</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#lineage-model">
+            Lineage Model
+          </a>
+        </p>
+        <div class="title">
+          <span *ngIf="!(isLoadingLineageModel$ | async); else loading">
+            {{ (hasLineageModel$ | async) ? 'Available' : 'Unavailable' }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#related-inputs">
+            Inputs
+          </a>
+        </p>
+        <p class="title">{{ inputCount$ | async }}</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#related-outputs">
+            Outputs
+          </a>
+        </p>
+        <p class="title">{{ outputCount$ | async }}</p>
+      </div>
+    </div>
+
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#properties-details">
+            Properties
+          </a>
+        </p>
+        <p class="title">{{ propertyCount$ | async }}</p>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div id="related-systems" class="box">
+  <models4insight-systems-cards></models4insight-systems-cards>
+</div>
+
+<div id="lineage-model" class="box">
+  <models4insight-lineage-model></models4insight-lineage-model>
+</div>
+
+<div id="related-inputs" class="box">
+  <models4insight-inputs-cards></models4insight-inputs-cards>
+</div>
+
+<div id="related-outputs" class="box">
+  <models4insight-outputs-cards></models4insight-outputs-cards>
+</div>
+
+<div id="gov-quality" class="box">
+  <models4insight-governance-quality-cards></models4insight-governance-quality-cards>
+</div>
+
+<div id="properties-details" class="box">
+  <h3 class="title is-3">
+    Properties
+  </h3>
+  <models4insight-properties></models4insight-properties>
+</div>
+
+<models4insight-details-navigation>
+  <li>
+    <a models4insightDetailsNavigationItem="#description-details">
+      Description
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#related-systems">
+      Systems
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#lineage-model">
+      Lineage Model
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#related-inputs">
+      Inputs
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#related-outputs">
+      Outputs
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#gov-quality">
+      Governance Quality Rules
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#properties-details">
+      Properties
+    </a>
+  </li>
+</models4insight-details-navigation>
+
+<ng-template #loading>
+  <div class="loader-container">
+    <div class="loader"></div>
+  </div>
+</ng-template>

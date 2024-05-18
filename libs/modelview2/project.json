@@ -1,0 +1,27 @@
+{
+  "name": "modelview2",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/modelview2/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/modelview2"],
+      "options": {
+        "jestConfig": "libs/modelview2/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/modelview2/**/*.ts",
+          "libs/modelview2/**/*.html"
+        ]
+      }
+    }
+  }
+}

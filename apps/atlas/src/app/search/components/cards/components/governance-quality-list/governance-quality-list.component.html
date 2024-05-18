@@ -1,0 +1,60 @@
+<ng-container *ngIf="nonCompliant$ | async as nonCompliant; else loading">
+  <div class="dropdown is-hoverable is-right is-up">
+    <div class="dropdown-trigger">
+      <span class="icon-text is-size-7">
+        <ng-container *ngIf="nonCompliant.length > 0; else success">
+          <span class="icon has-text-warning">
+            <fa-icon [icon]="faExclamationTriangle" [size]="sm"></fa-icon>
+          </span>
+          <span>{{ totalNonCompliant$ | async }}x</span>
+        </ng-container>
+      </span>
+    </div>
+    <div
+      *ngIf="nonCompliant.length > 0"
+      class="dropdown-menu"
+      id="non-compliant"
+      role="menu"
+    >
+      <div class="dropdown-content">
+        <models4insight-infinite-scroll-container>
+          <ng-container *ngFor="let item of nonCompliant; let isLast = last">
+            <div class="dropdown-item">
+              <div class="media">
+                <div class="media-left">
+                  <span class="icon is-small has-text-warning">
+                    <fa-icon
+                      [icon]="faExclamationTriangle"
+                      [size]="sm"
+                    ></fa-icon>
+                  </span>
+                </div>
+                <div class="media-content">
+                  <div class="content">
+                    <h6 class="title is-6">
+                      {{ item.name?.raw }}
+                    </h6>
+                    <p>{{ item.result?.raw }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr *ngIf="!isLast" class="dropdown-separator" />
+          </ng-container>
+        </models4insight-infinite-scroll-container>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #success>
+  <span class="icon has-text-success">
+    <fa-icon [icon]="faCheckCircle" [size]="sm"></fa-icon>
+  </span>
+</ng-template>
+
+<ng-template #loading>
+  <span class="tag is-white">
+    <span class="loader"></span>
+  </span>
+</ng-template>

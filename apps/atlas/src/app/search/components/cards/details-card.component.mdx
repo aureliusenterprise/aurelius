@@ -1,0 +1,49 @@
+import { Controls, Meta } from '@storybook/blocks';
+import { Mermaid } from 'mdx-mermaid/Mermaid';
+import { DetailsCardComponent } from './details-card.component';
+
+<Meta title="Apps/Atlas/Components/Search/Components/Cards/DetailsCardComponent" />
+
+# DetailsCardComponent
+
+This is a generic card component which can be used to display various properties of a data governance entity in a compact format.
+These cards are intended to be used in a search context.
+
+The `DetailsCardComponent` provides basic functionality for all details cards.
+Each entity type has its own implementation that controls the card content.
+Please view the stories for a particular entity type for examples.
+
+<Controls />
+
+## Dependencies
+
+The `DetailsCardComponent` requires type definitions to be available from the `SuperTypesInformationService` in order to resolve the card templates for a particular entity type.
+
+## Behaviour
+
+The `DetailsCardComponent` expects a search result representing an atlas entity as initial input.
+Atfter receiving a new search result as input, the atlas entity corresponding to the search result is retrieved from Atlas.
+In addition, any related data governance quality non-compliancies are retrieved from the data governance quality database.
+
+The sequence diagram below describes the overall behaviour of the `DetailsCardComponent`.
+
+<Mermaid
+  chart={`
+    sequenceDiagram
+    participant Atlas
+    participant App Search
+    participant Card
+    participant Governance Quality
+    Atlas -->> Card: Type definitions
+    App Search -->> Card: Search result
+    par
+        Card ->> Atlas: Entity details
+        Atlas -->> Card: Atlas entity
+    and
+        Card ->> Governance Quality: Non-compliance
+        Governance Quality -->> Card: Search results
+    end
+  `}
+/>
+
+When all required data is retrieved from the various sources, the `DetailsCardComponent` can resolve the details card template corresponding to the current entity type.

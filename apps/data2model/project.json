@@ -1,0 +1,121 @@
+{
+  "name": "data2model",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "schematics": {
+    "@nx/workspace:component": {
+      "style": "scss"
+    }
+  },
+  "sourceRoot": "apps/data2model/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/data2model",
+        "index": "libs/core/src/index.html",
+        "main": "apps/data2model/src/main.ts",
+        "polyfills": "apps/data2model/src/polyfills.ts",
+        "tsConfig": "apps/data2model/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/data2model/src/favicon.ico",
+          "apps/data2model/src/assets",
+          "apps/data2model/src/manifest.webmanifest",
+          {
+            "glob": "**/*",
+            "input": "libs/assets/src/assets",
+            "output": "/assets/"
+          }
+        ],
+        "styles": ["apps/data2model/src/styles.scss"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/data2model/src/environments/environment.ts",
+              "with": "apps/data2model/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            }
+          ],
+          "ngswConfigPath": "apps/data2model/ngsw-config.json"
+        },
+        "standalone": {
+          "fileReplacements": [
+            {
+              "replace": "apps/data2model/src/environments/environment.ts",
+              "with": "apps/data2model/src/environments/environment.standalone.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            }
+          ],
+          "ngswConfigPath": "apps/data2model/ngsw-config.json"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "data2model:build",
+        "host": "127.0.0.1",
+        "proxyConfig": "proxy.conf.json"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "data2model:build:production"
+        },
+        "development": {
+          "browserTarget": "data2model:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "builder": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "data2model:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/example/**/*.ts", "apps/example/**/*.html"]
+      }
+    },
+    "test": {
+      "builder": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/data2model"],
+      "options": {
+        "jestConfig": "apps/data2model/jest.config.js",
+        "tsConfig": "apps/data2model/tsconfig.spec.json",
+        "setupFile": "apps/data2model/src/test-setup.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

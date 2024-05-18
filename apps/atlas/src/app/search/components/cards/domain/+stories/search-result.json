@@ -1,0 +1,41 @@
+{
+  "derivedperson": { "raw": ["John Knoester"] },
+  "derivedfield": { "raw": [] },
+  "dqscorecnt_overall": { "raw": 48.0 },
+  "deriveddataattribute": { "raw": [] },
+  "dqscorecnt_timeliness": { "raw": 0.0 },
+  "deriveddataentity": { "raw": [] },
+  "supertypenames": {
+    "raw": ["Referenceable", "m4i_referenceable", "m4i_data_domain"]
+  },
+  "definition": {
+    "raw": "This data domain contains data from the personnel & organization domain, built out of fixed and temporary personnel managed by SSC and local branch offices, personnel initiated by SMD Fleet Crew and personnel initiated by Project Office.",
+    "snippet": "This data domain contains data from the personnel &amp; organization domain, built out of fixed and"
+  },
+  "dqscore_accuracy": { "raw": 0.8989310344827587 },
+  "dqscorecnt_validity": { "raw": 0.0 },
+  "dqscore_timeliness": { "raw": 0.0 },
+  "derivedcollection": { "raw": [] },
+  "dqscorecnt_accuracy": { "raw": 29.0 },
+  "dqscore_validity": { "raw": 0.0 },
+  "derivedsystem": { "raw": [] },
+  "deriveddataset": { "raw": [] },
+  "dqscore_uniqueness": { "raw": 0.0 },
+  "breadcrumbname": { "raw": [] },
+  "dqscorecnt_completeness": { "raw": 19.0 },
+  "breadcrumbguid": { "raw": [] },
+  "deriveddatadomain": { "raw": [] },
+  "name": { "raw": "Personnel and Organization" },
+  "dqscore_overall": { "raw": 0.9389375000000001 },
+  "guid": { "raw": "e6a315cd-a3c5-43e4-83a3-05ff9a01f8aa" },
+  "dqscore_completeness": { "raw": 1.0 },
+  "breadcrumbtype": { "raw": [] },
+  "dqscorecnt_uniqueness": { "raw": 0.0 },
+  "typename": { "raw": "m4i_data_domain" },
+  "_meta": {
+    "engine": "atlas-dev",
+    "score": 1.0,
+    "id": "e6a315cd-a3c5-43e4-83a3-05ff9a01f8aa"
+  },
+  "id": { "raw": "e6a315cd-a3c5-43e4-83a3-05ff9a01f8aa" }
+}

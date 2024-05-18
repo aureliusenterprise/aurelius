@@ -1,0 +1,65 @@
+<div class="dropdown is-up" [class.is-active]="hasFocus">
+  <div
+    class="input tags-input"
+    [class.is-focused]="hasFocus"
+    [class.is-danger]="input.dirty && input.invalid"
+    (click)="focusInput()"
+  >
+    <span class="field is-grouped is-grouped-multiline">
+      <span
+        *ngFor="let control of tags.controls; let i = index"
+        class="control"
+      >
+        <span class="tags has-addons">
+          <span class="tag is-primary">
+            <span class="icon is-small">
+              <fa-icon [icon]="faHashtag"></fa-icon>
+            </span>
+          </span>
+          <span
+            class="tag"
+            [title]="control.value?.typeName | translate"
+          >
+            <span class="truncate">
+              {{ control.value?.typeName | translate }}
+            </span>
+          </span>
+          <a class="tag is-delete" (click)="deleteTag(i)"></a>
+        </span>
+      </span>
+    </span>
+    <span class="field">
+      <span class="control is-expanded">
+        <input
+          #inputElement
+          class="input is-small input-control"
+          type="text"
+          placeholder="Add a classification..."
+          [formControl]="input"
+          (focus)="hasFocus = true"
+          (blur)="hasFocus = false"
+        />
+      </span>
+    </span>
+  </div>
+  <div class="dropdown-menu" role="menu">
+    <div class="dropdown-content">
+      <ng-container *ngIf="options$ | async as options; else noDefs">
+        <ng-container *ngIf="options.length > 0; else noDefs">
+          <a
+            *ngFor="let option of options"
+            class="dropdown-item"
+            (click)="addTag(option.name)"
+            (mousedown)="preventBlur($event)"
+          >
+            <span class="has-text-link"> {{ option.name | translate }}</span>
+          </a>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #noDefs>
+  <p class="dropdown-item is-italic">No classifications available</p>
+</ng-template>

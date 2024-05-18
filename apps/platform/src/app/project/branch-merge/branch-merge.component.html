@@ -1,0 +1,87 @@
+<ng-container *ngIf="(project$ | async) as project">
+  <h2 class="title is-2">Manage branches</h2>
+  <h5 class="subtitle is-5">Stuff related to branches</h5>
+  <ng-container *ngIf="(branches$ | async) as branches">
+    <ng-container *ngIf="branches && branches.length > 0; else noModel">
+      <form [formGroup]="branchMergeForm" (ngSubmit)="startMerge()">
+        <h3 class="title is-3">Move branches</h3>
+        <h6 class="subtitle is-6">
+          Create a new branch from an existing model, or merge two models into
+          one.
+        </h6>
+        <div class="columns">
+          <div class="column">
+            <models4insight-branch-select
+              #fromBranchSelect
+              id="fromBranchSelect"
+              [context]="fromBranchSelectContext"
+              [control]="branchMergeForm.controls['fromBranch']"
+              [isSubmitted]="isMoveBranchesFormSubmitted$ | async"
+            ></models4insight-branch-select>
+          </div>
+          <div class="column">
+            <models4insight-branch-select
+              #toBranchSelect
+              id="toBranchSelect"
+              [context]="toBranchSelectContext"
+              [control]="branchMergeForm.controls['toBranch']"
+              [isSubmitted]="isMoveBranchesFormSubmitted$ | async"
+              [withCreateBranch]="true"
+            ></models4insight-branch-select>
+          </div>
+        </div>
+        <div
+          *ngIf="
+            ((branchMergeForm.controls['fromBranch'].dirty &&
+              branchMergeForm.controls['toBranch'].dirty) ||
+              (isMoveBranchesFormSubmitted$ | async)) &&
+            (branchMergeForm.errors &&
+              branchMergeForm.errors['branchNamesMatch'])
+          "
+          class="field"
+        >
+          <p class="help is-danger">
+            Please select distinct branches to move between
+          </p>
+        </div>
+        <div class="field">
+          <models4insight-description-input
+            [context]="descriptionContext"
+            [control]="branchMergeForm.controls['comment']"
+            [isSubmitted]="isMoveBranchesFormSubmitted$ | async"
+          ></models4insight-description-input>
+        </div>
+        <div class="field">
+          <button
+            type="submit"
+            class="button is-success is-large is-fullwidth"
+            [ngClass]="{ 'is-loading': isMovingBranches$ | async }"
+          >
+            Move branch
+          </button>
+        </div>
+      </form>
+      <hr class="hr" />
+      <ng-container>
+        <h3 class="title is-3">Branches</h3>
+        <h6 class="subtitle is-6">
+          An overview of all branches in the project
+        </h6>
+        <models4insight-branches-table
+          [data]="branches"
+          [enableTableContainer]="false"
+          (edit)="editBranch($event)"
+        ></models4insight-branches-table>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-container>
+<models4insight-create-branch-modal
+></models4insight-create-branch-modal>
+<ng-template #noModel>
+  <section class="section is-light has-text-centered">
+    <h5 class="title is-5">
+      Your project does not contain any models yet! Please upload a model first.
+    </h5>
+  </section>
+</ng-template>

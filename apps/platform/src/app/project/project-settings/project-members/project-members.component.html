@@ -1,0 +1,28 @@
+<div class="level">
+  <div class="level-left">
+    <h3 class="title is-3 level-item">Project Members</h3>
+  </div>
+  <div class="level-right">
+    <div class="field level-item">
+      <div class="control">
+        <button
+          type="button"
+          class="button is-primary"
+          (click)="activateModal()"
+        >
+          Add a new user
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="project$ | async as project">
+  <models4insight-project-member-table
+    [project]="project"
+    [enableTableContainer]="false"
+  ></models4insight-project-member-table>
+</ng-container>
+<!-- Modal: Add a member -->
+<models4insight-user-search-modal
+  [currentUsers]="usernames$ | async"
+></models4insight-user-search-modal>

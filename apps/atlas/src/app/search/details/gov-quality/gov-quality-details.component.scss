@@ -1,0 +1,18 @@
+.gov-quality-overall-pie {
+    width: 100px;
+    height: 100px;
+    position: relative;
+}
+
+
+.legend-compliant {
+    height: 10px;
+    width: 50px;
+    background-color: hsl(141, 53%, 53%);
+}
+
+.legend-non-compliant {
+    height: 10px;
+    width: 50px;
+    background-color: hsl(348, 100%, 61%);
+}

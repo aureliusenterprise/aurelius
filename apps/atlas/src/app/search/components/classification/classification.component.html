@@ -1,0 +1,52 @@
+<div class="tags has-addons">
+  <span class="tag is-primary" title="Classification">
+    <span class="icon is-small">
+      <fa-icon [icon]="faHashtag"></fa-icon>
+    </span>
+  </span>
+  <ng-container *ngIf="!(isRetrievingTypeDefinition$ | async); else loading">
+    <ng-container
+      *ngIf="classificationType$ | async as classificationType; else loading"
+    >
+      <span
+        class="tag"
+        [models4insight-tooltip]="
+          classificationType.description || 'No description available'
+        "
+        tooltipDirection="bottom"
+        >{{ classificationType.name | translate }}
+      </span>
+      <div
+        *ngIf="isPropagated$ | async"
+        class="tag is-primary dropdown is-hoverable"
+        title="Is propagated"
+      >
+        <div class="dropdown-trigger">
+          <span class="icon is-small">
+            <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+          </span>
+        </div>
+        <div class="dropdown-menu" role="menu">
+          <div class="dropdown-content">
+            <div class="dropdown-item">
+              <strong>{{ classificationType.name | translate }}</strong>
+              originates from the following sources:
+            </div>
+            <ng-container *ngFor="let source of sources$ | async">
+              <hr class="dropdown-divider" />
+              <div class="dropdown-item">
+                <models4insight-classification-source
+                  [source]="source"
+                ></models4insight-classification-source>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
+
+<ng-template #loading>
+  <span class="tag"><span class="loader"></span></span>
+</ng-template>

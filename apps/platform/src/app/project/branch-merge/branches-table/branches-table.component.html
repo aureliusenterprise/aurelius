@@ -1,0 +1,15 @@
+<models4insight-sortable-table-shell [rowsSelectable]="false">
+  <ng-template let-rowData>
+    <th scope="row">{{ rowData.name }}</th>
+    <td class="truncate" [title]="rowData.description">
+      {{ rowData.description }}
+    </td>
+    <td>
+      <models4insight-branches-table-context-menu
+        class="field is-pulled-right"
+        [context]="rowData"
+        (edit)="onEdit($event)"
+      ></models4insight-branches-table-context-menu>
+    </td>
+  </ng-template>
+</models4insight-sortable-table-shell>

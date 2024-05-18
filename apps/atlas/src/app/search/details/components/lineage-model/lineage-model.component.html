@@ -1,0 +1,24 @@
+<ng-container *ngIf="!(isRetrievingLineageModel$ | async); else loading">
+  <models4insight-modelview2
+    *ngIf="hasLineageModel$ | async; else noLineageModelAvailable"
+    [highlightedEntity]="entityId$ | async"
+  >
+  </models4insight-modelview2>
+</ng-container>
+
+<ng-template #loading>
+  <div class="has-text-centered">
+    <span class="icon loader"></span>
+    <h5 class="title is-5">
+      <span>Loading the lineage model...</span>
+    </h5>
+  </div>
+</ng-template>
+
+<ng-template #noLineageModelAvailable>
+  <div class="has-text-centered">
+    <h5 class="title is-5">
+      No lineage model available
+    </h5>
+  </div>
+</ng-template>

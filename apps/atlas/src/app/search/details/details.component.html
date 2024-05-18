@@ -1,0 +1,56 @@
+<div class="container">
+  <ng-container *ngIf="entityDetails$ | async as details">
+    <div class="box">
+      <div class="block">
+        <article class="media">
+          <div class="media-content">
+            <div class="content">
+              <h1 class="entity title is-1">
+                {{
+                  details.attributes?.name ||
+                    details.attributes?.qualifiedName
+                }}
+              </h1>
+              <div class="subtitle name">
+                <models4insight-entity-type-name
+                  [showBaseTypeName]="true"
+                ></models4insight-entity-type-name>
+              </div>
+            </div>
+          </div>
+          <div
+            *models4insight-keycloak-role-permission="'DATA_STEWARD'"
+            class="media-right"
+          >
+            <a
+              class="icon is-large has-text-link"
+              (click)="navigateToEditEntity(details.guid)"
+            >
+              <fa-icon [icon]="faEdit" size="2x"></fa-icon>
+            </a>
+          </div>
+        </article>
+      </div>
+      <div class="block">
+        <models4insight-classifications-list></models4insight-classifications-list>
+      </div>
+      <div
+        *ngIf="details.relationshipAttributes?.meanings as meanings"
+        class="block"
+      >
+        <div class="field is-grouped is-grouped-multiline">
+          <div *ngFor="let meaning of meanings" class="control">
+            <models4insight-term [guid]="meaning.guid"></models4insight-term>
+          </div>
+        </div>
+      </div>
+      <div class="block">
+        <models4insight-bread-crumbs [activeGuid]="details.guid">
+        </models4insight-bread-crumbs>
+      </div>
+    </div>
+  </ng-container>
+  <div class="details-content">
+    <ng-container *ngComponentOutlet="detailsComponent$ | async"></ng-container>
+  </div>
+</div>

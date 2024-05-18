@@ -1,0 +1,22 @@
+<models4insight-sortable-table-shell
+  [config]="membersTableConfig"
+  [data]="members$ | async"
+  [rowsSelectable]="false"
+>
+  <ng-template let-rowData>
+    <th scope="row">{{ rowData.username }}</th>
+    <td>
+      <models4insight-permission-select
+        [user]="rowData.username"
+      ></models4insight-permission-select>
+    </td>
+    <td>
+      <ng-container *ngIf="username$ | async as currentUsername">
+        <models4insight-project-member-table-context-menu
+          *ngIf="rowData.username !== currentUsername"
+          [user]="rowData.username"
+        ></models4insight-project-member-table-context-menu>
+      </ng-container>
+    </td>
+  </ng-template>
+</models4insight-sortable-table-shell>

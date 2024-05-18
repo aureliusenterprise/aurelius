@@ -1,0 +1,54 @@
+/*
+ * Global application theme.
+ * Framework overrides and customization goes here.
+ */
+
+@import 'variables';
+
+// NAVBAR
+$navbar-height: 4.25rem;
+$navbar-background-color: $background;
+$navbar-dropdown-arrow: $black;
+$navbar-item-hover-color: $black;
+$navbar-item-hover-background-color: $background;
+
+// FOOTER
+$footer-background-color: $blue;
+
+// MESSAGE
+$message-body-pre-background-color: $background;
+
+// ENSURE FULL-HEIGHT HERO BODY
+.hero.is-fullheight,
+.hero.is-fullheight-with-navbar {
+  .hero-body {
+    min-height: 100vh;
+  }
+}
+
+// ENSURE INDETERMINATE PROGRESS BAR CONSISTENCY FOR IE AND EDGE
+progress::-ms-fill {
+  animation-name: none;
+}
+
+// DO NOT DISPLAY BUILT-IN CLEAR BUTTON FOR INPUT ELEMENTS IN IE AND EDGE
+::-ms-clear {
+  display: none;
+}
+
+// ANIMATION CLASS FOR index.html LOGO SPINNER
+.app-loader {
+  animation: spinner 8s linear infinite;
+
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(540deg);
+    }
+    100% {
+      transform: rotate(1080deg);
+    }
+  }
+}

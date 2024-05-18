@@ -1,0 +1,41 @@
+<div class="level is-mobile">
+  <div class="level-left">
+    <div>
+      <h2 class="title is-2">Explore</h2>
+      <h5 class="subtitle is-5">Browse the model</h5>
+    </div>
+  </div>
+  <div class="level-right">
+    <div class="level-item buttons">
+      <ng-container *ngIf="previousRoute$ | async">
+        <a class="button is-link" (click)="goBack()">
+          <span class="icon"><fa-icon [icon]="faArrowLeft"></fa-icon></span>
+          <span>Go back</span>
+        </a>
+      </ng-container>
+      <ng-container *ngIf="project$ | async as project">
+        <ng-container *ngIf="branch$ | async as branch">
+          <ng-container
+            *models4insight-project-permission="PermissionLevel.MODEL_USER"
+          >
+            <ng-container
+              *models4insight-branch-permission="
+                PermissionLevel.MODEL_USER;
+                branch: branch
+              "
+            >
+              <a class="button is-primary" (click)="retrieveModel()">
+                <span class="icon"
+                  ><fa-icon [icon]="faDownload"></fa-icon
+                ></span>
+                <span>Download</span>
+              </a>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<models4insight-modelview2> </models4insight-modelview2>

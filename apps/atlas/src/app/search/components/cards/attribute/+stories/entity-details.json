@@ -1,0 +1,160 @@
+{
+  "referredEntities": {},
+  "entity": {
+    "typeName": "m4i_data_attribute",
+    "attributes": {
+      "archimateReference": [],
+      "replicatedTo": null,
+      "replicatedFrom": null,
+      "steward": [
+        {
+          "guid": "3d4b17c2-b1af-41af-b391-a09aa2db14b6",
+          "typeName": "m4i_person",
+          "uniqueAttributes": {
+            "qualifiedName": "dionysia.vanrijn@stratonis_group.com",
+            "email": "dionysia.vanrijn@stratonis_group.com"
+          }
+        }
+      ],
+      "qualifiedName": "personnel-and-organization--organization--functional-organization",
+      "dataEntity": [
+        {
+          "guid": "6480a6eb-6344-4c6b-97bf-01c42affb41a",
+          "typeName": "m4i_data_entity",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--organization"
+          }
+        }
+      ],
+      "source": [],
+      "isKeyData": "Yes",
+      "hasPII": null,
+      "attributeType": "Text",
+      "name": "Functional Organization",
+      "definition": "This attribute describes the dotted-line reporting, the subject matter relationship between a supervisor and an employee. The functionel lead covers mainly strategic steering of the profession and setting the rules for how the business is ran.",
+      "riskClassification": "Low",
+      "fields": [
+        {
+          "guid": "a1bf9bbf-11e7-4894-8671-b9fd3ea74871",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--func_org"
+          }
+        }
+      ],
+      "businessOwner": [
+        {
+          "guid": "594e686e-1e99-480a-9189-1433d6b51728",
+          "typeName": "m4i_person",
+          "uniqueAttributes": {
+            "qualifiedName": "diane.vanzanten@stratonis_group.com",
+            "email": "diane.vanzanten@stratonis_group.com"
+          }
+        }
+      ]
+    },
+    "guid": "b1046ab7-4e72-415a-8fbc-0102368f6c15",
+    "isIncomplete": false,
+    "provenanceType": 0,
+    "status": "ACTIVE",
+    "createdBy": "admin",
+    "updatedBy": "atlas",
+    "createTime": 1649238419976,
+    "updateTime": 1652875069500,
+    "version": 0,
+    "relationshipAttributes": {
+      "ArchiMateReference": [],
+      "steward": [
+        {
+          "guid": "3d4b17c2-b1af-41af-b391-a09aa2db14b6",
+          "typeName": "m4i_person",
+          "entityStatus": "ACTIVE",
+          "displayText": "Dionysia van Rijn",
+          "relationshipType": "m4i_data_attribute_steward_assignment",
+          "relationshipGuid": "f0c16347-48f4-4fb1-a1b0-183100e2913a",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_attribute_steward_assignment"
+          }
+        }
+      ],
+      "dataEntity": [
+        {
+          "guid": "6480a6eb-6344-4c6b-97bf-01c42affb41a",
+          "typeName": "m4i_data_entity",
+          "entityStatus": "ACTIVE",
+          "displayText": "Organization",
+          "relationshipType": "m4i_data_entity_attribute_assignment",
+          "relationshipGuid": "b9cfd000-20e5-490d-96f4-9fbe87ba1724",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_entity_attribute_assignment"
+          }
+        }
+      ],
+      "source": [
+        {
+          "guid": "b00468d4-f309-4553-b8f5-54c6b7648551",
+          "typeName": "m4i_source",
+          "entityStatus": "ACTIVE",
+          "displayText": "/po/FTE_Actuals/Data Dictionary_FTE Actuals.xlsm",
+          "relationshipType": "m4i_referenceable_source_assignment",
+          "relationshipGuid": "0faef05e-464c-4055-8163-c9293cf98330",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_referenceable_source_assignment"
+          }
+        }
+      ],
+      "fields": [
+        {
+          "guid": "a1bf9bbf-11e7-4894-8671-b9fd3ea74871",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "FUNC_ORG",
+          "relationshipType": "m4i_data_attribute_field_assignment",
+          "relationshipGuid": "41c10ba3-4901-4f9d-8177-514b921f13f8",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_attribute_field_assignment"
+          }
+        }
+      ],
+      "businessOwner": [
+        {
+          "guid": "594e686e-1e99-480a-9189-1433d6b51728",
+          "typeName": "m4i_person",
+          "entityStatus": "ACTIVE",
+          "displayText": "Diane van Zanten",
+          "relationshipType": "m4i_data_attribute_business_owner_assignment",
+          "relationshipGuid": "214e5799-2a8a-4cb1-a40b-ed1a29e4910c",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_attribute_business_owner_assignment"
+          }
+        }
+      ],
+      "meanings": []
+    },
+    "classifications": [
+      {
+        "typeName": "key_data",
+        "entityGuid": "b1046ab7-4e72-415a-8fbc-0102368f6c15",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      },
+      {
+        "typeName": "low_risk",
+        "entityGuid": "b1046ab7-4e72-415a-8fbc-0102368f6c15",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      }
+    ],
+    "labels": [],
+    "proxy": false
+  }
+}

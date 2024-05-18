@@ -1,0 +1,116 @@
+<ng-container
+  [formGroup]="editorFormService.form"
+  *ngIf="validationResults$ | async as rules"
+>
+  <div class="field">
+    <label class="label">Name</label>
+    <div class="grid">
+      <div class="control">
+        <input
+          id="name"
+          name="name"
+          class="input"
+          type="text"
+          placeholder="Name"
+          [formControl]="name"
+          required
+          [class.is-danger]="(name.dirty || name.touched) && name.invalid"
+          [class.is-warning]="rules?.name?.isNonCompliant"
+        />
+      </div>
+      <ng-container *ngIf="rules.name as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+    <ng-container *ngIf="(name.dirty || name.touched) && name.invalid">
+      <p *ngIf="name.errors?.required" class="help is-danger">
+        Name is required.
+      </p>
+    </ng-container>
+  </div>
+
+  <div *ngIf="false" class="field">
+    <label class="label">Type alias</label>
+    <div class="grid">
+      <div class="control">
+        <input
+          id="typeAlias"
+          name="typeAlias"
+          class="input"
+          type="text"
+          placeholder="Type alias"
+          [formControl]="typeAlias"
+          [class.is-danger]="
+            (typeAlias.dirty || typeAlias.touched) && typeAlias.invalid
+          "
+        />
+      </div>
+      <ng-container *ngIf="rules.typeAlias as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Definition</label>
+    <div class="grid">
+      <div class="control">
+        <textarea
+          class="textarea"
+          placeholder="Definition"
+          [formControl]="definition"
+        ></textarea>
+      </div>
+      <ng-container *ngIf="rules.definition as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Systems</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="systems"
+          typeName="m4i_system"
+          [rule]="rules.systems"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.systems as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Datasets</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="datasets"
+          typeName="m4i_dataset"
+          [rule]="rules.datasets"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.datasets as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+</ng-container>

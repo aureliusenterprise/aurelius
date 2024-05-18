@@ -1,0 +1,17 @@
+{
+  "dataqualityruledescription": {
+    "raw": "This field has to be filled at all times"
+  },
+  "dqscore": { "raw": 0.814 },
+  "dataqualityruledimension": { "raw": "Completeness" },
+  "name": { "raw": "Rule 45" },
+  "guid": { "raw": "c90e57ff-204d-45c0-8b1b-593cfb6e3146" },
+  "_meta": {
+    "engine": "atlas-dev-quality",
+    "score": 1.0,
+    "id": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--45"
+  },
+  "id": {
+    "raw": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--45"
+  }
+}

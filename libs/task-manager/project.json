@@ -1,0 +1,27 @@
+{
+  "name": "task-manager",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/task-manager/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/task-manager"],
+      "options": {
+        "jestConfig": "libs/task-manager/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/task-manager/**/*.ts",
+          "libs/task-manager/**/*.html"
+        ]
+      }
+    }
+  }
+}

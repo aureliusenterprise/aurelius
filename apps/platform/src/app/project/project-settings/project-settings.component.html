@@ -1,0 +1,51 @@
+<h2 class="title is-2">Project Settings</h2>
+<h5 class="subtitle is-5">Change various aspects of your project</h5>
+<div class="columns">
+  <div class="column is-narrow">
+    <div class="level">
+      <div class="level-left">
+        <h3 class="title is-3 level-item">Categories</h3>
+      </div>
+    </div>
+    <aside class="menu">
+      <p class="menu-label">
+        General
+      </p>
+      <ul class="menu-list">
+        <li>
+          <a routerLinkActive="is-active" routerLink="info">
+            Project Info
+          </a>
+        </li>
+        <li *models4insight-project-permission="PermissionLevel.OWNER">
+          <a routerLinkActive="is-active" routerLink="delete">
+            Delete Project
+          </a>
+        </li>
+      </ul>
+      <p class="menu-label">
+        Project Members
+      </p>
+      <ul class="menu-list">
+        <li>
+          <a routerLinkActive="is-active" routerLink="members">Overview</a>
+        </li>
+        <li>
+          <a *ngIf="false" routerLinkActive="is-active" routerLink="groups"
+            >User Groups</a
+          >
+        </li>
+      </ul>
+      <p *ngIf="false" class="menu-label">
+        Branches
+      </p>
+      <ul *ngIf="false" class="menu-list">
+        <li><a>Overview</a></li>
+        <li><a>Access Management</a></li>
+      </ul>
+    </aside>
+  </div>
+  <div class="column">
+    <router-outlet></router-outlet>
+  </div>
+</div>

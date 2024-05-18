@@ -1,0 +1,112 @@
+import { Controls } from '@storybook/blocks';
+import { moduleMetadata } from '@storybook/angular';
+import { Mermaid } from 'mdx-mermaid/Mermaid';
+import { AppSearchResultsService } from '../app-search-results.service';
+
+<Meta
+  title="Apps/Atlas/Services/Search/AppSearchResults"
+  argTypes={{
+    pageSize: { control: 'number' },
+  }}
+/>
+
+# AppSearchResultsService
+
+The `AppSearchResultsService` allows for the execution of search queries and retrieval of search results from an app search engine.
+For large sets of results, it also provides automatic paging.
+
+## Dependencies
+
+The `AppSearchResultsService` depends on a `SearchService` to define the search query.
+Further, it depends on an `AppSearchService` to direct queries to the appropriate search engine.
+
+## State
+
+The `AppSearchResultsService` implementes `BasicStore` and manages the following properties:
+
+| Property        | Description                                      |
+| --------------- | ------------------------------------------------ |
+| `isLoadingPage` | Whether or not a page is currently being loaded. |
+| `pageSize`      | The maximum size of a page of search results.    |
+
+## Generics
+
+The `AppSearchResultsService` declares the following generic types:
+
+| Generic type | Description                                               |
+| ------------ | --------------------------------------------------------- |
+| `T`          | The shape of the document in app search.                  |
+| `P`          | The fields of the document included in the search result. |
+
+## Behaviour
+
+The sections below explain the behaviour of the `AppSearchResultsService`.
+
+### Query updated
+
+Whenever the search query is updated, the `AppSearchResultsService` automatically retrieves the first page of search results.
+
+<Mermaid
+  chart={`
+  sequenceDiagram
+      SearchService ->> AppSearchResultsService: Query updated
+      activate AppSearchResultsService
+      AppSearchResultsService ->> AppSearchService: Get first page
+      AppSearchService -->> AppSearchResultsService: First results page
+      deactivate AppSearchResultsService
+  `}
+/>
+
+### Next page
+
+The loading of the next page is triggered by calling the `nextPage` method.
+Please see the diagram below.
+
+<Mermaid
+  chart={`
+  sequenceDiagram
+      Consumer ->> AppSearchResultsService: nextPage()
+      activate AppSearchResultsService
+      AppSearchResultsService ->> AppSearchService: Get next page
+      AppSearchService -->> AppSearchResultsService: Next results page
+      deactivate AppSearchResultsService
+  `}
+/>
+
+## Result streams
+
+There are two streams of search results available.
+
+### `results$`
+
+The `results$` stream collects all search results for the currently loaded pages.
+When a new page is retrieved, it is joined with the previous results and emitted as a flat list.
+
+The list of search results is reset whenever the search query changes.
+
+### `allResults$`
+
+This `allResults$` stream automatically collects all available search results pages and emits all pages as a flat list.
+
+Use this stream when you want to trigger the loading of next pages automatically instead of incrementally.
+
+<Mermaid
+  chart={`
+  sequenceDiagram
+    SearchService ->> AppSearchResultsService: Query updated
+    activate AppSearchResultsService
+    AppSearchResultsService ->> AppSearchService: Get first page
+    AppSearchService -->> AppSearchResultsService: First results page
+    loop More pages available
+        AppSearchResultsService ->> AppSearchService: Get next page
+        AppSearchService -->> AppSearchResultsService: Next results page
+    end
+    deactivate AppSearchResultsService
+  `}
+/>
+
+## Details
+
+Please find the complete specification of the `AppSearchResultsService` below.
+
+<Controls />

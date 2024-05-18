@@ -1,0 +1,27 @@
+{
+  "name": "repository",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/repository/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/repository"],
+      "options": {
+        "jestConfig": "libs/repository/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/repository/**/*.ts",
+          "libs/repository/**/*.html"
+        ]
+      }
+    }
+  }
+}

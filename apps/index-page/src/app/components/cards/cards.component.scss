@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  padding: 20px;
+}
+
+.box1 {
+  width: auto;
+  height: auto;
+  min-height: 350px;
+}
+
+.img1 {
+  display: inline;
+  float: right;
+  width: 650px;
+  margin-left: 0px;
+}
+
+.column {
+  min-width: 300px;
+}

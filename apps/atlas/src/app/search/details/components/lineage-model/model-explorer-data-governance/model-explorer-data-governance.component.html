@@ -1,0 +1,18 @@
+<ng-container *ngIf="!(isLoading$ | async); else loading">
+  <ng-container *ngIf="showDetailsCard$ | async; else noDetails">
+    <models4insight-details-card
+      *ngIf="searchResult$ | async as searchResult"
+      [searchResult]="searchResult"
+    ></models4insight-details-card>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <p class="content">
+    <span class="loader"></span>
+  </p>
+</ng-template>
+
+<ng-template #noDetails>
+  <p class="is-italic">No data governance details available</p>
+</ng-template>

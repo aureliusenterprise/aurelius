@@ -1,0 +1,17 @@
+<div class="level">
+  <div class="level-left">
+    <h3 class="title is-3">File Upload</h3>
+  </div>
+</div>
+<form [formGroup]="fileUploadForm">
+  <models4insight-file-dropzone
+    [control]="fileUploadForm.controls['file']"
+    [isSubmitted]="isSubmitted"
+  ></models4insight-file-dropzone>
+</form>
+<a
+  class="button is-success is-medium is-fullwidth"
+  [class.is-loading]="isParsingFile$ | async"
+  (click)="submitCurrentFile()"
+  >Submit File
+</a>

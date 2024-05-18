@@ -1,0 +1,61 @@
+<ng-container *ngIf="showPlaceholder">
+  <p *ngIf="noPeople$ | async" class="is-italic has-text-centered">
+    No people assigned.
+  </p>
+</ng-container>
+
+<ng-container *ngIf="details$ | async as details" class="container">
+  <ng-container
+    *ngFor="
+      let domainLead of details.entity.relationshipAttributes
+        ?.domainLead as domain
+    "
+  >
+    <div>
+      <span class="pointer" (click)="directToDetailsPage(domain[0].guid)">
+        <span class="icon is-small">
+          <fa-icon class="business" [icon]="personsIcon"> </fa-icon>
+        </span>
+        <span> Domain Lead: </span>
+        <a>
+          {{ domain[0].displayText }}
+        </a>
+      </span>
+    </div>
+  </ng-container>
+  <ng-container
+    *ngFor="
+      let buiness of details.entity.relationshipAttributes
+        ?.businessOwner as business
+    "
+  >
+    <div>
+      <span class="pointer" (click)="directToDetailsPage(business[0].guid)">
+        <span class="icon is-small">
+          <fa-icon class="business" [icon]="personsIcon"> </fa-icon>
+        </span>
+        <span> Business Owner: </span>
+        <a>
+          {{ business[0].displayText }}
+        </a>
+      </span>
+    </div>
+  </ng-container>
+  <ng-container
+    *ngFor="
+      let steward of details.entity.relationshipAttributes?.steward as stewards
+    "
+  >
+    <div>
+      <span class="pointer" (click)="directToDetailsPage(stewards[0].guid)">
+        <span class="icon is-small">
+          <fa-icon class="business" [icon]="personsIcon"></fa-icon>
+        </span>
+        <span> Stewards: </span>
+        <a>
+          {{ stewards[0].displayText }}
+        </a>
+      </span>
+    </div>
+  </ng-container>
+</ng-container>

@@ -1,0 +1,204 @@
+<div id="description-details" class="box">
+  <h3 class="title is-3">
+    Description
+  </h3>
+  <models4insight-description> </models4insight-description>
+</div>
+
+<div class="box">
+  <nav class="level">
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#related-fields">
+            Fields
+          </a>
+        </p>
+        <p class="title">{{ fieldCount$ | async }}</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#related-datasets">
+            Child Datasets
+          </a>
+        </p>
+        <p class="title">{{ childDatasetCount$ | async }}</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#related-entities">
+            Data Entities
+          </a>
+        </p>
+        <p class="title">{{ entityCount$ | async }}</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#lineage-model">
+            Lineage Model
+          </a>
+        </p>
+        <div class="title">
+          <span *ngIf="!(isLoadingLineageModel$ | async); else loading">
+            {{ (hasLineageModel$ | async) ? 'Available' : 'Unavailable' }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#related-producers">
+            Producers
+          </a>
+        </p>
+        <p class="title">{{ producerCount$ | async }}</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#related-consumers">
+            Consumers
+          </a>
+        </p>
+        <p class="title">{{ consumerCount$ | async }}</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#data-quality">
+            Data Quality
+          </a>
+        </p>
+        <div class="title">
+          <span *ngIf="dataQualityCount$ | async; else noDataQuality">
+            {{ dataQualityScore$ | async | percent: '1.0-1' }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#properties-details">
+            Properties
+          </a>
+        </p>
+        <p class="title">{{ propertyCount$ | async }}</p>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div id="related-fields" class="box">
+  <models4insight-fields-cards></models4insight-fields-cards>
+</div>
+
+<div id="related-datasets" class="box">
+  <models4insight-datasets-cards></models4insight-datasets-cards>
+</div>
+
+<div id="related-entities" class="box">
+  <models4insight-entity-cards></models4insight-entity-cards>
+</div>
+
+<div id="lineage-model" class="box">
+  <models4insight-lineage-model></models4insight-lineage-model>
+</div>
+
+<div id="related-producers" class="box">
+  <models4insight-producers-cards></models4insight-producers-cards>
+</div>
+
+<div id="related-consumers" class="box">
+  <models4insight-consumers-cards></models4insight-consumers-cards>
+</div>
+
+<div id="data-quality" class="box">
+  <h3 class="title is-3">Data Quality</h3>
+  <models4insight-data-quality-list></models4insight-data-quality-list>
+</div>
+
+<div id="gov-quality" class="box">
+  <models4insight-governance-quality-cards></models4insight-governance-quality-cards>
+</div>
+
+<div id="properties-details" class="box">
+  <h3 class="title is-3">
+    Properties
+  </h3>
+  <models4insight-properties></models4insight-properties>
+</div>
+
+<models4insight-details-navigation>
+  <li>
+    <a models4insightDetailsNavigationItem="#description-details">
+      Description
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#related-fields">
+      Fields
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#related-datasets">
+      Child Datasets
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#related-entities">
+      Data Entities
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#lineage-model">
+      Lineage Model
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#related-producers">
+      Producers
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#related-consumers">
+      Consumers
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#data-quality">
+      Data Quality
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#gov-quality">
+      Governance Quality Rules
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#properties-details">
+      Properties
+    </a>
+  </li>
+</models4insight-details-navigation>
+
+<ng-template #loading>
+  <div class="loader-container">
+    <div class="loader"></div>
+  </div>
+</ng-template>
+
+<ng-template #noDataQuality>
+  <div>
+    <p class="title">Unavailable</p>
+  </div>
+</ng-template>

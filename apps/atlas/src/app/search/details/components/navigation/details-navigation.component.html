@@ -1,0 +1,38 @@
+<div class="details-navigation">
+  <div class="box is-paddingless">
+    <div class="dropdown is-up is-right" [class.is-active]="isActive">
+      <div class="dropdown-trigger">
+        <button
+          #toggleButton
+          class="button is-text is-large"
+          (click)="toggleIsActive()"
+        >
+          <span class="icon has-text-link">
+            <fa-icon [icon]="faBars"></fa-icon>
+          </span>
+        </button>
+      </div>
+      <div class="dropdown-menu" id="details-navigation-dropup" role="menu">
+        <div class="dropdown-content">
+          <div class="dropdown-item">
+            <nav class="menu">
+              <p class="menu-label">
+                <a [models4insightDetailsNavigationItem]="document.body">
+                  <span class="icon is-small">
+                    <fa-icon [icon]="faArrowAltCircleUp" size="s"></fa-icon>
+                  </span>
+                  <span>
+                    Details
+                  </span>
+                </a>
+              </p>
+              <ul class="menu-list">
+                <ng-content></ng-content>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

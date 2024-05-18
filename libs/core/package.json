@@ -1,0 +1,9 @@
+{
+  "name": "@models4insight/core",
+  "license": "UNLICENSED",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}

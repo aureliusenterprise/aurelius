@@ -1,0 +1,8 @@
+<models4insight-type-name
+  *ngIf="entityDetails$ | async as entityDetails"
+  [showBaseTypeName]="showBaseTypeName"
+  [showIcon]="showIcon"
+  [showTypeName]="showTypeName"
+  [typeAlias]="entityDetails.attributes['typeAlias']"
+  [typeName]="entityDetails.typeName"
+></models4insight-type-name>

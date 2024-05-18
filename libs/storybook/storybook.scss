@@ -1,0 +1,29 @@
+@import '@models4insight/styles/src/styles/main';
+
+pre {
+  .tag {
+    display: inline;
+    background-color: inherit;
+    border-radius: 0px;
+    height: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .number {
+    display: inline;
+    background-color: inherit;
+    border-radius: 0px;
+    height: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0px;
+    padding: 0px;
+  }
+}
+
+.mermaid .label {
+  font-weight: inherit;
+}

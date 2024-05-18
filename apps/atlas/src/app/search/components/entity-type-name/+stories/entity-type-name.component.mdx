@@ -1,0 +1,27 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { Controls, Canvas, Meta, Story } from '@storybook/blocks';
+import { moduleMetadata } from '@storybook/angular';
+import { Mermaid } from 'mdx-mermaid/Mermaid';
+import { MockEntityDetailsService } from './entity-details.mock.service.ts';
+import { EntityTypeNameComponent } from '../entity-type-name.component';
+import { EntityTypeNameModule } from '../entity-type-name.module';
+import { EntityDetailsService } from '../../../services/entity-details/entity-details.service';
+import * as EntityTypeNameComponentStories from './entity-type-name.component.stories';
+
+<Meta of={EntityTypeNameComponentStories} />
+
+# EntityTypeNameComponent
+
+This component displays type names, type aliases and associated icons within the context of an Atlas entity.
+
+<Controls />
+
+## Primary
+
+The `models4insight-entity-type-name` subscribes to the `EntityDetailsService` provided in the context in which the component is used.
+It automatically picks up the type name and type alias if available.
+It is possible to customize the appearance of the component similar to the `models4insight-type-name` component.
+
+<Canvas>
+  <Story of={EntityTypeNameComponentStories.Primary} />
+</Canvas>

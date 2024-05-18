@@ -1,0 +1,33 @@
+<models4insight-modal [context]="modalContext">
+  <div class="content">
+    <p>
+      The technical part of the data governance model captures the technical
+      implementation of data, such as where data is stored and the level of data
+      quality.
+    </p>
+    <p>
+      The technical data governance model consists of the following types of
+      entities:
+    </p>
+    <div class="block">
+      <models4insight-sortable-table-shell
+        [config]="tableConfig"
+        [data]="tableData"
+        [rowsSelectable]="false"
+      >
+        <ng-template let-rowData>
+          <td>
+            <span
+              class="icon is-small technical"
+              [title]="rowData.typeName | translate"
+            >
+              <fa-icon [icon]="rowData.icon"></fa-icon>
+            </span>
+          </td>
+          <th scope="row">{{ rowData.typeName | translate }}</th>
+          <td>{{ rowData.description }}</td>
+        </ng-template>
+      </models4insight-sortable-table-shell>
+    </div>
+  </div>
+</models4insight-modal>

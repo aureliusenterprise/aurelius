@@ -1,0 +1,89 @@
+<div class="box">
+  <nav class="level">
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#related-non-compliants">
+            Non-compliant
+          </a>
+        </p>
+        <p class="title">{{ nonCompliantCount$ | async }}</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#related-compliants">
+            Compliant
+          </a>
+        </p>
+        <p class="title">{{ compliantCount$ | async }}</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#properties-details">
+            Properties
+          </a>
+        </p>
+        <p class="title">{{ propertyCount$ | async }}</p>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div class="box">
+  <h3 class="title is-3">Compliance Chart</h3>
+  <div class="block">
+    <div class="columns">
+      <div class="column is-6">
+        <div>
+          <div class="legend-non-compliant"></div>
+          <div>Non-compliant</div>
+        </div>
+        <div>
+          <div class="legend-compliant"></div>
+          <div>Compliant</div>
+        </div>
+      </div>
+      <div class="column is-6">
+        <div class="gov-quality-overall-pie">
+          <models4insight-data-quality-pie
+            [value]="govQualityScore$ | async"
+            [size]="8"
+          ></models4insight-data-quality-pie>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="related-non-compliants" class="box">
+  <models4insight-non-compliant-cards></models4insight-non-compliant-cards>
+</div>
+
+<div id="related-compliants" class="box">
+  <models4insight-compliant-cards></models4insight-compliant-cards>
+</div>
+
+<div id="properties-details" class="box">
+  <h3 class="title is-3">Properties</h3>
+  <models4insight-properties></models4insight-properties>
+</div>
+
+<models4insight-details-navigation>
+  <li>
+    <a models4insightDetailsNavigationItem="#related-non-compliants">
+      Non-compliant
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#related-compliants"> Compliant </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#properties-details">
+      Properties
+    </a>
+  </li>
+</models4insight-details-navigation>

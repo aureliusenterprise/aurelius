@@ -1,0 +1,49 @@
+<ng-container *ngIf="metric.data[dataset$ | async] as dataset; else noDataset">
+  <h5 class="title is-5">
+    {{ dataset$ | async | titlecase }}
+  </h5>
+  <p class="content">
+    <span>
+      {{ dataset.config.description }}
+    </span>
+  </p>
+  <div class="field">
+    <models4insight-modelview2
+      *ngIf="dataset.config.color_column"
+      [bucketMapping]="bucketMapping$ | async"
+    ></models4insight-modelview2>
+  </div>
+  <div class="field">
+    <models4insight-report-table
+      [config]="dataset.config.data"
+      [data]="
+        dataset.type === 'aggregate'
+          ? dataset.data
+          : (filteredViolations$ | async)
+      "
+      [idColumn]="dataset.config.id_column"
+      [isSummary]="dataset.type === 'aggregate'"
+      [itemsPerPage]="5"
+    ></models4insight-report-table>
+  </div>
+
+  <ng-container *ngIf="metric.type === 'chart'">
+    <div class="field">
+      <div
+        models4insight-bokeh-chart
+        class="chart"
+        [attr.id]="dataset$ | async"
+        [id]="dataset$ | async"
+        [chart]="metric['chart']"
+      ></div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-template #noDataset>
+  <section class="section is-light has-text-centered">
+    <h5 class="title is-5">
+      Please select a dataset to view the data.
+    </h5>
+  </section>
+</ng-template>

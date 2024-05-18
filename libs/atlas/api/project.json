@@ -1,0 +1,27 @@
+{
+  "name": "atlas-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/atlas/api/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/atlas/api"],
+      "options": {
+        "jestConfig": "libs/atlas/api/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/atlas/api/**/*.ts",
+          "libs/atlas/api/**/*.html"
+        ]
+      }
+    }
+  }
+}

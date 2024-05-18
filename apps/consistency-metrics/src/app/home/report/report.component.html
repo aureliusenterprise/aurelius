@@ -1,0 +1,125 @@
+<ng-container *ngIf="report$ | async as report; else noReport">
+  <div class="columns">
+    <div class="column is-narrow">
+      <h2 class="title is-2">Report</h2>
+      <aside class="menu">
+        <ng-container
+          *ngFor="let category of report | keyvalue: sortByKeyOrder"
+        >
+          <p class="menu-label">
+            <a (click)="selectMetric(category.value['Summary'])">
+              <span>
+                {{ category.key | titlecase }}
+              </span>
+            </a>
+          </p>
+          <ul class="menu-list">
+            <ng-container
+              *ngFor="let metric of category.value | keyvalue: sortByKeyOrder"
+            >
+              <li *ngIf="metric.key !== 'Summary'">
+                <a
+                  [class.is-active]="(metricKey$ | async) === metric.value"
+                  (click)="selectMetric(metric.value)"
+                >
+                  {{ metric.key }}
+                </a>
+              </li>
+            </ng-container>
+          </ul>
+        </ng-container>
+      </aside>
+    </div>
+    <div class="column">
+      <ng-container *ngIf="isLoadingMetric$ | async; else metric">
+        <section class="section is-light has-text-centered">
+          <span class="icon is-large">
+            <fa-icon [icon]="faSpinner" [spin]="true"></fa-icon>
+          </span>
+          <h5 class="title is-5">
+            Loading the metric...
+          </h5>
+        </section>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #noReport>
+  <section class="section is-light has-text-centered">
+    <h5 class="title is-5">
+      No report available.
+    </h5>
+  </section>
+</ng-template>
+
+<ng-template #loadingMetric> </ng-template>
+
+<ng-template #metric>
+  <ng-container *ngIf="metric$ | async as currentMetric; else noMetric">
+    <div class="level is-mobile">
+      <div class="level-left">
+        <h3 class="title is-3">{{ metricName$ | async | titlecase }}</h3>
+      </div>
+      <div class="level-right">
+        <models4insight-report-context-menu
+          class="is-size-3"
+        ></models4insight-report-context-menu>
+      </div>
+    </div>
+    <ng-container
+      *ngIf="currentMetric.data | keyvalue: sortByKeyOrder as datasets"
+    >
+      <ng-container *ngIf="datasets.length > 1">
+        <h4 class="title is-4">Metric</h4>
+        <h6 class="subtitle is-6">
+          <span>The following datasets are available:</span>
+        </h6>
+        <div class="tabs is-small is-toggle is-fullwidth">
+          <ul>
+            <li
+              *ngFor="let dataset of datasets"
+              [class.is-active]="dataset.key === (dataset$ | async)"
+            >
+              <a (click)="selectDataset(dataset.key)">
+                <span>{{ dataset.key | titlecase }}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </ng-container>
+    </ng-container>
+    <div *ngIf="currentMetric.type === 'table'" class="tabs is-fullwidth">
+      <ul>
+        <li [class.is-active]="currentTab === 'metric'">
+          <a (click)="currentTab = 'metric'">
+            <span>Non-compliance</span>
+          </a>
+        </li>
+        <li [class.is-active]="currentTab === 'exemptions'">
+          <a (click)="currentTab = 'exemptions'">
+            <span>Exemptions</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <ng-container [ngSwitch]="currentTab">
+      <models4insight-report-metric
+        *ngSwitchCase="'metric'"
+        [metric]="currentMetric"
+      ></models4insight-report-metric>
+      <models4insight-report-exemptions
+        *ngSwitchCase="'exemptions'"
+        [metric]="currentMetric"
+      ></models4insight-report-exemptions>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #noMetric>
+  <section class="section is-light has-text-centered">
+    <h5 class="title is-5">
+      Please select a metric to view the report.
+    </h5>
+  </section>
+</ng-template>

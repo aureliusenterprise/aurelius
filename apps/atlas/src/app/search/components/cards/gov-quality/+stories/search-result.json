@@ -1,0 +1,16 @@
+{
+  "result": { "raw": "This entity has a name" },
+  "dataqualityruledescription": {
+    "raw": "nName is not empty"
+  },
+  "dataqualityruledimension": { "raw": "completeness" },
+  "name": { "raw": "Attribute - Name" },
+  "compliant": { "raw": "1" },
+  "guid": { "raw": "789db638-3aef-41f0-9bce-773f368f85b3" },
+  "_meta": {
+    "engine": "atlas-dev-gov-quality",
+    "score": 1.0,
+    "id": "doc-6290d9dedd895e197b97450c"
+  },
+  "id": { "raw": "doc-6290d9dedd895e197b97450c" }
+}

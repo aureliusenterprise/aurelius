@@ -1,0 +1,8 @@
+{
+  "extends": "../../tslint.json",
+  "rules": {
+    "directive-selector": [true, "attribute", "models4insight", "camelCase"],
+    "component-selector": [true, "element", "models4insight", "kebab-case"],
+    "no-console": false
+  }
+}

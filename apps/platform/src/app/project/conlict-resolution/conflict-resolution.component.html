@@ -1,0 +1,41 @@
+<h2 class="title is-2">Resolve conflicts</h2>
+<ng-container *ngIf="(conflictSets$ | async) as conflicts; else noConflicts">
+  <ng-container *ngIf="conflicts.length > 0; else noConflicts">
+    <h5 class="subtitle is-5">There are conflicts in your model. You can resolve them here.</h5>
+    <hr class="hr" />
+    <h3 class="title is-3">Conflict sets</h3>
+    <h6 class="subtitle is-6">Please select a set of conflicts to start resolving them.</h6>
+    <div class="table-container">
+      <table class="table has-background-light is-hoverable has-shadow is-fullwidth">
+        <thead class="has-background-dark">
+          <th class="has-text-white" scope="col">From branch</th>
+          <th class="has-text-white" scope="col">To branch</th>
+          <th class="has-text-white" scope="col">Timestamp</th>
+          <th class="has-text-white" scope="col">Comment</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let context of conflicts" (click)="currentContext = context">
+            <td>{{ context.fromBranchName }}</td>
+            <td>{{ context.toBranchName }}</td>
+            <td>{{ context.conflictSet.version | date: 'dd MMM y, HH:mm:ss' }}</td>
+            <td>{{ context.comment }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr class="hr" />
+    <ng-container *ngIf="(currentContext$ | async) as currentContext">
+      <h3 class="title is-3">Conflicts</h3>
+      <h6 class="subtitle is-6">
+        Please choose a conflict resolution template, or resolve the conflicts manually. Click on a conflict in the list
+        below for additional details.
+      </h6>
+      <models4insight-conflict-list></models4insight-conflict-list>
+    </ng-container>
+  </ng-container>
+</ng-container>
+<ng-template #noConflicts>
+  <section class="section is-light has-text-centered">
+    <h5 class="title is-5">There are currently no conflicts to be resolved!</h5>
+  </section>
+</ng-template>

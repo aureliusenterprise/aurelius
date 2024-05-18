@@ -1,0 +1,36 @@
+<div class="level is-mobile">
+  <div class="level-left">
+    <div>
+      <h2 class="title is-2">Compare</h2>
+      <h5 class="subtitle is-5">Find the differences between models</h5>
+    </div>
+  </div>
+  <div class="level-right">
+    <div class="level-item buttons">
+      <ng-container *ngIf="previousRoute">
+        <a class="button is-link" (click)="goBack()">
+          <span class="icon"><fa-icon [icon]="faArrowLeft"></fa-icon></span>
+          <span>Go back</span>
+        </a>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="!(isComparingModels$ | async); else loading">
+  <models4insight-modelview2
+    [bucketMapping]="bucketMapping$ | async"
+    [isPalletteFixed]="true"
+    pallette="compare"
+  >
+  </models4insight-modelview2>
+</ng-container>
+<ng-template #loading>
+  <div class="has-text-centered">
+    <span class="icon is-large">
+      <fa-icon [icon]="faSpinner" [spin]="true"></fa-icon>
+    </span>
+    <h5 class="title is-5">
+      Comparing the models. Please stand by...
+    </h5>
+  </div>
+</ng-template>

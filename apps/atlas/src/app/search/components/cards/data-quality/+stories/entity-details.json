@@ -1,0 +1,83 @@
+{
+  "referredEntities": {},
+  "entity": {
+    "typeName": "m4i_data_quality",
+    "attributes": {
+      "owner": null,
+      "archimateReference": [],
+      "expression": "completeness('HIER_ORG')",
+      "replicatedTo": null,
+      "userDescription": null,
+      "replicatedFrom": null,
+      "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--45",
+      "displayName": null,
+      "description": null,
+      "active": true,
+      "source": [],
+      "businessRuleDescription": "",
+      "ruleDescription": "This field has to be filled at all times",
+      "name": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--45",
+      "filterRequired": false,
+      "id": 45,
+      "qualityDimension": "Completeness",
+      "expressionVersion": "1",
+      "fields": [
+        {
+          "guid": "c1c9216e-8ba6-417a-a45e-2d34782fe429",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org"
+          }
+        }
+      ]
+    },
+    "guid": "c90e57ff-204d-45c0-8b1b-593cfb6e3146",
+    "isIncomplete": false,
+    "provenanceType": 0,
+    "status": "ACTIVE",
+    "createdBy": "admin",
+    "updatedBy": "atlas",
+    "createTime": 1649238424871,
+    "updateTime": 1649245105978,
+    "version": 0,
+    "relationshipAttributes": {
+      "inputToProcesses": [],
+      "pipeline": null,
+      "schema": [],
+      "ArchiMateReference": [],
+      "model": null,
+      "source": [
+        {
+          "guid": "b00468d4-f309-4553-b8f5-54c6b7648551",
+          "typeName": "m4i_source",
+          "entityStatus": "ACTIVE",
+          "displayText": "/po/FTE_Actuals/Data Dictionary_FTE Actuals.xlsm",
+          "relationshipType": "m4i_referenceable_source_assignment",
+          "relationshipGuid": "d111d1e3-6adf-4de5-afdb-e5f1f5c96928",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_referenceable_source_assignment"
+          }
+        }
+      ],
+      "fields": [
+        {
+          "guid": "c1c9216e-8ba6-417a-a45e-2d34782fe429",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "HIER_ORG",
+          "relationshipType": "m4i_data_quality_field_assignment",
+          "relationshipGuid": "18d2409f-800c-4a7f-8ab4-bfc851eb45f3",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_quality_field_assignment"
+          }
+        }
+      ],
+      "meanings": [],
+      "outputFromProcesses": []
+    },
+    "labels": [],
+    "proxy": false
+  }
+}

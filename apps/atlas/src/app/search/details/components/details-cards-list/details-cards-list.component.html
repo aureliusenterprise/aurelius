@@ -1,0 +1,101 @@
+<div class="level is-widescreen">
+  <div class="level-left">
+    <div>
+      <h3 class="title is-3">{{ title }}</h3>
+      <h6 class="subtitle is-6 is-underlined reset-search">
+        <a
+          *ngIf="!(isLoadingResults$ | async); else loading"
+          models4insight-tooltip="Reset the filters"
+          tooltipDirection="right"
+          (click)="reset()"
+          >{{ totalResults$ | async }} result(s)</a
+        >
+      </h6>
+    </div>
+  </div>
+  <div class="level-right">
+    <div class="level">
+      <div class="level-item">
+        <div class="level is-mobile is-expanded">
+          <div class="dropdown is-hoverable level-item is-narrow">
+            <div class="dropdown-trigger">
+              <button
+                class="button is-text is-inverted"
+                [class.is-primary]="isFilterActive$ | async"
+                aria-haspopup="true"
+                aria-controls="filter-dropdown"
+              >
+                <span class="icon is-large">
+                  <fa-icon [icon]="faFilter" size="lg"></fa-icon>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="filter-dropdown" role="menu">
+              <div class="dropdown-content">
+                <div *ngIf="enableDescendantsControl" class="dropdown-item">
+                  <div class="menu">
+                    <p class="menu-label">Filter</p>
+                    <ul class="menu-list">
+                      <li>
+                        <input
+                          [id]="descendantsControlId"
+                          type="checkbox"
+                          name="descendantsSwitch"
+                          class="switch"
+                          models4insightShowDescendantsControl
+                        />
+                        <label [for]="descendantsControlId">
+                          Show all descendants
+                        </label>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="dropdown-item">
+                  <models4insight-filter></models4insight-filter>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="level-item">
+            <models4insight-sorting
+              [sortingOptions]="sortingOptions"
+            ></models4insight-sorting>
+          </div>
+        </div>
+      </div>
+      <div class="option">
+        <models4insight-simple-search-input
+          [context]="searchBarContext"
+          [query]="query$ | async"
+          (querySubmitted)="query = $event"
+        >
+        </models4insight-simple-search-input>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="entities$ | async as entities">
+  <ng-container *ngIf="entities.length > 0">
+    <div class="cards">
+      <models4insight-infinite-scroll-container>
+        <div class="columns is-multiline">
+          <div
+            *ngFor="let entity of entities; trackBy: trackByGuid"
+            class="column"
+          >
+            <models4insight-details-card [searchResult]="entity">
+            </models4insight-details-card>
+          </div>
+        </div>
+      </models4insight-infinite-scroll-container>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <span class="icon is-small">
+    <span class="loader"></span>
+  </span>
+</ng-template>

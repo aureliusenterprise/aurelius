@@ -1,0 +1,14 @@
+<ng-container
+  *ngIf="classificationsByTypeName$ | async | keyvalue as classifications"
+>
+  <div *ngIf="classifications.length > 0" class="block">
+    <div class="field is-grouped is-grouped-multiline">
+      <div *ngFor="let classification of classifications" class="control">
+        <models4insight-classification
+          [classificationName]="classification.key"
+          [sources]="classification.value"
+        ></models4insight-classification>
+      </div>
+    </div>
+  </div>
+</ng-container>

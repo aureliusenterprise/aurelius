@@ -1,0 +1,113 @@
+<section class="hero is-light is-bold">
+  <div class="hero-head">
+    <header class="navbar">
+      <div class="steps is-small">
+        <div class="step-item is-completed is-success">
+          <div class="step-marker">
+            <span class="icon is-small">
+              <fa-icon [icon]="faCheck" size="sm"></fa-icon>
+            </span>
+          </div>
+          <div class="step-details">
+            <a class="step-title">First time setup</a>
+            <p>Welcome to Aurelius Atlas!</p>
+          </div>
+        </div>
+        <div class="step-item is-active">
+          <div class="step-marker"></div>
+          <div class="step-details">
+            <a class="step-title">Data domains</a>
+            <p>Create a first set of data domains</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"></div>
+          <div class="step-details">
+            <p class="step-title">Systems</p>
+            <p>Create a first set of systems</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker">
+            <span class="icon is-small">
+              <fa-icon [icon]="faFlag" size="sm"></fa-icon>
+            </span>
+          </div>
+          <div class="step-details">
+            <a class="step-title">Summary</a>
+            <p>You're all set!</p>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+  <div class="hero-body">
+    <div class="columns is-vcentered">
+      <div class="column is-two-thirds">
+        <p class="title">Data domains</p>
+        <p class="subtitle">Let's set up an initial set of data domains</p>
+        <p class="content">
+          Typically, data domains correspond to the departments of an
+          organisation.
+        </p>
+        <p class="content has-text-weight-bold">
+          Please select the departments applicable to your organisation from the
+          list.
+        </p>
+      </div>
+      <div class="column is-one-third">
+        <article class="panel is-warning">
+          <p class="panel-heading">Data domains</p>
+          <p class="panel-tabs">
+            <a class="is-active">All</a>
+            <a>General</a>
+            <a>Manufacturing</a>
+          </p>
+          <div class="panel-block">
+            <p class="control has-icons-left">
+              <input
+                class="input is-warning"
+                type="text"
+                placeholder="Search"
+              />
+              <span class="icon is-left">
+                <fa-icon [icon]="faSearch"></fa-icon>
+              </span>
+            </p>
+          </div>
+          <label
+            *ngFor="let department of departments"
+            [attr.for]="department"
+            class="panel-block"
+          >
+            <input [attr.id]="department" type="checkbox" />
+            <span class="panel-text">{{ department }}</span>
+            <a class="icon has-text-link">
+              <fa-icon [icon]="faPencilAlt"></fa-icon>
+            </a>
+          </label>
+          <div class="panel-block">
+            <button class="button is-success is-fullwidth">
+              Add a data domain
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+  <div class="hero-foot">
+    <div class="level">
+      <div class="level-left">
+        <button class="button level-item is-large is-link is-fullwidth">
+          Back
+        </button>
+        <button class="button level-item is-large is-link is-outlined is-fullwidth">
+          Skip
+        </button>
+      </div>
+      <div class="level-right">
+        <button class="button level-item is-large is-primary is-fullwidth">Confirm</button>
+      </div>
+    </div>
+  </div>
+</section>

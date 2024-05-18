@@ -1,0 +1,41 @@
+.columns {
+  width: 100%;
+}
+
+.panel {
+  background-color: hsl(0, 0%, 98%);
+
+  .panel-tabs {
+    color: black;
+  }
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.steps {
+  flex-grow: 1;
+}
+
+.columns {
+  width: 100%;
+}
+
+.hero-head {
+  padding: 2rem;
+}
+
+.hero-foot {
+  padding: 2rem;
+}
+
+.panel-text {
+  flex-grow: 1;
+}
+
+.level-item {
+  flex-shrink: 1;
+}

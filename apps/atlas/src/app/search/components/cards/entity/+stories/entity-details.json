@@ -1,0 +1,233 @@
+{
+  "referredEntities": {},
+  "entity": {
+    "typeName": "m4i_data_entity",
+    "attributes": {
+      "archimateReference": [],
+      "replicatedTo": null,
+      "replicatedFrom": null,
+      "steward": [
+        {
+          "guid": "3d4b17c2-b1af-41af-b391-a09aa2db14b6",
+          "typeName": "m4i_person",
+          "uniqueAttributes": {
+            "qualifiedName": "dionysia.vanrijn@stratonis_group.com",
+            "email": "dionysia.vanrijn@stratonis_group.com"
+          }
+        }
+      ],
+      "qualifiedName": "personnel-and-organization--organization",
+      "parentEntity": [],
+      "source": [],
+      "dataDomain": [
+        {
+          "guid": "e6a315cd-a3c5-43e4-83a3-05ff9a01f8aa",
+          "typeName": "m4i_data_domain",
+          "uniqueAttributes": { "qualifiedName": "personnel-and-organization" }
+        }
+      ],
+      "childEntity": [],
+      "name": "Organization",
+      "definition": "This entity contains information about the organizational unit in which a group of employees work together within an assigned discipline. ",
+      "attributes": [
+        {
+          "guid": "b1046ab7-4e72-415a-8fbc-0102368f6c15",
+          "typeName": "m4i_data_attribute",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--organization--functional-organization"
+          }
+        },
+        {
+          "guid": "4cd48302-571f-4b93-9e9f-07e2aaa6bb43",
+          "typeName": "m4i_data_attribute",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--organization--matrix-column-organization"
+          }
+        },
+        {
+          "guid": "0f35aacc-000b-4f1a-8c24-602879bb12a9",
+          "typeName": "m4i_data_attribute",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--organization--organization"
+          }
+        },
+        {
+          "guid": "4eaf3236-0ad5-4e7d-be89-7af7268d5fac",
+          "typeName": "m4i_data_attribute",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--organization--basket"
+          }
+        },
+        {
+          "guid": "f95ce2d2-8572-418d-877b-dd55e4d580d4",
+          "typeName": "m4i_data_attribute",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--organization--hierarchical-organization"
+          }
+        },
+        {
+          "guid": "6dea3e14-77d1-42d6-91f7-9cd3a22ba5d8",
+          "typeName": "m4i_data_attribute",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--organization--matrix-row-organization"
+          }
+        }
+      ],
+      "businessOwner": [
+        {
+          "guid": "594e686e-1e99-480a-9189-1433d6b51728",
+          "typeName": "m4i_person",
+          "uniqueAttributes": {
+            "qualifiedName": "diane.vanzanten@stratonis_group.com",
+            "email": "diane.vanzanten@stratonis_group.com"
+          }
+        }
+      ]
+    },
+    "guid": "6480a6eb-6344-4c6b-97bf-01c42affb41a",
+    "isIncomplete": false,
+    "provenanceType": 0,
+    "status": "ACTIVE",
+    "createdBy": "admin",
+    "updatedBy": "atlas",
+    "createTime": 1649238419390,
+    "updateTime": 1661936944784,
+    "version": 0,
+    "relationshipAttributes": {
+      "ArchiMateReference": [],
+      "steward": [
+        {
+          "guid": "3d4b17c2-b1af-41af-b391-a09aa2db14b6",
+          "typeName": "m4i_person",
+          "entityStatus": "ACTIVE",
+          "displayText": "Dionysia van Rijn",
+          "relationshipType": "m4i_data_entity_steward_assignment",
+          "relationshipGuid": "55f404cc-05ba-4f3b-a362-6108e8f966fa",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_entity_steward_assignment"
+          }
+        }
+      ],
+      "dataDomain": [
+        {
+          "guid": "e6a315cd-a3c5-43e4-83a3-05ff9a01f8aa",
+          "typeName": "m4i_data_domain",
+          "entityStatus": "ACTIVE",
+          "displayText": "Personnel and Organization",
+          "relationshipType": "m4i_data_entity_assignment",
+          "relationshipGuid": "548daa6f-e9dd-4d5a-8319-ba9d3c6b80a9",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_data_entity_assignment" }
+        }
+      ],
+      "parentEntity": [],
+      "childEntity": [],
+      "attributes": [
+        {
+          "guid": "6dea3e14-77d1-42d6-91f7-9cd3a22ba5d8",
+          "typeName": "m4i_data_attribute",
+          "entityStatus": "ACTIVE",
+          "displayText": "Matrix Row Organization",
+          "relationshipType": "m4i_data_entity_attribute_assignment",
+          "relationshipGuid": "1e1009c3-4a16-4c68-a6bd-468508068c81",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_entity_attribute_assignment"
+          }
+        },
+        {
+          "guid": "0f35aacc-000b-4f1a-8c24-602879bb12a9",
+          "typeName": "m4i_data_attribute",
+          "entityStatus": "ACTIVE",
+          "displayText": "Organization",
+          "relationshipType": "m4i_data_entity_attribute_assignment",
+          "relationshipGuid": "cdba1183-de7b-42b1-870c-d2c5ec9b2602",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_entity_attribute_assignment"
+          }
+        },
+        {
+          "guid": "4eaf3236-0ad5-4e7d-be89-7af7268d5fac",
+          "typeName": "m4i_data_attribute",
+          "entityStatus": "ACTIVE",
+          "displayText": "Basket",
+          "relationshipType": "m4i_data_entity_attribute_assignment",
+          "relationshipGuid": "20fe2b89-c4d4-47a0-9938-f839bb97b7da",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_entity_attribute_assignment"
+          }
+        },
+        {
+          "guid": "b1046ab7-4e72-415a-8fbc-0102368f6c15",
+          "typeName": "m4i_data_attribute",
+          "entityStatus": "ACTIVE",
+          "displayText": "Functional Organization",
+          "relationshipType": "m4i_data_entity_attribute_assignment",
+          "relationshipGuid": "b9cfd000-20e5-490d-96f4-9fbe87ba1724",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_entity_attribute_assignment"
+          }
+        },
+        {
+          "guid": "f95ce2d2-8572-418d-877b-dd55e4d580d4",
+          "typeName": "m4i_data_attribute",
+          "entityStatus": "ACTIVE",
+          "displayText": "Hierarchical Organization",
+          "relationshipType": "m4i_data_entity_attribute_assignment",
+          "relationshipGuid": "f0d9a31c-67d1-4ad0-8eae-94807c81f84c",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_entity_attribute_assignment"
+          }
+        },
+        {
+          "guid": "4cd48302-571f-4b93-9e9f-07e2aaa6bb43",
+          "typeName": "m4i_data_attribute",
+          "entityStatus": "ACTIVE",
+          "displayText": "Matrix Column Organization",
+          "relationshipType": "m4i_data_entity_attribute_assignment",
+          "relationshipGuid": "9ee64679-1d49-4c6c-8571-62f3a21dd368",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_entity_attribute_assignment"
+          }
+        }
+      ],
+      "source": [
+        {
+          "guid": "b00468d4-f309-4553-b8f5-54c6b7648551",
+          "typeName": "m4i_source",
+          "entityStatus": "ACTIVE",
+          "displayText": "/po/FTE_Actuals/Data Dictionary_FTE Actuals.xlsm",
+          "relationshipType": "m4i_referenceable_source_assignment",
+          "relationshipGuid": "89d841e0-62d6-4b42-a8ea-740af20e1d7f",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_referenceable_source_assignment"
+          }
+        }
+      ],
+      "businessOwner": [
+        {
+          "guid": "594e686e-1e99-480a-9189-1433d6b51728",
+          "typeName": "m4i_person",
+          "entityStatus": "ACTIVE",
+          "displayText": "Diane van Zanten",
+          "relationshipType": "m4i_data_entity_business_owner_assignment",
+          "relationshipGuid": "b71e3ee5-539c-4930-8f59-320aa338bbc6",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_entity_business_owner_assignment"
+          }
+        }
+      ],
+      "meanings": []
+    },
+    "labels": [],
+    "proxy": false
+  }
+}

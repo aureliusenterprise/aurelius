@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "alerts": [],
+    "warnings": [],
+    "precision": 2,
+    "page": { "current": 1, "total_pages": 1, "total_results": 0, "size": 100 },
+    "engine": { "name": "atlas-dev-gov-quality", "type": "default" },
+    "request_id": "htuguHe8SIqbjE0ceLA2nQ"
+  },
+  "results": [],
+  "facets": {
+    "dataqualityruledimension": [
+      { "type": "value", "data": [{ "value": "completeness", "count": 0 }] }
+    ],
+    "dataqualitytype": [
+      {
+        "type": "value",
+        "data": [
+          { "value": "attribute", "count": 0 },
+          { "value": "relationship", "count": 0 }
+        ]
+      }
+    ]
+  }
+}

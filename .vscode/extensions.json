@@ -6,6 +6,7 @@
     "redhat.vscode-yaml",
     "tamasfe.even-better-toml",
     "knisterpeter.vscode-commitizen",
-    "editorconfig.editorconfig"
+    "editorconfig.editorconfig",
+    "firsttris.vscode-jest-runner"
   ]
 }

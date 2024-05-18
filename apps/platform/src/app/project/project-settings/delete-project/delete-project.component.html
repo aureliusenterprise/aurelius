@@ -1,0 +1,24 @@
+<div class="level">
+  <div class="level-left">
+    <div class="title is-3 level-item">Delete Project</div>
+  </div>
+  <div class="level-right">
+    <div class="field level-item">
+      <div class="control">
+        <a
+          class="button is-danger level-item"
+          [class.is-loading]="isDeletingProject$ | async"
+          models4insight-holdable
+          holdTime="3"
+          (held)="deleteProject($event)"
+        >
+          Delete project
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="content">
+  This permanently deletes your project and all associated models from the
+  repository.
+</div>

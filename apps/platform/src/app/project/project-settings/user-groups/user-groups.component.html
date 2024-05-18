@@ -1,0 +1,28 @@
+<div class="level">
+  <div class="level-left">
+    <h3 class="title is-3 level-item">User Groups</h3>
+  </div>
+  <div class="level-right">
+    <div class="field level-item">
+      <div class="control">
+        <button
+          type="button"
+          class="button is-primary"
+          (click)="activateModal()"
+        >
+          Add a new user group
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="(userGroups$ | async) as groups">
+  <models4insight-user-group-table
+    [data]="groups"
+    [enableTableContainer]="false"
+    (edit)="editGroup($event)"
+  ></models4insight-user-group-table>
+</ng-container>
+<models4insight-create-user-group-modal
+
+></models4insight-create-user-group-modal>

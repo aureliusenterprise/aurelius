@@ -1,0 +1,27 @@
+{
+  "name": "services-project",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/services/project/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/services/project"],
+      "options": {
+        "jestConfig": "libs/services/project/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/services/project/**/*.ts",
+          "libs/services/project/**/*.html"
+        ]
+      }
+    }
+  }
+}

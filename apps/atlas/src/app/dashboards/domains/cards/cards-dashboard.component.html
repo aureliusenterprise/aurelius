@@ -1,0 +1,21 @@
+<div class="container">
+    <ng-container *ngIf="dataDomain.isActive">
+        <div class="active box" (click)="directToDetailsPage(dataDomain.guid)">
+            <p class="title is-6 name"> {{dataDomain.name}}</p>
+            <p>
+                Data Dictionary:
+            </p>
+            <p class="subtitle is-6">
+                {{dataDomain.totalNumberOfEntities}} conceptual entities
+            </p>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="!dataDomain.isActive">
+        <div class="inactive box">
+            <h2 class="title is-5"> {{dataDomain.name}}</h2>
+            <p>
+                No data Dictionary created.
+            </p>
+        </div>
+    </ng-container>
+</div>

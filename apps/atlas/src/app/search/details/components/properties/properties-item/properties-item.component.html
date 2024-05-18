@@ -1,0 +1,17 @@
+<ng-container *ngIf='isStringLike'>
+    {{isStringLike | titlecase}}
+</ng-container>
+<ng-container *ngIf="isObjectLike && isObjectLike.length > 0">
+    <ng-container *ngFor="let item of isObjectLike">
+        <a (click)="openDetails(item.guid)">
+            {{item.displayText}}
+        </a>
+    </ng-container>
+</ng-container>
+<ng-container *ngIf="isObjectLike && isObjectLike.length === 0">
+    <ng-container>
+        <div>
+            N/A
+        </div>
+    </ng-container>
+</ng-container>

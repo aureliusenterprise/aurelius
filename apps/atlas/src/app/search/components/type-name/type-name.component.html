@@ -1,0 +1,15 @@
+<span class="icon-text" [attr.title]="typeAlias ?? typeName | translate">
+  <ng-container *ngIf="showIcon">
+    <span
+      *ngIf="iconsByType[typeName] as iconDef"
+      class="icon"
+      [ngClass]="iconDef.classIcon"
+    >
+      <fa-icon [icon]="iconDef.icon"></fa-icon>
+    </span>
+  </ng-container>
+  <span *ngIf="showTypeName">{{ typeAlias ?? typeName | translate }}</span>
+  <span *ngIf="showBaseTypeName && typeAlias">
+    &nbsp;({{ typeName | translate }})
+  </span>
+</span>

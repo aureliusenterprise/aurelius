@@ -1,0 +1,27 @@
+{
+  "name": "google-analytics",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/google-analytics/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/google-analytics"],
+      "options": {
+        "jestConfig": "libs/google-analytics/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/google-analytics/**/*.ts",
+          "libs/google-analytics/**/*.html"
+        ]
+      }
+    }
+  }
+}

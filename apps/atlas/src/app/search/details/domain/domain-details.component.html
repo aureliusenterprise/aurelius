@@ -1,0 +1,113 @@
+<div class="columns">
+  <div class="column">
+    <div id="description-details" class="box">
+      <h3 class="title is-3">
+        Description
+      </h3>
+      <models4insight-description> </models4insight-description>
+    </div>
+  </div>
+  <div class="column">
+    <div id="people-details" class="box">
+      <h3 class="title is-3">People</h3>
+      <models4insight-people></models4insight-people>
+    </div>
+  </div>
+</div>
+
+<div class="box">
+  <nav class="level">
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#related-entities">
+            Data Entities
+          </a>
+        </p>
+        <p class="title">{{ entityCount$ | async }}</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#data-quality">
+            Data Quality
+          </a>
+        </p>
+        <div class="title">
+          <span *ngIf="(dataQualityCount$ | async); else noDataQuality">
+            {{ dataQualityScore$ | async | percent: '1.0-1' }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#properties-details">
+            Properties
+          </a>
+        </p>
+        <p class="title">{{ propertyCount$ | async }}</p>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div id="related-entities" class="box">
+  <models4insight-entity-cards></models4insight-entity-cards>
+</div>
+
+<div id="data-quality" class="box">
+  <h3 class="title is-3">Data Quality</h3>
+  <models4insight-data-quality-list></models4insight-data-quality-list>
+</div>
+
+<div id="gov-quality" class="box">
+  <models4insight-governance-quality-cards></models4insight-governance-quality-cards>
+</div>
+
+<div id="properties-details" class="box">
+  <h3 class="title is-3">
+    Properties
+  </h3>
+  <models4insight-properties></models4insight-properties>
+</div>
+
+<models4insight-details-navigation>
+  <li>
+    <a models4insightDetailsNavigationItem="#description-details">
+      Description
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#people-details">
+      People
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#related-entities">
+      Data Entities
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#data-quality">
+      Data Quality
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#gov-quality">
+      Governance Quality Rules
+    </a>
+  </li>
+  <li>
+    <a models4insightDetailsNavigationItem="#properties-details">
+      Properties
+    </a>
+  </li>
+</models4insight-details-navigation>
+<ng-template #noDataQuality>
+  <div>
+    <p class="title">Unavailable</p>
+  </div>
+</ng-template>

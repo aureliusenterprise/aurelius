@@ -1,0 +1,92 @@
+import { Canvas, Meta, Story } from '@storybook/blocks';
+import { moduleMetadata } from '@storybook/angular';
+import { Mermaid } from 'mdx-mermaid/Mermaid';
+import { DomainsWizardComponent } from '../domains-wizard/domains-wizard.component';
+import { DomainsWizardModule } from '../domains-wizard/domains-wizard.module';
+import { SummaryWizardComponent } from '../summary-wizard/summary-wizard.component';
+import { SummaryWizardModule } from '../summary-wizard/summary-wizard.module';
+import { SystemsWizardComponent } from '../systems-wizard/systems-wizard.component';
+import { SystemsWizardModule } from '../systems-wizard/systems-wizard.module';
+import { WelcomeWizardComponent } from '../welcome-wizard/welcome-wizard.component';
+import { WelcomeWizardModule } from '../welcome-wizard/welcome-wizard.module';
+import * as WizardComponentStories from './wizard.component.stories';
+
+<Meta of={WizardComponentStories} />
+
+# First Time Setup
+
+This components provides a wizard that guides users through the Aurelius Atlas first time setup process.
+
+## Primary
+
+The first time setup wizard includes the following steps:
+
+<Mermaid
+  chart={`
+  graph LR
+    A[Welcome] --> B[Data domains]
+    B --> C[Systems]
+    C --> D[Summary]
+`}
+/>
+
+Please find examples of each step below.
+
+### Welcome
+
+This step introduces the purpose of the first time setup wizard and explains the next steps.
+
+<Canvas>
+  <Story of={WizardComponentStories.Welcome} />
+</Canvas>
+
+### Data domains
+
+This step guides users through the first time setup process for data domains in Aurelius Atlas.
+Since domains often correspond to departments, it provides a shopping list of common departments found in most organisations.
+Specific business domains may include additional departments.
+For example, a manufacturing business will often have an engineering and a production department.
+
+Users can pick the deparments of their organisation from the shopping list.
+Using the search bar, users can look for the specific entries they want to add to the selection.
+If an entry is missing from the suggestions, it is possible to add a new entry by clicking the button at the bottom of the panel.
+It is also possible to edit the names of suggested entries, to fit with the names used in the organisation.
+
+By clicking continue, the selection is saved and the wizard moves to the next step.
+After completing the wizard, data domain entities corresponding to the selected departments will be automatically generated.
+
+Alternatively, users have the option of skipping this step.
+
+<Canvas>
+  <Story of={WizardComponentStories.DataDomains} />
+</Canvas>
+
+### Systems
+
+This step guides users through the first time setup process for systems in Aurelius Atlas.
+
+It provides a shopping list of common systems grouped by category.
+Examples of systems categories include ERP, MES and IT.
+
+Users can pick the systems used by their organisation from the shopping list.
+Using the search bar, users can look for the specific entries they want to add to the selection.
+If an entry is missing from the suggestions, it is possible to add a new entry by clicking the button at the bottom of the panel.
+It is also possible to edit the names of suggested entries, to fit with the names used in the organisation.
+
+By clicking continue, the selection is saved and the wizard moves to the next step.
+After completing the wizard, system entities corresponding to the selected systems will be automatically generated.
+
+Alternatively, users have the option of skipping this step.
+
+<Canvas>
+  <Story of={WizardComponentStories.Systems} />
+</Canvas>
+
+### Summary
+
+This step provides a overview of the selected data domains and systems.
+After confirmation from the user, Atlas entities corresponding to the current selection are automatically generated.
+
+<Canvas>
+  <Story of={WizardComponentStories.Summary} />
+</Canvas>

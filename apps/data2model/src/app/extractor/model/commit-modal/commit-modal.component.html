@@ -1,0 +1,29 @@
+<models4insight-modal [context]="modalContext">
+  <div class="field">
+    <models4insight-project-select
+      [control]="form.controls.projectName"
+      [isSubmitted]="isSubmitted"
+    ></models4insight-project-select>
+  </div>
+  <ng-container *ngIf="form.value.projectName">
+    <div class="field">
+      <models4insight-branch-select
+        [control]="form.controls['branchName']"
+        [isSubmitted]="isSubmitted"
+        [withCreateBranch]="true"
+      ></models4insight-branch-select>
+    </div>
+    <div class="field">
+      <models4insight-conflict-resolution-template-select
+        [control]="form.controls['conflictResolutionTemplate']"
+        [isSubmitted]="isSubmitted"
+      ></models4insight-conflict-resolution-template-select>
+    </div>
+    <div class="field">
+      <models4insight-description-input
+        [control]="form.controls['comment']"
+        [isSubmitted]="isSubmitted"
+      ></models4insight-description-input>
+    </div>
+  </ng-container>
+</models4insight-modal>

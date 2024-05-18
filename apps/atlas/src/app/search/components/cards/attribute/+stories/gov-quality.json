@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "alerts": [],
+    "warnings": [],
+    "precision": 2,
+    "page": {
+      "current": 1,
+      "total_pages": 1,
+      "total_results": 11,
+      "size": 100
+    },
+    "engine": { "name": "atlas-dev-gov-quality", "type": "default" },
+    "request_id": "k1NGEq4TRDS2ibdR7I5CFA"
+  },
+  "results": [
+    {
+      "result": { "raw": "This attribute does not have a data type" },
+      "dataqualityruledescription": {
+        "raw": "attributeType is not None and is not empty"
+      },
+      "dataqualityruledimension": { "raw": "completeness" },
+      "name": { "raw": "Attribute - Data Type" },
+      "compliant": { "raw": "0" },
+      "guid": { "raw": "45813081-2ea0-4707-bb66-18624cba7532" },
+      "_meta": {
+        "engine": "atlas-dev-gov-quality",
+        "score": 1.0,
+        "id": "doc-6290d9bcdd895e001d973ee8"
+      },
+      "id": { "raw": "doc-6290d9bcdd895e001d973ee8" }
+    }
+  ],
+  "facets": {
+    "dataqualityruledimension": [
+      { "type": "value", "data": [{ "value": "completeness", "count": 11 }] }
+    ],
+    "dataqualitytype": [
+      {
+        "type": "value",
+        "data": [
+          { "value": "attribute", "count": 6 },
+          { "value": "relationship", "count": 5 }
+        ]
+      }
+    ]
+  }
+}

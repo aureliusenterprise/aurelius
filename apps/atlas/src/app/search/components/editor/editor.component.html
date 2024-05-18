@@ -1,0 +1,65 @@
+<ng-container navigation>
+  <div class="tabs is-centered is-fullwidth">
+    <ul>
+      <li [class.is-active]="currentTab === 'entity'">
+        <a (click)="currentTab = 'entity'">Entity</a>
+      </li>
+      <li [class.is-active]="currentTab === 'history'">
+        <a (click)="currentTab = 'history'">History</a>
+      </li>
+    </ul>
+  </div>
+</ng-container>
+<ng-container>
+  <ng-container
+    *ngTemplateOutlet="currentTab === 'entity' ? entity : history"
+  ></ng-container>
+</ng-container>
+<ng-container footer>
+  <div *ngIf="currentTab === 'entity'" class="buttons" class="mt-6">
+    <ng-container *ngIf="deleteAllowed$ | async">
+      <a
+        models4insight-holdable
+        [holdTime]="3"
+        (held)="deleteEntity($event)"
+        class="button is-danger mr-3"
+        [class.is-loading]="isDeletingEntity$ | async"
+      >
+        Delete
+      </a>
+    </ng-container>
+    <a
+      class="button is-success"
+      [class.is-loading]="isUpdatingEntity$ | async"
+      (click)="saveEntity()"
+    >
+      Save
+    </a>
+  </div>
+</ng-container>
+
+<ng-template #entity>
+  <div *ngIf="editTypeAllowed$ | async" class="field">
+    <models4insight-type-select class="grid"></models4insight-type-select>
+  </div>
+  <ng-container
+    *models4insight-dynamic-component="editorComponent$ | async"
+  ></ng-container>
+</ng-template>
+
+<ng-template #history>
+  <div *ngFor="let audit of audits$ | async" class="media">
+    <div class="media-content">
+      <div class="content">
+        <h6 class="title is-6">{{ audit.action | translate }}</h6>
+        <p>
+          <small>
+            <span>{{ audit.user }}</span>
+            ·
+            <span>{{ audit.timestamp | date: 'yyyy-MM-dd HH:mm:ss' }}</span>
+          </small>
+        </p>
+      </div>
+    </div>
+  </div>
+</ng-template>

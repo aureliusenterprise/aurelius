@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "alerts": [],
+    "warnings": [],
+    "precision": 2,
+    "page": { "current": 1, "total_pages": 1, "total_results": 9, "size": 100 },
+    "engine": { "name": "atlas-dev-gov-quality", "type": "default" },
+    "request_id": "MfSNHkMlQJu1EwhGi-1idw"
+  },
+  "results": [
+    {
+      "result": { "raw": "This entity is missing a definition" },
+      "dataqualityruledescription": {
+        "raw": "Definition should not be empty"
+      },
+      "dataqualityruledimension": { "raw": "completeness" },
+      "name": { "raw": "Attribute - Definition" },
+      "compliant": { "raw": "0" },
+      "guid": { "raw": "3297f990-f16d-4320-9a14-e00d9235154b" },
+      "_meta": {
+        "engine": "atlas-dev-gov-quality",
+        "score": 1.0,
+        "id": "doc-6290d9f2dd895e02b89748d2"
+      },
+      "id": { "raw": "doc-6290d9f2dd895e02b89748d2" }
+    }
+  ],
+  "facets": {
+    "dataqualityruledimension": [
+      { "type": "value", "data": [{ "value": "completeness", "count": 9 }] }
+    ],
+    "dataqualitytype": [
+      {
+        "type": "value",
+        "data": [
+          { "value": "attribute", "count": 5 },
+          { "value": "relationship", "count": 4 }
+        ]
+      }
+    ]
+  }
+}

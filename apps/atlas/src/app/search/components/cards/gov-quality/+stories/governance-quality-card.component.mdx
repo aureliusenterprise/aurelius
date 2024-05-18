@@ -1,0 +1,50 @@
+import { RouterTestingModule } from '@angular/router/testing';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {
+  AtlasApiModule,
+  ClassificationDefAPIService,
+  ElasticApiModule,
+  EntityAPIService,
+  TypeDefAPIService,
+} from '@models4insight/atlas/api';
+import { AuthenticationModule } from '@models4insight/authentication';
+import { HttpModule } from '@models4insight/http';
+import { ReduxModule } from '@models4insight/redux';
+import { TaskManagerModule } from '@models4insight/task-manager';
+import { TranslateModule } from '@ngx-translate/core';
+import { Canvas, Meta, Story } from '@storybook/blocks';
+import { moduleMetadata } from '@storybook/angular';
+import { Mermaid } from 'mdx-mermaid/Mermaid';
+import { environment } from '../../../../../../environments/environment';
+import { DetailsCardComponent } from '../../details-card.component';
+import { DetailsCardModule } from '../../details-card.module';
+import { SHOW_GOV_QUALITY } from '../../config';
+import { GovernanceQualityCardModule } from '../governance-quality-card.module';
+import { MockEntityAPIService } from './entity-api.mock.service';
+import SEARCH_RESULT from './search-result.json';
+import { MockTypeDefAPIService } from './type-def-api.mock.service';
+import * as GovernanceQualityCardComponentStories from './governance-quality-card.component.stories';
+
+<Meta of={GovernanceQualityCardComponentStories} />
+
+# GovernanceQualityDetailsCardComponent
+
+This is the details card template for governance quality results, as well as inheriting types.
+
+## Primary
+
+Please find an example of a governance quality details card below.
+
+<Canvas>
+  <Story of={GovernanceQualityCardComponentStories.Primary} />
+</Canvas>
+
+### Content
+
+A governance quality details card displays the following content:
+
+| Content    | Description                                                                   |
+| ---------- | ----------------------------------------------------------------------------- |
+| Title      | The name of this entity.                                                      |
+| Type       | The type of this entity in the data governance model.                         |
+| Compliance | Whether or not the related entity is compliant with this data governance rule |

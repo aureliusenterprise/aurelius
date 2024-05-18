@@ -1,0 +1,17 @@
+<ng-content></ng-content>
+
+<!-- Load the next page whenever this element enters the viewport -->
+<p
+  *ngIf="!(allResultsLoaded$ | async)"
+  models4insight-intersection-observer
+  (intersection)="nextPage()"
+>
+  <!-- Have a clickable button as a fallback in case the intersection observer API is not available -->
+  <button
+    class="button is-fullwidth"
+    [class.is-loading]="isLoadingPage$ | async"
+    (click)="nextPage()"
+  >
+    Load next page...
+  </button>
+</p>

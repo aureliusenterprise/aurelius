@@ -1,0 +1,94 @@
+<div class="card">
+  <div class="card-content">
+    <div class="media">
+      <div class="media-content">
+        <p class="title is-4">
+          Data governance organization
+        </p>
+      </div>
+      <a class="icon has-text-info" (click)="activateInfoModal()">
+        <fa-icon [icon]="faInfoCircle" size="lg"></fa-icon>
+      </a>
+    </div>
+    <article class="media">
+      <div class="media-left">
+        <span class="icon has-text-primary">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </span>
+      </div>
+      <div class="media-content">
+        <div class="content">
+          <h6 class="title is-6">
+            I'm searching for the data governance responsibilities of a specific
+            person
+          </h6>
+          <p>
+            Search for the name or email address of the person you are looking
+            for.
+          </p>
+        </div>
+        <nav class="level is-mobile">
+          <models4insight-simple-search-input
+            [context]="searchBarContext"
+            (querySubmitted)="onQuerySubmitted($event)"
+          ></models4insight-simple-search-input>
+        </nav>
+      </div>
+    </article>
+    <article class="media">
+      <div class="media-left">
+        <span class="icon has-text-primary">
+          <fa-icon [icon]="faCompass"></fa-icon>
+        </span>
+      </div>
+      <div class="media-content">
+        <div class="content">
+          <h6 class="title is-6">
+            I'm exploring who has data governance responsibilities within my
+            organization
+          </h6>
+          <p>
+            Click the button below to see a list of all people with data
+            governance responsibilities.
+          </p>
+        </div>
+        <nav class="level is-mobile">
+          <a class="button is-success" (click)="directToPeople()">
+            <span class="icon is-small">
+              <fa-icon [icon]="faUser"></fa-icon>
+            </span>
+            <span>Start browsing people</span>
+          </a>
+        </nav>
+      </div>
+    </article>
+    <article class="media">
+      <div class="media-left">
+        <span class="icon has-text-primary">
+          <fa-icon [icon]="faCompass"></fa-icon>
+        </span>
+      </div>
+      <div class="media-content">
+        <div class="content">
+          <h6 class="title is-6">
+            I'm exploring my data governance responsibilities
+          </h6>
+          <p>
+            Click the button below to look up your data governance
+            responsibilities.
+          </p>
+        </div>
+        <nav class="level is-mobile">
+          <a class="button is-link" (click)="directToUser()">
+            <span class="icon is-small">
+              <fa-icon [icon]="faUser"></fa-icon>
+            </span>
+            <span>Start browsing your responsibilities</span>
+          </a>
+        </nav>
+      </div>
+    </article>
+  </div>
+</div>
+
+<models4insight-governance-responsibilities-info-modal></models4insight-governance-responsibilities-info-modal>

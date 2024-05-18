@@ -1,0 +1,67 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { Controls, Canvas, Meta, Story } from '@storybook/blocks';
+import { moduleMetadata } from '@storybook/angular';
+import { Mermaid } from 'mdx-mermaid/Mermaid';
+import { TypeNameComponent } from '../type-name.component';
+import { TypeNameModule } from '../type-name.module';
+import * as TypeNameComponentStories from './type-name.component.stories';
+
+<Meta of={TypeNameComponentStories} />
+
+# TypeNameComponent
+
+This component displays type names, type aliases and associated icons.
+
+<Controls />
+
+## Primary
+
+Given a `typeName`, the `models4insight-type-name` component displays the type name in human readable format as well as its associated icon.
+Icons are colored according to the position of the given type in the data governance meta model.
+
+The following colors are supported:
+
+| Name      | Color   |
+| --------- | ------- |
+| Business  | #ffa500 |
+| Technical | #0000ff |
+| Process   | #00d1b2 |
+| Meta      | #b5b5b5 |
+
+<Canvas>
+  <Story of={TypeNameComponentStories.Primary} />
+</Canvas>
+
+### Type alias
+
+The display name of the given type can be overridden by setting the `typeAlias` input.
+
+<Canvas>
+  <Story of={TypeNameComponentStories.TypeAlias} />
+</Canvas>
+
+### Show base type
+
+When a type alias is defined, it is possible to also show the base type by setting the `showBaseTypeName` input to `true`.
+
+<Canvas>
+  <Story of={TypeNameComponentStories.ShowBaseType} />
+</Canvas>
+
+### Hide icon
+
+It is possible to hide the icon by setting the `showIcon` input to `false`.
+When hiding the icon, only the type name or type alias and optional base type name are shown.
+
+<Canvas>
+  <Story of={TypeNameComponentStories.HideIcon} />
+</Canvas>
+
+### Hide type name
+
+It is also possible to only show the icon by setting `showTypeName` to `false`.
+Note that it is still required to set the `typeName` input in this case, since it is used to identify the icon.
+
+<Canvas>
+  <Story of={TypeNameComponentStories.HideTypeName} />
+</Canvas>

@@ -1,0 +1,48 @@
+{
+  "derivedperson": { "raw": ["Dionysia van Rijn", "Diane van Zanten"] },
+  "derivedfield": { "raw": ["FUNC_ORG"] },
+  "dqscorecnt_overall": { "raw": 2.0 },
+  "deriveddataattribute": { "raw": [] },
+  "dqscorecnt_timeliness": { "raw": 0.0 },
+  "deriveddataentity": { "raw": ["Organization"] },
+  "supertypenames": {
+    "raw": ["Referenceable", "m4i_referenceable", "m4i_data_attribute"]
+  },
+  "definition": {
+    "raw": "This attribute describes the dotted-line reporting, the subject matter relationship between a supervisor and an employee. The functionel lead covers mainly strategic steering of the profession and setting the rules for how the business is ran.",
+    "snippet": "This attribute describes the dotted-line reporting, the subject matter relationship between a"
+  },
+  "dqscore_accuracy": { "raw": 0.892 },
+  "dqscorecnt_validity": { "raw": 0.0 },
+  "dqscore_timeliness": { "raw": 0.0 },
+  "derivedcollection": { "raw": [] },
+  "dqscorecnt_accuracy": { "raw": 1.0 },
+  "dqscore_validity": { "raw": 0.0 },
+  "derivedsystem": { "raw": [] },
+  "deriveddataset": { "raw": [] },
+  "dqscore_uniqueness": { "raw": 0.0 },
+  "breadcrumbname": {
+    "raw": ["Personnel and Organization", "Organization"]
+  },
+  "dqscorecnt_completeness": { "raw": 1.0 },
+  "breadcrumbguid": {
+    "raw": [
+      "e6a315cd-a3c5-43e4-83a3-05ff9a01f8aa",
+      "6480a6eb-6344-4c6b-97bf-01c42affb41a"
+    ]
+  },
+  "deriveddatadomain": { "raw": ["Personnel and Organization"] },
+  "dqscore_overall": { "raw": 0.946 },
+  "name": { "raw": "Functional Organization" },
+  "guid": { "raw": "b1046ab7-4e72-415a-8fbc-0102368f6c15" },
+  "dqscore_completeness": { "raw": 1.0 },
+  "breadcrumbtype": { "raw": ["m4i_data_domain", "m4i_data_entity"] },
+  "dqscorecnt_uniqueness": { "raw": 0.0 },
+  "typename": { "raw": "m4i_data_attribute" },
+  "_meta": {
+    "engine": "atlas-dev",
+    "score": 1.0,
+    "id": "b1046ab7-4e72-415a-8fbc-0102368f6c15"
+  },
+  "id": { "raw": "b1046ab7-4e72-415a-8fbc-0102368f6c15" }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Models4Insight",
+  "short_name": "M4I",
+  "theme_color": "#F7F7F7",
+  "background_color": "#F7F7F7",
+  "scope": "/platform/",
+  "start_url": "/platform/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "assets/m4i-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

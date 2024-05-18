@@ -1,0 +1,22 @@
+<div
+  *ngIf="searchResult$ | async as searchResult"
+  class="media"
+  (mousedown)="preventBlur($event)"
+>
+  <div class="media-content">
+    <h6 class="title is-6">
+      <a (click)="onClicked()">
+        {{ searchResult.name?.raw }}
+      </a>
+    </h6>
+    <div class="block">
+      <models4insight-bread-crumbs></models4insight-bread-crumbs>
+    </div>
+  </div>
+  <div class="media-right">
+    <models4insight-type-name
+      [typeAlias]="searchResult.typealias?.raw"
+      [typeName]="searchResult.typename?.raw"
+    ></models4insight-type-name>
+  </div>
+</div>

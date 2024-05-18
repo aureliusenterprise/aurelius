@@ -1,0 +1,129 @@
+<ng-container *ngIf="project$ | async as project">
+  <ng-container *ngIf="latest$ | async as latest">
+    <ng-container *ngIf="latest.length > 0; else welcome">
+      <h2 class="title is-2">Home</h2>
+      <div class="level">
+        <div class="level-left">
+          <h3 class="level-item title is-3">Activity over time</h3>
+        </div>
+        <div class="level-right"></div>
+      </div>
+      <models4insight-calendar-heatmap
+        class="level-item"
+        [data]="heatmapData$ | async"
+        [domain]="heatmapDomain$ | async"
+        [legend]="heatmapLegend$ | async"
+        [range]="heatmapRange$ | async"
+        [start]="heatmapStart$ | async"
+        [subdomain]="heatmapSubdomain$ | async"
+      ></models4insight-calendar-heatmap>
+      <div class="level">
+        <div class="level-left">
+          <h3 class="level-item title is-3">Recent activity</h3>
+        </div>
+        <div class="level-right">
+          <a
+            [routerLink]="['../../../retrieve']"
+            class="level-item button is-link"
+            >View all activity</a
+          >
+        </div>
+      </div>
+      <models4insight-recent-activity-table
+        [data]="latest"
+        [itemsPerPage]="itemsPerPage"
+        [enableTableContainer]="false"
+      ></models4insight-recent-activity-table>
+    </ng-container>
+  </ng-container>
+</ng-container>
+<ng-template #welcome>
+  <h2 class="title is-2">Getting Started</h2>
+  <div class="subtitle is-5">
+    Welcome to your new project! Please follow these steps to get started.
+  </div>
+  <form [formGroup]="gettingStartedForm" (ngSubmit)="onDone()">
+    <ol>
+      <div class="section">
+        <li class="title is-size-3">
+          <h3 class="title">Set up a branch</h3>
+          <div class="content has-text-weight-normal is-size-6">
+            Please choose a name for the branch to which you will upload your
+            first model.
+            <a
+              class="tooltip is-tooltip-right"
+              data-tooltip="Branches help organize your model. Click to read more."
+            >
+              <span class="icon is-small">
+                <fa-icon [icon]="faQuestionCircle"></fa-icon>
+              </span>
+            </a>
+          </div>
+          <div class="field">
+            <models4insight-branch-select
+              class="has-text-weight-normal is-size-6"
+              [context]="branchSelectContext"
+              [control]="gettingStartedForm.controls['branch']"
+              [isSubmitted]="isSubmitted"
+              [withCreateBranch]="true"
+            ></models4insight-branch-select>
+          </div>
+        </li>
+      </div>
+      <div class="section">
+        <li class="title is-3">
+          <h3 class="title">Upload a model</h3>
+          <div class="content has-text-weight-normal is-size-6">
+            Next, please choose a model file from your computer which will be
+            your initial commit to the repository.
+          </div>
+          <div class="field">
+            <models4insight-file-dropzone
+              class="has-text-weight-normal is-size-6"
+              [context]="{
+                title: 'Model upload'
+              }"
+              [control]="gettingStartedForm.controls['file']"
+              [isSubmitted]="isSubmitted"
+            ></models4insight-file-dropzone>
+          </div>
+        </li>
+      </div>
+      <div class="section">
+        <li class="title is-3">
+          <h3 class="title">Add a comment</h3>
+          <div class="content has-text-weight-normal is-size-6">
+            Please describe the model you're uploading. These descriptions will
+            help you keep track of the differences in your model as you change
+            it over time.
+          </div>
+          <div class="field">
+            <models4insight-description-input
+              [context]="descriptionContext"
+              [control]="gettingStartedForm.controls['comment']"
+              [isSubmitted]="isSubmitted"
+            ></models4insight-description-input>
+          </div>
+        </li>
+      </div>
+      <div class="section">
+        <li class="title is-3">
+          <h3 class="title">Complete the setup</h3>
+          <div class="content has-text-weight-normal is-size-6">
+            Once you've completed all the steps, press the button below to
+            finalize your project setup!
+          </div>
+          <div class="field">
+            <button
+              type="submit"
+              class="button is-large is-success is-fullwidth"
+              [ngClass]="{ 'is-loading': isLoading }"
+            >
+              Done
+            </button>
+          </div>
+        </li>
+      </div>
+    </ol>
+  </form>
+</ng-template>

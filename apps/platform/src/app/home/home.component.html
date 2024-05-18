@@ -1,0 +1,94 @@
+<div class="hero is-primary is-bold">
+  <div class="hero-body has-margin-top-md has-margin-bottom-md has-text-light">
+    <div class="container">
+      <div class="columns is-vcentered">
+        <div *ngIf="(credentials$ | async) as credentials" class="column">
+          <h1 class="title is-spaced is-1 has-text-light">
+            Welcome, {{ credentials.username || credentials.email }}
+          </h1>
+        </div>
+        <div
+          *ngIf="(lastVisitedRoute$ | async) as lastVisitedRoute"
+          class="column"
+        >
+          <a
+            [routerLink]="lastVisitedRoute.path"
+            [queryParams]="lastVisitedRoute.queryParams"
+            type="button"
+            class="title button is-large is-fullwidth is-primary is-inverted is-outlined"
+          >
+            Continue working
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="section">
+  <div class="container">
+    <ng-container *ngIf="(skipWelcome$ | async) as isWelcome; else welcome">
+      <div class="field">
+        <h2 class="title is-2">Your favorite projects</h2>
+        <ng-container
+          *ngIf="
+            (favoriteProjects$ | async) as favoriteProjects;
+            else noFavorites
+          "
+        >
+          <ng-container *ngIf="favoriteProjects.length > 0; else noFavorites">
+            <models4insight-sortable-table
+              #favoriteProjectsTable
+              [config]="projectsTableConfig"
+              [data]="favoriteProjects"
+              [itemsPerPage]="5"
+              [rowsSelectable]="false"
+            ></models4insight-sortable-table>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div class="field">
+        <h2 class="title is-2">Your recent projects</h2>
+        <ng-container
+          *ngIf="(recentProjects$ | async) as recentProjects; else noRecents"
+        >
+          <ng-container *ngIf="recentProjects.length > 0; else noRecents">
+            <models4insight-sortable-table
+              #recentProjectsTable
+              [config]="projectsTableConfig"
+              [data]="recentProjects"
+              [itemsPerPage]="5"
+              [rowsSelectable]="false"
+            ></models4insight-sortable-table>
+          </ng-container>
+        </ng-container>
+      </div>
+      <section class="section">
+        <div class="level">
+          <a class="level-item button is-medium is-text" (click)="showWelcome()"
+            >Show the welcome screen</a
+          >
+        </div>
+      </section>
+    </ng-container>
+  </div>
+</section>
+<ng-template #welcome>
+  <router-outlet></router-outlet>
+  <section class="section">
+    <div class="level">
+      <a class="level-item button is-medium is-text" (click)="iGotIt()"
+        >Thanks, I got it.</a
+      >
+    </div>
+  </section>
+</ng-template>
+<ng-template #noFavorites>
+  <section class="section is-light has-text-centered">
+    <h5 class="title is-5">You do not have any favorite projects.</h5>
+  </section>
+</ng-template>
+<ng-template #noRecents>
+  <section class="section is-light has-text-centered">
+    <h5 class="title is-5">You do not have any recent projects.</h5>
+  </section>
+</ng-template>

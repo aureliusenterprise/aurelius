@@ -1,0 +1,13 @@
+.quality-dimension {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .icon {
+    margin-right: 0.33rem;
+  }
+}
+
+.block:not(:last-child) {
+  margin-bottom: 1rem;
+}

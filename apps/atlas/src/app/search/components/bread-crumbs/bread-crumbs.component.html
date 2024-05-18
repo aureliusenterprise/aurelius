@@ -1,0 +1,54 @@
+<ng-container *ngIf="breadcrumbs$ | async as breadcrumbs">
+  <ng-container *ngIf="breadcrumbs.length">
+    <nav
+      class="breadcrumb is-small has-arrow-separator"
+      aria-label="breadcrumbs"
+    >
+      <ul>
+        <ng-container *ngFor="let breadcrumb of breadcrumbs">
+          <li [class.is-active]="breadcrumb.guid === activeGuid">
+            <a (click)="directToNewEntity(breadcrumb.guid)" class="truncate">
+              <span
+                class="icon is-small"
+                [title]="breadcrumb.typeName | translate"
+              >
+                <fa-icon
+                  [ngClass]="breadcrumb.class"
+                  [icon]="breadcrumb.icon"
+                ></fa-icon>
+              </span>
+              <span [title]="breadcrumb.name">
+                {{ breadcrumb.name }}
+              </span>
+            </a>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="showLast">
+          <li
+            *ngIf="searchResult$ | async as searchResult"
+            [class.is-active]="searchResult.guid?.raw === activeGuid"
+          >
+            <a
+              (click)="directToNewEntity(searchResult.guid?.raw)"
+              class="truncate"
+            >
+              <span
+                *ngIf="iconsByType[searchResult.typename?.raw] as iconDef"
+                class="icon is-small"
+                [title]="searchResult.typename?.raw | translate"
+              >
+                <fa-icon
+                  [ngClass]="iconDef.classIcon"
+                  [icon]="iconDef.icon"
+                ></fa-icon>
+              </span>
+              <span [title]="searchResult.name?.raw">
+                {{ searchResult.name?.raw }}
+              </span>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </nav>
+  </ng-container>
+</ng-container>

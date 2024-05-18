@@ -1,0 +1,161 @@
+<ng-container *ngIf="currentContext$ | async as context">
+  <div class="field has-addons">
+    <p class="control"><a class="button is-static is-medium"> Template </a></p>
+    <p class="control is-expanded">
+      <span class="select is-fullwidth is-medium">
+        <select
+          id="templateSelect"
+          [value]="selectedTemplate$ | async"
+          (change)="selectTemplate($event)"
+        >
+          <option [value]="ConflictResolutionTemplateEnum.REPOSITORY_ONLY"
+            >Keep repository</option
+          >
+          <option [value]="ConflictResolutionTemplateEnum.UPLOAD_ONLY"
+            >Replace repository</option
+          >
+          <option [value]="ConflictResolutionTemplateEnum.UNION_REPOSITORY"
+            >Union keep repository</option
+          >
+          <option [value]="ConflictResolutionTemplateEnum.UNION_UPLOAD"
+            >Union replace repository</option
+          >
+          <option value="manual">Manual</option
+          >
+        </select>
+      </span>
+    </p>
+    <p class="control">
+      <button
+        class="button is-primary is-medium"
+        (click)="applySelectedTemplate()"
+        [disabled]="(selectedTemplate$ | async) === 'manual'"
+      >
+        Apply
+      </button>
+    </p>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <ng-container *ngIf="conflicts$ | async as conflicts">
+        <div class="field">
+          <cdk-virtual-scroll-viewport
+            itemSize="105"
+            (scrolledIndexChange)="nextBatch(conflicts.length)"
+          >
+            <div
+              *cdkVirtualFor="
+                let conflict of conflicts;
+                let i = index;
+                trackBy: trackByIndex
+              "
+              (click)="selectedConflict = conflict"
+              class="box"
+              [ngClass]="{
+                'has-background-link': conflict === (selectedConflict$ | async)
+              }"
+            >
+              <div class="level is-mobile">
+                <div class="level-left">
+                  <span class="is-size-7"
+                    ><strong
+                      [ngClass]="{
+                        'has-text-white':
+                          conflict === (selectedConflict$ | async)
+                      }"
+                      >#{{ i + 1 }}</strong
+                    ></span
+                  >
+                </div>
+                <div class="level-right">
+                  <span class="is-size-7">
+                    <strong>
+                      <span
+                        *ngIf="!conflict.resolution"
+                        class="has-text-warning"
+                      >
+                        Unresolved
+                      </span>
+                      <span
+                        *ngIf="conflict.resolution"
+                        class="has-text-success"
+                      >
+                        {{ conflict.resolution }}
+                      </span>
+                    </strong>
+                  </span>
+                </div>
+              </div>
+              <div class="content">
+                <p>
+                  <span class="is-size-7"
+                    ><strong
+                      [ngClass]="{
+                        'has-text-white':
+                          conflict === (selectedConflict$ | async)
+                      }"
+                      >{{ classifyConflict(conflict) }}</strong
+                    ></span
+                  >
+                </p>
+              </div>
+            </div>
+          </cdk-virtual-scroll-viewport>
+        </div>
+      </ng-container>
+      <div class="level">
+        <div class="level-item">
+          <div class="has-text-centered">
+            <p class="heading">Number of conflicts</p>
+            <p class="title">{{ context.conflictSet.difResult.noConflicts }}</p>
+          </div>
+        </div>
+        <div class="level-item">
+          <div class="has-text-centered">
+            <p class="heading">Resolved Conflicts</p>
+            <p
+              class="title"
+              [ngClass]="
+                (!(appliedTemplate$ | async) ||
+                  (appliedTemplate$ | async) === 'manual') &&
+                (resolvedConflictsCnt$ | async) <
+                  context.conflictSet.difResult.cnt
+                  ? 'has-text-danger'
+                  : 'has-text-success'
+              "
+            >
+              {{
+                (appliedTemplate$ | async) &&
+                (appliedTemplate$ | async) !== 'manual'
+                  ? 'Auto'
+                  : (resolvedConflictsCnt$ | async)
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <p class="control is-expanded">
+          <button
+            class="button is-large is-fullwidth is-success"
+            [ngClass]="{ 'is-loading': isLoading$ | async }"
+            (click)="onResolveClicked()"
+          >
+            Resolve conflicts
+          </button>
+        </p>
+      </div>
+    </div>
+    <div
+      *ngIf="selectedConflict$ | async as conflict"
+      class="column is-two-thirds"
+    >
+      <models4insight-conflict-details
+        [conflict]="conflict"
+        [context]="context"
+        (save)="handleSave(context, $event)"
+      >
+      </models4insight-conflict-details>
+    </div>
+  </div>
+</ng-container>

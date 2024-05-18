@@ -1,0 +1,33 @@
+.column {
+  min-width: 333px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+}
+
+.reset-search {
+  text-decoration: underline;
+}
+
+.dropdown-content {
+  min-width: 380px;
+}
+
+.level.is-expanded {
+  width: 100%;
+}
+
+models4insight-sorting {
+  width: 100%;
+}
+
+.cards {
+  max-height: 533px;
+  overflow-y: auto;
+}
+
+.columns {
+  margin: 0px;
+}

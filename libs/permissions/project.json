@@ -1,0 +1,27 @@
+{
+  "name": "permissions",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/permissions/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/permissions"],
+      "options": {
+        "jestConfig": "libs/permissions/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/permissions/**/*.ts",
+          "libs/permissions/**/*.html"
+        ]
+      }
+    }
+  }
+}

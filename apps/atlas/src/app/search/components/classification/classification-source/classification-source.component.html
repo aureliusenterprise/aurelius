@@ -1,0 +1,29 @@
+<ng-container *ngIf="searchResult$ | async as searchResult; else loading">
+  <div *ngIf="!(isLoading$ | async); else loading" class="media">
+    <div class="media-content">
+      <h6 class="title is-6">
+        <a (click)="openDetails(searchResult.guid?.raw)">
+          {{ searchResult.name?.raw }}
+        </a>
+      </h6>
+      <div class="block">
+        <models4insight-bread-crumbs></models4insight-bread-crumbs>
+      </div>
+    </div>
+    <div class="media-right">
+      <models4insight-type-name
+        [typeAlias]="searchResult.typealias?.raw"
+        [typeName]="searchResult.typename?.raw"
+      ></models4insight-type-name>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loading>
+  <div class="media">
+    <div class="media-content">
+      <h6 class="title is-6">Loading...</h6>
+    </div>
+    <div class="loader"></div>
+  </div>
+</ng-template>

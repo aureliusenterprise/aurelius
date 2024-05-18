@@ -1,0 +1,121 @@
+{
+  "name": "consistency-metrics",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "schematics": {
+    "@nx/workspace:component": {
+      "style": "scss"
+    }
+  },
+  "sourceRoot": "apps/consistency-metrics/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/consistency-metrics",
+        "index": "libs/core/src/index.html",
+        "main": "apps/consistency-metrics/src/main.ts",
+        "polyfills": "apps/consistency-metrics/src/polyfills.ts",
+        "tsConfig": "apps/consistency-metrics/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/consistency-metrics/src/favicon.ico",
+          "apps/consistency-metrics/src/assets",
+          "apps/consistency-metrics/src/manifest.webmanifest",
+          {
+            "glob": "**/*",
+            "input": "libs/assets/src/assets",
+            "output": "/assets/"
+          }
+        ],
+        "styles": ["apps/consistency-metrics/src/styles.scss"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/consistency-metrics/src/environments/environment.ts",
+              "with": "apps/consistency-metrics/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            }
+          ],
+          "ngswConfigPath": "apps/consistency-metrics/ngsw-config.json"
+        },
+        "standalone": {
+          "fileReplacements": [
+            {
+              "replace": "apps/consistency-metrics/src/environments/environment.ts",
+              "with": "apps/consistency-metrics/src/environments/environment.standalone.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            }
+          ],
+          "ngswConfigPath": "apps/consistency-metrics/ngsw-config.json"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "consistency-metrics:build",
+        "host": "127.0.0.1",
+        "proxyConfig": "proxy.conf.json"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "consistency-metrics:build:production"
+        },
+        "development": {
+          "browserTarget": "consistency-metrics:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "builder": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "consistency-metrics:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/example/**/*.ts", "apps/example/**/*.html"]
+      }
+    },
+    "test": {
+      "builder": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/consistency-metrics"],
+      "options": {
+        "jestConfig": "apps/consistency-metrics/jest.config.js",
+        "tsConfig": "apps/consistency-metrics/tsconfig.spec.json",
+        "setupFile": "apps/consistency-metrics/src/test-setup.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

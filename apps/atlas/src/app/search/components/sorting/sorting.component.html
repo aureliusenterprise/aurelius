@@ -1,0 +1,30 @@
+<div class="field has-addons is-fullwidth">
+  <div class="control has-icons-left is-expanded">
+    <div class="select is-fullwidth">
+      <select [formControl]="sortBy">
+        <option value="_score">Relevance</option>
+        <ng-container *ngFor="let option of sortingOptions">
+          <option [value]="option">
+            <a class="dropdown-item">
+              {{ option | translate | titlecase }}
+            </a>
+          </option>
+        </ng-container>
+      </select>
+    </div>
+    <span class="icon is-small has-text-info is-left">
+      <fa-icon [icon]="sortingIcon"></fa-icon>
+    </span>
+  </div>
+  <span class="control">
+    <span (click)="toggleSortDirection()">
+      <a class="button is-info">
+        <span class="icon is-small">
+          <fa-icon
+            [icon]="sortDirection.value ? faSortDown : faSortUp"
+          ></fa-icon>
+        </span>
+      </a>
+    </span>
+  </span>
+</div>

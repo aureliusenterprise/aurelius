@@ -1,0 +1,48 @@
+<section class="hero is-primary is-bold">
+  <div class="hero-body has-margin-top-md has-margin-bottom-md">
+    <div class="container">
+      <div class="columns is-vcentered">
+        <div class="column">
+          <h1 class="title is-1 is-spaced has-text-light">Projects</h1>
+        </div>
+        <div class="column">
+          <a
+            type="button"
+            class="title button is-large is-fullwidth is-primary is-inverted is-outlined"
+            (click)="activateModal()"
+          >
+            Create a project
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section has-background-light">
+  <div class="container">
+    <!-- Projects Table -->
+    <div class="level">
+      <div class="level-left">
+        <h2 class="title is-2">Your projects</h2>
+      </div>
+      <div class="level-right">
+        <div class="field">
+          <models4insight-fuzzy-search-input
+            [context]="searchInputContext"
+            [searchItems]="projects$ | async"
+            [tokenizerConfig]="projectTokenizerConfig"
+            (suggestionsChanged)="updateSuggestedProjects($event)"
+          >
+          </models4insight-fuzzy-search-input>
+        </div>
+      </div>
+    </div>
+    <models4insight-sortable-table
+      [config]="projectsTableOptions"
+      [data]="filteredProjects$ | async"
+      [rowsSelectable]="false"
+    ></models4insight-sortable-table>
+  </div>
+</section>
+<!-- Modal: Create a project -->
+<models4insight-create-project-modal></models4insight-create-project-modal>

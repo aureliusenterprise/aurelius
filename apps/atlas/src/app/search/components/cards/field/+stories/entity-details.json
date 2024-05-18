@@ -1,0 +1,225 @@
+{
+  "referredEntities": {},
+  "entity": {
+    "typeName": "m4i_field",
+    "attributes": {
+      "archimateReference": [],
+      "replicatedTo": null,
+      "replicatedFrom": null,
+      "hasContent": null,
+      "steward": [],
+      "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org",
+      "source": [],
+      "datasets": [
+        {
+          "guid": "ac43827a-a5fc-4a7e-9b58-b997d848ffc4",
+          "typeName": "m4i_dataset",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v"
+          }
+        }
+      ],
+      "parentField": [],
+      "optionalField": null,
+      "name": "HIER_ORG",
+      "definition": null,
+      "attributes": [
+        {
+          "guid": "2c02cf84-fd12-4294-970a-30fab1017eff",
+          "typeName": "m4i_data_attribute",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--personnel-managed-by-ssc-and-local-branch-offices--hierarchical-organization"
+          }
+        },
+        {
+          "guid": "85b75e11-1e0a-42ac-be11-2e32d70e6432",
+          "typeName": "m4i_data_attribute",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--personnel-smd-fleet-initiated--hierarchical-organization"
+          }
+        },
+        {
+          "guid": "f95ce2d2-8572-418d-877b-dd55e4d580d4",
+          "typeName": "m4i_data_attribute",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--organization--hierarchical-organization"
+          }
+        }
+      ],
+      "fieldType": "x",
+      "childField": []
+    },
+    "guid": "c1c9216e-8ba6-417a-a45e-2d34782fe429",
+    "isIncomplete": false,
+    "provenanceType": 0,
+    "status": "ACTIVE",
+    "createdBy": "admin",
+    "updatedBy": "thijsfranck",
+    "createTime": 1649238422889,
+    "updateTime": 1650868548713,
+    "version": 0,
+    "relationshipAttributes": {
+      "ArchiMateReference": [],
+      "dataQuality": [
+        {
+          "guid": "0547eed2-9d1c-4d10-a667-e03a3a4a669f",
+          "typeName": "m4i_data_quality",
+          "entityStatus": "ACTIVE",
+          "displayText": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--46",
+          "relationshipType": "m4i_data_quality_field_assignment",
+          "relationshipGuid": "bb5d067a-0b10-45f2-882b-c634a9107ef7",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_quality_field_assignment"
+          }
+        },
+        {
+          "guid": "8e41b1b0-f9c2-472d-85b7-9b9bce1bd6e7",
+          "typeName": "m4i_data_quality",
+          "entityStatus": "ACTIVE",
+          "displayText": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--47",
+          "relationshipType": "m4i_data_quality_field_assignment",
+          "relationshipGuid": "23e6fb71-f1dc-40e6-9016-f8d044c2ea23",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_quality_field_assignment"
+          }
+        },
+        {
+          "guid": "c90e57ff-204d-45c0-8b1b-593cfb6e3146",
+          "typeName": "m4i_data_quality",
+          "entityStatus": "ACTIVE",
+          "displayText": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--45",
+          "relationshipType": "m4i_data_quality_field_assignment",
+          "relationshipGuid": "18d2409f-800c-4a7f-8ab4-bfc851eb45f3",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_quality_field_assignment"
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "guid": "2c02cf84-fd12-4294-970a-30fab1017eff",
+          "typeName": "m4i_data_attribute",
+          "entityStatus": "ACTIVE",
+          "displayText": "Hierarchical Organization",
+          "relationshipType": "m4i_data_attribute_field_assignment",
+          "relationshipGuid": "7cf7f569-b1ce-4c64-8665-d450f4cd96c6",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_attribute_field_assignment"
+          }
+        },
+        {
+          "guid": "f95ce2d2-8572-418d-877b-dd55e4d580d4",
+          "typeName": "m4i_data_attribute",
+          "entityStatus": "ACTIVE",
+          "displayText": "Hierarchical Organization",
+          "relationshipType": "m4i_data_attribute_field_assignment",
+          "relationshipGuid": "457e5925-0289-4eab-a009-c158f2000ff7",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_attribute_field_assignment"
+          }
+        },
+        {
+          "guid": "85b75e11-1e0a-42ac-be11-2e32d70e6432",
+          "typeName": "m4i_data_attribute",
+          "entityStatus": "ACTIVE",
+          "displayText": "Hierarchical Organization",
+          "relationshipType": "m4i_data_attribute_field_assignment",
+          "relationshipGuid": "9fd2121d-7d39-4d6e-af0c-bc79c1a5fa15",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_data_attribute_field_assignment"
+          }
+        }
+      ],
+      "datasets": [
+        {
+          "guid": "ac43827a-a5fc-4a7e-9b58-b997d848ffc4",
+          "typeName": "m4i_dataset",
+          "entityStatus": "ACTIVE",
+          "displayText": "xxvo_dm_persons_v",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "d949ebc3-a485-4c23-ad59-60e5f5d45edd",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        }
+      ],
+      "source": [
+        {
+          "guid": "b00468d4-f309-4553-b8f5-54c6b7648551",
+          "typeName": "m4i_source",
+          "entityStatus": "ACTIVE",
+          "displayText": "/po/FTE_Actuals/Data Dictionary_FTE Actuals.xlsm",
+          "relationshipType": "m4i_referenceable_source_assignment",
+          "relationshipGuid": "b9c251a2-c48f-421c-a2d4-fdb5f9eddb4e",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_referenceable_source_assignment"
+          }
+        }
+      ],
+      "parentField": [],
+      "meanings": [],
+      "childField": []
+    },
+    "classifications": [
+      {
+        "typeName": "key_data",
+        "entityGuid": "2c02cf84-fd12-4294-970a-30fab1017eff",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      },
+      {
+        "typeName": "low_risk",
+        "entityGuid": "2c02cf84-fd12-4294-970a-30fab1017eff",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      },
+      {
+        "typeName": "key_data",
+        "entityGuid": "f95ce2d2-8572-418d-877b-dd55e4d580d4",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      },
+      {
+        "typeName": "low_risk",
+        "entityGuid": "f95ce2d2-8572-418d-877b-dd55e4d580d4",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      },
+      {
+        "typeName": "key_data",
+        "entityGuid": "85b75e11-1e0a-42ac-be11-2e32d70e6432",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      },
+      {
+        "typeName": "low_risk",
+        "entityGuid": "85b75e11-1e0a-42ac-be11-2e32d70e6432",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      }
+    ],
+    "labels": [],
+    "proxy": false
+  }
+}

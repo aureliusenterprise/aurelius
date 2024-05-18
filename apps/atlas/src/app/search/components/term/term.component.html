@@ -1,0 +1,16 @@
+<div class="tags has-addons">
+  <span class="tag is-info">Term</span>
+  <ng-container *ngIf="!(isRetrievingTerm$ | async); else loading">
+    <span
+      *ngIf="term$ | async as term; else loading"
+      class="tag"
+      [models4insight-tooltip]="term.description || 'No description available'"
+      tooltipDirection="bottom"
+      >{{ term.name }}
+    </span>
+  </ng-container>
+</div>
+
+<ng-template #loading>
+  <span class="tag"><span class="loader"></span></span>
+</ng-template>

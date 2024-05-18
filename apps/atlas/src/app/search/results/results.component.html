@@ -1,0 +1,47 @@
+<ng-container *ngIf="data$ | async as data">
+  <ng-container *ngIf="data.length; else noData">
+    <div class="columns">
+      <div id="filter-column" class="column is-one-third">
+        <div class="box filter-box">
+          <models4insight-filter></models4insight-filter>
+        </div>
+      </div>
+      <div class="column">
+        <div class="box results-box">
+          <h6 class="title is-6">{{ totalResults$ | async }} results</h6>
+          <div class="results-container">
+            <models4insight-infinite-scroll-container>
+              <div
+                *ngFor="let entity of data; trackBy: trackByGuid"
+                class="column"
+              >
+                <models4insight-details-card [searchResult]="entity">
+                </models4insight-details-card>
+              </div>
+            </models4insight-infinite-scroll-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-template #noData>
+  <div class="card">
+    <div class="card-content">
+      <div class="media">
+        <div class="media-content">
+          <p class="title is-4">No results found.</p>
+        </div>
+      </div>
+      <article class="media">
+        <div class="media-left"></div>
+        <div class="media-content">
+          <div class="content">
+            <h6 class="title is-6">Please, try to make another query.</h6>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</ng-template>

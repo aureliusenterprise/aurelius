@@ -1,0 +1,28 @@
+<models4insight-modal [context]="modalContext">
+  <div class="content">
+    <p>
+      The data governance model captures various kinds of organizational roles
+      with regards to data governance:
+    </p>
+    <div class="block">
+      <models4insight-sortable-table-shell
+        [config]="tableConfig"
+        [data]="tableData"
+        [rowsSelectable]="false"
+      >
+        <ng-template let-rowData>
+          <td>
+            <span
+              class="icon is-small business"
+              [title]="rowData.typeName | translate"
+            >
+              <fa-icon [icon]="rowData.icon"></fa-icon>
+            </span>
+          </td>
+          <th scope="row">{{ rowData.typeName | translate }}</th>
+          <td>{{ rowData.description }}</td>
+        </ng-template>
+      </models4insight-sortable-table-shell>
+    </div>
+  </div>
+</models4insight-modal>

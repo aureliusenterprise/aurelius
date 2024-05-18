@@ -1,0 +1,26 @@
+<ng-container *ngIf="maxSeverity">
+  <a
+    class="icon tooltip is-tooltip-left is-tooltip-multiline"
+    [attr.data-tooltip]="tooltip"
+    [ngClass]="{
+      'has-text-danger': maxSeverity === ValidationSeverityType.ERROR,
+      'has-text-warning': maxSeverity === ValidationSeverityType.WARNING,
+      'has-text-info': maxSeverity === ValidationSeverityType.INFO
+    }"
+  >
+    <fa-icon
+      [icon]="
+        maxSeverity === ValidationSeverityType.ERROR
+          ? faExclamationCircle
+          : maxSeverity === ValidationSeverityType.WARNING
+          ? faExclamationTriangle
+          : faInfoCircle
+      "
+    ></fa-icon>
+  </a>
+</ng-container>
+<ng-container *ngIf="!maxSeverity">
+  <span class="icon" class="has-text-success">
+    <fa-icon [icon]="faCheck"></fa-icon>
+  </span>
+</ng-container>

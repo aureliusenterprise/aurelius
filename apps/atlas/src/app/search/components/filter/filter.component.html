@@ -1,0 +1,21 @@
+<ng-container
+  *ngIf="
+    filters$ | async | keyvalue: preserveKeyOrder as filters;
+    else noFilters
+  "
+>
+  <ng-container *ngIf="filters.length > 0; else noFilters">
+    <ng-container *ngFor="let filter of filters">
+      <models4insight-facet
+        *ngIf="filter.value.length > 0"
+        [facet]="filter"
+      ></models4insight-facet>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-template #noFilters>
+  <div class="content">
+    <p class="is-italic has-text-centered">No filters available</p>
+  </div>
+</ng-template>

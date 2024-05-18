@@ -1,0 +1,26 @@
+<div class="under-navbar">
+  <models4insight-hero title="Atlas">
+    <ng-container after-title>
+      <div class="level is-mobile">
+        <div class="level-item">
+          <models4insight-simple-search-input
+            class="input-bar"
+            [context]="searchBarContext"
+            [query]="query$ | async"
+            (querySubmitted)="onQuerySubmitted($event)"
+          ></models4insight-simple-search-input>
+        </div>
+        <div
+          *models4insight-keycloak-role-permission="'DATA_STEWARD'"
+          class="level-item is-narrow"
+        >
+          <a class="button is-info" (click)="redirectToEditor()">
+            <span class="icon">
+              <fa-icon [icon]="faPlus"></fa-icon>
+            </span>
+          </a>
+        </div>
+      </div>
+    </ng-container>
+  </models4insight-hero>
+</div>

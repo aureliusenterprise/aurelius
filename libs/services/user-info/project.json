@@ -1,0 +1,27 @@
+{
+  "name": "services-user-info",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/services/user-info/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/services/user-info"],
+      "options": {
+        "jestConfig": "libs/services/user-info/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/services/user-info/**/*.ts",
+          "libs/services/user-info/**/*.html"
+        ]
+      }
+    }
+  }
+}

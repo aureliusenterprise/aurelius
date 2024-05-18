@@ -1,0 +1,46 @@
+{
+  "referredEntities": {},
+  "entity": {
+    "typeName": "m4i_gov_data_quality",
+    "attributes": {
+      "owner": null,
+      "archimateReference": [],
+      "expression": "completeness('name')",
+      "replicatedTo": null,
+      "userDescription": null,
+      "replicatedFrom": null,
+      "qualifiedName": "m4i_data_domain--name",
+      "displayName": null,
+      "description": null,
+      "active": true,
+      "source": [],
+      "ruleDescription": "name is not None and is not empty",
+      "nonCompliantMessage": "This entity is missing a name",
+      "ruleType": "attribute",
+      "name": "m4i_data_domain--name",
+      "compliantMessage": "This entity has a name",
+      "id": 1,
+      "qualityDimension": "completeness",
+      "expressionVersion": "1"
+    },
+    "guid": "789db638-3aef-41f0-9bce-773f368f85b3",
+    "isIncomplete": false,
+    "status": "ACTIVE",
+    "createdBy": "atlas",
+    "updatedBy": "atlas",
+    "createTime": 1653658126722,
+    "updateTime": 1653658126722,
+    "version": 0,
+    "relationshipAttributes": {
+      "inputToProcesses": [],
+      "pipeline": null,
+      "schema": [],
+      "ArchiMateReference": [],
+      "model": null,
+      "source": [],
+      "meanings": [],
+      "outputFromProcesses": []
+    },
+    "labels": []
+  }
+}

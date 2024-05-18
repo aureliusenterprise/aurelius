@@ -1,0 +1,117 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "allowJs": true,
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@models4insight/atlas/api": [
+        "libs/atlas/api/src/index.ts"
+      ],
+      "@models4insight/authentication": [
+        "libs/authentication/src/index.ts"
+      ],
+      "@models4insight/components": [
+        "libs/components/src/index.ts"
+      ],
+      "@models4insight/core": [
+        "libs/core/src/index.ts"
+      ],
+      "@models4insight/directives": [
+        "libs/directives/src/index.ts"
+      ],
+      "@models4insight/google-analytics": [
+        "libs/google-analytics/src/index.ts"
+      ],
+      "@models4insight/http": [
+        "libs/http/src/index.ts"
+      ],
+      "@models4insight/i18n": [
+        "libs/i18n/src/index.ts"
+      ],
+      "@models4insight/logger": [
+        "libs/logger/src/index.ts"
+      ],
+      "@models4insight/metamodel": [
+        "libs/metamodel/src/index.ts"
+      ],
+      "@models4insight/modelview": [
+        "libs/modelview/src/index.ts"
+      ],
+      "@models4insight/modelview2": [
+        "libs/modelview2/src/index.ts"
+      ],
+      "@models4insight/notifications": [
+        "libs/notifications/src/index.ts"
+      ],
+      "@models4insight/permissions": [
+        "libs/permissions/src/index.ts"
+      ],
+      "@models4insight/redux": [
+        "libs/redux/src/index.ts"
+      ],
+      "@models4insight/repository": [
+        "libs/repository/src/index.ts"
+      ],
+      "@models4insight/services/branch": [
+        "libs/services/branch/src/index.ts"
+      ],
+      "@models4insight/services/clickstream": [
+        "libs/services/clickstream/src/index.ts"
+      ],
+      "@models4insight/services/intersection-observer": [
+        "libs/services/intersection-observer/src/index.ts"
+      ],
+      "@models4insight/services/model": [
+        "libs/services/model/src/index.ts"
+      ],
+      "@models4insight/services/project": [
+        "libs/services/project/src/index.ts"
+      ],
+      "@models4insight/services/user-info": [
+        "libs/services/user-info/src/index.ts"
+      ],
+      "@models4insight/shell": [
+        "libs/shell/src/index.ts"
+      ],
+      "@models4insight/statistics": [
+        "libs/statistics/src/index.ts"
+      ],
+      "@models4insight/storybook": [
+        "libs/storybook/src/index.ts"
+      ],
+      "@models4insight/task-manager": [
+        "libs/task-manager/src/index.ts"
+      ],
+      "@models4insight/utils": [
+        "libs/utils/src/index.ts"
+      ],
+      "@models4insight/version": [
+        "libs/version/src/index.ts"
+      ],
+      "@models4insight/web-worker": [
+        "libs/web-worker/src/index.ts"
+      ],
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}

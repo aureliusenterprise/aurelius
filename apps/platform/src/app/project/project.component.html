@@ -1,0 +1,68 @@
+<ng-container *ngIf="project$ | async as project">
+  <models4insight-hero
+    [title]="project.name"
+    [subtitle]="project.documentation"
+  >
+    <ng-container before-title>
+      <a title="Mark as favorite" (click)="toggleFavorite()">
+        <span class="icon title is-3 has-text-warning">
+          <fa-icon
+            [icon]="(isFavorite$ | async) ? faSolidStar : faRegularStar"
+          ></fa-icon>
+        </span>
+      </a>
+    </ng-container>
+    <ng-container navigation>
+      <li
+        *models4insight-project-permission="PermissionLevel.BUSINESS_USER"
+        routerLinkActive="has-background-light"
+      >
+        <a routerLinkActive="has-text-primary" routerLink="home">Home</a>
+      </li>
+      <li
+        *models4insight-project-permission="PermissionLevel.CONTRIBUTOR"
+        routerLinkActive="has-background-light"
+      >
+        <a routerLinkActive="has-text-primary" routerLink="upload"
+          >Upload a model</a
+        >
+      </li>
+      <li
+        *models4insight-project-permission="PermissionLevel.BUSINESS_USER"
+        routerLinkActive="has-background-light"
+      >
+        <a routerLinkActive="has-text-primary" routerLink="retrieve"
+          >Retrieve a model</a
+        >
+      </li>
+      <li
+        *models4insight-project-permission="PermissionLevel.CONTRIBUTOR"
+        routerLinkActive="has-background-light"
+      >
+        <a routerLinkActive="has-text-primary" routerLink="branches"
+          >Manage branches</a
+        >
+      </li>
+      <li
+        *models4insight-project-permission="PermissionLevel.CONTRIBUTOR"
+        routerLinkActive="has-background-light"
+      >
+        <a routerLinkActive="has-text-primary" routerLink="conflicts"
+          >Resolve conflicts</a
+        >
+      </li>
+      <li
+        *models4insight-project-permission="PermissionLevel.MAINTAINER"
+        routerLinkActive="has-background-light"
+      >
+        <a routerLinkActive="has-text-primary" routerLink="settings"
+          >Settings</a
+        >
+      </li>
+    </ng-container>
+  </models4insight-hero>
+</ng-container>
+
+<!-- Modal form to set up a comparison between two models -->
+<models4insight-compare-modal></models4insight-compare-modal>
+

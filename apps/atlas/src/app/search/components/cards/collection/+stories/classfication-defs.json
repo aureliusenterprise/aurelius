@@ -1,0 +1,25 @@
+{
+  "PII": {
+    "category": "CLASSIFICATION",
+    "guid": "fea947f0-b9d0-47ea-b0dc-3267167b619d",
+    "createdBy": "atlas",
+    "updatedBy": "atlas",
+    "createTime": 1649238299966,
+    "updateTime": 1649238299966,
+    "version": 1,
+    "name": "PII",
+    "description": "PII",
+    "typeVersion": "1.0",
+    "options": {},
+    "attributeDefs": [],
+    "superTypes": [],
+    "entityTypes": [
+      "m4i_data_attribute",
+      "m4i_field",
+      "m4i_data_entity",
+      "m4i_collection",
+      "m4i_dataset"
+    ],
+    "subTypes": []
+  }
+}

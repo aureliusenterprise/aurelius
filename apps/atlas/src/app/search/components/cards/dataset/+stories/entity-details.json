@@ -1,0 +1,514 @@
+{
+  "referredEntities": {},
+  "entity": {
+    "typeName": "m4i_dataset",
+    "attributes": {
+      "owner": null,
+      "archimateReference": [],
+      "replicatedTo": null,
+      "userDescription": null,
+      "replicatedFrom": null,
+      "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v",
+      "displayName": null,
+      "description": null,
+      "source": [],
+      "parentDataset": [],
+      "childDataset": [],
+      "collections": [
+        {
+          "guid": "58becc63-3ded-4f07-8a13-c9602070652a",
+          "typeName": "m4i_collection",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp"
+          }
+        }
+      ],
+      "name": "xxvo_dm_persons_v",
+      "definition": null,
+      "fields": [
+        {
+          "guid": "2607883b-cd59-4720-b88a-0e8386956ecd",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--organisation"
+          }
+        },
+        {
+          "guid": "22b7440d-8fcf-4122-8153-802be5aa25a2",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--cc_employee"
+          }
+        },
+        {
+          "guid": "65905fd2-9a08-4e04-9a5c-0c96515991d4",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--contract_type"
+          }
+        },
+        {
+          "guid": "0f245551-985c-4b6a-93bd-ff2425437bc2",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--basket_org"
+          }
+        },
+        {
+          "guid": "fbf3093b-1a60-46b4-8ca3-6ccfec5063a4",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--placement"
+          }
+        },
+        {
+          "guid": "f18d5af6-8949-40f3-8051-4ade1095364f",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--matrix_col_org"
+          }
+        },
+        {
+          "guid": "c1c9216e-8ba6-417a-a45e-2d34782fe429",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org"
+          }
+        },
+        {
+          "guid": "e76a9809-2806-4778-a8e7-c4cee0646f31",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--agency"
+          }
+        },
+        {
+          "guid": "32a514a6-c0fd-4bbe-b2e5-da5808522867",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--matrix_row_org"
+          }
+        },
+        {
+          "guid": "c50e7670-2c35-4cfa-9049-b31553c01abe",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--fte"
+          }
+        },
+        {
+          "guid": "a1bf9bbf-11e7-4894-8671-b9fd3ea74871",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--func_org"
+          }
+        },
+        {
+          "guid": "cb6217ea-792b-471b-9878-07dec7b373ba",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--employee_number"
+          }
+        },
+        {
+          "guid": "96d550b3-fdb0-42db-8f4d-7f66d8e5fa93",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--job_title"
+          }
+        },
+        {
+          "guid": "c2be66f4-fee9-46a4-9da1-71ef0a7828a2",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--personal_grade"
+          }
+        },
+        {
+          "guid": "a8f587c0-6d9c-495d-89a8-f8d42461e9b0",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--location"
+          }
+        },
+        {
+          "guid": "82a0ccb7-aa90-4c50-8eb6-775f3fc0f112",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--people_group"
+          }
+        },
+        {
+          "guid": "5beab06c-d20a-4329-a71d-7274b195542c",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--full_name"
+          }
+        },
+        {
+          "guid": "00a08b93-3be1-4ee9-9f5e-d4a8b46084dd",
+          "typeName": "m4i_field",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--payroll"
+          }
+        }
+      ]
+    },
+    "guid": "ac43827a-a5fc-4a7e-9b58-b997d848ffc4",
+    "isIncomplete": false,
+    "provenanceType": 0,
+    "status": "ACTIVE",
+    "createdBy": "admin",
+    "updatedBy": "atlas",
+    "createTime": 1649238418748,
+    "updateTime": 1662712873127,
+    "version": 0,
+    "relationshipAttributes": {
+      "inputToProcesses": [
+        {
+          "guid": "9b9c680d-2da5-46b2-bdb2-7e0d24c2bc43",
+          "typeName": "m4i_microservice_process",
+          "entityStatus": "ACTIVE",
+          "displayText": "nxtgen-fte-data-producer-quarterly-31",
+          "relationshipType": "dataset_process_inputs",
+          "relationshipGuid": "bf5df305-ed5b-4504-bacc-1bbb9b465f3c",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "dataset_process_inputs" }
+        },
+        {
+          "guid": "013f03a2-3386-433b-b250-51025be125b3",
+          "typeName": "m4i_microservice_process",
+          "entityStatus": "ACTIVE",
+          "displayText": "nxtgen-fte-data-producer-quarterly-30",
+          "relationshipType": "dataset_process_inputs",
+          "relationshipGuid": "52c7485d-5334-4a92-8e9b-2fdea1bef565",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "dataset_process_inputs" }
+        },
+        {
+          "guid": "04decdc4-6794-494b-96b6-21428abd4869",
+          "typeName": "m4i_microservice_process",
+          "entityStatus": "ACTIVE",
+          "displayText": "nxtgen-fte-data-producer-daily",
+          "relationshipType": "dataset_process_inputs",
+          "relationshipGuid": "9fd4b385-6780-45c2-a626-af0aca7cdd7a",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "dataset_process_inputs" }
+        }
+      ],
+      "pipeline": null,
+      "schema": [],
+      "ArchiMateReference": [],
+      "childDataset": [],
+      "collections": [
+        {
+          "guid": "58becc63-3ded-4f07-8a13-c9602070652a",
+          "typeName": "m4i_collection",
+          "entityStatus": "ACTIVE",
+          "displayText": "NLHQEBSP",
+          "relationshipType": "m4i_dataset_assignment",
+          "relationshipGuid": "77a4a1b4-0821-4b6d-ae5f-bf9e20101876",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_dataset_assignment" }
+        }
+      ],
+      "model": null,
+      "source": [
+        {
+          "guid": "b00468d4-f309-4553-b8f5-54c6b7648551",
+          "typeName": "m4i_source",
+          "entityStatus": "ACTIVE",
+          "displayText": "/po/FTE_Actuals/Data Dictionary_FTE Actuals.xlsm",
+          "relationshipType": "m4i_referenceable_source_assignment",
+          "relationshipGuid": "68ab5bff-86a5-4581-b804-1318e1694a52",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_referenceable_source_assignment"
+          }
+        }
+      ],
+      "fields": [
+        {
+          "guid": "2607883b-cd59-4720-b88a-0e8386956ecd",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "ORGANISATION",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "2860a31e-e9c2-4d00-97b3-63ae8b9f4b7d",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "22b7440d-8fcf-4122-8153-802be5aa25a2",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "CC_EMPLOYEE",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "bbe56038-5571-4295-981d-8b3fa4ccaaed",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "65905fd2-9a08-4e04-9a5c-0c96515991d4",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "CONTRACT_TYPE",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "1e522a5c-48ac-40e6-b091-8419f8a2badc",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "0f245551-985c-4b6a-93bd-ff2425437bc2",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "BASKET_ORG",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "5a5fae26-9cf3-4705-81d1-4ec48f2ecfd9",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "fbf3093b-1a60-46b4-8ca3-6ccfec5063a4",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "PLACEMENT",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "55f18503-e905-4cee-ae7b-22c4d1dd66ac",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "f18d5af6-8949-40f3-8051-4ade1095364f",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "MATRIX_COL_ORG",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "acd06f42-671b-4b6a-9314-56da7ef7543d",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "c1c9216e-8ba6-417a-a45e-2d34782fe429",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "HIER_ORG",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "d949ebc3-a485-4c23-ad59-60e5f5d45edd",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "e76a9809-2806-4778-a8e7-c4cee0646f31",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "AGENCY",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "b6e0369c-597a-4035-a393-d15707e8fdac",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "32a514a6-c0fd-4bbe-b2e5-da5808522867",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "MATRIX_ROW_ORG",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "d7dcfb93-4180-46da-a120-9644fdaf4224",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "c50e7670-2c35-4cfa-9049-b31553c01abe",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "FTE",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "1ff65692-a0f2-4d21-9eb2-34fabcafca36",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "a1bf9bbf-11e7-4894-8671-b9fd3ea74871",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "FUNC_ORG",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "961ca538-8429-4d0d-9e9a-5c6d08a856c0",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "cb6217ea-792b-471b-9878-07dec7b373ba",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "EMPLOYEE_NUMBER",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "7b849bbb-4abd-4d75-bbaf-921621e45be7",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "96d550b3-fdb0-42db-8f4d-7f66d8e5fa93",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "JOB_TITLE",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "b93e7880-4536-4821-bd1f-8594d3361beb",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "c2be66f4-fee9-46a4-9da1-71ef0a7828a2",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "PERSONAL_GRADE",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "6e2c4668-47c8-4d9a-bb05-fe94dc99d01f",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "a8f587c0-6d9c-495d-89a8-f8d42461e9b0",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "LOCATION",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "6b1c410c-3937-4bad-b9ff-5def1726e049",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "82a0ccb7-aa90-4c50-8eb6-775f3fc0f112",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "PEOPLE_GROUP",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "fbde9efa-453a-4b54-8a19-c92b23612cd8",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "5beab06c-d20a-4329-a71d-7274b195542c",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "FULL_NAME",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "bcb056dc-792a-4ddb-af23-45b65463f5df",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        },
+        {
+          "guid": "00a08b93-3be1-4ee9-9f5e-d4a8b46084dd",
+          "typeName": "m4i_field",
+          "entityStatus": "ACTIVE",
+          "displayText": "PAYROLL",
+          "relationshipType": "m4i_field_assignment",
+          "relationshipGuid": "8a372868-38c4-468d-8044-85b33f8cedd7",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_field_assignment",
+            "attributes": { "typeInformation": null }
+          }
+        }
+      ],
+      "parentDataset": [],
+      "meanings": [],
+      "outputFromProcesses": []
+    },
+    "classifications": [
+      {
+        "typeName": "high_risk",
+        "entityGuid": "0d675be8-6aad-43c2-bd4b-84925ec3e573",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "removePropagationsOnEntityDelete": true
+      },
+      {
+        "typeName": "high_risk",
+        "entityGuid": "525fb541-c8b0-4bec-bcef-4a004176d622",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      },
+      {
+        "typeName": "PII",
+        "entityGuid": "525fb541-c8b0-4bec-bcef-4a004176d622",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      },
+      {
+        "typeName": "PII",
+        "entityGuid": "d28dd5b5-6e77-4946-a242-4a1a6b446476",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      },
+      {
+        "typeName": "high_risk",
+        "entityGuid": "d28dd5b5-6e77-4946-a242-4a1a6b446476",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      }
+    ],
+    "labels": [],
+    "proxy": false
+  }
+}

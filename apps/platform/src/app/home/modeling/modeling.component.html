@@ -1,0 +1,93 @@
+<div class="level is-mobile">
+  <div class="level-left"><h2 class="level-item title is-2">Modeling</h2></div>
+  <div class="level-right">
+    <div class="field level-item">
+      <p class="control">
+        <a routerLink="/home/welcome" class="button is-link">Back to Welcome</a>
+      </p>
+    </div>
+  </div>
+</div>
+<div class="content">
+  <p>
+    As a modeler, Models4Insight provides you with various tools to maintain,
+    manage and explore your models.
+  </p>
+</div>
+<div class="content">
+  <h3 class="title is-3">Set up your account</h3>
+  <p>
+    You can set up your account via the account management page. Here, you have
+    the option to add additonal info, reset your password, and to set up a
+    mobile authenticator for improved security.
+  </p>
+  <div class="buttons">
+    <button class="button is-link is-medium" (click)="accountManagement()">
+      Go to account security
+    </button>
+  </div>
+</div>
+<hr class="hr" />
+<div class="content">
+  <h3 class="title is-3">Create a project or join an existing one</h3>
+  <p>
+    Your work in Models4Insight is organized as projects. Every project
+    encompasses a single model, and provides management functions for that model
+    such as version control and access control. A project owner can invite you
+    to join their project.
+  </p>
+  <p>
+    <strong
+      >Please share the information below with your team so they can give you
+      access:</strong
+    >
+  </p>
+  <div class="field is-expanded">
+    <div class="field has-addons">
+      <p class="control"><a class="button is-static"> Username </a></p>
+      <p class="control is-expanded">
+        <input
+          #credentialsDisplay
+          id="credentialsDisplay"
+          class="input"
+          placeholder="Loading your username..."
+          [value]="(credentials$ | async)?.username"
+          aria-label="Your username"
+          readonly
+        />
+      </p>
+      <p class="control">
+        <a
+          #credentialsDisplayCopy
+          id="credentialsDisplayCopy"
+          class="button is-success"
+        >
+          <span class="icon"> <fa-icon [icon]="faCopy"></fa-icon> </span>
+          <span> Copy to clipboard </span>
+        </a>
+      </p>
+    </div>
+  </div>
+  <p>
+    Alternatively, you can join a public project that everyone has access to, or
+    you can start your own project from scratch.
+  </p>
+</div>
+<button class="button is-primary is-medium" (click)="activateModal()">
+  Create a new project
+</button>
+<div class="content">
+  <p></p>
+  <p>
+    Once you have access to a project, it will be visible on your projects page.
+    Press the button below to go there directly. The projects page is also
+    accessible via the top navigation bar.
+  </p>
+</div>
+<button [routerLink]="['/projects']" class="button is-link is-medium">
+  Go to the projects page
+</button>
+<!-- Modal: Create a project -->
+<models4insight-create-project-modal
+  [isLoading]="isLoading"
+></models4insight-create-project-modal>

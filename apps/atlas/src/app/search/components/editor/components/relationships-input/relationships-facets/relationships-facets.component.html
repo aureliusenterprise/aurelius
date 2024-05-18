@@ -1,0 +1,20 @@
+<div class="dropdown is-hoverable is-right" (mousedown)="preventBlur($event)">
+  <div class="dropdown-trigger">
+    <button
+      class="button is-text is-inverted"
+      aria-haspopup="true"
+      aria-controls="filter-dropdown"
+    >
+      <span class="icon">
+        <fa-icon [icon]="faFilter"></fa-icon>
+      </span>
+    </button>
+  </div>
+  <div class="dropdown-menu" id="filter-dropdown" role="menu">
+    <div class="dropdown-content">
+      <div class="dropdown-item">
+        <models4insight-filter></models4insight-filter>
+      </div>
+    </div>
+  </div>
+</div>

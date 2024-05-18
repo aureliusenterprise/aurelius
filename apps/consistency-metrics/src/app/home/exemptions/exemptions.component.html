@@ -1,0 +1,45 @@
+<h2 class="title is-2">Exemptions overview</h2>
+<h5 class="subtitle is-5">
+  This page shows the rule exemptions you have made.
+</h5>
+<div class="columns">
+  <div class="column is-one-quarter">
+    <h3 class="title is-3">Search</h3>
+    <h6 class="subtitle is-6">Select a project to get started.</h6>
+    <models4insight-project-select
+      [control]="searchForm.controls['project']"
+    ></models4insight-project-select>
+    <models4insight-branch-select
+      *ngIf="searchForm.value.project"
+      [control]="searchForm.controls['branch']"
+    ></models4insight-branch-select>
+    <models4insight-provenance-select
+      *ngIf="searchForm.value.branch"
+      [control]="searchForm.controls['version']"
+      [data]="versions$ | async"
+    ></models4insight-provenance-select>
+    <div class="field">
+      <a
+        class="button is-fullwidth is-success"
+        [class.is-loading]="isLoadingExemptions$ | async"
+        [class.is-static]="!searchForm.value.project"
+        (click)="findExemptions()"
+      >
+        <span class="icon">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </span>
+        <span>Find exemptions</span>
+      </a>
+    </div>
+  </div>
+  <div class="column">
+    <h3 class="title is-3">Exemptions</h3>
+    <h6 class="subtitle is-6">These exemptions match your search criteria.</h6>
+    <models4insight-sortable-table
+      [config]="exemptionsTableConfig"
+      [data]="exemptions$ | async"
+      [itemsPerPage]="10"
+      [rowsSelectable]="false"
+    ></models4insight-sortable-table>
+  </div>
+</div>

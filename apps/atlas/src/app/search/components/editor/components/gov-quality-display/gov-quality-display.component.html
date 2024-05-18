@@ -1,0 +1,22 @@
+<ng-container *ngFor="let rule of rules?.items">
+  <p>
+    <span class="icon-text">
+      <span
+        class="icon"
+        [class.has-text-warning]="rule?.compliant?.raw === '0'"
+        [class.has-text-success]="rule?.compliant?.raw === '1'"
+      >
+        <fa-icon
+          *ngIf="rule?.compliant?.raw === '0'"
+          [icon]="faExclamationTriangle"
+        >
+        </fa-icon>
+        <fa-icon *ngIf="rule?.compliant?.raw === '1'" [icon]="faCheckCircle">
+        </fa-icon>
+      </span>
+      <span>
+        {{ rule?.result?.raw }}
+      </span>
+    </span>
+  </p>
+</ng-container>

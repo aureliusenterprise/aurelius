@@ -1,0 +1,55 @@
+import { RouterTestingModule } from '@angular/router/testing';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {
+  AtlasApiModule,
+  ClassificationDefAPIService,
+  ElasticApiModule,
+  EntityAPIService,
+  GovernanceQualitySearchService,
+  TypeDefAPIService,
+} from '@models4insight/atlas/api';
+import { AuthenticationModule } from '@models4insight/authentication';
+import { HttpModule } from '@models4insight/http';
+import { ReduxModule } from '@models4insight/redux';
+import { TaskManagerModule } from '@models4insight/task-manager';
+import { TranslateModule } from '@ngx-translate/core';
+import { Canvas, Meta, Story } from '@storybook/blocks';
+import { moduleMetadata } from '@storybook/angular';
+import { Mermaid } from 'mdx-mermaid/Mermaid';
+import { environment } from '../../../../../../environments/environment';
+import { DetailsCardComponent } from '../../details-card.component';
+import { DetailsCardModule } from '../../details-card.module';
+import { FieldDetailsCardModule } from '../field-details-card.module';
+import { MockClassficationDefAPIService } from './classification-def-api.mock.service';
+import { MockEntityAPIService } from './entity-api.mock.service';
+import { MockGovQualityApiService } from './gov-quality-api.mock.service';
+import SEARCH_RESULT from './search-result.json';
+import { MockTypeDefAPIService } from './type-def-api.mock.service';
+import * as FieldDetailsCardComponentStories from './field-details-card.component.stories';
+
+<Meta of={FieldDetailsCardComponentStories} />
+
+# FieldDetailsCardComponent
+
+This is the details card template for fields, as well as inheriting types.
+
+## Primary
+
+Please find an example of a field details card below.
+
+<Canvas>
+  <Story of={FieldDetailsCardComponentStories.Primary} />
+</Canvas>
+
+### Content
+
+A field details card displays the following content:
+
+| Content                 | Description                                                                                     |
+|-------------------------|-------------------------------------------------------------------------------------------------|
+| Title                   | The name of this entity.                                                                        |
+| Type                    | The type of this entity in the data governance model.                                           |
+| Breadcrumb              | This entity's parents in the data governance model.                                             |
+| Classifications         | The classifications assigned or propagated to this entity.                                      |
+| Data quality            | The (aggregated) data quality scores for this entity, ranging from 0% to 100%.                  |
+| Data governance quality | An indicator of whether or not there are data governance quality issues related to this entity. |

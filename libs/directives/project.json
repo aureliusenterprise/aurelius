@@ -1,0 +1,27 @@
+{
+  "name": "directives",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/directives/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/directives"],
+      "options": {
+        "jestConfig": "libs/directives/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/directives/**/*.ts",
+          "libs/directives/**/*.html"
+        ]
+      }
+    }
+  }
+}

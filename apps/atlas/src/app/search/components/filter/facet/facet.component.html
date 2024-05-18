@@ -1,0 +1,17 @@
+<div class="menu">
+  <p class="menu-label">{{ facet.key | translate }}</p>
+  <ul class="menu-list">
+    <li *ngFor="let item of facet.value | slice: 0:(showMore ? 1000 : 5)">
+      <models4insight-check-box
+        [count]="item.count"
+        [facet]="facet.key"
+        [value]="item.value"
+      ></models4insight-check-box>
+    </li>
+    <li *ngIf="facet.value.length > 5">
+      <a (click)="toggleShowMore()" class="read-more">
+        Show {{ showMore ? 'less' : 'more' }}</a
+      >
+    </li>
+  </ul>
+</div>

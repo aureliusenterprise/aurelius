@@ -1,0 +1,12 @@
+cdk-virtual-scroll-viewport {
+  height: 50vh;
+
+  .box {
+    height: 100px;
+    margin: 5px;
+  }
+
+  tr {
+    line-height: 24px;
+  }
+}

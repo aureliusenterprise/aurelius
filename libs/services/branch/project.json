@@ -1,0 +1,27 @@
+{
+  "name": "services-branch",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/services/branch/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/services/branch"],
+      "options": {
+        "jestConfig": "libs/services/branch/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/services/branch/**/*.ts",
+          "libs/services/branch/**/*.html"
+        ]
+      }
+    }
+  }
+}

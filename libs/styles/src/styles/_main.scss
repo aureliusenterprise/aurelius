@@ -1,0 +1,17 @@
+// Theme variables, must be included before the libraries to allow overriding defaults
+@import 'variables';
+
+// Theme customization
+@import 'theme';
+
+// 3rd party libraries
+
+// Hides weird footer at the bottom of the page
+@import '@angular/cdk/a11y-prebuilt.css';
+
+// Bulma
+@import 'bulma/bulma';
+@import 'bulma-steps';
+@import 'bulma-switch';
+@import 'bulma-tooltip';
+@import 'bulma-quickview/dist/css/bulma-quickview.sass';

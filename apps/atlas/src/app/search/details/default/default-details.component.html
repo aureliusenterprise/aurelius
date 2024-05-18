@@ -1,0 +1,29 @@
+<div class="box">
+  <nav class="level">
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">
+          <a models4insightDetailsNavigationItem="#properties-details">
+            Properties
+          </a>
+        </p>
+        <p class="title">{{ propertyCount$ | async }}</p>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div id="properties-details" class="box">
+  <h3 class="title is-3">
+    Properties
+  </h3>
+  <models4insight-properties></models4insight-properties>
+</div>
+
+<models4insight-details-navigation>
+  <li>
+    <a models4insightDetailsNavigationItem="#properties-details">
+      Properties
+    </a>
+  </li>
+</models4insight-details-navigation>

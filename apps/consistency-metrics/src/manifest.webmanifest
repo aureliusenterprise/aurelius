@@ -1,0 +1,16 @@
+{
+  "name": "Models4Insight Consistency Metrics",
+  "short_name": "M4I",
+  "theme_color": "#F7F7F7",
+  "background_color": "#F7F7F7",
+  "scope": "/consistency_metrics/",
+  "start_url": "/consistency_metrics/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "assets/m4i-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+<div class="card">
+  <div class="card-content">
+    <ng-container *ngIf="!(isRetrievingDetails$ | async); else loading">
+      <ng-container *ngIf="entity$ | async as entity; else loading">
+        <div class="media">
+          <div class="media-content">
+            <p class="title is-4">
+              <a (click)="onEntityClick(entity.guid)">
+                {{ name$ | async }}
+              </a>
+            </p>
+          </div>
+          <div class="media-right">
+            <models4insight-entity-type-name></models4insight-entity-type-name>
+          </div>
+        </div>
+        <div class="columns is-gapless is-mobile">
+          <div class="column">
+            <div class="content">
+              <ng-container
+                *ngComponentOutlet="cardComponent$ | async"
+              ></ng-container>
+            </div>
+          </div>
+          <div *ngIf="showGovQuality" class="column is-narrow quality">
+            <models4insight-governance-quality-list></models4insight-governance-quality-list>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="media">
+    <div class="media-content">
+      <h6 class="title is-6">Loading {{ name$ | async }}...</h6>
+    </div>
+    <div class="media-right">
+      <div class="loader"></div>
+    </div>
+  </div>
+</ng-template>

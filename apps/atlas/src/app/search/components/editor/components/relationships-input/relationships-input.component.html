@@ -1,0 +1,87 @@
+<div
+  id="options-dropdown"
+  class="dropdown is-up"
+  (mousedown)="preventBlur($event)"
+>
+  <div
+    class="input tags-input"
+    [class.is-focused]="hasFocus"
+    [class.is-warning]="rule?.isNonCompliant"
+    (click)="focusInput()"
+  >
+    <span class="field is-grouped is-grouped-multiline">
+      <span
+        *ngFor="let control of tags.controls; let i = index"
+        class="control"
+      >
+        <span class="tags has-addons">
+          <span
+            *ngIf="iconsByType[control.value?.typeName] as typeIcon"
+            class="tag"
+            [ngClass]="typeIcon.classIcon"
+          >
+            <span class="icon">
+              <fa-icon [icon]="typeIcon.icon"></fa-icon>
+            </span>
+          </span>
+          <span class="tag" [title]="control.value?.displayText">
+            <span class="truncate">{{ control.value?.displayText }}</span>
+          </span>
+          <a class="tag is-delete" (click)="deleteTag(i)"></a>
+        </span>
+      </span>
+    </span>
+    <span class="field">
+      <span class="control is-expanded">
+        <input
+          #inputElement
+          class="input is-small input-control"
+          type="text"
+          placeholder="Add a relationship..."
+          [formControl]="input"
+          (focus)="hasFocus = true"
+          (blur)="hasFocus = false"
+        />
+      </span>
+    </span>
+  </div>
+
+  <div *ngIf="hasFocus" class="dropdown-menu" role="menu">
+    <div class="dropdown-content">
+      <ng-container *ngIf="options$ | async as options">
+        <ng-container *ngIf="options.length > 0">
+          <div id="search-results">
+            <ng-container
+              *ngFor="
+                let option of options;
+                trackBy: trackByGuid;
+                let isLast = last
+              "
+            >
+              <div class="dropdown-item">
+                <models4insight-details-card
+                  [searchResult]="option"
+                  (entityClicked)="addTag(option)"
+                >
+                </models4insight-details-card>
+              </div>
+              <hr *ngIf="!isLast" class="dropdown-divider" />
+            </ng-container>
+          </div>
+        </ng-container>
+        <div class="dropdown-item">
+          <div class="level is-mobile" role="menu">
+            <div class="level-left">
+              <div class="level-item content">
+                <h6 class="title is-6">{{ options.length }} results</h6>
+              </div>
+            </div>
+            <div class="level-right">
+              <models4insight-relationships-facets></models4insight-relationships-facets>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "types": [],
+    "target": "ES2022",
+    "useDefineForClassFields": false
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["src/test-setup.ts", "**/*.spec.ts", "src/**/*.worker.ts"],
+  "angularCompilerOptions": {
+    "enableIvy": true
+  }
+}

@@ -1,0 +1,589 @@
+<ng-container *ngIf="isCalculatingSuggestions$ | async">
+  <div class="has-text-centered">
+    <span class="icon is-large">
+      <fa-icon [icon]="faSpinner" [spin]="true"></fa-icon>
+    </span>
+    <h5 class="title is-5">
+      Calculating new suggestions based on your data. Please stand by...
+    </h5>
+  </div>
+</ng-container>
+<ng-container
+  *ngIf="suggestedRelations$ | async as suggestions; else noSuggestions"
+>
+  <div class="box">
+    <h3 class="title is-3">Define your Model</h3>
+    <h5 class="subtitle is-5">
+      This wizard helps you set up your model quickly
+    </h5>
+    <hr class="hr" />
+    <h4 class="title is-4">Suggested Relationships</h4>
+    <h6 class="subtitle is-6">
+      These relationships have been identified as possible candidates for your
+      model
+    </h6>
+    <ng-container *ngIf="selectedTab$ | async as selectedTab">
+      <div class="tabs is-boxed is-centered is-fullwidth">
+        <ul>
+          <li [class.is-active]="selectedTab === 'dynamic'">
+            <a (click)="selectRelationshipTypeTab('dynamic')">
+              Dynamic
+            </a>
+          </li>
+          <li [class.is-active]="selectedTab === 'structural'">
+            <a (click)="selectRelationshipTypeTab('structural')">
+              Structural
+            </a>
+          </li>
+          <li [class.is-active]="selectedTab === 'other'">
+            <a (click)="selectRelationshipTypeTab('other')">
+              Other
+            </a>
+          </li>
+        </ul>
+      </div>
+      <ng-container
+        *ngIf="
+          selectedTab === 'dynamic'
+            ? dynamicRelations$
+            : selectedTab === 'structural'
+            ? structuralRelations$
+            : selectedTab === 'other'
+            ? otherRelations$
+            : false as relations$
+        "
+      >
+        <ng-container
+          *ngIf="
+            selectedTab === 'dynamic'
+              ? dynamicRelationRanks$
+              : selectedTab === 'structural'
+              ? structuralRelationRanks$
+              : selectedTab === 'other'
+              ? otherRelationRanks$
+              : false as ranks$
+          "
+        >
+          <models4insight-sortable-table-shell
+            [config]="suggestionsTableConfig"
+            [data]="relations$ | async"
+            [enableTableContainer]="false"
+            [itemsPerPage]="5"
+            [selectedRow]="selectedRelationship$ | async"
+            (rowSelected)="selectSuggestion($event)"
+            (rowDeselected)="deselectSuggestion()"
+          >
+            <ng-template let-rowData>
+              <th *ngIf="ranks$ | async as ranks" scope="row">
+                {{ ranks[rowData.id] }}
+              </th>
+              <td>{{ rowData.source }}</td>
+              <td>{{ rowData.target }}</td>
+              <td *ngIf="modelBuilderIndex$ | async as modelBuilderIndex">
+                <ng-container
+                  *ngIf="
+                    modelBuilderIndex[rowData.id]?.errors | async as errors
+                  "
+                >
+                  <models4insight-validation-result
+                    [errors]="errors"
+                  ></models4insight-validation-result>
+                </ng-container>
+              </td>
+            </ng-template>
+          </models4insight-sortable-table-shell>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+  <ng-container *ngIf="selectedRelationship$ | async as selectedRelation">
+    <ng-container *ngIf="modelBuilder$ | async as modelBuilder">
+      <ng-container *ngIf="modelBuilderContext$ | async as modelBuilderContext">
+        <div class="box">
+          <div class="level">
+            <div class="level-left">
+              <div>
+                <h4 class="title is-4">Model Builder</h4>
+                <h6 class="subtitle is-6">
+                  Customize your model using the fields below
+                </h6>
+              </div>
+            </div>
+            <div class="level-right">
+              <a
+                models4insight-holdable
+                holdTime="1"
+                class="level-item button"
+                [ngClass]="
+                  modelBuilderContext.isUpdatingModelRules ||
+                  modelBuilderContext.isUpdatingViewRules
+                    ? 'is-loading'
+                    : 'is-danger'
+                "
+                (held)="removeRelation($event, modelBuilder)"
+              >
+                Remove this relation
+              </a>
+            </div>
+          </div>
+          <ng-container *ngIf="modelBuilderContext.selectedTab as selectedTab">
+            <div class="tabs is-boxed is-centered is-fullwidth">
+              <ul>
+                <li [class.is-active]="selectedTab === 'content'">
+                  <a
+                    (click)="
+                      selectModelBuilderTab(selectedRelation.id, 'content')
+                    "
+                    >Concepts</a
+                  >
+                </li>
+                <li [class.is-active]="selectedTab === 'views'">
+                  <a
+                    (click)="
+                      selectModelBuilderTab(selectedRelation.id, 'views')
+                    "
+                    >Views</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <ng-container *ngIf="selectedTab === 'content'">
+              <ng-container *ngTemplateOutlet="content"></ng-container>
+            </ng-container>
+            <ng-container *ngIf="selectedTab === 'views'">
+              <ng-container *ngTemplateOutlet="views"></ng-container>
+            </ng-container>
+          </ng-container>
+        </div>
+        <div class="box">
+          <h4 class="title is-4">Model Preview</h4>
+          <h6 class="subtitle is-6">
+            See what your model will look like based on a sample from your data
+          </h6>
+          <models4insight-modelview2></models4insight-modelview2>
+        </div>
+      </ng-container>
+      <div class="field">
+        <a
+          class="button is-success is-large is-fullwidth"
+          [class.is-loading]="isExtractingModel$ | async"
+          [class.is-static]="hasErrors$ | async"
+          (click)="extract()"
+        >
+          Generate the model
+        </a>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>
+<!-- Model Content Form-->
+<ng-template #content>
+  <ng-container *ngIf="selectedRelationship$ | async as relation">
+    <ng-container *ngIf="modelBuilder$ | async as modelBuilder">
+      <ng-container *ngIf="modelBuilderContext$ | async as modelBuilderContext">
+        <ng-container *ngIf="modelBuilder.modelForm as modelForm">
+          <form [formGroup]="modelForm">
+            <div class="columns">
+              <ng-container formGroupName="source">
+                <div class="column">
+                  <h5 class="title is-5">
+                    {{ relation.source }}
+                  </h5>
+                  <hr class="hr" />
+                  <div class="field">
+                    <label
+                      id="sourceTypeLabel"
+                      for="sourceTypeSelect"
+                      class="label"
+                      >Type</label
+                    >
+                    <div class="control is-expanded">
+                      <div
+                        class="select is-fullwidth"
+                        [class.is-danger]="
+                          (modelForm.controls.source.controls.type.dirty ||
+                            isSubmitted) &&
+                          modelForm.controls.source.controls.type.invalid
+                        "
+                      >
+                        <select
+                          id="sourceTypeSelect"
+                          formControlName="type"
+                          aria-labelledby="sourceTypeLabel"
+                          [attr.disabled]="
+                            (isUpdatingModelRules$ | async) ? '' : null
+                          "
+                        >
+                          <option value="ar3_Unknown"
+                            >-- Please select a type --</option
+                          >
+                          <option
+                            *ngFor="let type of elementTypes"
+                            [value]="type[1]"
+                            >{{ type[0] }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <ng-container
+                      *ngIf="
+                        (modelForm.controls.source.controls.type.dirty ||
+                          isSubmitted) &&
+                        modelForm.controls.source.controls.type.invalid
+                      "
+                    >
+                      <p
+                        *ngIf="
+                          modelForm.controls.source.controls.type.errors
+                            ?.required ||
+                          modelForm.controls.source.controls.type.errors
+                            ?.typeUnknown
+                        "
+                        class="help is-danger"
+                      >
+                        Please specify a concept type
+                      </p>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container formGroupName="relation">
+                <div class="column">
+                  <h5 class="title is-5">Relationship</h5>
+                  <hr class="hr" />
+                  <div class="field">
+                    <label
+                      id="relationshipTypeLabel"
+                      for="relationshipTypeSelect"
+                      class="label"
+                      >Type</label
+                    >
+                    <div class="field has-addons">
+                      <div class="control is-expanded">
+                        <div
+                          class="select is-fullwidth"
+                          [class.is-danger]="
+                            (modelForm.controls.relation.controls.type.dirty ||
+                              isSubmitted) &&
+                            modelForm.controls.relation.controls.type.invalid
+                          "
+                        >
+                          <select
+                            id="relationshipTypeSelect"
+                            formControlName="type"
+                            aria-labelledby="relationshipTypeLabel"
+                            [attr.disabled]="
+                              (isUpdatingModelRules$ | async) ? '' : null
+                            "
+                          >
+                            <option
+                              *ngFor="let type of relationshipTypes"
+                              [value]="type[1]"
+                            >
+                              {{
+                                modelBuilderContext.reversed
+                                  ? reverseDisplayNames[type[1]]
+                                  : forwardDisplayNames[type[1]]
+                              }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="control">
+                        <a
+                          class="button is-success"
+                          [class.is-static]="isUpdatingModelRules$ | async"
+                          (click)="
+                            modelBuilder.toggleReversed(
+                              relation.id,
+                              modelBuilderContext.reversed
+                            )
+                          "
+                        >
+                          <fa-icon [icon]="faExchangeAlt"></fa-icon>
+                        </a>
+                      </div>
+                    </div>
+                    <ng-container
+                      *ngIf="
+                        (modelForm.controls.relation.controls.type.dirty ||
+                          isSubmitted) &&
+                        modelForm.controls.relation.controls.type.invalid
+                      "
+                    >
+                      <p
+                        *ngIf="
+                          modelForm.controls.relation.controls.type.errors
+                            ?.required
+                        "
+                        class="help is-danger"
+                      >
+                        Please specify a relationship type
+                      </p>
+                    </ng-container>
+                  </div>
+                  <div class="field">
+                    <label
+                      id="relationshipNameLabel"
+                      for="relationshipNameSelect"
+                      class="label"
+                      >Name</label
+                    >
+                    <div class="control is-expanded">
+                      <div
+                        class="select is-fullwidth"
+                        [class.is-danger]="
+                          (modelForm.controls.relation.controls.name.dirty ||
+                            isSubmitted) &&
+                          modelForm.controls.relation.controls.name.invalid
+                        "
+                      >
+                        <select
+                          id="relationshipNameSelect"
+                          formControlName="name"
+                          aria-labelledby="relationshipNameLabel"
+                          [attr.disabled]="
+                            (isUpdatingModelRules$ | async) ? '' : null
+                          "
+                        >
+                          <option value="">-- No relationship name --</option>
+                          <option
+                            *ngFor="let label of labels$ | async"
+                            [value]="label.column"
+                          >
+                            {{ label.column }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container formGroupName="target">
+                <div class="column">
+                  <h5 class="title is-5">
+                    {{ relation.target }}
+                  </h5>
+                  <hr class="hr" />
+                  <div class="field">
+                    <label
+                      id="targetTypeLabel"
+                      for="targetTypeSelect"
+                      class="label"
+                      >Type</label
+                    >
+                    <div class="control is-expanded">
+                      <div
+                        class="select is-fullwidth"
+                        [class.is-danger]="
+                          (modelForm.controls.target.controls.type.dirty ||
+                            isSubmitted) &&
+                          modelForm.controls.target.controls.type.invalid
+                        "
+                      >
+                        <select
+                          id="targetTypeSelect"
+                          formControlName="type"
+                          aria-labelledby="targetTypeLabel"
+                          [attr.disabled]="
+                            (isUpdatingModelRules$ | async) ? '' : null
+                          "
+                        >
+                          <option value="ar3_Unknown"
+                            >-- Please select a type --</option
+                          >
+                          <option
+                            *ngFor="let type of elementTypes"
+                            [value]="type[1]"
+                          >
+                            {{ type[0] }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <ng-container
+                      *ngIf="
+                        (modelForm.controls.target.controls.type.dirty ||
+                          isSubmitted) &&
+                        modelForm.controls.target.controls.type.invalid
+                      "
+                    >
+                      <p
+                        *ngIf="
+                          modelForm.controls.target.controls.type.errors
+                            ?.required ||
+                          modelForm.controls.target.controls.type.errors
+                            ?.typeUnknown
+                        "
+                        class="help is-danger"
+                      >
+                        Please specify a concept type
+                      </p>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </form>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<!-- Views Form -->
+<ng-template #views>
+  <ng-container *ngIf="selectedRelationship$ | async as relation">
+    <ng-container *ngIf="modelBuilder$ | async as modelBuilder">
+      <ng-container *ngIf="modelBuilderContext$ | async as modelBuilderContext">
+        <ng-container *ngIf="modelBuilder.viewForm as viewForm">
+          <form [formGroup]="viewForm">
+            <div class="field">
+              <label id="viewContentLabel" for="viewContentSelect" class="label"
+                >View Content</label
+              >
+              <div class="control is-expanded">
+                <div
+                  class="select is-fullwidth"
+                  [class.is-danger]="
+                    (viewForm.controls.content.dirty || isSubmitted) &&
+                    viewForm.controls.content.invalid
+                  "
+                >
+                  <select
+                    id="viewContentSelect"
+                    formControlName="content"
+                    aria-labelledby="viewContentLabel"
+                  >
+                    <option hidden selected [ngValue]="null">
+                      -- Please select a content type --
+                    </option>
+                    <option value="single">Single view</option>
+                    <option value="source"
+                      >View per {{ relation.source }}</option
+                    >
+                    <option value="target"
+                      >View per {{ relation.target }}</option
+                    >
+                    <!--<option value="property">View per property</option>-->
+                  </select>
+                </div>
+              </div>
+              <ng-container
+                *ngIf="
+                  (viewForm.controls.content.dirty || isSubmitted) &&
+                  viewForm.controls.content.invalid
+                "
+              >
+                <p
+                  *ngIf="viewForm.controls.content.errors?.required"
+                  class="help is-danger"
+                >
+                  Please specify the view content
+                </p>
+              </ng-container>
+            </div>
+            <ng-container *ngIf="viewForm.value.content === 'property'">
+              <div class="field">
+                <label id="viewKeyLabel" for="viewKeySelect" class="label"
+                  >View Property</label
+                >
+                <div class="control is-expanded">
+                  <div
+                    class="select is-fullwidth"
+                    [class.is-danger]="
+                      (viewForm.controls.key.dirty || isSubmitted) &&
+                      (viewForm.controls.key.invalid ||
+                        viewForm.errors?.propertyKeyUndefined)
+                    "
+                  >
+                    <select
+                      id="viewKeySelect"
+                      formControlName="key"
+                      aria-labelledby="viewKeyLabel"
+                    >
+                      <option
+                        *ngFor="let label of labels$ | async"
+                        [value]="label.column"
+                      >
+                        {{ label.column }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <ng-container
+                  *ngIf="
+                    (viewForm.controls.key.dirty || isSubmitted) &&
+                    (viewForm.controls.key.invalid ||
+                      viewForm.errors?.propertyKeyUndefined)
+                  "
+                >
+                  <p
+                    *ngIf="viewForm.errors?.propertyKeyUndefined"
+                    class="help is-danger"
+                  >
+                    Please specify the property by which to group the view
+                    content
+                  </p>
+                </ng-container>
+              </div>
+            </ng-container>
+            <div class="field">
+              <label id="viewLayoutLabel" for="viewLayoutSelect" class="label"
+                >View Layout</label
+              >
+              <div class="control is-expanded">
+                <div
+                  class="select is-fullwidth"
+                  [class.is-danger]="
+                    (viewForm.controls.layout.dirty || isSubmitted) &&
+                    viewForm.controls.layout.invalid
+                  "
+                >
+                  <select
+                    id="viewLayoutSelect"
+                    formControlName="layout"
+                    aria-labelledby="viewLayoutLabel"
+                  >
+                    <option
+                      *ngFor="let layout of viewLayouts"
+                      [value]="layout[0]"
+                      >{{ layout[1] }}</option
+                    >
+                  </select>
+                </div>
+              </div>
+              <ng-container
+                *ngIf="
+                  (viewForm.controls.layout.dirty || isSubmitted) &&
+                  viewForm.controls.layout.invalid
+                "
+              >
+                <p
+                  *ngIf="viewForm.controls.layout.errors?.required"
+                  class="help is-danger"
+                >
+                  Please specify the view layout
+                </p>
+              </ng-container>
+            </div>
+          </form>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #noSuggestions>
+  <div *ngIf="!(isCalculatingSuggestions$ | async)" class="has-text-centered">
+    <ng-container *ngIf="!userAgentIsInternetExplorer">
+      <h5 class="title is-5">
+        Currently no suggestions available. Please upload a file first.
+      </h5>
+    </ng-container>
+    <ng-container *ngIf="userAgentIsInternetExplorer">
+      <h5 class="title is-5">
+        Suggestions are not available in Internet Explorer. You can still define
+        extractor rules manually.
+      </h5>
+    </ng-container>
+  </div>
+</ng-template>

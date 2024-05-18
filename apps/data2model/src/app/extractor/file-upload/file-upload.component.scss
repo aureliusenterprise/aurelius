@@ -1,0 +1,30 @@
+@import "@models4insight/styles/src/styles/theme";
+
+.dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 19rem;
+  max-height: 25vh;
+  border: 2px dashed $gray-500;
+  border-radius: 5px;
+  margin: 10px 0;
+
+  background: repeating-linear-gradient(45deg, $gray-100, $gray-100 10px, $gray-200 10px, $gray-200 20px);
+
+  &.hovering {
+    border: 2px solid $gray-500;
+    color: #dadada !important;
+  }
+  &.is-danger {
+    border: 2px dashed $red;
+  }
+  &.is-danger > * {
+    color: $red;
+  }
+  &.hovering.is-danger {
+    border: 2px solid $red;
+    color: #dadada !important;
+  }
+}

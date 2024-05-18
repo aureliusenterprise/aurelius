@@ -1,0 +1,26 @@
+<div class="block">
+  <models4insight-bread-crumbs
+    [activeGuid]="parentId$ | async"
+    [showLast]="false"
+  ></models4insight-bread-crumbs>
+</div>
+<ng-container *ngIf="searchResult$ | async as searchResult">
+  <div *ngIf="showDataQuality" class="block">
+    <p class="quality-dimension">
+      <span class="icon is-small">
+        <models4insight-data-quality-pie
+          [value]="searchResult.dqscore?.raw * 100"
+        ></models4insight-data-quality-pie>
+      </span>
+      <span
+        >{{ searchResult.dqscore?.raw | percent: '1.0-1' }}
+        {{ searchResult.dataqualityruledimension?.raw | lowercase }}
+      </span>
+    </p>
+  </div>
+  <div class="block">
+    <p>
+      {{ searchResult.dataqualityruledescription?.raw }}
+    </p>
+  </div>
+</ng-container>

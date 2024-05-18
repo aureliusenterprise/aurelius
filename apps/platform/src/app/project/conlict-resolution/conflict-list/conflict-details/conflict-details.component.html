@@ -1,0 +1,134 @@
+<ng-container *ngIf="conflict">
+  <div class="title is-3">Conflict Details</div>
+  <div class="columns">
+    <ng-container
+      *ngTemplateOutlet="
+        detailsColumn;
+        context: {
+          title: 'Currently in repository',
+          detailsContext: { side: conflict.left },
+          addContext: context.addListLeft,
+          deleteContext: context.deleteListLeft
+        }
+      "
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        detailsColumn;
+        context: {
+          title: 'Newly committed',
+          detailsContext: { side: conflict.right },
+          addContext: context.addListRight,
+          deleteContext: context.deleteListRight
+        }
+      "
+    ></ng-container>
+  </div>
+</ng-container>
+
+<!-- Defines the left/right columns -->
+<ng-template
+  #detailsColumn
+  let-title="title"
+  let-detailsContext="detailsContext"
+  let-addContext="addContext"
+  let-deleteContext="deleteContext"
+>
+  <div class="column" style="display: flex; flex-direction: column">
+    <div class="title is-4">
+      <span *ngIf="detailsContext.side && addContext.has(detailsContext.side.id)" class="icon has-text-success">
+        <fa-icon [icon]="faCheck"></fa-icon>
+      </span>
+      <span *ngIf="detailsContext.side && deleteContext.has(detailsContext.side.id)" class="icon has-text-danger">
+        <fa-icon [icon]="faTimes"></fa-icon>
+      </span>
+      {{ title }}
+    </div>
+    <div class="field" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+      <ng-container *ngIf="detailsContext.side; else noSide">
+        <ng-container *ngTemplateOutlet="details; context: detailsContext"></ng-container>
+      </ng-container>
+    </div>
+    <div class="field">
+      <button
+        class="button is-large is-fullwidth is-success"
+        (click)="saveSide(detailsContext.side)"
+        [disabled]="detailsContext.side && addContext.has(detailsContext.side.id)"
+      >
+        <span>Save</span>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Change view for one side of the conflict -->
+<ng-template #details let-side="side">
+  <div class="title is-5">General</div>
+  <div class="table-container">
+    <table class="table has-background-light is-hoverable has-shadow is-fullwidth">
+      <tbody>
+        <tr>
+          <th scope="row">ID</th>
+          <td>{{ side.id }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Branch</th>
+          <td>{{ side.branch }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Added on</th>
+          <td>{{ side.start_date.$numberLong | date: 'dd MMM y, HH:mm:ss' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-container *ngIf="conflict.type === ConflictTypeEnum.NODES">
+    <div class="title is-5">Node</div>
+    <table class="table has-background-light is-hoverable has-shadow is-fullwidth">
+      <tbody>
+        <tr *ngIf="side.raw['@xsi_type'] as type">
+          <th scope="row">Type</th>
+          <td>{{ type }}</td>
+        </tr>
+        <tr *ngIf="side.raw.ar3_name[0].value as name">
+          <th scope="row">Name</th>
+          <td>{{ name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+  <ng-container *ngIf="conflict.type === ConflictTypeEnum.RELATIONS">
+    <div class="title is-5">Relation</div>
+    <div class="table-container">
+      <table class="table has-background-light is-hoverable has-shadow is-fullwidth">
+        <tbody>
+          <tr *ngIf="side.raw['@xsi_type'] as type">
+            <th scope="row">Type</th>
+            <td>{{ type }}</td>
+          </tr>
+          <tr *ngIf="side.raw['@accessType'] as accessType">
+            <th scope="row">Access Type</th>
+            <td>{{ accessType }}</td>
+          </tr>
+          <tr *ngIf="side.raw.ar3_name[0].value as name">
+            <th scope="row">Name</th>
+            <td>{{ name }}</td>
+          </tr>
+          <tr *ngIf="side.sourceUUID as source">
+            <th scope="row">Source ID</th>
+            <td>{{ source }}</td>
+          </tr>
+          <tr *ngIf="side.targetUUID as target">
+            <th scope="row">Target ID</th>
+            <td>{{ target }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+</ng-template>
+
+<!-- Placeholder for when a side is not defined -->
+<ng-template #noSide>
+  <div class="has-text-centered"><strong>The element does not exist in this version of the model</strong></div>
+</ng-template>

@@ -1,0 +1,16 @@
+<models4insight-sortable-table-shell [rowsSelectable]="false">
+  <ng-template let-rowData>
+    <th scope="row">{{ rowData.start_user }}</th>
+    <td>{{ rowData.branch }}</td>
+    <td>{{ rowData.operation }}</td>
+    <td class="truncate" [title]="rowData.comment">
+      {{ rowData.comment }}
+    </td>
+    <td>{{ rowData.start_date | date: 'dd MMM y, HH:mm:ss' }}</td>
+    <td>
+      <models4insight-provenance-table-context-menu
+        [context]="rowData"
+      ></models4insight-provenance-table-context-menu>
+    </td>
+  </ng-template>
+</models4insight-sortable-table-shell>

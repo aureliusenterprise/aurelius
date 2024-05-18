@@ -1,0 +1,20 @@
+<models4insight-sortable-table-shell [rowsSelectable]="false">
+  <ng-template let-rowData>
+    <th scope="row">{{ rowData.name }}</th>
+    <td>{{ rowData.members?.length }}</td>
+    <td class="truncate" [title]="rowData.description">
+      {{ rowData.description }}
+    </td>
+    <td>
+      <models4insight-permission-select
+        [permission]="0"
+      ></models4insight-permission-select>
+    </td>
+    <td>
+      <models4insight-user-group-context-menu
+        [context]="rowData"
+        (edit)="onEdit($event)"
+      ></models4insight-user-group-context-menu>
+    </td>
+  </ng-template>
+</models4insight-sortable-table-shell>

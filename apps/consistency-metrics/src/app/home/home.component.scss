@@ -1,0 +1,4 @@
+// This solves a problem in IE where the report navigation would be offset to the right
+.report-navigation {
+    display: block !important;
+}

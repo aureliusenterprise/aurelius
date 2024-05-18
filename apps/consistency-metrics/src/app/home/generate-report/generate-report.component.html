@@ -1,0 +1,38 @@
+<h2 class="title is-2">Generate a report</h2>
+<h5 class="subtitle is-5">
+  To generate a report, please select a project, branch and version
+</h5>
+<div class="field">
+  <models4insight-project-select
+    [control]="form.controls['project']"
+    [data]="projects$ | async"
+  ></models4insight-project-select>
+</div>
+<ng-container *ngIf="form.value.project as currentProject">
+  <div class="field">
+    <models4insight-branch-select
+      [control]="form.controls['branch']"
+      [data]="branches$ | async"
+    ></models4insight-branch-select>
+  </div>
+</ng-container>
+<ng-container *ngIf="form.value.branch as currentBranch">
+  <div class="field">
+    <models4insight-provenance-select
+      [control]="form.controls['version']"
+      [data]="versions$ | async"
+    ></models4insight-provenance-select>
+  </div>
+</ng-container>
+<div class="field">
+  <a
+    class="button is-success is-medium is-fullwidth"
+    [class.is-static]="!form.value.version"
+    (click)="generateReport()"
+  >
+    <span class="icon">
+      <fa-icon [icon]="faChartPie"></fa-icon>
+    </span>
+    <span>Generate report</span>
+  </a>
+</div>

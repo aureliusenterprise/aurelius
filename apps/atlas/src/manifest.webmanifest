@@ -1,0 +1,16 @@
+{
+  "name": "Aurelius Atlas Data Governance",
+  "short_name": "Aurelius Atlas",
+  "theme_color": "#F7F7F7",
+  "background_color": "#F7F7F7",
+  "scope": "/atlas/",
+  "start_url": "/atlas/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "assets/m4i-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

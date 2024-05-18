@@ -1,0 +1,53 @@
+{
+  "derivedperson": { "raw": [] },
+  "derivedfield": { "raw": [] },
+  "dqscorecnt_overall": { "raw": 2.0 },
+  "deriveddataattribute": {
+    "raw": [
+      "Hierarchical Organization",
+      "Hierarchical Organization",
+      "Hierarchical Organization"
+    ]
+  },
+  "dqscorecnt_timeliness": { "raw": 0.0 },
+  "deriveddataentity": { "raw": [] },
+  "supertypenames": {
+    "raw": ["Referenceable", "m4i_referenceable", "m4i_field"]
+  },
+  "dqscore_accuracy": { "raw": 0.814 },
+  "dqscorecnt_validity": { "raw": 0.0 },
+  "dqscore_timeliness": { "raw": 0.0 },
+  "derivedcollection": { "raw": ["NLHQEBSP"] },
+  "dqscorecnt_accuracy": { "raw": 1.0 },
+  "dqscore_validity": { "raw": 0.0 },
+  "derivedsystem": { "raw": ["eudtc1-ebsp-db1.stratonis_group.org"] },
+  "deriveddataset": { "raw": ["xxvo_dm_persons_v"] },
+  "dqscore_uniqueness": { "raw": 0.0 },
+  "breadcrumbname": {
+    "raw": ["eudtc1-ebsp-db1.stratonis_group.org", "NLHQEBSP", "xxvo_dm_persons_v"]
+  },
+  "dqscorecnt_completeness": { "raw": 1.0 },
+  "breadcrumbguid": {
+    "raw": [
+      "21177ac3-a4e4-402a-98ad-3a5849001c10",
+      "58becc63-3ded-4f07-8a13-c9602070652a",
+      "ac43827a-a5fc-4a7e-9b58-b997d848ffc4"
+    ]
+  },
+  "deriveddatadomain": { "raw": [] },
+  "dqscore_overall": { "raw": 0.907 },
+  "name": { "raw": "HIER_ORG" },
+  "guid": { "raw": "c1c9216e-8ba6-417a-a45e-2d34782fe429" },
+  "dqscore_completeness": { "raw": 1.0 },
+  "breadcrumbtype": {
+    "raw": ["m4i_system", "m4i_collection", "m4i_dataset"]
+  },
+  "dqscorecnt_uniqueness": { "raw": 0.0 },
+  "typename": { "raw": "m4i_field" },
+  "_meta": {
+    "engine": "atlas-dev",
+    "score": 1.0,
+    "id": "c1c9216e-8ba6-417a-a45e-2d34782fe429"
+  },
+  "id": { "raw": "c1c9216e-8ba6-417a-a45e-2d34782fe429" }
+}

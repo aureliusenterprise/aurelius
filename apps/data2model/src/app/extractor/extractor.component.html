@@ -1,0 +1,33 @@
+<models4insight-hero title="Data2Model">
+  <ng-container navigation>
+    <li routerLinkActive="has-background-light">
+      <a routerLinkActive="has-text-primary" routerLink="upload">
+        File upload
+      </a>
+    </li>
+    <li routerLinkActive="has-background-light">
+      <a routerLinkActive="has-text-primary" routerLink="dataset">
+        Dataset
+      </a>
+    </li>
+    <li
+      *ngIf="!userAgentIsInternetExplorer"
+      routerLinkActive="has-background-light"
+    >
+      <a routerLinkActive="has-text-primary" routerLink="suggestions">
+        Suggestions
+      </a>
+    </li>
+    <li routerLinkActive="has-background-light">
+      <a routerLinkActive="has-text-primary" routerLink="rules">
+        Extractor Rules
+      </a>
+    </li>
+    <li routerLinkActive="has-background-light">
+      <a routerLinkActive="has-text-primary" routerLink="model">
+        Model
+      </a>
+    </li>
+  </ng-container>
+</models4insight-hero>
+<models4insight-rule-editor></models4insight-rule-editor>

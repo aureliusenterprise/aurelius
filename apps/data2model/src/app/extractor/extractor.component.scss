@@ -1,0 +1,4 @@
+// This solves a problem in IE where the extractor navigation would be offset to the right
+.extractor-navigation {
+    display: block !important;
+}

@@ -1,0 +1,64 @@
+<h2 class="title is-2">Getting Started</h2>
+<div class="subtitle is-5">
+  Welcome to Models4Insight! We'd like to help you get started. Please tell us
+  why you are here.
+</div>
+<hr class="hr" />
+<div class="columns is-multiline">
+  <div class="column">
+    <ng-container
+      *ngTemplateOutlet="category; context: insightsCategoryContext"
+    ></ng-container>
+  </div>
+  <div class="column">
+    <ng-container
+      *ngTemplateOutlet="category; context: modelingCategoryContext"
+    ></ng-container>
+  </div>
+  <div class="column">
+    <ng-container
+      *ngTemplateOutlet="category; context: analyticsCategoryContext"
+    ></ng-container>
+  </div>
+  <div class="column">
+    <ng-container
+      *ngTemplateOutlet="category; context: monitoringCategoryContext"
+    ></ng-container>
+  </div>
+</div>
+<ng-template
+  #category
+  let-iconClass="iconClass"
+  let-iconColor="iconColor"
+  let-title="title"
+  let-description="description"
+  let-redirectPath="redirectPath"
+>
+  <div class="card">
+    <div class="card-icon has-text-centered">
+      <p
+        class="title is-1"
+        [ngClass]="redirectPath ? iconColor : 'has-text-grey-light'"
+      >
+        <span class="icon"> <fa-icon [icon]="iconClass"></fa-icon> </span>
+      </p>
+    </div>
+    <div class="card-content has-text-centered">
+      <h3 class="title is-3">{{ title }}</h3>
+      <div class="content">{{ description }}</div>
+    </div>
+    <footer class="card-footer">
+      <a
+        *ngIf="redirectPath; else contactUs"
+        [routerLink]="redirectPath"
+        class="card-footer-item is-link"
+        >This is me</a
+      >
+    </footer>
+  </div>
+</ng-template>
+<ng-template #contactUs>
+  <span class="card-footer-item has-text-grey-light"
+    ><a href="mailto:info@aureliusenterprise.com">Please get in touch</a>
+  </span>
+</ng-template>

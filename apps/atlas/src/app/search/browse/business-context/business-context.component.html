@@ -1,0 +1,63 @@
+<div class="card">
+  <div class="card-content">
+    <div class="media">
+      <div class="media-content">
+        <p class="title is-4">Business context</p>
+      </div>
+      <a class="icon has-text-info" (click)="activateInfoModal()">
+        <fa-icon [icon]="faInfoCircle" size="lg"></fa-icon>
+      </a>
+    </div>
+
+    <article class="media">
+      <div class="media-left">
+        <span class="icon has-text-primary">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </span>
+      </div>
+      <div class="media-content">
+        <div class="content">
+          <h6 class="title is-6">
+            I'm searching for the meaning of data within a specific business
+            context
+          </h6>
+          <p>
+            Search for keywords related to the data domain or data entity that
+            you are looking for.
+          </p>
+        </div>
+        <nav class="level is-mobile">
+          <models4insight-simple-search-input
+            [context]="searchBarContext"
+            (querySubmitted)="onQuerySubmitted($event)"
+          ></models4insight-simple-search-input>
+        </nav>
+      </div>
+    </article>
+    <article class="media">
+      <div class="media-left">
+        <span class="icon has-text-primary">
+          <fa-icon [icon]="faCompass"></fa-icon>
+        </span>
+      </div>
+      <div class="media-content">
+        <div class="content">
+          <h6 class="title is-6">
+            I'm exploring the meaning of data in a business context
+          </h6>
+          <p>Click the button below to see a list of all data domains.</p>
+        </div>
+        <nav class="level is-mobile">
+          <a class="button is-success" (click)="directToConceptual()">
+            <span class="icon is-small">
+              <fa-icon [icon]="faProjectDiagram"></fa-icon>
+            </span>
+            <span>Start browsing data domains</span>
+          </a>
+        </nav>
+      </div>
+    </article>
+  </div>
+</div>
+
+<models4insight-business-context-info-modal></models4insight-business-context-info-modal>

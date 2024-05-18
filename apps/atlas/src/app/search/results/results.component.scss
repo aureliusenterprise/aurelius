@@ -1,0 +1,29 @@
+.results-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  height: 100%;
+  max-height: 80vh;
+}
+
+.filter-box {
+  overflow-y: auto;
+}
+
+.results-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.results-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.card-content {
+  text-align-last: center;
+}

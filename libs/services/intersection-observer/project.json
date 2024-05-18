@@ -1,0 +1,29 @@
+{
+  "name": "services-intersection-observer",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/services/intersection-observer/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/libs/services/intersection-observer"
+      ],
+      "options": {
+        "jestConfig": "libs/services/intersection-observer/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/services/intersection-observer/**/*.ts",
+          "libs/services/intersection-observer/**/*.html"
+        ]
+      }
+    }
+  }
+}

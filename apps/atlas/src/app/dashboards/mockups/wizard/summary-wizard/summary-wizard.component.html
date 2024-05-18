@@ -1,0 +1,141 @@
+<section class="hero is-light is-bold">
+  <div class="hero-head">
+    <header class="navbar">
+      <div class="steps is-small">
+        <div class="step-item is-completed is-success">
+          <div class="step-marker">
+            <span class="icon is-small">
+              <fa-icon [icon]="faCheck" size="sm"></fa-icon>
+            </span>
+          </div>
+          <div class="step-details">
+            <a class="step-title">First time setup</a>
+            <p>Welcome to Aurelius Atlas!</p>
+          </div>
+        </div>
+        <div class="step-item is-completed is-success">
+          <div class="step-marker">
+            <span class="icon is-small">
+              <fa-icon [icon]="faCheck" size="sm"></fa-icon>
+            </span>
+          </div>
+          <div class="step-details">
+            <a class="step-title">Data domains</a>
+            <p>Create a first set of data domains</p>
+          </div>
+        </div>
+        <div class="step-item is-completed is-success">
+          <div class="step-marker">
+            <span class="icon is-small">
+              <fa-icon [icon]="faCheck" size="sm"></fa-icon>
+            </span>
+          </div>
+          <div class="step-details">
+            <a class="step-title">Systems</a>
+            <p>Create a first set of systems</p>
+          </div>
+        </div>
+        <div class="step-item is-active">
+          <div class="step-marker">
+            <span class="icon is-small">
+              <fa-icon [icon]="faFlag" size="sm"></fa-icon>
+            </span>
+          </div>
+          <div class="step-details">
+            <p class="step-title">Summary</p>
+            <p>You're all set!</p>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+  <div class="hero-body">
+    <div>
+      <p class="title">Summary</p>
+      <p class="subtitle">You're all set!</p>
+      <p class="content">
+        Please review your selection of data domains and systems that will be
+        automatically generated.
+      </p>
+      <p class="content has-text-weight-bold">
+        When you're ready, please click the button below to generate the
+        selected data domains and systems.
+      </p>
+      <p class="content has-text-weight-bold">
+        This completes the first time setup wizard.
+      </p>
+
+      <div class="columns">
+        <div class="column">
+          <article class="panel is-warning">
+            <p class="panel-heading">Data domains</p>
+            <p class="panel-tabs">
+              <a class="is-active">All</a>
+              <a>General</a>
+              <a>Manufacturing</a>
+            </p>
+            <div class="panel-block">
+              <p class="control has-icons-left">
+                <input
+                  class="input is-warning"
+                  type="text"
+                  placeholder="Search"
+                />
+                <span class="icon is-left">
+                  <fa-icon [icon]="faSearch"></fa-icon>
+                </span>
+              </p>
+            </div>
+            <label
+              *ngFor="let department of departments"
+              [attr.for]="department"
+              class="panel-block"
+            >
+              <input [attr.id]="department" type="checkbox" checked disabled />
+              {{ department }}
+            </label>
+          </article>
+        </div>
+        <div class="column">
+          <article class="panel is-link">
+            <p class="panel-heading">Systems</p>
+            <p class="panel-tabs">
+              <a class="is-active">All</a>
+              <a>ERP</a>
+              <a>MES</a>
+              <a>IT</a>
+            </p>
+            <div class="panel-block">
+              <p class="control has-icons-left">
+                <input class="input is-link" type="text" placeholder="Search" />
+                <span class="icon is-left">
+                  <fa-icon [icon]="faSearch"></fa-icon>
+                </span>
+              </p>
+            </div>
+            <label
+              *ngFor="let system of systems"
+              [attr.for]="system"
+              class="panel-block"
+            >
+              <input [attr.id]="system" type="checkbox" checked disabled />
+              {{ system }}
+            </label>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-foot">
+    <div class="level">
+      <div class="level-left">
+        <button class="button level-item is-large is-link is-fullwidth">
+          Back
+        </button>
+      </div>
+      <div class="level-right">
+        <button class="button is-large is-primary is-fullwidth">Generate</button>
+      </div>
+    </div>
+  </div>
+</section>

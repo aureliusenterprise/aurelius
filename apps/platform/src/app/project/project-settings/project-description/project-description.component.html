@@ -1,0 +1,17 @@
+<form [formGroup]="projectSettingsForm" (ngSubmit)="onSaveProjectSettings()">
+  <div class="level">
+    <div class="level-left">
+      <h3 class="title is-3 level-item">Project Info</h3>
+    </div>
+    <div class="level-right">
+      <div class="field level-item">
+        <button type="submit" class="button level-item is-success">Save</button>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <models4insight-description-input
+      [control]="projectSettingsForm.controls['description']"
+    ></models4insight-description-input>
+  </div>
+</form>

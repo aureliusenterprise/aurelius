@@ -1,0 +1,24 @@
+{
+  "name": "version",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/version/src",
+  "prefix": "aurelius",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/version"],
+      "options": {
+        "jestConfig": "libs/version/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/version/**/*.ts", "libs/version/**/*.html"]
+      }
+    }
+  }
+}

@@ -1,0 +1,203 @@
+<ng-container
+  [formGroup]="editorFormService.form"
+  *ngIf="validationResults$ | async as rules"
+>
+  <div class="field">
+    <label class="label">Name</label>
+    <div class="grid">
+      <div class="control">
+        <input
+          id="name"
+          name="name"
+          class="input"
+          type="text"
+          placeholder="Name"
+          [formControl]="name"
+          required
+          [class.is-danger]="(name.dirty || name.touched) && name.invalid"
+        />
+      </div>
+      <ng-container *ngIf="rules.name as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+    <ng-container *ngIf="(name.dirty || name.touched) && name.invalid">
+      <p *ngIf="name.errors?.required" class="help is-danger">
+        Name is required.
+      </p>
+    </ng-container>
+  </div>
+
+  <div *ngIf="false" class="field">
+    <label class="label">Type alias</label>
+    <div class="grid">
+      <div class="control">
+        <input
+          id="typeAlias"
+          name="typeAlias"
+          class="input"
+          type="text"
+          placeholder="Type alias"
+          [formControl]="typeAlias"
+          [class.is-danger]="
+            (typeAlias.dirty || typeAlias.touched) && typeAlias.invalid
+          "
+        />
+      </div>
+      <ng-container *ngIf="rules.typeAlias as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Definition</label>
+    <div class="grid">
+      <div class="control">
+        <textarea
+          class="textarea"
+          placeholder="Definition"
+          [formControl]="definition"
+          [class.is-warning]="rules?.definition?.isNonCompliant"
+        ></textarea>
+      </div>
+      <ng-container *ngIf="rules.definition as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Classifications</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-classifications-input
+          [tags]="classifications"
+        ></models4insight-classifications-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Data domains</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="dataDomains"
+          typeName="m4i_data_domain"
+          [rule]="rules?.dataDomain"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.dataDomain as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Parent entities</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="parentEntities"
+          typeName="m4i_data_entity"
+          [rule]="rules.parentEntity"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.parentEntity as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Child entities</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="childEntities"
+          typeName="m4i_data_entity"
+          [rule]="rules.childEntity"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.childEntity as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Data attributes</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="dataAttributes"
+          typeName="m4i_data_attribute"
+          [rule]="rules.attributes"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.attributes as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Data owners</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="dataOwners"
+          typeName="m4i_person"
+          [rule]="rules?.businessOwner"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.businessOwner as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Data stewards</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="dataStewards"
+          typeName="m4i_person"
+          [rule]="rules?.steward"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.steward as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+</ng-container>

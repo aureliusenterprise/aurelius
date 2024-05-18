@@ -1,0 +1,62 @@
+<h4 class="title is-4">Exemptions</h4>
+<h6 class="subtitle is-6">
+  The following exemptions have been made for this metric:
+</h6>
+<models4insight-sortable-table-shell
+  [config]="exemptionsTableConfig"
+  [data]="exemptions$ | async"
+  [enableTableContainer]="false"
+  [itemsPerPage]="10"
+  [rowsSelectable]="false"
+>
+  <ng-template let-rowData>
+    <td>
+      <models4insight-copy-button
+        [value]="rowData.concept_id"
+      ></models4insight-copy-button>
+    </td>
+    <ng-container
+      *ngIf="(exemptionsTableConfig | keyvalue: sortByKeyOrder) as headers"
+    >
+      <ng-container
+        *ngFor="let header of headers; trackBy: trackByIndex; let index = index"
+      >
+        <th *ngIf="index === 1" scope="row">
+          {{
+            header.value.isTimestamp
+              ? (rowData[header.key] | date: 'dd MMM y, HH:mm:ss')
+              : rowData[header.key]
+          }}
+        </th>
+        <td
+          *ngIf="index > 1 && index < headers.length - 2"
+          class="truncate"
+          [title]="
+            header.value.isTimestamp
+              ? (rowData[header.key] | date: 'dd MMM y, HH:mm:ss')
+              : rowData[header.key]
+          "
+        >
+          {{
+            header.value.isTimestamp
+              ? (rowData[header.key] | date: 'dd MMM y, HH:mm:ss')
+              : rowData[header.key]
+          }}
+        </td>
+      </ng-container>
+    </ng-container>
+    <td>
+      {{
+        rowData.version ? 'version' : !rowData.branch || rowData.branch === '*' ? 'project' : 'branch'
+      }}
+    </td>
+    <td>
+      <models4insight-report-exemptions-context-menu
+        (delete)="removeExemption(rowData)"
+        (edit)="editExemption(rowData)"
+      >
+      </models4insight-report-exemptions-context-menu>
+    </td>
+  </ng-template>
+</models4insight-sortable-table-shell>
+<models4insight-add-exemption-modal> </models4insight-add-exemption-modal>

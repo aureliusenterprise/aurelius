@@ -1,0 +1,193 @@
+{
+  "referredEntities": {},
+  "entity": {
+    "typeName": "m4i_data_domain",
+    "attributes": {
+      "archimateReference": [],
+      "replicatedTo": [],
+      "replicatedFrom": [],
+      "qualifiedName": "personnel-and-organization",
+      "domainLead": [
+        {
+          "guid": "56ef000c-8b30-46e5-ba2d-0bed9255ccc0",
+          "typeName": "m4i_person",
+          "uniqueAttributes": {
+            "qualifiedName": "john.knoester@stratonis_group.com",
+            "email": "john.knoester@stratonis_group.com"
+          }
+        }
+      ],
+      "name": "Personnel and Organization",
+      "dataEntity": [
+        {
+          "guid": "af5243ad-bd7f-48e3-b3f7-a5c1d22cf007",
+          "typeName": "m4i_data_entity",
+          "uniqueAttributes": {
+            "qualifiedName": "a3bd7120-086d-4416-9893-716d6ea67960"
+          }
+        },
+        {
+          "guid": "c5102f5a-99d7-4984-b52b-bac353e9e144",
+          "typeName": "m4i_data_entity",
+          "uniqueAttributes": {
+            "qualifiedName": "a58ae15e-998e-4880-8c77-c8addea3517f"
+          }
+        },
+        {
+          "guid": "10b4eb09-b983-40fc-8e2d-a2de8f3da0c0",
+          "typeName": "m4i_data_entity",
+          "uniqueAttributes": {
+            "qualifiedName": "ba3e9c9d-b0b3-41ce-b57f-97c12120fe6d"
+          }
+        },
+        {
+          "guid": "92ca34df-f9d2-4adc-b18b-34373ce1b55f",
+          "typeName": "m4i_data_entity",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--personnel-managed-by-ssc-and-local-branch-offices"
+          }
+        },
+        {
+          "guid": "6480a6eb-6344-4c6b-97bf-01c42affb41a",
+          "typeName": "m4i_data_entity",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--organization"
+          }
+        },
+        {
+          "guid": "60998b3d-35b7-494f-8f61-950d52689760",
+          "typeName": "m4i_data_entity",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--personnel-smd-fleet-initiated"
+          }
+        },
+        {
+          "guid": "0d675be8-6aad-43c2-bd4b-84925ec3e573",
+          "typeName": "m4i_data_entity",
+          "uniqueAttributes": {
+            "qualifiedName": "personnel-and-organization--job"
+          }
+        },
+        {
+          "guid": "fcff9291-9a0f-4251-b049-dbec37cc4163",
+          "typeName": "m4i_data_entity",
+          "uniqueAttributes": {
+            "qualifiedName": "d6ebfcbe-30bc-40fd-b2fb-754a6410aa2e"
+          }
+        }
+      ],
+      "definition": "This data domain contains data from the personnel & organization domain, built out of fixed and temporary personnel managed by SSC and local branch offices, personnel initiated by SMD Fleet Crew and personnel initiated by Project Office.",
+      "source": []
+    },
+    "guid": "e6a315cd-a3c5-43e4-83a3-05ff9a01f8aa",
+    "isIncomplete": false,
+    "provenanceType": 0,
+    "status": "ACTIVE",
+    "createdBy": "admin",
+    "updatedBy": "atlas",
+    "createTime": 1649238419087,
+    "updateTime": 1664186988572,
+    "version": 0,
+    "relationshipAttributes": {
+      "ArchiMateReference": [],
+      "domainLead": [
+        {
+          "guid": "56ef000c-8b30-46e5-ba2d-0bed9255ccc0",
+          "typeName": "m4i_person",
+          "entityStatus": "ACTIVE",
+          "displayText": "John Knoester",
+          "relationshipType": "m4i_domainLead_assignment",
+          "relationshipGuid": "fa830527-b48c-465e-8d60-8ba31cb8764a",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_domainLead_assignment" }
+        }
+      ],
+      "dataEntity": [
+        {
+          "guid": "af5243ad-bd7f-48e3-b3f7-a5c1d22cf007",
+          "typeName": "m4i_data_entity",
+          "entityStatus": "ACTIVE",
+          "displayText": "mehr",
+          "relationshipType": "m4i_data_entity_assignment",
+          "relationshipGuid": "b8fbf9f7-9fc5-48fa-ae35-a5656a6c9086",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_data_entity_assignment" }
+        },
+        {
+          "guid": "c5102f5a-99d7-4984-b52b-bac353e9e144",
+          "typeName": "m4i_data_entity",
+          "entityStatus": "ACTIVE",
+          "displayText": "Mehr Entity",
+          "relationshipType": "m4i_data_entity_assignment",
+          "relationshipGuid": "945ff4d3-edfd-48a3-9bb0-03ed7230a713",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_data_entity_assignment" }
+        },
+        {
+          "guid": "6480a6eb-6344-4c6b-97bf-01c42affb41a",
+          "typeName": "m4i_data_entity",
+          "entityStatus": "ACTIVE",
+          "displayText": "Organization",
+          "relationshipType": "m4i_data_entity_assignment",
+          "relationshipGuid": "548daa6f-e9dd-4d5a-8319-ba9d3c6b80a9",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_data_entity_assignment" }
+        },
+        {
+          "guid": "60998b3d-35b7-494f-8f61-950d52689760",
+          "typeName": "m4i_data_entity",
+          "entityStatus": "ACTIVE",
+          "displayText": "Personnel SMD Fleet initiated (1:49)",
+          "relationshipType": "m4i_data_entity_assignment",
+          "relationshipGuid": "33155e11-420e-4be1-b304-0a3e14762c8d",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_data_entity_assignment" }
+        },
+        {
+          "guid": "0d675be8-6aad-43c2-bd4b-84925ec3e573",
+          "typeName": "m4i_data_entity",
+          "entityStatus": "ACTIVE",
+          "displayText": "Job",
+          "relationshipType": "m4i_data_entity_assignment",
+          "relationshipGuid": "1c6f327d-7901-456f-9e19-df08e76ad26d",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_data_entity_assignment" }
+        },
+        {
+          "guid": "92ca34df-f9d2-4adc-b18b-34373ce1b55f",
+          "typeName": "m4i_data_entity",
+          "entityStatus": "ACTIVE",
+          "displayText": "Personnel managed by SSC and local branch offices",
+          "relationshipType": "m4i_data_entity_assignment",
+          "relationshipGuid": "389fe0f3-ab66-43a5-af58-34493b9d6625",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_data_entity_assignment" }
+        },
+        {
+          "guid": "10b4eb09-b983-40fc-8e2d-a2de8f3da0c0",
+          "typeName": "m4i_data_entity",
+          "entityStatus": "ACTIVE",
+          "displayText": "Mehr",
+          "relationshipType": "m4i_data_entity_assignment",
+          "relationshipGuid": "b1b4d4f0-9eee-4b5a-9f6b-fe5014433773",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_data_entity_assignment" }
+        },
+        {
+          "guid": "fcff9291-9a0f-4251-b049-dbec37cc4163",
+          "typeName": "m4i_data_entity",
+          "entityStatus": "ACTIVE",
+          "displayText": "create entity new page test",
+          "relationshipType": "m4i_data_entity_assignment",
+          "relationshipGuid": "0b909079-2189-49a2-8ab0-7375c2b3881a",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_data_entity_assignment" }
+        }
+      ],
+      "source": [],
+      "meanings": []
+    },
+    "labels": [],
+    "proxy": false
+  }
+}

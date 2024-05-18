@@ -1,0 +1,21 @@
+<div class="block">
+  <models4insight-bread-crumbs
+    [activeGuid]="parentId$ | async"
+  ></models4insight-bread-crumbs>
+</div>
+<div class="block">
+  <models4insight-classifications-list></models4insight-classifications-list>
+</div>
+<div class="block">
+  <models4insight-description
+    [showPlaceholder]="false"
+  ></models4insight-description>
+</div>
+<div *ngIf="showDataQuality" class="block">
+  <models4insight-data-quality-list
+    [showPlaceholder]="false"
+  ></models4insight-data-quality-list>
+</div>
+<div class="block">
+  <models4insight-people [showPlaceholder]="false"></models4insight-people>
+</div>

@@ -1,0 +1,81 @@
+{
+  "name": "storybook",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/storybook/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/storybook"],
+      "options": {
+        "jestConfig": "libs/storybook/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "storybook": {
+      "executor": "@storybook/angular:start-storybook",
+      "options": {
+        "port": 4400,
+        "configDir": "libs/storybook/.storybook",
+        "browserTarget": "storybook:build-storybook",
+        "compodoc": true,
+        "compodocArgs": [
+          "-e json",
+          "--disableSourceCode",
+          "--disableDomTree",
+          "--disableTemplateTab",
+          "--disableStyleTab",
+          "--disableGraph",
+          "--disableCoverage",
+          "--disableRoutesGraph",
+          "--disableSearch",
+          "--disableDependencies",
+          "--disableLifeCycleHooks"
+        ],
+        "styles": ["libs/storybook/storybook.scss"]
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@storybook/angular:build-storybook",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputDir": "dist/storybook/storybook",
+        "configDir": "libs/storybook/.storybook",
+        "browserTarget": "storybook:build-storybook",
+        "compodoc": true,
+        "compodocArgs": [
+          "-e json",
+          "--disableSourceCode",
+          "--disableDomTree",
+          "--disableTemplateTab",
+          "--disableStyleTab",
+          "--disableGraph",
+          "--disableCoverage",
+          "--disableRoutesGraph",
+          "--disableSearch",
+          "--disableDependencies",
+          "--disableLifeCycleHooks",
+          "--disablePrivate"
+        ],
+        "styles": ["libs/storybook/storybook.scss"]
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    }
+  }
+}

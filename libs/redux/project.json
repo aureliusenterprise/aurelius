@@ -1,0 +1,24 @@
+{
+  "name": "redux",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/redux/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/redux"],
+      "options": {
+        "jestConfig": "libs/redux/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/redux/**/*.ts", "libs/redux/**/*.html"]
+      }
+    }
+  }
+}

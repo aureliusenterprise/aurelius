@@ -1,0 +1,9 @@
+<models4insight-markdown
+  *ngIf="description$ | async as description; else noDescription"
+  [markdown]="description"
+></models4insight-markdown>
+<ng-template #noDescription>
+  <p *ngIf="showPlaceholder" class="is-italic has-text-centered">
+    No description available.
+  </p>
+</ng-template>

@@ -1,0 +1,119 @@
+<ng-container *ngIf="(project$ | async) as project">
+  <div class="columns">
+    <div class="column is-narrow">
+      <p class="title is-2">Retrieve a model</p>
+      <p class="subtitle is-5">Search through the repository</p>
+    </div>
+    <div class="column">
+      <div id="cal-heatmap" class="level-item"></div>
+    </div>
+  </div>
+  <div class="columns is-desktop">
+    <div
+      class="column is-two-fifths-desktop is-one-third-widescreen is-one-third-fullhd"
+    >
+      <div class="level">
+        <div class="level-left">
+          <h3 class="level-item title is-3">Filter</h3>
+        </div>
+      </div>
+      <div class="field">
+        <models4insight-simple-search-input
+          [context]="searchInputContext"
+          [query]="search$ | async"
+          (querySubmitted)="setSearchQuery($event)"
+        ></models4insight-simple-search-input>
+      </div>
+      <div class="field">
+        <label class="label" for="date">From</label>
+        <models4insight-date-picker
+          [date]="from$ | async"
+          (dateChanged)="setFromDate($event)"
+        >
+        </models4insight-date-picker>
+      </div>
+      <div class="field">
+        <label class="label" for="date">Until</label>
+        <models4insight-date-picker
+          [date]="until$ | async"
+          (dateChanged)="setUntilDate($event)"
+        >
+        </models4insight-date-picker>
+      </div>
+      <ng-container *ngIf="(branches$ | async) as branches">
+        <div class="field">
+          <div class="level branches-title">
+            <div class="level-left">
+              <label class="label" for="date">Branches</label>
+            </div>
+            <div class="level-right">
+              <ng-container *ngIf="(branch$ | async)">
+                <div class="field level-item">
+                  <div class="control">
+                    <button
+                      class="button is-secondary is-small"
+                      (click)="clearBranchFilter()"
+                    >
+                      Clear branch selection
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <div class="field">
+            <input
+              id="latestOnly"
+              type="checkbox"
+              name="latestOnly"
+              class="switch"
+              [checked]="latestOnly$ | async"
+              (change)="onToggleLatestOnly($event)"
+            />
+            <label class="checkbox" for="latestOnly">
+              Show only the latest changes for each branch
+            </label>
+          </div>
+          <models4insight-branches-table
+            *ngIf="branches.length > 0"
+            [data]="branches"
+            [enableTableContainer]="false"
+          ></models4insight-branches-table>
+        </div>
+      </ng-container>
+    </div>
+    <div class="column">
+      <ng-container *ngIf="(models$ | async) as models; else noSearchResults">
+        <ng-container *ngIf="models.length > 0; else noSearchResults">
+          <div class="level">
+            <div class="level-left">
+              <h3 class="title is-3 level-item">Models</h3>
+            </div>
+          </div>
+          <models4insight-provenance-table
+            [currentPage]="currentPageIndex$ | async"
+            [data]="models"
+            [enableTableContainer]="false"
+            [itemsPerPage]="itemsPerPage"
+            [totalItems]="modelCount$ | async"
+          ></models4insight-provenance-table>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+<ng-template #noModel>
+  <section class="section is-light has-text-centered">
+    <h5 class="title is-5">
+      Your project does not contain any models yet! Please upload a model first.
+    </h5>
+  </section>
+</ng-template>
+<ng-template #noSearchResults>
+  <section class="section is-light has-text-centered">
+    <h5 class="title is-5">
+      No models were found for the current filter settings.
+    </h5>
+    <a routerLink="." class="button is-link">Reset filter</a>
+  </section>
+</ng-template>

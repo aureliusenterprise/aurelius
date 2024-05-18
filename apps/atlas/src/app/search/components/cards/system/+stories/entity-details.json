@@ -1,0 +1,69 @@
+{
+  "referredEntities": {},
+  "entity": {
+    "typeName": "m4i_system",
+    "attributes": {
+      "parentSystem": [],
+      "archimateReference": [],
+      "childSystem": [],
+      "replicatedTo": null,
+      "replicatedFrom": null,
+      "collections": [
+        {
+          "guid": "58becc63-3ded-4f07-8a13-c9602070652a",
+          "typeName": "m4i_collection",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp"
+          }
+        }
+      ],
+      "qualifiedName": "eudtc1ebspdb1.stratonis_group.org",
+      "name": "eudtc1-ebsp-db1.stratonis_group.org",
+      "definition": null,
+      "source": []
+    },
+    "guid": "21177ac3-a4e4-402a-98ad-3a5849001c10",
+    "isIncomplete": false,
+    "provenanceType": 0,
+    "status": "ACTIVE",
+    "createdBy": "admin",
+    "updatedBy": "atlas",
+    "createTime": 1649238418098,
+    "updateTime": 1649245105978,
+    "version": 0,
+    "relationshipAttributes": {
+      "parentSystem": [],
+      "ArchiMateReference": [],
+      "childSystem": [],
+      "collections": [
+        {
+          "guid": "58becc63-3ded-4f07-8a13-c9602070652a",
+          "typeName": "m4i_collection",
+          "entityStatus": "ACTIVE",
+          "displayText": "NLHQEBSP",
+          "relationshipType": "m4i_collection_assignment",
+          "relationshipGuid": "4711087e-2f0d-4866-bbee-e7312ce8e16e",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_collection_assignment" }
+        }
+      ],
+      "source": [
+        {
+          "guid": "b00468d4-f309-4553-b8f5-54c6b7648551",
+          "typeName": "m4i_source",
+          "entityStatus": "ACTIVE",
+          "displayText": "/po/FTE_Actuals/Data Dictionary_FTE Actuals.xlsm",
+          "relationshipType": "m4i_referenceable_source_assignment",
+          "relationshipGuid": "701d7407-60a8-4402-a1ee-3b6b491ffa22",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_referenceable_source_assignment"
+          }
+        }
+      ],
+      "meanings": []
+    },
+    "labels": [],
+    "proxy": false
+  }
+}

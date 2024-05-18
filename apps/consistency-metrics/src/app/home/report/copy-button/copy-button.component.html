@@ -1,0 +1,8 @@
+<a [models4insight-copy]="value" (valueCopied)="toggleCheck()" [title]="value">
+  <span *ngIf="!showCheck" class="icon is-small">
+    <fa-icon [icon]="faCopy"></fa-icon>
+  </span>
+  <span *ngIf="showCheck" class="icon is-small has-text-success">
+    <fa-icon class="check" [icon]="faCheck"></fa-icon>
+  </span>
+</a>

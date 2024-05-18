@@ -1,0 +1,1116 @@
+<!-- "Add a rule" Quickview-->
+<div
+  id="addARuleQuickview"
+  class="quickview"
+  [class.is-active]="isQuickviewActive$ | async"
+>
+  <header class="quickview-header">
+    <h3 class="title is-3">Add an extractor rule</h3>
+    <span
+      class="delete"
+      data-dismiss="quickview"
+      (click)="isQuickviewActive = false"
+    ></span>
+  </header>
+  <ng-container *ngIf="(currentDefinitionType$ | async) as definitionType">
+    <div class="quickview-body">
+      <div class="quickview-block">
+        <div class="tabs is-centered">
+          <ul>
+            <li [class.is-active]="definitionType === DefinitionType.ELEMENT">
+              <a (click)="currentDefinitionType = DefinitionType.ELEMENT"
+                >Element</a
+              >
+            </li>
+            <li [class.is-active]="definitionType === DefinitionType.RELATION">
+              <a (click)="currentDefinitionType = DefinitionType.RELATION"
+                >Relationship</a
+              >
+            </li>
+            <li [class.is-active]="definitionType === DefinitionType.VIEW">
+              <a (click)="currentDefinitionType = DefinitionType.VIEW">View</a>
+            </li>
+          </ul>
+        </div>
+        <section class="section">
+          <ng-container *ngIf="definitionType === DefinitionType.ELEMENT">
+            <ng-container *ngTemplateOutlet="element"></ng-container>
+          </ng-container>
+          <ng-container *ngIf="definitionType === DefinitionType.RELATION">
+            <ng-container *ngTemplateOutlet="relation"></ng-container>
+          </ng-container>
+          <ng-container *ngIf="definitionType === DefinitionType.VIEW">
+            <ng-container *ngTemplateOutlet="view"></ng-container>
+          </ng-container>
+        </section>
+      </div>
+    </div>
+    <footer class="quickview-footer">
+      <div class="buttons">
+        <ng-container *ngIf="getFormForType(definitionType) as currentForm">
+          <a
+            class="button is-success"
+            [class.is-loading]="isUpdatingRules$ | async"
+            (click)="saveRule()"
+            >Save</a
+          >
+          <a
+            *ngIf="currentForm.value.id"
+            class="button is-info"
+            [class.is-loading]="isUpdatingRules$ | async"
+            (click)="saveRuleAs()"
+            >Save as</a
+          >
+          <a class="button is-warning" (click)="clearRule()">Clear</a>
+          <a
+            *ngIf="currentForm.value.id"
+            class="button is-danger"
+            models4insight-holdable
+            holdTime="1"
+            (held)="deleteRule($event)"
+            >Delete</a
+          >
+        </ng-container>
+      </div>
+    </footer>
+  </ng-container>
+</div>
+<!-- "Create an Element" form-->
+<ng-template #element>
+  <form [formGroup]="elementForm">
+    <div class="field">
+      <label id="ruleNameLabel" class="label" for="ruleNameInput"
+        >Rule Name</label
+      >
+      <div class="control is-expanded">
+        <input
+          id="ruleNameInput"
+          formControlName="alias"
+          class="input"
+          [class.is-danger]="
+            (elementForm.controls['alias'].dirty || isSubmitted) &&
+            elementForm.controls['alias'].invalid
+          "
+          aria-labelledby="ruleNameLabel"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label
+        id="ruleDescriptionLabel"
+        class="label"
+        for="ruleDescriptionTextArea"
+        >Rule Description</label
+      >
+      <div class="control">
+        <textarea
+          id="ruleDescriptionTextArea"
+          formControlName="description"
+          class="textarea"
+          placeholder="Short description of the rule"
+          aria-labelledby="ruleDescriptionLabel"
+        ></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <input
+        id="includeSwitch"
+        type="checkbox"
+        name="includeSwitch"
+        class="switch"
+        formControlName="include"
+        aria-labelledby="includeSwitchLabel"
+      />
+      <label id="includeSwitchLabel" class="label" for="includeSwitch"
+        >Is active?</label
+      >
+    </div>
+    <hr class="hr" />
+    <div class="field">
+      <label id="conceptTypeHeader" for="conceptTypeSelect" class="label"
+        >Concept Type</label
+      >
+      <div class="control is-expanded">
+        <div
+          class="select"
+          [class.is-danger]="
+            (elementForm.controls['concept_type'].dirty || isSubmitted) &&
+            elementForm.controls['concept_type'].invalid
+          "
+        >
+          <select
+            id="conceptTypeSelect"
+            formControlName="concept_type"
+            aria-labelledby="conceptTypeHeader"
+          >
+            <option hidden selected [ngValue]="null">
+              -- Please select a type --
+            </option>
+            <option *ngFor="let type of elementTypes" [value]="type[1]">{{
+              type[0]
+            }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="field">
+      <label id="idKeyLabel" for="idKeySelect" class="label">ID Key</label>
+      <div class="control">
+        <div
+          class="select"
+          [class.is-danger]="
+            (elementForm.controls['id_key'].dirty || isSubmitted) &&
+            elementForm.controls['id_key'].invalid
+          "
+        >
+          <select
+            id="idKeySelect"
+            formControlName="id_key"
+            aria-labelledby="idKeyLabel"
+          >
+            <option hidden selected [ngValue]="null">
+              -- Please select a column --
+            </option>
+            <option
+              *ngFor="let header of (headers$ | async)"
+              [value]="header"
+              >{{ header }}</option
+            >
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label id="idPrefixLabel" for="idPrefixInput" class="label"
+        >ID Prefix</label
+      >
+      <div class="control is-expanded">
+        <input
+          id="idPrefixInput"
+          formControlName="id_prefix"
+          class="input"
+          aria-labelledby="idPrefixLabel"
+        />
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="field">
+      <label id="nameKeyLabel" for="nameKeySelect" class="label"
+        >Name Key</label
+      >
+      <div class="control">
+        <div class="select">
+          <select
+            id="nameKeySelect"
+            formControlName="concept_name_key"
+            aria-labelledby="nameKeyLabel"
+          >
+            <option hidden selected [ngValue]="null">
+              -- Please select a column --
+            </option>
+            <option
+              *ngFor="let header of (headers$ | async)"
+              [value]="header"
+              >{{ header }}</option
+            >
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label id="namePrefixLabel" for="namePrefixInput" class="label"
+        >Name Prefix</label
+      >
+      <div class="control is-expanded">
+        <input
+          id="namePrefixInput"
+          formControlName="concept_name_prefix"
+          class="input"
+          aria-labelledby="namePrefixLabel"
+        />
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h6 class="title is-6">Attribute Mapping</h6>
+        </div>
+      </div>
+      <div class="level-right">
+        <a class="button is-success" (click)="addMappingControl(elementForm)"
+          >New attribute</a
+        >
+      </div>
+    </div>
+    <ng-container
+      formArrayName="mapping"
+      *ngFor="
+        let attribute of elementForm.controls['mapping']['controls'];
+        let i = index;
+        trackBy: trackByFn
+      "
+    >
+      <ng-container [formGroupName]="i">
+        <div class="columns is-vcentered is-mobile">
+          <div class="column is-narrow">
+            <a
+              class="delete"
+              (click)="removeMappingControl(elementForm, i)"
+            ></a>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label id="mappingKeyLabel" for="mappingKeyInput" class="label"
+                >Attribute Label</label
+              >
+              <div class="control is-expanded">
+                <input
+                  id="mappingKeyInput"
+                  formControlName="key"
+                  class="input"
+                  [class.is-danger]="
+                    (attribute.controls.key.dirty || isSubmitted) &&
+                    attribute.controls.key.invalid
+                  "
+                  aria-labelledby="mappingKeyLabel"
+                />
+              </div>
+              <label
+                id="mappingValueLabel"
+                for="mappingValueSelect"
+                class="label"
+                >Attribute Value</label
+              >
+              <div class="control">
+                <div class="select">
+                  <select
+                    id="mappingValueSelect"
+                    formControlName="value"
+                    aria-labelledby="mappingValueLabel"
+                  >
+                    <option hidden selected [ngValue]="null">
+                      -- Please select a column --
+                    </option>
+                    <option
+                      *ngFor="let header of (headers$ | async)"
+                      [value]="header"
+                      >{{ header }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </form>
+</ng-template>
+<!-- "Create a Relation" form-->
+<ng-template #relation>
+  <form [formGroup]="relationForm">
+    <div class="field">
+      <label id="ruleNameLabel" class="label" for="ruleNameInput"
+        >Rule Name</label
+      >
+      <div class="control is-expanded">
+        <input
+          id="ruleNameInput"
+          formControlName="alias"
+          class="input"
+          [class.is-danger]="
+            (relationForm.controls['alias'].dirty || isSubmitted) &&
+            relationForm.controls['alias'].invalid
+          "
+          aria-labelledby="ruleNameLabel"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label
+        id="ruleDescriptionLabel"
+        class="label"
+        for="ruleDescriptionTextArea"
+        >Rule Description</label
+      >
+      <div class="control">
+        <textarea
+          id="ruleDescriptionTextArea"
+          formControlName="description"
+          class="textarea"
+          placeholder="Short description of the rule"
+          aria-labelledby="ruleDescriptionLabel"
+        ></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <input
+        id="includeSwitch"
+        type="checkbox"
+        name="includeSwitch"
+        class="switch"
+        formControlName="include"
+        aria-labelledby="includeSwitchLabel"
+      />
+      <label id="includeSwitchLabel" class="label" for="includeSwitch"
+        >Is active?
+      </label>
+    </div>
+    <hr class="hr" />
+    <div class="field">
+      <label id="conceptTypeHeader" for="conceptTypeSelect" class="label"
+        >Relationship Type</label
+      >
+      <div class="control is-expanded">
+        <div
+          class="select"
+          [class.is-danger]="
+            (relationForm.controls['relationship_type'].dirty || isSubmitted) &&
+            relationForm.controls['relationship_type'].invalid
+          "
+        >
+          <select
+            id="conceptTypeSelect"
+            formControlName="relationship_type"
+            aria-labelledby="conceptTypeHeader"
+          >
+            <option hidden selected [ngValue]="null">
+              -- Please select a type --
+            </option>
+            <option *ngFor="let type of relationTypes" [value]="type[1]">{{
+              type[0]
+            }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="field">
+      <label id="idKeyLabel" for="idKeySelect" class="label">ID Key</label>
+      <div class="control">
+        <div
+          class="select"
+          [class.is-danger]="
+            (relationForm.controls['id_key'].dirty || isSubmitted) &&
+            relationForm.controls['id_key'].invalid
+          "
+        >
+          <select
+            id="idKeySelect"
+            formControlName="id_key"
+            aria-labelledby="idKeyLabel"
+          >
+            <option hidden selected [ngValue]="null">
+              -- Please select a column --
+            </option>
+            <option
+              *ngFor="let header of (headers$ | async)"
+              [value]="header"
+              >{{ header }}</option
+            >
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label id="idPrefixLabel" for="idPrefixInput" class="label"
+        >ID Prefix</label
+      >
+      <div class="control is-expanded">
+        <input
+          id="idPrefixInput"
+          formControlName="id_prefix"
+          class="input"
+          aria-labelledby="idPrefixLabel"
+        />
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="field">
+      <label id="sourceLabel" for="sourceSelect" class="label"
+        >Source Element</label
+      >
+      <div class="control">
+        <div
+          class="select"
+          [class.is-danger]="
+            (relationForm.controls['source'].dirty || isSubmitted) &&
+            relationForm.controls['source'].invalid
+          "
+        >
+          <select
+            id="sourceSelect"
+            formControlName="source"
+            aria-labelledby="sourceLabel"
+          >
+            <option hidden selected [ngValue]="null">
+              -- Please select a source --
+            </option>
+            <option
+              *ngFor="let rule of (elementRules$ | async)"
+              [value]="rule.id"
+              >{{ rule.alias }}</option
+            >
+          </select>
+        </div>
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="field">
+      <label id="targetLabel" for="targetSelect" class="label"
+        >Target Element</label
+      >
+      <div class="control">
+        <div
+          class="select"
+          [class.is-danger]="
+            (relationForm.controls['target'].dirty || isSubmitted) &&
+            relationForm.controls['target'].invalid
+          "
+        >
+          <select
+            id="targetSelect"
+            formControlName="target"
+            aria-labelledby="targetLabel"
+          >
+            <option hidden selected [ngValue]="null">
+              -- Please select a target --
+            </option>
+            <option
+              *ngFor="let rule of (elementRules$ | async)"
+              [value]="rule.id"
+              >{{ rule.alias }}</option
+            >
+          </select>
+        </div>
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="field">
+      <label id="nameKeyLabel" for="nameKeySelect" class="label"
+        >Name Key</label
+      >
+      <div class="control">
+        <div class="select">
+          <select
+            id="nameKeySelect"
+            formControlName="relationship_name_key"
+            aria-labelledby="nameKeyLabel"
+          >
+            <option hidden selected [ngValue]="null">
+              -- Please select a column --
+            </option>
+            <option
+              *ngFor="let header of (headers$ | async)"
+              [value]="header"
+              >{{ header }}</option
+            >
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label id="namePrefixLabel" for="namePrefixInput" class="label"
+        >Name Prefix</label
+      >
+      <div class="control is-expanded">
+        <input
+          id="namePrefixInput"
+          formControlName="relationship_name_prefix"
+          class="input"
+          aria-labelledby="namePrefixLabel"
+        />
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h6 class="title is-6">Attribute Mapping</h6>
+        </div>
+      </div>
+      <div class="level-right">
+        <a class="button is-success" (click)="addMappingControl(relationForm)"
+          >New attribute
+        </a>
+      </div>
+    </div>
+    <ng-container
+      formArrayName="mapping"
+      *ngFor="
+        let attribute of relationForm.controls['mapping']['controls'];
+        let i = index;
+        trackBy: trackByFn
+      "
+    >
+      <ng-container [formGroupName]="i">
+        <div class="columns is-vcentered">
+          <div class="column is-narrow">
+            <a
+              class="delete"
+              (click)="removeMappingControl(relationForm, i)"
+            ></a>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label id="mappingKeyLabel" for="mappingKeyInput" class="label"
+                >Attribute Label</label
+              >
+              <div class="control is-expanded">
+                <input
+                  id="mappingKeyInput"
+                  formControlName="key"
+                  class="input"
+                  [class.is-danger]="
+                    (attribute.controls.key.dirty || isSubmitted) &&
+                    attribute.controls.key.invalid
+                  "
+                  aria-labelledby="mappingKeyLabel"
+                />
+              </div>
+              <label
+                id="mappingValueLabel"
+                for="mappingValueSelect"
+                class="label"
+                >Attribute Value</label
+              >
+              <div class="control">
+                <div class="select">
+                  <option hidden selected [ngValue]="null">
+                    -- Please select a column --
+                  </option>
+                  <select
+                    id="mappingValueSelect"
+                    formControlName="value"
+                    aria-labelledby="mappingValueLabel"
+                  >
+                    <option
+                      *ngFor="let header of (headers$ | async)"
+                      [value]="header"
+                      >{{ header }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </form>
+</ng-template>
+<!-- "Create a View" form-->
+<ng-template #view>
+  <form [formGroup]="viewForm">
+    <div class="field">
+      <label id="ruleNameLabel" class="label" for="ruleNameInput"
+        >Rule Name</label
+      >
+      <div class="control is-expanded">
+        <input
+          id="ruleNameInput"
+          formControlName="alias"
+          class="input"
+          [class.is-danger]="
+            (viewForm.controls['alias'].dirty || isSubmitted) &&
+            viewForm.controls['alias'].invalid
+          "
+          aria-labelledby="ruleNameLabel"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label
+        id="ruleDescriptionLabel"
+        class="label"
+        for="ruleDescriptionTextArea"
+        >Rule Description</label
+      >
+      <div class="control">
+        <textarea
+          id="ruleDescriptionTextArea"
+          formControlName="description"
+          class="textarea"
+          placeholder="Short description of the rule"
+          aria-labelledby="ruleDescriptionLabel"
+        ></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <input
+        id="includeSwitch"
+        type="checkbox"
+        name="includeSwitch"
+        class="switch"
+        formControlName="include"
+        aria-labelledby="includeSwitchLabel"
+      />
+      <label id="includeSwitchLabel" class="label" for="includeSwitch"
+        >Is active?</label
+      >
+    </div>
+    <hr class="hr" />
+    <div class="field">
+      <label id="idKeyLabel" for="idKeySelect" class="label">ID Key</label>
+      <div class="control">
+        <div
+          class="select"
+          [class.is-danger]="
+            (viewForm.controls['id_key'].dirty || isSubmitted) &&
+            viewForm.controls['id_key'].invalid
+          "
+        >
+          <select
+            id="idKeySelect"
+            formControlName="id_key"
+            aria-labelledby="idKeyLabel"
+          >
+            <option hidden selected [ngValue]="null">
+              -- Please select a column --
+            </option>
+            <option
+              *ngFor="let header of (headers$ | async)"
+              [value]="header"
+              >{{ header }}</option
+            >
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label id="idPrefixLabel" for="idPrefixInput" class="label"
+        >ID Prefix</label
+      >
+      <div class="control is-expanded">
+        <input
+          id="idPrefixInput"
+          formControlName="id_prefix"
+          class="input"
+          aria-labelledby="idPrefixLabel"
+        />
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="field">
+      <label id="nameTypeLabel" for="nameTypeSelect" class="label"
+        >Name Type</label
+      >
+      <div class="control">
+        <div
+          class="select"
+          [class.is-danger]="
+            (viewForm.controls['view_name_type'].dirty || isSubmitted) &&
+            viewForm.controls['view_name_type'].invalid
+          "
+        >
+          <select
+            id="nameTypeSelect"
+            formControlName="view_name_type"
+            aria-labelledby="nameTypeLabel"
+            (change)="onViewNameTypeChanged()"
+          >
+            <option hidden selected [ngValue]="null">
+              -- Please select a type --
+            </option>
+            <option value="dynamic">Dynamic</option>
+            <option value="static">Static</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <ng-container
+      *ngIf="viewForm.controls['view_name_type'].value === 'dynamic'"
+    >
+      <div class="field">
+        <label id="nameKeyLabel" for="nameKeySelect" class="label"
+          >Name Key</label
+        >
+        <div class="control">
+          <div class="select">
+            <select
+              id="nameKeySelect"
+              formControlName="view_name_key"
+              aria-labelledby="nameKeyLabel"
+            >
+              <option hidden selected [ngValue]="null">
+                -- Please select a column --
+              </option>
+              <option
+                *ngFor="let header of (headers$ | async)"
+                [value]="header"
+                >{{ header }}</option
+              >
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label id="namePrefixLabel" for="namePrefixInput" class="label"
+          >Name Prefix</label
+        >
+        <div class="control is-expanded">
+          <input
+            id="namePrefixInput"
+            formControlName="view_name_prefix"
+            class="input"
+            aria-labelledby="namePrefixLabel"
+          />
+        </div>
+      </div>
+    </ng-container>
+    <ng-container
+      *ngIf="viewForm.controls['view_name_type'].value === 'static'"
+    >
+      <div class="field">
+        <label id="nameValueLabel" for="nameValueInput" class="label"
+          >Name Value</label
+        >
+        <div class="control is-expanded">
+          <input
+            id="nameValueInput"
+            formControlName="view_name_value"
+            class="input"
+            aria-labelledby="nameValueLabel"
+          />
+        </div>
+      </div>
+    </ng-container>
+    <hr class="hr" />
+    <div class="field">
+      <label id="layoutLabel" for="layoutSelect" class="label">Layout</label>
+      <div class="control is-expanded">
+        <div
+          class="select"
+          [class.is-danger]="
+            (viewForm.controls['view_layout'].dirty || isSubmitted) &&
+            viewForm.controls['view_layout'].invalid
+          "
+        >
+          <select
+            id="layoutSelect"
+            formControlName="view_layout"
+            aria-labelledby="layoutLabel"
+          >
+            <option hidden selected [ngValue]="null">
+              -- Please select a layout --
+            </option>
+            <option *ngFor="let layout of viewLayouts" [ngValue]="layout[0]">{{
+              layout[1]
+            }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h6 class="title is-6">Path</h6>
+        </div>
+      </div>
+      <div class="level-right">
+        <a class="button is-success" (click)="addPathControl()"
+          >New directory</a
+        >
+      </div>
+    </div>
+    <ng-container
+      formArrayName="view_path"
+      *ngFor="
+        let path of viewForm.controls['view_path']['controls'];
+        let i = index;
+        trackBy: trackByFn
+      "
+    >
+      <ng-container [formGroupName]="i">
+        <div class="columns is-vcentered is-mobile">
+          <div class="column is-narrow">
+            <a class="delete" (click)="removePathControl(i)"></a>
+          </div>
+          <div class="column">
+            <label id="pathTypeLabel" for="pathTypeSelect" class="label"
+              >Type</label
+            >
+            <div class="control is-expanded">
+              <div class="select">
+                <select
+                  id="pathTypeSelect"
+                  formControlName="type"
+                  aria-labelledby="pathTypeLabel"
+                  (change)="onPathTypeChanged(path)"
+                >
+                  <option hidden selected [ngValue]="null">
+                    -- Please select a type --
+                  </option>
+                  <option value="dynamic">Dynamic</option>
+                  <option value="static">Static</option>
+                </select>
+              </div>
+              <ng-container
+                *ngIf="
+                  viewForm.controls['view_path'].value[i].type === 'dynamic'
+                "
+              >
+                <label
+                  id="pathPrefixInputLabel"
+                  for="pathPrefixInput"
+                  class="label"
+                  >Prefix</label
+                >
+                <div class="control is-expanded">
+                  <input
+                    id="pathPrefixInput"
+                    formControlName="prefix"
+                    class="input"
+                    aria-labelledby="pathPrefixInputLabel"
+                  />
+                </div>
+                <label
+                  id="pathValueSelectLabel"
+                  for="pathValueSelect"
+                  class="label"
+                  >Value</label
+                >
+                <div class="control">
+                  <div class="select">
+                    <select
+                      id="pathValueSelect"
+                      formControlName="value"
+                      aria-labelledby="pathValueSelectLabel"
+                    >
+                      <option hidden selected [ngValue]="null">
+                        -- Please select a column --
+                      </option>
+                      <option
+                        *ngFor="let header of (headers$ | async)"
+                        [value]="header"
+                      >
+                        {{ header }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  viewForm.controls['view_path'].value[i].type === 'static'
+                "
+              >
+                <label
+                  id="pathValueInputLabel"
+                  for="pathValueInput"
+                  class="label"
+                  >Value</label
+                >
+                <div class="control is-expanded">
+                  <input
+                    id="pathValueInput"
+                    formControlName="value"
+                    class="input"
+                    aria-labelledby="pathValueInputLabel"
+                  />
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+    <hr class="hr" />
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h6 class="title is-6">Attribute Mapping</h6>
+        </div>
+      </div>
+      <div class="level-right">
+        <a class="button is-success" (click)="addMappingControl(viewForm)"
+          >New attribute</a
+        >
+      </div>
+    </div>
+    <ng-container
+      formArrayName="mapping"
+      *ngFor="
+        let attribute of viewForm.controls['mapping']['controls'];
+        let i = index;
+        trackBy: trackByFn
+      "
+    >
+      <ng-container [formGroupName]="i">
+        <div class="columns is-vcentered is-mobile">
+          <div class="column is-narrow">
+            <a class="delete" (click)="removeMappingControl(viewForm, i)"></a>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label id="mappingKeyLabel" for="mappingKeyInput" class="label"
+                >Attribute Label</label
+              >
+              <div class="control is-expanded">
+                <input
+                  id="mappingKeyInput"
+                  formControlName="key"
+                  class="input"
+                  [class.is-danger]="
+                    (attribute.controls.key.dirty || isSubmitted) &&
+                    attribute.controls.key.invalid
+                  "
+                  aria-labelledby="mappingKeyLabel"
+                />
+              </div>
+              <label
+                id="mappingValueLabel"
+                for="mappingValueSelect"
+                class="label"
+                >Attribute Value</label
+              >
+              <div class="control">
+                <div class="select">
+                  <select
+                    id="mappingValueSelect"
+                    formControlName="value"
+                    aria-labelledby="mappingValueLabel"
+                  >
+                    <option hidden selected [ngValue]="null">
+                      -- Please select a column --
+                    </option>
+                    <option
+                      *ngFor="let header of (headers$ | async)"
+                      [value]="header"
+                      >{{ header }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+    <hr class="hr" />
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h6 class="title is-6">Elements</h6>
+        </div>
+      </div>
+      <div class="level-right">
+        <a class="button is-success" (click)="addElementControl(viewForm)"
+          >New element</a
+        >
+      </div>
+    </div>
+    <ng-container
+      formArrayName="view_nodes"
+      *ngFor="
+        let node of viewForm.controls['view_nodes']['controls'];
+        let i = index;
+        trackBy: trackByFn
+      "
+    >
+      <ng-container [formGroupName]="i">
+        <div class="columns is-vcentered is-mobile">
+          <div class="column is-narrow">
+            <a class="delete" (click)="removeElementControl(i)"></a>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label id="ruleLabel" for="ruleSelect" class="label"
+                >Element Rule</label
+              >
+              <div class="control">
+                <div
+                  class="select"
+                  [class.is-danger]="
+                    (node.controls.rule.dirty || isSubmitted) &&
+                    node.controls.rule.invalid
+                  "
+                >
+                  <select
+                    id="ruleSelect"
+                    formControlName="rule"
+                    aria-labelledby="ruleLabel"
+                  >
+                    <option hidden selected [ngValue]="null">
+                      -- Please select an element --
+                    </option>
+                    <option
+                      *ngFor="let rule of (elementRules$ | async)"
+                      [value]="rule.id"
+                    >
+                      {{ rule.alias }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+    <hr class="hr" />
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h6 class="title is-6">Relationships</h6>
+        </div>
+      </div>
+      <div class="level-right">
+        <a class="button is-success" (click)="addEdgeControl(viewForm)"
+          >New relationship</a
+        >
+      </div>
+    </div>
+    <ng-container
+      formArrayName="view_edges"
+      *ngFor="
+        let edge of viewForm.controls['view_edges']['controls'];
+        let i = index;
+        trackBy: trackByFn
+      "
+    >
+      <ng-container [formGroupName]="i">
+        <div class="columns is-vcentered is-mobile">
+          <div class="column is-narrow">
+            <a class="delete" (click)="removeEdgeControl(i)"></a>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label id="ruleLabel" for="ruleSelect" class="label"
+                >Relationship Rule</label
+              >
+              <div class="control">
+                <div
+                  class="select"
+                  [class.is-danger]="
+                    (edge.controls.rule.dirty || isSubmitted) &&
+                    edge.controls.rule.invalid
+                  "
+                >
+                  <select
+                    id="ruleSelect"
+                    formControlName="rule"
+                    aria-labelledby="ruleLabel"
+                  >
+                    <option hidden selected [ngValue]="null">
+                      -- Please select a relation --
+                    </option>
+                    <option
+                      *ngFor="let rule of (relationRules$ | async)"
+                      [value]="rule.id"
+                    >
+                      {{ rule.alias }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </form>
+</ng-template>

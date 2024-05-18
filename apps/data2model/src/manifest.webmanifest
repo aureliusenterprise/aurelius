@@ -1,0 +1,16 @@
+{
+  "name": "Data2Model",
+  "short_name": "D2M",
+  "theme_color": "#F7F7F7",
+  "background_color": "#F7F7F7",
+  "scope": "/data2model/",
+  "start_url": "/data2model/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "assets/d2m-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

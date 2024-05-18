@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="box">
+    <h2 class="title is-2">Getting started</h2>
+    <div class="content">
+      <p>
+        Welcome to the Aurelius Atlas solution powered by Apache Atlas! Aurelius
+        Atlas is an open-source Data Governance solution, based on a selection
+        of open-source tools to facilitate business users to access governance
+        information in an easily consumable way and meet the data governance
+        demands of the distributed data world.
+      </p>
+
+      <div class="buttons">
+        <a class="button is-normal is-primary" href="atlas/">
+          Access Aurelius Atlas now
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="box box1">
+    <img src="assets/k8s.png" alt="k8ks logo" class="img1 is-fullwidth" />
+    <h2 class="title is-2">Technology overview​</h2>
+    <div class="content">
+      <p class="text">
+        To enable business users to benefit form governance data, a special user
+        experience is required. The Aurelius Atlas. This solution is using
+        several open source solutions, in particular, Apache Atlas, Keycloak,
+        Apache Flink and ElasticSearch.​ The dependencies of these technologies
+        are depicted here. Several of these solutions have their own management
+        interface, which are exposed in this helm chart, but can easily be
+        disabled.​ All user interfaces are protected by username and passwords
+        which can be derived from the Kubernetes environment by your
+        administrator.
+      </p>
+    </div>
+  </div>
+  <div class="columns is-multiline">
+    <div class="column">
+      <models4insight-aurelius class="hints"></models4insight-aurelius>
+    </div>
+    <div class="column">
+      <models4insight-atlas class="hints"></models4insight-atlas>
+    </div>
+    <div class="column">
+      <models4insight-key class="hints"></models4insight-key>
+    </div>
+    <div class="column">
+      <models4insight-flink class="hints"></models4insight-flink>
+    </div>
+    <div class="column column-bottom">
+      <models4insight-kibana class="hints"></models4insight-kibana>
+    </div>
+    <div class="column column-bottom">
+      <models4insight-kafka class="hints"></models4insight-kafka>
+    </div>
+  </div>
+</div>

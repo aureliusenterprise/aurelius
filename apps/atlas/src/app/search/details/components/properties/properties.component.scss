@@ -1,0 +1,18 @@
+.tip .text {
+  visibility: hidden;
+  background-color: black;
+  width: 20rem;
+  height: fit-content;
+  color: white;
+  padding: 25px;
+  margin: 25px;
+  position: absolute;
+}
+.tip:hover .text {
+  visibility: visible;
+}
+
+.tip {
+  position: relative;
+  display: inline-block;
+}

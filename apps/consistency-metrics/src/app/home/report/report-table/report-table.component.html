@@ -1,0 +1,57 @@
+<models4insight-sortable-table-shell [rowsSelectable]="false">
+  <ng-template let-rowData>
+    <td>
+      <models4insight-copy-button
+        *ngIf="rowData[idColumn] as idValue"
+        [value]="idValue"
+      ></models4insight-copy-button>
+    </td>
+    <ng-container
+      *ngFor="
+        let header of config | keyvalue: sortByKeyOrder;
+        trackBy: trackByIndex;
+        let index = index;
+        let last = last
+      "
+    >
+      <th *ngIf="index === 1" scope="row">
+        <a *ngIf="isSummary" (click)="selectMetricByName(rowData[header.key])">
+          {{ rowData[header.key] }}
+        </a>
+        <ng-container *ngIf="!isSummary">
+          {{
+            header.value.isTimestamp
+              ? (rowData[header.key] | date: 'dd MMM y, HH:mm:ss')
+              : rowData[header.key]
+          }}
+        </ng-container>
+      </th>
+      <td
+        *ngIf="index > 1 && !last"
+        class="truncate"
+        [title]="
+          header.value.isTimestamp
+            ? (rowData[header.key] | date: 'dd MMM y, HH:mm:ss')
+            : rowData[header.key]
+        "
+      >
+        {{
+          header.value.isTimestamp
+            ? (rowData[header.key] | date: 'dd MMM y, HH:mm:ss')
+            : rowData[header.key]
+        }}
+      </td>
+    </ng-container>
+    <td>
+      <a
+        *ngIf="rowData[idColumn] as idValue"
+        class="button is-success is-small"
+        (click)="addExemption(idValue)"
+      >
+        <span class="icon is-small"><fa-icon [icon]="faPlus"></fa-icon></span>
+        <span>Add exemption</span>
+      </a>
+    </td>
+  </ng-template>
+</models4insight-sortable-table-shell>
+<models4insight-add-exemption-modal></models4insight-add-exemption-modal>

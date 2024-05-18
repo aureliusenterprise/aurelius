@@ -1,0 +1,203 @@
+<ng-container
+  [formGroup]="editorFormService.form"
+  *ngIf="validationResults$ | async as rules"
+>
+  <div class="field">
+    <label class="label">Name</label>
+    <div class="grid">
+      <div class="control">
+        <input
+          id="name"
+          name="name"
+          class="input"
+          type="text"
+          placeholder="Name"
+          [formControl]="name"
+          required
+          [class.is-danger]="(name.dirty || name.touched) && name.invalid"
+        />
+      </div>
+      <ng-container *ngIf="rules.name as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+    <ng-container *ngIf="(name.dirty || name.touched) && name.invalid">
+      <p *ngIf="name.errors?.required" class="help is-danger">
+        Name is required.
+      </p>
+    </ng-container>
+  </div>
+
+  <div class="field">
+    <label class="label">Description</label>
+    <div class="grid">
+      <div class="control">
+        <textarea
+          id="description"
+          name="description"
+          class="textarea"
+          placeholder="Description"
+          [formControl]="description"
+          [class.is-warning]="rules?.definition?.isNonCompliant"
+        ></textarea>
+      </div>
+      <ng-container *ngIf="rules.definition as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Dimension</label>
+    <div class="grid">
+      <div class="control">
+        <input
+          id="dimension"
+          name="dimension"
+          class="input"
+          type="text"
+          placeholder="Dimension"
+          [formControl]="qualityDimension"
+          [class.is-warning]="rules?.qualityDimension?.isNonCompliant"
+        />
+      </div>
+      <ng-container *ngIf="rules.qualityDimension as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Rule type</label>
+    <div class="grid">
+      <div class="control">
+        <input
+          id="rule-type"
+          name="rule type"
+          class="input"
+          type="text"
+          placeholder="Rule type"
+          [formControl]="ruleType"
+          [class.is-warning]="rules?.ruleType?.isNonCompliant"
+        />
+      </div>
+      <ng-container *ngIf="rules.ruleType as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Compliant message</label>
+    <div class="grid">
+      <div class="control">
+        <textarea
+          id="compliant-message"
+          name="compliant message"
+          class="textarea"
+          placeholder="Compliant message"
+          [formControl]="compliantMessage"
+          [class.is-danger]="
+            (compliantMessage.dirty || compliantMessage.touched) &&
+            compliantMessage.invalid
+          "
+        ></textarea>
+      </div>
+      <ng-container *ngIf="rules.compliantMessage as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+    <ng-container
+      *ngIf="
+        (compliantMessage.dirty || compliantMessage.touched) &&
+        compliantMessage.invalid
+      "
+    >
+      <p *ngIf="compliantMessage.errors?.required" class="help is-danger">
+        Compliant message is required.
+      </p>
+    </ng-container>
+  </div>
+
+  <div class="field">
+    <label class="label">Non-compliant message</label>
+    <div class="grid">
+      <div class="control">
+        <textarea
+          id="non-compliant-message"
+          name="non-compliant message"
+          class="textarea"
+          placeholder="Non-compliant message"
+          [formControl]="nonCompliantMessage"
+          [class.is-danger]="
+            (nonCompliantMessage.dirty || nonCompliantMessage.touched) &&
+            nonCompliantMessage.invalid
+          "
+        ></textarea>
+      </div>
+      <ng-container *ngIf="rules.nonCompliantMessage as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+    <ng-container
+      *ngIf="
+        (nonCompliantMessage.dirty || nonCompliantMessage.touched) &&
+        nonCompliantMessage.invalid
+      "
+    >
+      <p *ngIf="nonCompliantMessage.errors?.required" class="help is-danger">
+        Non-compliant message is required.
+      </p>
+    </ng-container>
+  </div>
+
+  <div class="field">
+    <label class="label">Expression</label>
+    <div class="grid">
+      <div class="control">
+        <textarea
+          id="expression"
+          name="expression"
+          class="textarea"
+          placeholder="Expression"
+          [formControl]="expression"
+          required
+          [class.is-danger]="
+            (expression.dirty || expression.touched) && expression.invalid
+          "
+        ></textarea>
+      </div>
+      <ng-container *ngIf="rules.expression as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+    <ng-container
+      *ngIf="(expression.dirty || expression.touched) && expression.invalid"
+    >
+      <p *ngIf="expression.errors?.required" class="help is-danger">
+        Expression is required.
+      </p>
+    </ng-container>
+  </div>
+</ng-container>

@@ -1,0 +1,22 @@
+<div class="container">
+    <ng-container *ngIf="listOfDashboardDomains$ | async as domains">
+        <ng-container *ngIf="totalNumberOfDataDomains$ | async as totalNumberOfDomains ">
+            <ng-container *ngIf="totalNumberOfActiveDomains$ | async as numberOfActiveDomains ">
+                <div class="title">State of Data Governance</div>
+                <div class="progress-wrapper">
+                    <progress class="progress is-primary is-large" value="{{numberOfActiveDomains}}"
+                        max="{{totalNumberOfDomains}}">
+                    </progress>
+                    <p class="progress-value has-text-black">
+                        {{numberOfActiveDomains}} of {{totalNumberOfDomains}} departaments.
+                    </p>
+                </div>
+            </ng-container>
+        </ng-container>
+        <div class="box">
+            <ng-container *ngFor="let domain of domains">
+                <models4insight-cards-dashboard [dataDomain]="domain"></models4insight-cards-dashboard>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>

@@ -1,0 +1,102 @@
+{
+  "referredEntities": {},
+  "entity": {
+    "typeName": "m4i_collection",
+    "attributes": {
+      "archimateReference": [],
+      "replicatedTo": null,
+      "replicatedFrom": null,
+      "systems": [
+        {
+          "guid": "21177ac3-a4e4-402a-98ad-3a5849001c10",
+          "typeName": "m4i_system",
+          "uniqueAttributes": { "qualifiedName": "eudtc1ebspdb1.stratonis_group.org" }
+        }
+      ],
+      "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp",
+      "name": "NLHQEBSP",
+      "definition": null,
+      "source": [],
+      "datasets": [
+        {
+          "guid": "ac43827a-a5fc-4a7e-9b58-b997d848ffc4",
+          "typeName": "m4i_dataset",
+          "uniqueAttributes": {
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v"
+          }
+        }
+      ]
+    },
+    "guid": "58becc63-3ded-4f07-8a13-c9602070652a",
+    "isIncomplete": false,
+    "provenanceType": 0,
+    "status": "ACTIVE",
+    "createdBy": "admin",
+    "updatedBy": "atlas",
+    "createTime": 1649238418422,
+    "updateTime": 1662712873127,
+    "version": 0,
+    "relationshipAttributes": {
+      "ArchiMateReference": [],
+      "systems": [
+        {
+          "guid": "21177ac3-a4e4-402a-98ad-3a5849001c10",
+          "typeName": "m4i_system",
+          "entityStatus": "ACTIVE",
+          "displayText": "eudtc1-ebsp-db1.stratonis_group.org",
+          "relationshipType": "m4i_collection_assignment",
+          "relationshipGuid": "4711087e-2f0d-4866-bbee-e7312ce8e16e",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_collection_assignment" }
+        }
+      ],
+      "datasets": [
+        {
+          "guid": "ac43827a-a5fc-4a7e-9b58-b997d848ffc4",
+          "typeName": "m4i_dataset",
+          "entityStatus": "ACTIVE",
+          "displayText": "xxvo_dm_persons_v",
+          "relationshipType": "m4i_dataset_assignment",
+          "relationshipGuid": "77a4a1b4-0821-4b6d-ae5f-bf9e20101876",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": { "typeName": "m4i_dataset_assignment" }
+        }
+      ],
+      "source": [
+        {
+          "guid": "b00468d4-f309-4553-b8f5-54c6b7648551",
+          "typeName": "m4i_source",
+          "entityStatus": "ACTIVE",
+          "displayText": "/po/FTE_Actuals/Data Dictionary_FTE Actuals.xlsm",
+          "relationshipType": "m4i_referenceable_source_assignment",
+          "relationshipGuid": "d2bde1e0-df10-4079-b502-67f80208b9bc",
+          "relationshipStatus": "ACTIVE",
+          "relationshipAttributes": {
+            "typeName": "m4i_referenceable_source_assignment"
+          }
+        }
+      ],
+      "meanings": []
+    },
+    "classifications": [
+      {
+        "typeName": "PII",
+        "entityGuid": "525fb541-c8b0-4bec-bcef-4a004176d622",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      },
+      {
+        "typeName": "PII",
+        "entityGuid": "d28dd5b5-6e77-4946-a242-4a1a6b446476",
+        "entityStatus": "ACTIVE",
+        "propagate": true,
+        "validityPeriods": [],
+        "removePropagationsOnEntityDelete": true
+      }
+    ],
+    "labels": [],
+    "proxy": false
+  }
+}

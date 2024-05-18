@@ -1,0 +1,152 @@
+{
+  "name": "atlas",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/atlas/src",
+  "prefix": "models4insight",
+  "tags": [],
+  "generators": {
+    "@nx/workspace:component": {
+      "style": "scss"
+    }
+  },
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/atlas",
+        "index": "libs/core/src/index.html",
+        "main": "apps/atlas/src/main.ts",
+        "polyfills": "apps/atlas/src/polyfills.ts",
+        "tsConfig": "apps/atlas/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/atlas/src/favicon.ico",
+          "apps/atlas/src/assets",
+          "apps/atlas/src/manifest.webmanifest",
+          {
+            "glob": "**/*",
+            "input": "libs/assets/src/assets",
+            "output": "/assets/"
+          }
+        ],
+        "styles": ["apps/atlas/src/styles.scss"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/atlas/src/environments/environment.ts",
+              "with": "apps/atlas/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            }
+          ],
+          "ngswConfigPath": "apps/atlas/ngsw-config.json"
+        },
+        "standalone": {
+          "fileReplacements": [
+            {
+              "replace": "apps/atlas/src/environments/environment.ts",
+              "with": "apps/atlas/src/environments/environment.standalone.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            }
+          ],
+          "ngswConfigPath": "apps/atlas/ngsw-config.json"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "atlas:build",
+        "host": "127.0.0.1",
+        "proxyConfig": "apps/atlas/proxy.conf.json"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "atlas:build:production"
+        },
+        "development": {
+          "browserTarget": "atlas:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "atlas:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/example/**/*.ts", "apps/example/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/atlas"],
+      "options": {
+        "jestConfig": "apps/atlas/jest.config.js",
+        "tsConfig": "apps/atlas/tsconfig.spec.json",
+        "setupFile": "apps/atlas/src/test-setup.ts",
+        "passWithNoTests": true
+      }
+    },
+    "storybook": {
+      "executor": "@storybook/angular:start-storybook",
+      "options": {
+        "port": 4400,
+        "configDir": "apps/atlas/.storybook",
+        "browserTarget": "atlas:build",
+        "compodoc": false,
+        "styles": ["libs/storybook/storybook.scss"]
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@storybook/angular:build-storybook",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputDir": "dist/storybook/atlas",
+        "configDir": "apps/atlas/.storybook",
+        "browserTarget": "atlas:build",
+        "compodoc": false,
+        "styles": ["libs/storybook/storybook.scss"]
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    }
+  }
+}

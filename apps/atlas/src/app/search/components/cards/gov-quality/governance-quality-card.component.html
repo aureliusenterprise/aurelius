@@ -1,0 +1,28 @@
+<ng-container *ngIf="searchResult$ | async as searchResult">
+  <div class="block">
+    <p>
+      <span class="icon-text">
+        <span
+          class="icon"
+          [class.has-text-warning]="searchResult.compliant?.raw === '0'"
+          [class.has-text-success]="searchResult.compliant?.raw === '1'"
+        >
+          <fa-icon
+            *ngIf="searchResult.compliant?.raw === '0'"
+            [icon]="faExclamationTriangle"
+          >
+          </fa-icon>
+          <fa-icon
+            *ngIf="searchResult.compliant?.raw === '1'"
+            [icon]="faCheckCircle"
+          >
+          </fa-icon>
+        </span>
+        <span>
+          {{ searchResult.dataqualityruledimension?.raw | titlecase }} -
+          {{ searchResult.result?.raw }}
+        </span>
+      </span>
+    </p>
+  </div>
+</ng-container>

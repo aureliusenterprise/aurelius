@@ -1,0 +1,36 @@
+{
+  "PII": {
+    "category": "CLASSIFICATION",
+    "guid": "93748ae5-e69c-445f-9e49-3577e283138a",
+    "createdBy": "atlas",
+    "updatedBy": "atlas",
+    "createTime": 1649238299976,
+    "updateTime": 1649238299976,
+    "version": 1,
+    "name": "PII",
+    "description": "PII",
+    "typeVersion": "1.0",
+    "options": {},
+    "attributeDefs": [],
+    "superTypes": [],
+    "entityTypes": ["m4i_data_attribute", "m4i_field"],
+    "subTypes": []
+  },
+  "high_risk": {
+    "category": "CLASSIFICATION",
+    "guid": "34b402be-fa4f-4db5-98a1-60b15f302a7b",
+    "createdBy": "atlas",
+    "updatedBy": "atlas",
+    "createTime": 1649238299983,
+    "updateTime": 1649238299983,
+    "version": 1,
+    "name": "high_risk",
+    "description": "high_risk",
+    "typeVersion": "1.0",
+    "options": {},
+    "attributeDefs": [],
+    "superTypes": [],
+    "entityTypes": ["m4i_data_attribute", "m4i_field"],
+    "subTypes": []
+  }
+}

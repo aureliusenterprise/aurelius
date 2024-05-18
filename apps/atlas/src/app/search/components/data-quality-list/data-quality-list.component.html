@@ -1,0 +1,57 @@
+<ng-container *ngIf="searchResult$ | async as searchResult">
+  <div
+    class="field is-grouped is-grouped-multiline"
+    *ngIf="searchResult.dqscorecnt_overall?.raw; else notAvailable"
+  >
+    <ng-container
+      *ngTemplateOutlet="dimensionTemplate; context: { dimension: 'accuracy' }"
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        dimensionTemplate;
+        context: { dimension: 'completeness' }
+      "
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        dimensionTemplate;
+        context: { dimension: 'timeliness' }
+      "
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        dimensionTemplate;
+        context: { dimension: 'uniqueness' }
+      "
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="dimensionTemplate; context: { dimension: 'validity' }"
+    ></ng-container>
+  </div>
+
+  <ng-template #dimensionTemplate let-dimension="dimension">
+    <div
+      *ngIf="searchResult['dqscorecnt_' + dimension]?.raw as count"
+      class="control"
+    >
+      <p class="quality-dimension">
+        <span class="icon is-small">
+          <models4insight-data-quality-pie
+            [value]="searchResult['dqscore_' + dimension]?.raw * 100"
+          ></models4insight-data-quality-pie>
+        </span>
+        <span class="quality-score"
+          >{{
+            searchResult['dqscore_' + dimension]?.raw | percent: '1.0-1'
+          }}&nbsp;{{ dimension }}&nbsp;({{ count }})
+        </span>
+      </p>
+    </div>
+  </ng-template>
+</ng-container>
+
+<ng-template #notAvailable>
+  <p *ngIf="showPlaceholder" class="is-italic has-text-centered">
+    No data quality results available
+  </p>
+</ng-template>

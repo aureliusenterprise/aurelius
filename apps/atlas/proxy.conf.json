@@ -1,0 +1,106 @@
+{
+  "/auth": {
+    "pathRewrite": {
+      "^/auth": ""
+    },
+    "target": "http://127.0.0.1:9100/auth",
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/compare": {
+    "pathRewrite": {
+      "^/compare": ""
+    },
+    "target": "http://127.0.0.1:5555/compare",
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/errorlog/api": {
+    "pathRewrite": {
+      "^/errorlog/api": ""
+    },
+    "target": "http://127.0.0.1:3333/api",
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/flask": {
+    "pathRewrite": {
+      "^/flask": ""
+    },
+    "target": "http://127.0.0.1:5555",
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/repository": {
+    "pathRewrite": {
+      "^/repository": ""
+    },
+    "target": "http://127.0.0.1:8989/RestApi3",
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/users": {
+    "pathRewrite": {
+      "^/users": ""
+    },
+    "target": "http://127.0.0.1:8989/RestUser/api/users",
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/atlas": {
+    "pathRewrite": {
+      "^/atlas": ""
+    },
+    "target": "http://127.0.0.1:9100/atlas/atlas",
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/lineage_model": {
+    "pathRewrite": {
+      "^/lineage_model": ""
+    },
+    "target": "http://127.0.0.1:5555/lineage_model",
+    "changeOrigin": false,
+    "secure": false
+  },
+  "/elastic": {
+    "pathRewrite": {
+      "^/elastic": ""
+    },
+    "target": "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev/search.json",
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/api/data_governance_dashboard": {
+    "pathRewrite": {
+      "^/api/data_governance_dashboard": ""
+    },
+    "target": "http://127.0.0.1:5555/data_governance/dashboard",
+    "changeOrigin": false,
+    "secure": false
+  },
+  "/data_quality": {
+    "pathRewrite": {
+      "^/data_quality": ""
+    },
+    "target": "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev-quality/search.json",
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/gov_quality": {
+    "pathRewrite": {
+      "^/gov_quality": ""
+    },
+    "target": "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev-gov-quality/search.json",
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/validate_entity": {
+    "pathRewrite": {
+      "^/validate_entity": ""
+    },
+    "target": "http://127.0.0.1:5555/validate_entity",
+    "changeOrigin": false,
+    "secure": false
+  }
+}

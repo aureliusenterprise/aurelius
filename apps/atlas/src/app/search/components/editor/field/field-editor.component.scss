@@ -1,0 +1,12 @@
+@import 'bulma/sass/utilities/mixins.sass';
+
+.grid {
+  @include desktop {
+    // Styles applied
+    // above $desktop
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+}

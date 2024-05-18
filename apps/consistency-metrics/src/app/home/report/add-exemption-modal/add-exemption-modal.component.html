@@ -1,0 +1,20 @@
+<models4insight-modal>
+  <div class="field">
+    <label class="label">Concept ID</label>
+    <p class="content">
+      {{ form.value.conceptId }}
+    </p>
+  </div>
+  <div class="field">
+    <models4insight-scope-select
+      [control]="form.controls['scope']"
+      [isSubmitted]="isSubmitted"
+    ></models4insight-scope-select>
+  </div>
+  <div class="field">
+    <models4insight-description-input
+      [control]="form.controls['comment']"
+      [isSubmitted]="isSubmitted"
+    ></models4insight-description-input>
+  </div>
+</models4insight-modal>

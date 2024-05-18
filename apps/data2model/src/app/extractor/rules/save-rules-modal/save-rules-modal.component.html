@@ -1,0 +1,15 @@
+<models4insight-modal [context]="modalContext">
+  <form [formGroup]="form">
+    <div class="field">
+      <label id="fileNameLabel" class="label" for="fileNameInput">Name</label>
+      <div class="control">
+        <input
+          id="fileNameInput"
+          formControlName="name"
+          class="input"
+          aria-labelledby="fileNameLabel"
+        />
+      </div>
+    </div>
+  </form>
+</models4insight-modal>

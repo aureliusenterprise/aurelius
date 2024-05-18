@@ -1,0 +1,41 @@
+{
+  "derivedperson": { "raw": ["Dionysia van Rijn", "Diane van Zanten"] },
+  "derivedfield": { "raw": [] },
+  "dqscorecnt_overall": { "raw": 7.0 },
+  "deriveddataattribute": { "raw": [] },
+  "dqscorecnt_timeliness": { "raw": 0.0 },
+  "deriveddataentity": { "raw": [] },
+  "supertypenames": {
+    "raw": ["Referenceable", "m4i_referenceable", "m4i_data_entity"]
+  },
+  "definition": {
+    "raw": "This entity contains information about the organizational unit in which a group of employees work together within an assigned discipline. ",
+    "snippet": "This entity contains information about the organizational unit in which a group of employees work"
+  },
+  "dqscore_accuracy": { "raw": 0.9015 },
+  "dqscorecnt_validity": { "raw": 0.0 },
+  "dqscore_timeliness": { "raw": 0.0 },
+  "derivedcollection": { "raw": [] },
+  "dqscorecnt_accuracy": { "raw": 4.0 },
+  "dqscore_validity": { "raw": 0.0 },
+  "derivedsystem": { "raw": [] },
+  "deriveddataset": { "raw": ["xxvo_dm_persons_v"] },
+  "dqscore_uniqueness": { "raw": 0.0 },
+  "breadcrumbname": { "raw": ["Personnel and Organization"] },
+  "dqscorecnt_completeness": { "raw": 3.0 },
+  "breadcrumbguid": { "raw": ["e6a315cd-a3c5-43e4-83a3-05ff9a01f8aa"] },
+  "deriveddatadomain": { "raw": ["Personnel and Organization"] },
+  "dqscore_overall": { "raw": 0.9437142857142857 },
+  "name": { "raw": "Organization" },
+  "guid": { "raw": "6480a6eb-6344-4c6b-97bf-01c42affb41a" },
+  "dqscore_completeness": { "raw": 1.0 },
+  "breadcrumbtype": { "raw": ["m4i_data_domain"] },
+  "dqscorecnt_uniqueness": { "raw": 0.0 },
+  "typename": { "raw": "m4i_data_entity" },
+  "_meta": {
+    "engine": "atlas-dev",
+    "score": 1.0,
+    "id": "6480a6eb-6344-4c6b-97bf-01c42affb41a"
+  },
+  "id": { "raw": "6480a6eb-6344-4c6b-97bf-01c42affb41a" }
+}

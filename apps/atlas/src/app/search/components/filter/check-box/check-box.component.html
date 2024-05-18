@@ -1,0 +1,11 @@
+<ng-container *ngIf="value$ | async as value">
+  <label class="checkbox">
+    <input [formControl]="control" type="checkbox" [name]="value | translate" />
+    <span class="label-text">
+      <span>{{ value | translate }}</span>
+      <ng-container *ngIf="count$ | async as count">
+        <span *ngIf="count !== '0'">&nbsp;({{ count }})</span>
+      </ng-container>
+    </span>
+  </label>
+</ng-container>
