@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { CheckBoxComponent } from './check-box.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<CheckBoxComponent>;
 
-const Template: Story<CheckBoxComponent> = (args: CheckBoxComponent) => ({
+const Template: StoryFn<CheckBoxComponent> = (args: CheckBoxComponent) => ({
   props: args,
 });
 

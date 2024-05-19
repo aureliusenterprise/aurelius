@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { FacetComponent } from './facet.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<FacetComponent>;
 
-const Template: Story<FacetComponent> = (args: FacetComponent) => ({
+const Template: StoryFn<FacetComponent> = (args: FacetComponent) => ({
   props: args,
 });
 

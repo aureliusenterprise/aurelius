@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { SearchComponent } from './search.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<SearchComponent>;
 
-const Template: Story<SearchComponent> = (args: SearchComponent) => ({
+const Template: StoryFn<SearchComponent> = (args: SearchComponent) => ({
   props: args,
 });
 

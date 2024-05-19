@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { GovernanceResponsibilitiesInfoModalComponent } from './governance-responsibilities-info-modal.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<GovernanceResponsibilitiesInfoModalComponent>;
 
-const Template: Story<GovernanceResponsibilitiesInfoModalComponent> = (args: GovernanceResponsibilitiesInfoModalComponent) => ({
+const Template: StoryFn<GovernanceResponsibilitiesInfoModalComponent> = (args: GovernanceResponsibilitiesInfoModalComponent) => ({
   props: args,
 });
 

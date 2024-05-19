@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { BreadCrumbsComponent } from './bread-crumbs.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<BreadCrumbsComponent>;
 
-const Template: Story<BreadCrumbsComponent> = (args: BreadCrumbsComponent) => ({
+const Template: StoryFn<BreadCrumbsComponent> = (args: BreadCrumbsComponent) => ({
   props: args,
 });
 

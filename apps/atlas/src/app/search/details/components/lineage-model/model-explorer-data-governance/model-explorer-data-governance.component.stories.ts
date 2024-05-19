@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { ModelExplorerDataGovernanceComponent } from './model-explorer-data-governance.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<ModelExplorerDataGovernanceComponent>;
 
-const Template: Story<ModelExplorerDataGovernanceComponent> = (args: ModelExplorerDataGovernanceComponent) => ({
+const Template: StoryFn<ModelExplorerDataGovernanceComponent> = (args: ModelExplorerDataGovernanceComponent) => ({
   props: args,
 });
 

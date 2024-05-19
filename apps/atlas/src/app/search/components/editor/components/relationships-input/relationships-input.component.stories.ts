@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { RelationshipsInputComponent } from './relationships-input.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<RelationshipsInputComponent>;
 
-const Template: Story<RelationshipsInputComponent> = (args: RelationshipsInputComponent) => ({
+const Template: StoryFn<RelationshipsInputComponent> = (args: RelationshipsInputComponent) => ({
   props: args,
 });
 

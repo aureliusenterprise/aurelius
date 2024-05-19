@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { ProcessEditorComponent } from './process-editor.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<ProcessEditorComponent>;
 
-const Template: Story<ProcessEditorComponent> = (args: ProcessEditorComponent) => ({
+const Template: StoryFn<ProcessEditorComponent> = (args: ProcessEditorComponent) => ({
   props: args,
 });
 

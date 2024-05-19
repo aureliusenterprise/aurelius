@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { DatasetsCardsComponent } from './datasets-cards.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<DatasetsCardsComponent>;
 
-const Template: Story<DatasetsCardsComponent> = (args: DatasetsCardsComponent) => ({
+const Template: StoryFn<DatasetsCardsComponent> = (args: DatasetsCardsComponent) => ({
   props: args,
 });
 

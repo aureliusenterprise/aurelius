@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { AttributeEditorComponent } from './attribute-editor.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<AttributeEditorComponent>;
 
-const Template: Story<AttributeEditorComponent> = (args: AttributeEditorComponent) => ({
+const Template: StoryFn<AttributeEditorComponent> = (args: AttributeEditorComponent) => ({
   props: args,
 });
 

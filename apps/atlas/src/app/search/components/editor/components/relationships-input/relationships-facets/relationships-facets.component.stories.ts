@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { RelationshipsFacetsComponent } from './relationships-facets.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<RelationshipsFacetsComponent>;
 
-const Template: Story<RelationshipsFacetsComponent> = (args: RelationshipsFacetsComponent) => ({
+const Template: StoryFn<RelationshipsFacetsComponent> = (args: RelationshipsFacetsComponent) => ({
   props: args,
 });
 

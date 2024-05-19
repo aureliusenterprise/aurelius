@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { DataQualityListComponent } from './data-quality-list.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<DataQualityListComponent>;
 
-const Template: Story<DataQualityListComponent> = (args: DataQualityListComponent) => ({
+const Template: StoryFn<DataQualityListComponent> = (args: DataQualityListComponent) => ({
   props: args,
 });
 

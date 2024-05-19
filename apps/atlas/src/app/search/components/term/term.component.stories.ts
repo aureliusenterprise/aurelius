@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { TermComponent } from './term.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<TermComponent>;
 
-const Template: Story<TermComponent> = (args: TermComponent) => ({
+const Template: StoryFn<TermComponent> = (args: TermComponent) => ({
   props: args,
 });
 

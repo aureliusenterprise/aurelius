@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { DataQualityPieComponent } from './data-quality-pie.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<DataQualityPieComponent>;
 
-const Template: Story<DataQualityPieComponent> = (args: DataQualityPieComponent) => ({
+const Template: StoryFn<DataQualityPieComponent> = (args: DataQualityPieComponent) => ({
   props: args,
 });
 

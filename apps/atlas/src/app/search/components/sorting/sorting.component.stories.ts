@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { SortingComponent } from './sorting.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<SortingComponent>;
 
-const Template: Story<SortingComponent> = (args: SortingComponent) => ({
+const Template: StoryFn<SortingComponent> = (args: SortingComponent) => ({
   props: args,
 });
 

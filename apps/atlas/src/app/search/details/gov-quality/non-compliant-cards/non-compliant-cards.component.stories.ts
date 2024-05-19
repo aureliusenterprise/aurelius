@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { NonCompliantCardsComponent } from './non-compliant-cards.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<NonCompliantCardsComponent>;
 
-const Template: Story<NonCompliantCardsComponent> = (args: NonCompliantCardsComponent) => ({
+const Template: StoryFn<NonCompliantCardsComponent> = (args: NonCompliantCardsComponent) => ({
   props: args,
 });
 

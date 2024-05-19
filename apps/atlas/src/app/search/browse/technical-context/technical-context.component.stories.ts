@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { TechnicalContextComponent } from './technical-context.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<TechnicalContextComponent>;
 
-const Template: Story<TechnicalContextComponent> = (args: TechnicalContextComponent) => ({
+const Template: StoryFn<TechnicalContextComponent> = (args: TechnicalContextComponent) => ({
   props: args,
 });
 

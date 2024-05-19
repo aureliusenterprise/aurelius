@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { DomainEditorComponent } from './domain-editor.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<DomainEditorComponent>;
 
-const Template: Story<DomainEditorComponent> = (args: DomainEditorComponent) => ({
+const Template: StoryFn<DomainEditorComponent> = (args: DomainEditorComponent) => ({
   props: args,
 });
 

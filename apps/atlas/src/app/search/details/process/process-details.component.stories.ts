@@ -1,4 +1,4 @@
-import { Meta, moduleMetadata, Story } from '@storybook/angular';
+import { Meta, moduleMetadata, StoryFn } from '@storybook/angular';
 import { ProcessDetailsComponent } from './process-details.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<ProcessDetailsComponent>;
 
-const Template: Story<ProcessDetailsComponent> = (
+const Template: StoryFn<ProcessDetailsComponent> = (
   args: ProcessDetailsComponent
 ) => ({
   props: args,

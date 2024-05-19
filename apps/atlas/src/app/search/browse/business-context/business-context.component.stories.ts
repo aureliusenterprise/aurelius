@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { BusinessContextComponent } from './business-context.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<BusinessContextComponent>;
 
-const Template: Story<BusinessContextComponent> = (args: BusinessContextComponent) => ({
+const Template: StoryFn<BusinessContextComponent> = (args: BusinessContextComponent) => ({
   props: args,
 });
 

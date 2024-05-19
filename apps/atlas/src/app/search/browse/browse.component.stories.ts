@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { BrowseComponent } from './browse.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<BrowseComponent>;
 
-const Template: Story<BrowseComponent> = (args: BrowseComponent) => ({
+const Template: StoryFn<BrowseComponent> = (args: BrowseComponent) => ({
   props: args,
 });
 

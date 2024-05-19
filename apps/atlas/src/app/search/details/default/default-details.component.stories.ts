@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { DefaultDetailsComponent } from './default-details.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<DefaultDetailsComponent>;
 
-const Template: Story<DefaultDetailsComponent> = (args: DefaultDetailsComponent) => ({
+const Template: StoryFn<DefaultDetailsComponent> = (args: DefaultDetailsComponent) => ({
   props: args,
 });
 

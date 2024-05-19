@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { ClassificationsInputComponent } from './classifications-input.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<ClassificationsInputComponent>;
 
-const Template: Story<ClassificationsInputComponent> = (args: ClassificationsInputComponent) => ({
+const Template: StoryFn<ClassificationsInputComponent> = (args: ClassificationsInputComponent) => ({
   props: args,
 });
 

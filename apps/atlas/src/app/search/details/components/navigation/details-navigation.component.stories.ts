@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { DetailsNavigationComponent } from './details-navigation.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<DetailsNavigationComponent>;
 
-const Template: Story<DetailsNavigationComponent> = (args: DetailsNavigationComponent) => ({
+const Template: StoryFn<DetailsNavigationComponent> = (args: DetailsNavigationComponent) => ({
   props: args,
 });
 

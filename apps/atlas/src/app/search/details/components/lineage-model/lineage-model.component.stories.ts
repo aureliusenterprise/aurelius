@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { LineageModelComponent } from './lineage-model.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<LineageModelComponent>;
 
-const Template: Story<LineageModelComponent> = (args: LineageModelComponent) => ({
+const Template: StoryFn<LineageModelComponent> = (args: LineageModelComponent) => ({
   props: args,
 });
 

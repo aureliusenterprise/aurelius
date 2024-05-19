@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { ClassificationSourceComponent } from './classification-source.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<ClassificationSourceComponent>;
 
-const Template: Story<ClassificationSourceComponent> = (args: ClassificationSourceComponent) => ({
+const Template: StoryFn<ClassificationSourceComponent> = (args: ClassificationSourceComponent) => ({
   props: args,
 });
 

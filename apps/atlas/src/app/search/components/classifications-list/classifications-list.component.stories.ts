@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { ClassificationsListComponent } from './classifications-list.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<ClassificationsListComponent>;
 
-const Template: Story<ClassificationsListComponent> = (args: ClassificationsListComponent) => ({
+const Template: StoryFn<ClassificationsListComponent> = (args: ClassificationsListComponent) => ({
   props: args,
 });
 

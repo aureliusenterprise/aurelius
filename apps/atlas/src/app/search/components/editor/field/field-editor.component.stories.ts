@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { FieldEditorComponent } from './field-editor.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<FieldEditorComponent>;
 
-const Template: Story<FieldEditorComponent> = (args: FieldEditorComponent) => ({
+const Template: StoryFn<FieldEditorComponent> = (args: FieldEditorComponent) => ({
   props: args,
 });
 

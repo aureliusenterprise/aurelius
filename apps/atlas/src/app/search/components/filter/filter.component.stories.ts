@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { FilterComponent } from './filter.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<FilterComponent>;
 
-const Template: Story<FilterComponent> = (args: FilterComponent) => ({
+const Template: StoryFn<FilterComponent> = (args: FilterComponent) => ({
   props: args,
 });
 

@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { CollectionEditorComponent } from './collection-editor.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<CollectionEditorComponent>;
 
-const Template: Story<CollectionEditorComponent> = (args: CollectionEditorComponent) => ({
+const Template: StoryFn<CollectionEditorComponent> = (args: CollectionEditorComponent) => ({
   props: args,
 });
 

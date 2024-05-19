@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { BusinessContextInfoModalComponent } from './business-context-info-modal.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<BusinessContextInfoModalComponent>;
 
-const Template: Story<BusinessContextInfoModalComponent> = (args: BusinessContextInfoModalComponent) => ({
+const Template: StoryFn<BusinessContextInfoModalComponent> = (args: BusinessContextInfoModalComponent) => ({
   props: args,
 });
 

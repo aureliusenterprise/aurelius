@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { SystemEditorComponent } from './system-editor.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<SystemEditorComponent>;
 
-const Template: Story<SystemEditorComponent> = (args: SystemEditorComponent) => ({
+const Template: StoryFn<SystemEditorComponent> = (args: SystemEditorComponent) => ({
   props: args,
 });
 

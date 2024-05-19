@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { DatasetEditorComponent } from './dataset-editor.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<DatasetEditorComponent>;
 
-const Template: Story<DatasetEditorComponent> = (args: DatasetEditorComponent) => ({
+const Template: StoryFn<DatasetEditorComponent> = (args: DatasetEditorComponent) => ({
   props: args,
 });
 

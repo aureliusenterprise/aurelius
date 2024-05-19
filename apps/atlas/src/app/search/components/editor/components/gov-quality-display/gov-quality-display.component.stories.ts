@@ -1,4 +1,4 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
+import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { GovQualityDisplayComponent } from './gov-quality-display.component';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   ],
 } as Meta<GovQualityDisplayComponent>;
 
-const Template: Story<GovQualityDisplayComponent> = (args: GovQualityDisplayComponent) => ({
+const Template: StoryFn<GovQualityDisplayComponent> = (args: GovQualityDisplayComponent) => ({
   props: args,
 });
 
