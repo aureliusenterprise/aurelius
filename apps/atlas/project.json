@@ -82,7 +82,6 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
         "browserTarget": "atlas:build",
-        "host": "127.0.0.1",
         "proxyConfig": "apps/atlas/proxy.conf.json"
       },
       "configurations": {
@@ -123,7 +122,7 @@
         "port": 4400,
         "configDir": "apps/atlas/.storybook",
         "browserTarget": "atlas:build",
-        "compodoc": false,
+        "compodoc": true,
         "styles": ["libs/storybook/storybook.scss"]
       },
       "configurations": {
@@ -139,7 +138,7 @@
         "outputDir": "dist/storybook/atlas",
         "configDir": "apps/atlas/.storybook",
         "browserTarget": "atlas:build",
-        "compodoc": false,
+        "compodoc": true,
         "styles": ["libs/storybook/storybook.scss"]
       },
       "configurations": {

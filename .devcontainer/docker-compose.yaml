@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  dev:
+    image: mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye
+    volumes:
+      - ..:/workspace
+      - node_modules:/workspace/node_modules
+    command: 'sleep infinity'
+
+  keycloak:
+    image: aureliusatlas/docker-keycloak:16.1.0.3
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: /tmp/keycloak-config/atlas-dev.json
+      KEYCLOAK_PORT: 8180
+      KEYCLOAK_REALM_NAME: 'atlas-dev'
+    volumes:
+      - keycloak-data:/opt/jboss/keycloak/standalone/data
+    configs:
+      - source: keycloak-config
+        target: /tmp/keycloak-config/atlas-dev.json
+      - source: keycloak-settings
+        target: /opt/jboss/keycloak/standalone/configuration/standalone.xml
+    network_mode: service:dev
+    restart: unless-stopped
+    command: ['-b 0.0.0.0', '-bmanagement 0.0.0.0', '-Djboss.http.port=8180']
+
+configs:
+  keycloak-config:
+    file: ./keycloak/realms/atlas-dev.json
+  keycloak-settings:
+    file: ./keycloak/settings/standalone.xml
+
+volumes:
+  keycloak-data:
+  node_modules:

@@ -14,8 +14,8 @@ export const environment = {
   },
   keycloak: {
     url: '/auth',
-    realm: 'm4i',
-    clientId: 'm4i_thijs',
+    realm: 'atlas-dev',
+    clientId: 'm4i_aurelius_atlas_dev',
   },
   notifications: {
     badgePath: 'assets/m4i-icon.png',
