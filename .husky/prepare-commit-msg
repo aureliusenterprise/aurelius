@@ -5,8 +5,10 @@ COMMIT_MSG_FILE=$1
 COMMIT_SOURCE=$2
 SHA1=$3
 
-# Exit if the commit message file is non-empty
-if [ -s "$COMMIT_MSG_FILE" ]; then
+echo "COMMIT_MSG_FILE: $COMMIT_MSG_FILE"
+
+# Exit if the commit message file has any content aside from comments and whitespace
+if grep -vE '^\s*#|^\s*$' "$COMMIT_MSG_FILE" | grep -q .; then
   exit 0
 fi
 
