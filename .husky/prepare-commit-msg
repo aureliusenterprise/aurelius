@@ -1,4 +1,14 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+SHA1=$3
+
+# Exit if the commit message file is non-empty
+if [ -s "$COMMIT_MSG_FILE" ]; then
+  exit 0
+fi
+
+# Run Commitizen
 (exec < /dev/tty && node_modules/.bin/cz --hook) || true < /dev/null
