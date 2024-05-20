@@ -2,37 +2,194 @@ version: '3'
 
 services:
   dev:
-    image: mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye
+    image: flink:1.17.0
+    environment:
+      FLINK_PROPERTIES: 'jobmanager.rpc.address: localhost'
+    command: 'taskmanager --cap-add=SYS_PTRACE --security-opt seccomp=unconfined'
+    cap_add:
+      - SYS_PTRACE
     volumes:
       - ..:/workspace
       - node_modules:/workspace/node_modules
-    command: 'sleep infinity'
+
+  atlas:
+    image: sburn/apache-atlas:2.2.0
+    depends_on:
+      - kafka-broker
+    volumes:
+      - atlas-data:/opt/apache-atlas-2.2.0/data
+    network_mode: service:dev
+    restart: unless-stopped
+    configs:
+      - source: atlas-application
+        target: /opt/apache-atlas-2.2.0/conf/atlas-application.properties
+      - source: atlas-simple-authz-policy
+        target: /opt/apache-atlas-2.2.0/conf/atlas-simple-authz-policy.json
+      - source: atlas-keycloak-conf
+        target: /opt/apache-atlas-2.2.0/conf/keycloak-conf.json
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - es-data:/usr/share/elasticsearch/data
+    environment:
+      bootstrap.memory_lock: 'true'
+      cluster.name: 'docker-cluster'
+      discovery.type: 'single-node'
+      ELASTIC_PASSWORD: 'elasticpw'
+      node.name: 'elasticsearch'
+    network_mode: service:dev
+    restart: unless-stopped
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -s http://localhost:9200']
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
+  jobmanager:
+    image: flink:1.17.0
+    environment:
+      FLINK_PROPERTIES: 'jobmanager.rpc.address: localhost'
+    command: jobmanager
+    volumes:
+      - checkpoints:/tmp/flink-checkpoints-directory
+    network_mode: service:dev
+    restart: unless-stopped
+
+  kafka-broker:
+    image: confluentinc/cp-kafka:7.6.1
+    environment:
+      CLUSTER_ID: 'ZDhiOWIzN2FmNmE0NWNlNW'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://localhost:9092'
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_BROKER_ID: 1
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@localhost:9093'
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT'
+      KAFKA_LISTENERS: 'INTERNAL://localhost:9092,CONTROLLER://localhost:9093'
+      KAFKA_NODE_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    network_mode: service:dev
+    restart: unless-stopped
+
+  kafka-connect:
+    build:
+      context: .
+      dockerfile: ../services/kafka-connect/Dockerfile
+      args:
+        CONNECT_ELASTICSEARCH_VERSION: '14.0.11'
+        CONNECT_VERSION: '7.3.2'
+    depends_on:
+      - kafka-broker
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: 'localhost:9092'
+      CONNECT_CONFIG_STORAGE_CLEANUP_POLICY: 'compact'
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_CONFIG_STORAGE_TOPIC: 'kafka-connect-configs'
+      CONNECT_GROUP_ID: 'kafka-connect-group'
+      CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.storage.StringConverter'
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: 'false'
+      CONNECT_LOG4J_ROOT_LOGLEVEL: 'INFO'
+      CONNECT_OFFSET_STORAGE_CLEANUP_POLICY: 'compact'
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_TOPIC: 'kafka-connect-offsets'
+      CONNECT_REST_ADVERTISED_HOST_NAME: 'localhost'
+      CONNECT_REST_PORT: 8083
+      CONNECT_STATUS_STORAGE_CLEANUP_POLICY: 'compact'
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_TOPIC: 'kafka-connect-status'
+      CONNECT_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'false'
+    network_mode: service:dev
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    depends_on:
+      - kafka-broker
+    environment:
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'localhost:9092'
+      KAFKA_CLUSTERS_0_NAME: 'local'
+      SERVER_PORT: 8082
+    network_mode: service:dev
+    restart: unless-stopped
 
   keycloak:
-    image: aureliusatlas/docker-keycloak:16.1.0.3
+    image: quay.io/keycloak/keycloak:16.1.1
     environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
-      KEYCLOAK_IMPORT: /tmp/keycloak-config/atlas-dev.json
+      KEYCLOAK_IMPORT: '/tmp/keycloak-config/atlas-dev.json'
+      KEYCLOAK_PASSWORD: 'admin'
       KEYCLOAK_PORT: 8180
       KEYCLOAK_REALM_NAME: 'atlas-dev'
+      KEYCLOAK_USER: 'admin'
     volumes:
       - keycloak-data:/opt/jboss/keycloak/standalone/data
     configs:
       - source: keycloak-config
-        target: /tmp/keycloak-config/atlas-dev.json
-      - source: keycloak-settings
         target: /opt/jboss/keycloak/standalone/configuration/standalone.xml
+      - source: keycloak-realm
+        target: /tmp/keycloak-config/atlas-dev.json
     network_mode: service:dev
     restart: unless-stopped
     command: ['-b 0.0.0.0', '-bmanagement 0.0.0.0', '-Djboss.http.port=8180']
 
+  kibana:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    image: docker.elastic.co/kibana/kibana:7.15.0
+    volumes:
+      - certs:/usr/share/kibana/config/certs
+      - kibana-data:/usr/share/kibana/data
+    environment:
+      ELASTIC_PASSWORD: 'elasticpw'
+      ELASTICSEARCH_HOSTS: 'http://localhost:9200'
+      ELASTICSEARCH_USERNAME: 'kibana_system'
+      ELASTICSEARCH_PASSWORD: 'kibanapw'
+      KIBANA_PASSWORD: 'kibanapw'
+      SERVERNAME: 'kibana'
+    network_mode: service:dev
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
 configs:
+  atlas-application:
+    file: ./apache-atlas/atlas-application.properties
+  atlas-simple-authz-policy:
+    file: ./apache-atlas/atlas-simple-authz-policy.json
+  atlas-keycloak-conf:
+    file: ./apache-atlas/keycloak-conf.json
   keycloak-config:
-    file: ./keycloak/realms/atlas-dev.json
-  keycloak-settings:
     file: ./keycloak/settings/standalone.xml
+  keycloak-realm:
+    file: ./keycloak/realms/atlas-dev.json
 
 volumes:
+  atlas-data:
+  certs:
+  checkpoints:
+  es-data:
+  kafka-data:
   keycloak-data:
+  kibana-data:
   node_modules:

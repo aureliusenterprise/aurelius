@@ -9,6 +9,10 @@
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.8",
       "toolsToInstall": "poetry"
@@ -16,15 +20,51 @@
     "ghcr.io/devcontainers-contrib/features/nx-npm:1": {
       "version": "19.0.4"
     },
-    "ghcr.io/dhoeric/features/act:1": {}
+    "ghcr.io/dhoeric/features/act:1": {},
+    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+      "packages": "gdb"
+    }
   },
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [
-    8180
+    5601,
+    8081,
+    8082,
+    9200,
+    8180,
+    21000
   ],
   "portsAttributes": {
+    "4200": {
+      "label": "Angular",
+      "onAutoForward": "openBrowser"
+    },
+    "4400": {
+      "label": "Storybook",
+      "onAutoForward": "openBrowser"
+    },
+    "5601": {
+      "label": "Kibana UI",
+      "onAutoForward": "silent"
+    },
+    "8081": {
+      "label": "Flink UI",
+      "onAutoForward": "silent"
+    },
+    "8082": {
+      "label": "Kafka UI",
+      "onAutoForward": "silent"
+    },
     "8180": {
       "label": "Keycloak",
+      "onAutoForward": "silent"
+    },
+    "9200": {
+      "label": "Elasticsearch API",
+      "onAutoForward": "silent"
+    },
+    "21000": {
+      "label": "Apache Atlas",
       "onAutoForward": "silent"
     }
   },
