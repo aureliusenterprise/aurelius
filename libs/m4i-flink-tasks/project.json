@@ -1,8 +1,8 @@
 {
-  "name": "m4i-atlas-core",
+  "name": "m4i-flink-tasks",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "sourceRoot": "libs/m4i-atlas-core/m4i_atlas_core",
+  "sourceRoot": "libs/m4i-flink-tasks/m4i_flink_tasks",
   "targets": {
     "add": {
       "executor": "@nxlv/python:add",
@@ -18,9 +18,9 @@
     },
     "build": {
       "executor": "@nxlv/python:build",
-      "outputs": ["{workspaceRoot}/dist/libs/m4i-atlas-core"],
+      "outputs": ["{workspaceRoot}/dist/libs/m4i-flink-tasks"],
       "options": {
-        "outputPath": "{workspaceRoot}/dist/libs/m4i-atlas-core",
+        "outputPath": "{workspaceRoot}/dist/libs/m4i-flink-tasks",
         "publish": false,
         "lockedVersions": true,
         "bundleLocalDependencies": true
@@ -30,18 +30,18 @@
       "executor": "@nxlv/python:ruff-check",
       "outputs": [],
       "options": {
-        "lintFilePatterns": ["m4i_atlas_core", "tests"]
+        "lintFilePatterns": ["m4i_flink_tasks", "tests"]
       }
     },
     "test": {
       "executor": "@nxlv/python:run-commands",
       "outputs": [
-        "{workspaceRoot}/reports/libs/m4i-atlas-core/unittests",
-        "{workspaceRoot}/coverage/libs/m4i-atlas-core"
+        "{workspaceRoot}/reports/libs/m4i-flink-tasks/unittests",
+        "{workspaceRoot}/coverage/libs/m4i-flink-tasks"
       ],
       "options": {
-        "command": "poetry run pytest m4i_atlas_core",
-        "cwd": "libs/m4i-atlas-core"
+        "command": "poetry run pytest m4i_flink_tasks",
+        "cwd": "libs/m4i-flink-tasks"
       }
     }
   },
