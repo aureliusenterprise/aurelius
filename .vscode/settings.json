@@ -1,4 +1,7 @@
 {
-    "python.analysis.typeCheckingMode": "basic",
-    "python.testing.pytestEnabled": true,
+  "eslint.validate": [
+    "json"
+  ],
+  "python.analysis.typeCheckingMode": "basic",
+  "python.testing.pytestEnabled": true,
 }
