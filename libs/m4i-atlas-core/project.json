@@ -1,0 +1,49 @@
+{
+  "name": "m4i-atlas-core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/m4i-atlas-core/m4i_atlas_core",
+  "targets": {
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "update": {
+      "executor": "@nxlv/python:update",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "outputPath": "{workspaceRoot}/dist/libs/m4i-atlas-core",
+        "publish": false,
+        "lockedVersions": true,
+        "bundleLocalDependencies": true
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:ruff-check",
+      "outputs": [],
+      "options": {
+        "lintFilePatterns": ["m4i_atlas_core", "tests"]
+      }
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [
+        "{workspaceRoot}/reports/libs/m4i-atlas-core/unittests",
+        "{workspaceRoot}/coverage/libs/m4i-atlas-core"
+      ],
+      "options": {
+        "command": "poetry run pytest m4i_atlas_core",
+        "cwd": "libs/m4i-atlas-core"
+      }
+    }
+  },
+  "tags": []
+}

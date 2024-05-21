@@ -28,9 +28,15 @@ develop = true
 path = "libs/m4i-analytics-extensions/m4i-graphviz-layouts"
 develop = true
 
+[tool.poetry.dependencies.m4i-atlas-core]
+path = "libs/m4i-atlas-core"
+develop = true
+
 [tool.poetry.group.dev.dependencies]
 ruff = "0.1.5"
 pytest = "7.3.1"
+pytest-asyncio = "0.23.7"
+pytest-cov = "5.0.0"
 pytest-sugar = "0.9.7"
 autopep8 = "2.0.2"
 
