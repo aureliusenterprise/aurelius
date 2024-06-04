@@ -2,7 +2,7 @@ version: '3'
 
 services:
   dev:
-    image: flink:1.17.0
+    build: .
     environment:
       FLINK_PROPERTIES: 'jobmanager.rpc.address: localhost'
     command: 'taskmanager --cap-add=SYS_PTRACE --security-opt seccomp=unconfined'
@@ -11,6 +11,16 @@ services:
     volumes:
       - ..:/workspace
       - node_modules:/workspace/node_modules
+    ports:
+      - "127.0.0.1:5601:5601"
+      - "127.0.0.1:8081:8081"
+      - "127.0.0.1:8082:8082"
+      - "127.0.0.1:8180:8180"
+      - "127.0.0.1:9200:9200"
+      - "127.0.0.1:21000:21000"
+      - "127.0.0.1:4200:4200"
+      - "127.0.0.1:4400:4400"
+    working_dir: /workspace
 
   atlas:
     image: sburn/apache-atlas:2.2.0
@@ -54,7 +64,9 @@ services:
   jobmanager:
     image: flink:1.17.0
     environment:
-      FLINK_PROPERTIES: 'jobmanager.rpc.address: localhost'
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: localhost
+        taskmanager.numberOfTaskSlots: 2
     command: jobmanager
     volumes:
       - checkpoints:/tmp/flink-checkpoints-directory
