@@ -12,6 +12,10 @@ include = "m4i_flink_jobs"
 [tool.poetry.dependencies]
 python = "~3.8"
 
+[tool.poetry.dependencies.m4i-atlas-core]
+path = "../../libs/m4i-atlas-core"
+develop = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
