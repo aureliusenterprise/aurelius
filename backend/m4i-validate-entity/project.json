@@ -1,0 +1,49 @@
+{
+  "name": "validate-entity",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "backend/m4i-validate-entity/m4i_validate_entity",
+  "targets": {
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "update": {
+      "executor": "@nxlv/python:update",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": ["{workspaceRoot}/dist/backend/m4i-validate-entity"],
+      "options": {
+        "outputPath": "{workspaceRoot}/dist/backend/m4i-validate-entity",
+        "publish": false,
+        "lockedVersions": true,
+        "bundleLocalDependencies": true
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:ruff-check",
+      "outputs": [],
+      "options": {
+        "lintFilePatterns": ["flink_jobs", "tests"]
+      }
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [
+        "{workspaceRoot}/reports/backend/m4i-validate-entity/unittests",
+        "{workspaceRoot}/coverage/backend/m4i-validate-entity"
+      ],
+      "options": {
+        "command": "poetry run pytest tests/",
+        "cwd": "backend/m4i-validate-entity"
+      }
+    }
+  },
+  "tags": []
+}
