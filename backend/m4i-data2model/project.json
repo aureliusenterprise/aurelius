@@ -21,7 +21,7 @@
       "executor": "@nxlv/python:run-commands",
       "outputs": [],
       "options": {
-        "command": "poetry run gunicorn -w ${WSGI_WORKERS} -t ${WSGI_TIMEOUT} -b 127.0.0.1:${WSGI_PORT} m4i_data2model:app --reload"
+        "command": "poetry run gunicorn -b 127.0.0.1:${WSGI_PORT} m4i_data2model:app --reload"
       }
     },
     "build": {
