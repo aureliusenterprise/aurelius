@@ -1,0 +1,56 @@
+{
+  "name": "backend-lineage-model",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "backend/m4i-lineage-model/m4i_lineage_model",
+  "targets": {
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "update": {
+      "executor": "@nxlv/python:update",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "serve": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "poetry run gunicorn -b 127.0.0.1:${WSGI_PORT} m4i_lineage_model:app --reload"
+      }
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": ["{workspaceRoot}/dist/backend/m4i-lineage-model"],
+      "options": {
+        "outputPath": "{workspaceRoot}/dist/backend/m4i-lineage-model",
+        "publish": false,
+        "lockedVersions": false,
+        "bundleLocalDependencies": true
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:ruff-check",
+      "outputs": [],
+      "options": {
+        "lintFilePatterns": ["flink_jobs", "tests"]
+      }
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [
+        "{workspaceRoot}/reports/backend/m4i-lineage-model/unittests",
+        "{workspaceRoot}/coverage/backend/m4i-lineage-model"
+      ],
+      "options": {
+        "command": "poetry run pytest tests/",
+        "cwd": "backend/m4i-lineage-model"
+      }
+    }
+  },
+  "tags": []
+}
