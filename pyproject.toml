@@ -5,7 +5,7 @@ autoActivate = true
 name = "@aurelius/source"
 version = "1.0.0"
 description = ""
-authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+authors = [ "Aurelius Enterprise <info@aureliusenterprise.com>" ]
 license = "UNLICENSED"
 readme = "README.md"
 
@@ -40,6 +40,10 @@ develop = true
 path = "backend/m4i-flink-jobs"
 develop = true
 
+[tool.poetry.dependencies.m4i-lineage-rest-api]
+path = "backend/m4i-lineage-rest-api"
+develop = true
+
 [tool.poetry.dependencies.m4i-graphviz-layouts]
 path = "libs/m4i-analytics-extensions/m4i-graphviz-layouts"
 develop = true
@@ -65,5 +69,5 @@ pytest-sugar = "0.9.7"
 autopep8 = "2.0.2"
 
 [build-system]
-requires = ["poetry-core==1.1.0"]
+requires = [ "poetry-core==1.1.0" ]
 build-backend = "poetry.core.masonry.api"

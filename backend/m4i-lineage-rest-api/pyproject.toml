@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "m4i-lineage-rest-api"
+version = "1.0.0"
+description = "Lineage Rest API used as an entry point to get and push entities to atlas"
+authors = [ "Aurelius Enterprise <info@aureliusenterprise.com>" ]
+license = "UNLICENSED"
+readme = "README.md"
+
+  [[tool.poetry.packages]]
+  include = "m4i_lineage_rest_api"
+
+  [tool.poetry.dependencies]
+  python = "~3.8"
+  flask-httpauth = "^4.8.0"
+  markupsafe = "2.0.1"
+  itsdangerous = "2.0.1"
+  flask-restx = "1.0.3"
+  gunicorn = "^22.0.0"
+
+    [tool.poetry.dependencies.m4i-atlas-core]
+    path = "../../libs/m4i-atlas-core"
+    develop = true
+
+    [tool.poetry.dependencies.m4i-backend-core]
+    path = "../../libs/m4i-backend-core"
+    develop = true
+
+[build-system]
+requires = [ "poetry-core" ]
+build-backend = "poetry.core.masonry.api"
