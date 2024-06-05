@@ -164,7 +164,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/
@@ -213,3 +212,6 @@ pyrightconfig.json
 /=*
 
 .angular
+
+# local cache
+consistency_metrics.sqlite

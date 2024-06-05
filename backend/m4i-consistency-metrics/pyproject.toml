@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "m4i-consistency-metrics"
+version = "1.0.0"
+description = "Entity validator for Aurelius Atlas"
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+license = 'UNLICENSED'
+readme = 'README.md'
+
+[[tool.poetry.packages]]
+include = "m4i_consistency_metrics"
+
+[tool.poetry.dependencies]
+python = "~3.8"
+bokeh = "1.4.0"
+gunicorn = "^22.0.0"
+
+[tool.poetry.dependencies.m4i-analytics]
+path = "../../libs/m4i-analytics"
+develop = true
+
+[tool.poetry.dependencies.m4i-backend-core]
+path = "../../libs/m4i-backend-core"
+develop = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

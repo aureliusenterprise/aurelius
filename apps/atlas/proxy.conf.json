@@ -67,7 +67,7 @@
     "pathRewrite": {
       "^/elastic": ""
     },
-    "target": "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev/search.json",
+    "target": "http://localhost:9200/api/as/v1/engines/atlas-dev/search.json",
     "changeOrigin": true,
     "secure": false
   },
@@ -83,7 +83,7 @@
     "pathRewrite": {
       "^/data_quality": ""
     },
-    "target": "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev-quality/search.json",
+    "target": "http://localhost:9200/api/as/v1/engines/atlas-dev-quality/search.json",
     "changeOrigin": true,
     "secure": false
   },
@@ -91,7 +91,7 @@
     "pathRewrite": {
       "^/gov_quality": ""
     },
-    "target": "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev-gov-quality/search.json",
+    "target": "http://localhost:9200/api/as/v1/engines/atlas-dev-gov-quality/search.json",
     "changeOrigin": true,
     "secure": false
   },

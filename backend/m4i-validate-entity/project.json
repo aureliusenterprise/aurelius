@@ -1,0 +1,89 @@
+{
+  "name": "backend-validate-entity",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "backend/m4i-validate-entity/m4i_validate_entity",
+  "targets": {
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "update": {
+      "executor": "@nxlv/python:update",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "serve": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "poetry run gunicorn -b 127.0.0.1:${WSGI_PORT} m4i_validate_entity:app --reload"
+      }
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": [
+        "{workspaceRoot}/dist/backend/m4i-validate-entity"
+      ],
+      "options": {
+        "outputPath": "{workspaceRoot}/dist/backend/m4i-validate-entity",
+        "publish": false,
+        "lockedVersions": false,
+        "bundleLocalDependencies": true
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:ruff-check",
+      "outputs": [],
+      "options": {
+        "lintFilePatterns": [
+          "flink_jobs",
+          "tests"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [
+        "{workspaceRoot}/reports/backend/m4i-validate-entity/unittests",
+        "{workspaceRoot}/coverage/backend/m4i-validate-entity"
+      ],
+      "options": {
+        "command": "poetry run pytest tests/",
+        "cwd": "backend/m4i-validate-entity"
+      }
+    },
+    "docker-build": {
+      "dependsOn": [
+        {
+          "target": "build",
+          "params": "forward"
+        }
+      ],
+      "command": "docker build -f {projectRoot}/Dockerfile . -t {args.namespace}/{args.tag}:{args.version}",
+      "options": {
+        "namespace": "aureliusenterprise",
+        "tag": "{projectName}",
+        "version": "latest"
+      }
+    },
+    "docker-publish": {
+      "dependsOn": [
+        {
+          "target": "docker-build",
+          "params": "forward"
+        }
+      ],
+      "command": "docker push {args.namespace}/{args.tag}:{args.version}",
+      "options": {
+        "namespace": "aureliusenterprise",
+        "tag": "{projectName}",
+        "version": "latest"
+      }
+    }
+  },
+  "tags": []
+}

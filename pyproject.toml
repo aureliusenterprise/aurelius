@@ -9,40 +9,56 @@ authors = [ "Aurelius Enterprise <info@aureliusenterprise.com>" ]
 license = "UNLICENSED"
 readme = "README.md"
 
-  [tool.poetry.dependencies]
-  python = "~3.8"
+[tool.poetry.dependencies]
+python = "~3.8"
 
-    [tool.poetry.dependencies.data2model]
-    path = "backend/m4i-data2model"
-    develop = true
+[tool.poetry.dependencies.data2model]
+path = "backend/m4i-data2model"
+develop = true
 
-    [tool.poetry.dependencies.m4i-analytics]
-    path = "libs/m4i-analytics"
-    develop = true
+[tool.poetry.dependencies.m4i-analytics]
+path = "libs/m4i-analytics"
+develop = true
 
-    [tool.poetry.dependencies.m4i-backend-core]
-    path = "libs/m4i-backend-core"
-    develop = true
+[tool.poetry.dependencies.m4i-atlas-core]
+path = "libs/m4i-atlas-core"
+develop = true
 
-    [tool.poetry.dependencies.m4i-graphviz-layouts]
-    path = "libs/m4i-analytics-extensions/m4i-graphviz-layouts"
-    develop = true
+[tool.poetry.dependencies.m4i-backend-core]
+path = "libs/m4i-backend-core"
+develop = true
 
-    [tool.poetry.dependencies.m4i-atlas-core]
-    path = "libs/m4i-atlas-core"
-    develop = true
+[tool.poetry.dependencies.m4i-consistency-metrics]
+path="backend/m4i-consistency-metrics"
+develop = true
 
-    [tool.poetry.dependencies.m4i-flink-tasks]
-    path = "libs/m4i-flink-tasks"
-    develop = true
+[tool.poetry.dependencies.m4i-flink-tasks]
+path = "libs/m4i-flink-tasks"
+develop = true
 
-    [tool.poetry.dependencies.m4i-flink-jobs]
-    path = "backend/m4i-flink-jobs"
-    develop = true
+[tool.poetry.dependencies.m4i-flink-jobs]
+path = "backend/m4i-flink-jobs"
+develop = true
 
-    [tool.poetry.dependencies.m4i-lineage-rest-api]
-    path = "backend/m4i-lineage-rest-api"
-    develop = true
+[tool.poetry.dependencies.m4i-lineage-rest-api]
+path = "backend/m4i-lineage-rest-api"
+develop = true
+
+[tool.poetry.dependencies.m4i-graphviz-layouts]
+path = "libs/m4i-analytics-extensions/m4i-graphviz-layouts"
+develop = true
+
+[tool.poetry.dependencies.m4i-lineage-model]
+path="backend/m4i-lineage-model"
+develop = true
+
+[tool.poetry.dependencies.m4i-metrics]
+path = "libs/m4i-metrics"
+develop = true
+
+[tool.poetry.dependencies.m4i-validate-entity]
+path="backend/m4i-validate-entity"
+develop = true
 
 [tool.poetry.group.dev.dependencies]
 ruff = "0.1.5"

@@ -1,0 +1,54 @@
+{
+  "name": "m4i-metrics",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/m4i-metrics/m4i_metrics",
+  "targets": {
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "update": {
+      "executor": "@nxlv/python:update",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": [
+        "{workspaceRoot}/dist/{projectRoot}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/m4i-metrics",
+        "publish": false,
+        "lockedVersions": true,
+        "bundleLocalDependencies": true
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:ruff-check",
+      "outputs": [],
+      "options": {
+        "lintFilePatterns": [
+          "m4i_metrics",
+          "tests"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [
+        "{workspaceRoot}/reports/libs/m4i-metrics/unittests",
+        "{workspaceRoot}/coverage/libs/m4i-metrics"
+      ],
+      "options": {
+        "command": "poetry run pytest tests/",
+        "cwd": "libs/m4i-metrics"
+      }
+    }
+  },
+  "tags": []
+}

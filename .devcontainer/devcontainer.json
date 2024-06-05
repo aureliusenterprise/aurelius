@@ -22,7 +22,7 @@
     },
     "ghcr.io/dhoeric/features/act:1": {},
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-      "packages": "gdb"
+      "packages": "gdb,graphviz"
     }
   },
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
