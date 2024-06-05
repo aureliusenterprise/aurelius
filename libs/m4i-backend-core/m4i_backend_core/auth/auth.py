@@ -1,5 +1,9 @@
+from typing import Tuple
+
 from flask import Flask, jsonify
+
 from .model import AuthError
+
 
 def register(app: Flask):
     """
@@ -10,7 +14,7 @@ def register(app: Flask):
     """
 
     @app.errorhandler(AuthError)
-    def handle_auth_error(ex: AuthError) -> tuple[str, int]:
+    def handle_auth_error(ex: AuthError) -> Tuple[str, int]:
         """
         Error handler for exceptions related to authentication
 
