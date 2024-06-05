@@ -1,5 +1,5 @@
 {
-  "name": "m4i-data2model",
+  "name": "backend-m4i-data2model",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "{projectRoot}/data2model",
@@ -17,6 +17,13 @@
       "executor": "@nxlv/python:remove",
       "options": {}
     },
+    "serve": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "poetry run gunicorn -w ${WSGI_WORKERS} -t ${WSGI_TIMEOUT} -b 127.0.0.1:${WSGI_PORT} m4i_data2model:app --reload"
+      }
+    },
     "build": {
       "executor": "@nxlv/python:build",
       "outputs": [
@@ -25,7 +32,7 @@
       "options": {
         "outputPath": "{workspaceRoot}/dist/backend/m4i-data2model",
         "publish": false,
-        "lockedVersions": true,
+        "lockedVersions": false,
         "bundleLocalDependencies": true
       }
     },
@@ -48,6 +55,34 @@
       "options": {
         "command": "poetry run pytest tests/",
         "cwd": "{projectRoot}"
+      }
+    },
+    "docker-build": {
+      "dependsOn": [
+        {
+          "target": "build",
+          "params": "forward"
+        }
+      ],
+      "command": "docker build -f {projectRoot}/Dockerfile . -t {args.namespace}/{args.tag}:{args.version}",
+      "options": {
+        "namespace": "aureliusenterprise",
+        "tag": "{projectName}",
+        "version": "latest"
+      }
+    },
+    "docker-publish": {
+      "dependsOn": [
+        {
+          "target": "docker-build",
+          "params": "forward"
+        }
+      ],
+      "command": "docker push {args.namespace}/{args.tag}:{args.version}",
+      "options": {
+        "namespace": "aureliusenterprise",
+        "tag": "{projectName}",
+        "version": "latest"
       }
     }
   }
