@@ -211,3 +211,6 @@ pyrightconfig.json
 /=*
 
 .angular
+
+# local cache
+consistency_metrics.sqlite

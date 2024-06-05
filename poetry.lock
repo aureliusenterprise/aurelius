@@ -1280,10 +1280,15 @@ develop = true
 [package.dependencies]
 bokeh = "1.4.0"
 flask = "1.1.1"
+gunicorn = "19.7.1"
+itsdangerous = "1.1.0"
+jinja2 = "2.11.1"
 m4i-analytics = {path = "../../libs/m4i-analytics", develop = true}
 m4i-backend-core = {path = "../../libs/m4i-backend-core", develop = true}
+markupsafe = "1.1.1"
 pandas = "1.3.0"
 requests-cache = "0.5.2"
+werkzeug = "0.16.1"
 
 [package.source]
 type = "directory"
@@ -1401,7 +1406,12 @@ develop = true
 
 [package.dependencies]
 flask = "1.1.1"
+gunicorn = "19.7.1"
+itsdangerous = "1.1.0"
+jinja2 = "2.11.1"
 m4i-backend-core = {path = "../../libs/m4i-backend-core", develop = true}
+markupsafe = "1.1.1"
+werkzeug = "0.16.1"
 
 [package.source]
 type = "directory"
