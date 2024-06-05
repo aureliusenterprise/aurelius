@@ -5,40 +5,44 @@ autoActivate = true
 name = "@aurelius/source"
 version = "1.0.0"
 description = ""
-authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+authors = [ "Aurelius Enterprise <info@aureliusenterprise.com>" ]
 license = "UNLICENSED"
 readme = "README.md"
 
-[tool.poetry.dependencies]
-python = "~3.8"
+  [tool.poetry.dependencies]
+  python = "~3.8"
 
-[tool.poetry.dependencies.data2model]
-path = "backend/m4i-data2model"
-develop = true
+    [tool.poetry.dependencies.data2model]
+    path = "backend/m4i-data2model"
+    develop = true
 
-[tool.poetry.dependencies.m4i-analytics]
-path = "libs/m4i-analytics"
-develop = true
+    [tool.poetry.dependencies.m4i-analytics]
+    path = "libs/m4i-analytics"
+    develop = true
 
-[tool.poetry.dependencies.m4i-backend-core]
-path = "libs/m4i-backend-core"
-develop = true
+    [tool.poetry.dependencies.m4i-backend-core]
+    path = "libs/m4i-backend-core"
+    develop = true
 
-[tool.poetry.dependencies.m4i-graphviz-layouts]
-path = "libs/m4i-analytics-extensions/m4i-graphviz-layouts"
-develop = true
+    [tool.poetry.dependencies.m4i-graphviz-layouts]
+    path = "libs/m4i-analytics-extensions/m4i-graphviz-layouts"
+    develop = true
 
-[tool.poetry.dependencies.m4i-atlas-core]
-path = "libs/m4i-atlas-core"
-develop = true
+    [tool.poetry.dependencies.m4i-atlas-core]
+    path = "libs/m4i-atlas-core"
+    develop = true
 
-[tool.poetry.dependencies.m4i-flink-tasks]
-path = "libs/m4i-flink-tasks"
-develop = true
+    [tool.poetry.dependencies.m4i-flink-tasks]
+    path = "libs/m4i-flink-tasks"
+    develop = true
 
-[tool.poetry.dependencies.m4i-flink-jobs]
-path = "backend/m4i-flink-jobs"
-develop = true
+    [tool.poetry.dependencies.m4i-flink-jobs]
+    path = "backend/m4i-flink-jobs"
+    develop = true
+
+    [tool.poetry.dependencies.m4i-lineage-rest-api]
+    path = "backend/m4i-lineage-rest-api"
+    develop = true
 
 [tool.poetry.group.dev.dependencies]
 ruff = "0.1.5"
@@ -49,5 +53,5 @@ pytest-sugar = "0.9.7"
 autopep8 = "2.0.2"
 
 [build-system]
-requires = ["poetry-core==1.1.0"]
+requires = [ "poetry-core==1.1.0" ]
 build-backend = "poetry.core.masonry.api"
