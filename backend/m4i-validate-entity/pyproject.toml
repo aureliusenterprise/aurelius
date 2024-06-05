@@ -12,6 +12,11 @@ include = "m4i_validate_entity"
 [tool.poetry.dependencies]
 python = "~3.8"
 flask = "1.1.1"
+gunicorn = "19.7.1"
+itsdangerous = "1.1.0"
+jinja2 = "2.11.1"
+markupsafe = "1.1.1"
+werkzeug = "0.16.1"
 
 [tool.poetry.dependencies.m4i-backend-core]
 path = "../../libs/m4i-backend-core"
