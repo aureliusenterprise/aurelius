@@ -20,7 +20,7 @@
       "executor": "@nxlv/python:run-commands",
       "outputs": [],
       "options": {
-        "command": "poetry run gunicorn -b 127.0.0.1:${WSGI_PORT} m4i_lineage_model:app --reload"
+        "command": "poetry run gunicorn -c {projectRoot}/conf.py -b 127.0.0.1:${WSGI_PORT} m4i_lineage_model:app --reload"
       }
     },
     "build": {
