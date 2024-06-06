@@ -28,9 +28,14 @@ The application will be available at `http://localhost:6969`.
 
 The application can be configured using environment variables. The following environment variables are available:
 
-| Environment Variable | Description                                 | Default Value |
-| -------------------- | ------------------------------------------- | ------------- |
-| `WSGI_PORT`          | The port on which the application will run. | `6969`        |
+| Environment Variable  | Description                                 | Default Value |
+| --------------------- | ------------------------------------------- | ------------- |
+| `AUTH_ISSUER`         | The issuer of the JWT token.                | -             |
+| `ATLAS_SERVER_URL`    | The URL of the Aurelius Atlas API.          | -             |
+| `KEYCLOAK_SERVER_URL` | The URL of the Keycloak server.             | -             |
+| `KEYCLOAK_REALM`      | The Keycloak authentication realm.          | -             |
+| `KEYCLOAK_CLIENT_ID`  | The Keycloak authentication client ID.      | -             |
+| `WSGI_PORT`           | The port on which the application will run. | `6969`        |
 
 ## Development
 
