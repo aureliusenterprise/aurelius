@@ -30,6 +30,7 @@ The application can be configured using environment variables. The following env
 
 | Environment Variable | Description                                 | Default Value |
 | -------------------- | ------------------------------------------- | ------------- |
+| `AUTH_ISSUER`        | The issuer of the JWT token.                | -             |
 | `WSGI_PORT`          | The port on which the application will run. | `7200`        |
 
 ## Development
