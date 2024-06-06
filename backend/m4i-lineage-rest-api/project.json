@@ -4,13 +4,6 @@
   "projectType": "application",
   "sourceRoot": "backend/m4i-lineage-rest-api/m4i_lineage_rest_api",
   "targets": {
-    "lock": {
-      "executor": "@nxlv/python:run-commands",
-      "options": {
-        "command": "poetry lock --no-update",
-        "cwd": "backend/m4i-lineage-rest-api"
-      }
-    },
     "add": {
       "executor": "@nxlv/python:add",
       "options": {}
@@ -33,14 +26,11 @@
         "bundleLocalDependencies": true
       }
     },
-    "install": {
-      "executor": "@nxlv/python:install",
+    "serve": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [],
       "options": {
-        "silent": false,
-        "args": "",
-        "cacheDir": ".cache/pypoetry",
-        "verbose": false,
-        "debug": false
+        "command": "poetry run gunicorn -c {projectRoot}/conf.py -b 127.0.0.1:${WSGI_PORT} 'm4i_lineage_rest_api:register_get_app()' --reload"
       }
     },
     "lint": {
@@ -61,13 +51,6 @@
       "options": {
         "command": "poetry run pytest tests/",
         "cwd": "backend/m4i-lineage-rest-api"
-      }
-    },
-    "serve": {
-      "executor": "@nxlv/python:run-commands",
-      "outputs": [],
-      "options": {
-        "command": "poetry run gunicorn -b 127.0.0.1:${WSGI_PORT} 'm4i_lineage_rest_api:register_get_app()' --reload"
       }
     },
     "docker-build": {

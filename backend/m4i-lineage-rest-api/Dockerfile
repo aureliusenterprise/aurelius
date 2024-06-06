@@ -21,8 +21,11 @@ RUN pip install --no-cache-dir *.whl && \
 RUN addgroup --system m4i-lineage-rest-api && \
   adduser --system --ingroup m4i-lineage-rest-api m4i-lineage-rest-api
 
+# Copy the configuration file into the container
+COPY --chown=m4i-lineage-rest-api:m4i-lineage-rest-api backend/m4i-lineage-rest-api/conf.py .
+
 # Switch to the non-root user
 USER m4i-lineage-rest-api
 
 # Command to run the application
-CMD ["sh", "-c", "m4i_lineage_rest_api:register_get_app() --bind 0.0.0.0:${WSGI_PORT}"]
+CMD ["sh", "-c", "m4i_lineage_rest_api:register_get_app() -c /app/conf.py --bind 0.0.0.0:${WSGI_PORT}"]
