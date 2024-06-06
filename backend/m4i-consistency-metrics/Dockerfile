@@ -2,7 +2,7 @@
 FROM python:3.8-slim
 
 # Set environment variables
-ENV WSGI_PORT=7000
+ENV WSGI_PORT=7300
 
 # Expose the port that the app runs on
 EXPOSE ${WSGI_PORT}
