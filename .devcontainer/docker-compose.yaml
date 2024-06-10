@@ -2,7 +2,6 @@ version: '3'
 
 services:
   dev:
-    container_name: ${DEV_CONTAINER}
     build: .
     environment:
       FLINK_PROPERTIES: 'jobmanager.rpc.address: localhost'
@@ -141,8 +140,8 @@ services:
   #################
   setup:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_STACK_VERSION}
-    container_name: es-setup
     user: "0"
+    network_mode: service:dev
     command: >
       bash -c '
         if [ x${ELASTIC_PASSWORD} == x ]; then
@@ -160,7 +159,6 @@ services:
       '
 
   elasticsearch:
-    container_name: ${ELASTICSEARCH_CONTAINER}
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_STACK_VERSION}
     volumes:
       - es-data:/usr/share/elasticsearch/data
@@ -178,7 +176,6 @@ services:
       retries: 120
 
   kibana:
-    container_name: ${KIBANA_CONTAINER}
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -189,7 +186,7 @@ services:
       - kibana-data:/usr/share/kibana/data
     env_file: ../services/elastic/kibana.env
     environment:
-      SERVERNAME: ${KIBANA_CONTAINER}
+      SERVERNAME: kibana
     network_mode: service:dev
     restart: unless-stopped
     healthcheck:
@@ -203,17 +200,15 @@ services:
       retries: 120
 
   enterprisesearch:
-    container_name: ${ENTERPRISE_SEARCH_CONTAINER}
     depends_on:
       kibana:
         condition: service_healthy
     image: docker.elastic.co/enterprise-search/enterprise-search:${ELASTIC_STACK_VERSION}
     volumes:
       - enterprisesearchdata:/usr/share/enterprise-search/config
-      #- ../services/elastic/enterprise-search/add_setting.sh:/usr/share/enterprise-search/config/add_setting.sh
     env_file: ../services/elastic/enterprisesearch.env
     environment:
-      SERVERNAME: ${ENTERPRISE_SEARCH_CONTAINER}
+      SERVERNAME: enterprisesearch
     network_mode: service:dev
     healthcheck:
       test:
@@ -224,12 +219,6 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
-    #entrypoint: ["bash", "-c"]
-    #command: >
-    #  '
-    #  /usr/share/enterprise-search/config/add_setting.sh;
-    #  /usr/local/bin/docker-entrypoint.sh
-    #  '
 
 configs:
   atlas-application:
