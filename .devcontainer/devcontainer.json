@@ -22,9 +22,12 @@
     },
     "ghcr.io/dhoeric/features/act:1": {},
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-      "packages": "gdb,graphviz"
-    }
+      "packages": "gdb,graphviz,openssh-client"
+    },
   },
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/dev/.ssh,type=bind"
+  ],
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [
     5601,
