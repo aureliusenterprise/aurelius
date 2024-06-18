@@ -92,11 +92,16 @@ services:
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-
     volumes:
       - kafka-data:/var/lib/kafka/data
     network_mode: service:dev
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   kafka-connect:
     build:
