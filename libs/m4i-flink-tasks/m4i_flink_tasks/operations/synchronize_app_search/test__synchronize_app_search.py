@@ -5,7 +5,7 @@ import pytest
 from m4i_atlas_core import Attributes, Entity, EntityAuditAction
 from pyflink.datastream import StreamExecutionEnvironment
 
-from flink_tasks import (
+from m4i_flink_tasks import (
     AppSearchDocument,
     EntityMessage,
     EntityMessageType,

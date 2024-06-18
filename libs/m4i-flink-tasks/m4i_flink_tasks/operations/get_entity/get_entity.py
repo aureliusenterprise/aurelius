@@ -1,9 +1,8 @@
 import asyncio
 import contextlib
 import logging
-from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
-from typing import cast
+from typing import Tuple, Callable, Union, cast
 
 from aiohttp import ClientResponseError
 from aiohttp.web import HTTPError
@@ -22,8 +21,9 @@ from marshmallow import ValidationError
 from pyflink.datastream import DataStream
 from pyflink.datastream.functions import MapFunction, RuntimeContext
 
-from flink_tasks.utils import ExponentialBackoff, retry
-from keycloak import KeycloakError, KeycloakOpenID
+from m4i_flink_tasks.utils import ExponentialBackoff, retry
+from keycloak import KeycloakOpenID
+from keycloak.exceptions import KeycloakError
 
 # A type alias for a factory function that produces instances of KeycloakOpenID.
 KeycloakFactory = Callable[[], KeycloakOpenID]
@@ -54,7 +54,7 @@ class GetEntityFunction(MapFunction):
         self,
         atlas_url: str,
         keycloak_factory: KeycloakFactory,
-        credentials: tuple[str, str],
+        credentials: Tuple[str, str],
     ) -> None:
         """
         Initialize the GetEntityFunction with a Keycloak factory and credentials.
@@ -90,7 +90,7 @@ class GetEntityFunction(MapFunction):
         """Close the event loop."""
         self.loop.close()
 
-    def map(self, value: str) -> AtlasChangeMessage | Exception:  # noqa: PLR0911
+    def map(self, value: str) -> Union[AtlasChangeMessage, Exception]:  # noqa: PLR0911
         """
         Process the incoming message and enrich it with entity details.
 
@@ -239,7 +239,7 @@ class GetEntity:
         data_stream: DataStream,
         atlas_url: str,
         keycloak_factory: KeycloakFactory,
-        credentials: tuple[str, str],
+        credentials: Tuple[str, str],
     ) -> None:
         """
         Initialize the GetEntity class with a given data stream.

@@ -9,7 +9,7 @@ from m4i_atlas_core import (
 )
 from pyflink.datastream import StreamExecutionEnvironment
 
-from flink_tasks import KafkaNotification
+from m4i_flink_tasks import KafkaNotification
 
 
 @pytest.fixture()
