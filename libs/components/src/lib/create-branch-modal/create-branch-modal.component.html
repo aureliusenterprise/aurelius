@@ -1,0 +1,103 @@
+<models4insight-modal>
+  <div class="tabs is-fullwidth">
+    <ul>
+      <li [class.is-active]="currentTab === 'general'">
+        <a (click)="currentTab = 'general'">
+          <span class="icon is-small">
+            <fa-icon [icon]="faInfo"></fa-icon>
+          </span>
+          <span>General</span>
+        </a>
+      </li>
+      <li *ngIf="false" [class.is-active]="currentTab === 'access'">
+        <a (click)="currentTab = 'access'">
+          <span class="icon is-small">
+            <fa-icon [icon]="faShieldAlt"></fa-icon>
+          </span>
+          <span>Access management</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <ng-container [ngSwitch]="currentTab">
+    <ng-container *ngSwitchCase="'general'">
+      <ng-container *ngTemplateOutlet="general"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'access'">
+      <ng-container *ngTemplateOutlet="accessManagement"></ng-container>
+    </ng-container>
+  </ng-container>
+</models4insight-modal>
+
+<ng-template #general>
+  <h4 class="title is-4">General</h4>
+  <div class="field">
+    <models4insight-branch-name-input
+      [control]="form.controls['name']"
+      [isSubmitted]="isSubmitted"
+    >
+    </models4insight-branch-name-input>
+  </div>
+  <div class="field">
+    <models4insight-description-input
+      [context]="descriptionContext"
+      [control]="form.controls['description']"
+      [isSubmitted]="isSubmitted"
+    >
+    </models4insight-description-input>
+  </div>
+</ng-template>
+
+<ng-template #accessManagement>
+  <h4 class="title is-4">Access management</h4>
+  <div class="field">
+    <input
+      id="protectedSwitch"
+      type="checkbox"
+      name="protectedSwitch"
+      class="switch"
+      [formControl]="form.controls['protected']"
+      aria-labelledby="protectedSwitchLabel"
+    />
+    <label id="protectedSwitchLabel" for="protectedSwitch">
+      I want to enable access management for this branch
+    </label>
+  </div>
+  <ng-container *ngIf="form.value.protected">
+    <hr class="hr" />
+    <div class="tabs is-fullwidth">
+      <ul>
+        <li [class.is-active]="accessManagementTab === 'members'">
+          <a (click)="accessManagementTab = 'members'">
+            <span class="icon is-small">
+              <fa-icon [icon]="faUsersCog"></fa-icon>
+            </span>
+            <span>Branch members</span>
+          </a>
+        </li>
+        <li [class.is-active]="accessManagementTab === 'add'">
+          <a (click)="accessManagementTab = 'add'">
+            <span class="icon is-small">
+              <fa-icon [icon]="faUsersPlus"></fa-icon>
+            </span>
+            <span>Add a new user or group</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <ng-container [ngSwitch]="accessManagementTab">
+      <ng-container *ngSwitchCase="'members'">
+        <models4insight-branch-members
+          [members]="members"
+          (removed)="removeMember($event)"
+        ></models4insight-branch-members>
+      </ng-container>
+      <ng-container *ngSwitchCase="'add'">
+        <models4insight-add-branch-member
+          [members]="members"
+          (added)="addMember($event)"
+        ></models4insight-add-branch-member>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>

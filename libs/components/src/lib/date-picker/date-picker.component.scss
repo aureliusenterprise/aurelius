@@ -1,0 +1,10 @@
+@import '@angular/material/prebuilt-themes/indigo-pink';
+
+// Fixes bug where day name headers would not align properly
+.mat-calendar-table-header th {
+  text-align: center !important;
+}
+
+.mat-calendar-body-selected {
+  background-color: hsl(171, 100%, 41%);
+}

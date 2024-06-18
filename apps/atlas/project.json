@@ -12,12 +12,12 @@
   },
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@angular-devkit/build-angular:application",
       "options": {
         "outputPath": "dist/apps/atlas",
         "index": "libs/core/src/index.html",
-        "main": "apps/atlas/src/main.ts",
-        "polyfills": "apps/atlas/src/polyfills.ts",
+        "browser": "apps/atlas/src/main.ts",
+        "polyfills": ["apps/atlas/src/polyfills.ts"],
         "tsConfig": "apps/atlas/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -30,7 +30,9 @@
             "output": "/assets/"
           }
         ],
-        "styles": ["apps/atlas/src/styles.scss"],
+        "styles": [
+          "apps/atlas/src/styles.scss"
+        ],
         "scripts": []
       },
       "configurations": {
@@ -69,12 +71,9 @@
           "ngswConfigPath": "apps/atlas/ngsw-config.json"
         },
         "development": {
-          "buildOptimizer": false,
           "optimization": false,
-          "vendorChunk": true,
           "extractLicenses": false,
-          "sourceMap": true,
-          "namedChunks": true
+          "sourceMap": true
         }
       }
     },
@@ -104,12 +103,17 @@
     "lint": {
       "executor": "@nx/linter:eslint",
       "options": {
-        "lintFilePatterns": ["apps/example/**/*.ts", "apps/example/**/*.html"]
+        "lintFilePatterns": [
+          "apps/example/**/*.ts",
+          "apps/example/**/*.html"
+        ]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/atlas"],
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/atlas"
+      ],
       "options": {
         "jestConfig": "apps/atlas/jest.config.js",
         "tsConfig": "apps/atlas/tsconfig.spec.json",
@@ -124,7 +128,9 @@
         "configDir": "apps/atlas/.storybook",
         "browserTarget": "atlas:build",
         "compodoc": false,
-        "styles": ["libs/storybook/storybook.scss"]
+        "styles": [
+          "libs/storybook/storybook.scss"
+        ]
       },
       "configurations": {
         "ci": {
@@ -134,13 +140,17 @@
     },
     "build-storybook": {
       "executor": "@storybook/angular:build-storybook",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputDir": "dist/storybook/atlas",
         "configDir": "apps/atlas/.storybook",
         "browserTarget": "atlas:build",
         "compodoc": false,
-        "styles": ["libs/storybook/storybook.scss"]
+        "styles": [
+          "libs/storybook/storybook.scss"
+        ]
       },
       "configurations": {
         "ci": {

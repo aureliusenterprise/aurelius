@@ -1,0 +1,219 @@
+<ng-container
+  *ngIf="
+    !((isLoadingModel$ | async) || (isParsingModel$ | async)) &&
+      (modelName$ | async);
+    else loading
+  "
+>
+  <div class="level">
+    <div class="level-left">
+      <div>
+        <h3 *ngIf="displayName$ | async as displayName" class="title is-3">
+          {{ displayName }}
+        </h3>
+        <h6 *ngIf="description$ | async as description" class="subtitle is-6">
+          {{ description }}
+        </h6>
+      </div>
+    </div>
+    <div class="level-right">
+      <a class="button is-info level-item" (click)="openBrowser()">
+        <span class="icon">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </span>
+        <span>Browse the model</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="modelview" [class.is-fullscreen]="isFullscreen">
+    <div class="controls buttons">
+      <a
+        *ngIf="isFullscreen"
+        class="button is-info"
+        models4insight-tooltip="Browse the model"
+        (click)="openBrowser()"
+      >
+        <span class="icon"> <fa-icon [icon]="faSearch"></fa-icon> </span>
+      </a>
+      <a
+        class="button"
+        models4insight-tooltip="View info"
+        (click)="openViewInfo()"
+      >
+        <span class="icon"> <fa-icon [icon]="faInfo"></fa-icon> </span>
+      </a>
+      <a
+        class="button"
+        models4insight-tooltip="Toggle fullscreen"
+        (click)="isFullscreen = !isFullscreen"
+      >
+        <span class="icon"> <fa-icon [icon]="faExpand"></fa-icon> </span>
+      </a>
+      <a
+        class="button"
+        models4insight-tooltip="Reset zoom and pan"
+        (click)="resetZoom()"
+      >
+        <span class="icon"> <fa-icon [icon]="faArrowsAlt"></fa-icon> </span>
+      </a>
+      <a
+        class="button"
+        [class.is-loading]="isConverting$ | async"
+        models4insight-tooltip="Save view as image"
+        (click)="saveViewAsImage()"
+      >
+        <span class="icon"> <fa-icon [icon]="faCamera"></fa-icon> </span>
+      </a>
+    </div>
+    <div
+      id="screenshot-container"
+      #fallbackSaveViewAsImageTarget
+      class="screenshot-container"
+    >
+      <svg id="modelview-container" #svg models4insight-svg-zoom>
+        <svg:defs>
+          <style>
+            /* General styles */
+            svg {
+              font-family: 'Segoe UI';
+              font-size: 12px;
+            }
+            .background {
+              fill: white;
+            } /* Connection styles */
+            .connection-label {
+              text-anchor: middle;
+            }
+            .connection-path {
+              fill: none;
+              stroke: black;
+            }
+            .connection.is-selected .connection-path {
+              stroke: #40e0d0;
+            } /* Node styles */
+            .node-content {
+              height: 100%;
+              line-height: 1.1em;
+              padding: 5px;
+            }
+            .node-shape {
+              stroke: #a0a0a0;
+              stroke-width: 2px;
+              fill: none;
+            }
+            .node.is-highlighted .node-shape {
+              stroke: hsl(141, 53%, 53%);
+            }
+            .node.is-selected .node-shape {
+              stroke: #40e0d0;
+            }
+            .node-icon {
+              float: right;
+              margin-left: 5px;
+              stroke: #000000;
+            }
+            .node-icon .dataset {
+              fill: blue;
+              stroke: none;
+            }
+            .node-icon .process {
+              fill: #00d1b2;
+              stroke: none;
+            }
+            .node-text {
+              max-height: 100%;
+              max-width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            } /* Archi styles */
+            .link {
+              fill: #b4cfec;
+            } /* Archimate styles */
+            .business {
+              fill: #ffffb5;
+            }
+            .application {
+              fill: #b5ffff;
+            }
+            .technology {
+              fill: #c9e7b7;
+            }
+            .physical {
+              fill: #c9e7b7;
+            }
+            .motivation {
+              fill: #ccccff;
+            }
+            .implementation {
+              fill: #ffe0e0;
+            }
+            .strategy {
+              fill: #f4deaa;
+            }
+            .and {
+              fill: #000000;
+            }
+            .or {
+              fill: #ffffff;
+            }
+            .location {
+              fill: #ff8c00;
+            }
+            .dataset {
+              fill: hsl(240, 100%, 95%);
+            }
+            .process {
+              fill: hsl(171, 100%, 95%);
+            }
+          </style>
+        </svg:defs>
+        <svg:defs>
+          <svg:marker
+            *ngFor="let marker of defs$ | async | keyvalue"
+            [attr.id]="marker.key"
+            [attr.refX]="marker.value.refX"
+            [attr.refY]="marker.value.refY"
+            [attr.markerWidth]="marker.value.markerWidth"
+            [attr.markerHeight]="marker.value.markerHeight"
+            orient="auto"
+          >
+            <svg:path
+              [attr.d]="marker.value.path"
+              [style.fill]="marker.value.fill"
+              [style.stroke]="marker.value.stroke"
+              stroke-dasharray="999"
+            ></svg:path>
+          </svg:marker>
+        </svg:defs>
+        <svg:rect
+          id="modelview-background"
+          class="background"
+          width="100%"
+          height="100%"
+          data-html2canvas-ignore
+        ></svg:rect>
+        <svg:g id="modelview" #zoomTarget>
+          <svg:g
+            *ngFor="let node of nodes$ | async"
+            [models4insight-modelview-node]="node"
+          ></svg:g>
+          <svg:g
+            *ngFor="let connection of connections$ | async"
+            [models4insight-modelview-connection]="connection"
+          ></svg:g>
+        </svg:g>
+      </svg>
+    </div>
+  </div>
+  <models4insight-model-browser></models4insight-model-browser>
+</ng-container>
+
+<ng-template #loading>
+  <div class="has-text-centered">
+    <span class="icon is-large">
+      <fa-icon [icon]="faSpinner" [spin]="true"></fa-icon>
+    </span>
+    <h5 class="title is-5">Loading the model...</h5>
+  </div>
+</ng-template>

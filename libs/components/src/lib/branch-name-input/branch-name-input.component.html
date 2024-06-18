@@ -1,0 +1,46 @@
+<models4insight-control-shell>
+  <ng-container control>
+    <input
+      id="branchNameInput"
+      type="text"
+      class="input"
+      placeholder="Branch name"
+      [class.is-danger]="(control.dirty || isSubmitted) && control.invalid"
+      [ngClass]="inputClasses"
+      [formControl]="control"
+    />
+  </ng-container>
+  <ng-container hints>
+    <p *ngIf="control.valid" class="help is-success" translate>
+      This branch name is currently available
+    </p>
+    <p *ngIf="control.pending" class="help is-info" translate>
+      Checking branch name availability...
+    </p>
+  </ng-container>
+  <ng-container errors>
+    <p *ngIf="control.errors?.unique" class="help is-danger">
+      Please provide a branch name you have not used before
+    </p>
+    <p *ngIf="control.errors?.minlength as error" class="help is-danger">
+      Please provide a branch name longer than
+      {{ error.requiredLength }} characters
+    </p>
+    <p *ngIf="control.errors?.maxlength as error" class="help is-danger">
+      Please provide a branch name shorter than
+      {{ error.requiredLength }} characters
+    </p>
+    <p
+      *ngIf="control.errors?.leadingOrTrailingWhitespace as error"
+      class="help is-danger"
+    >
+      Please provide a branch name without leading or trailing whitespaces
+    </p>
+    <p
+      *ngIf="control.errors?.multipleWhitespaces as error"
+      class="help is-danger"
+    >
+      Please provide a branch name with single whitespaces only
+    </p>
+  </ng-container>
+</models4insight-control-shell>

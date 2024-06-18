@@ -1,0 +1,23 @@
+<ng-container *ngIf="shapeDefinition$ | async as shapeDefinition">
+    <svg:clipPath [attr.id]="this.id +'clip-path'">
+        <svg:path [attr.d]="shapeDefinition.shape"></svg:path>
+    </svg:clipPath>
+    <svg:path class="node-shape" [attr.d]="shapeDefinition.shape" [ngClass]="class$| async" [style.fill]="color$ | async"></svg:path>
+    <svg:g [attr.clip-path]="this.id +'clip-path'">
+        <svg:foreignObject [attr.width]="width" [attr.height]="height">
+            <xhtml:div models4insight-intersection-observer class="node-content"
+                xmlns="http://www.w3.org/1999/xhtml">
+                <ng-container *ngIf="shapeDefinition.showIcon">
+                    <xhtml:div *ngIf="type$ | async as type" models4insight-archimate-icon [type]="type" class="node-icon"
+                        xmlns="http://www.w3.org/1999/xhtml"></xhtml:div>
+                </ng-container>
+                <ng-container *ngIf="shapeDefinition.showName">
+                    <xhtml:div *ngIf="displayName$ | async as displayName" class="node-text" [attr.title]="displayName"
+                        xmlns="http://www.w3.org/1999/xhtml">
+                    {{ displayName }} 
+                    </xhtml:div>
+                </ng-container>
+            </xhtml:div>
+        </svg:foreignObject>
+    </svg:g>
+</ng-container>

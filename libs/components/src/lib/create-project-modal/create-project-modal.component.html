@@ -1,0 +1,95 @@
+<models4insight-modal
+  [context]="{
+    title: 'Create a new project',
+    cancel: 'Close',
+    confirm: 'Create',
+    closeOnConfirm: false
+  }"
+  [isLoading]="isCreatingProject$ | async"
+>
+  <form [formGroup]="form">
+    <div class="field">
+      <label class="label" for="username">Project name</label>
+      <div class="control">
+        <input
+          type="text"
+          class="input"
+          [ngClass]="{
+            'is-danger':
+              form.controls.name.invalid &&
+              (form.controls.name.dirty || isSubmitted)
+          }"
+          placeholder="Project name"
+          formControlName="name"
+          required
+        />
+      </div>
+      <p *ngIf="form.controls['name'].valid" class="help is-success" translate>
+        This project name is currently available
+      </p>
+      <p *ngIf="form.controls['name'].pending" class="help is-info" translate>
+        Checking project name availability...
+      </p>
+      <ng-container
+        *ngIf="
+          form.controls['name'].invalid &&
+          (form.controls['name'].dirty || isSubmitted)
+        "
+      >
+        <p
+          *ngIf="form.controls['name'].errors?.unique"
+          class="help is-danger"
+          translate
+        >
+          Please provide project name you have not used before
+        </p>
+        <p
+          *ngIf="form.controls['name'].errors?.minlength as error"
+          class="help is-danger"
+          translate
+        >
+          Please provide a project name longer than
+          {{ error.requiredLength }} characters
+        </p>
+        <p
+          *ngIf="form.controls['name'].errors?.maxlength as error"
+          class="help is-danger"
+          translate
+        >
+          Please provide a project name shorter than
+          {{ error.requiredLength }} characters
+        </p>
+        <p
+          *ngIf="
+            form.controls['name'].errors?.leadingOrTrailingWhitespace as error
+          "
+          class="help is-danger"
+          translate
+        >
+          Please provide a project name without leading or trailing whitespaces
+        </p>
+        <p
+          *ngIf="form.controls['name'].errors?.multipleWhitespaces as error"
+          class="help is-danger"
+          translate
+        >
+          Please provide a project name with single whitespaces only
+        </p>
+        <p
+          *ngIf="form.controls['name'].errors?.required"
+          class="help is-danger"
+          translate
+        >
+          Please provide a name for your project
+        </p>
+      </ng-container>
+    </div>
+    <div class="field">
+      <models4insight-description-input
+        [context]="descriptionContext"
+        [control]="form.controls['documentation']"
+        [isSubmitted]="isSubmitted"
+      ></models4insight-description-input>
+    </div>
+  </form>
+</models4insight-modal>

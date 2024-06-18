@@ -1,0 +1,8 @@
+{
+  "holdable": {
+    "tooltip": {
+      "single": "Hold for {{seconds}} second",
+      "plural": "Hold for {{seconds}} seconds"
+    }
+  }
+}

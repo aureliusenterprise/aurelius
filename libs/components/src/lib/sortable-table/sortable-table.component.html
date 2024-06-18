@@ -1,0 +1,35 @@
+<models4insight-sortable-table-shell>
+  <ng-template let-rowData>
+    <ng-container
+      *ngFor="
+        let header of config | keyvalue : sortByKeyOrder;
+        trackBy: trackByIndex;
+        let first = first
+      "
+    >
+      <th *ngIf="first" scope="row">
+        {{
+          header.value.isTimestamp
+            ? (rowData[header.key] | date : 'dd MMM y, HH:mm:ss')
+            : rowData[header.key]
+        }}
+      </th>
+      <td
+        *ngIf="!first"
+        [class.truncate]="header.value.truncate"
+        [class.truncate-start]="header.value.truncate === 'start'"
+        [title]="
+          header.value.isTimestamp
+            ? (rowData[header.key] | date : 'dd MMM y, HH:mm:ss')
+            : rowData[header.key]
+        "
+      >
+        {{
+          header.value.isTimestamp
+            ? (rowData[header.key] | date : 'dd MMM y, HH:mm:ss')
+            : rowData[header.key]
+        }}
+      </td>
+    </ng-container>
+  </ng-template>
+</models4insight-sortable-table-shell>

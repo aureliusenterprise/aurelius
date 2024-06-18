@@ -1,0 +1,23 @@
+import { Controls, Canvas, Meta, Story } from '@storybook/blocks';
+import { moduleMetadata } from '@storybook/angular';
+import { MarkdownComponent } from '../markdown.component';
+import { MarkdownModule } from '../markdown.module';
+import { markdown } from './content';
+import * as MarkdownComponentStories from './markdown.component.stories';
+
+<Meta of={MarkdownComponentStories} />
+
+# MarkdownComponent
+
+This component allows for dynamically rendering markdown content.
+Tags (e.g. headings) are annotated with corresponding `Bulma` classes to ensure styling is consistent with the rest of the application.
+
+<Controls />
+
+## Primary
+
+Please find an example of rendered markdown content below.
+
+<Canvas>
+  <Story of={MarkdownComponentStories.Primary} />
+</Canvas>

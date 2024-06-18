@@ -1,0 +1,25 @@
+<models4insight-sortable-table-shell
+  [config]="entitiesTableConfig"
+  [itemsPerPage]="5"
+  [rowsSelectable]="true"
+  [selectedRow]="selectedEntity$ | async"
+  (rowDeselected)="deselectEntity()"
+  (rowSelected)="selectEntity($event)"
+>
+  <ng-template let-rowData>
+    <ng-container [ngSwitch]="rowData.parserType">
+      <models4insight-model-browser-element-row
+        *ngSwitchCase="'element'"
+        [entity]="rowData"
+      ></models4insight-model-browser-element-row>
+      <td
+        *ngSwitchCase="'relationship'"
+        [attr.colspan]="(entitiesTableConfig | keyvalue)['length']"
+      >
+        <models4insight-model-browser-relationship-row
+          [entity]="rowData"
+        ></models4insight-model-browser-relationship-row>
+      </td>
+    </ng-container>
+  </ng-template>
+</models4insight-sortable-table-shell>

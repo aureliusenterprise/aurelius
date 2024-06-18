@@ -1,0 +1,19 @@
+<div class="buttons has-addons">
+  <a
+    class="button is-expanded is-large is-success"
+    [class.is-loading]="isCommittingModel$ | async"
+    (click)="onCommitButtonClicked()"
+  >
+    Upload
+  </a>
+  <a
+    *ngIf="!(isCommittingModel$ | async)"
+    class="button is-large is-success"
+    (click)="openCommitOptionsModal()"
+  >
+    <span class="icon">
+      <fa-icon [icon]="faCog"></fa-icon>
+    </span>
+  </a>
+</div>
+<models4insight-commit-options-modal></models4insight-commit-options-modal>

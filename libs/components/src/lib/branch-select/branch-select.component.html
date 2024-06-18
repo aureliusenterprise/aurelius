@@ -1,0 +1,19 @@
+<models4insight-select>
+  <ng-container buttons-left *ngIf="withCreateBranch">
+    <div class="control">
+      <a
+        type="button"
+        class="button is-primary"
+        [ngClass]="context.inputClasses"
+        [class.is-loading]="isCreatingBranch$ | async"
+        (click)="activateModal()"
+        aria-label="Add a branch"
+      >
+        <span class="icon is-small">
+          <fa-icon [icon]="faPlus"></fa-icon>
+        </span>
+      </a>
+    </div>
+  </ng-container>
+</models4insight-select>
+<models4insight-create-branch-modal></models4insight-create-branch-modal>

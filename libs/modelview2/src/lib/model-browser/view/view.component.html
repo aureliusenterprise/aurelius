@@ -1,0 +1,110 @@
+<ng-container *ngIf="selectedView$ | async as selectedView">
+  <div *ngIf="selectedView?.name as name" class="field">
+    <label class="label">Name</label>
+    <p>{{ name }}</p>
+  </div>
+  <div *ngIf="selectedView?.description as description" class="field">
+    <label class="label">Description</label>
+    <p>{{ description }}</p>
+  </div>
+
+  <ng-container *ngIf="selectedView?.properties | keyvalue as viewProperties">
+    <div *ngIf="viewProperties['length']" class="field">
+      <label class="label">Properties</label>
+      <models4insight-sortable-table
+        [config]="propertiesTableConfig"
+        [data]="viewProperties"
+        [itemsPerPage]="5"
+        [rowsSelectable]="false"
+      >
+      </models4insight-sortable-table>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="legend$ | async as legend">
+    <div class="field">
+      <div *ngIf="!(isPalletteFixed$ | async)" class="field">
+        <models4insight-pallette-select></models4insight-pallette-select>
+      </div>
+      <div class="field">
+        <label class="label">Color legend</label>
+        <models4insight-sortable-table-shell
+          [config]="legendTableConfig"
+          [data]="legend | keyvalue"
+          [itemsPerPage]="6"
+          [rowsSelectable]="false"
+        >
+          <ng-template let-rowData>
+            <th scope="row">{{ rowData.key }}</th>
+            <td class="legend-color">
+              <models4insight-color-square
+                [color]="rowData.value"
+                (colorChanged)="updateLegendColor(rowData.key, $event)"
+              ></models4insight-color-square>
+            </td>
+          </ng-template>
+        </models4insight-sortable-table-shell>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="referencedViews$ | async as referencedViews">
+    <ng-container *ngIf="referencedViews.length > 0">
+      <div class="field">
+        <label class="label">Referenced views</label>
+        <models4insight-sortable-table-shell
+          [config]="viewsTableConfig"
+          [data]="referencedViews"
+          [itemsPerPage]="5"
+          [rowsSelectable]="true"
+          [selectedRow]="selectedView"
+          (rowSelected)="selectView($event)"
+          (rowDeselected)="deselectView()"
+        >
+          <ng-template let-rowData>
+            <th class="truncate" scope="row" [title]="rowData.name">
+              {{ rowData.name }}
+            </th>
+            <td class="truncate" [title]="rowData.description">
+              {{ rowData.description }}
+            </td>
+          </ng-template>
+        </models4insight-sortable-table-shell>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="referencingViews$ | async as referencingViews">
+    <ng-container *ngIf="referencingViews.length > 0">
+      <div class="field">
+        <label class="label">Referencing views</label>
+        <models4insight-sortable-table-shell
+          [config]="viewsTableConfig"
+          [data]="referencingViews"
+          [itemsPerPage]="5"
+          [rowsSelectable]="true"
+          [selectedRow]="selectedView"
+          (rowSelected)="selectView($event)"
+          (rowDeselected)="deselectView()"
+        >
+          <ng-template let-rowData>
+            <th class="truncate" scope="row" [title]="rowData.name">
+              {{ rowData.name }}
+            </th>
+            <td class="truncate" [title]="rowData.docs">{{ rowData.docs }}</td>
+          </ng-template>
+        </models4insight-sortable-table-shell>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="selectedViewId$ | async as viewId">
+    <div class="field">
+      <p>
+        <span class="is-size-7 has-text-grey-light has-text-weight-light">
+          ID:&nbsp;{{ viewId }}
+        </span>
+      </p>
+    </div>
+  </ng-container>
+</ng-container>

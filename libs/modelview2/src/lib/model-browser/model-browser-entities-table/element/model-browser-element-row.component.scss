@@ -1,0 +1,14 @@
+:host {
+  display: contents;
+}
+
+.truncate {
+  max-width: 12rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.truncate-start {
+    direction: rtl;
+  }
+}

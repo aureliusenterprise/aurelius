@@ -1,0 +1,31 @@
+<models4insight-modal>
+  <form [formGroup]="form">
+    <div class="field">
+      <models4insight-conflict-resolution-template-select
+        [control]="form.controls.conflictResolutionTemplate"
+      >
+      </models4insight-conflict-resolution-template-select>
+    </div>
+    <h6 class="title is-6">Advanced</h6>
+    <div class="field">
+      <input
+        id="keepOriginalIdsSwitch"
+        type="checkbox"
+        name="keepOriginalIdsSwitch"
+        class="switch"
+        formControlName="keepOriginalIds"
+      />
+      <label for="keepOriginalIdsSwitch">
+        <span>Keep original ids</span>
+      </label>
+      <span
+        models4insight-tooltip="Use this option if the model you are committing comes from a different project"
+        [isTooltipMultiline]="true"
+        tooltipDirection="right"
+        class="icon has-text-info is-small"
+      >
+        <fa-icon [icon]="faQuestionCircle"></fa-icon>
+      </span>
+    </div>
+  </form>
+</models4insight-modal>

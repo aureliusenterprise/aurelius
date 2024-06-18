@@ -1,0 +1,9 @@
+<models4insight-header></models4insight-header>
+<div class="sticky" [style.width]="'100%'">
+  <models4insight-loading></models4insight-loading>
+  <models4insight-pipeline></models4insight-pipeline>
+</div>
+<div class="is-tall-container has-background-light">
+  <router-outlet (activate)="onActivate()"></router-outlet>
+</div>
+<models4insight-footer></models4insight-footer>

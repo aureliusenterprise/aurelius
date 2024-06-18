@@ -1,0 +1,11 @@
+<models4insight-control-shell>
+  <input
+    control
+    class="input"
+    [class.is-loading]="isUpdatingSuggestions$ | async"
+    [attr.disabled]="(isUpdatingSearchIndex$ | async) ? '' : null"
+    type="text"
+    placeholder="Search..."
+    [formControl]="control"
+  />
+</models4insight-control-shell>

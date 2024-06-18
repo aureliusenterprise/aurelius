@@ -1,0 +1,39 @@
+<div *ngIf="isActive" class="quickview is-active">
+  <header class="quickview-header">
+    <p class="title">{{ name }}</p>
+    <div class="quickview-header-buttons">
+      <a
+        class="button is-text"
+        [class.has-text-primary]="isPinned"
+        [models4insight-tooltip]="isPinned ? 'Unpin from side' : 'Pin to side'"
+        (click)="toggleIsPinned()"
+      >
+        <span class="icon">
+          <fa-icon
+            [icon]="faThumbtack"
+            [rotate]="isPinned ? 270 : 90"
+          ></fa-icon>
+        </span>
+      </a>
+      <span class="icon">
+        <span
+          class="delete"
+          data-dismiss="quickview"
+          (click)="close(true)"
+        ></span>
+      </span>
+    </div>
+  </header>
+  <ng-content select="[navigation]"></ng-content>
+  <div class="quickview-body">
+    <div class="quickview-block">
+      <ng-content select="[quickview-body]"></ng-content>
+    </div>
+  </div>
+  <footer class="quickview-footer">
+    <a class="button" (click)="close(true)">
+      <span>Close</span>
+    </a>
+    <ng-content select="[footer]"></ng-content>
+  </footer>
+</div>

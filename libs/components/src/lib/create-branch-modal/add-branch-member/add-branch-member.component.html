@@ -1,0 +1,66 @@
+<div class="level">
+  <div class="level-left">
+    <h5 class="title is-5">Add a new user or group</h5>
+  </div>
+  <div class="level-right">
+    <models4insight-fuzzy-search-input
+      [searchItems]="searchTerms$ | async"
+      [tokenizerConfig]="nameSearchTokenizerConfig"
+    ></models4insight-fuzzy-search-input>
+  </div>
+</div>
+<div *ngIf="suggestions$ | async as suggestions" class="field">
+  <ng-container *ngIf="suggestions.length > 0; else noSuggestions">
+    <ng-container *ngIf="nameTypeIndex$ | async as nameTypeIndex">
+      <models4insight-sortable-table-shell
+        [config]="suggestionsTableConfig"
+        [data]="suggestions"
+        [itemsPerPage]="3"
+        [rowsSelectable]="false"
+      >
+        <ng-template let-rowData>
+          <td>
+            <span
+              *ngIf="nameTypeIndex[rowData] as nameType"
+              class="icon is-small has-text-info"
+            >
+              <fa-icon
+                [icon]="nameType === 'user' ? faUser : faUsers"
+              ></fa-icon>
+            </span>
+          </td>
+          <th scope="row">
+            <span>{{ rowData }}</span>
+          </th>
+          <td>
+            <a
+              *ngIf="
+                members.value[rowData] === undefined;
+                else isAlreadyAMember
+              "
+              class="button is-success is-small is-pulled-right"
+              (click)="addMember(rowData)"
+            >
+              <span class="icon">
+                <fa-icon [icon]="faPlus"></fa-icon>
+              </span>
+              <span>Add</span>
+            </a>
+          </td>
+        </ng-template>
+      </models4insight-sortable-table-shell>
+    </ng-container>
+  </ng-container>
+</div>
+
+<ng-template #isAlreadyAMember>
+  <p class="content is-pulled-right">
+    <span><i>Already a member</i></span>
+  </p>
+</ng-template>
+
+<ng-template #noSuggestions>
+  <p class="content has-text-centered">
+    <span><i>No suggestions based on the current query</i></span>
+  </p>
+</ng-template>

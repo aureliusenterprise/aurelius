@@ -1,0 +1,10 @@
+.color-box {
+  border: 1px solid lightgray;
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

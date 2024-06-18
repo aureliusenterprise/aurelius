@@ -1,0 +1,38 @@
+<div
+  *ngIf="source$ | async as source"
+  class="level is-mobile is-marginless"
+  [title]="source.name"
+>
+  <span class="icon">
+    <models4insight-archimate-icon
+      [type]="source['type']"
+    ></models4insight-archimate-icon>
+  </span>
+  <strong class="truncate">{{ source.name }}</strong>
+</div>
+
+<p>
+  <em>
+    <span
+      *ngIf="displayName$ | async as displayName"
+      class="truncate"
+      [title]="displayName"
+    >
+      {{ displayName }}
+    </span>
+    <span>({{ type$ | async }})</span>
+  </em>
+</p>
+
+<div
+  *ngIf="target$ | async as target"
+  class="level is-mobile is-marginless"
+  [title]="target.name"
+>
+  <span class="icon">
+    <models4insight-archimate-icon
+      [type]="target['type']"
+    ></models4insight-archimate-icon>
+  </span>
+  <strong class="truncate">{{ target.name }}</strong>
+</div>

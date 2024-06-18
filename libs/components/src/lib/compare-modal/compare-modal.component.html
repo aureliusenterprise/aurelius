@@ -1,0 +1,29 @@
+<models4insight-modal>
+  <div class="field">
+    <label class="label is-medium">Base</label>
+    <div class="field">
+      <label class="label">Branch</label>
+      <p>{{ form.value.baseBranch }}</p>
+    </div>
+    <div *ngIf="form.value.baseVersion" class="field">
+      <label class="label">Version</label>
+      <p>{{ form.value.baseVersion | date : 'dd MMM y, HH:mm:ss' }}</p>
+    </div>
+  </div>
+  <div class="field">
+    <label class="label is-medium">Compare to</label>
+    <div class="field">
+      <models4insight-branch-select
+        [control]="form.controls.otherBranch"
+        [isSubmitted]="isSubmitted"
+      ></models4insight-branch-select>
+    </div>
+    <div *ngIf="form.value.otherBranch" class="field">
+      <models4insight-provenance-select
+        [control]="form.controls.otherVersion"
+        [data]="versions$ | async"
+        [isSubmitted]="isSubmitted"
+      ></models4insight-provenance-select>
+    </div>
+  </div>
+</models4insight-modal>

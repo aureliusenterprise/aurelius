@@ -1,0 +1,21 @@
+<models4insight-quickview>
+  <ng-container navigation>
+    <div class="tabs is-centered">
+      <ul>
+        <ng-container *ngFor="let tab of tabs | keyvalue : preserveKeyOrder">
+          <ng-container
+            *ngIf="!tab.value.condition || (tab.value.condition | async)"
+          >
+            <li [class.is-active]="currentTab?.id === tab.key">
+              <a (click)="selectTab(tab.key)">{{ tab.value.displayName }}</a>
+            </li>
+          </ng-container>
+        </ng-container>
+      </ul>
+    </div>
+  </ng-container>
+  <ng-container
+    quickview-body
+    *models4insight-dynamic-component="currentTab?.component"
+  ></ng-container>
+</models4insight-quickview>
