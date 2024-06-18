@@ -1,7 +1,7 @@
 import json
 import os
 from pathlib import Path
-from typing import TypedDict
+from typing import TypedDict, Union
 
 from pyflink.common import Types
 from pyflink.common.serialization import SimpleStringSchema
@@ -65,7 +65,7 @@ class PublishStateConfig(TypedDict):
     kafka_producer_group_id: str
     kafka_source_topic_name: str
     keycloak_client_id: str
-    keycloak_client_secret_key: str | None
+    keycloak_client_secret_key: Union[str, None]
     keycloak_server_url: str
     keycloak_realm_name: str
     keycloak_username: str
