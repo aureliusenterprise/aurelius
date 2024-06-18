@@ -1,0 +1,58 @@
+<div class="dropdown is-hoverable is-right">
+  <div class="dropdown-trigger">
+    <a class="has-text-dark" aria-haspopup="true" aria-controls="dropdown-menu">
+      <span class="icon is-small">
+        <fa-icon [icon]="faEllipsisH"></fa-icon>
+      </span>
+    </a>
+  </div>
+  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+    <div class="dropdown-content">
+      <ng-container
+        *ngIf="filteredMenuItems$ | async as filteredMenuItems; else emptyMenu"
+      >
+        <ng-container *ngIf="filteredMenuItems.length > 0; else emptyMenu">
+          <ng-container
+            *ngFor="
+              let group of filteredMenuItems;
+              let isLastGroup = last;
+              trackBy: trackByIndex
+            "
+          >
+            <ng-container *ngFor="let item of group; trackBy: trackByIndex">
+              <!-- If no holdtime is specified, or if the holdtime is 0, use a normal button-->
+              <a
+                *ngIf="!item.holdTime"
+                class="dropdown-item"
+                (click)="item.click()"
+              >
+                <models4insight-context-menu-item
+                  [item]="item"
+                ></models4insight-context-menu-item>
+              </a>
+              <!-- If a holdtime is specified, use a holdable button-->
+              <a
+                *ngIf="item.holdTime"
+                class="dropdown-item"
+                models4insight-holdable
+                [holdTime]="item.holdTime"
+                (held)="onHeld($event, item)"
+              >
+                <models4insight-context-menu-item
+                  [item]="item"
+                ></models4insight-context-menu-item>
+              </a>
+            </ng-container>
+            <hr *ngIf="!isLastGroup" class="dropdown-divider" />
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyMenu>
+  <div class="dropdown-item is-italic has-text-centered has-text-grey">
+    No options available
+  </div>
+</ng-template>

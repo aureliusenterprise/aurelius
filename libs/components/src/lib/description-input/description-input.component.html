@@ -1,0 +1,12 @@
+<models4insight-control-shell>
+  <ng-container control>
+    <textarea
+      class="textarea"
+      [class.is-danger]="
+        control.invalid && ((control.touched && control.dirty) || isSubmitted)
+      "
+      [placeholder]="context['placeholder']"
+      [formControl]="control"
+    ></textarea>
+  </ng-container>
+</models4insight-control-shell>

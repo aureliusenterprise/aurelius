@@ -7,7 +7,7 @@
     "useDefineForClassFields": false
   },
   "files": ["src/main.ts", "src/polyfills.ts"],
-  "include": ["**/*.ts"],
+  "include": ["./**/*.ts"],
   "exclude": [
     "**/+stories/*",
     "src/test-setup.ts",

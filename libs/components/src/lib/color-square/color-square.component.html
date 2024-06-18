@@ -1,0 +1,15 @@
+<ng-container *ngIf="enableColorPicker">
+  <div
+    class="color-box"
+    [colorPicker]="color"
+    cpAlphaChannel="disabled"
+    [cpDisableInput]="true"
+    cpOutputFormat="hex"
+    [cpPosition]="position"
+    (colorPickerChange)="handleColorPickerChange($event)"
+    [style.background-color]="color"
+  ></div>
+</ng-container>
+<ng-container *ngIf="!enableColorPicker">
+  <div class="color-box" [style.background-color]="color"></div>
+</ng-container>

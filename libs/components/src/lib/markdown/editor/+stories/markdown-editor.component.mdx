@@ -1,0 +1,21 @@
+import { Controls, Canvas, Meta, Story } from '@storybook/blocks';
+import { moduleMetadata } from '@storybook/angular';
+import { MarkdownEditorComponent } from '../markdown-editor.component';
+import { MarkdownEditorModule } from '../markdown-editor.module';
+import * as MarkdownEditorComponentStories from './markdown-editor.component.stories';
+
+<Meta of={MarkdownEditorComponentStories} />
+
+# MarkdownEditorComponent
+
+This component allows for editing of markdown content and provides a live preview of the rendered output.
+
+<Controls />
+
+## Primary
+
+Please find an example of the markdown editor below.
+
+<Canvas>
+  <Story of={MarkdownEditorComponentStories.Primary} />
+</Canvas>

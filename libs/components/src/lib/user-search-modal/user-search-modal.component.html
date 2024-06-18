@@ -1,0 +1,43 @@
+<models4insight-modal>
+  <div class="field">
+    <models4insight-user-search-input></models4insight-user-search-input>
+  </div>
+  <div class="field">
+    <ng-container *ngIf="suggestedUsers$ | async as suggestedUsers">
+      <ng-container *ngIf="suggestedUsers.length > 0">
+        <label class="label" for="description">Suggestions</label>
+        <table
+          class="table has-background-light is-hoverable has-shadow is-fullwidth"
+        >
+          <thead class="has-background-dark">
+            <th class="has-text-white" scope="col">Email</th>
+            <th class="has-text-white" scope="col">Username</th>
+            <th scope="col"></th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of suggestedUsers">
+              <th scope="row">{{ user.email }}</th>
+              <td>{{ user.userName }}</td>
+              <td>
+                <div class="field is-pulled-right">
+                  <p class="control">
+                    <button
+                      type="button"
+                      class="button is-success is-small"
+                      (click)="onAddMember(user)"
+                    >
+                      <span class="icon is-small">
+                        <fa-icon [icon]="faPlus"></fa-icon>
+                      </span>
+                      <span>Add</span>
+                    </button>
+                  </p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+    </ng-container>
+  </div>
+</models4insight-modal>

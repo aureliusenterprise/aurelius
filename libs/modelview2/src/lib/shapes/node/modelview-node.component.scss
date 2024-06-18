@@ -1,0 +1,37 @@
+.node-content {
+  height: 100%;
+  line-height: 1.1em;
+}
+
+.node-shape {
+  stroke: #a0a0a0;
+  stroke-width: 2px;
+  fill: none;
+}
+
+.node-icon {
+  float: right;
+  margin-left: 5px;
+}
+
+.node-text {
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+}
+
+:host.is-highlighted {
+  .node-shape {
+    stroke: hsl(141, 53%, 53%);
+  }
+}
+
+:host.is-selected {
+  .node-shape {
+    stroke: #40e0d0;
+  }
+}
+
+@import '../languages';

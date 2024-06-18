@@ -1,0 +1,23 @@
+<models4insight-modal [context]="modalContext">
+  <ng-container *ngIf="isActive | async">
+    <div class="field">
+      <models4insight-fuzzy-search-input
+        *ngIf="!isTimestamp"
+        [query]="searchQuery"
+        [searchItems]="rows"
+      ></models4insight-fuzzy-search-input>
+      <models4insight-date-picker
+        *ngIf="isTimestamp"
+      ></models4insight-date-picker>
+    </div>
+    <models4insight-sortable-table
+      [config]="tableConfig"
+      [data]="filteredRows"
+      [itemsPerPage]="5"
+      [rowComparator]="rowComparator"
+      [rowsSelectable]="false"
+      [selectedRow]="control?.value"
+    >
+    </models4insight-sortable-table>
+  </ng-container>
+</models4insight-modal>

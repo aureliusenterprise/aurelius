@@ -1,0 +1,39 @@
+<label *ngIf="context.label" id="controlLabel" class="label">{{
+  context.label
+}}</label>
+<div class="field has-addons" [class.is-marginless]="!context.label">
+  <!-- You can add additional items such as buttons or labels to the left and right of the control. -->
+  <ng-content select="[addons-left]"></ng-content>
+  <div
+    class="control is-expanded"
+    [class.has-icons-left]="context.icon"
+    [class.has-icons-right]="context.hasIconsRight"
+  >
+    <!-- The actual form control goes here -->
+    <ng-content select="[control]"></ng-content>
+    <!-- If an icon is defined, it is inserted as part of the control on the left hand side -->
+    <span
+      *ngIf="context.icon"
+      class="icon is-left"
+      [class.has-text-danger]="
+        (control.dirty || isSubmitted) && control.invalid
+      "
+      [class.has-text-info]="
+        !((control.dirty || isSubmitted) && control.invalid)
+      "
+    >
+      <fa-icon [icon]="context.icon"></fa-icon>
+    </span>
+    <!-- Use this space for messages not related to errors  -->
+    <ng-content select="[hints]"></ng-content>
+    <ng-container *ngIf="(control.dirty || isSubmitted) && control.invalid">
+      <p *ngIf="control.errors?.required" class="help is-danger">
+        {{ context.requiredErrorMessage }}
+      </p>
+      <!-- Use this space for validation error messages -->
+      <ng-content select="[errors]"></ng-content>
+    </ng-container>
+  </div>
+  <!-- You can add additional items such as buttons or labels to the left and right of the control. -->
+  <ng-content select="[addons-right]"></ng-content>
+</div>

@@ -1,0 +1,81 @@
+.progress {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+$primary: #00d1b2;
+$text: #4a4a4a;
+$progress-bar-background-color: #dbdbdb;
+$dummy-invert: white;
+$colors: (
+  'primary': (
+    $primary,
+    $primary,
+  ),
+  'link': (
+    #209cee,
+    #209cee,
+  ),
+  'info': (
+    #3273dc,
+    #3273dc,
+  ),
+  'success': (
+    #23d160,
+    #23d160,
+  ),
+  'warning': (
+    #ffdd57,
+    #ffdd57,
+  ),
+  'danger': (
+    #ff3860,
+    #ff3860,
+  ),
+);
+
+.progress {
+  background: $progress-bar-background-color;
+
+  &::-webkit-progress-bar {
+    background: transparent !important; // override bulma.css
+  }
+
+  &:indeterminate {
+    animation: progress-indeterminate 0.75s linear infinite;
+    background: $progress-bar-background-color
+      linear-gradient(to right, $text 30%, $progress-bar-background-color 30%)
+      top left / 150% 150% no-repeat;
+
+    &::-moz-progress-bar {
+      background: transparent !important; // override bulma.css
+    }
+
+    @each $name, $pair in $colors {
+      $color: nth($pair, 1);
+      &.is-#{$name} {
+        background: $progress-bar-background-color
+          linear-gradient(
+            to right,
+            $color 30%,
+            $progress-bar-background-color 30%
+          )
+          top
+          left /
+          150%
+          150%
+          no-repeat;
+      }
+    }
+  }
+}
+
+@keyframes progress-indeterminate {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

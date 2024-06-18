@@ -1,0 +1,252 @@
+<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item is-size-4" routerLink="/"
+        ><img class="logo" [src]="appLogoPath" [alt]="appName"
+      /></a>
+      <a
+        role="button"
+        class="navbar-burger burger"
+        type="button"
+        aria-label="Toggle navigation"
+        data-target="primaryNavMenu"
+        [attr.aria-expanded]="!menuHidden"
+        [class.is-active]="!menuHidden"
+        (click)="toggleMenu()"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div
+      id="primaryNavMenu"
+      class="navbar-menu is-paddingless"
+      [ngClass]="{ 'is-active': !menuHidden }"
+    >
+      <div class="navbar-start">
+        <div class="navbar-item">
+          <div class="buttons">
+            <!-- Primary navigation items -->
+            <ng-container *ngFor="let route of routes$ | async">
+              <a
+                *ngIf="!route.data.hidden"
+                class="button is-outlined is-dark is-hidden-touch"
+                [routerLink]="'/' + route.path"
+                routerLinkActive="has-text-white has-background-dark"
+              >
+                <span *ngIf="route.data?.icon as icon" class="icon">
+                  <fa-icon [icon]="icon"></fa-icon>
+                </span>
+                <span translate>
+                  {{
+                    (route.data && route.data['title']
+                      ? route.data['title']
+                      : route.path
+                    )
+                      | titlecase
+                      | translate
+                  }}
+                </span>
+              </a>
+              <a
+                *ngIf="!route.data.hidden"
+                class="button is-outlined is-dark is-fullwidth is-hidden-desktop"
+                [routerLink]="'/' + route.path"
+                routerLinkActive="has-text-white has-background-dark"
+              >
+                <span class="icon">
+                  <fa-icon
+                    [icon]="route.data ? route.data['icon'] : null"
+                  ></fa-icon>
+                </span>
+                <span translate>
+                  {{
+                    (route.data && route.data['title']
+                      ? route.data['title']
+                      : route.path
+                    )
+                      | titlecase
+                      | translate
+                  }}
+                </span>
+              </a>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <ng-container *ngIf="isUpdateAvailable$ | async">
+              <a class="button is-info is-hidden-touch" (click)="applyUpdate()">
+                <span class="icon">
+                  <fa-icon [icon]="faSync"></fa-icon>
+                </span>
+                <span translate>shell.header.update</span>
+              </a>
+              <a
+                class="button is-info is-fullwidth is-hidden-desktop"
+                (click)="applyUpdate()"
+              >
+                <span class="icon">
+                  <fa-icon [icon]="faSync"></fa-icon>
+                </span>
+                <span translate>shell.header.update</span>
+              </a>
+            </ng-container>
+            <ng-container *ngIf="isAppInstallable$ | async">
+              <a
+                class="button is-primary is-hidden-touch"
+                (click)="triggerInstallPrompt()"
+              >
+                <span class="icon">
+                  <fa-icon [icon]="faArrowCircleDown"></fa-icon>
+                </span>
+                <span translate>shell.header.install</span>
+              </a>
+              <a
+                class="button is-primary is-fullwidth is-hidden-desktop"
+                (click)="triggerInstallPrompt()"
+              >
+                <span class="icon">
+                  <fa-icon [icon]="faArrowCircleDown"></fa-icon>
+                </span>
+                <span translate>shell.header.install</span>
+              </a>
+            </ng-container>
+            <!-- Documentation -->
+            <div *ngIf="!hideDocumentation">
+              <a
+                class="button is-outlined is-dark is-hidden-touch"
+                href="https://docs.models4insight.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span class="icon"> <fa-icon [icon]="faBook"></fa-icon> </span>
+                <span translate>shell.header.documentation</span>
+              </a>
+              <a
+                class="button is-outlined is-dark is-fullwidth is-hidden-desktop"
+                href="https://docs.models4insight.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span class="icon"> <fa-icon [icon]="faBook"></fa-icon> </span>
+                <span translate>shell.header.documentation</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Language selection -->
+      <ng-container *ngIf="supportedLanguages$ | async as supportedLanguages">
+        <ng-container *ngIf="supportedLanguages.length > 1">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <span>
+                <span translate>shell.header.language</span>
+                <span>&nbsp;</span>
+                <strong>{{ currentLanguage$ | async }}</strong>
+              </span>
+            </a>
+            <div class="navbar-dropdown">
+              <a
+                class="navbar-item"
+                *ngFor="let language of supportedLanguages$ | async"
+                (click)="setLanguage(language)"
+              >
+                {{ language }}
+              </a>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+      <!-- User account-->
+      <div
+        *ngIf="credentials$ | async as credentials; else loginButton"
+        class="navbar-item has-dropdown is-hoverable"
+      >
+        <a class="navbar-link">
+          <span>
+            <span translate>shell.header.welcome</span>
+            <span>&nbsp;</span>
+            <strong>{{ credentials.username || credentials.email }}</strong>
+          </span>
+        </a>
+        <div class="navbar-dropdown">
+          <a
+            role="button"
+            class="navbar-item"
+            (click)="accountManagement()"
+            translate
+            >shell.header.security</a
+          >
+          <hr class="navbar-divider" />
+          <a role="button" class="navbar-item" (click)="logout()" translate
+            >shell.header.logout</a
+          >
+        </div>
+      </div>
+
+      <!-- Models4Insight apps-->
+      <div *ngIf="!standalone" class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link is-arrowless">
+          <span class="icon is-large is-hidden-touch">
+            <fa-icon [icon]="faEllipsisV"></fa-icon>
+            <fa-icon [icon]="faEllipsisV"></fa-icon>
+            <fa-icon [icon]="faEllipsisV"></fa-icon>
+          </span>
+          <span class="is-hidden-desktop" translate>shell.header.services</span>
+        </a>
+        <div class="navbar-dropdown is-right">
+          <a
+            *models4insight-feature="Feature.PLATFORM_ACCESS"
+            href="/platform"
+            class="navbar-item"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="icon is-medium">
+              <img src="assets/m4i-icon.png" />
+            </span>
+            <span> Platform </span>
+          </a>
+          <a
+            *models4insight-feature="Feature.DATA2MODEL_ACCESS"
+            href="/data2model"
+            class="navbar-item"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="icon is-medium">
+              <img src="assets/d2m-icon.png" />
+            </span>
+            <span> Data2Model </span>
+          </a>
+          <a
+            *models4insight-feature="Feature.ANALYTICS_ACCESS"
+            href="/consistency_metrics"
+            class="navbar-item"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="icon is-medium">
+              <img src="assets/m4i-icon.png" />
+            </span>
+            <span> Analytics </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<ng-template #loginButton>
+  <!-- Login Button -->
+  <div class="navbar-item">
+    <a class="button is-primary is-fullwidth login-button" (click)="login()">
+      <span translate>shell.header.login</span>
+    </a>
+  </div>
+</ng-template>

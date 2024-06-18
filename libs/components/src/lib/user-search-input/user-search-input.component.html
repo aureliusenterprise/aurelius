@@ -1,0 +1,9 @@
+<label class="label" for="username">Search for a user</label>
+<div class="control">
+  <input
+    type="text"
+    class="input"
+    placeholder="Full email address..."
+    (input)="searchForUsers($event.target.value)"
+  />
+</div>

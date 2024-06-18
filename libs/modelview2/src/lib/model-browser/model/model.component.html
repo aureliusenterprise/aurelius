@@ -1,0 +1,15 @@
+<div class="field">
+  <models4insight-fuzzy-search-input></models4insight-fuzzy-search-input>
+</div>
+<div class="field">
+  <label class="label">Elements</label>
+  <models4insight-model-browser-entities-table
+    [data]="elements$ | async"
+  ></models4insight-model-browser-entities-table>
+</div>
+<div class="field">
+  <label class="label">Relationships</label>
+  <models4insight-model-browser-entities-table
+    [data]="relationships$ | async"
+  ></models4insight-model-browser-entities-table>
+</div>

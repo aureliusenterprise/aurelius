@@ -1,0 +1,15 @@
+.quickview {
+  transform: none !important;
+  will-change: auto !important;
+}
+
+.quickview-block {
+  margin-left: 1rem;
+  margin-top: 1rem;
+  margin-right: 1rem;
+}
+
+.quickview-header-buttons {
+  align-items: center;
+  display: flex;
+}

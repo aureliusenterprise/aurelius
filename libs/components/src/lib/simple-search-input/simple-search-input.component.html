@@ -1,0 +1,35 @@
+<models4insight-control-shell>
+  <ng-container control>
+    <input
+      control
+      class="input"
+      type="search"
+      [attr.placeholder]="context['placeholder']"
+      [formControl]="control"
+      [ngClass]="context.inputClasses"
+      (search)="submitQuery()"
+    />
+    <span
+      *ngIf="control.value"
+      class="icon is-small is-right"
+      (click)="clearQuery()"
+    >
+      <i class="delete is-small"></i>
+    </span>
+  </ng-container>
+
+  <ng-container addons-right>
+    <div class="control">
+      <a
+        *ngIf="context['withSubmitButton']"
+        class="button is-success"
+        [ngClass]="context.inputClasses"
+        (click)="submitQuery()"
+      >
+        <span class="icon is-small">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </span>
+      </a>
+    </div>
+  </ng-container>
+</models4insight-control-shell>

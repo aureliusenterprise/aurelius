@@ -1,0 +1,113 @@
+<ng-container *ngIf="selectedEntity$ | async as selectedEntity">
+  <div *ngIf="selectedEntity.name as name" class="field">
+    <label class="label">Name</label>
+    <p>{{ name }}</p>
+  </div>
+  <ng-container *ngIf="selectedEntity['type'] as type">
+    <div class="field">
+      <label class="label">Type</label>
+      <p>
+        <models4insight-archimate-icon class="type-icon" [type]="type">
+        </models4insight-archimate-icon>
+        <span>{{ selectedEntity['humanReadableType'] || type }}</span>
+      </p>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="selectedEntity['description'] as description">
+    <div class="field">
+      <label class="label">Description</label>
+      <p>{{ description }}</p>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="selectedEntity.parserType === 'view'">
+    <div class="field">
+      <a
+        class="button is-link"
+        [class.is-static]="(selectedView$ | async)?.id === selectedEntity.id"
+        (click)="selectView(selectedEntity)"
+      >
+        <span class="icon">
+          <fa-icon [icon]="faArrowRight"></fa-icon>
+        </span>
+        <span>Open this view</span>
+      </a>
+    </div>
+  </ng-container>
+
+  <div *ngFor="let addon of addons | keyvalue" class="field">
+    <label class="label">{{ addon.key }}</label>
+    <ng-container *ngComponentOutlet="addon.value"></ng-container>
+  </div>
+
+  <ng-container *ngIf="properties$ | async | keyvalue as selectionProperties">
+    <div *ngIf="selectionProperties['length']" class="field">
+      <label class="label">Properties</label>
+      <models4insight-sortable-table
+        [config]="propertiesTableConfig"
+        [data]="selectionProperties"
+        [itemsPerPage]="5"
+        [rowsSelectable]="false"
+      >
+      </models4insight-sortable-table>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="referencedConcepts$ | async as referencedConcepts">
+    <ng-container *ngIf="referencedConcepts.length">
+      <div class="field">
+        <label class="label">Referenced concepts</label>
+        <models4insight-model-browser-entities-table
+          [data]="referencedConcepts"
+        ></models4insight-model-browser-entities-table>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="referencingConcepts$ | async as referencingConcepts">
+    <ng-container *ngIf="referencingConcepts.length">
+      <div class="field">
+        <label class="label">Referencing concepts</label>
+        <models4insight-model-browser-entities-table
+          [data]="referencingConcepts"
+        ></models4insight-model-browser-entities-table>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="referencingViews$ | async as referencingViews">
+    <ng-container *ngIf="referencingViews.length">
+      <div class="field">
+        <label class="label">Referencing views</label>
+        <models4insight-sortable-table-shell
+          [config]="viewsTableConfig"
+          [data]="referencingViews"
+          [itemsPerPage]="5"
+          [rowsSelectable]="true"
+          [selectedRow]="selectedView$ | async"
+          (rowSelected)="selectView($event)"
+          (rowDeselected)="deselectView()"
+        >
+          <ng-template let-rowData>
+            <th class="truncate" scope="row" [title]="rowData.name">
+              {{ rowData.name }}
+            </th>
+            <td class="truncate" [title]="rowData.description">
+              {{ rowData.description }}
+            </td>
+          </ng-template>
+        </models4insight-sortable-table-shell>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="selectedEntityId$ | async as entityId">
+    <div class="field">
+      <p>
+        <span class="is-size-7 has-text-grey-light has-text-weight-light">
+          ID:&nbsp;{{ entityId }}
+        </span>
+      </p>
+    </div>
+  </ng-container>
+</ng-container>

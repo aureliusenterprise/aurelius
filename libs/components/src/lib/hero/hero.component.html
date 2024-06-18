@@ -1,0 +1,43 @@
+<section
+  class="hero is-primary is-bold"
+  [class.is-fullheight-with-navbar]="!routerOutlet.isActivated"
+>
+  <div class="hero-body has-margin-top-md has-margin-bottom-md has-text-light">
+    <div class="container">
+      <div class="columns is-vcentered">
+        <div class="column is-narrow">
+          <div class="buttons">
+            <ng-content select="[before-title]"></ng-content>
+          </div>
+        </div>
+        <div class="column">
+          <h1 *ngIf="title" class="title is-1 is-spaced has-text-light">
+            {{ title }}
+          </h1>
+          <h2 *ngIf="subtitle" class="subtitle is-4 is-spaced has-text-light">
+            {{ subtitle }}
+          </h2>
+        </div>
+        <div class="column">
+          <ng-content select="[after-title]"></ng-content>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-foot">
+    <nav #nav class="tabs is-boxed is-fullwidth navigation">
+      <div class="container">
+        <ul>
+          <ng-content select="[navigation]"></ng-content>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</section>
+<section
+  [ngClass]="{ 'section has-background-light': routerOutlet.isActivated }"
+>
+  <div [class.container]="routerOutlet.isActivated">
+    <router-outlet (activate)="onActivate()"></router-outlet>
+  </div>
+</section>

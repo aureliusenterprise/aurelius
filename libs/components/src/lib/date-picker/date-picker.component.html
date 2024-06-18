@@ -1,0 +1,25 @@
+<models4insight-control-shell>
+  <ng-container control>
+    <input
+      #dateInput
+      class="input"
+      placeholder="Pick a date..."
+      [formControl]="control"
+      [matDatepicker]="datePicker"
+    />
+  </ng-container>
+  <ng-container addons-right>
+    <div class="control">
+      <a
+        class="button is-danger"
+        [class.is-static]="!date"
+        (click)="clearDate()"
+      >
+        <span class="icon is-small">
+          <fa-icon [icon]="faTimes"></fa-icon>
+        </span>
+      </a>
+    </div>
+  </ng-container>
+</models4insight-control-shell>
+<mat-datepicker touchUi #datePicker></mat-datepicker>

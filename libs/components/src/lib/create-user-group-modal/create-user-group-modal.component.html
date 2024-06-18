@@ -1,0 +1,158 @@
+<models4insight-modal>
+  <form [formGroup]="form">
+    <div class="tabs is-fullwidth">
+      <ul>
+        <li [class.is-active]="currentTab === 'general'">
+          <a (click)="currentTab = 'general'">
+            <span class="icon is-small">
+              <fa-icon [icon]="faInfo"></fa-icon>
+            </span>
+            <span>General</span>
+          </a>
+        </li>
+        <li [class.is-active]="currentTab === 'access'">
+          <a (click)="currentTab = 'access'">
+            <span class="icon is-small">
+              <fa-icon [icon]="faShieldAlt"></fa-icon>
+            </span>
+            <span>Access management</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <ng-container [ngSwitch]="currentTab">
+      <ng-container *ngSwitchCase="'general'">
+        <ng-container *ngTemplateOutlet="general"></ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="'access'">
+        <ng-container *ngTemplateOutlet="accessManagement"></ng-container>
+      </ng-container>
+    </ng-container>
+  </form>
+</models4insight-modal>
+
+<ng-template #general>
+  <ng-container *ngIf="form.controls['name'] as userGroupNameInput">
+    <h4 class="title is-4">General</h4>
+    <div class="field">
+      <label id="userGroupNameInputLabel" class="label" for="userGroupNameInput"
+        >Group name</label
+      >
+      <div class="control">
+        <input
+          id="userGroupNameInput"
+          type="text"
+          class="input"
+          placeholder="Please give the user group a name..."
+          aria-labelledby="userGroupNameInputLabel"
+          [class.is-danger]="
+            (userGroupNameInput.dirty || isSubmitted) &&
+            userGroupNameInput.invalid
+          "
+          [formControl]="userGroupNameInput"
+        />
+      </div>
+      <p *ngIf="userGroupNameInput.valid" class="help is-success" translate>
+        This group name is currently available
+      </p>
+      <ng-container
+        *ngIf="
+          (userGroupNameInput.dirty || isSubmitted) &&
+          userGroupNameInput.invalid &&
+          userGroupNameInput.errors
+        "
+      >
+        <p
+          *ngIf="userGroupNameInput.errors['unique']"
+          class="help is-danger"
+          translate
+        >
+          Please provide a group name you have not used before
+        </p>
+        <p
+          *ngIf="userGroupNameInput.errors['minlength'] as error"
+          class="help is-danger"
+          translate
+        >
+          Please provide a group name longer than
+          {{ error.requiredLength }} characters
+        </p>
+        <p
+          *ngIf="userGroupNameInput.errors['maxlength'] as error"
+          class="help is-danger"
+          translate
+        >
+          Please provide a group name shorter than
+          {{ error.requiredLength }} characters
+        </p>
+        <p
+          *ngIf="
+            userGroupNameInput.errors['leadingOrTrailingWhitespace'] as error
+          "
+          class="help is-danger"
+          translate
+        >
+          Please provide a group name without leading or trailing whitespaces
+        </p>
+        <p
+          *ngIf="userGroupNameInput.errors['multipleWhitespaces'] as error"
+          class="help is-danger"
+          translate
+        >
+          Please provide a group name with single whitespaces only
+        </p>
+        <p
+          *ngIf="userGroupNameInput.errors['required']"
+          class="help is-danger"
+          translate
+        >
+          Please provide a group name
+        </p>
+      </ng-container>
+    </div>
+  </ng-container>
+  <div class="field">
+    <models4insight-description-input
+      [context]="descriptionContext"
+      [control]="form.controls['description']"
+      [isSubmitted]="isSubmitted"
+    ></models4insight-description-input>
+  </div>
+</ng-template>
+
+<ng-template #accessManagement>
+  <h4 class="title is-4">Access management</h4>
+  <div class="tabs is-fullwidth">
+    <ul>
+      <li [class.is-active]="accessManagementTab === 'members'">
+        <a (click)="accessManagementTab = 'members'">
+          <span class="icon is-small">
+            <fa-icon [icon]="faUserCog"></fa-icon>
+          </span>
+          <span>Group members</span>
+        </a>
+      </li>
+      <li [class.is-active]="accessManagementTab === 'add'">
+        <a (click)="accessManagementTab = 'add'">
+          <span class="icon is-small">
+            <fa-icon [icon]="faUserPlus"></fa-icon>
+          </span>
+          <span>Add a new user or group</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <ng-container [ngSwitch]="accessManagementTab">
+    <ng-container *ngSwitchCase="'members'">
+      <models4insight-group-members
+        [members]="members"
+      ></models4insight-group-members>
+    </ng-container>
+    <ng-container *ngSwitchCase="'add'">
+      <models4insight-add-group-member
+        [members]="members"
+        (added)="addMember($event)"
+      ></models4insight-add-group-member>
+    </ng-container>
+  </ng-container>
+</ng-template>

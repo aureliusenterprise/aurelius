@@ -1,0 +1,105 @@
+<article
+  *ngIf="
+    task &&
+    ((task.currentState === TaskState.RUNNING && !task.options.isQuiet) ||
+      (task.currentState == TaskState.INTERRUPTED && !task.options.isQuiet) ||
+      (task.currentState === TaskState.DONE && !task.options.clearOnSuccess) ||
+      (task.currentState === TaskState.ERROR && !task.options.clearOnError))
+  "
+  class="message"
+  [ngClass]="{
+    'is-success':
+      task.currentState === TaskState.RUNNING ||
+      task.currentState === TaskState.DONE,
+    'is-warning': task.currentState === TaskState.INTERRUPTED,
+    'is-danger': task.currentState === TaskState.ERROR
+  }"
+  role="alert"
+>
+  <div class="message-body has-background-light">
+    <div class="columns is-mobile">
+      <div class="column is-vcentered">
+        <ng-container
+          *ngIf="
+            task.currentState === TaskState.RUNNING ||
+            task.currentState === TaskState.INTERRUPTED
+          "
+        >
+          <div class="content">{{ task.currentOperation.description }}</div>
+        </ng-container>
+        <ng-container *ngIf="task.currentState === TaskState.ERROR">
+          <div class="content">
+            <span>
+              <strong translate>shell.pipeline.oops</strong>
+              <span>&nbsp;</span>
+              <ng-container *ngIf="!task.options.showDetailedErrorDescription">
+                <span translate>shell.pipeline.error</span>
+                {{ task.currentOperation.description | lowercase }}
+              </ng-container>
+              <ng-container *ngIf="task.options.showDetailedErrorDescription">
+                {{ task.error }}
+                {{ task.error?.message }}
+              </ng-container>
+            </span>
+          </div>
+        </ng-container>
+      </div>
+      <ng-container
+        *ngIf="
+          task.currentState === TaskState.ERROR ||
+          task.currentState === TaskState.INTERRUPTED ||
+          task.currentState === TaskState.DONE
+        "
+      >
+        <div class="column is-narrow is-vcentered">
+          <div class="buttons">
+            <ng-container *ngIf="task.currentState === TaskState.ERROR">
+              <a
+                class="button is-danger"
+                (click)="report()"
+                [ngClass]="{
+                  'is-loading': isReporting,
+                  'is-static': hasBeenReported
+                }"
+              >
+                <ng-container *ngIf="!hasBeenReported">
+                  <span class="icon">
+                    <fa-icon [icon]="faBug"></fa-icon>
+                  </span>
+                  <span translate>shell.pipeline.report</span>
+                </ng-container>
+                <ng-container *ngIf="hasBeenReported">
+                  <span translate>shell.pipeline.thanks</span>
+                </ng-container>
+              </a>
+            </ng-container>
+            <ng-container *ngIf="task.currentState === TaskState.INTERRUPTED">
+              <ng-container
+                *ngIf="task.currentNavigationContext as navigationContext"
+              >
+                <a class="button is-warning" (click)="navigate()">
+                  <span class="icon">
+                    <fa-icon [icon]="faArrowRight"></fa-icon>
+                  </span>
+                </a>
+              </ng-container>
+            </ng-container>
+            <a class="delete" (click)="clear()"></a>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="task.currentState === TaskState.RUNNING">
+      <ng-container *ngIf="task.operations.length > 1">
+        <progress
+          class="progress is-success"
+          [value]="(task.currentOperation.index / task.operations.length) * 100"
+          max="100"
+        ></progress>
+      </ng-container>
+      <ng-container *ngIf="task.operations.length === 1">
+        <progress class="progress is-success" max="100"></progress>
+      </ng-container>
+    </ng-container>
+  </div>
+</article>

@@ -1,0 +1,14 @@
+.type-icon:not(:empty) {
+  margin-right: 5px;
+}
+
+.truncate {
+  max-width: 12rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.truncate-start {
+    direction: rtl;
+  }
+}

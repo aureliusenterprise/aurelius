@@ -1,0 +1,20 @@
+.connection-label {
+  text-anchor: middle;
+}
+
+.connection-path {
+  fill: none;
+  stroke: black;
+}
+
+:host.is-highlighted {
+  .connection-path {
+    stroke: hsl(141, 53%, 53%);
+  }
+}
+
+:host.is-selected {
+  .connection-path {
+    stroke: #40e0d0;
+  }
+}

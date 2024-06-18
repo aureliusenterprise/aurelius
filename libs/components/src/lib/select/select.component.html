@@ -1,0 +1,66 @@
+<models4insight-control-shell>
+  <ng-container control>
+    <div
+      class="select is-fullwidth"
+      [ngClass]="context.inputClasses"
+      [class.is-danger]="(control.dirty || isSubmitted) && control.invalid"
+    >
+      <select
+        [formControl]="control"
+        [compareWith]="comparator"
+        [attr.disabled]="isDisabled ? '' : null"
+        aria-labelledby="toLabel"
+        required
+      >
+        <option hidden selected [ngValue]="null">
+          --&nbsp;{{
+            data && data.length > 0
+              ? context['nullInputMessage']
+              : context['noDataMessage']
+          }}&nbsp;--
+        </option>
+        <ng-content select="[options-before]"></ng-content>
+        <ng-container *ngFor="let row of data; trackBy: trackByIndex">
+          <option *ngIf="row[displayField] as value" [ngValue]="row">
+            {{
+              context['isTimestamp']
+                ? (value | date : 'dd MMM y, HH:mm:ss')
+                : value
+            }}
+          </option>
+        </ng-container>
+        <ng-content select="[options-after]"></ng-content>
+      </select>
+    </div>
+  </ng-container>
+  <ng-container addons-right>
+    <!-- 
+      You have the option to include additional buttons before or after the search button.
+    -->
+    <ng-content select="[buttons-left]"></ng-content>
+    <div class="control">
+      <a
+        class="button is-info"
+        [ngClass]="context.inputClasses"
+        [class.is-loading]="isLoading | async"
+        [class.is-static]="isDisabled"
+        (click)="activateSearchModal()"
+      >
+        <span class="icon is-small">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </span>
+      </a>
+    </div>
+    <ng-content select="[buttons-right]"></ng-content>
+  </ng-container>
+</models4insight-control-shell>
+
+<models4insight-search-modal
+  [control]="control"
+  [data]="data"
+  [displayField]="displayField"
+  [isTimestamp]="context['isTimestamp']"
+  [modalContext]="context['searchModalContext']"
+  [rowComparator]="comparator"
+  [tableConfig]="context['searchTableConfig']"
+></models4insight-search-modal>

@@ -1,0 +1,17 @@
+.logo {
+  display: block;
+  max-width: 150px;
+  max-height: 50px;
+  width: auto;
+  height: auto;
+}
+
+.icon img {
+  max-height: 20px;
+  max-width: 20px;
+}
+
+// Ensures the navbar menu dropdown shows on hover in IE11 and Edge (see https://github.com/jgthms/bulma/issues/2644)
+.navbar-item.has-dropdown.is-hoverable:hover .navbar-dropdown {
+  display: block !important;
+}

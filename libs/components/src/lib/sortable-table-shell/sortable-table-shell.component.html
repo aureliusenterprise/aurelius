@@ -1,0 +1,154 @@
+<ng-container *ngIf="sortedData$ | async as sortedData">
+  <ng-container *ngIf="sortedData.length > 0; else noData">
+    <div class="field">
+      <pagination-template
+        #p="paginationApi"
+        (pageChange)="currentPage = $event"
+        [id]="paginationId"
+      >
+        <nav
+          *ngIf="p.pages.length > 1"
+          class="pagination"
+          role="navigation"
+          aria-label="pagination"
+        >
+          <a
+            [attr.disabled]="p.isFirstPage() ? '' : null"
+            class="pagination-previous"
+            (click)="p.previous()"
+          >
+            Previous
+          </a>
+          <ul class="pagination-list">
+            <ng-container *ngFor="let page of p.pages">
+              <li>
+                <a
+                  [class.is-current]="p.getCurrent() === page.value"
+                  [ngClass]="
+                    page.label === '...'
+                      ? 'pagination-ellipsis'
+                      : 'pagination-link'
+                  "
+                  (click)="p.setCurrent(page.value)"
+                >
+                  <span>{{ page.label }}</span>
+                </a>
+              </li>
+            </ng-container>
+          </ul>
+          <a
+            [attr.disabled]="p.isLastPage() ? '' : null"
+            class="pagination-next"
+            (click)="p.next()"
+          >
+            Next page
+          </a>
+        </nav>
+      </pagination-template>
+    </div>
+    <!-- 
+      If the table container is enabled, include an additional div around the table. 
+      This enables scrolling when the table becomes wider than the page.
+      However, it can also cause dropdown menus to become partially invisible.
+      See https://github.com/jgthms/bulma/issues/1655.
+
+      For tables which include dropdown menus, you have the option to omit the container div by setting the `enableTableContainer` property to false.
+    -->
+    <ng-container *ngIf="enableTableContainer">
+      <div class="table-container">
+        <ng-container [ngTemplateOutlet]="table"></ng-container>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!enableTableContainer" [ngTemplateOutlet]="table">
+    </ng-container>
+  </ng-container>
+
+  <ng-template #table>
+    <table
+      matSort
+      [matSortActive]="(sort$ | async)?.active"
+      [matSortDirection]="(sort$ | async)?.direction"
+      (matSortChange)="sort = $event"
+      class="table has-background-light is-striped is-hoverable is-fullwidth"
+    >
+      <thead *ngIf="showHeaderRow">
+        <ng-container
+          *ngFor="
+            let header of config | keyvalue : sortByKeyOrder;
+            trackBy: trackByIndex
+          "
+        >
+          <!-- If the header is not static, make it a sortable header. Otherwise, make it a regular header. -->
+          <th
+            *ngIf="!header.value.isStatic"
+            [mat-sort-header]="header.key"
+            [title]="header.value.description ? header.value.description : ''"
+            class="has-background-dark has-text-light"
+            [class.is-narrow]="header.value.isNarrow"
+          >
+            {{ header.value.displayName }}
+          </th>
+          <th
+            *ngIf="header.value.isStatic"
+            [title]="header.value.description ? header.value.description : ''"
+            class="has-background-dark has-text-light"
+            [class.is-narrow]="header.value.isNarrow"
+          >
+            {{ header.value.displayName }}
+          </th>
+        </ng-container>
+      </thead>
+      <tbody
+        *ngIf="
+          sortedData
+            | paginate
+              : {
+                  currentPage: (currentPage$ | async),
+                  itemsPerPage: itemsPerPage,
+                  id: paginationId,
+                  totalItems: totalItems
+                } as paginatedData
+        "
+      >
+        <ng-container
+          *ngFor="
+            let rowData of paginatedData;
+            let even = even;
+            let first = first;
+            let index = index;
+            let last = last;
+            let odd = odd;
+            trackBy: trackByIndex
+          "
+        >
+          <tr
+            models4insight-intersection-observer
+            [class.is-selected]="isRowSelected(rowData, selectedRow$ | async)"
+            (click)="onRowClicked(rowData)"
+            (intersectionChanged)="onRowIntersectionChanged(rowData, $event)"
+          >
+            <ng-container
+              *ngTemplateOutlet="
+                row;
+                context: {
+                  $implicit: rowData,
+                  even: even,
+                  first: first,
+                  index: index,
+                  last: last,
+                  odd: odd
+                }
+              "
+            ></ng-container>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </ng-template>
+</ng-container>
+
+<ng-template #noData>
+  <p class="content has-text-centered">
+    <span><i>No data available</i></span>
+  </p>
+</ng-template>
