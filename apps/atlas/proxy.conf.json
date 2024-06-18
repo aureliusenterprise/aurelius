@@ -3,7 +3,7 @@
     "pathRewrite": {
       "^/auth": ""
     },
-    "target": "http://localhost:8180/auth",
+    "target": "http://127.0.0.1:8180/auth",
     "changeOrigin": true,
     "secure": false
   },
