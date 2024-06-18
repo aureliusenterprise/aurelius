@@ -11,7 +11,7 @@ from m4i_atlas_core import (
     ObjectId,
 )
 
-from flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
 from .entity_created import (
     EntityDataNotProvidedError,
@@ -134,6 +134,7 @@ def test__handle_entity_created_with_breadcrumbs() -> None:
                 "qualifiedName": "test-data-entity",
                 "name": "test entity",
                 "unmapped_attributes": {"qualifiedName": "test-data-entity"},
+                "definition": "An example definition.",
             },
         ),
     )

@@ -11,7 +11,7 @@ from m4i_atlas_core import (
     EntityAuditAction,
 )
 
-from flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
 from .update_derived_entities import (
     EntityDataNotProvidedError,

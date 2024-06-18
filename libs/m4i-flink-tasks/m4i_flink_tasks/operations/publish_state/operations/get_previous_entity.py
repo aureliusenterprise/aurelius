@@ -1,15 +1,15 @@
 import logging
 import time
-from collections.abc import Callable
 from dataclasses import dataclass
+from typing import Callable, Union
 
 from elasticsearch import ApiError, Elasticsearch
 from m4i_atlas_core import AtlasChangeMessage, Entity, EntityAuditAction, get_entity_type_by_type_name
 from pyflink.datastream import DataStream, MapFunction, RuntimeContext
 
-from flink_tasks import AtlasChangeMessageWithPreviousVersion
-from flink_tasks.operations.publish_state.operations.delayed_map import DelayedMap
-from flink_tasks.utils import ExponentialBackoff, retry
+from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion
+from m4i_flink_tasks.operations.publish_state.operations.delayed_map import DelayedMap
+from m4i_flink_tasks.utils import ExponentialBackoff, retry
 
 ElasticsearchFactory = Callable[[], Elasticsearch]
 
@@ -71,8 +71,8 @@ class GetPreviousEntityFunction(MapFunction):
 
     def map(
         self,
-        value: AtlasChangeMessage | Exception,
-    ) -> AtlasChangeMessageWithPreviousVersion | Exception:
+        value: Union[AtlasChangeMessage, Exception],
+    ) -> Union[AtlasChangeMessageWithPreviousVersion, Exception]:
         """
         Map function to retrieve the previous version of an entity.
 

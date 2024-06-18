@@ -1,11 +1,11 @@
 import logging
-from collections.abc import Callable
 from functools import reduce
+from typing import Callable, Dict, List, Tuple, Union
 
 from elasticsearch import Elasticsearch
 from pyflink.datastream import DataStream, MapFunction, OutputTag, RuntimeContext
 
-from flink_tasks import (
+from m4i_flink_tasks import (
     AppSearchDocument,
     EntityMessage,
     EntityMessageType,
@@ -23,9 +23,9 @@ from .event_handlers import (
 )
 
 ElasticsearchFactory = Callable[[], Elasticsearch]
-EventHandler = Callable[[EntityMessage, Elasticsearch, str, dict[str, AppSearchDocument]], dict[str, AppSearchDocument]]
+EventHandler = Callable[[EntityMessage, Elasticsearch, str, Dict[str, AppSearchDocument]], Dict[str, AppSearchDocument]]
 
-EVENT_HANDLERS: dict[EntityMessageType, list[EventHandler]] = {
+EVENT_HANDLERS: Dict[EntityMessageType, List[EventHandler]] = {
     EntityMessageType.ENTITY_CREATED: [handle_entity_created],
     EntityMessageType.ENTITY_ATTRIBUTE_AUDIT: [
         handle_update_attributes,
@@ -79,8 +79,8 @@ class SynchronizeAppSearchFunction(MapFunction):
 
     def map(
         self,
-        value: EntityMessage | Exception,
-    ) -> list[tuple[str, AppSearchDocument | None]] | list[Exception]:
+        value: Union[EntityMessage, Exception],
+    ) -> Union[List[Tuple[str, Union[AppSearchDocument, None]]], List[Exception]]:
         """
         Process an EntityMessage and perform actions based on the type of change event.
 
@@ -109,7 +109,7 @@ class SynchronizeAppSearchFunction(MapFunction):
 
         event_handlers = EVENT_HANDLERS[event_type]
 
-        updated_documents: dict[str, AppSearchDocument] = {}
+        updated_documents: Dict[str, AppSearchDocument] = {}
 
         try:
             updated_documents = reduce(

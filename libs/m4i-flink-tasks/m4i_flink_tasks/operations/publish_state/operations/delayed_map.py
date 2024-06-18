@@ -1,9 +1,10 @@
 import logging
 import time
+from typing import Union
 
 from pyflink.datastream import MapFunction
 
-from flink_tasks.model.app_search_document import AppSearchDocument
+from m4i_flink_tasks.model.app_search_document import AppSearchDocument
 
 
 class DelayedMap(MapFunction):
@@ -15,7 +16,7 @@ class DelayedMap(MapFunction):
         self.time_to_sleep_s = 1
         self.time_between_messages_ms = 500
 
-    def map(self, value: AppSearchDocument | Exception) -> AppSearchDocument | Exception:
+    def map(self, value: Union[AppSearchDocument, Exception]) -> Union[AppSearchDocument, Exception]:
         """
         Delay the incoming message so documents are already written in Elastic search.
 

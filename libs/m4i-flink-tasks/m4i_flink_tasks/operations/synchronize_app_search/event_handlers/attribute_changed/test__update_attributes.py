@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pytest
 from m4i_atlas_core import Attributes, BusinessDataDomain, BusinessDataDomainAttributes, Entity, EntityAuditAction
 
-from flink_tasks import EntityMessage, EntityMessageType
+from m4i_flink_tasks import EntityMessage, EntityMessageType
 
 from .update_attributes import (
     AppSearchDocumentNotFoundError,
