@@ -15,6 +15,9 @@ fi
 # Derive the worker name from the file name
 NAME=$(basename "$WORKER_FILE" .json)
 
+# Read the file content
+WORKER=$(cat "$WORKER_FILE")
+
 echo "Deploying worker $NAME to $KAFKA_CONNECT_URL/connectors/$NAME/config"
 
 # Update the worker on Kafka Connect
