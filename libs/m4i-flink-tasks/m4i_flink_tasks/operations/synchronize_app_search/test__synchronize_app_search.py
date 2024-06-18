@@ -1,4 +1,4 @@
-from typing import cast
+from typing import Tuple, Union, cast
 from unittest.mock import Mock, patch
 
 import pytest
@@ -75,7 +75,7 @@ def test__synchronize_app_search_valid_input_event(environment: StreamExecutionE
 
     assert isinstance(item, tuple)
 
-    guid, document = cast(tuple[str, AppSearchDocument | None], item)
+    guid, document = cast(Tuple[str, Union[AppSearchDocument, None]], item)
 
     assert guid == "1234"
     assert isinstance(document, AppSearchDocument)
@@ -128,7 +128,7 @@ def test__synchronize_app_search_emit_tombstone_message(
 
     assert isinstance(item, tuple)
 
-    guid, document = cast(tuple[str, AppSearchDocument | None], item)
+    guid, document = cast(Tuple[str, Union[AppSearchDocument, None]], item)
 
     assert guid == "1234"
     assert document is None

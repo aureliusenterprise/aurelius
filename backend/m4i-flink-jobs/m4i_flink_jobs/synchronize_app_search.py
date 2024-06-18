@@ -2,7 +2,7 @@ import json
 import os
 import time
 from pathlib import Path
-from typing import TypedDict, Union
+from typing import Tuple, TypedDict, Union
 
 from elastic_transport._models import DefaultType
 from elasticsearch import Elasticsearch
@@ -175,7 +175,7 @@ def main(config: SynchronizeAppSearchConfig) -> None:
         config["elasticsearch_app_search_index_name"],
     )
 
-    def waiting_mapper(value: tuple[str, AppSearchDocument | None]) -> tuple[str, AppSearchDocument | None]:
+    def waiting_mapper(value: Tuple[str, Union[AppSearchDocument, None]]) -> Tuple[str, Union[AppSearchDocument, None]]:
         # To avoid racing condition, introduce a second sleep
         time.sleep(1)
         return value
