@@ -4,7 +4,9 @@ services:
   dev:
     build: .
     environment:
-      FLINK_PROPERTIES: 'jobmanager.rpc.address: localhost'
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: localhost
+        taskmanager.numberOfTaskSlots: 2
     command: 'taskmanager --cap-add=SYS_PTRACE --security-opt seccomp=unconfined'
     cap_add:
       - SYS_PTRACE
@@ -77,13 +79,15 @@ services:
 
   kafka-connect:
     build:
-      context: .
-      dockerfile: ../services/kafka-connect/Dockerfile
+      context: ..
+      dockerfile: ./services/kafka-connect/Dockerfile
       args:
         CONNECT_ELASTICSEARCH_VERSION: '14.0.11'
         CONNECT_VERSION: '7.3.2'
     depends_on:
       - kafka-broker
+    volumes:
+      - certs:/home/appuser/certs
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'localhost:9092'
       CONNECT_CONFIG_STORAGE_CLEANUP_POLICY: 'compact'
