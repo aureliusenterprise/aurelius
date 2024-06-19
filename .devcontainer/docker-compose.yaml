@@ -7,7 +7,6 @@ services:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: localhost
         taskmanager.numberOfTaskSlots: 2
-      POETRY_VIRTUALENVS_IN_PROJECT: "true"
       ATLAS_SERVER_URL: "http://localhost:21000/api/atlas"
       ELASTICSEARCH_APP_SEARCH_INDEX_NAME: "app_search_documents"
       ELASTICSEARCH_STATE_INDEX_NAME: "publish_state"
