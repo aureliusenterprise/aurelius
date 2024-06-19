@@ -1,4 +1,5 @@
-from flink_tasks import (
+from typing import List
+from m4i_flink_tasks import (
     AtlasChangeMessageWithPreviousVersion,
     EntityMessage,
     EntityMessageType,
@@ -7,7 +8,7 @@ from flink_tasks import (
 
 def handle_delete_operation(
     change_message: AtlasChangeMessageWithPreviousVersion,
-) -> list[EntityMessage]:
+) -> List[EntityMessage]:
     """
     Identify the changes when an entity is deleted.
 

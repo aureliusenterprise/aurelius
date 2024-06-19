@@ -2,9 +2,8 @@ import functools
 import logging
 import random
 import time
-from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Protocol, TypeVar
+from typing import Callable, Protocol, Tuple, Type, TypeVar, Union
 
 T = TypeVar("T")
 
@@ -49,7 +48,7 @@ class ExponentialBackoff(RetryStrategy):
     initial_delay: float = 1
     multiplier: float = 1.5
     ceil: float = 60
-    jitter: tuple[float, float] = (0, 1)
+    jitter: Tuple[float, float] = (0, 1)
 
     def __post_init__(self) -> None:
         if self.initial_delay <= 0:
@@ -77,7 +76,7 @@ class ExponentialBackoff(RetryStrategy):
 
 def retry(  # noqa: ANN201
     retry_strategy: RetryStrategy,
-    catch: type[Exception] | tuple[type[Exception], ...] = Exception,
+    catch: Union[Type[Exception], Tuple[Type[Exception], ...]] = Exception,
     max_retries: int = 5,
 ):
     """

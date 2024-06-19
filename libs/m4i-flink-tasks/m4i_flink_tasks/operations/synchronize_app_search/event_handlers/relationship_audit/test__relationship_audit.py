@@ -8,7 +8,7 @@ from m4i_atlas_core import (
     ObjectId,
 )
 
-from flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
 from .relationship_audit import handle_relationship_audit
 

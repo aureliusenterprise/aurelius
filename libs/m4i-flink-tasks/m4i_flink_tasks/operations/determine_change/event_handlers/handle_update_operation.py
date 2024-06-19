@@ -1,6 +1,7 @@
+from typing import Dict, List, Union
 from m4i_atlas_core import Entity, ObjectId
 
-from flink_tasks import (
+from m4i_flink_tasks import (
     AtlasChangeMessageWithPreviousVersion,
     EntityMessage,
     EntityMessageType,
@@ -11,7 +12,7 @@ def handle_attribute_changes(
     change_message: AtlasChangeMessageWithPreviousVersion,
     previous: Entity,
     current: Entity,
-) -> EntityMessage | None:
+) -> Union[EntityMessage, None]:
     """
     Identify and process changes in entity attributes between two versions of an entity.
 
@@ -70,7 +71,7 @@ def handle_attribute_changes(
     return entity_message
 
 
-def get_relationships_diff(a: Entity, b: Entity) -> dict[str, list[ObjectId]]:
+def get_relationships_diff(a: Entity, b: Entity) -> Dict[str, List[ObjectId]]:
     """
     Compute the difference in relationships between two entity states.
 
@@ -118,7 +119,7 @@ def handle_relationship_changes(
     change_message: AtlasChangeMessageWithPreviousVersion,
     previous: Entity,
     current: Entity,
-) -> EntityMessage | None:
+) -> Union[EntityMessage, None]:
     """
     Identify and process changes in entity relationships between two versions of an entity.
 
@@ -166,7 +167,7 @@ def handle_relationship_changes(
 
 def handle_update_operation(
     change_message: AtlasChangeMessageWithPreviousVersion,
-) -> list[EntityMessage]:
+) -> List[EntityMessage]:
     """
     Process the update operation on an entity to identify changes in attributes and relationships.
 

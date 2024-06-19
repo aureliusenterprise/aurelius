@@ -2,8 +2,9 @@ import json
 import os
 import time
 from pathlib import Path
-from typing import TypedDict
+from typing import Tuple, TypedDict, Union
 
+from elastic_transport._models import DefaultType
 from elasticsearch import Elasticsearch
 from pyflink.common import Types
 from pyflink.common.serialization import SimpleStringSchema
@@ -58,6 +59,7 @@ class SynchronizeAppSearchConfig(TypedDict):
     elasticsearch_endpoint: str
     elasticsearch_username: str
     elasticsearch_password: str
+    elasticsearch_certificate_path: Union[str, DefaultType]
     kafka_app_search_topic_name: str
     kafka_publish_state_topic_name: str
     kafka_bootstrap_server_hostname: str
@@ -67,7 +69,7 @@ class SynchronizeAppSearchConfig(TypedDict):
     kafka_producer_group_id: str
     kafka_source_topic_name: str
     keycloak_client_id: str
-    keycloak_client_secret_key: str | None
+    keycloak_client_secret_key: Union[str, None]
     keycloak_server_url: str
     keycloak_realm_name: str
     keycloak_username: str
@@ -138,6 +140,7 @@ def main(config: SynchronizeAppSearchConfig) -> None:
         return Elasticsearch(
             hosts=[config["elasticsearch_endpoint"]],
             basic_auth=(config["elasticsearch_username"], config["elasticsearch_password"]),
+            ca_certs=config["elasticsearch_certificate_path"],
         )
 
     def create_keycloak_client() -> KeycloakOpenID:
@@ -172,7 +175,7 @@ def main(config: SynchronizeAppSearchConfig) -> None:
         config["elasticsearch_app_search_index_name"],
     )
 
-    def waiting_mapper(value: tuple[str, AppSearchDocument | None]) -> tuple[str, AppSearchDocument | None]:
+    def waiting_mapper(value: Tuple[str, Union[AppSearchDocument, None]]) -> Tuple[str, Union[AppSearchDocument, None]]:
         # To avoid racing condition, introduce a second sleep
         time.sleep(1)
         return value
@@ -201,6 +204,7 @@ if __name__ == "__main__":
         "elasticsearch_endpoint": os.environ["ELASTICSEARCH_ENDPOINT"],
         "elasticsearch_username": os.environ["ELASTICSEARCH_USERNAME"],
         "elasticsearch_password": os.environ["ELASTICSEARCH_PASSWORD"],
+        "elasticsearch_certificate_path": os.environ.get("ELASTICSEARCH_CERTIFICATE_PATH", DefaultType(0)),
         "kafka_app_search_topic_name": os.environ["KAFKA_APP_SEARCH_TOPIC_NAME"],
         "kafka_publish_state_topic_name": os.environ["KAFKA_PUBLISH_STATE_TOPIC_NAME"],
         "kafka_bootstrap_server_hostname": os.environ["KAFKA_BOOTSTRAP_SERVER_HOSTNAME"],

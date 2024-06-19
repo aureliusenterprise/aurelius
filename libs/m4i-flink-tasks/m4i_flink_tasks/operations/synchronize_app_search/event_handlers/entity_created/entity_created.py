@@ -1,15 +1,15 @@
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict
 
 from elasticsearch import Elasticsearch
 
-from flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
-from flink_tasks.model.synchronize_app_search_error_with_payload import SynchronizeAppSearchWithPayloadError
-from flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit import (
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
+from m4i_flink_tasks.model.synchronize_app_search_error_with_payload import SynchronizeAppSearchWithPayloadError
+from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit import (
     get_child_documents,
     get_related_documents,
 )
-from flink_tasks.utils import RetryError
+from m4i_flink_tasks.utils import RetryError
 
 if TYPE_CHECKING:
     from m4i_atlas_core import Entity
@@ -48,8 +48,8 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
     message: EntityMessage,
     elastic: Elasticsearch,
     index_name: str,
-    updated_documents: dict[str, AppSearchDocument],
-) -> dict[str, AppSearchDocument]:
+    updated_documents: Dict[str, AppSearchDocument],
+) -> Dict[str, AppSearchDocument]:
     """
     Create `AppSearchDocument` instance and update existing ones using the provided entity details.
 
@@ -75,6 +75,7 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
     entity_details = message.new_value
     qualified_name = getattr(entity_details.attributes, "qualified_name", entity_details.guid)
     name = getattr(entity_details.attributes, "name", qualified_name)
+    definition = getattr(entity_details.attributes, "definition", "")
 
     document = AppSearchDocument(
         id=message.new_value.guid,
@@ -83,6 +84,7 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
         referenceablequalifiedname=qualified_name,
         supertypenames=[entity_details.type_name],
         typename=entity_details.type_name,
+        definition=definition,
     )
     # Add document to created documents
     updated_documents[document.guid] = document
@@ -294,8 +296,8 @@ def create_person_handler(
     message: EntityMessage,
     elastic: Elasticsearch,
     index_name: str,
-    updated_documents: dict[str, AppSearchDocument],
-) -> dict[str, AppSearchDocument]:
+    updated_documents: Dict[str, AppSearchDocument],
+) -> Dict[str, AppSearchDocument]:
     """
     Create an `AppSearchDocument` instance for a person entity using the provided entity details.
 
@@ -307,7 +309,7 @@ def create_person_handler(
         The Elasticsearch client for database interaction.
     index_name : str
         The name of the index in Elasticsearch to query.
-    updated_documents : dict[str, AppSearchDocument]
+    updated_documents : Dict[str, AppSearchDocument]
         A dictionary containing the updated documents
 
     Returns
@@ -338,8 +340,8 @@ def handle_entity_created(
     message: EntityMessage,
     elastic: Elasticsearch,
     index_name: str,
-    updated_documents: dict[str, AppSearchDocument],
-) -> dict[str, AppSearchDocument]:
+    updated_documents: Dict[str, AppSearchDocument],
+) -> Dict[str, AppSearchDocument]:
     """
     Process the entity creation message and create `AppSearchDocument`s accordingly.
 
@@ -354,12 +356,12 @@ def handle_entity_created(
         The Elasticsearch client for database interaction.
     index_name : str
         The name of the index in Elasticsearch to query.
-    updated_documents : dict[str, AppSearchDocument]
+    updated_documents : Dict[str, AppSearchDocument]
         A dictionary containing the updated documents.
 
     Returns
     -------
-    list[AppSearchDocument]
+    List[AppSearchDocument]
         A list containing the created and updated `AppSearchDocument`s.
         The first element is for the created entity.
         The rest is for its references.

@@ -1,8 +1,9 @@
 import logging
+from typing import List, Union
 
 from pyflink.datastream import DataStream, MapFunction, OutputTag
 
-from flink_tasks import AtlasChangeMessageWithPreviousVersion, EntityMessage
+from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion, EntityMessage
 
 from .event_handlers import EVENT_HANDLERS
 
@@ -22,8 +23,8 @@ class DetermineChangeFunction(MapFunction):
 
     def map(
         self,
-        value: AtlasChangeMessageWithPreviousVersion | Exception,
-    ) -> list[EntityMessage] | list[Exception]:
+        value: Union[AtlasChangeMessageWithPreviousVersion, Exception],
+    ) -> Union[List[EntityMessage], List[Exception]]:
         """
         Process the incoming message to determine changes using predefined event handlers.
 

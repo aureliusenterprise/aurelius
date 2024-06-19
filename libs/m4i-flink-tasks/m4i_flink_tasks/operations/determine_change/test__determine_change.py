@@ -1,7 +1,7 @@
 import pytest
 from pyflink.datastream import StreamExecutionEnvironment
 
-from flink_tasks import AtlasChangeMessageWithPreviousVersion, EntityMessage
+from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion, EntityMessage
 
 from .determine_change import DetermineChange
 
