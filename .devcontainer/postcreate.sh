@@ -21,10 +21,6 @@ while read -r url; do
     wget -P "$JARS_DIR/" "$url"
 done < "$JARS_DIR/manifest"
 
-# set permissions
-sudo chmod -R 777 /opt/flink/log
-sudo chown -R $(whoami) /opt/flink/log
-
 # Prompt the user to set their git username and email if not already set
 if [ -z "$(git config --global user.name)" ]; then
     read -p "Enter your Git username (full name): " git_username
