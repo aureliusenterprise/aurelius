@@ -1,11 +1,12 @@
 import logging
+from typing import Dict, List
 
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan
 
-from flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
-from flink_tasks.model.synchronize_app_search_error_with_payload import SynchronizeAppSearchWithPayloadError
-from flink_tasks.utils import ExponentialBackoff, RetryError, retry
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
+from m4i_flink_tasks.model.synchronize_app_search_error_with_payload import SynchronizeAppSearchWithPayloadError
+from m4i_flink_tasks.utils import ExponentialBackoff, RetryError, retry
 
 RELATIONSHIP_MAP = {
     "m4i_data_domain": "deriveddatadomain",
@@ -81,10 +82,10 @@ def get_current_document(guid: str, elastic: Elasticsearch, index_name: str) -> 
 
 @retry(retry_strategy=ExponentialBackoff(), max_retries=2)
 def get_related_documents(
-    ids: list[str],
+    ids: List[str],
     elastic: Elasticsearch,
     index_name: str,
-) -> list[AppSearchDocument]:
+) -> List[AppSearchDocument]:
     """
     Get the related documents from the Elasticsearch index.
 
@@ -99,7 +100,7 @@ def get_related_documents(
 
     Returns
     -------
-    list[AppSearchDocument]
+    List[AppSearchDocument]
         A list of the related AppSearchDocument instances as they are retrieved from Elasticsearch.
     """
     if not ids:
@@ -133,10 +134,10 @@ def get_related_documents(
 
 @retry(retry_strategy=ExponentialBackoff())
 def get_child_documents(
-    ids: list[str],
+    ids: List[str],
     elastic: Elasticsearch,
     index_name: str,
-) -> list[AppSearchDocument]:
+) -> List[AppSearchDocument]:
     """
     Get the related documents from the Elasticsearch index.
 
@@ -151,7 +152,7 @@ def get_child_documents(
 
     Returns
     -------
-    list[AppSearchDocument]
+    List[AppSearchDocument]
         Yields the related AppSearchDocument instances as they are retrieved from Elasticsearch.
     """
     if not ids:
@@ -182,8 +183,8 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
     document: AppSearchDocument,
     elastic: Elasticsearch,
     index_name: str,
-    updated_documents: dict[str, AppSearchDocument],
-) -> dict[str, AppSearchDocument]:
+    updated_documents: Dict[str, AppSearchDocument],
+) -> Dict[str, AppSearchDocument]:
     """
     Handle the deleted relationships in the entity message.
 
@@ -197,7 +198,7 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
         The Elasticsearch client.
     index_name : str
         The name of the index.
-    updated_documents : dict[str, AppSearchDocument]
+    updated_documents : Dict[str, AppSearchDocument]
         The dictionary of updated AppSearchDocuments.
     """
     if message.deleted_relationships is None:
@@ -388,8 +389,8 @@ def handle_inserted_relationships(  # noqa: C901, PLR0912, PLR0915
     document: AppSearchDocument,
     elastic: Elasticsearch,
     index_name: str,
-    updated_documents: dict[str, AppSearchDocument],
-) -> dict[str, AppSearchDocument]:
+    updated_documents: Dict[str, AppSearchDocument],
+) -> Dict[str, AppSearchDocument]:
     """
     Handle the inserted relationships in the entity message.
 
@@ -403,7 +404,7 @@ def handle_inserted_relationships(  # noqa: C901, PLR0912, PLR0915
         The Elasticsearch client.
     index_name : str
         The name of the index.
-    updated_documents : dict[str, AppSearchDocument]
+    updated_documents : Dict[str, AppSearchDocument]
         The dictionary of updated AppSearchDocuments.
     """
     if message.inserted_relationships is None:
@@ -612,8 +613,8 @@ def handle_relationship_audit(
     message: EntityMessage,
     elastic: Elasticsearch,
     index_name: str,
-    updated_documents: dict[str, AppSearchDocument],
-) -> dict[str, AppSearchDocument]:
+    updated_documents: Dict[str, AppSearchDocument],
+) -> Dict[str, AppSearchDocument]:
     """
     Handle the relationship audit event.
 
@@ -628,7 +629,7 @@ def handle_relationship_audit(
 
     Returns
     -------
-    list[AppSearchDocument]
+    List[AppSearchDocument]
         The list of updated AppSearchDocuments.
     """
     if not (message.inserted_relationships or message.deleted_relationships):

@@ -1,12 +1,12 @@
 import logging
-from collections.abc import Generator
 from functools import partial
+from typing import Dict, Generator
 
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan
 
-from flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
-from flink_tasks.utils import ExponentialBackoff, retry
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
+from m4i_flink_tasks.utils import ExponentialBackoff, retry
 
 
 class EntityDataNotProvidedError(SynchronizeAppSearchError):
@@ -71,10 +71,10 @@ def handle_derived_entities_update(  # noqa: PLR0913
     entity_name: str,
     elastic: Elasticsearch,
     index_name: str,
-    updated_documents: dict[str, AppSearchDocument],
+    updated_documents: Dict[str, AppSearchDocument],
     relationship_attribute_guid: str,
     relationship_attribute_name: str,
-) -> dict[str, AppSearchDocument]:
+) -> Dict[str, AppSearchDocument]:
     """
     Find related entities in Elasticsearch and update their references to the given entity.
 
@@ -178,8 +178,8 @@ def handle_update_derived_entities(
     message: EntityMessage,
     elastic: Elasticsearch,
     index_name: str,
-    updated_documents: dict[str, AppSearchDocument],
-) -> dict[str, AppSearchDocument]:
+    updated_documents: Dict[str, AppSearchDocument],
+) -> Dict[str, AppSearchDocument]:
     """
     Update derived entities in Elasticsearch based on the given EntityMessage.
 
@@ -194,7 +194,7 @@ def handle_update_derived_entities(
 
     Returns
     -------
-    list[AppSearchDocument]
+    List[AppSearchDocument]
         A list of updated AppSearchDocument instances.
 
     Raises

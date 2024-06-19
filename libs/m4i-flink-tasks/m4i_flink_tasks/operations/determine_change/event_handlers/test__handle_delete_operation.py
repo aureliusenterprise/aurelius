@@ -1,6 +1,6 @@
 from m4i_atlas_core import Attributes, ObjectId
 
-from flink_tasks import (
+from m4i_flink_tasks import (
     AtlasChangeMessageWithPreviousVersion,
     EntityMessageType,
 )

@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from enum import Enum
 from time import time
+from typing import Dict, List, Union
 
 from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
 from m4i_atlas_core import AtlasChangeMessage, Entity, EntityAuditAction, ObjectId
@@ -25,20 +26,20 @@ class EntityMessage(DataClassJsonMixin):
     original_event_type: EntityAuditAction
     event_type: EntityMessageType
 
-    inserted_attributes: list[str] = field(default_factory=list)
-    changed_attributes: list[str] = field(default_factory=list)
-    deleted_attributes: list[str] = field(default_factory=list)
+    inserted_attributes: List[str] = field(default_factory=list)
+    changed_attributes: List[str] = field(default_factory=list)
+    deleted_attributes: List[str] = field(default_factory=list)
 
-    inserted_relationships: dict[str, list[ObjectId]] | None = field(
+    inserted_relationships: Union[Dict[str, List[ObjectId]], None] = field(
         default_factory=dict,
     )
-    changed_relationships: dict[str, list[ObjectId]] | None = field(default_factory=dict)
-    deleted_relationships: dict[str, list[ObjectId]] | None = field(default_factory=dict)
+    changed_relationships: Union[Dict[str, List[ObjectId]], None] = field(default_factory=dict)
+    deleted_relationships: Union[Dict[str, List[ObjectId]], None] = field(default_factory=dict)
 
     direct_change: bool = True
     msg_creation_time: float = field(default_factory=time)
-    old_value: Entity | None = None
-    new_value: Entity | None = None
+    old_value: Union[Entity, None] = None
+    new_value: Union[Entity, None] = None
 
     @classmethod
     def from_change_message(

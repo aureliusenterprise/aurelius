@@ -3,7 +3,7 @@ from unittest.mock import Mock, patch
 import pytest
 from m4i_atlas_core import Attributes, Entity, EntityAuditAction
 
-from flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
 from .delete_breadcrumbs import (
     EntityDataNotProvidedError,

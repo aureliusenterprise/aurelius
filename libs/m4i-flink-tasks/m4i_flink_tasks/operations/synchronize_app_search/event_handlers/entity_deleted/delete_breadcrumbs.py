@@ -1,11 +1,11 @@
 import logging
-from collections.abc import Generator
+from typing import Dict, Generator
 
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan
 
-from flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
-from flink_tasks.utils import ExponentialBackoff, retry
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
+from m4i_flink_tasks.utils import ExponentialBackoff, retry
 
 
 class EntityDataNotProvidedError(SynchronizeAppSearchError):
@@ -54,8 +54,8 @@ def update_document_breadcrumb(
     guid: str,
     elastic: Elasticsearch,
     index_name: str,
-    updated_documents: dict[str, AppSearchDocument],
-) -> dict[str, AppSearchDocument]:
+    updated_documents: Dict[str, AppSearchDocument],
+) -> Dict[str, AppSearchDocument]:
     """
     Update the breadcrumb information in documents related to a specified entity.
 
@@ -131,8 +131,8 @@ def handle_delete_breadcrumbs(
     message: EntityMessage,
     elastic: Elasticsearch,
     index_name: str,
-    updated_documents: dict[str, AppSearchDocument],
-) -> dict[str, AppSearchDocument]:
+    updated_documents: Dict[str, AppSearchDocument],
+) -> Dict[str, AppSearchDocument]:
     """
     Handle the update of breadcrumb information in documents based on an entity delete message.
 
@@ -149,7 +149,7 @@ def handle_delete_breadcrumbs(
 
     Returns
     -------
-    list[AppSearchDocument]
+    List[AppSearchDocument]
         A list of AppSearchDocument instances that have been updated.
 
     Raises

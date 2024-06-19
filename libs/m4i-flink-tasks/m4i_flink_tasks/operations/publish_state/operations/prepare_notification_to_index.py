@@ -1,10 +1,11 @@
 import logging
+from typing import Union
 
 from m4i_atlas_core import AtlasChangeMessage
 from pyflink.datastream import DataStream, OutputTag
 from pyflink.datastream.functions import MapFunction
 
-from flink_tasks import EntityVersion
+from m4i_flink_tasks import EntityVersion
 
 NO_ENTITY_TAG = OutputTag("no_entity")
 
@@ -17,7 +18,7 @@ class PrepareNotificationToIndexFunction(MapFunction):
     object suitable for indexing.
     """
 
-    def map(self, value: AtlasChangeMessage | Exception) -> EntityVersion | Exception:
+    def map(self, value: Union[AtlasChangeMessage, Exception]) -> Union[EntityVersion, Exception]:
         """
         Transform a ValidatedInput message into an EntityVersion object.
 

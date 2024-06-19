@@ -7,6 +7,20 @@ git config --global --add safe.directory $PWD
 npm install
 poetry install --no-root
 
+JARS_DIR=backend/m4i-flink-jobs/m4i_flink_jobs/jars
+
+# Download JAR files if not already present
+while read -r url; do
+    [ -z "$url" ] && continue
+    filename=$(basename "$url")
+    if [ -e "$JARS_DIR/$filename" ]; then
+        echo "File jars/$filename already exists, skipping download."
+        continue
+    fi
+
+    wget -P "$JARS_DIR/" "$url"
+done < "$JARS_DIR/manifest"
+
 # Prompt the user to set their git username and email if not already set
 if [ -z "$(git config --global user.name)" ]; then
     read -p "Enter your Git username (full name): " git_username

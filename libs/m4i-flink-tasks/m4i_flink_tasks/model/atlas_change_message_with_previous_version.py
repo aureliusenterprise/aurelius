@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Union
 
 from dataclasses_json import LetterCase, dataclass_json
 from m4i_atlas_core import AtlasChangeMessage, Entity
@@ -9,4 +10,4 @@ from m4i_atlas_core import AtlasChangeMessage, Entity
 class AtlasChangeMessageWithPreviousVersion(AtlasChangeMessage):
     """An AtlasChangeMessage with a previous version of the entity."""
 
-    previous_version: Entity | None = None
+    previous_version: Union[Entity, None] = None

@@ -1,9 +1,10 @@
 import logging
+from typing import Dict
 
 from elasticsearch import Elasticsearch
 
-from flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
-from flink_tasks.utils import ExponentialBackoff, retry
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
+from m4i_flink_tasks.utils import ExponentialBackoff, retry
 
 ATTRIBUTES_WHITELIST = {"name", "definition", "email"}
 
@@ -78,8 +79,8 @@ def handle_update_attributes(
     message: EntityMessage,
     elastic: Elasticsearch,
     index_name: str,
-    updated_documents: dict[str, AppSearchDocument],
-) -> dict[str, AppSearchDocument]:
+    updated_documents: Dict[str, AppSearchDocument],
+) -> Dict[str, AppSearchDocument]:
     """
     Update specified attributes for an entity in the Elasticsearch index based on the EntityMessage.
 
