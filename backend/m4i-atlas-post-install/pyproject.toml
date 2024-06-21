@@ -1,0 +1,28 @@
+[tool.coverage.run]
+branch = true
+source = [ "m4i_atlas_post_install" ]
+
+[tool.coverage.report]
+exclude_lines = ['if TYPE_CHECKING:']
+show_missing = true
+
+[tool.pytest.ini_options]
+addopts = "--cov --cov-fail-under=100 --cov-report html:'../../coverage/apps/m4i-atlas-post-install/html' --cov-report xml:'../../coverage/apps/m4i-atlas-post-install/coverage.xml' --junitxml='../../reports/apps/m4i-atlas-post-install/unittests/junit.xml' --html='../../reports/apps/m4i-atlas-post-install/unittests/html/index.html'"
+
+[tool.poetry]
+name = "m4i-atlas-post-install"
+version = "1.0.0"
+description = ""
+authors = [ ]
+license = 'Proprietary'
+readme = 'README.md'
+
+  [[tool.poetry.packages]]
+  include = "m4i_atlas_post_install"
+
+  [tool.poetry.dependencies]
+  python = ">=3.8,<3.11"
+
+[build-system]
+requires = ["poetry-core==1.1.0"]
+build-backend = "poetry.core.masonry.api"
