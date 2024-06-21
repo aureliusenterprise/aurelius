@@ -162,7 +162,27 @@ services:
         target: /tmp/keycloak-config/atlas-dev.json
     network_mode: service:dev
     restart: unless-stopped
-    command: ['-b 0.0.0.0', '-bmanagement 0.0.0.0', '-Djboss.http.port=8180']
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      '
+      /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -bmanagement 0.0.0.0 -Djboss.http.port=8180 2>&1 &
+
+      PORT=${KEYCLOAK_PORT:-8080};
+      while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' curl \
+                      -X GET "http://localhost:${PORT}/" | tail -c 3)" != "200" ]]; do
+          echo '.'
+          sleep 5;
+      done;
+      sleep 5;
+      
+      REALM_NAME=${KEYCLOAK_REALM_NAME:-"m4i"};
+      /opt/jboss/keycloak/bin/kcadm.sh config credentials --server "http://localhost:${PORT}/auth" --realm master --user admin --password $KEYCLOAK_PASSWORD;
+      /opt/jboss/keycloak/bin/kcadm.sh create users -r "$REALM_NAME" -s username=atlas -s enabled=true;
+      /opt/jboss/keycloak/bin/kcadm.sh add-roles -r "$REALM_NAME" --uusername atlas --rolename ROLE_ADMIN;
+      /opt/jboss/keycloak/bin/kcadm.sh set-password -r "$REALM_NAME" --username atlas --new-password atlas
+
+      tail -f /dev/null
+      '
 
   #################
   # ELASTIC STACK #
@@ -297,6 +317,7 @@ services:
     depends_on:
       - jobmanager
     entrypoint: [ "bash", "-c", "tail -f /dev/null"] # ./run.sh && "run.sh && tail -f /dev/null && exit 0
+    network_mode: service:dev
 
 configs:
   atlas-application:
