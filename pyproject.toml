@@ -12,9 +12,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "~3.8"
 
-[tool.poetry.dependencies.data2model]
-path = "backend/m4i-data2model"
-develop = true
+    [tool.poetry.dependencies.data2model]
+    path = "backend/m4i-data2model"
+    develop = true
 
 [tool.poetry.dependencies.m4i-analytics]
 path = "libs/m4i-analytics"
@@ -49,7 +49,7 @@ path = "libs/m4i-analytics-extensions/m4i-graphviz-layouts"
 develop = true
 
 [tool.poetry.dependencies.m4i-lineage-model]
-path="backend/m4i-lineage-model"
+path = "backend/m4i-lineage-model"
 develop = true
 
 [tool.poetry.dependencies.m4i-metrics]
@@ -57,7 +57,11 @@ path = "libs/m4i-metrics"
 develop = true
 
 [tool.poetry.dependencies.m4i-validate-entity]
-path="backend/m4i-validate-entity"
+path = "backend/m4i-validate-entity"
+develop = true
+
+[tool.poetry.dependencies.m4i-atlas-post-install]
+path = "backend/m4i-atlas-post-install"
 develop = true
 
 [tool.poetry.group.dev.dependencies]

@@ -285,6 +285,19 @@ services:
       timeout: 10s
       retries: 120
 
+  post-install:
+    build:
+      context: ..
+      dockerfile: ./backend/m4i-atlas-post-install/Dockerfile
+    container_name: post-install
+    env_file: ../backend/m4i-atlas-post-install/.env
+    volumes:
+      - certs:/opt/flink/certs
+    restart: "no"
+    depends_on:
+      - jobmanager
+    entrypoint: [ "bash", "-c", "tail -f /dev/null"] # ./run.sh && "run.sh && tail -f /dev/null && exit 0
+
 configs:
   atlas-application:
     file: ./apache-atlas/atlas-application.properties
