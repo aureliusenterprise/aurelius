@@ -43,7 +43,7 @@ services:
     working_dir: /workspace
 
   atlas:
-    image: sburn/apache-atlas:2.2.0
+    image: aureliusatlas/docker-apache-atlas:2.2.1
     depends_on:
       - kafka-broker
     volumes:
@@ -57,6 +57,16 @@ services:
         target: /opt/apache-atlas-2.2.0/conf/atlas-simple-authz-policy.json
       - source: atlas-keycloak-conf
         target: /opt/apache-atlas-2.2.0/conf/keycloak-conf.json
+    command: "/opt/apache-atlas-2.2.0/bin/startup.sh"
+    healthcheck:
+      test:
+        [
+            "CMD-SHELL",
+            "wget http://localhost:21000",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 120
 
   jobmanager:
     image: flink:1.17.0
