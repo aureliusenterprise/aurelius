@@ -4,6 +4,7 @@ import asyncio
 import logging
 import os
 import sys
+from typing import Union
 
 import aiohttp
 from m4i_atlas_core import (
@@ -14,7 +15,7 @@ from m4i_atlas_core import (
 )
 
 
-async def main(access_token: str | None = None) -> None:
+async def main(access_token: Union[str, None] = None) -> None:
     """Create the types in Atlas."""
     if not access_token:
         access_token = get_keycloak_token()
