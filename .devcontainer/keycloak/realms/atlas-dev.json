@@ -7,7 +7,7 @@
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,
-  "accessTokenLifespan": 300,
+  "accessTokenLifespan": 10800,
   "accessTokenLifespanForImplicitFlow": 900,
   "ssoSessionIdleTimeout": 1800,
   "ssoSessionMaxLifespan": 36000,
@@ -21,10 +21,10 @@
   "clientOfflineSessionIdleTimeout": 0,
   "clientOfflineSessionMaxLifespan": 0,
   "accessCodeLifespan": 60,
-  "accessCodeLifespanUserAction": 300,
+  "accessCodeLifespanUserAction": 900,
   "accessCodeLifespanLogin": 1800,
   "actionTokenGeneratedByAdminLifespan": 43200,
-  "actionTokenGeneratedByUserLifespan": 300,
+  "actionTokenGeneratedByUserLifespan": 1800,
   "oauth2DeviceCodeLifespan": 600,
   "oauth2DevicePollingInterval": 5,
   "enabled": true,
@@ -90,6 +90,15 @@
         "id": "2110225f-9353-45ca-84f4-13ab4bf218b1",
         "name": "ROLE_ADMIN",
         "description": "admin role for apache atlas",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "atlas-dev",
+        "attributes": {}
+      },
+      {
+        "id": "17465103-a497-40b3-b920-9c65f94a61e7",
+        "name": "DATA_STEWARD",
+        "description": "Apache Atlas data steward role role",
         "composite": false,
         "clientRole": false,
         "containerId": "atlas-dev",
@@ -714,10 +723,13 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://127.0.0.1:4200*"
+        "http://127.0.0.1:4200*",
+        "http://127.0.0.1:21000/*",
+        "*"
       ],
       "webOrigins": [
-        "http://127.0.0.1:4200"
+        "http://127.0.0.1:4200",
+        "*"
       ],
       "notBefore": 0,
       "bearerOnly": false,

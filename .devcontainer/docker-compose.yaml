@@ -70,6 +70,9 @@ services:
 
   jobmanager:
     image: flink:1.17.0
+    depends_on:
+      atlas:
+        condition: service_healthy
     environment:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: localhost
