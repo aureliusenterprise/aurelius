@@ -17,11 +17,15 @@ authors = [ ]
 license = 'Proprietary'
 readme = 'README.md'
 
-  [[tool.poetry.packages]]
-  include = "m4i_atlas_post_install"
+[[tool.poetry.packages]]
+include = "m4i_atlas_post_install"
 
-  [tool.poetry.dependencies]
-  python = ">=3.8,<3.11"
+[tool.poetry.dependencies]
+python = "~3.8"
+
+[tool.poetry.dependencies.m4i-atlas-core]
+path = "../../libs/m4i-atlas-core"
+develop = true
 
 [build-system]
 requires = ["poetry-core==1.1.0"]

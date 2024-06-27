@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-from collections.abc import Mapping
-from typing import Any, MutableMapping, NewType, Tuple
+from typing import Any, List, Mapping, MutableMapping, NewType, Tuple
 from zipfile import ZipFile
 import argparse
 from pathlib import Path
@@ -73,19 +72,19 @@ def index_both(
     return index_entities(left), index_entities(right)
 
 
-def get_added(diff: list[Tuple]) -> list[Tuple]:
+def get_added(diff: List[Tuple]) -> List[Tuple]:
     return [i for i in diff if i[0] == "add"]
 
 
-def get_removed(diff: list[Tuple]) -> list[Tuple]:
+def get_removed(diff: List[Tuple]) -> List[Tuple]:
     return [i for i in diff if i[0] == "remove"]
 
 
-def get_changed(diff: list[Tuple]) -> list[Tuple]:
+def get_changed(diff: List[Tuple]) -> List[Tuple]:
     return [i for i in diff if i[0] == "change"]
 
 
-def get_deleted_entities(diff: list[Tuple]) -> list[Tuple]:
+def get_deleted_entities(diff: List[Tuple]) -> List[Tuple]:
     removed = get_removed(diff)
     for item in removed:
         if item[1] == "":
@@ -93,7 +92,7 @@ def get_deleted_entities(diff: list[Tuple]) -> list[Tuple]:
     return []
 
 
-def filter_gov_quality(entities: list[Tuple]) -> list[Tuple]:
+def filter_gov_quality(entities: List[Tuple]) -> List[Tuple]:
     return [
         i for i in entities if i[1]["entity"]["typeName"] in ["m4i_gov_data_quality"]
     ]
@@ -107,18 +106,18 @@ def update_types(entity: MutableMapping[str, Any]) -> MutableMapping[str, Any]:
     return entity
 
 
-def update_all_entities(entities: list[Tuple]) -> list[Tuple]:
+def update_all_entities(entities: List[Tuple]) -> List[Tuple]:
     for entity in entities:
         entity[1]["entity"] = update_types(entity[1]["entity"])
     return entities
 
 
-def create_patch(entities: list[Tuple]) -> list[Tuple]:
+def create_patch(entities: List[Tuple]) -> List[Tuple]:
     return [("add", "", entities)]
 
 
 def update_index(
-    index: MutableMapping[str, Any], patch: list[Tuple]
+    index: MutableMapping[str, Any], patch: List[Tuple]
 ) -> MutableMapping[str, Any]:
     return dictdiffer.patch(patch, index)
 
