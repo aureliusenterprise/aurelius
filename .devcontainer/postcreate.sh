@@ -24,6 +24,11 @@ done < "$JARS_DIR/manifest"
 ####################
 # Atlas Post Install
 ####################
+upload_to_atlas () {
+    echo "Uploading data to Apache Atlas..."
+    ./upload_sample_data.sh
+}
+
 # Set flink log permission
 sudo chmod -R 777 /opt/flink/log
 sudo chown -R $(whoami) /opt/flink/log
@@ -33,13 +38,19 @@ pip install elastic_enterprise_search elasticsearch dictdiffer urlpath
 # Init Elastic and Atlas
 python init_app_search_engines.py
 python init_atlas_types.py
+if [[ "$UPLOAD_DATA" == "true" ]]
+then
+    upload_to_atlas
+fi
 # Start jobs
 pushd /workspace/backend/m4i-flink-jobs/m4i_flink_jobs/
 /opt/flink/bin/flink run -d -py synchronize_app_search.py
 /opt/flink/bin/flink run -d -py publish_state.py
 popd
-
-./upload_sample_data.sh
+if [[ "$UPLOAD_DATA" == "test-jobs" ]]
+then
+    upload_to_atlas
+fi
 
 # Prompt the user to set their git username and email if not already set
 if [ -z "$(git config --global user.name)" ]; then
