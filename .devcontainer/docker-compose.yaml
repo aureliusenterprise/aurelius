@@ -36,6 +36,7 @@ services:
       ATLAS_EXTERNAL_URL: 'http://localhost:8087/atlas/atlas'
       ELASTIC_CERTIFICATE_PATH: '/opt/flink/certs/ca/ca.crt'
       ELASTICSEARCH_CERTIFICATE_PATH: '/opt/flink/certs/ca/ca.crt'
+      UPLOAD_DATA: "true"
     command: 'taskmanager --cap-add=SYS_PTRACE --security-opt seccomp=unconfined'
     cap_add:
       - SYS_PTRACE

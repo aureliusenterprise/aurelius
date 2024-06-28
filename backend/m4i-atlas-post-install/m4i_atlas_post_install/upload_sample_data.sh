@@ -5,4 +5,4 @@ TOKEN=$(./oauth.sh --endpoint "${KEYCLOAK_SERVER_URL}realms/${KEYCLOAK_REALM_NAM
 
 python export_atlas.py --token "$TOKEN" \
 --base-url "$ATLAS_SERVER_URL" \
---output "small.zip" --import-data
+--output "sample_data.zip" --import-data
