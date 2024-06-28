@@ -39,7 +39,7 @@ pushd /workspace/backend/m4i-flink-jobs/m4i_flink_jobs/
 /opt/flink/bin/flink run -d -py publish_state.py
 popd
 
-./upload_sample_data
+./upload_sample_data.sh
 
 # Prompt the user to set their git username and email if not already set
 if [ -z "$(git config --global user.name)" ]; then
