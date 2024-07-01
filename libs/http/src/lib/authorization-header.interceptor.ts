@@ -42,7 +42,6 @@ export class AuthorizationHeaderInterceptor<T> implements HttpInterceptor {
 
     if(isDevMode() && (request.url.includes("atlas/v2") || request.url.includes("lineage"))) {
       token=environment.DEV_ATLAS_TOKEN;
-      console.log(environment)
     }
 
     const clone = request.clone({
