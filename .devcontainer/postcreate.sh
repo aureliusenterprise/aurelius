@@ -60,7 +60,6 @@ sed -i 's/DEV_ATLAS_TOKEN_VALUE/'"$DEV_ATLAS_TOKEN"'/' /workspace/apps/atlas/src
 export SEARCH_TOKEN=$(python retrieve_elastic_search_key.py)
 sed -i 's/SEARCH_TOKEN_VALUE/'"$SEARCH_TOKEN"'/' /workspace/apps/atlas/src/environments/environment.ts;
 
-/workspace/apps/atlas/src/environments/environment.ts
 # Prompt the user to set their git username and email if not already set
 if [ -z "$(git config --global user.name)" ]; then
     read -p "Enter your Git username (full name): " git_username
