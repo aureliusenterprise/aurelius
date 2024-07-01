@@ -6,6 +6,8 @@ import {
 } from '@angular/common/http';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { from, Observable } from 'rxjs';
+import { isDevMode } from '@angular/core';
+import { environment } from '../../../../apps/atlas/src/environments/environment';
 
 export interface AuthTokenProvider {
   getToken: () => Promise<string>;
@@ -36,7 +38,12 @@ export class AuthorizationHeaderInterceptor<T> implements HttpInterceptor {
     request: HttpRequest<T>,
     next: HttpHandler
   ): Promise<HttpEvent<T>> {
-    const token = await this.authTokenProvider.getToken();
+    let token = await this.authTokenProvider.getToken();
+
+    if(isDevMode() && (request.url.includes("atlas/v2") || request.url.includes("lineage"))) {
+      token=environment.DEV_ATLAS_TOKEN;
+      console.log(environment)
+    }
 
     const clone = request.clone({
       setHeaders: {

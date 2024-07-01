@@ -52,6 +52,15 @@ then
     upload_to_atlas
 fi
 
+# Set tokens in enviroment.ts of the Angular app
+echo "Setting tokens for Atlas"
+export DEV_ATLAS_TOKEN=$(python get_keycloak_token.py)
+sed -i 's/DEV_ATLAS_TOKEN_VALUE/'"$DEV_ATLAS_TOKEN"'/' /workspace/apps/atlas/src/environments/environment.ts;
+
+export SEARCH_TOKEN=$(python retrieve_elastic_search_key.py)
+sed -i 's/SEARCH_TOKEN_VALUE/'"$SEARCH_TOKEN"'/' /workspace/apps/atlas/src/environments/environment.ts;
+
+/workspace/apps/atlas/src/environments/environment.ts
 # Prompt the user to set their git username and email if not already set
 if [ -z "$(git config --global user.name)" ]; then
     read -p "Enter your Git username (full name): " git_username

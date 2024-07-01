@@ -16,6 +16,7 @@ services:
       ELASTIC_URL: 'https://localhost:9200'
       ELASTIC_PASSWORD: 'elasticpw'
       ENTERPRISE_SEARCH_URL: 'http://localhost:3002/'
+      DATA2MODEL_URL: 'http://localhost:7000'
       KAFKA_APP_SEARCH_TOPIC_NAME: ".ent-search-engine-documents-atlas-dev"
       KAFKA_PUBLISH_STATE_TOPIC_NAME: "publish_state"
       KAFKA_BOOTSTRAP_SERVER_HOSTNAME: "localhost"
