@@ -36,6 +36,7 @@ The application can be configured using environment variables. The following env
 | --------------------- | ------------------------------------------- | ------------- |
 | `AUTH_ISSUER`         | The issuer of the JWT token.                | -             |
 | `ATLAS_SERVER_URL`    | The URL of the Aurelius Atlas API.          | -             |
+| `DATA2MODEL_URL`      | The url of data2model API                   | -             |
 | `KEYCLOAK_SERVER_URL` | The URL of the Keycloak server.             | -             |
 | `KEYCLOAK_REALM`      | The Keycloak authentication realm.          | -             |
 | `KEYCLOAK_CLIENT_ID`  | The Keycloak authentication client ID.      | -             |
