@@ -716,19 +716,19 @@
     {
       "id": "12a0cd4d-aa06-4aff-a767-b1e7521dfbca",
       "clientId": "m4i_aurelius_atlas_dev",
-      "rootUrl": "http://127.0.0.1:4200",
-      "adminUrl": "http://127.0.0.1:4200",
+      "rootUrl": "http://localhost:4200",
+      "adminUrl": "http://localhost:4200",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://127.0.0.1:4200*",
-        "http://127.0.0.1:21000/*",
+        "http://localhost:4200*",
+        "http://localhost:21000/*",
         "*"
       ],
       "webOrigins": [
-        "http://127.0.0.1:4200",
+        "http://localhost:4200",
         "*"
       ],
       "notBefore": 0,

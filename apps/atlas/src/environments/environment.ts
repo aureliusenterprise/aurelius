@@ -26,10 +26,9 @@ export const environment = {
     appCopyright: 2022,
     appLogoPath: 'assets/aurelius-atlas-logo.png',
     appName: 'Aurelius Atlas Data Governance',
-    standalone: false,
+    standalone: true,
   },
   telemetry: false,
-  DEV_ATLAS_TOKEN: 'DEV_ATLAS_TOKEN_VALUE'
 };
 
 /*

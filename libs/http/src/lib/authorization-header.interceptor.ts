@@ -40,10 +40,6 @@ export class AuthorizationHeaderInterceptor<T> implements HttpInterceptor {
   ): Promise<HttpEvent<T>> {
     let token = await this.authTokenProvider.getToken();
 
-    if(isDevMode() && (request.url.includes("atlas/v2") || request.url.includes("lineage"))) {
-      token=environment.DEV_ATLAS_TOKEN;
-    }
-
     const clone = request.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,

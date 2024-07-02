@@ -7,7 +7,7 @@ services:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: localhost
         taskmanager.numberOfTaskSlots: 2
-      ATLAS_SERVER_URL: "http://localhost:21000/api/atlas"
+      ATLAS_SERVER_URL: "http://127.0.0.1:21000/api/atlas"
       ELASTICSEARCH_APP_SEARCH_INDEX_NAME: ".ent-search-engine-documents-atlas-dev"
       ELASTICSEARCH_STATE_INDEX_NAME: "publish_state"
       ELASTICSEARCH_USERNAME: ${ELASTIC_USERNAME}
@@ -29,7 +29,7 @@ services:
       KEYCLOAK_PASSWORD: "atlas"
       KEYCLOAK_ATLAS_ADMIN_PASSWORD: "atlas"
       KEYCLOAK_REALM_NAME: "atlas-dev"
-      KEYCLOAK_SERVER_URL: "http://localhost:8180/auth/"
+      KEYCLOAK_SERVER_URL: "http://127.0.0.1:8180/auth/"
       KEYCLOAK_USERNAME: "atlas"
       KEYCLOAK_ATLAS_USER_USERNAME: 'atlas'
       KEYCLOAK_ATLAS_USER_PASSWORD: 'atlas'
