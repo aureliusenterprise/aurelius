@@ -6,8 +6,6 @@ import {
 } from '@angular/common/http';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import { isDevMode } from '@angular/core';
-import { environment } from '../../../../apps/atlas/src/environments/environment';
 
 export interface AuthTokenProvider {
   getToken: () => Promise<string>;
@@ -38,7 +36,7 @@ export class AuthorizationHeaderInterceptor<T> implements HttpInterceptor {
     request: HttpRequest<T>,
     next: HttpHandler
   ): Promise<HttpEvent<T>> {
-    let token = await this.authTokenProvider.getToken();
+    const token = await this.authTokenProvider.getToken();
 
     const clone = request.clone({
       setHeaders: {
