@@ -24,4 +24,4 @@ COPY --chown=m4i-atlas-post-install:m4i-atlas-post-install --chmod=0440 backend/
 USER m4i-atlas-post-install
 
 # Run the main script
-CMD ["./bin/run.sh"]
+CMD ["/app/bin/run.sh"]
