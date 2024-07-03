@@ -1,30 +1,19 @@
 #!/usr/bin/env python3
-from typing import Any, Mapping, MutableMapping, List
-import requests
-from requests.auth import HTTPBasicAuth
 import argparse
 from pathlib import Path
+from typing import Any, List, Mapping, MutableMapping
 
 from elastic_enterprise_search import AppSearch
-
-from export_diff import (
+from m4i_atlas_post_install import (
+    cleanup,
     drop_non_entities,
     extract,
-    cleanup,
+    get_all_documents,
+    get_enterprise_search_key,
+    index_all_documents,
     index_entities,
     update_types,
 )
-
-
-def get_enterprise_api_private_key(
-    enterprise_search_url: str, elastic_username: str, elastic_password: str
-) -> str:
-    key_response = requests.get(
-        f"{enterprise_search_url}api/as/v1/credentials/private-key",
-        auth=HTTPBasicAuth(elastic_username, elastic_password),
-    )
-    key_info = key_response.json()
-    return key_info["key"]
 
 
 def parse_args() -> argparse.Namespace:
@@ -36,32 +25,6 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--password", "-p", required=True, help="ES password", type=str)
     return parser.parse_args()
-
-
-def get_all_documents(
-    app_search_client: AppSearch, engine_name: str
-) -> List[MutableMapping[str, Any]]:
-    response = app_search_client.list_documents(
-        engine_name=engine_name, page_size=1000, current_page=1
-    )
-    documents = response.raw["results"]
-    for page in range(2, response.raw["meta"]["page"]["total_pages"] + 1):
-        response = app_search_client.list_documents(
-            engine_name=engine_name, page_size=1000, current_page=page
-        )
-        documents.extend(response.raw["results"])
-    return documents
-
-
-def index_all_documents(
-    app_search_client: AppSearch,
-    engine_name: str,
-    documents: List[Mapping[str, Any]],
-):
-    for i in range(0, len(documents), 100):
-        app_search_client.index_documents(
-            engine_name=engine_name, documents=documents[i : i + 100]
-        )
 
 
 def update_types_in_documents(
@@ -91,7 +54,7 @@ def substitute_quality_guid(
 
 def main() -> None:
     args = parse_args()
-    app_search_api_key = get_enterprise_api_private_key(
+    app_search_api_key = get_enterprise_search_key(
         args.url, args.username, args.password
     )
 
@@ -107,7 +70,7 @@ def main() -> None:
     index_all_documents(
         app_search_client=app_search_client,
         engine_name=engine_name,
-        documents=list[Mapping[str, Any]](documents),
+        documents=list(documents),
     )
     cleanup(extracted)
 

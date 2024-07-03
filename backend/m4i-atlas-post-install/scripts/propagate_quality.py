@@ -1,13 +1,10 @@
 import argparse
-import pprint
 import json
 from pathlib import Path
-from typing import Any, MutableMapping
+from typing import Any, List, MutableMapping
 
 from elastic_enterprise_search import AppSearch
-
-from update_gov_index import get_enterprise_api_private_key, index_all_documents
-
+from m4i_atlas_post_install import get_enterprise_search_key, index_all_documents
 
 DIMENSIONS = ["accuracy", "completeness", "timeliness", "validity", "uniqueness"]
 
@@ -28,7 +25,7 @@ def load_documents(path: Path):
     return documents
 
 
-def index_documents(documents: list[MutableMapping[str, Any]]):
+def index_documents(documents: List[MutableMapping[str, Any]]):
     atlas_dev_index = {}
     for document in documents:
         atlas_dev_index[document["guid"]] = document
@@ -62,7 +59,7 @@ def update_quality_field(
 
 
 def update_quality_fields(
-    quality_documents: list[MutableMapping[str, Any]],
+    quality_documents: List[MutableMapping[str, Any]],
     atlas_dev_index: MutableMapping[str, Any],
 ):
     for quality_document in quality_documents:
@@ -108,7 +105,7 @@ def update_quality_attributes(
 ):
     for document in atlas_dev_index.values():
         if document["typename"] == "m4i_field":
-            for attribute_guid in document[f"deriveddataattributeguid"]:
+            for attribute_guid in document["deriveddataattributeguid"]:
                 update_quality_scores_per_dimension(
                     downstream_document=document,
                     upstream_document=atlas_dev_index[attribute_guid],
@@ -148,7 +145,7 @@ def update_overall_score(document: MutableMapping[str, Any]):
 
 def main():
     args = parse_args()
-    app_search_api_key = get_enterprise_api_private_key(
+    app_search_api_key = get_enterprise_search_key(
         args.url, args.username, args.password
     )
 

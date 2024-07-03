@@ -1,8 +1,10 @@
 from pathlib import Path
 from typing import Any, MutableMapping
+
 from elastic_enterprise_search import AppSearch
-from propagate_quality import index_documents, load_documents, parse_args
-from update_gov_index import get_enterprise_api_private_key, index_all_documents
+
+from .propagate_quality import index_documents, load_documents, parse_args
+from .update_gov_index import get_enterprise_api_private_key, index_all_documents
 
 
 def propagate_relationship(

@@ -6,7 +6,7 @@ export const environment = {
   name: 'm4i_atlas',
   googleAnalyticsMeasurementID: 'UA-138345924-1',
   atlas: {
-    appSearchToken: 'SEARCH_TOKEN_VALUE',
+    appSearchToken: 'search-8ra7geka99orzh45s3wm167b',
   },
   i18n: {
     defaultLanguage: 'en-US',

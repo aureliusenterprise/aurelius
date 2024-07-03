@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 
-from typing import Any, List, Mapping, MutableMapping, NewType, Tuple
-from zipfile import ZipFile
 import argparse
+import json
 from pathlib import Path
 from shutil import rmtree
-import json
+from typing import Any, List, Mapping, MutableMapping, Tuple
+from zipfile import ZipFile
 
 import dictdiffer
-
 
 NON_ENTITY = [
     "atlas-typesdef.json",
