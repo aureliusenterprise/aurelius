@@ -1,5 +1,6 @@
-import requests
 import argparse
+
+import requests
 from urlpath import URL
 
 

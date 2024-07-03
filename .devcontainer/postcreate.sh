@@ -5,7 +5,7 @@ git config --global --add safe.directory $PWD
 
 # Install dependencies
 npm install
-poetry install --no-root
+poetry install
 
 JARS_DIR=backend/m4i-flink-jobs/m4i_flink_jobs/jars
 
@@ -35,19 +35,18 @@ sudo chown -R $(whoami) /opt/flink/log
 # Init dependencies
 cd backend/m4i-atlas-post-install/m4i_atlas_post_install
 pip install elastic_enterprise_search elasticsearch dictdiffer urlpath
+
 # Init Elastic and Atlas
 python init_app_search_engines.py
 python init_atlas_types.py
-if [[ "$UPLOAD_DATA" == "true" ]]
-then
-    upload_to_atlas
-fi
+
 # Start jobs
 pushd /workspace/backend/m4i-flink-jobs/m4i_flink_jobs/
 /opt/flink/bin/flink run -d -py synchronize_app_search.py
 /opt/flink/bin/flink run -d -py publish_state.py
 popd
-if [[ "$UPLOAD_DATA" == "test-jobs" ]]
+
+if [[ "$UPLOAD_DATA" == "true" ]]
 then
     upload_to_atlas
 fi

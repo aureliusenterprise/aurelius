@@ -1,10 +1,12 @@
+import argparse
 import json
 from pathlib import Path
-from elastic_enterprise_search import AppSearch
-from update_gov_index import get_all_documents, get_enterprise_api_private_key
-import argparse
 
-from app_search_engine_setup import engines
+from elastic_enterprise_search import AppSearch
+
+from .app_search_engine_setup import engines
+from .get_all_documents import get_all_documents
+from .get_enterprise_search_key import get_enterprise_search_key
 
 
 def parse_args():
@@ -19,7 +21,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    app_search_api_key = get_enterprise_api_private_key(
+    app_search_api_key = get_enterprise_search_key(
         args.url, args.username, args.password
     )
 

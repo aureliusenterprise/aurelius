@@ -1,18 +1,15 @@
 import json
-import os
 import logging
+import os
 from pathlib import Path
-from elastic_transport.client_utils import DefaultType
+
 import requests
 from elastic_enterprise_search import AppSearch
 from elastic_enterprise_search.exceptions import BadRequestError
+from elastic_transport.client_utils import DefaultType
 from elasticsearch import Elasticsearch
+from m4i_atlas_post_install import engines, index_all_documents, publish_state_template
 from requests.auth import HTTPBasicAuth
-
-from app_search_engine_setup import engines
-from index_template import publish_state_template
-from update_gov_index import index_all_documents
-
 
 NAMESPACE = os.getenv("NAMESPACE", "demo")
 

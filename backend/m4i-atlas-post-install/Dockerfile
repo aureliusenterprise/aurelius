@@ -1,17 +1,27 @@
-FROM aureliusatlas/docker-flink:2.0.1
+# Use the official Python image as a base
+FROM python:3.8-slim
 
-USER root
+# Create a non-root user and group
+RUN addgroup --system m4i-atlas-post-install && \
+    adduser --system --ingroup m4i-atlas-post-install m4i-atlas-post-install
 
-RUN apt-get update
-RUN apt-get install -y jq curl
+# Set the working directory
+WORKDIR /app
 
-USER flink
+# Copy the wheel file into the container
+COPY ../../dist/backend/m4i-atlas-post-install/*.whl .
 
-COPY ./backend/m4i-atlas-post-install/requirements.txt ./
+# Install the wheel file and remove it afterwards
+RUN pip install --no-cache-dir *.whl && \
+    rm *.whl
 
-RUN python -m pip install --no-cache-dir -r requirements.txt
+# Copy scripts and data into the container
+COPY --chown=m4i-atlas-post-install:m4i-atlas-post-install --chmod=0550 backend/m4i-atlas-post-install/bin /app/bin
+COPY --chown=m4i-atlas-post-install:m4i-atlas-post-install --chmod=0440 backend/m4i-atlas-post-install/data /app/data
+COPY --chown=m4i-atlas-post-install:m4i-atlas-post-install --chmod=0440 backend/m4i-atlas-post-install/scripts /app/scripts
 
-COPY ./backend/m4i-atlas-post-install/m4i_atlas_post_install/* ./
+# Switch to the non-root user
+USER m4i-atlas-post-install
 
-#CMD ["./run.sh"]
-CMD ["echo asd && tail -f /dev/null"]
+# Run the main script
+CMD ["./bin/run.sh"]
