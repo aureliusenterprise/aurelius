@@ -27,12 +27,13 @@
       }
     },
     "lint": {
-      "executor": "@nxlv/python:flake8",
-      "outputs": [
-        "{workspaceRoot}/reports/apps/m4i-atlas-post-install/pylint.txt"
-      ],
+      "executor": "@nxlv/python:ruff-check",
+      "outputs": [],
       "options": {
-        "outputFile": "reports/apps/m4i-atlas-post-install/pylint.txt"
+        "lintFilePatterns": [
+          "flink_jobs",
+          "tests"
+        ]
       }
     },
     "test": {
