@@ -33,12 +33,17 @@ upload_to_atlas () {
 sudo chmod -R 777 /opt/flink/log
 sudo chown -R $(whoami) /opt/flink/log
 # Init dependencies
-cd backend/m4i-atlas-post-install/m4i_atlas_post_install
+cd backend/m4i-atlas-post-install/scripts
 pip install elastic_enterprise_search elasticsearch dictdiffer urlpath
 
 # Init Elastic and Atlas
 python init_app_search_engines.py
 python init_atlas_types.py
+
+if [[ "$UPLOAD_DATA" == "true" ]]
+then
+    upload_to_atlas
+fi
 
 # Start jobs
 pushd /workspace/backend/m4i-flink-jobs/m4i_flink_jobs/
@@ -46,7 +51,7 @@ pushd /workspace/backend/m4i-flink-jobs/m4i_flink_jobs/
 /opt/flink/bin/flink run -d -py publish_state.py
 popd
 
-if [[ "$UPLOAD_DATA" == "true" ]]
+if [[ "$UPLOAD_DATA" == "test-jobs" ]]
 then
     upload_to_atlas
 fi
