@@ -28,9 +28,9 @@ UPLOAD_DATA = os.getenv("UPLOAD_DATA", False)
 
 
 ENGINES_TO_UPLOAD = {
-    "atlas-dev-quality": Path("data/atlas-dev-quality.json"),
-    "atlas-dev-gov-quality": Path("data/atlas-dev-gov-quality.json"),
-    "atlas-dev": Path("data/atlas-dev.json"),
+    "atlas-dev-quality": Path("../data/atlas-dev-quality.json"),
+    "atlas-dev-gov-quality": Path("../data/atlas-dev-gov-quality.json"),
+    "atlas-dev": Path("../data/atlas-dev.json"),
 }
 
 
@@ -88,7 +88,6 @@ def upload_documents(app_search_client: AppSearch, quality_only: bool = False) -
     for engine_name, data_path in ENGINES_TO_UPLOAD.items():
         if engine_name == "atlas-dev" and quality_only:
             continue
-        print(f"Uploading {engine_name}")
         with open(data_path, "r") as json_file:
             documents = json.load(json_file)
         index_all_documents(app_search_client, engine_name, documents)
