@@ -303,7 +303,7 @@
                     </key-store>
                 </key-stores>
                 <key-managers>
-                    <key-manager name="applicationKM" key-store="applicationKS" generate-self-signed-certificate-host="localhost">
+                    <key-manager name="applicationKM" key-store="applicationKS" generate-self-signed-certificate-host="127.0.0.1">
                         <credential-reference clear-text="password"/>
                     </key-manager>
                 </key-managers>
@@ -490,7 +490,7 @@
                 </provider>
                 <provider name="fixed" enabled="true">
                     <properties>
-                        <property name="hostname" value="${keycloak.hostname.fixed.hostname:localhost}"/>
+                        <property name="hostname" value="${keycloak.hostname.fixed.hostname:127.0.0.1}"/>
                         <property name="httpPort" value="${keycloak.hostname.fixed.httpPort:-1}"/>
                         <property name="httpsPort" value="${keycloak.hostname.fixed.httpsPort:-1}"/>
                         <property name="alwaysHttps" value="${keycloak.hostname.fixed.alwaysHttps:false}"/>
@@ -533,7 +533,7 @@
             <server name="default-server">
                 <http-listener name="default" socket-binding="http" redirect-socket="https" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" enable-http2="true"/>
                 <https-listener name="https" socket-binding="https" ssl-context="applicationSSC" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" enable-http2="true"/>
-                <host name="default-host" alias="localhost">
+                <host name="default-host" alias="127.0.0.1">
                     <location name="/" handler="welcome-content"/>
                     <http-invoker http-authentication-factory="application-http-authentication"/>
                 </host>
@@ -568,7 +568,7 @@
         <socket-binding name="txn-recovery-environment" port="4712"/>
         <socket-binding name="txn-status-manager" port="4713"/>
         <outbound-socket-binding name="mail-smtp">
-            <remote-destination host="${jboss.mail.server.host:localhost}" port="${jboss.mail.server.port:25}"/>
+            <remote-destination host="${jboss.mail.server.host:127.0.0.1}" port="${jboss.mail.server.port:25}"/>
         </outbound-socket-binding>
     </socket-binding-group>
 </server>

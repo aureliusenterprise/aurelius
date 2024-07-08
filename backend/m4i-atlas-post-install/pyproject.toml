@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "m4i-atlas-post-install"
+version = "1.0.0"
+description = "Post-install automation for Aurelius Atlas"
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+license = 'UNLICENSED'
+readme = 'README.md'
+
+[[tool.poetry.packages]]
+include = "m4i_atlas_post_install"
+
+[tool.poetry.dependencies]
+python = "~3.8"
+dictdiffer = "0.9.0"
+elastic_enterprise_search = "~8.11"
+elasticsearch = "~8.9"
+urlpath="1.2.0"
+
+[tool.poetry.dependencies.m4i-atlas-core]
+path = "../../libs/m4i-atlas-core"
+develop = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

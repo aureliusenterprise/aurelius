@@ -1,6 +1,6 @@
 {
   "realm": "atlas-dev",
-  "auth-server-url": "http://localhost:8180/auth",
+  "auth-server-url": "http://127.0.0.1:8180/auth",
   "ssl-required": "none",
   "resource": "m4i_atlas",
   "public-client": true,

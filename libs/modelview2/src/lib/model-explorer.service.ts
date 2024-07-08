@@ -197,10 +197,10 @@ export class ModelExplorerService extends BasicStore<ModelExplorerStoreContext> 
     views: Dictionary<ModelView>
   ) {
     function buildViewEntityIndex() {
-      return {
-        ...views.nodes,
-        ...views.connections
-      }
+      return Object.values(views).reduce(
+        (acc, view) => ({ ...acc, ...view.nodes, ...view.connections }),
+        {}
+      );
     }
 
     const entitiesById = {

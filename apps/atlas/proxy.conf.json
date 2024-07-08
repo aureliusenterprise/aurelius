@@ -51,7 +51,7 @@
     "pathRewrite": {
       "^/atlas": ""
     },
-    "target": "http://127.0.0.1:9100/atlas/atlas",
+    "target": "http://127.0.0.1:21000/api/atlas",
     "changeOrigin": true,
     "secure": false
   },
@@ -67,9 +67,9 @@
     "pathRewrite": {
       "^/elastic": ""
     },
-    "target": "http://localhost:9200/api/as/v1/engines/atlas-dev/search.json",
+    "target": "http://localhost:3002/api/as/v1/engines/atlas-dev/search.json",
     "changeOrigin": true,
-    "secure": false
+    "secure": true
   },
   "/api/data_governance_dashboard": {
     "pathRewrite": {
@@ -83,17 +83,17 @@
     "pathRewrite": {
       "^/data_quality": ""
     },
-    "target": "http://localhost:9200/api/as/v1/engines/atlas-dev-quality/search.json",
+    "target": "http://localhost:3002/api/as/v1/engines/atlas-dev-quality/search.json",
     "changeOrigin": true,
-    "secure": false
+    "secure": true
   },
   "/gov_quality": {
     "pathRewrite": {
       "^/gov_quality": ""
     },
-    "target": "http://localhost:9200/api/as/v1/engines/atlas-dev-gov-quality/search.json",
+    "target": "http://localhost:3002/api/as/v1/engines/atlas-dev-gov-quality/search.json",
     "changeOrigin": true,
-    "secure": false
+    "secure": true
   },
   "/validate_entity": {
     "pathRewrite": {
