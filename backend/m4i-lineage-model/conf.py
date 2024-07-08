@@ -12,9 +12,10 @@ if __name__ == "__config__":
 
   required_config = {
       "atlas.server.url": os.getenv("ATLAS_SERVER_URL"),
+      "data2model.server.url": os.getenv("DATA2MODEL_URL"),
       "keycloak.server.url": os.getenv("KEYCLOAK_SERVER_URL"),
       "keycloak.client.id": os.getenv("KEYCLOAK_CLIENT_ID"),
-      "keycloak.realm.name": os.getenv("KEYCLOAK_REALM_NAME"),
+      "keycloak.realm.name": os.getenv("KEYCLOAK_REALM_NAME")
   }
 
   missing_keys = [key for key, value in required_config.items() if value is None]

@@ -2,12 +2,7 @@
 autoActivate = true
 
 [tool.poetry]
-name = "@aurelius/source"
-version = "1.0.0"
-description = ""
-authors = [ "Aurelius Enterprise <info@aureliusenterprise.com>" ]
-license = "UNLICENSED"
-readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "~3.8"
@@ -29,7 +24,7 @@ path = "libs/m4i-backend-core"
 develop = true
 
 [tool.poetry.dependencies.m4i-consistency-metrics]
-path="backend/m4i-consistency-metrics"
+path = "backend/m4i-consistency-metrics"
 develop = true
 
 [tool.poetry.dependencies.m4i-flink-tasks]
@@ -49,7 +44,7 @@ path = "libs/m4i-analytics-extensions/m4i-graphviz-layouts"
 develop = true
 
 [tool.poetry.dependencies.m4i-lineage-model]
-path="backend/m4i-lineage-model"
+path = "backend/m4i-lineage-model"
 develop = true
 
 [tool.poetry.dependencies.m4i-metrics]
@@ -57,7 +52,11 @@ path = "libs/m4i-metrics"
 develop = true
 
 [tool.poetry.dependencies.m4i-validate-entity]
-path="backend/m4i-validate-entity"
+path = "backend/m4i-validate-entity"
+develop = true
+
+[tool.poetry.dependencies.m4i-atlas-post-install]
+path = "backend/m4i-atlas-post-install"
 develop = true
 
 [tool.poetry.group.dev.dependencies]
@@ -69,5 +68,5 @@ pytest-sugar = "0.9.7"
 autopep8 = "2.0.2"
 
 [build-system]
-requires = [ "poetry-core==1.1.0" ]
+requires = ["poetry-core==1.1.0"]
 build-backend = "poetry.core.masonry.api"

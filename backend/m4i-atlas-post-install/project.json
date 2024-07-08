@@ -1,0 +1,80 @@
+{
+  "name": "m4i-atlas-post-install",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/m4i-atlas-post-install/m4i_atlas_post_install",
+  "targets": {
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "update": {
+      "executor": "@nxlv/python:update",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "outputPath": "{workspaceRoot}/dist/backend/m4i-atlas-post-install",
+        "publish": false,
+        "lockedVersions": false,
+        "bundleLocalDependencies": true
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:ruff-check",
+      "outputs": [],
+      "options": {
+        "lintFilePatterns": [
+          "flink_jobs",
+          "tests"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [
+        "{workspaceRoot}/reports/apps/m4i-atlas-post-install/unittests",
+        "{workspaceRoot}/coverage/apps/m4i-atlas-post-install"
+      ],
+      "options": {
+        "command": "poetry run pytest tests/",
+        "cwd": "apps/m4i-atlas-post-install"
+      }
+    },
+    "docker-build": {
+      "dependsOn": [
+        {
+          "target": "build",
+          "params": "forward"
+        }
+      ],
+      "command": "docker build -f {projectRoot}/Dockerfile . -t {args.namespace}/{args.tag}:{args.version}",
+      "options": {
+        "namespace": "aureliusenterprise",
+        "tag": "{projectName}",
+        "version": "latest"
+      }
+    },
+    "docker-publish": {
+      "dependsOn": [
+        {
+          "target": "docker-build",
+          "params": "forward"
+        }
+      ],
+      "command": "docker push {args.namespace}/{args.tag}:{args.version}",
+      "options": {
+        "namespace": "aureliusenterprise",
+        "tag": "{projectName}",
+        "version": "latest"
+      }
+    }
+  },
+  "tags": []
+}

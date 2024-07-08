@@ -6,7 +6,7 @@ export const environment = {
   name: 'm4i_atlas',
   googleAnalyticsMeasurementID: 'UA-138345924-1',
   atlas: {
-    appSearchToken: 'search-ot1rcw3uffpojw1tz299upw1',
+    appSearchToken: 'search-8ra7geka99orzh45s3wm167b',
   },
   i18n: {
     defaultLanguage: 'en-US',
@@ -26,9 +26,9 @@ export const environment = {
     appCopyright: 2022,
     appLogoPath: 'assets/aurelius-atlas-logo.png',
     appName: 'Aurelius Atlas Data Governance',
-    standalone: false,
+    standalone: true,
   },
-  telemetry: false
+  telemetry: false,
 };
 
 /*
