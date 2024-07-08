@@ -26,7 +26,9 @@ done < "$JARS_DIR/manifest"
 ####################
 upload_to_atlas () {
     echo "Uploading data to Apache Atlas..."
+    pushd /workspace/backend/m4i-flink-jobs/bin/
     ./upload_sample_data.sh
+    popd
 }
 
 # Set flink log permission
