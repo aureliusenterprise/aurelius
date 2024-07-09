@@ -1,0 +1,100 @@
+{
+  "name": "m4i-publish-state",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "backend/m4i-publish-state/m4i_publish_state",
+  "targets": {
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "update": {
+      "executor": "@nxlv/python:update",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": [
+        "{workspaceRoot}/dist/backend/m4i-publish-state"
+      ],
+      "options": {
+        "outputPath": "{workspaceRoot}/dist/backend/m4i-publish-state",
+        "publish": false,
+        "lockedVersions": false,
+        "bundleLocalDependencies": true
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:ruff-check",
+      "outputs": [],
+      "options": {
+        "lintFilePatterns": [
+          "m4i_publish_state",
+          "tests"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [
+        "{workspaceRoot}/reports/backend/m4i-publish-state/unittests",
+        "{workspaceRoot}/coverage/backend/m4i-publish-state"
+      ],
+      "options": {
+        "command": "poetry run pytest tests/",
+        "cwd": "backend/m4i-publish-state"
+      }
+    },
+    "load-jars": {
+      "command": "bash {projectRoot}/jars/load-jars.sh"
+    },
+    "serve": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [],
+      "dependsOn": [
+        {
+          "target": "load-jars"
+        }
+      ],
+      "options": {
+        "command": "/opt/flink/bin/flink run -d -py {projectRoot}/main.py"
+      }
+    },
+    "docker-build": {
+      "dependsOn": [
+        {
+          "target": "build",
+          "params": "forward"
+        },
+        {
+          "target": "load-jars"
+        }
+      ],
+      "command": "docker build -f {projectRoot}/Dockerfile . -t {args.namespace}/{args.tag}:{args.version}",
+      "options": {
+        "namespace": "aureliusenterprise",
+        "tag": "{projectName}",
+        "version": "latest"
+      }
+    },
+    "docker-publish": {
+      "dependsOn": [
+        {
+          "target": "docker-build",
+          "params": "forward"
+        }
+      ],
+      "command": "docker push {args.namespace}/{args.tag}:{args.version}",
+      "options": {
+        "namespace": "aureliusenterprise",
+        "tag": "{projectName}",
+        "version": "latest"
+      }
+    }
+  },
+  "tags": []
+}
