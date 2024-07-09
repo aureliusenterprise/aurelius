@@ -31,8 +31,12 @@ develop = true
 path = "libs/m4i-flink-tasks"
 develop = true
 
-[tool.poetry.dependencies.m4i-flink-jobs]
-path = "backend/m4i-flink-jobs"
+[tool.poetry.dependencies.m4i-publish-state]
+path = "backend/m4i-publish-state"
+develop = true
+
+[tool.poetry.dependencies.m4i-synchronize-app-search]
+path = "backend/m4i-synchronize-app-search"
 develop = true
 
 [tool.poetry.dependencies.m4i-lineage-rest-api]
