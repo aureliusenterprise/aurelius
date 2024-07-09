@@ -16,6 +16,18 @@ def parse_args():
         "--username", "-u", default="elastic", help="ES username", type=str
     )
     parser.add_argument("--password", "-p", required=True, help="ES password", type=str)
+    parser.add_argument(
+        "--atlas-dev",
+        default=Path("data/atlas-dev.json"),
+        type=Path,
+        help="Path to atlas-dev JSON dump",
+    )
+    parser.add_argument(
+        "--quality",
+        default=Path("data/atlas-dev-quality.json"),
+        type=Path,
+        help="Path to atlas-dev-quality JSON dump",
+    )
     return parser.parse_args()
 
 
@@ -151,8 +163,8 @@ def main():
 
     app_search_client = AppSearch(args.url, bearer_auth=app_search_api_key)
 
-    atlas_dev_documents = load_documents(Path("data/atlas-dev.json"))
-    quality_documents = load_documents(Path("data/atlas-dev-quality.json"))
+    atlas_dev_documents = load_documents(args.atlas_dev)
+    quality_documents = load_documents(args.quality)
     atlas_dev_index = index_documents(atlas_dev_documents)
     zero_everything(atlas_dev_index)
     update_quality_fields(quality_documents, atlas_dev_index)
