@@ -1,10 +1,10 @@
 import argparse
-import json
 from pathlib import Path
 from typing import Any, List, MutableMapping
 
 from elastic_enterprise_search import AppSearch
 from m4i_atlas_post_install import get_enterprise_search_key, index_all_documents
+from m4i_atlas_post_install.documents_utils import index_documents, load_documents
 
 DIMENSIONS = ["accuracy", "completeness", "timeliness", "validity", "uniqueness"]
 
@@ -16,20 +16,19 @@ def parse_args():
         "--username", "-u", default="elastic", help="ES username", type=str
     )
     parser.add_argument("--password", "-p", required=True, help="ES password", type=str)
+    parser.add_argument(
+        "--atlas-dev",
+        default=Path("data/atlas-dev.json"),
+        type=Path,
+        help="Path to atlas-dev JSON dump",
+    )
+    parser.add_argument(
+        "--quality",
+        default=Path("data/atlas-dev-quality.json"),
+        type=Path,
+        help="Path to atlas-dev-quality JSON dump",
+    )
     return parser.parse_args()
-
-
-def load_documents(path: Path):
-    with open(path, "r") as json_file:
-        documents = json.load(json_file)
-    return documents
-
-
-def index_documents(documents: List[MutableMapping[str, Any]]):
-    atlas_dev_index = {}
-    for document in documents:
-        atlas_dev_index[document["guid"]] = document
-    return atlas_dev_index
 
 
 def zero_everything(atlas_dev_index: MutableMapping[str, Any]):
@@ -151,8 +150,8 @@ def main():
 
     app_search_client = AppSearch(args.url, bearer_auth=app_search_api_key)
 
-    atlas_dev_documents = load_documents(Path("data/atlas-dev.json"))
-    quality_documents = load_documents(Path("data/atlas-dev-quality.json"))
+    atlas_dev_documents = load_documents(args.atlas_dev)
+    quality_documents = load_documents(args.quality)
     atlas_dev_index = index_documents(atlas_dev_documents)
     zero_everything(atlas_dev_index)
     update_quality_fields(quality_documents, atlas_dev_index)
@@ -164,11 +163,13 @@ def main():
         app_search_client=app_search_client,
         documents=list(atlas_dev_index.values()),
     )
+    print("Updated atlas-dev")
     index_all_documents(
         engine_name="atlas-dev-quality",
         app_search_client=app_search_client,
         documents=quality_documents,
     )
+    print("Updated atlas-dev-quality")
 
 
 if __name__ == "__main__":
