@@ -1,8 +1,8 @@
 {
-  "name": "m4i-flink-jobs",
+  "name": "m4i-publish-state",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "backend/m4i-flink-jobs/m4i_flink_jobs",
+  "sourceRoot": "backend/m4i-publish-state/m4i_publish_state",
   "targets": {
     "add": {
       "executor": "@nxlv/python:add",
@@ -19,10 +19,10 @@
     "build": {
       "executor": "@nxlv/python:build",
       "outputs": [
-        "{workspaceRoot}/dist/backend/m4i-flink-jobs"
+        "{workspaceRoot}/dist/backend/m4i-publish-state"
       ],
       "options": {
-        "outputPath": "{workspaceRoot}/dist/backend/m4i-flink-jobs",
+        "outputPath": "{workspaceRoot}/dist/backend/m4i-publish-state",
         "publish": false,
         "lockedVersions": false,
         "bundleLocalDependencies": true
@@ -33,7 +33,7 @@
       "outputs": [],
       "options": {
         "lintFilePatterns": [
-          "m4i_flink_jobs",
+          "m4i_publish_state",
           "tests"
         ]
       }
@@ -41,12 +41,12 @@
     "test": {
       "executor": "@nxlv/python:run-commands",
       "outputs": [
-        "{workspaceRoot}/reports/backend/m4i-flink-jobs/unittests",
-        "{workspaceRoot}/coverage/backend/m4i-flink-jobs"
+        "{workspaceRoot}/reports/backend/m4i-publish-state/unittests",
+        "{workspaceRoot}/coverage/backend/m4i-publish-state"
       ],
       "options": {
         "command": "poetry run pytest tests/",
-        "cwd": "backend/m4i-flink-jobs"
+        "cwd": "backend/m4i-publish-state"
       }
     },
     "load-jars": {

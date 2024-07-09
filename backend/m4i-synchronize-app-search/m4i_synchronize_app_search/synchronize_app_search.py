@@ -1,11 +1,17 @@
 import json
-import os
 import time
-from pathlib import Path
-from typing import Tuple, TypedDict, Union
+from typing import List, Tuple, TypedDict, Union
 
 from elastic_transport._models import DefaultType
 from elasticsearch import Elasticsearch
+from keycloak import KeycloakOpenID
+from m4i_flink_tasks import (
+    AppSearchDocument,
+    DetermineChange,
+    GetEntity,
+    SynchronizeAppSearch,
+)
+from m4i_flink_tasks.operations.publish_state.operations import GetPreviousEntity
 from pyflink.common import Types
 from pyflink.common.serialization import SimpleStringSchema
 from pyflink.datastream import StreamExecutionEnvironment
@@ -15,10 +21,6 @@ from pyflink.datastream.connectors.kafka import (
     KafkaRecordSerializationSchema,
     KafkaSink,
 )
-
-from m4i_flink_tasks import AppSearchDocument, DetermineChange, GetEntity, SynchronizeAppSearch
-from m4i_flink_tasks.operations.publish_state.operations import GetPreviousEntity
-from keycloak import KeycloakOpenID
 
 
 class SynchronizeAppSearchConfig(TypedDict):
@@ -76,15 +78,12 @@ class SynchronizeAppSearchConfig(TypedDict):
     keycloak_password: str
 
 
-def main(config: SynchronizeAppSearchConfig) -> None:
+def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
     """Sink an example message into a Kafka topic."""
     env = StreamExecutionEnvironment.get_execution_environment()
 
     env.set_parallelism(1)
-
-    # Add JARs to the classpath
-    jars = [path.absolute().as_uri() for path in Path("./jars").glob("*.jar")]
-    env.add_jars(*jars)
+    env.add_jars(*jars_path)
 
     kafka_bootstrap_server = f"{config['kafka_bootstrap_server_hostname']}:{config['kafka_bootstrap_server_port']}"
 
@@ -139,7 +138,10 @@ def main(config: SynchronizeAppSearchConfig) -> None:
         """Create an Elasticsearch client instance."""
         return Elasticsearch(
             hosts=[config["elasticsearch_endpoint"]],
-            basic_auth=(config["elasticsearch_username"], config["elasticsearch_password"]),
+            basic_auth=(
+                config["elasticsearch_username"],
+                config["elasticsearch_password"],
+            ),
             ca_certs=config["elasticsearch_certificate_path"],
         )
 
@@ -175,7 +177,9 @@ def main(config: SynchronizeAppSearchConfig) -> None:
         config["elasticsearch_app_search_index_name"],
     )
 
-    def waiting_mapper(value: Tuple[str, Union[AppSearchDocument, None]]) -> Tuple[str, Union[AppSearchDocument, None]]:
+    def waiting_mapper(
+        value: Tuple[str, Union[AppSearchDocument, None]]
+    ) -> Tuple[str, Union[AppSearchDocument, None]]:
         # To avoid racing condition, introduce a second sleep
         time.sleep(1)
         return value
@@ -191,34 +195,3 @@ def main(config: SynchronizeAppSearchConfig) -> None:
     ).sink_to(app_search_sink).name("App Search Sink")
 
     env.execute("Synchronize App Search")
-
-
-if __name__ == "__main__":
-    """
-    Entry point of the script. Load configuration from environment variables and start the job.
-    """
-    config: SynchronizeAppSearchConfig = {
-        "atlas_server_url": os.environ["ATLAS_SERVER_URL"],
-        "elasticsearch_app_search_index_name": os.environ["ELASTICSEARCH_APP_SEARCH_INDEX_NAME"],
-        "elasticsearch_publish_state_index_name": os.environ["ELASTICSEARCH_STATE_INDEX_NAME"],
-        "elasticsearch_endpoint": os.environ["ELASTICSEARCH_ENDPOINT"],
-        "elasticsearch_username": os.environ["ELASTICSEARCH_USERNAME"],
-        "elasticsearch_password": os.environ["ELASTICSEARCH_PASSWORD"],
-        "elasticsearch_certificate_path": os.environ.get("ELASTICSEARCH_CERTIFICATE_PATH", DefaultType(0)),
-        "kafka_app_search_topic_name": os.environ["KAFKA_APP_SEARCH_TOPIC_NAME"],
-        "kafka_publish_state_topic_name": os.environ["KAFKA_PUBLISH_STATE_TOPIC_NAME"],
-        "kafka_bootstrap_server_hostname": os.environ["KAFKA_BOOTSTRAP_SERVER_HOSTNAME"],
-        "kafka_bootstrap_server_port": os.environ["KAFKA_BOOTSTRAP_SERVER_PORT"],
-        "kafka_consumer_group_id": os.environ["KAFKA_CONSUMER_GROUP_ID"],
-        "kafka_error_topic_name": os.environ["KAFKA_ERROR_TOPIC_NAME"],
-        "kafka_producer_group_id": os.environ["KAFKA_PRODUCER_GROUP_ID"],
-        "kafka_source_topic_name": os.environ["KAFKA_SOURCE_TOPIC_NAME"],
-        "keycloak_client_id": os.environ["KEYCLOAK_CLIENT_ID"],
-        "keycloak_client_secret_key": os.environ.get("KEYCLOAK_CLIENT_SECRET_KEY"),
-        "keycloak_password": os.environ["KEYCLOAK_PASSWORD"],
-        "keycloak_realm_name": os.environ["KEYCLOAK_REALM_NAME"],
-        "keycloak_server_url": os.environ["KEYCLOAK_SERVER_URL"],
-        "keycloak_username": os.environ["KEYCLOAK_USERNAME"],
-    }
-
-    main(config)
