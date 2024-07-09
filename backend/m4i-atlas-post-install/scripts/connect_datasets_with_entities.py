@@ -3,8 +3,13 @@ from typing import Any, MutableMapping
 
 from elastic_enterprise_search import AppSearch
 
-from .propagate_quality import index_documents, load_documents, parse_args
-from .update_gov_index import get_enterprise_api_private_key, index_all_documents
+from .propagate_quality import parse_args
+from m4i_atlas_post_install import (
+    index_all_documents,
+    index_documents,
+    load_documents,
+    get_enterprise_search_key,
+)
 
 
 def propagate_relationship(
@@ -50,7 +55,7 @@ def connect_datasets_with_entities(atlas_dev_index: MutableMapping[str, Any]):
 
 def main():
     args = parse_args()
-    app_search_api_key = get_enterprise_api_private_key(
+    app_search_api_key = get_enterprise_search_key(
         args.url, args.username, args.password
     )
     app_search_client = AppSearch(args.url, bearer_auth=app_search_api_key)

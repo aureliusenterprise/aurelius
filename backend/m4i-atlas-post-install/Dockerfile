@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir *.whl && \
 
 # Copy scripts and data into the container
 COPY --chown=m4i-atlas-post-install:m4i-atlas-post-install --chmod=0550 backend/m4i-atlas-post-install/bin /app/bin
-COPY --chown=m4i-atlas-post-install:m4i-atlas-post-install --chmod=0440 backend/m4i-atlas-post-install/data /app/data
+COPY --chown=m4i-atlas-post-install:m4i-atlas-post-install --chmod=0640 backend/m4i-atlas-post-install/data /app/data
 COPY --chown=m4i-atlas-post-install:m4i-atlas-post-install --chmod=0440 backend/m4i-atlas-post-install/scripts /app/scripts
 
 # Switch to the non-root user

@@ -31,8 +31,9 @@
       "outputs": [],
       "options": {
         "lintFilePatterns": [
-          "flink_jobs",
-          "tests"
+          "m4i_atlas_post_install",
+          "tests",
+          "scripts"
         ]
       }
     },
@@ -44,7 +45,7 @@
       ],
       "options": {
         "command": "poetry run pytest tests/",
-        "cwd": "apps/m4i-atlas-post-install"
+        "cwd": "backend/m4i-atlas-post-install"
       }
     },
     "docker-build": {
