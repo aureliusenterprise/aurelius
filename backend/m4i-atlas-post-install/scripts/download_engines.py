@@ -36,6 +36,7 @@ def main():
         documents = get_all_documents(app_search_client, engine["name"])
         with open(args.target_dir / f"{engine['name']}.json", "w") as json_file:
             json.dump(documents, json_file, indent=4)
+        print(f"{engine['name']} downloaded")
 
 
 if __name__ == "__main__":
