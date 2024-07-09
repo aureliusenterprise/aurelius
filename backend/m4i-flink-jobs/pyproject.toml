@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "m4i-flink-jobs"
+version = "1.0.0"
+description = "Flink jobs for Aurelius Atlas"
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+license = 'UNLICENSED'
+readme = 'README.md'
+
+[[tool.poetry.packages]]
+include = "m4i_flink_jobs"
+
+[tool.poetry.dependencies]
+python = "~3.8"
+apache-flink = "~1.17"
+elasticsearch = "~8.9"
+elastic-transport = "8.13.1"
+python-keycloak = "0.18.0"
+
+[tool.poetry.dependencies.m4i-publish-state]
+path = "../m4i-publish-state"
+develop = true
+
+[tool.poetry.dependencies.m4i-synchronize-app-search]
+path = "../m4i-synchronize-app-search"
+develop = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
