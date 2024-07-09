@@ -41,6 +41,4 @@ if __name__ == "__main__":
     jars_root = Path(__file__).parent / "jars"
     jars_path = [path.absolute().as_uri() for path in jars_root.glob("*.jar")]
 
-    print(jars_path)
-
     main(config, jars_path)
