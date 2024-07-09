@@ -12,7 +12,7 @@ from m4i_flink_tasks import (
     SynchronizeAppSearch,
 )
 from m4i_flink_tasks.operations.publish_state.operations import GetPreviousEntity
-from pyflink.common import Types
+from pyflink.common import Configuration, Types
 from pyflink.common.serialization import SimpleStringSchema
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.datastream.connectors.kafka import (
@@ -80,7 +80,12 @@ class SynchronizeAppSearchConfig(TypedDict):
 
 def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
     """Sink an example message into a Kafka topic."""
-    env = StreamExecutionEnvironment.get_execution_environment()
+
+    env_config = Configuration()  # type: ignore
+    env_config.set_string("restart-strategy.type", "fixed-delay")
+    env_config.set_integer("restart-strategy.attempts", 999)
+
+    env = StreamExecutionEnvironment.get_execution_environment(env_config)
 
     env.set_parallelism(1)
     env.add_jars(*jars_path)
