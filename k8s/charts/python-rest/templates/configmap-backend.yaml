@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: python-rest-configs-m4i-backend-config
+data:
+  m4i_backend_config.py: |
+    AUTH_ISSUER = "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/realms/m4i"
+    AUTH_PUBLIC_KEY = '-----BEGIN PUBLIC KEY-----\n' \
+                      'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgxjFy7eKHkhV2IP3LOcgUhQOm3KFn/yKiQQj+hZJmqqDgvArlFDMkc3mdJmcec0BCAz45x17ZhJU6leHX1dFR272COIQHvga+8d6p5joTzc063Zi/Wkt+jb5Q4cQNpR1yGdQX0U6eYck5uWpYxK740HRYF+HRB6Uh9hZqkGWF6cKFs3XLwWUS/bbUrLSLzjXTDD2TxdjlnPXqluO26f0hTJkjL/BNC8QSrMBTqOqGAUgU71fVkUolwGkvCsOl0ZcEAZnhIXKYfvODTkI8hj8UVNQH4AECO4QhpoXwHDJl6t5Lb+Tr0d3aHind3GhmJQAyQ+QMGEtdsK5kPkXsPIu6wIDAQAB' \
+                      '\n-----END PUBLIC KEY-----'

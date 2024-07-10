@@ -1,0 +1,3 @@
+
+ProxyPass "/{{ .Release.Namespace }}/atlas2/" "http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/"
+ProxyPassReverse "/{{ .Release.Namespace }}/atlas2/" "http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/"
