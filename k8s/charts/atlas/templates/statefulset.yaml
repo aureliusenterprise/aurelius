@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "atlas.fullname" . }}
+  labels:
+    {{- include "atlas.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "atlas.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "atlas.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "atlas.selectorLabels" . | nindent 8 }}
+    spec:
+      hostname: atlas
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.repository }}:{{ .Values.tag }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+              name: atlas
+            - containerPort: {{ .Values.service.internalPort_kafka }}
+              name: kafkatopic
+          env:
+            - name: ATLAS_EXTERNAL_URL
+              value: "http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/api/atlas"
+            - name: KEYCLOAK_SERVER_URL
+              value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/"
+            {{- if .Values.env }}
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value }} 
+            {{- end }}
+            {{- end }}
+            - name: KEYCLOAK_ATLAS_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-admin
+                  key: password
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.internalPort }}
+              scheme: HTTP
+            initialDelaySeconds: 120
+            periodSeconds: 60
+            timeoutSeconds: 10
+          command: [
+              "/bin/bash",
+              "-c",
+              "apt update && apt install lsof -y && /opt/apache-atlas-2.2.0/bin/startup.sh"
+          ]
+          volumeMounts:
+            - name: atlas-application-properties--volume
+              mountPath: /opt/apache-atlas-2.2.0/conf/atlas-application.properties
+              subPath: atlas-application.properties
+            - name: users-credentials-properties--volume
+              mountPath: /opt/apache-atlas-2.2.0/conf/users-credentials.properties
+              subPath: users-credentials.properties
+            - name: atlas-simple-authz-policy--volume
+              mountPath: /opt/apache-atlas-2.2.0/conf/atlas-simple-authz-policy.json
+              subPath: atlas-simple-authz-policy.json
+            - name: keycloak-conf--volume
+              mountPath: /opt/apache-atlas-2.2.0/conf/keycloak-conf.json
+              subPath: keycloak-conf.json
+            {{- if .Values.persistence.enabled }}
+            - name: data
+              mountPath: /opt/apache-atlas-2.2.0/data
+              subPath: data
+            {{- end }}
+      volumes:
+        - name: atlas-application-properties--volume
+          configMap:
+            name: atlas-application-properties-configmap
+        - name: users-credentials-properties--volume
+          configMap:
+            name: users-credentials-properties-configmap
+        - name: atlas-simple-authz-policy--volume
+          configMap:
+            name: atlas-simple-authz-policy-configmap
+        - name: keycloak-conf--volume
+          configMap:
+            name: keycloak-conf-configmap
+{{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - {{ .Values.persistence.accessMode | quote }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size | quote }}
+      {{- if .Values.persistence.storageClass }}
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: "{{ .Values.persistence.storageClass }}"
+        {{- end }}
+      {{- end }}
+{{- end }}
