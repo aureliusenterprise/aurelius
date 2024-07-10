@@ -28,9 +28,9 @@ UPLOAD_DATA = os.getenv("UPLOAD_DATA", False)
 
 
 ENGINES_TO_UPLOAD = {
-    "atlas-dev-quality": Path("../data/atlas-dev-quality.json"),
-    "atlas-dev-gov-quality": Path("../data/atlas-dev-gov-quality.json"),
-    "atlas-dev": Path("../data/atlas-dev.json"),
+    "atlas-dev-quality": Path(__file__).parent / "../data/atlas-dev-quality.json",
+    "atlas-dev-gov-quality":Path(__file__).parent / "../data/atlas-dev-gov-quality.json",
+    "atlas-dev": Path(__file__).parent / "../data/atlas-dev.json",
 }
 
 
