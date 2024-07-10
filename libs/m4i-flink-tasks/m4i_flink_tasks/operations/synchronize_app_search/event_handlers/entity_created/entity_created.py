@@ -28,6 +28,41 @@ RELATIONSHIP_MAP = {
 
 RELATIONSHIP_BLACKLIST = ["m4i_data_quality", "m4i_gov_data_quality", "m4i_source"]
 
+TECHNICAL_TYPES = {
+    "m4i_system",
+    "m4i_collection",
+    "m4i_dataset",
+    "m4i_field"
+}
+
+BUSINESS_TYPES = {
+    "m4i_data_domain",
+    "m4i_data_entity",
+    "m4i_data_attribute",
+}
+
+
+def determine_sourcetype(typename):
+    """
+    Determine whether an entity is technical or business
+
+    Parameters
+    ----------
+    typename : str
+        The type of the entity.
+
+    Returns
+    -------
+    List[str]
+        List of one item, containing Technical or Business.
+    """
+    if typename in TECHNICAL_TYPES:
+        return ["Technical"]
+    elif typename in BUSINESS_TYPES:
+        return ["Business"]
+    else:
+        return []
+
 
 class EntityDataNotProvidedError(SynchronizeAppSearchError):
     """Exception raised when the entity details are not provided in the message."""
@@ -85,6 +120,7 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
         supertypenames=[entity_details.type_name],
         typename=entity_details.type_name,
         definition=definition,
+        sourcetype=determine_sourcetype(entity_details.type_name)
     )
     # Add document to created documents
     updated_documents[document.guid] = document
