@@ -20,14 +20,8 @@ import { SearchService } from '../../../../services/search/search.service';
   templateUrl: 'model-explorer-data-governance.component.html',
   styleUrls: ['model-explorer-data-governance.component.scss'],
   providers: [
-    SearchService,
     { provide: AppSearchResultsService, useClass: EntitySearchResultsService },
     ElementSearchService,
-    AppSearchResultService,
-    {
-      provide: $APP_SEARCH_DOCUMENT_PROVIDER,
-      useExisting: AppSearchResultService,
-    },
   ],
 })
 export class ModelExplorerDataGovernanceComponent implements OnDestroy {
