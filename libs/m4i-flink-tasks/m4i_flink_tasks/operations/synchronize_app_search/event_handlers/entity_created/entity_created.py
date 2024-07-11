@@ -1,5 +1,5 @@
 import logging
-from typing import TYPE_CHECKING, Dict
+from typing import List, TYPE_CHECKING, Dict
 
 from elasticsearch import Elasticsearch
 
@@ -42,7 +42,7 @@ BUSINESS_TYPES = {
 }
 
 
-def determine_sourcetype(typename):
+def determine_sourcetype(typename) -> List[str]:
     """
     Determine whether an entity is technical or business
 
