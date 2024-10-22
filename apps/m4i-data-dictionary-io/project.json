@@ -1,0 +1,62 @@
+{
+    "name": "m4i-data-dictionary-io",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "application",
+    "sourceRoot": "apps/m4i-data-dictionary-io/m4i_data_dictionary_io",
+    "tags": [],
+    "targets": {
+        "add": {
+            "executor": "@nxlv/python:add",
+            "options": {}
+        },
+        "update": {
+            "executor": "@nxlv/python:update",
+            "options": {}
+        },
+        "remove": {
+            "executor": "@nxlv/python:remove",
+            "options": {}
+        },
+        "build": {
+            "executor": "@nxlv/python:build",
+            "outputs": [
+                "{projectRoot}/dist"
+            ],
+            "options": {
+                "outputPath": "{workspaceRoot}/dist/apps/m4i-data-dictionary-io",
+                "publish": false,
+                "lockedVersions": false,
+                "bundleLocalDependencies": true
+            }
+        },
+        "lint": {
+            "executor": "@nxlv/python:ruff-check",
+            "outputs": [],
+            "options": {
+                "lintFilePatterns": [
+                    "m4i_atlas_post_install",
+                    "tests",
+                    "scripts"
+                ]
+            }
+        },
+        "serve": {
+            "executor": "@nxlv/python:run-commands",
+            "options": {
+                "command": "poetry run python -m m4i_data_dictionary_io",
+                "cwd": "apps/m4i-data-dictionary-io"
+            }
+        },
+        "test": {
+            "executor": "@nxlv/python:run-commands",
+            "outputs": [
+                "{workspaceRoot}/reports/apps/m4i-data-dictionary-io/unittests",
+                "{workspaceRoot}/coverage/apps/m4i-data-dictionary-io"
+            ],
+            "options": {
+                "command": "poetry run pytest tests/",
+                "cwd": "apps/m4i-data-dictionary-io"
+            }
+        }
+    }
+}
