@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "m4i-data-dictionary-io"
+version = "1.0.0"
+description = "App for importing data dictionaries into Aurelius Atlas"
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+license = 'UNLICENSED'
+readme = 'README.md'
+
+[[tool.poetry.packages]]
+include = "m4i_data_dictionary_io"
+
+[tool.poetry.dependencies]
+python = "~3.8"
+dataclasses-json = "~0.6"
+pandas = "1.3.0"
+
+[tool.poetry.dependencies.m4i-atlas-core]
+path = "../../libs/m4i-atlas-core"
+develop = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

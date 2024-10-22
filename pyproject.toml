@@ -27,6 +27,10 @@ develop = true
 path = "backend/m4i-consistency-metrics"
 develop = true
 
+[tool.poetry.dependencies.m4i-data-dictionary-io]
+path = "apps/m4i-data-dictionary-io"
+develop = true
+
 [tool.poetry.dependencies.m4i-flink-tasks]
 path = "libs/m4i-flink-tasks"
 develop = true
