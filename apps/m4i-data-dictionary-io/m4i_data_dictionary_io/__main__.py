@@ -12,7 +12,7 @@ config = {
     "atlas.credentials.password": os.getenv("ATLAS_PASSWORD"),
     "atlas.server.url": os.getenv("ATLAS_SERVER_URL"),
     "data.dictionary.path": os.getenv("DATA_DICTIONARY_PATH"),
-    "validate_qualified_name": os.getenv("VALIDATE_QUALIFIED_NAME", "True"),
+    "validate_qualified_name": os.getenv("VALIDATE_QUALIFIED_NAME", True),
 }
 
 store = ConfigStore.get_instance()
