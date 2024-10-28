@@ -10,3 +10,4 @@ from .person import *
 from .system import *
 from .source import *
 from .ToAtlasConvertible import *
+from .process import *

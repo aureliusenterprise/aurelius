@@ -9,7 +9,7 @@ from .ExcelParserConfig import *
 from .persons import *
 from .systems import *
 from .source import *
-
+from .processes import *
 
 excel_parser_configs = (
     persons_parser_config,
@@ -20,6 +20,6 @@ excel_parser_configs = (
     data_entities_parser_config,
     data_attributes_parser_config,
     data_fields_parser_config,
-    data_qualities_parser_config
-
+    data_qualities_parser_config,
+    process_parser_config
 )
