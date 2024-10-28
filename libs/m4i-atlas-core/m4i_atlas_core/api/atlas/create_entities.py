@@ -8,7 +8,7 @@ PATH = "v2/entity/bulk"
 
 async def create_entities(*entities: Entity, referred_entities: Optional[Dict[str, Entity]] = None, access_token: Optional[str] = None):
     """
-    Bulk API to create new entities or updates existing entities in Atlas. 
+    Bulk API to create new entities or updates existing entities in Atlas.
 
     Existing entities are matched using their unique `guid` if supplied or by their unique attributes (e.g. `qualifiedName`).
     """

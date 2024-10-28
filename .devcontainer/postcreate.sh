@@ -36,27 +36,10 @@ sudo chmod -R 777 /opt/flink/log
 sudo chown -R $(whoami) /opt/flink/log
 # Init dependencies
 cd backend/m4i-atlas-post-install/scripts
-pip install elastic_enterprise_search elasticsearch dictdiffer urlpath
 
 # Init Elastic and Atlas
 python init_app_search_engines.py
 python init_atlas_types.py
-
-if [[ "$UPLOAD_DATA" == "true" ]]
-then
-    upload_to_atlas
-fi
-
-# Start jobs
-pushd /workspace/backend/m4i-flink-jobs/m4i_flink_jobs/
-/opt/flink/bin/flink run -d -py synchronize_app_search.py
-/opt/flink/bin/flink run -d -py publish_state.py
-popd
-
-if [[ "$UPLOAD_DATA" == "test-jobs" ]]
-then
-    upload_to_atlas
-fi
 
 # Set elasticsearch token in enviroment.ts of the Angular app
 echo "Setting appSearchToken in Atlas"

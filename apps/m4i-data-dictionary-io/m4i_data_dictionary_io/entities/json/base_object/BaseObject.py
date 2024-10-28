@@ -22,7 +22,7 @@ class BaseObject(DataClassJsonMixin):
 
     def validate_qualified_name(self):
         """
-        Validates the current qualified name value. 
+        Validates the current qualified name value.
         If the value is not valid, raises a `QualifiedNameNotValidException`.
         """
 
@@ -37,7 +37,7 @@ class BaseObject(DataClassJsonMixin):
 
     def _qualified_name(self) -> str:
         """
-        Returns the qualified name of the object based on some other properties of the object. 
+        Returns the qualified name of the object based on some other properties of the object.
         This qualified name is used as a reference by the `validate_qualified_name` method.
         Should be implemented by inheriting classes.
         """

@@ -43,9 +43,8 @@
         "serve": {
             "executor": "@nxlv/python:run-commands",
             "options": {
-                "command": "poetry run python -m m4i_data_dictionary_io",
-                "cwd": "apps/m4i-data-dictionary-io"
-            }
+                "command": "poetry run python -m m4i_data_dictionary_io"
+          }
         },
         "test": {
             "executor": "@nxlv/python:run-commands",
