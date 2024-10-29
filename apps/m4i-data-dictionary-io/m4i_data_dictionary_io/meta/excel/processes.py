@@ -20,7 +20,6 @@ processes_parser_class = Process
 
 
 def process_transform(data: DataFrame):
-    print("> process_transform")
     data["source"] = get_file_details()['qualifiedName']
     return data
 
