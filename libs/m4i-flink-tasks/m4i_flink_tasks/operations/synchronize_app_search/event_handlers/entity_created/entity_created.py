@@ -42,7 +42,7 @@ BUSINESS_TYPES = {
 }
 
 
-def determine_sourcetype(typename) -> List[str]:
+def determine_sourcetype(typename) -> str:
     """
     Determine whether an entity is technical or business
 
@@ -57,11 +57,11 @@ def determine_sourcetype(typename) -> List[str]:
         List of one item, containing Technical or Business.
     """
     if typename in TECHNICAL_TYPES:
-        return ["Technical"]
+        return "Technical"
     elif typename in BUSINESS_TYPES:
-        return ["Business"]
+        return "Business"
     else:
-        return []
+        return ""
 
 
 class EntityDataNotProvidedError(SynchronizeAppSearchError):

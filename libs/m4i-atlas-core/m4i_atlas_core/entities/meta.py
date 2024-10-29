@@ -24,7 +24,7 @@ T = TypeVar('T', bound=Entity, covariant=True)
 
 def register_atlas_entity_type(type_name: str, entity_type: Type[Entity]):
     """
-    Registers the given `entity_type` under the given `type_name`. 
+    Registers the given `entity_type` under the given `type_name`.
 
     Registration makes the entity type available for the rest of the application as a plugin.
 
@@ -43,7 +43,7 @@ def register_atlas_entity_type(type_name: str, entity_type: Type[Entity]):
 
 def register_atlas_entity_types(type_mapping: Dict[str, Type[Entity]]):
     """
-    Registers every key-value pair in the given `type_mapping`. 
+    Registers every key-value pair in the given `type_mapping`.
 
     Registration makes the entity type available for the rest of the application as a plugin.
 

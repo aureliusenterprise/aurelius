@@ -6,6 +6,7 @@ from dataclasses_json import LetterCase, dataclass_json
 from ..core import (AttributeDef, Cardinality, Entity, EntityBase, EntityDef,
                     EntityDefaultsBase, ObjectId, RelationshipDef,
                     RelationshipEndDef, TypeCategory)
+from ..m4i.M4IAttributes import M4IAttributesBase
 
 generic_process_super_type = ["Process", "m4i_referenceable"]
 
@@ -67,8 +68,8 @@ m4i_system_process_rel_def = RelationshipDef(
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
-class GenericProcessAttributesBase():
-    pass
+class GenericProcessAttributesBase(M4IAttributesBase):
+    name: str
 # END GenericProcessAttributesBase
 
 
