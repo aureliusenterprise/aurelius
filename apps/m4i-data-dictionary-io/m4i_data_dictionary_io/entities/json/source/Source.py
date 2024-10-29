@@ -3,18 +3,15 @@ from typing import Optional
 
 from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
 
-from m4i_atlas_core import BusinessSource, BusinessSourceAttributes, M4IAttributes, ObjectId
+from m4i_atlas_core import BusinessSource, BusinessSourceAttributes
 from ..base_object import BaseObject
 from ..ToAtlasConvertible import ToAtlasConvertible
-from ..utils import get_qualified_name
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class SourceBase(BaseObject):
     name: str
-
-
 # END SourceBase
 
 
@@ -23,9 +20,6 @@ class SourceBase(BaseObject):
 class SourceDefaultsBase(DataClassJsonMixin):
     hash_code: Optional[str] = None
     branch: Optional[str] = None
-    # change_log: Optional[str] = None
-
-
 # END SourceDefaultsBase
 
 
@@ -40,24 +34,9 @@ class Source(
         """
         Returns a corresponding Atlas `BusinessSource` instance.
         """
-        # change_logs=[]
-        # if bool(self.change_log):
-        #     unique_attributes = M4IAttributes(
-        #         qualified_name=self.change_log
-        #     )
-        #
-        #     change_log = ObjectId(
-        #         type_name="m4i_referenceable",
-        #         unique_attributes=unique_attributes
-        #     )
-        #     change_logs = [change_log]
-        # # END IF
 
         attributes = BusinessSourceAttributes(
             name=self.name,
-            hash_code=self.hash_code,
-            # change_log=change_logs,
-            branch=self.branch,
             qualified_name=self._qualified_name(),
         )
 
@@ -70,8 +49,8 @@ class Source(
     # END convert_to_atlas
     def _qualified_name(self):
         """
-        Returns the qualified name of the entity based on its `name`, `GIT branch`, and its `GIT hashcode`
+        Returns the qualified name of the entity based on its `name`.
         """
-        return f"{self.name}@{self.branch}@{self.hash_code}"
+        return self.name
     # END _qualified_name
 # END Source
