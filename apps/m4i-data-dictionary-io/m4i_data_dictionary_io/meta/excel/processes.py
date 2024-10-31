@@ -11,7 +11,7 @@ processes_column_mapping = {
     "Output 2": "output_2",
     "Process Name": "name",
     "Process Qualified Name": "qualifiedName",
-    "System Name": "system",
+    "System Intermediate Qualified Name": "system",
     "Process Owner": "processOwner"
 }
 
