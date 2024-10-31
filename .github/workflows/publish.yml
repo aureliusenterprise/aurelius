@@ -31,6 +31,12 @@ jobs:
         run: npx nx report
         shell: bash
 
+      - name: Setup Python, Poetry and Dependencies
+        uses: packetcoders/action-setup-cache-python-poetry@main
+        with:
+          python-version: 3.8
+          poetry-version: 1.8.4
+
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
