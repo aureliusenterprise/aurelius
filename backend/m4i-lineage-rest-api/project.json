@@ -18,9 +18,11 @@
     },
     "build": {
       "executor": "@nxlv/python:build",
-      "outputs": ["{projectRoot}/dist"],
+      "outputs": [
+        "{workspaceRoot}/dist/backend/m4i-lineage-rest-api"
+      ],
       "options": {
-        "outputPath": "backend/m4i-lineage-rest-api/dist",
+        "outputPath": "{workspaceRoot}/dist/backend/m4i-lineage-rest-api",
         "publish": false,
         "lockedVersions": true,
         "bundleLocalDependencies": true
