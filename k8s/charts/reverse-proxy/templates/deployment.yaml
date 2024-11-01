@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "reverse-proxy.fullname" . }}
+  labels:
+    {{- include "reverse-proxy.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "reverse-proxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "reverse-proxy.selectorLabels" . | nindent 8 }}
+    spec:
+      hostname: reverse-proxy
+      subdomain: atlas
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers: # sidecar container to wait for a service to be completed.
+        - name: wait-for-app-search-service
+          image: darthcabs/tiny-tools:1
+          env:
+            - name: ENTERPRISE_SEARCH_INTERNAL_URL
+              value: {{ tpl .Values.enterprise_search_internal_url . }}
+          args:
+          - /bin/bash
+          - -c
+          - >
+            set -x;
+            while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' curl \
+                          -X GET "${ENTERPRISE_SEARCH_INTERNAL_URL}api/as/v1/credentials/search-key" \
+                          -H 'Content-Type: application/json' --insecure | tail -c 3)" != "401" ]]; do 
+              echo '.'
+              sleep 15;
+            done
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.repository }}:{{ .Values.tag }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          # command:
+          #   - "/usr/local/apache2/init/init_index_html.sh"
+          # cpu: 1000
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/usr/local/apache2/init/init_index_html.sh" ]
+          env:
+            - name: NAMESPACE
+              value: "{{ .Release.Namespace }}"
+            - name: ENTERPRISE_SEARCH_INTERNAL_URL
+              value: {{ tpl .Values.enterprise_search_internal_url . }}
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: elastic-search-es-elastic-user
+                  key: elastic
+            {{- if .Values.env }}
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{  $value  | quote }}
+            {{- end }}
+            {{- end }}
+          volumeMounts:
+          - name: v-reverse-proxy-configs-auth-conf
+            mountPath: /usr/local/apache2/conf.d/auth.conf
+            subPath: auth.conf
+          - name: v-reverse-proxy-configs-atlas-conf
+            mountPath: /usr/local/apache2/conf.d/atlas.conf
+            subPath: atlas.conf
+          - name: v-reverse-proxy-configs-namespace-conf
+            mountPath: /usr/local/apache2/conf.d/namespace.conf
+            subPath: namespace.conf
+          - name: v-reverse-proxy-configs-atlas2-conf
+            mountPath: /usr/local/apache2/conf.d/atlas2.conf
+            subPath: atlas2.conf
+          - name: v-reverse-proxy-configs-flink-conf
+            mountPath: /usr/local/apache2/conf.d/flink.conf
+            subPath: flink.conf
+          - name: v-reverse-proxy-configs-kafka-connect-conf
+            mountPath: /usr/local/apache2/conf.d/kafka-connect.conf
+            subPath: kafka-connect.conf
+          - name: v-reverse-proxy-configs-kafka-ui-conf
+            mountPath: /usr/local/apache2/conf.d/kafka-ui.conf
+            subPath: kafka-ui.conf
+          - name: v-reverse-proxy-configs-elastic-conf
+            mountPath: /usr/local/apache2/conf.d/elastic.conf
+            subPath: elastic.conf
+      volumes:
+        - name: v-reverse-proxy-configs-auth-conf
+          configMap:
+            name: cm-reverse-proxy-configs-auth-conf
+        - name: v-reverse-proxy-configs-atlas-conf
+          configMap:
+            name: cm-reverse-proxy-configs-atlas-conf
+        - name: v-reverse-proxy-configs-namespace-conf
+          configMap:
+            name: cm-reverse-proxy-configs-namespace-conf
+        - name: v-reverse-proxy-configs-atlas2-conf
+          configMap:
+            name: cm-reverse-proxy-configs-atlas2-conf
+        - name: v-reverse-proxy-configs-flink-conf
+          configMap:
+            name: cm-reverse-proxy-configs-flink-conf
+        - name: v-reverse-proxy-configs-kafka-connect-conf
+          configMap:
+            name: cm-reverse-proxy-configs-kafka-connect-conf
+        - name: v-reverse-proxy-configs-kafka-ui-conf
+          configMap:
+            name: cm-reverse-proxy-configs-kafka-ui-conf
+        - name: v-reverse-proxy-configs-elastic-conf
+          configMap:
+            name: cm-reverse-proxy-configs-elastic-conf

@@ -1,0 +1,29 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: {{ .Values.elastic_search.name }}
+spec:
+  version: {{ .Values.elastic_search.version }}
+  nodeSets:
+  - name: default
+    count: {{ .Values.elastic_search.replicaCount }}
+    config:
+      node.store.allow_mmap: false
+    {{- if .Values.elastic_search.persistence.enabled }}
+    volumeClaimTemplates:
+      - metadata:
+          name: elasticsearch-data # Do not change this name unless you set up a volume mount for the data path.
+        spec:
+          accessModes:
+            - {{ .Values.elastic_search.persistence.accessMode | quote }}
+          resources:
+            requests:
+              storage: {{ .Values.elastic_search.persistence.size | quote }}
+        {{- if .Values.elastic_search.persistence.storageClass }}
+        {{- if (eq "-" .Values.elastic_search.persistence.storageClass) }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ .Values.elastic_search.persistence.storageClass | quote }}
+        {{- end }}
+        {{- end }}
+    {{- end }}

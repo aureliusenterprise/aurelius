@@ -1,0 +1,84 @@
+atlas.graph.storage.backend=hbase2
+atlas.graph.storage.hbase.table=apache_atlas_janus
+atlas.graph.storage.hostname=localhost
+atlas.graph.storage.hbase.regions-per-server=1
+
+atlas.DeleteHandlerV1.impl=org.apache.atlas.repository.store.graph.v1.HardDeleteHandlerV1
+
+atlas.EntityAuditRepository.impl=org.apache.atlas.repository.audit.HBaseBasedAuditRepository
+
+atlas.graph.index.search.backend=solr
+atlas.graph.index.search.solr.mode=cloud
+atlas.graph.index.search.solr.zookeeper-url=localhost:2181
+atlas.graph.index.search.solr.zookeeper-connect-timeout=60000
+atlas.graph.index.search.solr.zookeeper-session-timeout=60000
+atlas.graph.index.search.solr.wait-searcher=true
+# atlas.graph.index.search.backend=elasticsearch
+# atlas.graph.index.search.hostname=elastic-search-es-http.{{ .Release.Namespace }}.svc.cluster.local:9200
+# atlas.graph.index.search.elasticsearch.client-only=true
+
+atlas.graph.index.search.max-result-set-size=150
+
+atlas.notification.embedded=false
+#atlas.kafka.data=${sys:atlas.home}/data/kafka
+#atlas.kafka.zookeeper.connect=localhost:9026
+atlas.kafka.zookeeper.connect=zookeeper.{{ .Release.Namespace }}.svc.cluster.local:2181
+#atlas.kafka.bootstrap.servers=localhost:9027
+atlas.kafka.bootstrap.servers=kafka.{{ .Release.Namespace }}.svc.cluster.local:9092
+atlas.kafka.zookeeper.session.timeout.ms=400
+atlas.kafka.zookeeper.connection.timeout.ms=200
+atlas.kafka.zookeeper.sync.time.ms=20
+atlas.kafka.auto.commit.interval.ms=1000
+atlas.kafka.hook.group.id=atlas
+
+atlas.kafka.enable.auto.commit=false
+atlas.kafka.auto.offset.reset=earliest
+atlas.kafka.session.timeout.ms=30000
+atlas.kafka.offsets.topic.replication.factor=1
+atlas.kafka.poll.timeout.ms=1000
+
+atlas.notification.create.topics=true
+atlas.notification.replicas=1
+atlas.notification.topics=ATLAS_HOOK,ATLAS_ENTITIES
+atlas.notification.log.failed.messages=true
+atlas.notification.consumer.retry.interval=500
+atlas.notification.hook.retry.interval=1000
+atlas.entity.change.notify.ignore.relationship.attributes=false
+atlas.notification.relationships.enabled=true
+
+
+atlas.enableTLS=false
+
+atlas.authentication.method.kerberos=false
+atlas.authentication.method.file=false
+
+atlas.authentication.method.ldap.type=none
+atlas.authentication.method.file.filename=${sys:atlas.home}/conf/users-credentials.properties
+
+atlas.rest.address=http//0.0.0.0:21000
+
+atlas.audit.hbase.tablename=apache_atlas_entity_audit
+atlas.audit.zookeeper.session.timeout.ms=1000
+atlas.audit.hbase.zookeeper.quorum=localhost:2181
+
+atlas.server.ha.enabled=false
+atlas.authorizer.impl=simple
+atlas.authorizer.simple.authz.policy.file=atlas-simple-authz-policy.json
+atlas.rest-csrf.enabled=false
+atlas.rest-csrf.browser-useragents-regex=^Mozilla.*,^Opera.*,^Chrome.*
+atlas.rest-csrf.methods-to-ignore=GET,OPTIONS,HEAD,TRACE
+atlas.rest-csrf.custom-header=X-XSRF-HEADER
+
+atlas.metric.query.cache.ttlInSecs=900
+
+atlas.search.gremlin.enable=true
+
+atlas.authentication.method.keycloak=true
+atlas.authentication.method.keycloak.file=/opt/apache-atlas-2.2.0/conf/keycloak-conf.json
+atlas.authentication.method.keycloak.ugi-groups=false
+atlas.authentication.method.keycloak.groups_claim=claims
+
+# Performance configuration items
+
+# The number of times Atlas code tries to acquire a lock (to ensure consistency) while committing a transaction.
+atlas.graph.storage.lock.retries=10

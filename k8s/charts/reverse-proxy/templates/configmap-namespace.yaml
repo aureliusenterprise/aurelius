@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-reverse-proxy-configs-namespace-conf
+data:
+  namespace.conf: |
+{{ tpl ( .Files.Get "conf.d/namespace.yaml" ) . | indent 4}}

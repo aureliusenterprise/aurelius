@@ -1,0 +1,20 @@
+
+OIDCProviderMetadataURL https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/realms/m4i/.well-known/openid-configuration
+OIDCRedirectURI https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/flink/index.html
+OIDCCryptoPassphrase 144f9e52-1d14-498d-9f1f-8dae0e50e579
+OIDCClientID m4i_flink
+# get secrtet from https://aureliusdev.westeurope.cloudapp.azure.com/anwo/auth/admin/realms/m4i/clients/a7bcc3d1-40e5-4119-99b8-2ae9bb4976d3/installation/providers/keycloak-oidc-keycloak-json
+OIDCClientSecret 144f9e52-1d14-498d-9f1f-8dae0e50e579
+## See https://github.com/Reposoft/openidc-keycloak-test/issues/7
+OIDCProviderTokenEndpointAuth client_secret_basic
+#OIDCRemoteUserClaim email
+OIDCScope "openid email"
+#OIDCXForwardedHeaders X-Forwarded-Host
+
+<Location /{{ .Release.Namespace }}/flink/>
+  AuthType openid-connect
+  Require claim roles~^(.*)ROLE_ADMIN(.*)$
+</Location>
+
+ProxyPass "/{{ .Release.Namespace }}/flink/" "http://flink-jobmanager.{{ .Release.Namespace }}.svc.cluster.local:8081/"
+ProxyPassReverse "/{{ .Release.Namespace }}/flink/" "http://flink-jobmanager.{{ .Release.Namespace }}.svc.cluster.local:8081/"

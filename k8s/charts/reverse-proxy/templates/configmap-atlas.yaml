@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-reverse-proxy-configs-atlas-conf
+data:
+  atlas.conf: |
+{{ tpl ( .Files.Get "conf.d/atlas.yaml" ) . | indent 4}}

@@ -1,0 +1,18 @@
+#apiVersion: cert-manager.io/v1
+#kind: Certificate
+#metadata:
+#  name: cert-aureliusdev
+#  namespace: cert-manager
+#spec:
+#  secretName: letsencrypt-secret-aureliusdev
+#  issuerRef:
+#    name: letsencrypt-clusterissuer-aureliusdev
+#    kind: ClusterIssuer
+#  dnsNames:
+#  - {{ .Values.global.external_hostname }}
+#  secretTemplate:
+#    annotations:
+#      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+#      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: ""
+#      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+#      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: ""
