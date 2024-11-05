@@ -7,6 +7,7 @@ from m4i_atlas_core import (ConfigStore, register_atlas_entity_types, get_keyclo
                             )
 
 from m4i_data_dictionary_io import (create_from_excel, excel_parser_configs)
+from m4i_data_dictionary_io.sources.kafka.create_from_kafka import create_from_kafka
 
 config = {
     "atlas.server.url": os.getenv("ATLAS_SERVER_URL"),
@@ -18,6 +19,10 @@ config = {
     "keycloak.server.url": os.environ.get("KEYCLOAK_SERVER_URL"),
     "data.dictionary.path": os.getenv("DATA_DICTIONARY_PATH"),
     "validate_qualified_name": os.getenv("VALIDATE_QUALIFIED_NAME", False),
+    "source": os.getenv("SOURCE", "excel"),
+    "bootstrap_servers": os.getenv("BOOTSTRAP_SERVERS", "localhost:9092"),
+    "schema_registry_url": os.getenv("SCHEMA_REGISTRY_URL"),
+    "consumer_group_id_prefix": os.getenv("CONSUMER_GROUP_ID_PREFIX", 'check-format-group'),
 }
 
 store = ConfigStore.get_instance()
@@ -41,4 +46,10 @@ atlas_entity_types = {
 
 register_atlas_entity_types(atlas_entity_types)
 
-asyncio.run(create_from_excel(*excel_parser_configs, access_token=access_token))
+
+read_mode = store.get("source", default=True)
+
+if read_mode == "excel":
+  asyncio.run(create_from_excel(*excel_parser_configs, access_token=access_token))
+elif read_mode == "kafka":
+  asyncio.run(create_from_kafka(access_token=access_token))

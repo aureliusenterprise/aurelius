@@ -7,8 +7,12 @@ from . import get_file_details
 processes_column_mapping = {
     "Input 1": "input_1",
     "Input 2": "input_2",
+    "Input 3": "input_3",
+    "Input 4": "input_4",
     "Output 1": "output_1",
     "Output 2": "output_2",
+    "Output 3": "output_3",
+    "Output 4": "output_4",
     "Process Name": "name",
     "Process Qualified Name": "qualifiedName",
     "System Intermediate Qualified Name": "system",
