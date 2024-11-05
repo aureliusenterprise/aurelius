@@ -32,8 +32,12 @@ class ProcessDefaultsBase(DataClassJsonMixin):
     source: Optional[str] = None
     input_1: Optional[str] = None
     input_2: Optional[str] = None
+    input_3: Optional[str] = None
+    input_4: Optional[str] = None
     output_1: Optional[str] = None
     output_2: Optional[str] = None
+    output_3: Optional[str] = None
+    output_4: Optional[str] = None
     system: Optional[str] = None
     process_owner: Optional[str] = None
 
@@ -82,17 +86,17 @@ class Process(
               type_name="m4i_dataset",
               unique_attributes=M4IAttributes(qualified_name=input_name)
             )
-            for input_name in (self.input_1, self.input_2) if input_name
+            for input_name in (self.input_1, self.input_2, self.input_3, self.input_4) if input_name
           ]
         # END IF
 
         if bool(self.output_1) or bool(self.output_2):
-          attributes.inputs = [
+          attributes.outputs = [
             ObjectId(
               type_name="m4i_dataset",
               unique_attributes=M4IAttributes(qualified_name=output_name)
             )
-            for output_name in (self.output_1, self.output_2) if output_name
+            for output_name in (self.output_1, self.output_2, self.output_3, self.output_4) if output_name
           ]
         # END IF
 
