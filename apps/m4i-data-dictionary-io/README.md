@@ -38,6 +38,10 @@ The following environment variables can be set to configure the behavior of the 
 | `SCHEMA_REGISTRY_URL` | False | The URL of the schema registry. Used when reading metadata from Kafka to manage schemas. |
 | `BOOTSTRAP_SERVERS` | False False | The Kafka bootstrap servers to connect to, formatted as a comma-separated list of host |
 | `CONSUMER_GROUP_ID_PREFIX`| False | A prefix for the consumer group ID used when reading from Kafka, allowing logical grouping of consumers. |
+| `SYSTEM_NAME`                  | False    | The name of the system. Defaults to "Kafka Broker" if not provided. |
+| `SYSTEM_QUALIFIED_NAME`        | False    | The qualified name of the system. Defaults to "kafka-broker" if not provided. |
+| `COLLECTION_NAME`              | False    | The name of the collection. Defaults to "Default Cluster" if not provided. |
+| `COLLECTION_QUALIFIED_NAME`    | False    | The qualified name of the collection. Defaults to "kafka-broker--default-cluster" if not provided. |
 
 ## Testing
 

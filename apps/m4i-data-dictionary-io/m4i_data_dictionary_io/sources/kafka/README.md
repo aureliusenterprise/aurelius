@@ -11,7 +11,6 @@ graph LR
     A["System: Kafka Broker"] --> B["Collection: Default Cluster (ID)"]
     B --> C["Dataset: Kafka Topic"]
     C --> D["Field: Message Keys"]
-    E["Business Data Attribtue"] --> D
 ```
 
 - **System** - Kafka Broker: 
@@ -29,7 +28,3 @@ graph LR
 - **Field** - Message keys
 
   This refers to the keys associated with the messages in a topic. 
-
-- **Business Data Attribtue**
-
-  This represents the business meaning of the datafield.
