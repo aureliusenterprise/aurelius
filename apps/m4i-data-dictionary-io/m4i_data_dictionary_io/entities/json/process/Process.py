@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from typing import List, Optional
 
 from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
 from m4i_atlas_core import ObjectId, GenericProcess, GenericProcessAttributes
@@ -30,14 +30,8 @@ class ProcessBase(BaseObject):
 class ProcessDefaultsBase(DataClassJsonMixin):
     definition: Optional[str] = None
     source: Optional[str] = None
-    input_1: Optional[str] = None
-    input_2: Optional[str] = None
-    input_3: Optional[str] = None
-    input_4: Optional[str] = None
-    output_1: Optional[str] = None
-    output_2: Optional[str] = None
-    output_3: Optional[str] = None
-    output_4: Optional[str] = None
+    inputs: List[str] = field(default_factory=list)
+    outputs: List[str] = field(default_factory=list)
     system: Optional[str] = None
     process_owner: Optional[str] = None
 
@@ -80,23 +74,23 @@ class Process(
           ]
         # END IF
 
-        if bool(self.input_1) or bool(self.input_2):
+        if bool(self.inputs):
           attributes.inputs = [
             ObjectId(
               type_name="m4i_dataset",
               unique_attributes=M4IAttributes(qualified_name=input_name)
             )
-            for input_name in (self.input_1, self.input_2, self.input_3, self.input_4) if input_name
+            for input_name in self.inputs if input_name
           ]
         # END IF
 
-        if bool(self.output_1) or bool(self.output_2):
+        if bool(self.outputs):
           attributes.outputs = [
             ObjectId(
               type_name="m4i_dataset",
               unique_attributes=M4IAttributes(qualified_name=output_name)
             )
-            for output_name in (self.output_1, self.output_2, self.output_3, self.output_4) if output_name
+            for output_name in self.outputs if output_name
           ]
         # END IF
 

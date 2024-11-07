@@ -17,7 +17,7 @@ datasets_parser_class = Dataset
 
 def datasets_transform(data: DataFrame):
     data["collection"] = data["simpleSystem"] + "--" + data["simpleCollection"]
-    data["qualifiedName"] = data["simpleDataset"]
+    data["qualifiedName"] = data["collection"] + "--" + data["simpleDataset"]
     data = data.drop(columns=["simpleSystem", "simpleCollection", "simpleDataset"])
     data["source"] = get_file_details()['qualifiedName']
     return data.drop_duplicates()

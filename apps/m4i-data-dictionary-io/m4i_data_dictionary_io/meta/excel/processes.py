@@ -22,9 +22,26 @@ processes_column_mapping = {
 processes_sheet_name = "12. Process"
 processes_parser_class = Process
 
+def unpack_dataset_qualified_name(name):
+    """ Unpacks the dataset name into its components and reconstructs the qualified name. """
+    parts = name.split('--')
+    system = parts[0]
+    collection = parts[1]
+    return '--'.join([system, collection, name])
+
 
 def process_transform(data: DataFrame):
-    data["source"] = get_file_details()['qualifiedName']
+    data["inputs"] = data[["input_1", "input_2", "input_3", "input_4"]].apply(
+        lambda row: [unpack_dataset_qualified_name(val) for val in row if val != ""], axis=1
+    )
+    data["outputs"] = data[["output_1", "output_2", "output_3", "output_4"]].apply(
+        lambda row: [unpack_dataset_qualified_name(val) for val in row if val != ""], axis=1
+    )
+    data = data.drop(columns=[
+        "input_1", "input_2", "input_3", "input_4",
+        "output_1", "output_2", "output_3", "output_4"
+    ])
+    data["source"] = get_file_details()["qualifiedName"]
     return data
 
 
