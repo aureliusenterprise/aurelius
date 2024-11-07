@@ -1,6 +1,6 @@
 from typing import List
 from m4i_atlas_core.config.config_store import ConfigStore
-from m4i_data_dictionary_io.entities.json import Collection, DataAttribute, DataField, Dataset, Source, System
+from m4i_data_dictionary_io.entities.json import Collection, DataField, Dataset, Source, System
 from m4i_data_dictionary_io.functions.create_from_excel import get_ref_and_push
 from m4i_data_dictionary_io.entities.json import get_qualified_name
 from m4i_data_dictionary_io.sources.kafka.discover_cluster import discover_cluster
@@ -41,26 +41,20 @@ def process_topic(item, collection_qualified_name: str) -> List:
   }))
 
   for field in item["fields"]:
-    elements.extend(process_field(field, dataset_qualified_name))
+    elements.append(process_field(field, dataset_qualified_name))
 
   return elements
 
-def process_field(field, dataset_qualified_name) -> List:
+def process_field(field: str, dataset_qualified_name: str) -> DataField:
   qualified_name = get_qualified_name(field)
 
-  return [
-    DataAttribute.from_dict({
-      "name": field,
-      "qualifiedName": qualified_name,
-    }),
-    DataField.from_dict({
+  return DataField.from_dict({
       "name": field,
       "dataset": dataset_qualified_name,
       "qualifiedName": dataset_qualified_name + "--" + qualified_name,
       "fieldType": "numeric",
       "attribute": qualified_name
     })
-  ]
 
 async def create_from_kafka(access_token: str, store: ConfigStore):
 
