@@ -23,6 +23,10 @@ config = {
     "bootstrap_servers": os.getenv("BOOTSTRAP_SERVERS", "localhost:9092"),
     "schema_registry_url": os.getenv("SCHEMA_REGISTRY_URL"),
     "consumer_group_id_prefix": os.getenv("CONSUMER_GROUP_ID_PREFIX", 'check-format-group'),
+    "system.name": os.getenv("SYSTEM_NAME", "Kafka Broker"),
+    "system.qualified_name": os.getenv("SYSTEM_QUALIFIED_NAME", "kafka-broker"),
+    "collection.name": os.getenv("COLLECTION_NAME", "Default Cluster"),
+    "collection.qualified_name": os.getenv("COLLECTION_QUALIFIED_NAME", "kafka-broker--default-cluster"),
 }
 
 store = ConfigStore.get_instance()
@@ -52,4 +56,4 @@ read_mode = store.get("source", default=True)
 if read_mode == "excel":
   asyncio.run(create_from_excel(*excel_parser_configs, access_token=access_token))
 elif read_mode == "kafka":
-  asyncio.run(create_from_kafka(access_token=access_token))
+  asyncio.run(create_from_kafka(access_token=access_token, store=store))

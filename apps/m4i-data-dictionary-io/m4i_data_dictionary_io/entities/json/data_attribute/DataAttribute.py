@@ -13,8 +13,8 @@ from ..utils import get_qualified_name
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class DataAttributeBase(BaseObject):
-    data_entity: Optional[str] = None
     name: str
+    data_entity: Optional[str] = None
 
     def _qualified_name(self):
         """
