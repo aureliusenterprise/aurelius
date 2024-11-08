@@ -61,13 +61,17 @@ async def create_from_kafka(access_token: str, store: ConfigStore):
   # Fetch data from kafka
   data = discover_cluster()
   # Create Source, System and Collection
+  instances = []
   system_qualified_name = store.get("system.qualified_name")
   collection_qualified_name = store.get("collection.qualified_name")
-  instances = [
-    create_source(store.get("data.dictionary.path")),
-    create_system(store.get("system.name"), system_qualified_name),
-    create_collection(store.get("collection.name"), system_qualified_name, collection_qualified_name)
-  ]
+
+  instances.append(create_source(store.get("data.dictionary.path")))
+
+  if not system_qualified_name:
+    instances.append(create_system("Kafka Broker", "kafka-broker"))
+
+  if not collection_qualified_name:
+    instances.append(create_collection("Default Cluster", "kafka-broker", "kafka-broker--default-cluster"))
 
   # Iterate over topics and fields
   for item in data:
