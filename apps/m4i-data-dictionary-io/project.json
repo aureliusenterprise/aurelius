@@ -20,10 +20,10 @@
         "build": {
             "executor": "@nxlv/python:build",
             "outputs": [
-                "{projectRoot}/dist"
+                "{workspaceRoot}/dist/backend/m4i-data-dictionary-io"
             ],
             "options": {
-                "outputPath": "{workspaceRoot}/dist/apps/m4i-data-dictionary-io",
+                "outputPath": "{workspaceRoot}/dist/backend/m4i-data-dictionary-io",
                 "publish": false,
                 "lockedVersions": false,
                 "bundleLocalDependencies": true
@@ -56,6 +56,34 @@
                 "command": "poetry run pytest tests/",
                 "cwd": "apps/m4i-data-dictionary-io"
             }
+        },
+        "docker-build": {
+          "dependsOn": [
+            {
+              "target": "build",
+              "params": "forward"
+            }
+          ],
+          "command": "docker build -f {projectRoot}/Dockerfile . -t {args.namespace}/{args.tag}:{args.version}",
+          "options": {
+            "namespace": "aureliusenterprise",
+            "tag": "{projectName}",
+            "version": "latest"
+          }
+        },
+        "docker-publish": {
+          "dependsOn": [
+            {
+              "target": "docker-build",
+              "params": "forward"
+            }
+          ],
+          "command": "docker push {args.namespace}/{args.tag}:{args.version}",
+          "options": {
+            "namespace": "aureliusenterprise",
+            "tag": "{projectName}",
+            "version": "latest"
+          }
         }
     }
 }

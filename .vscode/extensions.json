@@ -7,6 +7,7 @@
     "tamasfe.even-better-toml",
     "knisterpeter.vscode-commitizen",
     "editorconfig.editorconfig",
-    "firsttris.vscode-jest-runner"
+    "firsttris.vscode-jest-runner",
+    "bierner.markdown-mermaid"
   ]
 }

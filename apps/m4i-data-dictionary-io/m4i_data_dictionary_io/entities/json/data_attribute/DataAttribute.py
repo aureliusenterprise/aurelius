@@ -13,8 +13,8 @@ from ..utils import get_qualified_name
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class DataAttributeBase(BaseObject):
-    data_entity: str
     name: str
+    data_entity: Optional[str] = None
 
     def _qualified_name(self):
         """
@@ -59,17 +59,20 @@ class DataAttribute(
         Returns a corresponding Atlas `BusinessDataAttribute` instance.
         """
 
-        data_entity_unique_attributes = M4IAttributes(
-            qualified_name=self.data_entity
-        )
+        if bool(self.data_entity):
+            data_entity_unique_attributes = M4IAttributes(
+                qualified_name=self.data_entity
+            )
 
-        data_entity = ObjectId(
-            type_name="m4i_data_entity",
-            unique_attributes=data_entity_unique_attributes
-        )
+            data_entity = ObjectId(
+                type_name="m4i_data_entity",
+                unique_attributes=data_entity_unique_attributes
+            )
+        else:
+            data_entity = None
 
         attributes = BusinessDataAttributeAttributes(
-            data_entity=[data_entity],
+            data_entity=[data_entity] if data_entity else [],
             definition=self.definition,
             name=self.name,
             qualified_name=self.qualified_name,

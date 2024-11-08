@@ -7,17 +7,24 @@ from m4i_atlas_core import (ConfigStore, register_atlas_entity_types, get_keyclo
                             )
 
 from m4i_data_dictionary_io import (create_from_excel, excel_parser_configs)
+from m4i_data_dictionary_io.sources.kafka.create_from_kafka import create_from_kafka
 
 config = {
     "atlas.server.url": os.getenv("ATLAS_SERVER_URL"),
-    "keycloak.client.id": os.environ.get("KEYCLOAK_CLIENT_ID"),
+    "keycloak.client.id": os.environ.get("KEYCLOAK_CLIENT_ID", "m4i_atlas"),
     "keycloak.credentials.username": os.environ.get("KEYCLOAK_USERNAME"),
     "keycloak.credentials.password": os.environ.get("KEYCLOAK_ATLAS_ADMIN_PASSWORD"),
-    "keycloak.realm.name": os.environ.get("KEYCLOAK_REALM_NAME"),
+    "keycloak.realm.name": os.environ.get("KEYCLOAK_REALM_NAME", "m4i"),
     "keycloak.client.secret.key": os.environ.get("KEYCLOAK_CLIENT_SECRET_KEY"),
     "keycloak.server.url": os.environ.get("KEYCLOAK_SERVER_URL"),
     "data.dictionary.path": os.getenv("DATA_DICTIONARY_PATH"),
     "validate_qualified_name": os.getenv("VALIDATE_QUALIFIED_NAME", False),
+    "source": os.getenv("SOURCE", "excel"),
+    "bootstrap_servers": os.getenv("BOOTSTRAP_SERVERS"),
+    "schema_registry_url": os.getenv("SCHEMA_REGISTRY_URL"),
+    "consumer_group_id_prefix": os.getenv("CONSUMER_GROUP_ID_PREFIX", 'check-format-group'),
+    "system.qualified_name": os.getenv("SYSTEM_QUALIFIED_NAME"),
+    "collection.qualified_name": os.getenv("COLLECTION_QUALIFIED_NAME"),
 }
 
 store = ConfigStore.get_instance()
@@ -41,4 +48,10 @@ atlas_entity_types = {
 
 register_atlas_entity_types(atlas_entity_types)
 
-asyncio.run(create_from_excel(*excel_parser_configs, access_token=access_token))
+
+read_mode = store.get("source", default=True)
+
+if read_mode == "excel":
+  asyncio.run(create_from_excel(*excel_parser_configs, access_token=access_token))
+elif read_mode == "kafka":
+  asyncio.run(create_from_kafka(access_token=access_token, store=store))
