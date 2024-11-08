@@ -21,4 +21,4 @@ COPY --chown=m4i-data-dictionary-io:m4i-data-dictionary-io --chmod=0550 apps/m4i
 USER m4i-data-dictionary-io
 
 # Run the main script
-CMD ["python __main__.py"]
+CMD ["python", "/app/bin/__main__.py"]
