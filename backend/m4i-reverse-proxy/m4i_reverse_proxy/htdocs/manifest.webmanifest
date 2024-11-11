@@ -1,0 +1,16 @@
+{
+  "name": "Aurelius Atlas Data Governance Index Page",
+  "short_name": "Aurelius Atlas Index",
+  "theme_color": "#F7F7F7",
+  "background_color": "#F7F7F7",
+  "scope": "/index/",
+  "start_url": "/index/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "assets/aurelius-atlas-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
