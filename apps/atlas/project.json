@@ -51,7 +51,7 @@
               "maximumError": "5mb"
             }
           ],
-          "ngswConfigPath": "apps/atlas/ngsw-config.json"
+          "serviceWorker": "apps/atlas/ngsw-config.json"
         },
         "standalone": {
           "fileReplacements": [
@@ -68,7 +68,7 @@
               "maximumError": "5mb"
             }
           ],
-          "ngswConfigPath": "apps/atlas/ngsw-config.json"
+          "serviceWorker": "apps/atlas/ngsw-config.json"
         },
         "development": {
           "optimization": false,
