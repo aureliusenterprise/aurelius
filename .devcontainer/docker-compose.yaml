@@ -38,8 +38,8 @@ services:
       ATLAS_EXTERNAL_URL: 'http://localhost:8087/atlas/atlas'
       ELASTIC_CERTIFICATE_PATH: '/opt/flink/certs/ca/ca.crt'
       ELASTICSEARCH_CERTIFICATE_PATH: '/opt/flink/certs/ca/ca.crt'
-      UPLOAD_DATA: "true"
-      DATA_DICTIONARY_PATH: "/workspace/apps/m4i-data-dictionary-io/m4i_data_dictionary_io/example/Data Dictionary Equipment Availability.xlsm"
+      UPLOAD_DATA: "false"
+      DATA_DICTIONARY_PATH: "/workspace/apps/m4i-data-dictionary-io/m4i_data_dictionary_io/example/Data Dictionary in IoT Terms.xlsm"
     command: 'taskmanager --cap-add=SYS_PTRACE --security-opt seccomp=unconfined'
     cap_add:
       - SYS_PTRACE
