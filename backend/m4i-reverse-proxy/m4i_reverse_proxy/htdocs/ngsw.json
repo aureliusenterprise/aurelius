@@ -1,0 +1,113 @@
+{
+  "configVersion": 1,
+  "timestamp": 1664708239969,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/favicon.ico",
+        "/index.html",
+        "/main.804d82daf1eef5fc.js",
+        "/manifest.webmanifest",
+        "/polyfills.e49fc9ddb8f8b296.js",
+        "/runtime.2ff6231ddc1f8cd2.js",
+        "/styles.3e92a92235c47d27.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/assets/Aurelius.png",
+        "/assets/atlas.png",
+        "/assets/aurelius-atlas-logo.png",
+        "/assets/aurelius.jpg",
+        "/assets/d2m-icon.png",
+        "/assets/d2m-logo-50.png",
+        "/assets/flink.png",
+        "/assets/k8s.png",
+        "/assets/kafka.png",
+        "/assets/key.png",
+        "/assets/kibana.png",
+        "/assets/m4i-analytics-beta.png",
+        "/assets/m4i-analytics-logo-50.png",
+        "/assets/m4i-analytics-logo.png",
+        "/assets/m4i-data2model-beta.png",
+        "/assets/m4i-data2model-logo.png",
+        "/assets/m4i-icon-fulltext.png",
+        "/assets/m4i-icon-notext-vector.svg",
+        "/assets/m4i-icon-notext.svg",
+        "/assets/m4i-icon.png",
+        "/assets/m4i-logo-notext.png",
+        "/assets/m4i-logo.png",
+        "/assets/m4i-platform-logo.png",
+        "/assets/models.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/assets/Aurelius.png": "1c028071883ce38a2384b2b635a5ae39a68b8ab5",
+    "/assets/atlas.png": "274e9993ea1bae61f7bf9ee6b6b708550ba6f530",
+    "/assets/aurelius-atlas-logo.png": "d3fe43e646685ede94056c2b7132afcec20cac75",
+    "/assets/aurelius.jpg": "a495978dcefc7a92ea0004ecc063f5acafd0cad5",
+    "/assets/d2m-icon.png": "ccfe86e0933bfe4f95032cbf539d5a0acc2f75fb",
+    "/assets/d2m-logo-50.png": "21bfa2b08aca739b98ab49550da39ef4220ecf92",
+    "/assets/flink.png": "cfae2ab05623e5bbe1d2f64d92530527ae0b61f5",
+    "/assets/k8s.png": "06eb569cc4c725095ac5003e7c1e8421cd736239",
+    "/assets/kafka.png": "45aefbfdd2f0e3a41b6f36845c5f15e1e8fb7cac",
+    "/assets/key.png": "3af6964f7270136e35037238843958dec7ae3ec6",
+    "/assets/kibana.png": "8fcb7a337e43919b87f9fc25264ca42c7f7e552d",
+    "/assets/m4i-analytics-beta.png": "a9d51528602b79a1b3e5bbace8989255bb1e0db6",
+    "/assets/m4i-analytics-logo-50.png": "0e20299232cc395da4849ab816165d1769d6697b",
+    "/assets/m4i-analytics-logo.png": "89a0c27c5a1518092161675a3ea8404b59fefec6",
+    "/assets/m4i-data2model-beta.png": "6ef0d894cb93b6ca99ab4d370528be0c24b2c762",
+    "/assets/m4i-data2model-logo.png": "56ca2808dda1d8c1c3cf74857e833a0b3b3e31c1",
+    "/assets/m4i-icon-fulltext.png": "2a053156dbbce3867c28adb50c26c82acd8cd2bb",
+    "/assets/m4i-icon-notext-vector.svg": "641959f225e7316e341acf73e91d8e0705109064",
+    "/assets/m4i-icon-notext.svg": "f5cc6be491483675fc8f3bba2deba33faceab674",
+    "/assets/m4i-icon.png": "656a195c6728fc52f8d08616c25f71836d2c7582",
+    "/assets/m4i-logo-notext.png": "a1794095346d55e357bd6ae0eb884a177bb3c093",
+    "/assets/m4i-logo.png": "4e543dc98d2a7747a1179e5f068d71a8cee3879a",
+    "/assets/m4i-platform-logo.png": "557378834bf275434176226fa221660401b98c9d",
+    "/assets/models.png": "10166ad4b9a4f84abe097cd976855b5f1461c459",
+    "/favicon.ico": "6ec022b655bc4395764421eb8b03491d1c6a2141",
+    "/index.html": "3a963d0c890210555ff69c75bc54eaa52725e60b",
+    "/main.804d82daf1eef5fc.js": "28052a68c00f0d77a2e886183ff3546945dff76f",
+    "/manifest.webmanifest": "1416028cf69bde7dfd7934ed27a23cd7e1a391d6",
+    "/polyfills.e49fc9ddb8f8b296.js": "1c7faad3c9ca410bc42c1c68da76c0ab866d48c3",
+    "/runtime.2ff6231ddc1f8cd2.js": "10b0dc3e17b6b7d95380f9a7a2f25c5cd481e811",
+    "/styles.3e92a92235c47d27.css": "1778e876c4fadf1ce5532e34c5c51f06dc82dbc5"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
