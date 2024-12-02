@@ -1,0 +1,49 @@
+{
+  "name": "m4i-governance-data-quality",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/m4i-governance-data-quality/m4i_governance_data_quality",
+  "targets": {
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "update": {
+      "executor": "@nxlv/python:update",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": ["{workspaceRoot}/dist/libs/m4i-governance-data-quality"],
+      "options": {
+        "outputPath": "{workspaceRoot}/dist/libs/m4i-governance-data-quality",
+        "publish": false,
+        "lockedVersions": true,
+        "bundleLocalDependencies": true
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:ruff-check",
+      "outputs": [],
+      "options": {
+        "lintFilePatterns": ["m4i_governance_data_quality", "tests"]
+      }
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [
+        "{workspaceRoot}/reports/libs/m4i-governance-data-quality/unittests",
+        "{workspaceRoot}/coverage/libs/m4i-governance-data-quality"
+      ],
+      "options": {
+        "command": "poetry run pytest m4i_governance_data_quality",
+        "cwd": "libs/m4i-governance-data-quality"
+      }
+    }
+  },
+  "tags": []
+}

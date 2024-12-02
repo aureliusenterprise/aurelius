@@ -3,7 +3,7 @@ from typing import List, TypedDict, Union
 from elastic_transport._models import DefaultType
 from m4i_publish_state import main as publish_state
 from m4i_synchronize_app_search import main as synchronize_app_search
-
+from m4i_update_gov_data_quality import main as update_gov_quality
 
 class FlinkJobsConfig(TypedDict):
     """
@@ -23,6 +23,8 @@ class FlinkJobsConfig(TypedDict):
         The password for Elasticsearch authentication.
     kafka_app_search_topic_name: str
         The Kafka topic name to which updated App Search documents will be produced.
+    kafka_gov_data_quality_topic_name: str
+        The Kafka topic name to which governance data quality is synchronized.
     kafka_bootstrap_server_hostname: str
         The hostname of the Kafka bootstrap server.
     kafka_bootstrap_server_port: str
@@ -46,6 +48,7 @@ class FlinkJobsConfig(TypedDict):
     elasticsearch_certificate_path: Union[str, DefaultType]
     kafka_app_search_topic_name: str
     kafka_publish_state_topic_name: str
+    kafka_gov_data_quality_topic_name: str
     kafka_bootstrap_server_hostname: str
     kafka_bootstrap_server_port: str
     kafka_consumer_group_id: str
@@ -63,3 +66,4 @@ class FlinkJobsConfig(TypedDict):
 def main(config: FlinkJobsConfig, jars_path: List[str]) -> None:
     synchronize_app_search(config, jars_path)
     publish_state(config, jars_path)
+    update_gov_quality(config, jars_path)
