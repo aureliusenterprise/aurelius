@@ -1,0 +1,1 @@
+from .contains_character import *

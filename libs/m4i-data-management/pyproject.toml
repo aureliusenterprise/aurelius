@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "m4i-data-management"
+version = "1.0.0"
+description = "Library of Data Management"
+authors = [ "Aurelius Enterprise <info@aureliusenterprise.com>" ]
+license = "UNLICENSED"
+readme = "README.md"
+
+  [[tool.poetry.packages]]
+  include = "m4i_data_management"
+
+    [tool.poetry.dependencies]
+    python = "~3.8"
+    dataclasses-json = "~0.6"
+    dict_hash = "~1.3"
+
+    [tool.poetry.dependencies.m4i-atlas-core]
+    path = "../m4i-atlas-core"
+    develop = true
+
+[build-system]
+requires = [ "poetry-core" ]
+build-backend = "poetry.core.masonry.api"
