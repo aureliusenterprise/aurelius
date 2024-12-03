@@ -1,16 +1,9 @@
-import asyncio
-import contextlib
 import json
 import logging
-from datetime import datetime, timedelta, timezone
 import re
 from typing import Dict, List, Tuple, Callable, Union
 
 from m4i_atlas_core import (
-    ConfigStore,
-    ExistingEntityTypeException,
-    data_dictionary_entity_types,
-    register_atlas_entity_types,
     AtlasPerson,
     BusinessDataDomain,
     BusinessDataEntity,
@@ -26,7 +19,7 @@ from m4i_atlas_core import (
 from m4i_flink_tasks.model.gov_data_quality_document import GovDataQualityDocument
 from marshmallow import ValidationError
 from pyflink.datastream import DataStream
-from pyflink.datastream.functions import MapFunction, RuntimeContext
+from pyflink.datastream.functions import MapFunction
 
 from m4i_governance_data_quality import get_rules_for_type, calculate_gov_quality
 from keycloak import KeycloakOpenID
