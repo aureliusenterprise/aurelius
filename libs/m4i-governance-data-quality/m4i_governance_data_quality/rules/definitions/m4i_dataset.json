@@ -40,5 +40,19 @@
     "active": 1,
     "type": "relationship",
     "guid": "cfd24715-125d-46e2-854d-b0c1b16340bf"
+  },
+  {
+    "id": 4,
+    "expressionVersion": 1,
+    "expression": "length('definition', 1)",
+    "qualifiedName": "m4i_dataset--definition",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Dataset has a definition",
+    "ruleDescription": "A dataset should have a definition",
+    "compliantMessage": "This dataset has a definition",
+    "noncompliantMessage": "This dataset should have a definition",
+    "active": 1,
+    "type": "attribute",
+    "guid": "7d50218c-d4a9-4533-8cc9-c312d5b37a13"
   }
 ]

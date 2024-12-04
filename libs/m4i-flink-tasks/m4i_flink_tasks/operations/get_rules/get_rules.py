@@ -116,7 +116,7 @@ class GetRulesFunction(MapFunction):
                 updated_rules[id] = GovDataQualityDocument(
                     id=id,
                     guid=rule.guid,
-                    name=f"{rule.type} - {used_attribute}",
+                    name=rule.rule_title,
                     qualifiedname=id,
                     qualityqualifiedname=rule.qualified_name,
                     dataqualityruletypename=entity.type_name,
