@@ -40,5 +40,19 @@
     "active": 1,
     "type": "relationship",
     "guid": "69c6a273-9255-4454-ba81-e58cf1a1d055"
+  },
+  {
+    "id": 4,
+    "expressionVersion": 1,
+    "expression": "length('definition', 1)",
+    "qualifiedName": "m4i_collection--definition",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Collection has a definition",
+    "ruleDescription": "A collection should have a definition",
+    "compliantMessage": "This collection has a definition",
+    "noncompliantMessage": "This collection should have a definition",
+    "active": 1,
+    "type": "attribute",
+    "guid": "c1f19da8-a7f8-45f5-8d3a-d1d16332b08f"
   }
 ]
