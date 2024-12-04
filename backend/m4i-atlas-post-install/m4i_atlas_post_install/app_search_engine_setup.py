@@ -173,6 +173,7 @@ engines = [
             'business_rule_id': 'text',
             'name': 'text',
             'compliant': 'text',
+            'noncompliant_message': 'text',
             'guid': 'text',
             'entity_guid': 'text'
         },
@@ -192,6 +193,7 @@ engines = [
                 'business_rule_id': {'weight': 1},
                 'name': {'weight': 1},
                 'compliant': {'weight': 1},
+                'noncompliant_message': {'weight': 1},
                 'guid': {'weight': 1},
                 'entity_guid': {'weight': 1},
                 'id': {'weight': 1}
@@ -212,6 +214,7 @@ engines = [
                 'business_rule_id': {'raw': {}},
                 'name': {'raw': {}},
                 'compliant': {'raw': {}},
+                'noncompliant_message': {'raw': {}},
                 'guid': {'raw': {}},
                 'entity_guid': {'raw': {}}
             },
