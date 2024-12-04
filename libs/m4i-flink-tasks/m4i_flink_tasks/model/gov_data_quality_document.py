@@ -23,4 +23,5 @@ class GovDataQualityDocument(DataClassJsonMixin):
     entity_guid: str
     expression: str
     compliant: float
+    noncompliant_message: str
     usedattributes: List[str] = field(default_factory=list)

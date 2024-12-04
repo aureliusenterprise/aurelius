@@ -126,6 +126,7 @@ class GetRulesFunction(MapFunction):
                     result_id="0",
                     business_rule_id="1",
                     compliant=compliant,
+                    noncompliant_message=rule.noncompliant_message,
                     entity_guid=entity.guid,
                     expression=rule.expression,
                     usedattributes=[used_attribute],
