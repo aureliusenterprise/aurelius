@@ -12,8 +12,6 @@ There are two main categories of Data that is generated for each m4i Type entity
    * Relationships related data
      consists of details about entity relationships where certain quality metrics can be applied like
        * completeness -- whether we have correct relationships between two entities.
-     
-These rules are inherited from `nxtgen-vox-data-management` repository.
 
 # Configuring Rules
 An important aspect of Data Quality is the rules that are applied to each entity. 
@@ -63,28 +61,6 @@ and relationships. In addition, generated data is pushed to Elasticsearch indexe
 * Summary -- gives a summary of the data quality results.
 * Complaint Data -- gives information about complaints.
 * Non-complaint Data -- gives information about non-complaints.
-
-# Dependency
-To Run this package, we need to have below packages installed
-* `m4i_atlas_core` -- communicates with Apache Atlas
-* `vox-data-management` -- communicates for Quality metric already defined
-* `elasticsearch` -- communicates with ElasticSearch
-
-## Installation
-
-Please ensure your `Python` environment is set on version `3.7`. Some dependencies do not work with any later versions of `Python`.
-Basically, this is a requirement for underlying package `vox_data_management`
-
-To install `m4i-atlas-core` and all required dependencies to your active `Python` environment. Activate it using:
-
-`source <venv_name>\bin\activate` or create new `python3.7 -m venv <venv_name>`
-
-Example: Creates a new environment and activates it
-```shell
-python3.7 -m venv <venv_name>
-source <venv_name>\bin\activate
-pip install -e <location_of_dependent_packages>
-```
 
 ## Configurations and Credentials
 Please make a copy of `config.sample.py` and `credentials.sample.py` and rename the files to `config.py` and `credentials.py` respectively.
@@ -154,16 +130,6 @@ Should contain two dictionaries viz `config_elastic` and `config_atlas`
 │       run.py
 ```
 
-# Execution 
-
-1. Create the Python Environment. How to do this can be found in this file under `Installation` 
-2. Fill in the Configurations and Credentials as indicated in this file under `Configurations and Credentials` 
-3. Run `scripts\run.py` to create 6 files in output folder, 3 each for Attributes and Relationships. Same data is also 
-pushed to Elastic.  
-   1. creates/updates an index for attributes as `<prefix>`_quality_attr_[ summary | complaint | non_complaint]
-   2. creates/updates an index for relationships as `<prefix>`_quality_rels_[ summary | complaint | non_complaint]
-
 # Updates
 Data needed to be added to App search and entities are created in dev atlas. new function `_push_rules_to_atlas` in `Rules` class was added,
 This function creates the entities in atlas.
-
