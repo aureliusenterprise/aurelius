@@ -14,6 +14,7 @@ from m4i_atlas_core import (
     BusinessSystem,
     BusinessSource,
     BusinessDataQuality,
+    BusinessGovDataQuality,
     GenericProcess,
 )
 from m4i_flink_tasks.model.gov_data_quality_document import GovDataQualityDocument
@@ -38,6 +39,7 @@ ATLAS_ENTITY_TYPES = {
     "m4i_collection": BusinessCollection,
     "m4i_system": BusinessSystem,
     "m4i_data_quality": BusinessDataQuality,
+    "m4i_gov_data_quality": BusinessGovDataQuality,
     "m4i_generic_process": GenericProcess,
 }
 
@@ -70,7 +72,7 @@ class GetRulesFunction(MapFunction):
             If an error occurs during processing.
         """
 
-        logging.info("Governance Data Quality rules: %s", value)
+        logging.debug("Governance Data Quality rules: %s", value)
 
         try:
             # Convert the JSON string into a Python dictionary.
@@ -84,12 +86,17 @@ class GetRulesFunction(MapFunction):
         except ValidationError as e:
             logging.exception("Error deserializing message")
             return e
+        except KeyError:
+            return ValueError(f"Unexpected type. TypeName={object_type}")
 
-        logging.debug("Successfully deserialized message: %s", entity)
+        logging.info("Successfully deserialized message: %s", entity)
 
         if entity is None:
             logging.debug("No entity found in message: %s", entity)
             return ValueError(f"No entity found in message. Value={value}")
+
+        if object_type in {"m4i_source", "m4i_gov_data_quality", "m4i_data_quality"}:
+            return ValueError("Creating rules, skipping type %s.", object_type)
 
         # Retrieve applicable rules for the entity type
         rules = get_rules_for_type(object_type)
@@ -178,8 +185,12 @@ class GetRules:
             GetRulesFunction(),
         ).name("enriched_rules")
 
-        self.main = self.rules.flat_map(
+        self.filtered_rules = self.rules.filter(
+            lambda messages: isinstance(messages, list)
+        ).name("filtered_rules")
+
+        self.main = self.filtered_rules.flat_map(
             lambda messages: (
-                message for message in messages if not isinstance(message, Exception)
+                message for message in messages
             ),
-        )
+        ).name("flattened_messages")
