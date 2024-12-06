@@ -1,5 +1,5 @@
 {
-  "name": "kafka-connect",
+  "name": "aurelius-kafka-connect",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "tags": [],
