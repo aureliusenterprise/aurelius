@@ -1,5 +1,7 @@
 FROM flink:1.17.0
 
+LABEL org.opencontainers.image.source https://github.com/aureliusenterprise/aurelius
+
 # Create a non-root user
 RUN addgroup --system m4i-flink-jobs && \
   adduser --system --ingroup m4i-flink-jobs m4i-flink-jobs

@@ -1,0 +1,1 @@
+from .compare_first_characters import *
