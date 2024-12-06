@@ -95,11 +95,11 @@ class GetRulesFunction(MapFunction):
             logging.debug("No entity found in message: %s", entity)
             return ValueError(f"No entity found in message. Value={value}")
 
-        if object_type in {"m4i_source", "m4i_gov_data_quality", "m4i_data_quality"}:
-            return ValueError("Creating rules, skipping type %s.", object_type)
-
         # Retrieve applicable rules for the entity type
-        rules = get_rules_for_type(object_type)
+        try:
+            rules = get_rules_for_type(object_type)
+        except Exception:
+            return ValueError("Creating rules, skipping type %s.", object_type)
 
         # 3. Enrich rules based on the entity
         updated_rules: Dict[str, Union[GovDataQualityDocument, None]] = {}

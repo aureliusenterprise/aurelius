@@ -1,6 +1,8 @@
 # Use the official Python image as a base
 FROM python:3.8-slim
 
+LABEL org.opencontainers.image.source https://github.com/aureliusenterprise/aurelius
+
 # Create a non-root user and group
 RUN addgroup --system m4i-atlas-post-install && \
     adduser --system --ingroup m4i-atlas-post-install m4i-atlas-post-install
