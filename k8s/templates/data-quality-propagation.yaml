@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: data-quality-propagation
+spec:
+  schedule: "@midnight"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: data-quality-propagation
+            image: "aureliusatlas/atlas-post-install:latest"
+            imagePullPolicy: Always
+            command:
+                - /bin/bash
+                - -c
+                - python scripts/download_engines.py --url $ENTERPRISE_SEARCH_EXTERNAL_URL --password $ELASTIC_PASSWORD && python scripts/propagate_quality.py --url $ENTERPRISE_SEARCH_EXTERNAL_URL --password $ELASTIC_PASSWORD
+            env:
+              - name: ELASTIC_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: elastic-search-es-elastic-user
+                    key: elastic
+              - name: ENTERPRISE_SEARCH_EXTERNAL_URL
+                value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/"

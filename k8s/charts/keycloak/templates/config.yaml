@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: realm-single-file
+  namespace: {{ .Release.Namespace }}
+data:
+  realm.json: |-
+{{ tpl (.Files.Get (printf "realms/%s" .Values.realm_file_name)) . | indent 4}}

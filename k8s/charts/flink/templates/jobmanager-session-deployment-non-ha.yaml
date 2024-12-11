@@ -1,0 +1,158 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flink-jobmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flink
+      component: jobmanager
+  template:
+    metadata:
+      labels:
+        app: flink
+        component: jobmanager
+    spec:
+      securityContext:
+          runAsUser: 9999  # refers to user _flink_ from official flink image, change if necessary
+          runAsGroup: 9999
+          fsGroup: 9999
+      initContainers: # sidecar container to wait for a service to be completed.
+        - name: wait-for-reverse-proxy-service
+          image: darthcabs/tiny-tools:1
+          args:
+          - /bin/bash
+          - -c
+          - >
+            set -x;
+            while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' curl \
+                          -X GET "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/atlas2/" \
+                          -H 'Content-Type: application/json' --insecure | tail -c 3)" != "302" ]]; do
+              echo '.'
+              sleep 15;
+            done
+      containers:
+      - name: jobmanager
+        image: "{{ .Values.repository }}:{{ .Values.global.version }}"
+        imagePullPolicy: {{ .Values.pullPolicy }}
+        args: ["jobmanager"]
+        ports:
+        - containerPort: 6123
+          name: rpc
+        - containerPort: 6124
+          name: blob-server
+        - containerPort: 8081
+          name: webui
+        livenessProbe:
+          tcpSocket:
+            port: 6123
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        env:
+          - name: NAMESPACE
+            value: "{{ .Release.Namespace }}"
+          - name: ENTERPRISE_SEARCH_INTERNAL_URL
+            value: {{ tpl .Values.enterprise_search_internal_url . }}
+          - name: ELASTIC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: elastic-search-es-elastic-user
+                key: elastic
+          - name: ELASTICSEARCH_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: elastic-search-es-elastic-user
+                key: elastic
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret
+                key: password
+          - name: KEYCLOAK_ATLAS_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret-user-admin
+                key: password
+          - name: KEYCLOAK_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret-user-admin
+                key: password
+          - name: KEYCLOAK_ATLAS_STEWARD_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret-user-steward
+                key: password
+          - name: KEYCLOAK_ATLAS_USER_USERNAME
+            value: atlas
+          - name: KEYCLOAK_ATLAS_USER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret-user-data
+                key: password
+          - name: ATLAS_SERVER_URL
+            value: "http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/api/atlas"
+          - name: ELASTICSEARCH_ENDPOINT
+            value:  "https://{{ .Values.global.external_hostname }}:443/{{ .Release.Namespace }}/elastic"
+          - name: KAFKA_BOOTSTRAP_SERVER_HOSTNAME
+            value: "kafka.{{ .Release.Namespace }}.svc.cluster.local"
+          - name: KEYCLOAK_SERVER_URL
+            value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/"
+          - name: ENTERPRISE_SEARCH_EXTERNAL_URL
+            value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/"
+          - name: ATLAS_EXTERNAL_URL
+            value: "http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/api/atlas"
+          {{- if .Values.env }}
+          {{- range $key, $value := .Values.env }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
+          {{- end }}
+        #lifecycle:
+        #  postStart:
+        #    exec:
+        #      command: ["/bin/sh", "-c", "/opt/flink/bin/flink run -d -py main.py"]
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "
+                while ! curl -s localhost:8081 > /dev/null; do
+                  echo 'Waiting for Flink JobManager to be available...';
+                  sleep 5;
+                done;
+                echo 'JobManager is available. Running Flink job now...';
+                sleep 60;
+                echo 'Running Flink job now...';
+                cd /app/;
+                /opt/flink/bin/flink run -d -py main.py"]
+        #lifecycle:
+        #  postStart:
+        #    exec:
+        #      command:
+        #      - /bin/sh
+        #      - -c
+        #      - >
+        #        echo "Post-start script running...";
+        volumeMounts:
+        - name: flink-config-volume
+          mountPath: /opt/flink/conf
+        - name: flink-tasks-config-volume
+          mountPath: /opt/flink/tasks-conf
+      volumes:
+      - name: flink-config-volume
+        configMap:
+          name: flink-config
+          items:
+          - key: flink-conf.yaml
+            path: flink-conf.yaml
+          - key: log4j-console.properties
+            path: log4j-console.properties
+      - name: flink-tasks-config-volume
+        configMap:
+          name: flink-tasks-config
+          items:
+          - key: config.py
+            path: config.py
+          - key: credentials.py
+            path: credentials.py

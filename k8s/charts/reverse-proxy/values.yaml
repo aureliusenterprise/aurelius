@@ -1,0 +1,16 @@
+---
+# Example values for service
+
+# container image
+# https://github.com/keycloak/keycloak-containers/blob/16.1.1/server/README.md
+replicaCount: 1
+repository: aureliusatlas/reverse-proxy
+pullPolicy: Always
+service:
+  name: reverse-proxy
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 8080
+enterprise_search_internal_url: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/
+env:
+  ELASTIC_USERNAME: elastic

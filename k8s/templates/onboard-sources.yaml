@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: import-dataset
+  namespace: {{ .Release.Namespace }}
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: import-dataset
+        image: aureliusatlas/m4i-data-dictionary-io:latest
+        imagePullPolicy: Always
+        env:
+          - name: ATLAS_SERVER_URL
+            value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/atlas/atlas"
+          - name: KEYCLOAK_USERNAME
+            value: "atlas"
+          - name: KEYCLOAK_ATLAS_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret-user-admin
+                key: password
+          - name: KEYCLOAK_SERVER_URL
+            value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/"
+          - name: SOURCE
+            value: {{ .Values.onboard_sources.source }}
+          - name: DATA_DICTIONARY_PATH
+            value: "/data/{{ .Values.onboard_sources.excel_file }}"
+          - name: BOOTSTRAP_SERVERS
+            value: {{ .Values.onboard_sources.bootstrap_servers }}
+          - name: SCHEMA_REGISTRY_URL
+            value: {{ .Values.onboard_sources.schema_registry_url }}
+        volumeMounts:
+          - name: excel-file-volume
+            mountPath: /data/{{ .Values.onboard_sources.excel_file }}
+            subPath: {{ .Values.onboard_sources.excel_file }}
+        securityContext:
+          runAsUser: 0
+      volumes:
+        - name: excel-file-volume
+          configMap:
+            name: excel-config
+            items:
+              - key: {{ .Values.onboard_sources.excel_file }}
+                path: {{ .Values.onboard_sources.excel_file }}

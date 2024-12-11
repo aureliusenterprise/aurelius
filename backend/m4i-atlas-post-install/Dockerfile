@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.source https://github.com/aureliusenterprise/aure
 RUN addgroup --system m4i-atlas-post-install && \
     adduser --system --ingroup m4i-atlas-post-install m4i-atlas-post-install
 
+# Install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends curl
+
 # Set the working directory
 WORKDIR /app
 

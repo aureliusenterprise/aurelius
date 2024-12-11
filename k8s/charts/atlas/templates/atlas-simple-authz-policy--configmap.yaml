@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: atlas-simple-authz-policy-configmap
+data:
+  atlas-simple-authz-policy.json: |
+{{ tpl ( .Files.Get "conf/atlas-simple-authz-policy.json" ) . | indent 4}}

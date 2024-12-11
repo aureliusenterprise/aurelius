@@ -6,6 +6,9 @@ authors = [ "Aurelius Enterprise <info@aureliusenterprise.com>" ]
 license = "UNLICENSED"
 readme = "README.md"
 
+[[tool.poetry.packages]]
+include = "m4i_governance_data_quality"
+
   [tool.poetry.dependencies]
   python = "~3.8"
   dataclasses-json = "~0.6"

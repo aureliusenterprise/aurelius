@@ -1,0 +1,33 @@
+---
+kafka:
+  clusters:
+    - name: atlas
+      bootstrapServers: "kafka.{{ .Release.Namespace }}.svc.cluster.local:9092"
+      kafkaConnect:
+        - name: connect
+          address: "http://kafka-connect.{{ .Release.Namespace }}.svc.cluster.local:8083"
+spring:
+  logging:
+    level: INFO
+    file: ${java.io.tmpdir}/kafka-ui.log
+management:
+  health:
+    ldap:
+      enabled: false
+auth:
+  type: OAUTH2
+  oauth2:
+    client:
+      keycloak:
+        clientId: m4i_kafka_ui
+        clientSecret: hello-world
+        scope:
+          - openid
+          - profile
+          - email
+        issuer-uri: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/realms/m4i"
+        user-name-attribute: preferred_username
+        client-name: keycloak
+        provider: keycloak
+        custom-params:
+          type: keycloak
