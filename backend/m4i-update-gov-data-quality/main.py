@@ -2,13 +2,13 @@ import os
 from pathlib import Path
 
 from elastic_transport._models import DefaultType
-from m4i_synchronize_app_search import SynchronizeAppSearchConfig, main
+from m4i_update_gov_data_quality import UpdateGovDataQualityConfig, main
 
 if __name__ == "__main__":
     """
     Entry point of the script. Load configuration from environment variables and start the job.
     """
-    config: SynchronizeAppSearchConfig = {
+    config: UpdateGovDataQualityConfig = {
         "atlas_server_url": os.environ["ATLAS_SERVER_URL"],
         "elasticsearch_app_search_index_name": os.environ[
             "ELASTICSEARCH_APP_SEARCH_INDEX_NAME"
@@ -27,6 +27,7 @@ if __name__ == "__main__":
         "kafka_bootstrap_server_hostname": os.environ[
             "KAFKA_BOOTSTRAP_SERVER_HOSTNAME"
         ],
+        "kafka_gov_data_quality_topic_name": os.environ["KAFKA_GOV_DATA_QUALITY_TOPIC_NAME"],
         "kafka_bootstrap_server_port": os.environ["KAFKA_BOOTSTRAP_SERVER_PORT"],
         "kafka_consumer_group_id": os.environ["KAFKA_CONSUMER_GROUP_ID"],
         "kafka_error_topic_name": os.environ["KAFKA_ERROR_TOPIC_NAME"],

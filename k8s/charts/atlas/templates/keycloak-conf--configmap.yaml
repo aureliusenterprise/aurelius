@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-conf-configmap
+data:
+  keycloak-conf.json: |
+{{ tpl ( .Files.Get "conf/keycloak-conf.json" ) . | indent 4}}

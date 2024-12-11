@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name:  reverse-proxy-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /{{ .Release.Namespace }}$1$2
+    cert-manager.io/cluster-issuer: letsencrypt-clusterissuer-aureliusdev
+    cert-manager-io/http01-edit-in-place: "true"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '3600'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '3600'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '3600'
+    #nginx.ingress.kubernetes.io/server-snippet: 'keepalive_timeout 3600s;client_body_timeout 3600s;client_header_timeout 3600s;'
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.global.external_hostname }}
+      http:
+        paths:
+          - pathType: Prefix
+            backend:
+              service:
+                name: reverse-proxy
+                port:
+                  number: 80
+            path: /{{ .Release.Namespace }}(/|$)(.*)
+  # This section is only required if TLS is to be enabled for the Ingress
+  tls:
+  - hosts:
+      - {{ .Values.global.external_hostname }}
+    secretName: letsencrypt-secret-aureliusdev

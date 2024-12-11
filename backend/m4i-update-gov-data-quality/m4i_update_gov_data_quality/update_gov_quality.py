@@ -1,6 +1,7 @@
 import json
 from typing import List, TypedDict, Union
 
+from elastic_transport._models import DefaultType
 from keycloak import KeycloakOpenID
 from m4i_flink_tasks.operations.get_rules.get_rules import GetRules
 from pyflink.common import Configuration, Types
@@ -54,6 +55,7 @@ class UpdateGovDataQualityConfig(TypedDict):
     elasticsearch_endpoint: str
     elasticsearch_username: str
     elasticsearch_password: str
+    elasticsearch_certificate_path: Union[str, DefaultType]
     kafka_app_search_topic_name: str
     kafka_publish_state_topic_name: str
     kafka_gov_data_quality_topic_name: str
