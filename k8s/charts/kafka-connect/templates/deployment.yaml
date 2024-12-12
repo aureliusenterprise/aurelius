@@ -75,18 +75,6 @@ spec:
         {{- end }}
         - name: {{ template "kafka-connect.name" . }}-server
           image: "{{ .Values.image }}:{{ .Values.global.version }}"
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - "sh"
-                  - "-c"
-                  - >
-                    cd /home/appuser/;
-                    yes | keytool -import -alias elasticca -file secret_certs/ca.crt -keypass elastic -keystore elastic.jks -storepass elastic | tee error.log;
-                    sed 's/ELASTIC_PASSWORD/'"$KAFKA_CONNECT_ELASTIC_PASSWORD"'/' /etc/conf/app_search_documents.json > app_search_documents.json | tee -a error.log;
-                    sed 's/ELASTIC_PASSWORD/'"$KAFKA_CONNECT_ELASTIC_PASSWORD"'/' /etc/conf/publish_state.json > publish_state.json | tee -a error.log;
-                    while [ "$(curl -s http://localhost:8083/connectors)" != "[]" ]; do echo "Waiting..." >> error.log; sleep 5; done;
           imagePullPolicy: "{{ .Values.imagePullPolicy }}"
           ports:
             - name: kafka-connect
@@ -123,6 +111,8 @@ spec:
               value: "8083"
             - name: ELASTICSEARCH_URL
               value: https://elastic-search-es-http:9200
+            - name: SECRET_FILE_PATH
+              value: secret_certs/ca.crt
             - name: KAFKA_CONNECT_ELASTIC_PASSWORD
               valueFrom:
                 secretKeyRef:

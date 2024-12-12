@@ -140,7 +140,7 @@ services:
       setup:
         condition: service_completed_successfully
     volumes:
-      - certs:/home/appuser/certs
+      - certs:/home/appuser/secret_certs
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'localhost:9092'
       CONNECT_CONFIG_STORAGE_CLEANUP_POLICY: 'compact'
@@ -160,6 +160,7 @@ services:
       CONNECT_STATUS_STORAGE_TOPIC: 'kafka-connect-status'
       CONNECT_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
       CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'false'
+      SECRET_FILE_PATH: /home/appuser/certs/ca/ca.crt
     network_mode: service:dev
 
   kafka-ui:
