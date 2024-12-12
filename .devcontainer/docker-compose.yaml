@@ -140,7 +140,7 @@ services:
       setup:
         condition: service_completed_successfully
     volumes:
-      - certs:/home/appuser/secret_certs
+      - certs:/home/appuser/certs
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'localhost:9092'
       CONNECT_CONFIG_STORAGE_CLEANUP_POLICY: 'compact'
