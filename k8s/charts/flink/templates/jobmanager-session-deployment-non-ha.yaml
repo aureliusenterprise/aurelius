@@ -109,31 +109,6 @@ spec:
             value: {{ $value | quote }}
           {{- end }}
           {{- end }}
-        #lifecycle:
-        #  postStart:
-        #    exec:
-        #      command: ["/bin/sh", "-c", "/opt/flink/bin/flink run -d -py main.py"]
-        lifecycle:
-          postStart:
-            exec:
-              command: ["/bin/sh", "-c", "
-                while ! curl -s localhost:8081 > /dev/null; do
-                  echo 'Waiting for Flink JobManager to be available...';
-                  sleep 5;
-                done;
-                echo 'JobManager is available. Running Flink job now...';
-                sleep 60;
-                echo 'Running Flink job now...';
-                cd /app/;
-                /opt/flink/bin/flink run -d -py main.py"]
-        #lifecycle:
-        #  postStart:
-        #    exec:
-        #      command:
-        #      - /bin/sh
-        #      - -c
-        #      - >
-        #        echo "Post-start script running...";
         volumeMounts:
         - name: flink-config-volume
           mountPath: /opt/flink/conf

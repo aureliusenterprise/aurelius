@@ -26,7 +26,7 @@ atlas:
     size: 1Gi
 
 reverse-proxy:
-  tag: "1.0.9.6"
+  tag: "1.0.9.7"
 
 host_ip: 51.138.48.239   # Replace with your IP address
 
@@ -62,10 +62,10 @@ ingress:
 global:
   #external_hostname: "google.aurelius-atlas.com"
   external_hostname: "aureliusdev.westeurope.cloudapp.azure.com"
-  version: 2.0.5
+  version: 2.0.7
 
 post_install:
-  upload_data: "false"
+  upload_data: "true"
 
 onboard_sources:
   source: excel
