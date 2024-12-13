@@ -341,7 +341,7 @@ services:
   #  restart: "no"
   #  depends_on:
   #    - jobmanager
-  #  entrypoint: [ "bash", "-c", "./run.sh && tail -f /dev/null"]
+  #  entrypoint: [ "bash", "-c", "/app/bin/run.sh && tail -f /dev/null"]
   #  network_mode: service:dev
 
 configs:
