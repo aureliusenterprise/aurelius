@@ -1,0 +1,4 @@
+<Location /{{ .Release.Namespace }}/kafka-ui/>
+ProxyPass "http://kafka-ui.{{ .Release.Namespace }}.svc.cluster.local:8080/{{ .Release.Namespace }}/kafka-ui/"
+ProxyPassReverse "http://kafka-ui.{{ .Release.Namespace }}.svc.cluster.local:8080/{{ .Release.Namespace }}/kafka-ui/"
+</Location>

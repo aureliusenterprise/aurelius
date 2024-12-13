@@ -1,0 +1,98 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: post-install-hook
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": keep
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: post-install-job
+        image: "aureliusatlas/atlas-post-install:main"
+        imagePullPolicy: Always
+        env:
+          - name: NAMESPACE
+            value: "{{ .Release.Namespace }}"
+          - name: ELASTIC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: elastic-search-es-elastic-user
+                key: elastic
+          - name: ELASTICSEARCH_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: elastic-search-es-elastic-user
+                key: elastic
+
+          - name: KEYCLOAK_ATLAS_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret-user-admin
+                key: password
+          - name: KEYCLOAK_SERVER_URL
+            value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/"
+          - name: ATLAS_SERVER_URL
+            value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/atlas2/api/atlas"
+          - name: ELASTIC_URL
+            value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/elastic/"
+          - name: ENTERPRISE_SEARCH_URL
+            value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/"
+          - name: JOBMANAGER_URL
+            value: "flink-jobmanager.{{ .Release.Namespace }}.svc.cluster.local:8081"
+          - name: UPLOAD_DATA
+            value: "{{ .Values.post_install.upload_data }}"
+          - name: ELASTICSEARCH_ENDPOINT
+            value:  "https://{{ .Values.global.external_hostname }}:443/{{ .Release.Namespace }}/elastic"
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret
+                key: password
+          - name: KEYCLOAK_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret-user-admin
+                key: password
+          - name: KEYCLOAK_ATLAS_STEWARD_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret-user-steward
+                key: password
+          - name: KEYCLOAK_ATLAS_USER_USERNAME
+            value: atlas
+          - name: KEYCLOAK_ATLAS_USER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret-user-data
+                key: password
+          - name: KAFKA_BOOTSTRAP_SERVER_HOSTNAME
+            value: "kafka.{{ .Release.Namespace }}.svc.cluster.local"
+          - name: ENTERPRISE_SEARCH_EXTERNAL_URL
+            value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/"
+          - name: ATLAS_EXTERNAL_URL
+            value: "http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/api/atlas"
+
+
+          {{- if .Values.flink.env }}
+          {{- range $key, $value := .Values.flink.env }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
+          {{- end }}

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-connect-config
+  labels:
+    app: kafka-connect
+data:
+  app_search_documents.json: |+
+{{ tpl ( .Files.Get "conf/app_search_documents.json" ) . | indent 4}}
+  publish_state.json: |+
+{{ tpl ( .Files.Get "conf/publish_state.json" ) . | indent 4}}

@@ -1,0 +1,16 @@
+<Location /{{ .Release.Namespace }}/auth/>
+ProxyPass "http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/auth/"
+ProxyPassReverse "http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/auth/"
+</Location>
+
+# make this configurable to disable access to the admin interface via switch in values
+# 
+<Location /{{ .Release.Namespace }}/admin/>
+ProxyPass "http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/admin/"
+ProxyPassReverse "http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/admin/"
+</Location>
+
+<Location /{{ .Release.Namespace }}/atlas/auth/>
+ProxyPass "http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/auth/"
+ProxyPassReverse "http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/auth/"
+</Location>
