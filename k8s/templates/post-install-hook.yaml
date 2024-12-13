@@ -88,8 +88,6 @@ spec:
             value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/"
           - name: ATLAS_EXTERNAL_URL
             value: "http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/api/atlas"
-
-
           {{- if .Values.flink.env }}
           {{- range $key, $value := .Values.flink.env }}
           - name: {{ $key }}
