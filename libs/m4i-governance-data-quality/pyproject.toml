@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "m4i-governance-data-quality"
+version = "1.0.0"
+description = "Library of Governance Data Quality"
+authors = [ "Aurelius Enterprise <info@aureliusenterprise.com>" ]
+license = "UNLICENSED"
+readme = "README.md"
+
+[[tool.poetry.packages]]
+include = "m4i_governance_data_quality"
+
+  [tool.poetry.dependencies]
+  python = "~3.8"
+  dataclasses-json = "~0.6"
+
+    [tool.poetry.dependencies.m4i-atlas-core]
+    path = "../m4i-atlas-core"
+    develop = true
+
+    [tool.poetry.dependencies.m4i-data-management]
+    path = "../m4i-data-management"
+    develop = true
+
+[build-system]
+requires = [ "poetry-core" ]
+build-backend = "poetry.core.masonry.api"

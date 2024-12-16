@@ -19,6 +19,14 @@ develop = true
 path = "libs/m4i-atlas-core"
 develop = true
 
+[tool.poetry.dependencies.m4i-data-management]
+path = "libs/m4i-data-management"
+develop = true
+
+[tool.poetry.dependencies.m4i-governance-data-quality]
+path = "libs/m4i-governance-data-quality"
+develop = true
+
 [tool.poetry.dependencies.m4i-backend-core]
 path = "libs/m4i-backend-core"
 develop = true
@@ -41,6 +49,10 @@ develop = true
 
 [tool.poetry.dependencies.m4i-synchronize-app-search]
 path = "backend/m4i-synchronize-app-search"
+develop = true
+
+[tool.poetry.dependencies.m4i-update-gov-data-quality]
+path = "backend/m4i-update-gov-data-quality"
 develop = true
 
 [tool.poetry.dependencies.m4i-lineage-rest-api]

@@ -1,0 +1,5 @@
+
+<Location /{{ .Release.Namespace }}/kafka-connect/>
+ProxyPass "http://kafka-connect.{{ .Release.Namespace }}.svc.cluster.local:8083/"
+ProxyPassReverse "http://kafka-connect.{{ .Release.Namespace }}.svc.cluster.local:8083/"
+</Location>

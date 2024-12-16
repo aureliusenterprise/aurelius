@@ -1,0 +1,49 @@
+{
+  "name": "m4i-data-management",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/m4i-data-management/m4i_data_management",
+  "targets": {
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "update": {
+      "executor": "@nxlv/python:update",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": ["{workspaceRoot}/dist/libs/m4i-data-management"],
+      "options": {
+        "outputPath": "{workspaceRoot}/dist/libs/m4i-data-management",
+        "publish": false,
+        "lockedVersions": true,
+        "bundleLocalDependencies": true
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:ruff-check",
+      "outputs": [],
+      "options": {
+        "lintFilePatterns": ["m4i_data_management", "tests"]
+      }
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "outputs": [
+        "{workspaceRoot}/reports/libs/m4i-data-management/unittests",
+        "{workspaceRoot}/coverage/libs/m4i-data-management"
+      ],
+      "options": {
+        "command": "poetry run pytest m4i_data_management",
+        "cwd": "libs/m4i-data-management"
+      }
+    }
+  },
+  "tags": []
+}

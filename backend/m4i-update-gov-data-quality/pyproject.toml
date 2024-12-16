@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "m4i-update-gov-data-quality"
+version = "1.0.0"
+description = "Update Governance Data Quality job for Aurelius Atlas"
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+license = 'UNLICENSED'
+readme = 'README.md'
+
+[[tool.poetry.packages]]
+include = "m4i_update_gov_data_quality"
+
+[tool.poetry.dependencies]
+python = "~3.8"
+apache-flink = "~1.17"
+elasticsearch = "~8.9"
+elastic-transport = "8.13.1"
+python-keycloak = "0.18.0"
+urllib3="1.26.2"
+
+[tool.poetry.dependencies.m4i-flink-tasks]
+path = "../../libs/m4i-flink-tasks"
+develop = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

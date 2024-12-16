@@ -1,0 +1,19 @@
+SSLProxyEngine On
+SSLProxyVerify off
+SSLProxyCheckPeerName off
+SSLVerifyClient off
+
+<Location /{{ .Release.Namespace }}/app-search/>
+ProxyPass "https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/"
+ProxyPassReverse "https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/"
+</Location>
+
+<Location /{{ .Release.Namespace }}/elastic/>
+ProxyPass "https://elastic-search-es-http.{{ .Release.Namespace }}.svc.cluster.local:9200/"
+ProxyPassReverse "https://elastic-search-es-http.{{ .Release.Namespace }}.svc.cluster.local:9200/"
+</Location>
+
+<Location /{{ .Release.Namespace }}/kibana/>
+ProxyPass "https://kibana-kb-http.{{ .Release.Namespace }}.svc.cluster.local:5601/"
+ProxyPassReverse "https://kibana-kb-http.{{ .Release.Namespace }}.svc.cluster.local:5601/"
+</Location>

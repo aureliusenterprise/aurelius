@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-reverse-proxy-configs-flink-conf
+data:
+  flink.conf: |
+{{ tpl ( .Files.Get "conf.d/flink.yaml" ) . | indent 4}}

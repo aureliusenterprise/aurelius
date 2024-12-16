@@ -21,6 +21,10 @@ develop = true
 path = "../m4i-synchronize-app-search"
 develop = true
 
+[tool.poetry.dependencies.m4i-update-gov-data-quality]
+path = "../m4i-update-gov-data-quality"
+develop = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

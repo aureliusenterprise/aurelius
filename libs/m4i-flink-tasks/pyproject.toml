@@ -6,8 +6,8 @@ authors = [ "Aurelius Enterprise <info@aureliusenterprise.com>" ]
 license = "UNLICENSED"
 readme = "README.md"
 
-  [[tool.poetry.packages]]
-  include = "m4i_flink_tasks"
+[[tool.poetry.packages]]
+include = "m4i_flink_tasks"
 
   [tool.poetry.dependencies]
   python = "~3.8"
@@ -18,6 +18,10 @@ readme = "README.md"
 
     [tool.poetry.dependencies.m4i-atlas-core]
     path = "../m4i-atlas-core"
+    develop = true
+
+    [tool.poetry.dependencies.m4i-governance-data-quality]
+    path = "../m4i-governance-data-quality"
     develop = true
 
 [build-system]

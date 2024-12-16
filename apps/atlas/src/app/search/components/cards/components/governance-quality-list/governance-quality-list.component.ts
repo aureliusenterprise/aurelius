@@ -18,6 +18,7 @@ export interface GovernanceQualityListDocument {
   readonly name: string;
   readonly result: string;
   readonly compliant: string;
+  readonly noncompliant_message: string;
 }
 
 @Injectable()
@@ -40,6 +41,7 @@ export class GovernanceQualityListSearchService extends SearchService<Governance
         entity_guid: { raw: {} },
         guid: { raw: {} },
         compliant: { raw: {} },
+        noncompliant_message: { raw: {} },
         name: { raw: {} },
         result: { raw: {} },
       },

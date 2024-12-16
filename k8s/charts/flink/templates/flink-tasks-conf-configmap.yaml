@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flink-tasks-config
+  labels:
+    app: flink
+data:
+  credentials.py: |+
+{{ tpl ( .Files.Get "conf/credentials.py" ) . | indent 4}}
+  config.py: |+
+{{ tpl ( .Files.Get "conf/config.py" ) . | indent 4}}
+

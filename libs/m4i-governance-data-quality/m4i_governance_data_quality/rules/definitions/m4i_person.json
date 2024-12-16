@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "expressionVersion": 1,
+    "expression": "length('name', 1)",
+    "qualifiedName": "m4i_person--name",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Person has a name",
+    "ruleDescription": "A person should have a name",
+    "compliantMessage": "This person has a name",
+    "noncompliantMessage": "This person should have a name",
+    "active": 1,
+    "type": "attribute",
+    "guid": "f5569602-45a5-4c4b-95b5-bce16f368c4b"
+  },
+  {
+    "id": 2,
+    "expressionVersion": 1,
+    "expression": "length('email', 1)",
+    "qualifiedName": "m4i_person--email",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Person has an email address",
+    "ruleDescription": "A person should have an email address",
+    "compliantMessage": "This person has an email address",
+    "noncompliantMessage": "This person should have an email address",
+    "active": 1,
+    "type": "attribute",
+    "guid": "1b7e2141-638d-4270-906e-a33d0ebb529a"
+  }
+]

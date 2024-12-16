@@ -15,6 +15,7 @@ apache-flink = "~1.17"
 elasticsearch = "~8.9"
 elastic-transport = "8.13.1"
 python-keycloak = "0.18.0"
+urllib3="1.26.2"
 
 [tool.poetry.dependencies.m4i-flink-tasks]
 path = "../../libs/m4i-flink-tasks"

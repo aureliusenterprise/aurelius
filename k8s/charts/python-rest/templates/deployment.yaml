@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "python-rest.fullname" . }}
+  labels:
+    {{- include "python-rest.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "python-rest.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "python-rest.selectorLabels" . | nindent 8 }}
+    spec:
+      hostname: python-rest
+      subdomain: atlas
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.repository }}:{{ .Values.tag }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          env:
+            - name: NAMESPACE
+              value: "{{ .Release.Namespace }}"
+            - name: RESTAPI_ADDITIONAL_CONTEXT
+              value: "atlas"
+            - name: atlas_server_url
+              value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/atlas/atlas"
+            - name: elastic_password
+              valueFrom:
+                secretKeyRef:
+                  name: elastic-search-es-elastic-user
+                  key: elastic
+            {{- if .Values.env }}
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+          volumeMounts:
+          - name: v-python-rest-configs-m4i-atlas-config
+            mountPath: /rest-services/m4i_atlas_config.py
+            subPath: m4i_atlas_config.py
+          - name: v-python-rest-configs-m4i-backend-config
+            mountPath: /rest-services/m4i_backend_config.py
+            subPath: m4i_backend_config.py
+          - name: v-python-rest-configs-m4i-platform-config
+            mountPath: /rest-services/m4i_platform_config.py
+            subPath: m4i_platform_config.py
+          - name: v-elastic-certs
+            mountPath: /secret_certs
+      volumes:
+        - name: v-python-rest-configs-m4i-atlas-config
+          configMap:
+            name: python-rest-configs-m4i-atlas-config
+        - name: v-python-rest-configs-m4i-backend-config
+          configMap:
+            name: python-rest-configs-m4i-backend-config
+        - name: v-python-rest-configs-m4i-platform-config
+          configMap:
+            name: python-rest-configs-m4i-platform-config
+        - name: v-elastic-certs
+          secret:
+            secretName: elastic-search-es-http-certs-public
