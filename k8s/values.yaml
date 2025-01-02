@@ -15,7 +15,7 @@ keycloak:
     accessMode: ReadWriteOnce
     size: 1Gi
   external_ip: 51.138.48.239
-  #keycloakFrontendURL: "https://google.aurelius-atlas.com/" # Replace with your URL here
+
   keycloakFrontendURL: "https://aureliusdev.westeurope.cloudapp.azure.com/" # Replace with your URL here
 
 atlas:
@@ -50,8 +50,6 @@ flink:
   repository: ghcr.io/aureliusenterprise/aurelius-flink-jobs
   taskmanager_numberOfTaskSlots: 3
   replicas: 1
-  # repository: ghcr.io/aureliusenterprise/m4i-flink-jobs:
-  # tag: v2.0.2
 
 kafka-ui:
   enabled: true
@@ -60,7 +58,6 @@ ingress:
   email_address: lorand.vatamany@aureliusenterprise.com
 
 global:
-  #external_hostname: "google.aurelius-atlas.com"
   external_hostname: "aureliusdev.westeurope.cloudapp.azure.com"
   version: 2.0.7
 
