@@ -14,7 +14,6 @@ from ..utils import get_qualified_name
 @dataclass
 class DataFieldBase(BaseObject):
 
-    attribute: str
     dataset: str
     name: str
 
@@ -35,6 +34,7 @@ class DataFieldBase(BaseObject):
 @dataclass
 class DataFieldDefaultsBase(DataClassJsonMixin):
 
+    attribute: Optional[str] = None
     definition: Optional[str] = None
     field_type: Optional[str] = None
     source: Optional[str] = None
@@ -53,14 +53,16 @@ class DataField(
         """
         Returns a corresponding Atlas `BusinessField` instance.
         """
-        attribute_unique_attributes = M4IAttributes(
-            qualified_name=self.attribute
-        )
 
-        attribute = ObjectId(
-            type_name="m4i_data_attribute",
-            unique_attributes=attribute_unique_attributes
-        )
+        if bool(self.attribute):
+            attribute_unique_attributes = M4IAttributes(
+                qualified_name=self.attribute
+            )
+
+            attribute = ObjectId(
+                type_name="m4i_data_attribute",
+                unique_attributes=attribute_unique_attributes
+            )
 
         dataset_unique_attributes = M4IAttributes(
             qualified_name=self.dataset
@@ -72,7 +74,7 @@ class DataField(
         )
 
         attributes = BusinessFieldAttributes(
-            attributes=[attribute],
+            attributes=[attribute] if bool(self.attribute) else [],
             datasets=[dataset],
             definition=self.definition,
             field_type=self.field_type,
