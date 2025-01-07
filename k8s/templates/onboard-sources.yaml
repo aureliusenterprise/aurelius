@@ -9,7 +9,7 @@ spec:
       restartPolicy: OnFailure
       containers:
       - name: import-dataset
-        image: aureliusatlas/m4i-data-dictionary-io:latest
+        image: "ghcr.io/aureliusenterprise/m4i-data-dictionary-io:{{ .Values.global.version }}"
         imagePullPolicy: Always
         env:
           - name: ATLAS_SERVER_URL
@@ -31,16 +31,28 @@ spec:
             value: {{ .Values.onboard_sources.bootstrap_servers }}
           - name: SCHEMA_REGISTRY_URL
             value: {{ .Values.onboard_sources.schema_registry_url }}
+          - name: SYSTEM_NAME
+            value: "Demo System"
+          - name: SYSTEM_QUALIFIED_NAME
+            value: "demo-system"
+          - name: COLLECTION_NAME
+            value: "Demo Collection"
+          - name: COLLECTION_QUALIFIED_NAME
+            value: "demo-system--demo-collection"
         volumeMounts:
+        {{- if .Values.onboard_sources.excel_file }}
           - name: excel-file-volume
             mountPath: /data/{{ .Values.onboard_sources.excel_file }}
             subPath: {{ .Values.onboard_sources.excel_file }}
+        {{- end }}
         securityContext:
           runAsUser: 0
       volumes:
+      {{- if .Values.onboard_sources.excel_file }}
         - name: excel-file-volume
           configMap:
             name: excel-config
             items:
               - key: {{ .Values.onboard_sources.excel_file }}
                 path: {{ .Values.onboard_sources.excel_file }}
+      {{- end }}
