@@ -10,6 +10,11 @@
           "target": "build",
           "projects": ["atlas"],
           "params": "forward"
+        },
+        {
+          "target": "build",
+          "projects": ["index-page"],
+          "params": "forward"
         }
       ],
       "command": "docker build -f {projectRoot}/Dockerfile . -t {args.namespace}/{args.tag}:{args.version}",
