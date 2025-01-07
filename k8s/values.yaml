@@ -59,11 +59,13 @@ ingress:
 
 global:
   external_hostname: "aureliusdev.westeurope.cloudapp.azure.com"
-  version: 2.0.7
+  version: 2.0.8
 
 post_install:
   upload_data: "true"
 
 onboard_sources:
-  source: excel
-  excel_file: my_excel_file.xlsx
+  source: kafka
+  #excel_file: my_excel_file.xlsx
+  bootstrap_servers: "kafka-broker.iot-kafka-data-platform.svc.cluster.local:9092"
+  schema_registry_url: "http://iot-schema-registry.iot-kafka-data-platform.svc.cluster.local:8085"
