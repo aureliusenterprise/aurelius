@@ -1,6 +1,9 @@
 <ng-container *ngIf="searchResult$ | async as searchResult">
   <div class="block">
     <p>
+      {{ searchResult.dataqualityruledescription?.raw }}
+    </p>
+    <p>
       <span class="icon-text">
         <span
           class="icon"
@@ -19,8 +22,7 @@
           </fa-icon>
         </span>
         <span>
-          {{ searchResult.dataqualityruledimension?.raw | titlecase }} -
-          {{ searchResult.result?.raw }}
+          {{ searchResult.dataqualityruledimension?.raw | titlecase }}
         </span>
       </span>
     </p>

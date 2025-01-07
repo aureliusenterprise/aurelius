@@ -23,8 +23,10 @@ config = {
     "bootstrap_servers": os.getenv("BOOTSTRAP_SERVERS"),
     "schema_registry_url": os.getenv("SCHEMA_REGISTRY_URL"),
     "consumer_group_id_prefix": os.getenv("CONSUMER_GROUP_ID_PREFIX", 'check-format-group'),
-    "system.qualified_name": os.getenv("SYSTEM_QUALIFIED_NAME"),
-    "collection.qualified_name": os.getenv("COLLECTION_QUALIFIED_NAME"),
+    "system_name": os.getenv("SYSTEM_NAME", "Kafka Broker"),
+    "system_qualified_name": os.getenv("SYSTEM_QUALIFIED_NAME", "kafka-broker"),
+    "collection_name": os.getenv("COLLECTION_NAME", "Default Cluster"),
+    "collection_qualified_name": os.getenv("COLLECTION_QUALIFIED_NAME", "kafka-broker--default-cluster"),
 }
 
 store = ConfigStore.get_instance()
@@ -50,6 +52,13 @@ register_atlas_entity_types(atlas_entity_types)
 
 
 read_mode = store.get("source", default=True)
+
+print("EXAMPLE")
+print(os.getenv("SYSTEM_NAME", "Kafka Broker"))
+print(os.getenv("SYSTEM_NAME"))
+print(os.getenv("SYSTEM_QUALIFIED_NAME", "kafka-broker"))
+print(os.getenv("SYSTEM_QUALIFIED_NAME"))
+print(os.getenv("COLLECTION_NAME", "Default Cluster"))
 
 if read_mode == "excel":
   asyncio.run(create_from_excel(*excel_parser_configs, access_token=access_token))

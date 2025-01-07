@@ -1,0 +1,84 @@
+<Location /{{ .Release.Namespace }}/atlas/atlas/>
+ProxyPass "http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/api/atlas/"
+ProxyPassReverse "http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/api/atlas/"
+</Location>
+
+Alias "/{{ .Release.Namespace }}/atlas" "/usr/local/apache2/atlas"
+<Directory "/usr/local/apache2/atlas">
+   RewriteEngine On
+   RewriteBase /{{ .Release.Namespace }}/atlas/
+   RewriteRule ^index\.html$ - [L]
+   RewriteCond %{REQUEST_FILENAME} !-f
+   RewriteCond %{REQUEST_FILENAME} !-d
+   RewriteRule . index.html [L]
+    Order allow,deny
+		AllowOverride All
+		Allow from all
+		Require all granted
+</Directory>
+
+## models4insight backend
+<Location /{{ .Release.Namespace }}/atlas/repository/api>
+        ProxyPass "http://python-rest.{{ .Release.Namespace }}.svc.cluster.local:5000/{{ .Release.Namespace }}/atlas/logging/"
+        ProxyPassReverse "http://python-rest.{{ .Release.Namespace }}.svc.cluster.local:5000/{{ .Release.Namespace }}/atlas/logging/"
+</Location>
+
+# lineage graph backend
+<Location /{{ .Release.Namespace }}/atlas/lineage_model>
+        ProxyPass "http://python-rest.{{ .Release.Namespace }}.svc.cluster.local:5000/{{ .Release.Namespace }}/atlas/lineage_model/"
+        ProxyPassReverse "http://python-rest.{{ .Release.Namespace }}.svc.cluster.local:5000/{{ .Release.Namespace }}/atlas/lineage_model/"
+</Location>
+
+# python script
+<Location /{{ .Release.Namespace }}/atlas/api/data_governance_dashboard>
+        ProxyPass "http://python-rest.{{ .Release.Namespace }}.svc.cluster.local:5000/{{ .Release.Namespace }}/lineage/data_governance/dashboard"
+        ProxyPassReverse "http://python-rest.{{ .Release.Namespace }}.svc.cluster.local:5000/{{ .Release.Namespace }}/lineage/data_governance/dashboard"
+        Header add Access-Control-Allow-Origin "*"
+</Location>
+
+# python script
+<Location /{{ .Release.Namespace }}/atlas/lineage>
+        ProxyPass "http://python-rest.{{ .Release.Namespace }}.svc.cluster.local:5000/{{ .Release.Namespace }}/atlas/lineage"
+        ProxyPassReverse "http://python-rest.{{ .Release.Namespace }}.svc.cluster.local:5000/{{ .Release.Namespace }}/atlas/lineage"
+        Header add Access-Control-Allow-Origin "*"
+</Location>
+
+#
+##Alias "http://atlas-dev/search" "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev/search.json"
+#
+##<Location /elastic>
+##       ProxyPass "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev/search.json"
+##       ProxyPassReverse "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev/search.json"
+##</Location>
+#
+Redirect 307 "/{{ .Release.Namespace }}/atlas/elastic" "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/api/as/v1/engines/atlas-dev/search.json"
+
+Redirect 307 "/{{ .Release.Namespace }}/atlas/data_quality" "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/api/as/v1/engines/atlas-dev-quality/search.json"
+
+Redirect 307 "/{{ .Release.Namespace }}/atlas/gov_quality" "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/api/as/v1/engines/atlas-dev-gov-quality/search.json"
+
+
+#Redirect 307 "/atlas/elastic" "https://aureliusdev.westeurope.cloudapp.azure.com/gaby/app-search/api/as/v1/engines/atlas-dev/search.json"
+#
+#Redirect 307 "/atlas/data_quality" "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev-quality/search.json"
+#
+#Redirect 307 "/atlas/gov_quality" "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev-gov-quality/search.json"
+
+#Alias "/atlas" "/var/www/atlas"
+#<Directory "/var/www/atlas">
+#        RewriteEngine On
+#        RewriteBase /atlas/
+#        RewriteRule ^index\.html$ - [L]
+#        RewriteCond %{REQUEST_FILENAME} !-f
+#        RewriteCond %{REQUEST_FILENAME} !-d
+#        RewriteRule . /atlas/index.html [L]
+#
+###    AuthType Basic
+###  AuthName "Authentication Required"
+###  AuthUserFile "/etc/htpasswd/.htpasswd"
+###  Require valid-user
+#Options Indexes FollowSymLinks
+#    AllowOverride all
+#    Order allow,deny
+#    Allow from all
+#</Directory>

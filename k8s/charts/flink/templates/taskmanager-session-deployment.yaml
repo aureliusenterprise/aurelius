@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flink-taskmanager
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: flink
+      component: taskmanager
+  template:
+    metadata:
+      labels:
+        app: flink
+        component: taskmanager
+    spec:
+      initContainers: # sidecar container to wait for a service to be completed.
+        - name: wait-for-reverse-proxy-service
+          image: darthcabs/tiny-tools:1
+          args:
+          - /bin/bash
+          - -c
+          - >
+            set -x;
+            while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' curl \
+                          -X GET "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/" \
+                          -H 'Content-Type: application/json' --insecure | tail -c 3)" != "200" ]]; do
+              echo '.'
+              sleep 15;
+            done
+      containers:
+      - name: taskmanager
+        image: "{{ .Values.repository }}:{{ .Values.global.version }}"
+        resources:
+          requests:
+            memory: "4Gi"
+          limits:
+            memory: "8Gi"
+        imagePullPolicy: {{ .Values.pullPolicy }}
+        args: ["taskmanager"]
+        ports:
+        - containerPort: 6122
+          name: rpc
+        - containerPort: 6125
+          name: query-state
+        livenessProbe:
+          tcpSocket:
+            port: 6122
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        volumeMounts:
+        - name: flink-config-volume
+          mountPath: /opt/flink/conf/
+        - name: flink-tasks-config-volume
+          mountPath: /opt/flink/tasks-conf
+        securityContext:
+          runAsUser: 9999  # refers to user _flink_ from official flink image, change if necessary
+      volumes:
+      - name: flink-config-volume
+        configMap:
+          name: flink-config
+          items:
+          - key: flink-conf.yaml
+            path: flink-conf.yaml
+          - key: log4j-console.properties
+            path: log4j-console.properties
+      - name: flink-tasks-config-volume
+        configMap:
+          name: flink-tasks-config
+          items:
+          - key: config.py
+            path: config.py
+          - key: credentials.py
+            path: credentials.py

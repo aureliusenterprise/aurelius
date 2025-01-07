@@ -1,0 +1,11 @@
+apiVersion: enterprisesearch.k8s.elastic.co/v1
+kind: EnterpriseSearch
+metadata:
+  name: {{ .Values.enterprise_search.name }}
+spec:
+  version: {{ .Values.enterprise_search.version }}
+  count: {{ .Values.enterprise_search.replicaCount }}
+  elasticsearchRef:
+    name: {{ .Values.elastic_search.name }}
+  config:
+    app_search.engine.total_fields.limit: 96

@@ -1,0 +1,21 @@
+pullPolicy: Always
+taskmanager_numberOfTaskSlots: 10
+replicas: 1
+enterprise_search_internal_url: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/
+env:
+  POETRY_VIRTUALENVS_IN_PROJECT: true
+  ELASTICSEARCH_APP_SEARCH_INDEX_NAME: .ent-search-engine-documents-atlas-dev
+  ELASTICSEARCH_STATE_INDEX_NAME: publish_state
+  ELASTICSEARCH_USERNAME: elastic
+  KAFKA_APP_SEARCH_TOPIC_NAME: .ent-search-engine-documents-atlas-dev
+  KAFKA_PUBLISH_STATE_TOPIC_NAME: publish_state
+  KAFKA_GOV_DATA_QUALITY_TOPIC_NAME: ".ent-search-engine-documents-atlas-dev-gov-quality"
+  KAFKA_BOOTSTRAP_SERVER_PORT: 9092
+  KAFKA_CONSUMER_GROUP_ID: "SYNCHRONIZE_APP_SEARCH_CONSUMER"
+  KAFKA_PRODUCER_GROUP_ID: "SYNCHRONIZE_APP_SEARCH_PRODUCER"
+  KAFKA_ERROR_TOPIC_NAME: DEAD_LETTER_BOX
+  KAFKA_SOURCE_TOPIC_NAME: ATLAS_ENTITIES
+  KEYCLOAK_CLIENT_ID: m4i_atlas
+  KEYCLOAK_REALM_NAME: m4i
+  KEYCLOAK_USERNAME: atlas
+  ELASTIC_USERNAME: elastic

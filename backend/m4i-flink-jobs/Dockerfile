@@ -1,8 +1,6 @@
 FROM flink:1.17.0
 
-# Create a non-root user
-RUN addgroup --system m4i-flink-jobs && \
-  adduser --system --ingroup m4i-flink-jobs m4i-flink-jobs
+LABEL org.opencontainers.image.source https://github.com/aureliusenterprise/aurelius
 
 # Install Python 3.8
 RUN apt-get update && \
@@ -15,6 +13,9 @@ RUN apt-get update && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
+# Create a symlink for `python` to `python3.8`
+RUN ln -s /usr/bin/python3.8 /usr/bin/python
+
 # Set the working directory
 WORKDIR /app
 
@@ -22,17 +23,16 @@ WORKDIR /app
 COPY ../../dist/backend/m4i-flink-jobs/*.whl .
 
 # Install the wheel file and remove it afterwards
-RUN pip install --no-cache-dir *.whl && \
-  rm *.whl
+RUN pip install --no-cache-dir *.whl && rm *.whl
 
 # Copy the main script into the container
-COPY --chown=m4i-flink-jobs:m4i-flink-jobs --chmod=0400 backend/m4i-flink-jobs/main.py .
+COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/main.py .
 
 # Copy the jar files into the container
-COPY --chown=m4i-flink-jobs:m4i-flink-jobs --chmod=0400 backend/m4i-flink-jobs/*.jar ./jars/
+COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/jars/*.jar ./jars/
 
 # Switch to the non-root user
-USER m4i-flink-jobs
+USER flink
 
 # Command to run the application
 CMD ["/opt/flink/bin/flink", "run", "-d", "-py", "main.py"]
