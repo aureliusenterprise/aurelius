@@ -2,7 +2,7 @@
   "name": "m4i-atlas-post-install",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "apps/m4i-atlas-post-install/m4i_atlas_post_install",
+  "sourceRoot": "backend/m4i-atlas-post-install/m4i_atlas_post_install",
   "targets": {
     "add": {
       "executor": "@nxlv/python:add",
@@ -18,7 +18,7 @@
     },
     "build": {
       "executor": "@nxlv/python:build",
-      "outputs": ["{projectRoot}/dist"],
+      "outputs": ["{projectRoot}/dist/backend/m4i-atlas-post-install"],
       "options": {
         "outputPath": "{workspaceRoot}/dist/backend/m4i-atlas-post-install",
         "publish": false,

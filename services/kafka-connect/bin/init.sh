@@ -4,7 +4,7 @@ echo "Running the Aurelius initialization script.."
 
 # Sign elastic certificate
 cd /home/appuser/;
-yes | keytool -import -alias elasticca -file certs/ca/ca.crt -keypass elastic -keystore elastic.jks -storepass elastic | tee error.log;
+yes | keytool -import -alias elasticca -file $SECRET_FILE_PATH -keypass elastic -keystore elastic.jks -storepass elastic;
 
 # Wait for the Kafka Connect REST API to be available
 while [ "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:${CONNECT_REST_PORT}/connectors)" != "200" ]; do

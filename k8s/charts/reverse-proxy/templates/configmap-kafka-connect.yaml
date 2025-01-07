@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-reverse-proxy-configs-kafka-connect-conf
+data:
+  kafka-connect.conf: |
+{{ tpl ( .Files.Get "conf.d/kafka-connect.yaml" ) . | indent 4}}

@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "expressionVersion": 1,
+    "expression": "length('name', 1)",
+    "qualifiedName": "m4i_collection--name",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Collection has a name",
+    "ruleDescription": "A collection should have a name",
+    "compliantMessage": "This collection has a name",
+    "noncompliantMessage": "This collection should have a name",
+    "active": 1,
+    "type": "attribute",
+    "guid": "b7e35a21-90ef-43db-949b-8fedba5c1fec"
+  },
+  {
+    "id": 2,
+    "expressionVersion": 1,
+    "expression": "length('systems', 1)",
+    "qualifiedName": "m4i_collection--systems",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Collection belongs to a system",
+    "ruleDescription": "A collection should belong to a system",
+    "compliantMessage": "This collection belongs to a system",
+    "noncompliantMessage": "This collection should belong to a system",
+    "active": 1,
+    "type": "relationship",
+    "guid": "198cbc37-3ec8-4eb0-a1a3-372240e37e29"
+  },
+  {
+    "id": 3,
+    "expressionVersion": 1,
+    "expression": "length('datasets', 1)",
+    "qualifiedName": "m4i_collection--datasets",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Collection has a dataset",
+    "ruleDescription": "A collection should have at least one dataset",
+    "compliantMessage": "This collection has at least one dataset",
+    "noncompliantMessage": "This collection should have at least one dataset",
+    "active": 1,
+    "type": "relationship",
+    "guid": "69c6a273-9255-4454-ba81-e58cf1a1d055"
+  },
+  {
+    "id": 4,
+    "expressionVersion": 1,
+    "expression": "length('definition', 1)",
+    "qualifiedName": "m4i_collection--definition",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Collection has a definition",
+    "ruleDescription": "A collection should have a definition",
+    "compliantMessage": "This collection has a definition",
+    "noncompliantMessage": "This collection should have a definition",
+    "active": 1,
+    "type": "attribute",
+    "guid": "c1f19da8-a7f8-45f5-8d3a-d1d16332b08f"
+  }
+]

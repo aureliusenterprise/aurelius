@@ -1,0 +1,71 @@
+---
+# Example values for service
+
+# define global variable
+
+# container image
+# https://github.com/keycloak/keycloak-containers/blob/16.1.1/server/README.md
+keycloak:
+  tag: "16.1.0.2"
+  env:
+    KEYCLOAK_USER: "admin"
+  realm_file_name: "realm_m4i.json"
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 1Gi
+  external_ip: 51.138.48.239
+
+  keycloakFrontendURL: "https://aureliusdev.westeurope.cloudapp.azure.com/" # Replace with your URL here
+
+atlas:
+  tag: "2.2.1"
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 1Gi
+
+reverse-proxy:
+  tag: "1.0.9.7"
+
+host_ip: 51.138.48.239   # Replace with your IP address
+
+elastic:
+  elastic_search:
+    replicaCount: 1
+    version: 8.2.2
+    persistence:
+      enabled: true
+      # storageClass: "-"
+      accessMode: ReadWriteOnce
+      size: 4Gi
+  kibana:
+    replicaCount: 1
+    version: 8.2.2
+  enterprise_search:
+    replicaCount: 1
+    version: 8.2.2
+
+flink:
+  repository: ghcr.io/aureliusenterprise/aurelius-flink-jobs
+  taskmanager_numberOfTaskSlots: 3
+  replicas: 1
+
+kafka-ui:
+  enabled: true
+
+ingress:
+  email_address: lorand.vatamany@aureliusenterprise.com
+
+global:
+  external_hostname: "aureliusdev.westeurope.cloudapp.azure.com"
+  version: 2.0.8
+
+post_install:
+  upload_data: "true"
+
+onboard_sources:
+  source: kafka
+  #excel_file: my_excel_file.xlsx
+  bootstrap_servers: "kafka-broker.iot-kafka-data-platform.svc.cluster.local:9092"
+  schema_registry_url: "http://iot-schema-registry.iot-kafka-data-platform.svc.cluster.local:8085"

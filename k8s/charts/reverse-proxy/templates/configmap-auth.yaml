@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-reverse-proxy-configs-auth-conf
+data:
+  auth.conf: |
+{{ tpl ( .Files.Get "conf.d/auth.yaml" ) . | indent 4}}

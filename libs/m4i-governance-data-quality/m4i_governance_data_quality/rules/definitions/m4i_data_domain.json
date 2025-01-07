@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "expressionVersion": 1,
+    "expression": "length('name', 1)",
+    "qualifiedName": "m4i_data_domain--name",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Data domain has a name",
+    "ruleDescription": "A data domain should have a name",
+    "compliantMessage": "This data domain has a name",
+    "noncompliantMessage": "This data domain should have a name",
+    "active": 1,
+    "type": "attribute",
+    "guid": "a623d462-c004-4f4f-aff8-b4f7ce01a38e"
+  },
+  {
+    "id": 2,
+    "expressionVersion": 1,
+    "expression": "length('definition', 1)",
+    "qualifiedName": "m4i_data_domain--definition",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Data domain has a definition",
+    "ruleDescription": "A data domain should have a definition",
+    "compliantMessage": "This data domain has a definition",
+    "noncompliantMessage": "This data domain should have a definition",
+    "active": 1,
+    "type": "attribute",
+    "guid": "4d4e95c8-7746-47e9-9c28-3d22d8d0c1bf"
+  },
+  {
+    "id": 3,
+    "expressionVersion": 1,
+    "expression": "length('dataEntity', 1)",
+    "qualifiedName": "m4i_data_domain--dataEntity",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Data domain has a data entity",
+    "ruleDescription": "A data domain should have at least one data entity",
+    "compliantMessage": "This data domain has at least one data entity",
+    "noncompliantMessage": "This data domain should have at least one data entity",
+    "active": 1,
+    "type": "relationship",
+    "guid": "261ffe99-fdbb-456f-8e6c-6fad87c448df"
+  },
+  {
+    "id": 4,
+    "expressionVersion": 1,
+    "expression": "length('domainLead', 1)",
+    "qualifiedName": "m4i_data_domain--domainLead",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Data domain has a domain lead",
+    "ruleDescription": "A data domain should have at least one domain lead",
+    "compliantMessage": "This data domain has at least one domain lead",
+    "noncompliantMessage": "This data domain should have at least one domain lead",
+    "active": 1,
+    "type": "relationship",
+    "guid": "ea0ca02b-c8c6-40f0-9828-f2c90ae71c2b"
+  }
+]

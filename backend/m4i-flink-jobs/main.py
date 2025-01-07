@@ -32,6 +32,7 @@ if __name__ == "__main__":
         "kafka_error_topic_name": os.environ["KAFKA_ERROR_TOPIC_NAME"],
         "kafka_producer_group_id": os.environ["KAFKA_PRODUCER_GROUP_ID"],
         "kafka_source_topic_name": os.environ["KAFKA_SOURCE_TOPIC_NAME"],
+        "kafka_gov_data_quality_topic_name": os.environ["KAFKA_GOV_DATA_QUALITY_TOPIC_NAME"],
         "keycloak_client_id": os.environ["KEYCLOAK_CLIENT_ID"],
         "keycloak_client_secret_key": os.environ.get("KEYCLOAK_CLIENT_SECRET_KEY"),
         "keycloak_password": os.environ["KEYCLOAK_PASSWORD"],

@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "expressionVersion": 1,
+    "expression": "length('name', 1)",
+    "qualifiedName": "m4i_data_attribute--name",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Data attribute has a name",
+    "ruleDescription": "A data attribute should have a name",
+    "compliantMessage": "This data attribute has a name",
+    "noncompliantMessage": "This data attribute should have a name",
+    "active": 1,
+    "type": "attribute",
+    "guid": "ed526686-f4eb-4552-b871-c606eb7711b2"
+  },
+  {
+    "id": 2,
+    "expressionVersion": 1,
+    "expression": "length('definition', 1)",
+    "qualifiedName": "m4i_data_attribute--definition",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Data attribute has a definition",
+    "ruleDescription": "A data attribute should have a definition",
+    "compliantMessage": "This data attribute has a definition",
+    "noncompliantMessage": "This data attribute should have a definition",
+    "active": 1,
+    "type": "attribute",
+    "guid": "f6ae2088-3557-4014-a9d7-9ef9a29ad8a8"
+  },
+  {
+    "id": 3,
+    "expressionVersion": 1,
+    "expression": "length('dataEntity', 1)",
+    "qualifiedName": "m4i_data_attribute--dataEntity",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Data attribute belongs to a data entity",
+    "ruleDescription": "A data attribute should belong to a data entity",
+    "compliantMessage": "This data attribute belongs to a data entity",
+    "noncompliantMessage": "This data attribute should belong to a data entity",
+    "active": 1,
+    "type": "relationship",
+    "guid": "d1952aa1-5d80-4d58-b520-cf2b8915aa8b"
+  },
+  {
+    "id": 4,
+    "expressionVersion": 1,
+    "expression": "length('businessOwner', 1)",
+    "qualifiedName": "m4i_data_attribute--businessOwner",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Data attribute has an owner",
+    "ruleDescription": "A data attribute should have at least one business owner",
+    "compliantMessage": "This data attribute has at least one business owner",
+    "noncompliantMessage": "This data attribute should have at least one business owner",
+    "active": 1,
+    "type": "relationship",
+    "guid": "18ac4a3b-3aec-4e62-8ff7-47f96c74e90d"
+  },
+  {
+    "id": 5,
+    "expressionVersion": 1,
+    "expression": "length('steward', 1)",
+    "qualifiedName": "m4i_data_attribute--steward",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Data attribute has a steward",
+    "ruleDescription": "A data attribute should have at least one data steward",
+    "compliantMessage": "This data attribute has at least one data steward",
+    "noncompliantMessage": "This data attribute should have at least one data steward",
+    "active": 1,
+    "type": "relationship",
+    "guid": "7c875ccb-b38e-4669-96ea-2b5391245461"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "expressionVersion": 1,
+    "expression": "length('name', 1)",
+    "qualifiedName": "m4i_field--name",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Field has a name",
+    "ruleDescription": "A field should have a name",
+    "compliantMessage": "This field has a name",
+    "noncompliantMessage": "This field should have a name",
+    "active": 1,
+    "type": "attribute",
+    "guid": "09e41d1f-0b00-4092-8ad3-389fab3ec848"
+  },
+  {
+    "id": 2,
+    "expressionVersion": 1,
+    "expression": "length('definition', 1)",
+    "qualifiedName": "m4i_field--definition",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Field has a definition",
+    "ruleDescription": "A field should have a definition",
+    "compliantMessage": "This field has a definition",
+    "noncompliantMessage": "This field should have a definition",
+    "active": 1,
+    "type": "attribute",
+    "guid": "c141319d-a0a5-428b-80ed-e76c7f480e39"
+  },
+  {
+    "id": 3,
+    "expressionVersion": 1,
+    "expression": "length('field_type', 1)",
+    "qualifiedName": "m4i_field--fieldType",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Field has a data type",
+    "ruleDescription": "A field should have a data type",
+    "compliantMessage": "This field has a data type",
+    "noncompliantMessage": "This field should have a data type",
+    "active": 1,
+    "type": "attribute",
+    "guid": "a5965332-bb1d-4c34-90ba-0cc45948b0a4"
+  },
+  {
+    "id": 4,
+    "expressionVersion": 1,
+    "expression": "length('datasets', 1)",
+    "qualifiedName": "m4i_field--datasets",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Field belongs to a dataset",
+    "ruleDescription": "A field should belong to a dataset",
+    "compliantMessage": "This field belongs to a dataset",
+    "noncompliantMessage": "This field should belong to a dataset",
+    "active": 1,
+    "type": "relationship",
+    "guid": "cad0a3bf-9f7f-464f-aeb5-9ce97eb993b3"
+  }
+]

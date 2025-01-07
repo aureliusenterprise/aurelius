@@ -6,7 +6,7 @@ services:
     environment:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: localhost
-        taskmanager.numberOfTaskSlots: 2
+        taskmanager.numberOfTaskSlots: 3
       ATLAS_SERVER_URL: "http://127.0.0.1:21000/api/atlas"
       ATLAS_USERNAME: "atlas"
       ELASTICSEARCH_APP_SEARCH_INDEX_NAME: ".ent-search-engine-documents-atlas-dev"
@@ -20,6 +20,7 @@ services:
       DATA2MODEL_URL: 'http://localhost:7000'
       KAFKA_APP_SEARCH_TOPIC_NAME: ".ent-search-engine-documents-atlas-dev"
       KAFKA_PUBLISH_STATE_TOPIC_NAME: "publish_state"
+      KAFKA_GOV_DATA_QUALITY_TOPIC_NAME: ".ent-search-engine-documents-atlas-dev-gov-quality"
       KAFKA_BOOTSTRAP_SERVER_HOSTNAME: "localhost"
       KAFKA_BOOTSTRAP_SERVER_PORT: "9092"
       KAFKA_CONSUMER_GROUP_ID: "SYNCHRONIZE_APP_SEARCH_CONSUMER"
@@ -159,6 +160,7 @@ services:
       CONNECT_STATUS_STORAGE_TOPIC: 'kafka-connect-status'
       CONNECT_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
       CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'false'
+      SECRET_FILE_PATH: /home/appuser/certs/ca/ca.crt
     network_mode: service:dev
 
   kafka-ui:
@@ -339,7 +341,7 @@ services:
   #  restart: "no"
   #  depends_on:
   #    - jobmanager
-  #  entrypoint: [ "bash", "-c", "./run.sh && tail -f /dev/null"]
+  #  entrypoint: [ "bash", "-c", "/app/bin/run.sh && tail -f /dev/null"]
   #  network_mode: service:dev
 
 configs:

@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "keycloak.fullname" . }}
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "keycloak.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "keycloak.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "keycloak.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      hostname: keycloak
+      subdomain: atlas
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.repository }}:{{ .Values.tag }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          lifecycle:
+            postStart:
+              exec:
+                command: 
+                 - "/bin/bash"
+                 - "-c"
+                 - > 
+                   /tmp/init_standard_users.sh;
+          env:
+            {{- if .Values.env }}
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            - name: KEYCLOAK_FRONTEND_URL
+              value:  {{ .Values.keycloakFrontendURL }}{{ .Release.Namespace }}/auth
+            - name: RELEASE_NAMESPACE
+              value:  {{ .Release.Namespace }}
+            - name: RELEASE_NAME
+              value: {{ .Release.Name }}
+            - name: KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: password
+            - name: USER_ATLAS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-admin
+                  key: password
+            - name: USER_STEWARD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-steward
+                  key: password
+            - name: USER_DATA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-data
+                  key: password
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            - name: data
+              mountPath: /opt/jboss/keycloak/standalone/data
+              subPath: data
+            {{- end }}
+            - name: realm-single-file-volume
+              mountPath: /tmp/realm.json
+              subPath: realm.json
+      volumes:
+        - name: realm-single-file-volume
+          configMap:
+            name: realm-single-file
+{{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - {{ .Values.persistence.accessMode | quote }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size | quote }}
+      {{- if .Values.persistence.storageClass }}
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: "{{ .Values.persistence.storageClass }}"
+        {{- end }}
+      {{- end }}
+{{- end }}

@@ -53,25 +53,22 @@ def process_field(field: str, dataset_qualified_name: str) -> DataField:
       "dataset": dataset_qualified_name,
       "qualifiedName": dataset_qualified_name + "--" + qualified_name,
       "fieldType": "numeric",
-      "attribute": qualified_name
     })
 
 async def create_from_kafka(access_token: str, store: ConfigStore):
 
   # Fetch data from kafka
-  data = discover_cluster()
+  data = discover_cluster(store)
   # Create Source, System and Collection
   instances = []
-  system_qualified_name = store.get("system.qualified_name")
-  collection_qualified_name = store.get("collection.qualified_name")
+  system_qualified_name = store.get("system_qualified_name")
+  collection_qualified_name = store.get("collection_qualified_name")
 
   instances.append(create_source(store.get("data.dictionary.path")))
 
-  if not system_qualified_name:
-    instances.append(create_system("Kafka Broker", "kafka-broker"))
+  instances.append(create_system(store.get("system_name"), store.get("system_qualified_name")))
 
-  if not collection_qualified_name:
-    instances.append(create_collection("Default Cluster", "kafka-broker", "kafka-broker--default-cluster"))
+  instances.append(create_collection(store.get("collection_name"), system_qualified_name, collection_qualified_name))
 
   # Iterate over topics and fields
   for item in data:
