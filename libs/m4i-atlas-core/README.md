@@ -164,7 +164,7 @@ When Keycloak authentication is disabled, the default Apache Atlas user manageme
 
 The library includes example scripts to demonstrate how to interact with the Atlas API using the provided data object models and functions. These scripts can be found in the `scripts` directory of the project. Below is a brief overview of some example scripts:
 
-- `load_type_defs.py`: This script loads the type definitions into Atlas. The main function in `load_type_defs.py` can be adjusted to determine which set of type definitions to load. Please note that if a subset of the set already exists, the loading of the type definitions will fail.
+- [`load_type_defs.py`](./scripts/load_type_defs.py): This script loads the type definitions into Atlas. The main function in `load_type_defs.py` can be adjusted to determine which set of type definitions to load. Please note that if a subset of the set already exists, the loading of the type definitions will fail.
 
 ## Testing
 
