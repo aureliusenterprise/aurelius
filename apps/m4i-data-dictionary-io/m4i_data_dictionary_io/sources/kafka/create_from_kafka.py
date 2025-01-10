@@ -28,15 +28,13 @@ def create_collection(name: str, system_qualified_name: str, qualified_name: str
 def process_topic(item, collection_qualified_name: str) -> List:
   """Process each topic by creating dataset and field instances."""
 
-  print(type(item))
-
   elements = []
 
   dataset_qualified_name = collection_qualified_name + "--" + get_qualified_name(item["name"])
   # Create topic
   elements.append(Dataset.from_dict({
     "name": item["name"],
-    "collection": "kafka-broker--default-cluster",
+    "collection": collection_qualified_name,
     "qualifiedName": dataset_qualified_name,
   }))
 
