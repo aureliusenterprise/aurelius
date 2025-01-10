@@ -53,13 +53,6 @@ register_atlas_entity_types(atlas_entity_types)
 
 read_mode = store.get("source", default=True)
 
-print("EXAMPLE")
-print(os.getenv("SYSTEM_NAME", "Kafka Broker"))
-print(os.getenv("SYSTEM_NAME"))
-print(os.getenv("SYSTEM_QUALIFIED_NAME", "kafka-broker"))
-print(os.getenv("SYSTEM_QUALIFIED_NAME"))
-print(os.getenv("COLLECTION_NAME", "Default Cluster"))
-
 if read_mode == "excel":
   asyncio.run(create_from_excel(*excel_parser_configs, access_token=access_token))
 elif read_mode == "kafka":
