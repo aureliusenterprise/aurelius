@@ -7,12 +7,12 @@
     "docker-build": {
       "dependsOn": [
         {
-          "target": "build",
+          "target": "build:standalone",
           "projects": ["atlas"],
           "params": "forward"
         },
         {
-          "target": "build",
+          "target": "build:standalone",
           "projects": ["index-page"],
           "params": "forward"
         }
