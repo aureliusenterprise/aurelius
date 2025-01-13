@@ -3,7 +3,7 @@ FROM httpd:2.4
 LABEL org.opencontainers.image.source https://github.com/aureliusenterprise/aurelius
 
 # Copy Atlas and Landing page
-COPY dist/apps/atlas/browser/* dist/apps/atlas/3rdpartylicenses.txt backend/m4i-reverse-proxy/m4i_reverse_proxy/atlas/
+COPY dist/apps/atlas/browser/* backend/m4i-reverse-proxy/m4i_reverse_proxy/atlas/
 COPY dist/apps/index-page/* backend/m4i-reverse-proxy/m4i_reverse_proxy/htdocs/
 
 # Copy settings and configurations
