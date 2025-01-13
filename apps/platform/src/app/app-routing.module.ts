@@ -4,7 +4,6 @@ import { faHome, faProjectDiagram, faQuestionCircle } from '@fortawesome/free-so
 
 export const routingConfiguration: ExtraOptions = {
     paramsInheritanceStrategy: 'always',
-    relativeLinkResolution: 'legacy'
 };
 
 const routes: Routes = [
@@ -36,7 +35,6 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
   providers: []
 })
