@@ -4,7 +4,7 @@
 # container image
 # https://github.com/keycloak/keycloak-containers/blob/16.1.1/server/README.md
 replicaCount: 1
-repository: aureliusatlas/reverse-proxy
+repository: ghcr.io/aureliusenterprise/m4i-reverse-proxy
 pullPolicy: Always
 service:
   name: reverse-proxy

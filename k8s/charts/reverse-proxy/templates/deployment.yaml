@@ -43,7 +43,7 @@ spec:
             done
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.repository }}:{{ .Values.tag }}"
+          image: "{{ .Values.repository }}:{{ .Values.global.version }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           # command:
           #   - "/usr/local/apache2/init/init_index_html.sh"
