@@ -7,10 +7,9 @@ COPY dist/apps/atlas/browser/* /usr/local/apache2/htdocs/atlas/
 COPY dist/apps/index-page/* /usr/local/apache2/htdocs/
 
 # Copy settings and configurations
-COPY backend/m4i-reverse-proxy/m4i_reverse_proxy/* /usr/local/apache2/
-
 COPY backend/m4i-reverse-proxy/m4i_reverse_proxy/conf/httpd.conf /usr/local/apache2/conf/
 COPY backend/m4i-reverse-proxy/m4i_reverse_proxy/conf.d/ /usr/local/apache2/conf.d/
+COPY backend/m4i-reverse-proxy/m4i_reverse_proxy/init/ /usr/local/apache2/init/
 
 # Install dependencies and configure Apache
 RUN apt-get update && \
