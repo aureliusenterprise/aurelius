@@ -33,6 +33,7 @@
         "styles": ["apps/index-page/src/styles.scss"],
         "scripts": []
       },
+      "defaultConfiguration": "standalone",
       "configurations": {
         "production": {
           "fileReplacements": [
