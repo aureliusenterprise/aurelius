@@ -7,14 +7,12 @@
     "docker-build": {
       "dependsOn": [
         {
-          "target": "build:standalone",
-          "projects": ["atlas"],
-          "params": "forward"
+          "target": "build",
+          "projects": ["atlas"]
         },
         {
-          "target": "build:standalone",
-          "projects": ["index-page"],
-          "params": "forward"
+          "target": "build",
+          "projects": ["index-page"]
         }
       ],
       "command": "docker build -f {projectRoot}/Dockerfile . -t {args.namespace}/{args.tag}:{args.version}",
@@ -33,7 +31,7 @@
       ],
       "command": "docker push {args.namespace}/{args.tag}:{args.version}",
       "options": {
-        "namespace": "aureliusenterprise",
+        "namespace": "ghcr.io/aureliusenterprise",
         "tag": "{projectName}",
         "version": "latest"
       }

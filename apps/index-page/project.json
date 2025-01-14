@@ -33,6 +33,7 @@
         "styles": ["apps/index-page/src/styles.scss"],
         "scripts": []
       },
+      "defaultConfiguration": "standalone",
       "configurations": {
         "production": {
           "fileReplacements": [
@@ -76,7 +77,8 @@
           "sourceMap": true,
           "namedChunks": true
         }
-      }
+      },
+      "defaultConfiguration": "standalone"
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",

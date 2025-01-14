@@ -35,6 +35,7 @@
         ],
         "scripts": []
       },
+      "defaultConfiguration": "standalone",
       "configurations": {
         "production": {
           "fileReplacements": [
