@@ -1,4 +1,4 @@
-pullPolicy: Always
+pullPolicy: IfNotPresent
 taskmanager_numberOfTaskSlots: 10
 replicas: 1
 enterprise_search_internal_url: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/

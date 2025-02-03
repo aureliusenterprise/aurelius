@@ -5,7 +5,7 @@
 # https://github.com/keycloak/keycloak-containers/blob/16.1.1/server/README.md
 replicaCount: 1
 repository: aureliusatlas/docker-keycloak
-pullPolicy: Always
+pullPolicy: IfNotPresent
 tag: "16.1.0.2"
 service:
   name: keycloak

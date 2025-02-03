@@ -1,7 +1,7 @@
 ---
 replicaCount: 1
 repository: aureliusatlas/docker-apache-atlas
-pullPolicy: Always
+pullPolicy: IfNotPresent
 tag: "2.2.1"
 service:
   name: atlas

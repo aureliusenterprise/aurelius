@@ -16,7 +16,7 @@ keycloak:
     size: 1Gi
   external_ip: 51.138.48.239
 
-  keycloakFrontendURL: "https://aureliusdev.westeurope.cloudapp.azure.com/" # Replace with your URL here
+  keycloakFrontendURL: "https://huawei.aurelius-atlas.com/" # Replace with your URL here
 
 atlas:
   tag: "2.2.1"
@@ -58,8 +58,8 @@ ingress:
   email_address: lorand.vatamany@aureliusenterprise.com
 
 global:
-  external_hostname: "aureliusdev.westeurope.cloudapp.azure.com"
-  version: 2.0.8
+  external_hostname: "huawei.aurelius-atlas.com"
+  version: "v2.0.12"
 
 post_install:
   upload_data: "true"
