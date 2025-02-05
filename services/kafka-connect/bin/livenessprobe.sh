@@ -5,8 +5,8 @@ response=$(curl -s -w "%{http_code}" http://localhost:8083/connectors?expand=sta
 http_code=$(echo "$response" | tail -c 4)  # Extract the last 3 characters (HTTP code)
 body=$(echo "$response" | head -c -4)      # Extract the body without the last 3 characters
 
-# Get the state of each connector, make sure they are all running
-status=$(echo "$body" | jq '.[] | .status | .connector | .state')
+# Check whether the tasks of all the connectors are running
+status=$(echo "$body" | jq '.[] | .status | .tasks | .[] | .state')
 for s in $status; do
   if [ "$s" != "\"RUNNING\"" ]; then
     echo "Connectors not running"
