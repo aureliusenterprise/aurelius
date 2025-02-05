@@ -104,7 +104,7 @@
     "lint": {
       "executor": "@nx/linter:eslint",
       "options": {
-        "lintFilePatterns": ["apps/example/**/*.ts", "apps/example/**/*.html"]
+        "lintFilePatterns": ["apps/consistency-metrics/**/*.ts", "apps/consistency-metrics/**/*.html"]
       }
     },
     "test": {
