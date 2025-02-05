@@ -105,7 +105,7 @@
     "lint": {
       "executor": "@nx/linter:eslint",
       "options": {
-        "lintFilePatterns": ["apps/example/**/*.ts", "apps/example/**/*.html"]
+        "lintFilePatterns": ["apps/data2model/**/*.ts", "apps/data2model/**/*.html"]
       }
     },
     "test": {
