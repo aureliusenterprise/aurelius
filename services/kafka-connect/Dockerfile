@@ -20,4 +20,6 @@ RUN confluent-hub install confluentinc/connect-transforms:${CONNECT_TRANSFORMS_V
 COPY --chmod=755 ./services/kafka-connect/bin/ /tmp/aurelius/bin/
 COPY ./services/kafka-connect/workers/ /tmp/aurelius/workers/
 
+HEALTHCHECK --interval=10s --timeout=5s --retries=10  CMD /tmp/aurelius/bin/livenessprobe.sh
+
 ENTRYPOINT ["/tmp/aurelius/bin/docker-entrypoint.sh"]
