@@ -105,8 +105,8 @@
       "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": [
-          "apps/example/**/*.ts",
-          "apps/example/**/*.html"
+          "apps/atlas/**/*.ts",
+          "apps/atlas/**/*.html"
         ]
       }
     },
