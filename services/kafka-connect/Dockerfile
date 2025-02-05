@@ -6,8 +6,7 @@ LABEL org.opencontainers.image.source https://github.com/aureliusenterprise/aure
 USER root
 
 # Install gettext for envsubst
-RUN yum update -y && yum install -y gettext
-
+RUN yum update -y && yum install -y gettext jq
 USER appuser
 
 ARG CONNECT_ELASTICSEARCH_VERSION=latest
