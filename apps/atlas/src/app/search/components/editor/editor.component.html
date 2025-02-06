@@ -17,7 +17,7 @@
 </ng-container>
 <ng-container footer>
   <div *ngIf="currentTab === 'entity'" class="buttons" class="mt-6">
-    <div *models4insight-keycloak-role-permission="'ROLE_ADMIN'"
+    <ng-container *models4insight-keycloak-role-permission="'ROLE_ADMIN'"
     >
       <ng-container *ngIf="deleteAllowed$ | async">
           <a
@@ -30,7 +30,7 @@
             Delete
           </a>
         </ng-container>
-    </div>
+    </ng-container>
 
     <a
       class="button is-success"
