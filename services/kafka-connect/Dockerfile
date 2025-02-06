@@ -6,8 +6,7 @@ LABEL org.opencontainers.image.source https://github.com/aureliusenterprise/aure
 USER root
 
 # Install gettext for envsubst
-RUN yum update -y && yum install -y gettext
-
+RUN yum update -y && yum install -y gettext jq
 USER appuser
 
 ARG CONNECT_ELASTICSEARCH_VERSION=latest
@@ -19,5 +18,7 @@ RUN confluent-hub install confluentinc/connect-transforms:${CONNECT_TRANSFORMS_V
 # Copy the scripts and connector files into the Docker image
 COPY --chmod=755 ./services/kafka-connect/bin/ /tmp/aurelius/bin/
 COPY ./services/kafka-connect/workers/ /tmp/aurelius/workers/
+
+HEALTHCHECK --interval=10s --timeout=5s --retries=10  CMD /tmp/aurelius/bin/livenessprobe.sh
 
 ENTRYPOINT ["/tmp/aurelius/bin/docker-entrypoint.sh"]
