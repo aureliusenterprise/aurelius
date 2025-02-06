@@ -17,17 +17,21 @@
 </ng-container>
 <ng-container footer>
   <div *ngIf="currentTab === 'entity'" class="buttons" class="mt-6">
-    <ng-container *ngIf="deleteAllowed$ | async">
-      <a
-        models4insight-holdable
-        [holdTime]="3"
-        (held)="deleteEntity($event)"
-        class="button is-danger mr-3"
-        [class.is-loading]="isDeletingEntity$ | async"
-      >
-        Delete
-      </a>
-    </ng-container>
+    <!-- <div *models4insight-keycloak-role-permission="'ROLE_ADMIN'"
+    > -->
+      <ng-container *models4insight-keycloak-role-permission="'ROLE_ADMIN'" *ngIf="deleteAllowed$ | async">
+          <a
+            models4insight-holdable
+            [holdTime]="3"
+            (held)="deleteEntity($event)"
+            class="button is-danger mr-3"
+            [class.is-loading]="isDeletingEntity$ | async"
+          >
+            Delete
+          </a>
+        </ng-container>
+    <!-- </div> -->
+
     <a
       class="button is-success"
       [class.is-loading]="isUpdatingEntity$ | async"
