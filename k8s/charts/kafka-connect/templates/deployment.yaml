@@ -138,10 +138,10 @@ spec:
               /etc/confluent/docker/run &
               $CUSTOM_SCRIPT_PATH
               sleep infinity
-          {{- if .Values.livenessProbe }}
+        {{- end }}
+        {{- if .Values.livenessProbe }}
           livenessProbe:
 {{ toYaml .Values.livenessProbe | trim | indent 12 }}
-          {{- end }}
         {{- end }}
           {{- if .Values.volumeMounts }}
           volumeMounts:

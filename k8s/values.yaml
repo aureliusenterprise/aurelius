@@ -59,7 +59,7 @@ ingress:
 
 global:
   external_hostname: "aureliusdev.westeurope.cloudapp.azure.com"
-  version: v2.0.13
+  version: v2.0.14
 
 post_install:
   upload_data: "true"
