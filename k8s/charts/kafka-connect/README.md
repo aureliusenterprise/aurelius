@@ -166,7 +166,7 @@ The configuration parameters in this section control the resources requested and
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
 | `customEnv.CUSTOM_SCRIPT_PATH` | Path to external bash script to run inside the container | see [values.yaml](values.yaml) for details |
-| `livenessProbe` | Requirement of `livenessProbe` depends on the custom script to be run  | see [values.yaml](values.yaml) for details |
+| `livenessProbe` | Executes the `livenessprobe.sh` script at regular intervals to check if Kafka Connect tasks are running  | see [values.yaml](values.yaml) for details |
 
 ### Deployment Topology
 
