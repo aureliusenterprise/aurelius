@@ -171,7 +171,7 @@ Deploy Aurelius Atlas
 3. Deploy the services
 
     ```bash
-    cd Aurelius-Atlas-helm-chart
+    cd aurelius/k8s
     helm dependency update
     helm install --generate-name -n <namespace>  -f values.yaml --wait --timeout 15m0s .
     ```
