@@ -24,6 +24,7 @@ import { SystemEditorComponent } from './system/system-editor.component';
 import { TypeSelectModule } from './type-select/type-select.module';
 import { GovQualityDisplayComponent } from './components/gov-quality-display/gov-quality-display.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { KeycloakRolePermissionModule } from '@models4insight/permissions';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     TypeSelectModule,
     GovernanceQualityCardModule,
     FontAwesomeModule,
+    KeycloakRolePermissionModule,
   ],
   declarations: [
     EditorComponent,

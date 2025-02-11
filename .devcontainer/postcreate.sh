@@ -27,7 +27,7 @@ done < "$JARS_DIR/manifest"
 upload_to_atlas () {
     echo "Uploading data to Apache Atlas..."
     pushd backend/m4i-atlas-post-install/bin
-    ./upload_sample_data.sh only_gov_quality.zip
+    ./upload_sample_data.sh
     popd
 }
 
