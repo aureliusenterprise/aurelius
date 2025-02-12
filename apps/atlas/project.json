@@ -20,16 +20,6 @@
         "polyfills": ["apps/atlas/src/polyfills.ts"],
         "tsConfig": "apps/atlas/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": [
-          "apps/atlas/src/favicon.ico",
-          "apps/atlas/src/assets",
-          "apps/atlas/src/manifest.webmanifest",
-          {
-            "glob": "**/*",
-            "input": "libs/assets/src/assets",
-            "output": "/assets/"
-          }
-        ],
         "styles": [
           "apps/atlas/src/styles.scss"
         ],
@@ -52,7 +42,18 @@
               "maximumError": "5mb"
             }
           ],
-          "serviceWorker": "apps/atlas/ngsw-config.json"
+          "serviceWorker": "apps/atlas/ngsw-config.json",
+          "assets": [
+            "apps/atlas/src/config.prod.json",
+            "apps/atlas/src/favicon.ico",
+            "apps/atlas/src/assets",
+            "apps/atlas/src/manifest.webmanifest",
+            {
+              "glob": "**/*",
+              "input": "libs/assets/src/assets",
+              "output": "/assets/"
+            }
+          ]
         },
         "standalone": {
           "fileReplacements": [
@@ -69,12 +70,34 @@
               "maximumError": "5mb"
             }
           ],
-          "serviceWorker": "apps/atlas/ngsw-config.json"
+          "serviceWorker": "apps/atlas/ngsw-config.json",
+          "assets": [
+            "apps/atlas/src/config.standalone.json",
+            "apps/atlas/src/favicon.ico",
+            "apps/atlas/src/assets",
+            "apps/atlas/src/manifest.webmanifest",
+            {
+              "glob": "**/*",
+              "input": "libs/assets/src/assets",
+              "output": "/assets/"
+            }
+          ]
         },
         "development": {
           "optimization": false,
           "extractLicenses": false,
-          "sourceMap": true
+          "sourceMap": true,
+          "assets": [
+            "apps/atlas/src/config.json",
+            "apps/atlas/src/favicon.ico",
+            "apps/atlas/src/assets",
+            "apps/atlas/src/manifest.webmanifest",
+            {
+              "glob": "**/*",
+              "input": "libs/assets/src/assets",
+              "output": "/assets/"
+            }
+          ]
         }
       }
     },

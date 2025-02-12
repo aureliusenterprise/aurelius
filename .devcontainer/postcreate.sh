@@ -46,10 +46,10 @@ popd
 upload_to_atlas
 
 pushd backend/m4i-atlas-post-install/scripts
-# Set elasticsearch token in enviroment.ts of the Angular app
+# Set elasticsearch token in the config
 echo "Setting appSearchToken in Atlas"
 export SEARCH_TOKEN=$(python retrieve_elastic_search_key.py)
-sed -i "s/appSearchToken: '.*'/appSearchToken: '$SEARCH_TOKEN'/g" /workspace/apps/atlas/src/environments/environment.ts;
+sed -i "s/appSearchToken: '.*'/appSearchToken: '$SEARCH_TOKEN'/g" /workspace/apps/atlas/src/config.json;
 popd
 
 # Prompt the user to set their git username and email if not already set
