@@ -1,0 +1,4 @@
+# Ignore config file that contains the appSearchToken for Elastic Search
+# at least in the development setting
+
+config.json

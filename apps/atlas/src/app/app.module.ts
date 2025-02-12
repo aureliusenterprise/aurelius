@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
   imports: [
     ...Core.imports(environment),
     AtlasApiModule,
-    ElasticApiModule.forRoot(environment.atlas),
+    ElasticApiModule.forRoot(await(await fetch("assets/config.json")).json()),
     AppRoutingModule, // must be imported as the last module as it contains the fallback route
   ],
   bootstrap: [AppComponent],
