@@ -44,7 +44,6 @@
           ],
           "serviceWorker": "apps/atlas/ngsw-config.json",
           "assets": [
-            "apps/atlas/src/config.prod.json",
             "apps/atlas/src/favicon.ico",
             "apps/atlas/src/assets",
             "apps/atlas/src/manifest.webmanifest",
@@ -52,6 +51,10 @@
               "glob": "**/*",
               "input": "libs/assets/src/assets",
               "output": "/assets/"
+            },
+            {
+              "input": "apps/atlas/src/config.prod.json",
+              "output": "/config.json"
             }
           ]
         },
@@ -72,7 +75,6 @@
           ],
           "serviceWorker": "apps/atlas/ngsw-config.json",
           "assets": [
-            "apps/atlas/src/config.standalone.json",
             "apps/atlas/src/favicon.ico",
             "apps/atlas/src/assets",
             "apps/atlas/src/manifest.webmanifest",
@@ -80,6 +82,10 @@
               "glob": "**/*",
               "input": "libs/assets/src/assets",
               "output": "/assets/"
+            },
+            {
+              "input": "apps/atlas/src/config.standalone.json",
+              "output": "/config.json"
             }
           ]
         },
