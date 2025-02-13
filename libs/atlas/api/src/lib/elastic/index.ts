@@ -1,5 +1,5 @@
 export * from './app-search.service';
-export { ElasticApiConfig, ElasticApiModule } from './elastic-api.module';
+export { ElasticApiConfig, ElasticApiModule, getElasticApiConfig } from './elastic-api.module';
 export * from './engines';
 export * from './get-data-quality';
 export * from './get-filters-and-results';

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { AtlasApiModule, ElasticApiModule } from '@models4insight/atlas/api';
+import { AtlasApiModule, ElasticApiModule, getElasticApiConfig } from '@models4insight/atlas/api';
 import { Core } from '@models4insight/core';
 import { I18nService } from '@models4insight/i18n';
 import { environment } from '../environments/environment';
@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
   imports: [
     ...Core.imports(environment),
     AtlasApiModule,
-    ElasticApiModule.forRoot(await(await fetch("assets/config.json")).json()),
+    ElasticApiModule.forRoot(getElasticApiConfig()),
     AppRoutingModule, // must be imported as the last module as it contains the fallback route
   ],
   bootstrap: [AppComponent],

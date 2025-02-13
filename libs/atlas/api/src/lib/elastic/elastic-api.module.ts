@@ -9,6 +9,25 @@ export interface ElasticApiConfig {
   readonly appSearchToken?: string;
 }
 
+let elasticApiConfig: ElasticApiConfig
+
+async function fetchElasticApiConfig(){
+  const response = await fetch("config.json");
+  const config = await response.json();
+  if (config) {
+    elasticApiConfig = config;
+  } else {
+    throw new Error('Elastic ApiConfig is void');
+  }
+}
+
+export function getElasticApiConfig(): ElasticApiConfig {
+  if (!elasticApiConfig) {
+    throw new Error('ElasticApiConfig has not been loaded yet.');
+  }
+  return elasticApiConfig;
+}
+
 export function getHttpClient(): HttpService {
   if (!ElasticApiModule.injector) {
     throw new Error(
