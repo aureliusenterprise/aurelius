@@ -1,0 +1,102 @@
+[
+  {
+    "name": "myentity",
+    "guid": "entity-guid",
+    "typename": "m4i_data_entity",
+    "deriveddataattributeguid": [
+      "attribute-one-guid",
+      "attribute-two-guid"
+    ],
+    "deriveddataentityguid": [],
+    "deriveddataset": [],
+    "deriveddatasetguid": []
+  },
+  {
+    "name": "attribute_one",
+    "guid": "attribute-one-guid",
+    "typename": "m4i_data_attribute",
+    "derivedfieldguid": [
+      "field-one-guid",
+      "field-two-guid"
+    ]
+  },
+  {
+    "name": "attribute_two",
+    "guid": "attribute-two-guid",
+    "typename": "m4i_data_attribute",
+    "derivedfieldguid": [
+      "field-three-guid",
+      "field-four-guid"
+    ]
+  },
+  {
+    "name": "field_one",
+    "guid": "field-one-guid",
+    "typename": "m4i_field",
+    "deriveddatasetguid": [
+      "dataset-one-guid"
+    ]
+  },
+  {
+    "name": "field_two",
+    "guid": "field-two-guid",
+    "typename": "m4i_field",
+    "deriveddatasetguid": [
+      "dataset-one-guid",
+      "dataset-three-guid"
+    ]
+  },
+  {
+    "name": "field_three",
+    "guid": "field-three-guid",
+    "typename": "m4i_field",
+    "deriveddatasetguid": [
+      "dataset-one-guid",
+      "dataset-two-guid",
+      "dataset-three-guid"
+    ]
+  },
+  {
+    "name": "field_four",
+    "guid": "field-four-guid",
+    "typename": "m4i_field",
+    "deriveddatasetguid": [
+      "dataset-three-guid"
+    ]
+  },
+  {
+    "name": "dataset_one",
+    "guid": "dataset-one-guid",
+    "typename": "m4i_dataset",
+    "derivedfieldguid": [
+      "field-one-guid",
+      "field-two-guid",
+      "field-three-guid"
+    ],
+    "deriveddataentityguid": [],
+    "deriveddataentity": []
+  },
+  {
+    "name": "dataset_two",
+    "guid": "dataset-two-guid",
+    "typename": "m4i_dataset",
+    "derivedfieldguid": [
+      "field-two-guid",
+      "field-three-guid"
+    ],
+    "deriveddataentityguid": [],
+    "deriveddataentity": []
+  },
+  {
+    "name": "dataset_three",
+    "guid": "dataset-three-guid",
+    "typename": "m4i_dataset",
+    "derivedfieldguid": [
+      "field-three-guid",
+      "field-four-guid"
+    ],
+    "deriveddataentityguid": [],
+    "deriveddataentity": []
+  }
+
+]

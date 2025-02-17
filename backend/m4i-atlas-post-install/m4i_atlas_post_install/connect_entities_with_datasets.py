@@ -1,20 +1,14 @@
 from pathlib import Path
-from typing import Set
 import json
 from typing import Any, MutableMapping
 from collections import Counter
-from elastic_enterprise_search import AppSearch
 from m4i_atlas_post_install import (
     index_documents,
-    index_all_documents,
-    load_documents,
-    get_enterprise_search_key
+    load_documents
 )
 
-INPUT = "../data/atlas-dev.json"
-OUTPUT = "../data/atlas-dev-index.json"
-TOP_K = 5
-USE_TOP_K = True
+INPUT = "../data/test_data.json"
+OUTPUT = "../data/test_data_output.json"
 
 def get_derived_datasets(entity, atlas_dev_index : MutableMapping[str, Any]):
   """
@@ -57,16 +51,14 @@ def get_derived_datasets(entity, atlas_dev_index : MutableMapping[str, Any]):
     coverage = 0
     # Mark the fields as covered by this dataset by setting field_guid to 1
     for field_guid in field_guids:
-      if field_guid in dataset["derivedfield"] and field_guids[field_guid] != 1:
+      if field_guid in dataset["derivedfieldguid"] and field_guids[field_guid] != 1:
         field_guids[field_guid] = 1
         coverage += 1
     # Save the coverage of this dataset
     datasets_field_coverage[dataset_guid] = coverage
 
-  # Return the top k datasets that have the highest coverage
-  derived_dataset_guids = []
-  for dataset_guid, coverage in sorted(datasets_field_coverage.items(), key=lambda x: x[1], reverse=True)[:TOP_K]:
-    derived_dataset_guids.append(dataset_guid)
+  # Return the datasets whose field coverage is larger than zero
+  derived_dataset_guids = [dataset_guid for dataset_guid, coverage in datasets_field_coverage.items() if coverage > 0]
   return derived_dataset_guids
 
 def update_index(atlas_dev_index: MutableMapping[str, Any], object_guid, key, value):
@@ -101,36 +93,15 @@ def main():
 
   # Load documents
   documents = load_documents(Path(INPUT))
-  atlas_dev_index = index_documents(documents)
+  atlas_dev_index: MutableMapping[str, Any]= index_documents(documents)
 
   # Connect entities with datasets
   connect_entities_with_datasets(documents, atlas_dev_index)
-
-  # TODO backwards mapping
-  # TODO find out what is TF/IDF and how to use it
-  # TODO compute coverage of datasets over fields
-  """
-  for each entity:
-  - get all its fields by branching out
-  - make a dictionary of each field and its dataset(s)
-  - which group of datasets would, when selected, cover the most fields?
-  """
 
   # Save updated index to file
   new_documents = list(atlas_dev_index.values())
   with open(OUTPUT, "w") as f:
     json.dump(new_documents, f, indent=4)
-
-  # Update index in Elasticsearch
-  # app_search_api_key = get_enterprise_search_key(
-  #       args.url, args.username, args.password
-  #   )
-  # app_search_client = AppSearch(args.url, bearer_auth=app_search_api_key)
-  # index_all_documents(
-  #       app_search_client=app_search_client,
-  #       engine_name="atlas-dev",
-  #       documents=list(atlas_dev_index.values()),
-  #   )
 
 if __name__ == "__main__":
     main()
