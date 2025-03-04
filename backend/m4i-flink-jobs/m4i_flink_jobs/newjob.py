@@ -2,8 +2,9 @@ import json
 from typing import Any, List, Mapping, MutableMapping
 from elastic_enterprise_search import AppSearch
 from m4i_atlas_post_install import get_enterprise_search_key
-from kafka import KafkaConsumer
+from kafka import KafkaConsumer, TopicPartition
 from collections import Counter
+from datetime import datetime, timedelta
 # from m4i_flink_jobs.connect_entities_with_datasets import get_derived_datasets_incremental
 # from m4i_atlas_core.entities.atlas.core.entity_audit_event.EntityAuditEvent import EntityAuditAction, EntityAuditType, EntityAuditEventBase, EntityAuditEventDefaultsBase
 
@@ -13,11 +14,6 @@ elasticsearch_args = {
     "username": "elastic",
     "password": "elasticpw",
 }
-# elasticsearch_args = {
-#     "url": "https://aureliusdev.westeurope.cloudapp.azure.com/test-namespace/app-search/",
-#     "username": "elastic",
-#     "password": "5I25YUNdcp17Scc8y6O9Qf54",
-# }
 app_search_api_key = get_enterprise_search_key(elasticsearch_args["url"], elasticsearch_args["username"], elasticsearch_args["password"])
 app_search_client = AppSearch(elasticsearch_args["url"], bearer_auth=app_search_api_key)
 
@@ -25,17 +21,6 @@ app_search_client = AppSearch(elasticsearch_args["url"], bearer_auth=app_search_
 bootstrap_servers = '127.0.0.1:9092'
 topic = 'ATLAS_ENTITIES'
 group_id = 'my-group'
-
-# consumer_config = {
-#         "auto.offset.reset": "earliest",
-#         "bootstrap.servers": bootstrap_servers,
-#         "enable.auto.commit": False,
-#         "group.id": group_id,
-#         "sasl.mechanisms": "PLAIN",
-#         "sasl.password": password,
-#         "sasl.username": username,
-#         "security.protocol": "SASL_SSL"
-#     }
 
 def get_documents_by_id(app_search_client: AppSearch, engine_name: str, documents: List[str]) -> List[MutableMapping[str, Any]]:
   response = app_search_client.get_documents(
@@ -47,7 +32,7 @@ def get_documents_by_id(app_search_client: AppSearch, engine_name: str, document
 # print(documents[0]['deriveddataattribute'])
 
 def consume_messages():
-  # WIP - for now, this method is not used
+  # Temporary for dev/test purpose -  writes messages to file
   consumer = KafkaConsumer(
       topic,
       bootstrap_servers=bootstrap_servers,
@@ -55,17 +40,33 @@ def consume_messages():
       enable_auto_commit=False,
       auto_offset_reset='earliest'
   )
+  consumer.poll(max_records=1)
+  partitions = consumer.assignment()
+
+  # from_date = (datetime.now()) - timedelta(days=1) # e.g. 1 day
+  # from_date_ts = int(from_date.timestamp()* 1000) # millisecond timestamps
+  from_date_ts = 1740993035318
+  partition_to_timestamp = {part: from_date_ts for part in partitions}
+
+  mapping = consumer.offsets_for_times(partition_to_timestamp)
+  if mapping is not None:
+    for part, offset in mapping.items():
+      print("seeking partition", part, "to offset", offset.offset)
+      consumer.seek(part, offset.offset)
   messages = []
   count = 0
-  with open("kafka_messages.txt", "w") as f:
-    for message in consumer:
-      if count <= 100:
-        f.write(message.value.decode('utf-8') + "\n")
-        messages.append(message)
-        count += 1
-      else:
-        consumer.close()
-        break
+  res = consumer.poll(timeout_ms=5000,max_records=100)
+
+  with open("kafka_messages_new.txt", "w") as f:
+    for consumerrecord in res.values():
+        for record in consumerrecord:
+            if count <= 100:
+                f.write(record.value.decode('utf-8') + "\n")
+                messages.append(record.value)
+                count += 1
+            else:
+                break
+  consumer.close()
   return messages
 
 def get_messages():
@@ -74,7 +75,7 @@ def get_messages():
   f = open("kafka_messages.txt", "r")
   stop = 0
   for line in f:
-      if stop <= 10:
+      if stop <= 100:
         messages.append(line)
         # change_msg = json.loads(line)['message']
         # guids.update(process_message(change_msg))
@@ -101,13 +102,58 @@ def process_message(change_message: MutableMapping[str, Any]):
       guids[guid_2] = type_2
     return guids
 
+def get_derived_entities_incremental(dataset):
+  derived_entity_guids = []
+  attribute_guids = {}
+
+  if dataset["derivedfieldguid"] is not None:
+    derived_fields = get_documents_by_id(app_search_client, "atlas-dev", dataset["derivedfieldguid"])
+    for field in derived_fields:
+      if field["deriveddataattributeguid"] is not None:
+        derived_attributes = get_documents_by_id(app_search_client, "atlas-dev", field["deriveddataattributeguid"])
+        for attribute in derived_attributes:
+          attribute_guids[attribute["guid"]] = 0
+          derived_entity_guids.extend(attribute["deriveddataentityguid"])
+
+  entities_attribute_coverage = {}
+  entities = {}
+  for entity_guid, ct in Counter(derived_entity_guids).most_common():
+    entity = get_documents_by_id(app_search_client, "atlas-dev", [entity_guid])[0]
+    entities[entity_guid] = entity
+    coverage = 0
+    for attribute_guid in attribute_guids:
+      if attribute_guid in entity["deriveddataattributeguid"] and attribute_guids[attribute_guid] != 1:
+        attribute_guids[attribute_guid] = 1
+        coverage += 1
+    entities_attribute_coverage[entity_guid] = coverage
+
+  derived_entity_guids = [entity_guid for entity_guid, coverage in entities_attribute_coverage.items() if coverage > 0]
+  return entities, derived_entity_guids
+
+
+def connect_dataset_with_entities_incremental(dataset_guid):
+  dataset = get_documents_by_id(app_search_client, "atlas-dev", [dataset_guid])[0]
+  to_index : List[Mapping[str, Any]] = []
+
+  entities, derived_entity_guids = get_derived_entities_incremental(dataset)
+  dataset["deriveddataentityguid"] = derived_entity_guids
+  print("Linking dataset: " + dataset['name'] + " with its")
+  for guid in derived_entity_guids:
+    entities[guid]["deriveddatasetguid"].append(dataset_guid)
+    to_index.append({guid : entities[guid]})
+
+  to_index.append({dataset_guid : dataset})
+  app_search_client.index_documents(engine_name="atlas-dev", documents=to_index)
 
 def get_derived_datasets_incremental(entity):
   """
   Taking the data entity object, find the datasets that are linked to it by mapping from:
   data entity -> each of its data attributes -> each of its fields -> datasets associated with the field
-  If the entity has child entities, this also includes a single recursion to find the datasets associated with the children.
-  Returns two lists - a list of dataset names and a list of guids
+  If the entity has child entities, this also includes recursion to find the datasets associated with the children.
+
+  Returns two lists -
+  - a list of all datasets (documents) connected to this entity
+  - a list of dataset guids indicating which of those datasets have been selected
   """
 
   derived_dataset_guids = [] # List of the dataset guids that are linked to this entity
@@ -132,7 +178,6 @@ def get_derived_datasets_incremental(entity):
         for field in fields:
             # Track the field by adding it to the field_guid dictionary
             field_guids[field["guid"]] = 0
-            # TODO implicit assumption that the fields are correctly assigned the derived dataset guid
             derived_dataset_guids.extend(field["deriveddatasetguid"])
   else:
     raise Exception("Entity has neither child entities nor child attributes")
@@ -176,8 +221,8 @@ def connect_entity_with_datasets_incremental(entity_guid):
 
 def main():
   # TODO a proper consumer that reads messages from Kafka
-  # consume_messages() # write to file
-  consumer = get_messages() # get first 10 messages from file
+  consume_messages() # write to file
+  consumer = get_messages() # get messages from file
 
   # List all the documents that are mentioned in the change messages
   changed_documents = {}
@@ -193,15 +238,20 @@ def main():
 
     elif changed_documents[guid] == "m4i_dataset":
       print("Need to update dataset")
-      # TODO implementation
+      connect_dataset_with_entities_incremental(guid)
 
     elif changed_documents[guid] == "m4i_field":
-      print("Need to update field")
-      # TODO implementation
+      field = get_documents_by_id(app_search_client, "atlas-dev", [guid])[0]
+      for datasetguid in field['deriveddatasetguid']:
+        print("Need to update dataset")
+        connect_dataset_with_entities_incremental(datasetguid)
 
     elif changed_documents[guid] == "m4i_data_attribute":
       print("Need to update attribute")
-      # TODO implementation
+      attribute = get_documents_by_id(app_search_client, "atlas-dev", [guid])[0]
+      for entityguid in attribute["deriveddataentityguid"]:
+        print("Need to update entity")
+        connect_entity_with_datasets_incremental(entityguid)
 
 if __name__ == "__main__":
     main()
