@@ -2,10 +2,9 @@ import json
 from typing import Any, List, Mapping, MutableMapping
 from elastic_enterprise_search import AppSearch
 from m4i_atlas_post_install import get_enterprise_search_key
-from kafka import KafkaConsumer, TopicPartition
+from kafka import KafkaConsumer
 from collections import Counter
 from datetime import datetime, timedelta
-# from m4i_flink_jobs.connect_entities_with_datasets import get_derived_datasets_incremental
 # from m4i_atlas_core.entities.atlas.core.entity_audit_event.EntityAuditEvent import EntityAuditAction, EntityAuditType, EntityAuditEventBase, EntityAuditEventDefaultsBase
 
 # Elasticsearch configuration
@@ -20,7 +19,7 @@ app_search_client = AppSearch(elasticsearch_args["url"], bearer_auth=app_search_
 # Kafka consumer configuration
 bootstrap_servers = '127.0.0.1:9092'
 topic = 'ATLAS_ENTITIES'
-group_id = 'my-group'
+group_id = 'test-group'
 
 def get_documents_by_id(app_search_client: AppSearch, engine_name: str, documents: List[str]) -> List[MutableMapping[str, Any]]:
   response = app_search_client.get_documents(
@@ -28,11 +27,8 @@ def get_documents_by_id(app_search_client: AppSearch, engine_name: str, document
   )
   return response # type: ignore
 
-# documents: List[MutableMapping[str, Any]] = get_documents_by_id(app_search_client, "atlas-dev", ["fed7d6b6-3a49-4c48-b7fa-fda76a1a7d87"]) # type: ignore
-# print(documents[0]['deriveddataattribute'])
 
-def consume_messages():
-  # Temporary for dev/test purpose -  writes messages to file
+def init_consumer():
   consumer = KafkaConsumer(
       topic,
       bootstrap_servers=bootstrap_servers,
@@ -41,68 +37,65 @@ def consume_messages():
       auto_offset_reset='earliest'
   )
   consumer.poll(max_records=1)
+  return consumer
+
+def get_offset_by_timestamp(consumer, timestamp):
   partitions = consumer.assignment()
+  partition_to_timestamp = {part: timestamp for part in partitions}
+  return consumer.offsets_for_times(partition_to_timestamp)
 
-  # from_date = (datetime.now()) - timedelta(days=1) # e.g. 1 day
-  # from_date_ts = int(from_date.timestamp()* 1000) # millisecond timestamps
-  from_date_ts = 1740993035318
-  partition_to_timestamp = {part: from_date_ts for part in partitions}
 
-  mapping = consumer.offsets_for_times(partition_to_timestamp)
-  if mapping is not None:
-    for part, offset in mapping.items():
-      print("seeking partition", part, "to offset", offset.offset)
-      consumer.seek(part, offset.offset)
+def consume_messages(consumer, offsets_for_times):
+  """
+  Returns the list of messages that are available in this consumer, starting from the given offsets / times
+  """
+  if offsets_for_times is not None:
+    for part, offset in offsets_for_times.items():
+      if offset is None:
+        # No offset returned for this timestamp -> no messages to consume
+        return []
+      else:
+        print("Seeking to offset", offset.offset)
+        consumer.seek(part, offset.offset)
+
   messages = []
-  count = 0
   res = consumer.poll(timeout_ms=5000,max_records=100)
+  for consumerrecord in res.values():
+    for record in consumerrecord:
+      messages.append(record.value)
 
-  with open("kafka_messages_new.txt", "w") as f:
-    for consumerrecord in res.values():
-        for record in consumerrecord:
-            if count <= 100:
-                f.write(record.value.decode('utf-8') + "\n")
-                messages.append(record.value)
-                count += 1
-            else:
-                break
   consumer.close()
   return messages
 
-def get_messages():
-  # Temporary for dev/test purpose - read messages from file
-  messages = []
-  f = open("kafka_messages.txt", "r")
-  stop = 0
-  for line in f:
-      if stop <= 100:
-        messages.append(line)
-        # change_msg = json.loads(line)['message']
-        # guids.update(process_message(change_msg))
-        stop += 1
-  f.close()
-  return messages
 
 def process_message(change_message: MutableMapping[str, Any]):
-    """"
-    Extract from the given message the GUID(s) and their type(s)
-    """
-    guids = {}
-    if "ENTITY" in change_message['operationType']:
-      entity_type = change_message['entity']['typeName']
-      guid = change_message['entity']['guid']
-      guids[guid] = entity_type
-    elif "RELATIONSHIP" in change_message['operationType']:
-      #  in [EntityAuditAction.RELATIONSHIP_CREATE, EntityAuditAction.RELATIONSHIP_UPDATE, EntityAuditAction.RELATIONSHIP_DELETE]
-      type_1 = change_message['relationship']['end1']['typeName']
-      type_2 = change_message['relationship']['end2']['typeName']
-      guid_1 = change_message['relationship']['end1']['guid']
-      guid_2 = change_message['relationship']['end2']['guid']
-      guids[guid_1] = type_1
-      guids[guid_2] = type_2
-    return guids
+  """"
+  Extract from the given message the GUID(s) and their type(s)
+  """
+  guids = {}
+  if "ENTITY" in change_message['operationType']:
+    entity_type = change_message['entity']['typeName']
+    guid = change_message['entity']['guid']
+    guids[guid] = entity_type
+  elif "RELATIONSHIP" in change_message['operationType']:
+    #  in [EntityAuditAction.RELATIONSHIP_CREATE, EntityAuditAction.RELATIONSHIP_UPDATE, EntityAuditAction.RELATIONSHIP_DELETE]
+    type_1 = change_message['relationship']['end1']['typeName']
+    type_2 = change_message['relationship']['end2']['typeName']
+    guid_1 = change_message['relationship']['end1']['guid']
+    guid_2 = change_message['relationship']['end2']['guid']
+    guids[guid_1] = type_1
+    guids[guid_2] = type_2
+  return guids
 
 def get_derived_entities_incremental(dataset):
+  """
+  Taking the dataset object, find the data entities that are linked to it by mapping from:
+  dataset -> each of its fields -> each of its attributes -> entities associated with the attribute
+
+  Returns two lists -
+  - a list of all entities (documents) connected to this entity
+  - a list of entity guids indicating which of those datasets have been selected
+  """
   derived_entity_guids = []
   attribute_guids = {}
 
@@ -132,18 +125,24 @@ def get_derived_entities_incremental(dataset):
 
 
 def connect_dataset_with_entities_incremental(dataset_guid):
+  """
+  Find the datasets connected with this entity and create the link (by updating the derived GUIDs) of the entity and its datasets,
+  then push the changes to ElasticSearch
+  """
   dataset = get_documents_by_id(app_search_client, "atlas-dev", [dataset_guid])[0]
-  to_index : List[Mapping[str, Any]] = []
+  to_index : Mapping[str, Any] = {}
 
   entities, derived_entity_guids = get_derived_entities_incremental(dataset)
   dataset["deriveddataentityguid"] = derived_entity_guids
   print("Linking dataset: " + dataset['name'] + " with its")
   for guid in derived_entity_guids:
     entities[guid]["deriveddatasetguid"].append(dataset_guid)
-    to_index.append({guid : entities[guid]})
+    to_index[guid] = entities[guid]
 
-  to_index.append({dataset_guid : dataset})
-  app_search_client.index_documents(engine_name="atlas-dev", documents=to_index)
+  to_index[dataset_guid] = dataset
+  print("Pushing changes to ES")
+  response = app_search_client.index_documents(engine_name="atlas-dev", documents=list(to_index.values()))
+  print(response)
 
 def get_derived_datasets_incremental(entity):
   """
@@ -160,7 +159,7 @@ def get_derived_datasets_incremental(entity):
   field_guids = {} # Keep track of the fields that are linked to this entity.
 
   # Check if the entity has derived entities
-  if entity["deriveddataentityguid"] is not None:
+  if entity["deriveddataentityguid"] is not None and len(entity["deriveddataentityguid"]) > 0:
       derived_data_entities = get_documents_by_id(app_search_client, "atlas-dev", entity["deriveddataentityguid"])
       for derived_entity in derived_data_entities:
           # Check whether the derived entity is a child by looking at its parentguid
@@ -171,7 +170,7 @@ def get_derived_datasets_incremental(entity):
 
   # Otherwise, the entity should have data attributes,
   # from which we can derive fields and datasets
-  if entity["deriveddataattributeguid"] is not None:
+  if entity["deriveddataattributeguid"] is not None and len(entity["deriveddataattributeguid"]) > 0:
     attributes = get_documents_by_id(app_search_client, "atlas-dev", entity["deriveddataattributeguid"])
     for attribute in attributes:
         fields = get_documents_by_id(app_search_client, "atlas-dev", attribute["derivedfieldguid"])
@@ -202,8 +201,12 @@ def get_derived_datasets_incremental(entity):
   return datasets, derived_dataset_guids
 
 def connect_entity_with_datasets_incremental(entity_guid):
+  """
+  Find the entities connected with this dataset and create the link (by updating the derived GUIDs) of the dataset and its entities,
+  then push the changes to ElasticSearch
+  """
   entity = get_documents_by_id(app_search_client, "atlas-dev", [entity_guid])[0]
-  to_index : List[Mapping[str, Any]] = []
+  to_index : Mapping[str, Any] = {}
 
   # Link the entity with the datasets
   datasets, derived_dataset_guids = get_derived_datasets_incremental(entity)
@@ -212,21 +215,27 @@ def connect_entity_with_datasets_incremental(entity_guid):
   # Link the datasets to the entity
   for guid in derived_dataset_guids:
     datasets[guid]["deriveddataentityguid"].append(entity_guid)
-    to_index.append({guid : datasets[guid]})
+    to_index[guid] = datasets[guid]
 
-  print("UPDATED!")
   # Save the changes by indexing the changed documents
-  # to_index.append({entity_guid : entity})
-  # app_search_client.index_documents(engine_name="atlas-dev", documents=to_index)
+  to_index[entity_guid] = entity
+  print("Pushing changes to ES")
+  response = app_search_client.index_documents(engine_name="atlas-dev", documents=list(to_index.values()))
+  print(response)
 
 def main():
-  # TODO a proper consumer that reads messages from Kafka
-  consume_messages() # write to file
-  consumer = get_messages() # get messages from file
 
-  # List all the documents that are mentioned in the change messages
+  # TODO define timestamp or get offset from the last time the job ran
+  # from_date = (datetime.now())#  - timedelta(days=1) # e.g. 1 day
+  # from_date_ts = int(from_date.timestamp()* 1000) # millisecond timestamps
+  consumer = init_consumer()
+  offsets_for_times = get_offset_by_timestamp(consumer, 1741272555500)
+  print(offsets_for_times)
+  messages = consume_messages(consumer, offsets_for_times)
+
+  # # List all the documents that are mentioned in the change messages
   changed_documents = {}
-  for message in consumer:
+  for message in messages:
     changed_documents.update(process_message(json.loads(message)['message']))
     # changed_documents.update(process_message(json.loads(message.value.decode('utf-8'))))
 
@@ -253,6 +262,9 @@ def main():
         print("Need to update entity")
         connect_entity_with_datasets_incremental(entityguid)
 
+    else:
+      print("No changes made.")
+
 if __name__ == "__main__":
-    main()
+  main()
 
