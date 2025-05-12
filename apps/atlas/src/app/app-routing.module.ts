@@ -8,7 +8,7 @@ const routes: Routes = [
     path: 'search',
     loadChildren: () =>
       import('./search/search.module').then((m) => m.SearchModule),
-    data: { title: 'Search', icon: faSearch, hidden: true},
+    data: { title: 'Search', icon: faSearch, hidden: true },
   },
   // Fallback when no prior route is matched
   { path: '**', redirectTo: '', pathMatch: 'full' },
