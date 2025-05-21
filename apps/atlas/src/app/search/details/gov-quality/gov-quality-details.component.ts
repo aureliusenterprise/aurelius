@@ -9,6 +9,7 @@ import {
   $APP_SEARCH_DOCUMENT_PROVIDER,
   AppSearchDocumentProvider
 } from '../../services/element-search/app-search-document-provider';
+import { EntityDetailsService } from '../../services/entity-details/entity-details.service';
 import { FilteredPropertiesService } from '../../services/filtered-properties/filtered-properties.service';
 import { CompliantCardsComponent } from './compliant-cards/compliant-cards.component';
 import { NonCompliantCardsComponent } from './non-compliant-cards/non-compliant-cards.component';
@@ -33,6 +34,7 @@ export class GovQualityDetailsComponent implements OnInit {
   protected govQualityScore$: Observable<number>;
 
   constructor(
+    private readonly entityDetailsService: EntityDetailsService,
     private readonly filteredPropertiesService: FilteredPropertiesService,
     @Inject($APP_SEARCH_DOCUMENT_PROVIDER)
     private readonly searchResultService: AppSearchDocumentProvider<AtlasEntitySearchObject>
