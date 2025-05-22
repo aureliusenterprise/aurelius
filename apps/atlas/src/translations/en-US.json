@@ -90,6 +90,7 @@
   "typename": "Type Name",
   "datadomainname": "Data Domain",
   "dataqualityruledimension": "Dimension",
+  "dataqualitytype": "Rule Type",
   "dqscore": "Quality Score",
   "dqscore_accuracy": "Accuracy",
   "dqscore_completeness": "Completeness",

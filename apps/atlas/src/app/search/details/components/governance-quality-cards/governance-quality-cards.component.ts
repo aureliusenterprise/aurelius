@@ -46,6 +46,7 @@ const sortingOptions: string[] = [
   'name',
   'dataqualityruledimension',
   'compliant',
+  "dataqualitytype",
 ];
 
 @Component({

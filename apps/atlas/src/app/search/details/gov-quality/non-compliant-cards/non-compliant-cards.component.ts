@@ -106,7 +106,7 @@ export class NonCompliantCardsSearchService extends EntityDetailsCardsSearchServ
   }
 }
 
-const sortingOptions: string[] = ['name', 'dataqualitytype'];
+const sortingOptions: string[] = ['name'];
 
 @Component({
   selector: 'models4insight-non-compliant-cards',
