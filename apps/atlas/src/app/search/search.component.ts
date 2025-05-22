@@ -46,7 +46,7 @@ export class SearchComponent implements OnInit {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         if (event.urlAfterRedirects.includes('/search/browse')) {
-          this.searchInput.query = null;
+          this.searchService.reset();
         }
       });
   }
