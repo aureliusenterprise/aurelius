@@ -32,8 +32,6 @@ export class SearchComponent implements OnInit {
   readonly faPlus = faPlus;
   readonly searchBarContext = searchBarContext;
 
-  private isQuerySubmitted = false; // Flag to track if the route change is due to onQuerySubmitted
-
   readonly query$: Observable<string>;
 
   constructor(
@@ -46,16 +44,14 @@ export class SearchComponent implements OnInit {
   ngOnInit() {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        if (!this.isQuerySubmitted) {
-          this.searchInput.clearQuery();
+      .subscribe((event: NavigationEnd) => {
+        if (event.urlAfterRedirects.includes('/search/browse')) {
+          this.searchInput.query = null;
         }
-        this.isQuerySubmitted = false; // Reset the flag after handling the route change
       });
   }
 
   onQuerySubmitted(query: string) {
-    this.isQuerySubmitted = true; // Set the flag to true before navigating
     this.searchService.filters = {};
     this.router.navigate(['/search/results'], {
       queryParams: { query },
