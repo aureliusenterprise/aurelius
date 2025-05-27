@@ -83,7 +83,8 @@
       "options": {
         "browserTarget": "atlas:build",
         "host": "127.0.0.1",
-        "proxyConfig": "apps/atlas/proxy.conf.json"
+        "proxyConfig": "apps/atlas/proxy.conf.json",
+        "open": false
       },
       "configurations": {
         "production": {
