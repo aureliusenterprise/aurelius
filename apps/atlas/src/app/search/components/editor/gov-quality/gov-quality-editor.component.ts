@@ -20,7 +20,7 @@ import { EntityValidateService } from '../services/entity-validate/entity-valida
 
 function createGovQualityEditorForm(): UntypedFormGroup {
   const compliantMessage = new UntypedFormControl(null),
-    description = new UntypedFormControl(null),
+    ruleDescription = new UntypedFormControl(null),
     expression = new UntypedFormControl(null, [Validators.required]),
     name = new UntypedFormControl(null, [Validators.required]),
     nonCompliantMessage = new UntypedFormControl(null),
@@ -30,7 +30,7 @@ function createGovQualityEditorForm(): UntypedFormGroup {
 
   const attributes = new UntypedFormGroup({
     compliantMessage,
-    description,
+    ruleDescription,
     expression,
     name,
     nonCompliantMessage,
@@ -95,8 +95,8 @@ export class GovernanceQualityEditorComponent {
     return this.editorFormService.form.get('attributes.compliantMessage');
   }
 
-  get description() {
-    return this.editorFormService.form.get('attributes.description');
+  get ruleDescription() {
+    return this.editorFormService.form.get('attributes.ruleDescription');
   }
 
   get expression() {
