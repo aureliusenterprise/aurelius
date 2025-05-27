@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { EditorComponent } from './components/editor/editor.component';
 import { EntitySearchService } from './services/search/entity-search.service';
-import { SimpleSearchInputComponent } from '@models4insight/components';
 
 const searchBarContext: SimpleSearchInputContext = {
   ...defaultSimpleSearchInputContext,
@@ -25,9 +24,6 @@ const searchBarContext: SimpleSearchInputContext = {
 export class SearchComponent implements OnInit {
   @ViewChild(EditorComponent, { static: true })
   readonly editor: EditorComponent;
-
-  @ViewChild(SimpleSearchInputComponent, { static: false })
-  readonly searchInput: SimpleSearchInputComponent;
 
   readonly faPlus = faPlus;
   readonly searchBarContext = searchBarContext;
