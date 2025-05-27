@@ -46,7 +46,7 @@ export class TechnicalContextComponent {
 
   directToTechnical() {
     this.searchService.filters = {
-      all: [{ sourcetype: ['Technical'] }, { supertypenames: ['m4i_system'] }],
+      all: [{ sourcetype: ['Technical'] }],
     };
 
     this.router.navigate(['/search/results']);
@@ -56,7 +56,7 @@ export class TechnicalContextComponent {
     this.searchService.query = '';
 
     this.searchService.filters = {
-      all: [{ sourcetype: ['Technical'] }, { supertypenames: ['m4i_system'] }],
+      all: [{ sourcetype: ['Technical'] }],
     };
 
     this.router.navigate(['/search/results'], {
