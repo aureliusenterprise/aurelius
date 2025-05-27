@@ -54,6 +54,7 @@ export class BusinessContextComponent {
     this.searchService.filters = {
       all: [
         { sourcetype: ['Business'] },
+        { supertypenames: ['m4i_data_domain'] },
       ],
     };
 
