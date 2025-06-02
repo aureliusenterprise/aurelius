@@ -13,6 +13,7 @@ import { untilDestroyed } from '@models4insight/utils';
 import { Subject } from 'rxjs';
 import { exhaustMap } from 'rxjs/operators';
 import { EntityDetailsService } from '../entity-details/entity-details.service';
+// import { ClassificationService } from '../../components/classification/classification.service';
 
 export interface EntityUpdateStoreContext {
   readonly isUpdatingEntity?: boolean;
@@ -24,6 +25,7 @@ export class EntityUpdateService extends BasicStore<EntityUpdateStoreContext> {
   private readonly update$ = new Subject<AtlasEntityWithEXTInformation>();
 
   constructor(
+    // private readonly classificationService: ClassificationService,
     private readonly entityDetailsService: EntityDetailsService,
     private readonly entityApiService: EntityAPIService
   ) {
@@ -73,7 +75,11 @@ export class EntityUpdateService extends BasicStore<EntityUpdateStoreContext> {
       currentClassifications = await this.entityDetailsService.get(
         ['entityDetails', 'entity', 'classifications'],
         { includeFalsy: true }
-      );
+      )
+    const notPropogatedCurrentClassifications = currentClassifications.filter(
+      (classification: Classification) => classification.entityGuid === guid
+    );
+
 
     function difference(
       a: Classification[],
@@ -82,14 +88,14 @@ export class EntityUpdateService extends BasicStore<EntityUpdateStoreContext> {
       return a.filter((aa) => !b.find((bb) => aa.typeName === bb.typeName));
     }
 
-    const classificationsToAdd = currentClassifications
-      ? difference(classifications, currentClassifications)
+    const classificationsToAdd = notPropogatedCurrentClassifications
+      ? difference(classifications, notPropogatedCurrentClassifications)
       : classifications;
 
-    const classificationsToRemove = currentClassifications
-      ? difference(currentClassifications, classifications)
+    const classificationsToRemove = notPropogatedCurrentClassifications
+      ? difference(notPropogatedCurrentClassifications, classifications)
       : [];
-
+    
     // When creating a new entity, any classifications direclty assigned to this entity will have a placeholder entityGuid.
     // Override the placeholder entityGuid with the given guid
     const classificationsWithoutPlaceholderGuid = classificationsToAdd.map(
