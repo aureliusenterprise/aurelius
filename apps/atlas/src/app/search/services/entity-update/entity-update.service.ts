@@ -73,7 +73,12 @@ export class EntityUpdateService extends BasicStore<EntityUpdateStoreContext> {
       currentClassifications = await this.entityDetailsService.get(
         ['entityDetails', 'entity', 'classifications'],
         { includeFalsy: true }
-      );
+      )
+    // filter out classifications that are not owned by the entity (being propagated from a relationship)
+    // thouse types of classifications are not editable
+    const ownedCurrentClassifications = currentClassifications.filter(
+      (classification: Classification) => classification.entityGuid === guid
+    );
 
     function difference(
       a: Classification[],
@@ -82,12 +87,12 @@ export class EntityUpdateService extends BasicStore<EntityUpdateStoreContext> {
       return a.filter((aa) => !b.find((bb) => aa.typeName === bb.typeName));
     }
 
-    const classificationsToAdd = currentClassifications
-      ? difference(classifications, currentClassifications)
+    const classificationsToAdd = ownedCurrentClassifications
+      ? difference(classifications, ownedCurrentClassifications)
       : classifications;
 
-    const classificationsToRemove = currentClassifications
-      ? difference(currentClassifications, classifications)
+    const classificationsToRemove = ownedCurrentClassifications
+      ? difference(ownedCurrentClassifications, classifications)
       : [];
 
     // When creating a new entity, any classifications direclty assigned to this entity will have a placeholder entityGuid.
