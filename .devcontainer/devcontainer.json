@@ -13,12 +13,12 @@
     "ghcr.io/devcontainers/features/node:1": {
       "version": "lts"
     },
+    "ghcr.io/devcontainers-extra/features/nx-npm:1": {
+         "version": "19.0.4"
+    },
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.8",
       "toolsToInstall": "poetry"
-    },
-    "ghcr.io/devcontainers-contrib/features/nx-npm:1": {
-      "version": "19.0.4"
     },
     "ghcr.io/dhoeric/features/act:1": {},
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
