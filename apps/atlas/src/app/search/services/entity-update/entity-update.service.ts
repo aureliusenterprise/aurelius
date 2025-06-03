@@ -13,7 +13,6 @@ import { untilDestroyed } from '@models4insight/utils';
 import { Subject } from 'rxjs';
 import { exhaustMap } from 'rxjs/operators';
 import { EntityDetailsService } from '../entity-details/entity-details.service';
-// import { ClassificationService } from '../../components/classification/classification.service';
 
 export interface EntityUpdateStoreContext {
   readonly isUpdatingEntity?: boolean;
@@ -25,7 +24,6 @@ export class EntityUpdateService extends BasicStore<EntityUpdateStoreContext> {
   private readonly update$ = new Subject<AtlasEntityWithEXTInformation>();
 
   constructor(
-    // private readonly classificationService: ClassificationService,
     private readonly entityDetailsService: EntityDetailsService,
     private readonly entityApiService: EntityAPIService
   ) {
@@ -95,7 +93,7 @@ export class EntityUpdateService extends BasicStore<EntityUpdateStoreContext> {
     const classificationsToRemove = notPropogatedCurrentClassifications
       ? difference(notPropogatedCurrentClassifications, classifications)
       : [];
-    
+
     // When creating a new entity, any classifications direclty assigned to this entity will have a placeholder entityGuid.
     // Override the placeholder entityGuid with the given guid
     const classificationsWithoutPlaceholderGuid = classificationsToAdd.map(
