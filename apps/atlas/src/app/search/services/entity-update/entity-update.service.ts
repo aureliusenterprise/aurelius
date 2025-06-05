@@ -76,9 +76,11 @@ export class EntityUpdateService extends BasicStore<EntityUpdateStoreContext> {
       )
     // filter out classifications that are not owned by the entity (being propagated from a relationship)
     // thouse types of classifications are not editable
-    const ownedCurrentClassifications = currentClassifications.filter(
-      (classification: Classification) => classification.entityGuid === guid
-    );
+    const ownedCurrentClassifications = guid === undefined
+      ? (currentClassifications ?? [])
+      : (currentClassifications ?? []).filter(
+          (classification: Classification) => classification.entityGuid === guid
+        );
 
     function difference(
       a: Classification[],
