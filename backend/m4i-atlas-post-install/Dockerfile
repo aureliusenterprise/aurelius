@@ -13,7 +13,7 @@ RUN apt-get update && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update && \
     apt-get install -y --no-install-recommends python3.8 python3.8-distutils curl && \
-    curl -sS https://bootstrap.pypa.io/get-pip.py | python3.8 && \
+    curl -sS https://bootstrap.pypa.io/pip/3.8/get-pip.py | python3.8 && \
     ln -s /usr/bin/python3.8 /usr/bin/python && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
