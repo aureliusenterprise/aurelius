@@ -19,11 +19,16 @@ export class PropertiesComponent implements OnInit {
 
   dataForTable$: Observable<DataForTable[]>;
 
+  isCollapsed = true; // collapsed by default
+
   constructor(
     private readonly propertiesService: PropertiesService
   ) { }
 
   ngOnInit() {
     this.dataForTable$ = this.propertiesService.select('propertiesList');
+  }
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
   }
 }

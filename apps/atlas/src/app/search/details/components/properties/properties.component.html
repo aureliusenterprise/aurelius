@@ -1,15 +1,24 @@
-<models4insight-sortable-table-shell [config]="tableConfigProperties" [data]="dataForTable$ | async"
-  [itemsPerPage]="1000" [rowsSelectable]="false">
-  <ng-template let-rowData>
-    <td *ngIf="rowData">
-      <ng-container>
-        <div>
-          {{ rowData.name |translate | titlecase }}
-        </div>
-      </ng-container>
-    </td>
-    <td>
-      <models4insight-properties-item [data]="rowData.value"></models4insight-properties-item>
-    </td>
-  </ng-template>
-</models4insight-sortable-table-shell>
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+  <button (click)="toggleCollapse()" style="border: none; background: none; cursor: pointer; font-size: 1.5rem;">
+    <span *ngIf="isCollapsed">[+]</span>
+    <span *ngIf="!isCollapsed">[-]</span>
+  </button>
+</div>
+
+<div *ngIf="!isCollapsed">
+  <models4insight-sortable-table-shell [config]="tableConfigProperties" [data]="dataForTable$ | async"
+    [itemsPerPage]="1000" [rowsSelectable]="false">
+    <ng-template let-rowData>
+      <td *ngIf="rowData">
+        <ng-container>
+          <div>
+            {{ rowData.name |translate | titlecase }}
+          </div>
+        </ng-container>
+      </td>
+      <td>
+        <models4insight-properties-item [data]="rowData.value"></models4insight-properties-item>
+      </td>
+    </ng-template>
+  </models4insight-sortable-table-shell>
+</div>
