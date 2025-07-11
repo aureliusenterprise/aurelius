@@ -1,0 +1,8 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "name": "aurelius-testing",
+    "projectType": "library",
+    "sourceRoot": "{projectRoot}/aurelius_testing",
+    "tags": [],
+    "targets": {}
+}

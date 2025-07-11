@@ -1,0 +1,33 @@
+[tool.poetry]
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+description = "This is an example FastAPI application."
+name = "aurelius-fastapi-example"
+version = "0.0.0"
+
+[[tool.poetry.packages]]
+include = "aurelius_fastapi_example"
+
+[tool.poetry.dependencies]
+fastapi = "^0.116.1"
+pydantic = "^2.11.7"
+pydantic-settings = "^2.10.1"
+python = "^3.13"
+
+[tool.poetry.dependencies.uvicorn]
+extras = ["standard"]
+version = "^0.35.0"
+
+[tool.poetry.dependencies.aurelius-sdk]
+develop = true
+path = "../../libs/aurelius-sdk"
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "module"
+asyncio_mode = "auto"
+log_format = "%(message)s"
+log_level = "INFO"
+required_plugins = ["pytest-asyncio"]
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]

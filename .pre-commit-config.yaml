@@ -13,7 +13,6 @@ repos:
             args: [--unsafe]
           - id: end-of-file-fixer
             name: Ensure files end with a newline
-            exclude: pnpm-lock.yaml
           - id: trailing-whitespace
             name: Trim trailing whitespace
             args: [--markdown-linebreak-ext=md]

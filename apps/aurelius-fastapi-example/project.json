@@ -1,0 +1,21 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["aurelius-sdk"],
+    "name": "aurelius-fastapi-example",
+    "projectType": "application",
+    "sourceRoot": "{projectRoot}/aurelius_fastapi_example",
+    "tags": [],
+    "targets": {
+        "serve": {
+            "continuous": true,
+            "dependsOn": [{ "target": "decrypt" }],
+            "executor": "@nxlv/python:run-commands",
+            "metadata": {
+                "description": "Serve the application on a local development server"
+            },
+            "options": {
+                "command": "python -m aurelius_fastapi_example"
+            }
+        }
+    }
+}

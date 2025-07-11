@@ -29,11 +29,23 @@ ruff = "^0.12.3"
 sqlalchemy = "^2.0.41"
 testcontainers = "^4.10.0"
 
+[tool.poetry.group.dev.dependencies.aurelius-fastapi-example]
+develop = true
+path = "apps/aurelius-fastapi-example"
+
+[tool.poetry.group.dev.dependencies.aurelius-sdk]
+develop = true
+path = "libs/aurelius-sdk"
+
+[tool.poetry.group.dev.dependencies.aurelius-testing]
+develop = true
+path = "libs/aurelius-testing"
+
 [tool.pyright]
 exclude = [".venv"]
 pythonVersion = "3.13"
 reportUnnecessaryTypeIgnoreComment = "error"
-typeCheckingMode = "basic"
+typeCheckingMode = "standard"
 venvPath = "."
 
 [tool.pytest.ini_options]

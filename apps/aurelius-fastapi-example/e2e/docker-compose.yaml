@@ -1,0 +1,7 @@
+name: aurelius-fastapi-example-e2e
+
+services:
+    aurelius-fastapi-example:
+        image: aurelius-fastapi-example:latest
+        ports:
+            - 8000
