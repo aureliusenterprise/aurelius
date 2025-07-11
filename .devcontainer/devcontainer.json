@@ -1,0 +1,105 @@
+{
+    "containerEnv": {
+        "POETRY_VIRTUALENVS_IN_PROJECT": "true",
+        "SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/secrets/keys.txt"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bierner.markdown-mermaid",
+                "charliermarsh.ruff",
+                "DavidAnson.vscode-markdownlint",
+                "esbenp.prettier-vscode",
+                "KnisterPeter.vscode-commitizen",
+                "nrwl.angular-console",
+                "PKief.material-icon-theme",
+                "tamasfe.even-better-toml",
+                "-ms-python.autopep8"
+            ],
+            "settings": {
+                "[json]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[markdown]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[python]": {
+                    "editor.defaultFormatter": "charliermarsh.ruff"
+                },
+                "[toml]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[yaml]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "dev.containers.mountWaylandSocket": false,
+                "editor.formatOnSave": true,
+                "editor.formatOnSaveMode": "file",
+                "files.exclude": {
+                    "**/.pytest_cache": true,
+                    "**/.ruff_cache": true,
+                    "**/__pycache__": true,
+                    ".nx": true,
+                    ".pnpm-store": true,
+                    ".tmp": true,
+                    ".venv": true,
+                    "node_modules": true
+                },
+                "files.insertFinalNewline": true,
+                "files.watcherExclude": {
+                    "**/.pytest_cache": true,
+                    "**/.ruff_cache": true,
+                    "**/__pycache__": true,
+                    "**/dist": true,
+                    ".git/objects/**": true,
+                    ".git/subtree-cache/**": true,
+                    ".nx": true,
+                    ".pnpm-store": true,
+                    ".tmp": true,
+                    ".venv": true,
+                    "node_modules": true
+                },
+                "material-icon-theme.files.associations": {
+                    "project.json": "nx"
+                },
+                "material-icon-theme.folders.associations": {
+                    "connectors": "connection"
+                },
+                "python.analysis.typeCheckingMode": "standard",
+                "python.testing.pytestEnabled": true,
+                "python.testing.unittestEnabled": false,
+                "vscode.env.isTelemetryEnabled": false
+            }
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers-extra/features/apt-packages:1": {
+            "packages": "age"
+        },
+        "ghcr.io/devcontainers-extra/features/nx-npm:1": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers-extra/features/sops:1": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "lts"
+        },
+        "ghcr.io/devcontainers/features/python:1": {
+            "toolsToInstall": ["poetry"],
+            "version": "3.13"
+        }
+    },
+    "forwardPorts": [8000],
+    "image": "mcr.microsoft.com/devcontainers/base:noble",
+    "name": "Aurelius Project Template",
+    "postCreateCommand": {
+        "pre-commit": "bash .devcontainer/pre-commit.sh",
+        "sops": "bash .devcontainer/sops.sh"
+    },
+    "updateContentCommand": {
+        "npm": "bash .devcontainer/npm.sh",
+        "poetry": "bash .devcontainer/poetry.sh"
+    }
+}

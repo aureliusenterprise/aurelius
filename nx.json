@@ -1,0 +1,32 @@
+{
+    "$schema": "./node_modules/nx/schemas/nx-schema.json",
+    "defaultBase": "main",
+    "plugins": [
+        "./tools/plugins/alembic.ts",
+        "./tools/plugins/docker.ts",
+        "./tools/plugins/mkdocs.ts",
+        "./tools/plugins/python.ts",
+        "./tools/plugins/sops.ts",
+        "./tools/plugins/sops-decrypt.ts",
+        "./tools/plugins/sops-encrypt.ts"
+    ],
+    "release": {
+        "changelog": {
+            "workspaceChangelog": {
+                "file": "docs/CHANGELOG.md",
+                "renderOptions": {
+                    "authors": false,
+                    "commitReferences": true,
+                    "versionTitleDate": true
+                }
+            }
+        },
+        "projects": ["*"],
+        "version": {
+            "conventionalCommits": true
+        }
+    },
+    "tui": {
+        "enabled": false
+    }
+}
