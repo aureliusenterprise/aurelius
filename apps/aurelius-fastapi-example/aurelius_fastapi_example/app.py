@@ -1,4 +1,3 @@
-import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -17,14 +16,7 @@ def main() -> FastAPI:
     Returns:
         FastAPI: The FastAPI application instance.
     """
-    # Set up logging for the application
     setup_logger(level=SETTINGS.log_level)
-
-    # Ensure all log handlers use the default log format
-    if default_handler := logging.getLogger().handlers[0]:
-        for name in logging.getHandlerNames():
-            if handler := logging.getHandlerByName(name):
-                handler.setFormatter(default_handler.formatter)
 
     LOGGER.debug("Application setup complete. Settings: %s", SETTINGS)
 

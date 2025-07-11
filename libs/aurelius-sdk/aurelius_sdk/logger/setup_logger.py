@@ -43,3 +43,9 @@ def setup_logger(level: int | str = logging.INFO) -> None:
         style="{",
         reconfigure=True,
     )
+
+    # Ensure all log handlers use the specified log format
+    if default_handler := logging.getLogger().handlers[0]:
+        for name in logging.getHandlerNames():
+            if handler := logging.getHandlerByName(name):
+                handler.setFormatter(default_handler.formatter)
