@@ -5,3 +5,5 @@ services:
         image: aurelius-fastapi-example:latest
         ports:
             - 8000
+        environment:
+            LOG_LEVEL: ${LOG_LEVEL}
