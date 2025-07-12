@@ -25,8 +25,7 @@ def compose() -> Generator[DockerCompose]:
 
     with DockerCompose(context, env_file=env_file) as compose:
         yield compose
-
-    capture_docker_compose_logs(compose)
+        capture_docker_compose_logs(compose)
 
 
 @pytest.fixture()

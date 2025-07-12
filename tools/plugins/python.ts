@@ -51,6 +51,39 @@ function buildTargets(
         return targets;
     }
 
+    targets[typecheckTargetName] = {
+        cache: true,
+        executor: "@nxlv/python:run-commands",
+        metadata: {
+            description: "Run type checking on the Python code",
+        },
+        options: {
+            command: `pyright ${projectRoot}`,
+        },
+    };
+
+    if (existsSync(join(projectRoot, e2ePath))) {
+        targets[e2eTargetName] = {
+            cache: true,
+            dependsOn: [
+                {
+                    target: "decrypt",
+                },
+                {
+                    target: "docker-build",
+                },
+            ],
+            executor: "@nxlv/python:run-commands",
+            metadata: {
+                description: "Run the end-to-end tests for this application",
+            },
+            options: {
+                command: `pytest ${e2ePath}`,
+                cwd: projectRoot,
+            },
+        };
+    }
+
     const projectJson = readJsonFile<ProjectConfiguration>(join(projectRoot, "project.json"));
 
     if (!projectJson.sourceRoot) {
@@ -89,17 +122,6 @@ function buildTargets(
         },
     };
 
-    targets[typecheckTargetName] = {
-        cache: true,
-        executor: "@nxlv/python:run-commands",
-        metadata: {
-            description: "Run type checking on the Python code",
-        },
-        options: {
-            command: `pyright ${projectRoot}`,
-        },
-    };
-
     if (existsSync(join(projectRoot, testPath))) {
         targets[testTargetName] = {
             cache: true,
@@ -120,28 +142,6 @@ function buildTargets(
             },
             options: {
                 command: `pytest ${testPath}`,
-                cwd: projectRoot,
-            },
-        };
-    }
-
-    if (existsSync(join(projectRoot, e2ePath))) {
-        targets[e2eTargetName] = {
-            cache: true,
-            dependsOn: [
-                {
-                    target: "decrypt",
-                },
-                {
-                    target: "docker-build",
-                },
-            ],
-            executor: "@nxlv/python:run-commands",
-            metadata: {
-                description: "Run the end-to-end tests for this application",
-            },
-            options: {
-                command: `pytest ${e2ePath}`,
                 cwd: projectRoot,
             },
         };
