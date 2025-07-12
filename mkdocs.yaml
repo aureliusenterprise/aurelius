@@ -2,6 +2,7 @@ copyright: © 2025 Aurelius Enterprise
 repo_name: project-template
 repo_url: https://github.com/aureliusenterprise/project-template
 site_name: Aurelius Project Template
+site_url: https://project-template-3nr.pages.dev
 
 theme:
     favicon: assets/favicon.ico
