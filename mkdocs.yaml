@@ -82,7 +82,60 @@ nav:
                 - Secrets Management: user-guide/how-to-contribute/secrets-management.md
                 - Version Control: user-guide/how-to-contribute/version-control.md
     - API Reference: api-reference/index.md
-    - Architecture: architecture/index.md
+    - Architecture:
+          - architecture/index.md
+          - Vision & Strategy:
+                - architecture/vision-and-strategy/index.md
+                - Mission Statement: architecture/vision-and-strategy/mission-statement.md
+                - Business Objectives: architecture/vision-and-strategy/business-objectives.md
+                - Stakeholder Analysis: architecture/vision-and-strategy/stakeholder-analysis.md
+                - Architecture Roadmap: architecture/vision-and-strategy/architecture-roadmap.md
+          - Data Lifecycle Management:
+                - architecture/data-lifecycle-management/index.md
+                - Data Collection: architecture/data-lifecycle-management/data-collection.md
+                - Data Storage: architecture/data-lifecycle-management/data-storage.md
+                - Data Processing: architecture/data-lifecycle-management/data-processing.md
+                - Data Sharing: architecture/data-lifecycle-management/data-sharing.md
+                - Data Archiving: architecture/data-lifecycle-management/data-archiving.md
+          - Data Governance:
+                - architecture/data-governance/index.md
+                - Roles & Responsibilities: architecture/data-governance/roles-and-responsibilities.md
+                - Data Dictionary: architecture/data-governance/data-dictionary.md
+                - Data Quality: architecture/data-governance/data-quality.md
+                - Data Lineage: architecture/data-governance/data-lineage.md
+                - Compliance & Auditability: architecture/data-governance/compliance-and-auditability.md
+          - Platform:
+                - architecture/platform/index.md
+                - Components & Interfaces: architecture/platform/components-and-interfaces.md
+                - Data Pipelines: architecture/platform/data-pipelines.md
+                - Connectivity:
+                      - architecture/platform/connectivity/index.md
+                      - Integration Methods: architecture/platform/connectivity/integration-methods.md
+                      - API Management: architecture/platform/connectivity/api-management.md
+                      - Networking: architecture/platform/connectivity/networking.md
+                - Delivery:
+                      - architecture/platform/delivery/index.md
+                      - Configuration Management: architecture/platform/delivery/configuration-management.md
+                      - Change Management: architecture/platform/delivery/change-management.md
+                      - Release Management: architecture/platform/delivery/release-management.md
+                      - Deployment: architecture/platform/delivery/deployment.md
+                - Observability:
+                      - architecture/platform/observability/index.md
+                      - Monitoring: architecture/platform/observability/monitoring.md
+                      - Logging: architecture/platform/observability/logging.md
+                      - Alerting: architecture/platform/observability/alerting.md
+                - Resilience:
+                      - architecture/platform/resilience/index.md
+                      - High Availability: architecture/platform/resilience/high-availability.md
+                      - Incident Management: architecture/platform/resilience/incident-management.md
+                      - Backup & Restore: architecture/platform/resilience/backup-and-restore.md
+                      - Disaster Recovery: architecture/platform/resilience/disaster-recovery.md
+                - Security:
+                      - architecture/platform/security/index.md
+                      - Access Management: architecture/platform/security/access-management.md
+                      - Identity Management: architecture/platform/security/identity-management.md
+                      - Secrets Management: architecture/platform/security/secrets-management.md
+                      - Data Encryption: architecture/platform/security/data-encryption.md
     - Changelog: CHANGELOG.md
 
 plugins:
