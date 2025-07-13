@@ -81,7 +81,22 @@ nav:
                 - Documentation: user-guide/how-to-contribute/documentation.md
                 - Secrets Management: user-guide/how-to-contribute/secrets-management.md
                 - Version Control: user-guide/how-to-contribute/version-control.md
-    - API Reference: api-reference/index.md
+    - API Reference:
+          - api-reference/index.md
+          - Apps:
+                - api-reference/apps/index.md
+                - aurelius-fastapi-example: api-reference/apps/aurelius-fastapi-example.md
+          - Connectors:
+                - api-reference/connectors/index.md
+                - aurelius-kafka-connect-jdbc-sink-example: api-reference/connectors/aurelius-kafka-connect-jdbc-sink-example.md
+          - Docker:
+                - api-reference/docker/index.md
+                - aurelius-kafka-connect: api-reference/docker/aurelius-kafka-connect.md
+                - aurelius-kafka-connect-jdbc-sink: api-reference/docker/aurelius-kafka-connect-jdbc-sink.md
+          - Libs:
+                - api-reference/libs/index.md
+                - aurelius-sdk: api-reference/libs/aurelius-sdk.md
+                - aurelius-testing: api-reference/libs/aurelius-testing.md
     - Architecture:
           - architecture/index.md
           - Vision & Strategy:
