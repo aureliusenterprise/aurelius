@@ -1,8 +1,8 @@
 from uuid import UUID
 
 import pytest
+from aurelius_kafka.producer import KafkaProducer
 from aurelius_kafka_connect_jdbc_sink_example.models import Entity
-from confluent_kafka import Producer
 from confluent_kafka.serialization import Serializer
 from sqlmodel import Session
 from tenacity import retry, stop_after_attempt, wait_fixed
@@ -10,7 +10,7 @@ from tenacity import retry, stop_after_attempt, wait_fixed
 
 def produce_message(
     entity: Entity,
-    kafka_producer: Producer,
+    kafka_producer: KafkaProducer,
     key_serializer: Serializer,
     topic_name: str,
     value_serializer: Serializer,
@@ -21,16 +21,13 @@ def produce_message(
 
     kafka_producer.produce(
         topic=topic_name,
-        key=key,
-        value=value,
+        message=(key, value),
     )
-
-    kafka_producer.flush()
 
 
 def produce_tombstone_message(
     guid: UUID,
-    kafka_producer: Producer,
+    kafka_producer: KafkaProducer,
     key_serializer: Serializer,
     topic_name: str,
 ) -> None:
@@ -39,11 +36,8 @@ def produce_tombstone_message(
 
     kafka_producer.produce(
         topic=topic_name,
-        key=key,
-        value=None,
+        message=(key, None),
     )
-
-    kafka_producer.flush()
 
 
 @retry(stop=stop_after_attempt(5), wait=wait_fixed(2))
@@ -75,7 +69,7 @@ def assert_entity_not_in_database(
 )
 def test__aurelius_kafka_connect_jdbc_sink_example_handles_messages(  # noqa: PLR0913
     expected: Entity,
-    kafka_producer: Producer,
+    kafka_producer: KafkaProducer,
     kafka_topic_name: str,
     key_serializer: Serializer,
     session: Session,
@@ -99,7 +93,7 @@ def test__aurelius_kafka_connect_jdbc_sink_example_handles_messages(  # noqa: PL
 
 
 def test__aurelius_kafka_connect_jdbc_sink_example_handles_tombstone_messages(
-    kafka_producer: Producer,
+    kafka_producer: KafkaProducer,
     kafka_topic_name: str,
     key_serializer: Serializer,
     session: Session,

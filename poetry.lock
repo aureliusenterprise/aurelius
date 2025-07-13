@@ -95,6 +95,23 @@ type = "directory"
 url = "apps/aurelius-fastapi-example"
 
 [[package]]
+name = "aurelius-kafka"
+version = "0.0.0"
+description = "This library provides common utilities for working with Apache Kafka."
+optional = false
+python-versions = "*"
+groups = ["dev"]
+files = []
+develop = true
+
+[package.dependencies]
+confluent_kafka = "^2.10.0"
+
+[package.source]
+type = "directory"
+url = "libs/aurelius-kafka"
+
+[[package]]
 name = "aurelius-kafka-connect-jdbc-sink-example"
 version = "0.0.0"
 description = "This is an example Kafka Connect JDBC Sink application."
@@ -2946,4 +2963,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "7dbb7785e2d2ca0623720bdc5fb865e8809de07790a1d0ed9ba39bfa82169efd"
+content-hash = "728bb3b06507b37369c60050a334471e26d5083223f83f421118a714136007c7"

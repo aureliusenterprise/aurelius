@@ -37,6 +37,10 @@ testcontainers = "^4.10.0"
 develop = true
 path = "apps/aurelius-fastapi-example"
 
+[tool.poetry.group.dev.dependencies.aurelius-kafka]
+develop = true
+path = "libs/aurelius-kafka"
+
 [tool.poetry.group.dev.dependencies.aurelius-kafka-connect-jdbc-sink-example]
 develop = true
 path = "connectors/aurelius-kafka-connect-jdbc-sink-example"

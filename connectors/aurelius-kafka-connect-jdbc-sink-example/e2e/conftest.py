@@ -5,6 +5,7 @@ from typing import cast
 
 import dotenv
 import pytest
+from aurelius_kafka.producer import KafkaProducer
 from aurelius_kafka_connect_jdbc_sink_example.models import Entity
 from aurelius_testing.testcontainers import capture_docker_compose_logs
 from confluent_kafka import Producer
@@ -94,10 +95,10 @@ def session(database: Engine) -> Generator[Session]:
 
 
 @pytest.fixture(scope="session")
-def kafka_producer(compose: DockerCompose, settings: Settings) -> Producer:
+def kafka_producer(compose: DockerCompose, settings: Settings) -> KafkaProducer:
     """Return a Kafka producer instance."""
     hostname, port = compose.get_service_host_and_port("broker", settings.kafka_port)
-    return Producer({"bootstrap.servers": f"{hostname}:{port}"})
+    return KafkaProducer(producer=Producer({"bootstrap.servers": f"{hostname}:{port}"}))
 
 
 @pytest.fixture(scope="session")

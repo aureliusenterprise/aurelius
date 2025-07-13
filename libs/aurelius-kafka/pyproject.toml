@@ -1,0 +1,20 @@
+[tool.poetry]
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+description = "This library provides common utilities for working with Apache Kafka."
+name = "aurelius-kafka"
+version = "0.0.0"
+
+[[tool.poetry.packages]]
+include = "aurelius_kafka"
+
+[tool.poetry.dependencies]
+confluent_kafka = "^2.10.0"
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "module"
+asyncio_mode = "auto"
+required_plugins = ["pytest-asyncio"]
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]

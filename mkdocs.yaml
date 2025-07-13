@@ -95,6 +95,7 @@ nav:
                 - aurelius-kafka-connect-jdbc-sink: api-reference/docker/aurelius-kafka-connect-jdbc-sink.md
           - Libs:
                 - api-reference/libs/index.md
+                - aurelius-kafka: api-reference/libs/aurelius-kafka.md
                 - aurelius-sdk: api-reference/libs/aurelius-sdk.md
                 - aurelius-testing: api-reference/libs/aurelius-testing.md
     - Architecture:
