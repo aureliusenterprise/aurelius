@@ -93,7 +93,6 @@
     },
     "forwardPorts": [8000],
     "image": "mcr.microsoft.com/devcontainers/base:noble",
-    "mounts": ["source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind"],
     "name": "Aurelius Project Template",
     "postCreateCommand": {
         "pre-commit": "bash .devcontainer/pre-commit.sh",

@@ -19,15 +19,16 @@ environment, including the all tools and dependencies required for local develop
 
 ## Configure your SSH Key
 
-If you have not previously set up an SSH key for your GitHub account, follow the steps below:
+Follow the steps below to configure your SSH key for accessing the repository:
 
 1. [Generate an SSH key](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
 2. [Add the SSH key to your GitHub account](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
 
-!!! WARNING "Development Container Requires `~/.ssh` Directory"
+## Configure your SSH Agent
 
-    The development container expects the `~/.ssh` directory to be present. If this directory is not present, the setup
-    process will fail with an error. Make sure to set up your SSH key before starting the development container.
+The development container will attempt to pick up your SSH key from your `ssh-agent` when it starts. Follow the
+guide on [sharing git credentials with the development container](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)
+to ensure your SSH key is available inside the container.
 
 ## Clone the Repository
 
