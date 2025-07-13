@@ -120,10 +120,17 @@ def key_serializer() -> Serializer:
 
 
 @pytest.fixture(scope="session")
-def value_serializer(schema_registry_client: SchemaRegistryClient) -> Serializer:
+def value_schema() -> str:
+    """Return the Avro schema for the value."""
+    schema = Entity.avro_schema(namespace="aurelius_kafka_connect_jdbc_sink_example.models")
+    return json.dumps(schema)
+
+
+@pytest.fixture(scope="session")
+def value_serializer(schema_registry_client: SchemaRegistryClient, value_schema: str) -> Serializer:
     """Return the value serializer."""
     return AvroSerializer(
         conf={"subject.name.strategy": record_subject_name_strategy},
         schema_registry_client=schema_registry_client,
-        schema_str=json.dumps(Entity.avro_schema()),
+        schema_str=value_schema,
     )
