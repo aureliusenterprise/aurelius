@@ -8,7 +8,7 @@ This template is designed to help you quickly set up a new project. It includes 
 your code, documentation, and other resources. Also included are some common utilities for working with core components
 like Apache Kafka.
 
-## About the Team
+## About the team
 
 This project is maintained by the Aurelius Enterprise team. Please feel free to reach out if you have any questions,
 need assistance, or would like to contribute.
