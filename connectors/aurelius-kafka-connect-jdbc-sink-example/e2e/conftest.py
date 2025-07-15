@@ -5,10 +5,11 @@ from typing import cast
 
 import dotenv
 import pytest
-from aurelius_kafka.producer import KafkaProducer
+from aurelius_kafka import KafkaAdminClient, KafkaProducer
 from aurelius_kafka_connect_jdbc_sink_example.models import Entity
-from aurelius_testing.testcontainers import capture_docker_compose_logs
+from aurelius_testing import capture_docker_compose_logs
 from confluent_kafka import Producer
+from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.schema_registry import SchemaRegistryClient, record_subject_name_strategy
 from confluent_kafka.schema_registry.avro import AvroSerializer
 from confluent_kafka.serialization import Serializer, StringSerializer
@@ -102,9 +103,26 @@ def kafka_producer(compose: DockerCompose, settings: Settings) -> KafkaProducer:
 
 
 @pytest.fixture(scope="session")
-def kafka_topic_name(settings: Settings) -> str:
-    """Return the Kafka topic name."""
-    return settings.connect_topic_name
+def kafka_admin_client(compose: DockerCompose, settings: Settings) -> KafkaAdminClient:
+    """Return a KafkaAdminClient instance."""
+    hostname, port = compose.get_service_host_and_port("broker", settings.kafka_port)
+    return KafkaAdminClient(admin_client=AdminClient({"bootstrap.servers": f"{hostname}:{port}"}))
+
+
+@pytest.fixture(scope="session")
+def kafka_topic(kafka_admin_client: KafkaAdminClient, settings: Settings) -> str:
+    """Create a Kafka topic and return its name."""
+    kafka_topic_name = settings.connect_topic_name
+
+    kafka_topic = NewTopic(
+        kafka_topic_name,
+        num_partitions=1,
+        replication_factor=1,
+    )
+
+    kafka_admin_client.create_topics(kafka_topic)
+
+    return kafka_topic_name
 
 
 @pytest.fixture(scope="session")

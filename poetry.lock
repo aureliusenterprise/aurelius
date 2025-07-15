@@ -84,7 +84,7 @@ files = []
 develop = true
 
 [package.dependencies]
-aurelius-sdk = {path = "../../libs/aurelius-sdk", develop = true}
+aurelius-sdk = {path = "../../libs/aurelius-sdk", develop = true, extras = ["logger"]}
 fastapi = "^0.116.1"
 pydantic = "^2.11.7"
 pydantic-settings = "^2.10.1"
@@ -105,7 +105,11 @@ files = []
 develop = true
 
 [package.dependencies]
-confluent_kafka = "^2.10.0"
+aws-msk-iam-sasl-signer-python = {version = "^1.0.2", optional = true}
+confluent-kafka = "^2.10.0"
+
+[package.extras]
+msk = ["aws-msk-iam-sasl-signer-python (>=1.0.2,<2.0.0)"]
 
 [package.source]
 type = "directory"
@@ -141,7 +145,14 @@ files = []
 develop = true
 
 [package.dependencies]
-coloredlogs = "^15.0.1"
+coloredlogs = {version = "^15.0.1", optional = true}
+httpx = {version = "^0.28.1", optional = true}
+msal = {version = "^1.32.3", optional = true}
+
+[package.extras]
+api = ["httpx (>=0.28.1,<0.29.0)"]
+logger = ["coloredlogs (>=15.0.1,<16.0.0)"]
+msal = ["httpx (>=0.28.1,<0.29.0)", "msal (>=1.32.3,<2.0.0)"]
 
 [package.source]
 type = "directory"
@@ -196,6 +207,26 @@ snappy = ["python-snappy"]
 zstandard = ["zstandard"]
 
 [[package]]
+name = "aws-msk-iam-sasl-signer-python"
+version = "1.0.2"
+description = "Amazon MSK Library in Python for SASL/OAUTHBEARER Auth"
+optional = false
+python-versions = ">=3.8"
+groups = ["dev"]
+files = [
+    {file = "aws_msk_iam_sasl_signer_python-1.0.2-py2.py3-none-any.whl", hash = "sha256:310eb2db9ca0ff55ed06a24212739b87533e7f1cf6f34e43aabbd97a3b21290e"},
+    {file = "aws_msk_iam_sasl_signer_python-1.0.2.tar.gz", hash = "sha256:3432d88a7c6db4887ceb1130ebaed0113bfda48b79ea811537add5f1d25fa13f"},
+]
+
+[package.dependencies]
+boto3 = ">=1.26.125"
+botocore = ">=1.29.125"
+Click = ">=7.0"
+
+[package.extras]
+test = ["coverage (==7.2.5)", "mock (==5.0.2)", "pytest (==7.3.1)", "pytest-cov (==4.0.0)"]
+
+[[package]]
 name = "babel"
 version = "2.17.0"
 description = "Internationalization utilities"
@@ -229,6 +260,46 @@ files = [
 
 [package.extras]
 extras = ["regex"]
+
+[[package]]
+name = "boto3"
+version = "1.39.4"
+description = "The AWS SDK for Python"
+optional = false
+python-versions = ">=3.9"
+groups = ["dev"]
+files = [
+    {file = "boto3-1.39.4-py3-none-any.whl", hash = "sha256:f8e9534b429121aa5c5b7c685c6a94dd33edf14f87926e9a182d5b50220ba284"},
+    {file = "boto3-1.39.4.tar.gz", hash = "sha256:6c955729a1d70181bc8368e02a7d3f350884290def63815ebca8408ee6d47571"},
+]
+
+[package.dependencies]
+botocore = ">=1.39.4,<1.40.0"
+jmespath = ">=0.7.1,<2.0.0"
+s3transfer = ">=0.13.0,<0.14.0"
+
+[package.extras]
+crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
+
+[[package]]
+name = "botocore"
+version = "1.39.4"
+description = "Low-level, data-driven core of boto 3."
+optional = false
+python-versions = ">=3.9"
+groups = ["dev"]
+files = [
+    {file = "botocore-1.39.4-py3-none-any.whl", hash = "sha256:c41e167ce01cfd1973c3fa9856ef5244a51ddf9c82cb131120d8617913b6812a"},
+    {file = "botocore-1.39.4.tar.gz", hash = "sha256:e662ac35c681f7942a93f2ec7b4cde8f8b56dd399da47a79fa3e370338521a56"},
+]
+
+[package.dependencies]
+jmespath = ">=0.7.1,<2.0.0"
+python-dateutil = ">=2.1,<3.0.0"
+urllib3 = {version = ">=1.25.4,<2.2.0 || >2.2.0,<3", markers = "python_version >= \"3.10\""}
+
+[package.extras]
+crt = ["awscrt (==0.23.8)"]
 
 [[package]]
 name = "cachetools"
@@ -1165,6 +1236,18 @@ MarkupSafe = ">=2.0"
 i18n = ["Babel (>=2.7)"]
 
 [[package]]
+name = "jmespath"
+version = "1.0.1"
+description = "JSON Matching Expressions"
+optional = false
+python-versions = ">=3.7"
+groups = ["dev"]
+files = [
+    {file = "jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980"},
+    {file = "jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"},
+]
+
+[[package]]
 name = "mako"
 version = "1.3.10"
 description = "A super-fast templating language that borrows the best ideas from the existing templating languages."
@@ -1472,6 +1555,26 @@ files = [
 griffe = ">=1.6.2"
 mkdocs-autorefs = ">=1.4"
 mkdocstrings = ">=0.28.3"
+
+[[package]]
+name = "msal"
+version = "1.32.3"
+description = "The Microsoft Authentication Library (MSAL) for Python library enables your app to access the Microsoft Cloud by supporting authentication of users with Microsoft Azure Active Directory accounts (AAD) and Microsoft Accounts (MSA) using industry standard OAuth2 and OpenID Connect."
+optional = false
+python-versions = ">=3.7"
+groups = ["dev"]
+files = [
+    {file = "msal-1.32.3-py3-none-any.whl", hash = "sha256:b2798db57760b1961b142f027ffb7c8169536bf77316e99a0df5c4aaebb11569"},
+    {file = "msal-1.32.3.tar.gz", hash = "sha256:5eea038689c78a5a70ca8ecbe1245458b55a857bd096efb6989c69ba15985d35"},
+]
+
+[package.dependencies]
+cryptography = ">=2.5,<47"
+PyJWT = {version = ">=1.0.0,<3", extras = ["crypto"]}
+requests = ">=2.0.0,<3"
+
+[package.extras]
+broker = ["pymsalruntime (>=0.14,<0.18) ; python_version >= \"3.6\" and platform_system == \"Windows\"", "pymsalruntime (>=0.17,<0.18) ; python_version >= \"3.8\" and platform_system == \"Darwin\""]
 
 [[package]]
 name = "nodeenv"
@@ -1857,6 +1960,27 @@ files = [
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
+name = "pyjwt"
+version = "2.10.1"
+description = "JSON Web Token implementation in Python"
+optional = false
+python-versions = ">=3.9"
+groups = ["dev"]
+files = [
+    {file = "PyJWT-2.10.1-py3-none-any.whl", hash = "sha256:dcdd193e30abefd5debf142f9adfcdd2b58004e644f25406ffaebd50bd98dacb"},
+    {file = "pyjwt-2.10.1.tar.gz", hash = "sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953"},
+]
+
+[package.dependencies]
+cryptography = {version = ">=3.4.0", optional = true, markers = "extra == \"crypto\""}
+
+[package.extras]
+crypto = ["cryptography (>=3.4.0)"]
+dev = ["coverage[toml] (==5.0.4)", "cryptography (>=3.4.0)", "pre-commit", "pytest (>=6.0.0,<7.0.0)", "sphinx", "sphinx-rtd-theme", "zope.interface"]
+docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
+tests = ["coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)"]
+
+[[package]]
 name = "pymdown-extensions"
 version = "10.16"
 description = "Extension pack for Python Markdown."
@@ -2210,6 +2334,24 @@ files = [
     {file = "ruff-0.12.3-py3-none-win_arm64.whl", hash = "sha256:5f9c7c9c8f84c2d7f27e93674d27136fbf489720251544c4da7fb3d742e011b1"},
     {file = "ruff-0.12.3.tar.gz", hash = "sha256:f1b5a4b6668fd7b7ea3697d8d98857390b40c1320a63a178eee6be0899ea2d77"},
 ]
+
+[[package]]
+name = "s3transfer"
+version = "0.13.0"
+description = "An Amazon S3 Transfer Manager"
+optional = false
+python-versions = ">=3.9"
+groups = ["dev"]
+files = [
+    {file = "s3transfer-0.13.0-py3-none-any.whl", hash = "sha256:0148ef34d6dd964d0d8cf4311b2b21c474693e57c2e069ec708ce043d2b527be"},
+    {file = "s3transfer-0.13.0.tar.gz", hash = "sha256:f5e6db74eb7776a37208001113ea7aa97695368242b364d73e91c981ac522177"},
+]
+
+[package.dependencies]
+botocore = ">=1.37.4,<2.0a.0"
+
+[package.extras]
+crt = ["botocore[crt] (>=1.37.4,<2.0a.0)"]
 
 [[package]]
 name = "six"
@@ -2963,4 +3105,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "728bb3b06507b37369c60050a334471e26d5083223f83f421118a714136007c7"
+content-hash = "9bf744c26e0ca6a610959c40c28142b4c4b9b066f2e102845c8cdb19616f5b8d"

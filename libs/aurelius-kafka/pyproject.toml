@@ -8,7 +8,11 @@ version = "0.0.0"
 include = "aurelius_kafka"
 
 [tool.poetry.dependencies]
-confluent_kafka = "^2.10.0"
+aws-msk-iam-sasl-signer-python = { version = "^1.0.2", optional = true }
+confluent-kafka = "^2.10.0"
+
+[tool.poetry.extras]
+msk = ["aws-msk-iam-sasl-signer-python"]
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "module"

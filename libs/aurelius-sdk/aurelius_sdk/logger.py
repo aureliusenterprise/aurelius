@@ -1,3 +1,10 @@
+"""
+This module provides logging utilities for Aurelius applications.
+
+Note:
+    Please install the `logger` extra to use this module.
+"""
+
 import logging
 
 import coloredlogs

@@ -8,7 +8,13 @@ version = "0.0.0"
 include = "aurelius_sdk"
 
 [tool.poetry.dependencies]
-coloredlogs = "^15.0.1"
+coloredlogs = { version = "^15.0.1", optional = true }
+httpx = { version = "^0.28.1", optional = true }
+msal = { version = "^1.32.3", optional = true }
+
+[tool.poetry.extras]
+logger = ["coloredlogs"]
+msal = ["httpx", "msal"]
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "module"

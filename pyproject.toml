@@ -39,6 +39,7 @@ path = "apps/aurelius-fastapi-example"
 
 [tool.poetry.group.dev.dependencies.aurelius-kafka]
 develop = true
+extras = ["msk"]
 path = "libs/aurelius-kafka"
 
 [tool.poetry.group.dev.dependencies.aurelius-kafka-connect-jdbc-sink-example]
@@ -47,6 +48,7 @@ path = "connectors/aurelius-kafka-connect-jdbc-sink-example"
 
 [tool.poetry.group.dev.dependencies.aurelius-sdk]
 develop = true
+extras = ["logger", "msal"]
 path = "libs/aurelius-sdk"
 
 [tool.poetry.group.dev.dependencies.aurelius-testing]
