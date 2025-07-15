@@ -150,7 +150,6 @@ httpx = {version = "^0.28.1", optional = true}
 msal = {version = "^1.32.3", optional = true}
 
 [package.extras]
-api = ["httpx (>=0.28.1,<0.29.0)"]
 logger = ["coloredlogs (>=15.0.1,<16.0.0)"]
 msal = ["httpx (>=0.28.1,<0.29.0)", "msal (>=1.32.3,<2.0.0)"]
 
@@ -3105,4 +3104,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "9bf744c26e0ca6a610959c40c28142b4c4b9b066f2e102845c8cdb19616f5b8d"
+content-hash = "353c2b25dade00b7f9db58ea004c84d459fe8fcadca4cc1b81690057ef0ae121"
