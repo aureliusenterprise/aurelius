@@ -62,11 +62,18 @@ def settings() -> Settings:
 
 
 @pytest.fixture(scope="session")
-def consumer(compose: DockerCompose, settings: Settings) -> Generator[Consumer]:
+def kafka_bootstrap_servers(compose: DockerCompose, settings: Settings) -> str:
+    """Return the Kafka bootstrap servers."""
+    hostname, port = compose.get_service_host_and_port("broker", settings.kafka_port)
+    return f"{hostname}:{port}"
+
+
+@pytest.fixture(scope="session")
+def consumer(kafka_bootstrap_servers: str) -> Generator[Consumer]:
     """Return a Kafka consumer."""
     consumer = Consumer(
         {
-            "bootstrap.servers": f"localhost:{compose.get_service_port('broker', settings.kafka_port)}",
+            "bootstrap.servers": kafka_bootstrap_servers,
             "group.id": "test-group",
             "auto.offset.reset": "earliest",
         },
@@ -75,6 +82,34 @@ def consumer(compose: DockerCompose, settings: Settings) -> Generator[Consumer]:
     yield consumer
 
     consumer.close()
+
+
+@pytest.fixture(scope="session")
+def kafka_admin_client(kafka_bootstrap_servers: str) -> KafkaAdminClient:
+    """Return a KafkaAdminClient instance."""
+    return KafkaAdminClient(
+        admin_client=AdminClient(
+            {
+                "bootstrap.servers": kafka_bootstrap_servers,
+            },
+        ),
+    )
+
+
+@pytest.fixture(scope="session")
+def kafka_topic(kafka_admin_client: KafkaAdminClient, settings: Settings) -> str:
+    """Create a Kafka topic and return its name."""
+    kafka_topic_name = settings.kafka_topic_name
+
+    kafka_topic = NewTopic(
+        kafka_topic_name,
+        num_partitions=1,
+        replication_factor=1,
+    )
+
+    kafka_admin_client.create_topics(kafka_topic)
+
+    return kafka_topic_name
 
 
 @pytest.fixture(scope="session")
@@ -132,26 +167,3 @@ def connection(compose: DockerCompose) -> http.client.HTTPConnection:
         raise ValueError(message)
 
     return http.client.HTTPConnection(host, port)  # type: ignore[reportArgumentType]
-
-
-@pytest.fixture(scope="session")
-def kafka_admin_client(compose: DockerCompose, settings: Settings) -> KafkaAdminClient:
-    """Return a KafkaAdminClient instance."""
-    hostname, port = compose.get_service_host_and_port("broker", settings.kafka_port)
-    return KafkaAdminClient(admin_client=AdminClient({"bootstrap.servers": f"{hostname}:{port}"}))
-
-
-@pytest.fixture(scope="session")
-def kafka_topic(kafka_admin_client: KafkaAdminClient, settings: Settings) -> str:
-    """Create a Kafka topic and return its name."""
-    kafka_topic_name = settings.kafka_topic_name
-
-    kafka_topic = NewTopic(
-        kafka_topic_name,
-        num_partitions=1,
-        replication_factor=1,
-    )
-
-    kafka_admin_client.create_topics(kafka_topic)
-
-    return kafka_topic_name

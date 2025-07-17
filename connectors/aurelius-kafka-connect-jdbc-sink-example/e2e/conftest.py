@@ -96,17 +96,34 @@ def session(database: Engine) -> Generator[Session]:
 
 
 @pytest.fixture(scope="session")
-def kafka_producer(compose: DockerCompose, settings: Settings) -> KafkaProducer:
-    """Return a Kafka producer instance."""
+def kafka_bootstrap_servers(compose: DockerCompose, settings: Settings) -> str:
+    """Return the Kafka bootstrap servers."""
     hostname, port = compose.get_service_host_and_port("broker", settings.kafka_port)
-    return KafkaProducer(producer=Producer({"bootstrap.servers": f"{hostname}:{port}"}))
+    return f"{hostname}:{port}"
 
 
 @pytest.fixture(scope="session")
-def kafka_admin_client(compose: DockerCompose, settings: Settings) -> KafkaAdminClient:
+def kafka_producer(kafka_bootstrap_servers: str) -> KafkaProducer:
+    """Return a Kafka producer instance."""
+    return KafkaProducer(
+        producer=Producer(
+            {
+                "bootstrap.servers": kafka_bootstrap_servers,
+            },
+        ),
+    )
+
+
+@pytest.fixture(scope="session")
+def kafka_admin_client(kafka_bootstrap_servers: str) -> KafkaAdminClient:
     """Return a KafkaAdminClient instance."""
-    hostname, port = compose.get_service_host_and_port("broker", settings.kafka_port)
-    return KafkaAdminClient(admin_client=AdminClient({"bootstrap.servers": f"{hostname}:{port}"}))
+    return KafkaAdminClient(
+        admin_client=AdminClient(
+            {
+                "bootstrap.servers": kafka_bootstrap_servers,
+            },
+        ),
+    )
 
 
 @pytest.fixture(scope="session")
@@ -126,16 +143,16 @@ def kafka_topic(kafka_admin_client: KafkaAdminClient, settings: Settings) -> str
 
 
 @pytest.fixture(scope="session")
+def key_serializer() -> Serializer:
+    """Return the key serializer."""
+    return StringSerializer()
+
+
+@pytest.fixture(scope="session")
 def schema_registry_client(compose: DockerCompose) -> SchemaRegistryClient:
     """Return a Schema Registry client instance."""
     hostname, port = compose.get_service_host_and_port("schema-registry", 8081)
     return SchemaRegistryClient({"url": f"http://{hostname}:{port}"})
-
-
-@pytest.fixture(scope="session")
-def key_serializer() -> Serializer:
-    """Return the key serializer."""
-    return StringSerializer()
 
 
 @pytest.fixture(scope="session")
