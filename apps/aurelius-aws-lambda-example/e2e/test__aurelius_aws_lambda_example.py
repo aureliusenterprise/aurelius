@@ -10,7 +10,7 @@ from confluent_kafka.serialization import StringDeserializer, StringSerializer
 from timeout_decorator import timeout
 
 
-@timeout(60)
+@timeout(10)
 def consume_message(consumer: Consumer, topic: str) -> tuple[bytes | None, bytes | None]:
     """Consume a message from the Kafka topic."""
     consumer.subscribe([topic])
@@ -27,7 +27,13 @@ def consume_message(consumer: Consumer, topic: str) -> tuple[bytes | None, bytes
     return msg.key(), msg.value()
 
 
-@pytest.mark.parametrize("entity", [Entity()])
+@pytest.mark.parametrize(
+    "entity",
+    [
+        Entity(),
+        Entity(name="Hello World", description="This is a test"),
+    ],
+)
 def test__aurelius_aws_lambda_example(  # noqa: PLR0913
     connection: http.client.HTTPConnection,
     consumer: Consumer,
