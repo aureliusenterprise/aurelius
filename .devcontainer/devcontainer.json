@@ -68,6 +68,7 @@
                 "python.analysis.typeCheckingMode": "standard",
                 "python.testing.pytestEnabled": true,
                 "python.testing.unittestEnabled": false,
+                "terminal.integrated.gpuAcceleration": "on",
                 "vscode.env.isTelemetryEnabled": false
             }
         }
@@ -98,6 +99,7 @@
         "pre-commit": "bash .devcontainer/pre-commit.sh",
         "sops": "bash .devcontainer/sops.sh"
     },
+    "runArgs": ["--gpus", "all"],
     "updateContentCommand": {
         "npm": "bash .devcontainer/npm.sh",
         "poetry": "bash .devcontainer/poetry.sh"

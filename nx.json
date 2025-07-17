@@ -27,6 +27,6 @@
         }
     },
     "tui": {
-        "enabled": false
+        "enabled": true
     }
 }
