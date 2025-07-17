@@ -31,8 +31,19 @@ async function createNodesInternal(
                 tags: ["docker"],
                 targets: {
                     [buildTargetName]: {
-                        command: `docker build . -f ${configFilePath} -t {projectName}:latest`,
+                        command: `docker buildx build . -f ${configFilePath} -t {projectName}:latest`,
                         dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
+                        configurations: {
+                            ci: {
+                                options: {
+                                    "cache-from": "type=gha",
+                                    "cache-to": "type=gha",
+                                    env: {
+                                        DOCKER_BUILDKIT: "1",
+                                    },
+                                },
+                            },
+                        },
                         metadata: {
                             description: "Build the Docker image for the application",
                         },
