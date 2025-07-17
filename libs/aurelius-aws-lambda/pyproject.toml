@@ -8,6 +8,7 @@ version = "0.0.0"
 include = "aurelius_aws_lambda"
 
 [tool.poetry.dependencies]
+aws-lambda-powertools = "^3.17.0"
 pydantic = "^2.11.7"
 
 [tool.pytest.ini_options]

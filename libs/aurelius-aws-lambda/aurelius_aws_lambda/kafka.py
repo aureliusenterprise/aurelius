@@ -1,19 +1,57 @@
 import base64
+from datetime import datetime
 
+from aws_lambda_powertools.shared.functions import decode_header_bytes
 from pydantic import BaseModel, Field, field_validator
 
 
-class AWSLambdaKafkaRecord(BaseModel):
+class AWSLambdaKafkaRecordBase(BaseModel):
+    """Base model for Kafka records in AWS Lambda."""
+
+    headers: list[dict[str, bytes]] = Field(
+        default_factory=list,
+        description="A list of headers for the record.",
+    )
+
+    offset: int = Field(
+        description="The offset of the record in the partition.",
+    )
+
+    partition: int = Field(
+        description="The partition from which the record was read.",
+    )
+
+    timestamp: datetime = Field(
+        description="The timestamp of the record.",
+    )
+
+    timestamp_type: str = Field(
+        alias="timestampType",
+        description="The type of timestamp for the record.",
+    )
+
+    topic: str = Field(
+        description="The topic from which the record was read.",
+    )
+
+    @field_validator("headers", mode="before")
+    @classmethod
+    def decode_headers(cls, headers: list[dict[str, str]]) -> list[dict[str, bytes]]:
+        """Decode headers to bytes."""
+        return [{key: decode_header_bytes(values) for key, values in header.items()} for header in headers]
+
+
+class AWSLambdaKafkaRecord(AWSLambdaKafkaRecordBase):
     """Model representing a Kafka record."""
 
     key: bytes | None = Field(
         default=None,
-        description="The key of the Kafka record.",
+        description="The key of the record.",
     )
 
     value: bytes | None = Field(
         default=None,
-        description="The value of the Kafka record",
+        description="The value of the record.",
     )
 
     @field_validator("key", mode="before")
