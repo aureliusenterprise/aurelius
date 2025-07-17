@@ -1,4 +1,4 @@
-name: aurelius-kafka-connect-jdbc-sink-example-e2e
+name: aurelius-kafka-connect-jdbc-sink-example
 services:
     broker:
         image: apache/kafka:latest

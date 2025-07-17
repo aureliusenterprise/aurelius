@@ -6,9 +6,20 @@
     "sourceRoot": "{projectRoot}/aurelius_fastapi_example",
     "tags": [],
     "targets": {
-        "serve": {
+        "backend": {
             "continuous": true,
             "dependsOn": [{ "target": "decrypt" }],
+            "executor": "@nxlv/python:run-commands",
+            "metadata": {
+                "description": "Run the backend for the application."
+            },
+            "options": {
+                "command": "docker compose --profile backend up ",
+                "cwd": "{projectRoot}"
+            }
+        },
+        "serve": {
+            "dependsOn": [{ "target": "backend" }, { "target": "decrypt" }],
             "executor": "@nxlv/python:run-commands",
             "metadata": {
                 "description": "Serve the application on a local development server"

@@ -36,7 +36,7 @@ RUN addgroup --system aurelius-fastapi-example && \
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
-    apt-get install --no-install-recommends --no-install-suggests -y curl
+    apt-get install --no-install-recommends --no-install-suggests -y curl libpq-dev
 
 # Set the working directory
 WORKDIR /application

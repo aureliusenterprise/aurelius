@@ -1,4 +1,4 @@
-name: aurelius-aws-lambda-example-e2e
+name: aurelius-aws-lambda-example
 services:
     broker:
         image: apache/kafka:latest
@@ -44,7 +44,7 @@ services:
         ports:
             - 8080
         volumes:
-            - ../../../tools/aws-lambda-rie:/aws-lambda
+            - ../../tools/aws-lambda-rie:/aws-lambda
 
     schema-registry:
         image: confluentinc/cp-schema-registry:7.6.1

@@ -3,6 +3,9 @@ import logging
 
 from aurelius_fastapi_example.models import Settings
 
-LOGGER = logging.getLogger("app")
-METADATA = importlib.metadata.metadata("aurelius-fastapi-example")
-SETTINGS = Settings()
+NAME = "aurelius-fastapi-example"
+METADATA = importlib.metadata.metadata(NAME)
+
+SETTINGS = Settings()  # type: ignore[settings are loaded from environment variables]
+
+LOGGER = logging.getLogger(NAME)

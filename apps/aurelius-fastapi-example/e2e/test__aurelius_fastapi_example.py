@@ -1,4 +1,10 @@
 import http.client
+import json
+from collections.abc import Generator
+
+import pytest
+from aurelius_example import Entity
+from sqlmodel import Session
 
 
 def test__aurelius_fastapi_example_has_swagger_docs(connection: http.client.HTTPConnection) -> None:
@@ -47,3 +53,219 @@ def test__aurelius_fastapi_example_has_healthcheck(connection: http.client.HTTPC
     response = connection.getresponse()
 
     assert response.status == 200
+
+
+@pytest.fixture()
+def entities(session: Session) -> Generator[list[Entity]]:
+    """
+    Fixture to create and return a list of entities for testing.
+
+    Yields:
+        A list of Entity instances.
+    """
+    entities = [Entity() for _ in range(3)]
+    session.add_all(entities)
+    session.commit()
+
+    yield entities
+
+    for entity in entities:
+        session.delete(entity)
+
+    session.commit()
+
+
+def test__aurelius_fastapi_example_find_many(
+    connection: http.client.HTTPConnection,
+    entities: list[Entity],
+) -> None:
+    """
+    Test the find_many endpoint of the Aurelius FastAPI example.
+
+    Asserts:
+        - The API returns a 200 OK status code.
+        - All expected entities are returned in the response.
+    """
+    connection.request(
+        "GET",
+        "/entities/",
+    )
+    response = connection.getresponse()
+
+    assert response.status == 200
+
+    data = [Entity.model_validate(item) for item in json.loads(response.read())]
+
+    assert all(entity in data for entity in entities), "Not all entities were returned in the response"
+
+
+def test__aurelius_fastapi_example_find_one(
+    connection: http.client.HTTPConnection,
+    session: Session,
+) -> None:
+    """
+    Test the find_one endpoint of the Aurelius FastAPI example.
+
+    Asserts:
+        - The API returns a 200 OK status code.
+        - The returned entity matches one of the created entities.
+    """
+    entity = Entity(name="Find One Test", description="This is a test entity")
+
+    session.add(entity)
+    session.commit()
+    session.expunge(entity)
+
+    connection.request(
+        "GET",
+        f"/entities/{entity.guid}",
+    )
+
+    response = connection.getresponse()
+
+    assert response.status == 200
+
+    data = Entity.model_validate(json.loads(response.read()))
+
+    assert data == entity, "The returned entity does not match the expected entity"
+
+
+def test__aurelius_fastapi_example_find_one_not_exists(
+    connection: http.client.HTTPConnection,
+) -> None:
+    """
+    Test the find_one endpoint of the Aurelius FastAPI example for a non-existing entity.
+
+    Asserts:
+        - The API returns a 410 Gone status code when the entity does not exist.
+    """
+    non_existing_guid = "12345678-1234-5678-1234-567812345678"
+
+    connection.request(
+        "GET",
+        f"/entities/{non_existing_guid}",
+    )
+
+    response = connection.getresponse()
+
+    assert response.status == 410, "Expected 410 Gone status for non-existing entity"
+
+
+def test__aurelius_fastapi_example_create(
+    connection: http.client.HTTPConnection,
+    session: Session,
+) -> None:
+    """
+    Test the create endpoint of the Aurelius FastAPI example.
+
+    Asserts:
+        - The API returns a 200 OK status code.
+        - The created entity is returned in the response.
+        - The entity is stored in the database.
+    """
+    entity = Entity(name="Create Test", description="This is a test entity")
+
+    assert session.get(Entity, entity.guid) is None, "Entity already exists in the database"
+
+    connection.request(
+        "PUT",
+        "/entities/",
+        entity.model_dump_json(),
+        {"Content-Type": "application/json"},
+    )
+
+    response = connection.getresponse()
+
+    assert response.status == 200
+
+    data = Entity.model_validate(json.loads(response.read()))
+
+    assert data == entity, "The created entity does not match the expected entity"
+    assert session.get(Entity, entity.guid) == entity, "The entity was not found in the database after creation"
+
+
+def test__aurelius_fastapi_example_update(
+    connection: http.client.HTTPConnection,
+    session: Session,
+) -> None:
+    """
+    Test the update endpoint of the Aurelius FastAPI example.
+
+    Asserts:
+        - The API returns a 200 OK status code.
+        - The updated entity is returned in the response.
+        - The entity is updated in the database.
+    """
+    entity = Entity(name="Update Test", description="This is a test entity")
+
+    session.add(entity)
+    session.commit()
+    session.expunge(entity)
+
+    entity.description = "This is an updated description"
+
+    connection.request(
+        "PUT",
+        "/entities/",
+        entity.model_dump_json(),
+        {"Content-Type": "application/json"},
+    )
+
+    response = connection.getresponse()
+
+    assert response.status == 200
+
+    data = Entity.model_validate(json.loads(response.read()))
+
+    assert data == entity, "The updated entity does not match the expected entity"
+    assert session.get(Entity, entity.guid) == entity, "The entity was not found in the database after update"
+
+
+def test__aurelius_fastapi_example_delete(
+    connection: http.client.HTTPConnection,
+    session: Session,
+) -> None:
+    """
+    Test the delete endpoint of the Aurelius FastAPI example.
+
+    Asserts:
+        - The API returns a 200 OK status code.
+        - The entity is deleted from the database.
+    """
+    entity = Entity(name="Delete Test", description="This is a test entity")
+
+    session.add(entity)
+    session.commit()
+    session.expunge(entity)
+
+    connection.request(
+        "DELETE",
+        f"/entities/{entity.guid}",
+    )
+
+    response = connection.getresponse()
+
+    assert response.status == 200
+
+    assert session.get(Entity, entity.guid) is None, "The entity was not deleted from the database"
+
+
+def test__aurelius_fastapi_example_delete_not_exists(
+    connection: http.client.HTTPConnection,
+) -> None:
+    """
+    Test the delete endpoint of the Aurelius FastAPI example for a non-existing entity.
+
+    Asserts:
+        - The API returns a 410 Gone status code when the entity does not exist.
+    """
+    non_existing_guid = "12345678-1234-5678-1234-567812345678"
+
+    connection.request(
+        "DELETE",
+        f"/entities/{non_existing_guid}",
+    )
+
+    response = connection.getresponse()
+
+    assert response.status == 410, "Expected 410 Gone status for non-existing entity"

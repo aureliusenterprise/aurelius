@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     kafka_port: int
     postgres_db: str
     postgres_password: SecretStr
-    postgres_user: SecretStr
+    postgres_user: str
 
     model_config = SettingsConfigDict(
         env_file=dotenv.find_dotenv(),
@@ -52,9 +52,8 @@ def _environment() -> None:
 @wait_container_is_ready()
 def compose() -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
-    context = Path(__file__).parent.absolute()
-
-    with DockerCompose(context, env_file=dotenv.find_dotenv()) as compose:
+    context = Path(__file__).parents[1].absolute()
+    with DockerCompose(context=context) as compose:
         yield compose
         capture_docker_compose_logs(compose)
 
@@ -70,7 +69,7 @@ def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
 
     url = URL.create(
         drivername="postgresql",
-        username=settings.postgres_user.get_secret_value(),
+        username=settings.postgres_user,
         password=settings.postgres_password.get_secret_value(),
         host=hostname,
         port=cast("int", port),
@@ -88,7 +87,7 @@ def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
     SQLModel.metadata.drop_all(engine)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def session(database: Engine) -> Generator[Session]:
     """Return a SQLModel session."""
     with Session(database) as session:

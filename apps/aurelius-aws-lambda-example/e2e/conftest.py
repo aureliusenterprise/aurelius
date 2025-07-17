@@ -33,6 +33,12 @@ class Settings(BaseSettings):
     )
 
 
+@pytest.fixture(scope="session")
+def settings() -> Settings:
+    """Return the test configuration."""
+    return Settings()  # type: ignore[values are loaded from the environment]
+
+
 @pytest.fixture(scope="session", autouse=True)
 def _environment() -> None:
     """Load the environment variables from the .env file."""
@@ -43,8 +49,8 @@ def _environment() -> None:
 @wait_container_is_ready()
 def compose() -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
-    context = Path(__file__).parent.absolute()
-    with DockerCompose(context, env_file=dotenv.find_dotenv()) as compose:
+    context = Path(__file__).parents[1].absolute()
+    with DockerCompose(context=context) as compose:
         yield compose
 
 
@@ -53,12 +59,6 @@ def _capture_docker_compose_logs(compose: DockerCompose) -> Generator[None]:
     """Capture logs from the Docker Compose services."""
     yield
     capture_docker_compose_logs(compose)
-
-
-@pytest.fixture(scope="session")
-def settings() -> Settings:
-    """Return the test configuration."""
-    return Settings()  # type: ignore[reportCallIssue]
 
 
 @pytest.fixture(scope="session")

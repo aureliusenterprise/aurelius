@@ -4,7 +4,8 @@ from contextlib import asynccontextmanager
 from aurelius_sdk.logger import setup_logger
 from fastapi import FastAPI
 
-from aurelius_fastapi_example.globals import LOGGER, METADATA, SETTINGS
+from aurelius_fastapi_example.globals import LOGGER, METADATA, NAME, SETTINGS
+from aurelius_fastapi_example.routes import ENTITIES
 
 
 def main() -> FastAPI:
@@ -50,11 +51,16 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
 app = FastAPI(lifespan=lifespan)
 app.debug = SETTINGS.is_development
 app.description = METADATA.get("Summary", "")
-app.title = METADATA.get("Name", "")
+app.title = NAME
 app.version = f"v{METADATA.get('Version', '')}"
 
 
 # Routes setup - Add your API routes here
+app.include_router(
+    ENTITIES,
+    prefix="/entities",
+    tags=["Entities"],
+)
 
 
 @app.get("/healthcheck", include_in_schema=False)
