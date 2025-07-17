@@ -187,8 +187,8 @@ develop = true
 
 [package.dependencies]
 boto3 = {version = "^1.39.6", optional = true}
-coloredlogs = {version = "^15.0.1", optional = true}
-httpx = "^0.28.1"
+coloredlogs = "^15.0.1"
+httpx = {version = "^0.28.1", optional = true}
 msal = {version = "^1.32.3", optional = true}
 testcontainers = {version = "^4.10.0", optional = true}
 types-boto3 = {version = "^1.39.6", extras = ["full"], optional = true}
