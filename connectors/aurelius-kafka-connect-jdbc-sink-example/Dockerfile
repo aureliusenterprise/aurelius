@@ -1,4 +1,4 @@
-FROM aurelius-kafka-connect-jdbc-sink:latest
+FROM aurelius-kafka-connect-jdbc-sink-base:latest
 
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"

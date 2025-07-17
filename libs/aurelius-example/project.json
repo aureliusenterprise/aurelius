@@ -1,9 +1,8 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "implicitDependencies": ["aurelius-sdk"],
-    "name": "aurelius-kafka",
+    "name": "aurelius-example",
     "projectType": "library",
-    "sourceRoot": "{projectRoot}/aurelius_kafka",
+    "sourceRoot": "{projectRoot}/aurelius_example",
     "tags": [],
     "targets": {}
 }

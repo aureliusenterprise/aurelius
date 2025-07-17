@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "aurelius-kafka-connect-jdbc-sink-example"
+name = "aurelius-aws-lambda-base"
 package-mode = false
 version = "0.0.0"
 

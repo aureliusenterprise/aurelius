@@ -1,0 +1,9 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["aurelius-aws-lambda", "aurelius-aws-lambda-base", "aurelius-example", "aurelius-kafka"],
+    "name": "aurelius-aws-lambda-example",
+    "projectType": "application",
+    "sourceRoot": "{projectRoot}/aurelius_aws_lambda_example",
+    "tags": [],
+    "targets": {}
+}

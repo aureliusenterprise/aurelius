@@ -1,0 +1,41 @@
+[tool.poetry]
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+description = "This is an example AWS lambda function."
+name = "aurelius-aws-lambda-example"
+version = "0.0.0"
+
+[[tool.poetry.packages]]
+include = "aurelius_aws_lambda_example"
+
+[tool.poetry.dependencies]
+aws-lambda-powertools = "^3.17.0"
+pydantic = "^2.11.7"
+pydantic-settings = "^2.10.1"
+python = "^3.13"
+
+[tool.poetry.dependencies.aurelius-aws-lambda]
+develop = true
+path = "../../libs/aurelius-aws-lambda"
+
+[tool.poetry.dependencies.aurelius-example]
+develop = true
+path = "../../libs/aurelius-example"
+
+[tool.poetry.dependencies.confluent-kafka]
+extras = ["avro", "schema-registry"]
+version = "2.10.0"
+
+[tool.poetry.dependencies.aurelius-kafka]
+develop = true
+path = "../../libs/aurelius-kafka"
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "module"
+asyncio_mode = "auto"
+log_format = "%(message)s"
+log_level = "INFO"
+required_plugins = ["pytest-asyncio"]
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]

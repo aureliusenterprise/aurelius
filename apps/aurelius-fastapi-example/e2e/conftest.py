@@ -5,7 +5,7 @@ from typing import cast
 
 import dotenv
 import pytest
-from aurelius_testing import capture_docker_compose_logs
+from aurelius_sdk.testing import capture_docker_compose_logs
 from testcontainers.compose import DockerCompose
 from testcontainers.core.waiting_utils import wait_container_is_ready
 

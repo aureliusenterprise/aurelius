@@ -40,24 +40,24 @@ data to the `Entity` table in Postgres.
 
 ## Key Schema
 
-Keys should be string representations of the entity's [`guid`][aurelius_kafka_connect_jdbc_sink_example.models.Entity.guid]
+Keys should be string representations of the entity's [`guid`][aurelius_example.models.Entity.guid]
 field.
 
 ## Value Schema
 
-Values are expected to be Avro-encoded records that conform to the [`Entity`][aurelius_kafka_connect_jdbc_sink_example.models.Entity]
+Values are expected to be Avro-encoded records that conform to the [`Entity`][aurelius_example.models.Entity]
 schema.
 
 ??? INFO "Entity Schema"
 
-    ::: aurelius_kafka_connect_jdbc_sink_example.models.Entity
+    ::: aurelius_example.models.Entity
 
-The schema is registered in the schema registry as `aurelius_kafka_connect_jdbc_sink_example.models.Entity`.
+The schema is registered in the schema registry as `aurelius_example.models.Entity`.
 
 ## Tombstone Messages
 
 The connector also supports tombstone messages, which are used to delete records from the database. Tombstone messages
-should have a key that matches the entity's [`guid`][aurelius_kafka_connect_jdbc_sink_example.models.Entity.guid]
+should have a key that matches the entity's [`guid`][aurelius_example.models.Entity.guid]
 field and a value that is `null`.
 
 ## Configuration

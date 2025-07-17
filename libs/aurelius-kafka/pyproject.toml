@@ -9,7 +9,14 @@ include = "aurelius_kafka"
 
 [tool.poetry.dependencies]
 aws-msk-iam-sasl-signer-python = { version = "^1.0.2", optional = true }
-confluent-kafka = "^2.10.0"
+
+[tool.poetry.dependencies.aurelius-sdk]
+develop = true
+path = "../../libs/aurelius-sdk"
+
+[tool.poetry.dependencies.confluent-kafka]
+extras = ["avro", "schema-registry"]
+version = "2.10.0"
 
 [tool.poetry.extras]
 msk = ["aws-msk-iam-sasl-signer-python"]

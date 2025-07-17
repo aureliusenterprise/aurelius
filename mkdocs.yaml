@@ -85,19 +85,22 @@ nav:
           - api-reference/index.md
           - Apps:
                 - api-reference/apps/index.md
+                - aurelius-aws-lambda-example: api-reference/apps/aurelius-aws-lambda-example.md
                 - aurelius-fastapi-example: api-reference/apps/aurelius-fastapi-example.md
           - Connectors:
                 - api-reference/connectors/index.md
                 - aurelius-kafka-connect-jdbc-sink-example: api-reference/connectors/aurelius-kafka-connect-jdbc-sink-example.md
           - Docker:
                 - api-reference/docker/index.md
-                - aurelius-kafka-connect: api-reference/docker/aurelius-kafka-connect.md
-                - aurelius-kafka-connect-jdbc-sink: api-reference/docker/aurelius-kafka-connect-jdbc-sink.md
+                - aurelius-aws-lambda-base: api-reference/docker/aurelius-aws-lambda-base.md
+                - aurelius-kafka-connect-base: api-reference/docker/aurelius-kafka-connect-base.md
+                - aurelius-kafka-connect-jdbc-sink-base: api-reference/docker/aurelius-kafka-connect-jdbc-sink-base.md
           - Libs:
                 - api-reference/libs/index.md
+                - aurelius-aws-lambda: api-reference/libs/aurelius-aws-lambda.md
+                - aurelius-example: api-reference/libs/aurelius-example.md
                 - aurelius-kafka: api-reference/libs/aurelius-kafka.md
                 - aurelius-sdk: api-reference/libs/aurelius-sdk.md
-                - aurelius-testing: api-reference/libs/aurelius-testing.md
     - Architecture:
           - architecture/index.md
           - Vision & Strategy:

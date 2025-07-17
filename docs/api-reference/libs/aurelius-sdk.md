@@ -20,20 +20,28 @@ The `aurelius-sdk` library includes optional dependencies that can be installed 
 
 | Extra Name | Description                                                    |
 | ---------- | -------------------------------------------------------------- |
+| `aws`      | Includes dependencies for AWS services and utilities.          |
 | `logger`   | Includes dependencies for logging utilities.                   |
 | `msal`     | Includes dependencies for Microsoft Identity Platform support. |
+| `testing`  | Includes dependencies for testing utilities.                   |
 
 You can install these extras by specifying them in your `pyproject.toml`:
 
 ```toml
 [tool.poetry.dependencies.aurelius-sdk]
 develop = true
-extras = ["logger", "msal"]
+extras = ["aws", "logger", "msal", "testing"]
 path = "../../libs/aurelius-sdk"
 ```
 
 ## Documentation
 
+::: aurelius_sdk
+
+::: aurelius_sdk.aws
+
 ::: aurelius_sdk.logger
 
 ::: aurelius_sdk.msal
+
+::: aurelius_sdk.testing

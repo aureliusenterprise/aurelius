@@ -1,8 +1,8 @@
 from uuid import UUID
 
 import pytest
+from aurelius_example import Entity
 from aurelius_kafka import KafkaProducer
-from aurelius_kafka_connect_jdbc_sink_example.models import Entity
 from confluent_kafka.serialization import Serializer
 from sqlmodel import Session
 from tenacity import retry, stop_after_attempt, wait_fixed

@@ -1,6 +1,6 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "implicitDependencies": ["aurelius-kafka-connect-jdbc-sink"],
+    "implicitDependencies": ["aurelius-example", "aurelius-kafka", "aurelius-kafka-connect-jdbc-sink-base"],
     "name": "aurelius-kafka-connect-jdbc-sink-example",
     "projectType": "application",
     "sourceRoot": "{projectRoot}/aurelius_kafka_connect_jdbc_sink_example",

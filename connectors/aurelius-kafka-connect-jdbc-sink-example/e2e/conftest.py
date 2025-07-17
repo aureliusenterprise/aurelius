@@ -5,9 +5,9 @@ from typing import cast
 
 import dotenv
 import pytest
+from aurelius_example import Entity
 from aurelius_kafka import KafkaAdminClient, KafkaProducer
-from aurelius_kafka_connect_jdbc_sink_example.models import Entity
-from aurelius_testing import capture_docker_compose_logs
+from aurelius_sdk.testing import capture_docker_compose_logs
 from confluent_kafka import Producer
 from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.schema_registry import SchemaRegistryClient, record_subject_name_strategy
@@ -141,7 +141,7 @@ def key_serializer() -> Serializer:
 @pytest.fixture(scope="session")
 def value_schema() -> str:
     """Return the Avro schema for the value."""
-    schema = Entity.avro_schema(namespace="aurelius_kafka_connect_jdbc_sink_example.models")
+    schema = Entity.avro_schema(namespace="aurelius_example.models")
     return json.dumps(schema)
 
 
