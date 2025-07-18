@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, NonNegativeInt, PositiveInt, SecretStr
 from pydantic_settings import BaseSettings
+from sqlalchemy import URL
 
 DEVELOPMENT = "development"
 
@@ -32,43 +33,48 @@ class Settings(BaseSettings):
         description="Automatically create the database schema. Enabled by default in development mode.",
     )
 
+    database_driver: str = Field(
+        default="postgresql",
+        description="The driver for the database.",
+    )
+
+    database_host: str = Field(
+        default="localhost",
+        description="The host for the database.",
+    )
+
+    database_name: str = Field(
+        default="postgres",
+        description="The name of the database.",
+    )
+
+    database_password: SecretStr = Field(
+        description="The password for the database.",
+    )
+
+    database_port: int = Field(
+        default=5432,
+        description="The port for the database.",
+    )
+
+    database_username: str = Field(
+        default="postgres",
+        description="The username for the database.",
+    )
+
     host: str = Field(
         default="127.0.0.1",
         description="The host to bind the server to.",
     )
 
-    port: int = Field(
-        default=8000,
-        description="The port to bind the server to.",
-    )
-
-    postgres_db: str = Field(
-        default="postgres",
-        description="The name of the Postgres database.",
-    )
-
-    postgres_host: str = Field(
-        default="localhost",
-        description="The host for the Postgres database.",
-    )
-
-    postgres_password: SecretStr = Field(
-        description="The password for the Postgres database.",
-    )
-
-    postgres_port: int = Field(
-        default=5432,
-        description="The port for the Postgres database.",
-    )
-
-    postgres_user: str = Field(
-        default="postgres",
-        description="The username for the Postgres database.",
-    )
-
     log_level: str = Field(
         default="INFO",
         description="The logging level for the application.",
+    )
+
+    port: int = Field(
+        default=8000,
+        description="The port to bind the server to.",
     )
 
     @property
@@ -77,9 +83,13 @@ class Settings(BaseSettings):
         return self.environment == DEVELOPMENT
 
     @property
-    def database_connection_string(self) -> str:
-        """Construct the database connection string."""
-        return (
-            f"postgresql://{self.postgres_user}:{self.postgres_password.get_secret_value()}"
-            f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
+    def database_url(self) -> URL:
+        """Construct the database URL."""
+        return URL.create(
+            drivername=self.database_driver,
+            username=self.database_username,
+            password=self.database_password.get_secret_value(),
+            host=self.database_host,
+            port=self.database_port,
+            database=self.database_name,
         )

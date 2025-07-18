@@ -12,10 +12,10 @@ from aurelius_fastapi_example.globals import LOGGER, SETTINGS
 @cache
 def database() -> Engine:
     """Return a database engine instance."""
-    connection_string = SETTINGS.database_connection_string
+    database_url = SETTINGS.database_url
 
-    engine = create_engine(connection_string)
-    LOGGER.info("Connected to database %s", connection_string.split("@")[-1])
+    engine = create_engine(database_url)
+    LOGGER.info("Connected to database %s", str(database_url).split("@")[-1])
 
     if SETTINGS.auto_create_schema:
         SQLModel.metadata.create_all(engine)

@@ -17,9 +17,10 @@ from testcontainers.core.waiting_utils import wait_container_is_ready
 class Settings(BaseSettings):
     """Test configuration."""
 
-    postgres_db: str
-    postgres_password: SecretStr
-    postgres_user: str
+    database_name: str
+    database_password: SecretStr
+    database_port: int
+    database_username: str
 
     model_config = SettingsConfigDict(
         env_file=dotenv.find_dotenv(),
@@ -52,7 +53,7 @@ def compose() -> Generator[DockerCompose]:
 @pytest.fixture(scope="session", autouse=True)
 def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
     """Setup and teardown the database."""
-    hostname, port = compose.get_service_host_and_port("postgres-e2e", 5432)
+    hostname, port = compose.get_service_host_and_port("postgres-e2e", settings.database_port)
 
     if not (hostname and port):
         message = "PostgreSQL service not found in Docker Compose"
@@ -60,11 +61,11 @@ def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
 
     url = URL.create(
         drivername="postgresql",
-        username=settings.postgres_user,
-        password=settings.postgres_password.get_secret_value(),
+        username=settings.database_username,
+        password=settings.database_password.get_secret_value(),
         host=hostname,
         port=cast("int", port),
-        database=settings.postgres_db,
+        database=settings.database_name,
     )
 
     engine = create_engine(url)

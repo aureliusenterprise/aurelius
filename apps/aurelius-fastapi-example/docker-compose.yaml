@@ -4,12 +4,12 @@ services:
     aurelius-fastapi-example:
         image: aurelius-fastapi-example:latest
         environment:
+            DATABASE_NAME: ${DATABASE_NAME}
+            DATABASE_HOST: postgres-e2e
+            DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+            DATABASE_PORT: ${DATABASE_PORT}
+            DATABASE_USERNAME: ${DATABASE_USERNAME}
             LOG_LEVEL: ${LOG_LEVEL}
-            POSTGRES_DB: ${POSTGRES_DB}
-            POSTGRES_HOST: postgres-e2e
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_PORT: 5432
-            POSTGRES_USER: ${POSTGRES_USER}
         ports:
             - 8000
         profiles:
@@ -18,11 +18,11 @@ services:
     postgres:
         image: postgres:latest
         environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${DATABASE_USERNAME}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+            POSTGRES_DB: ${DATABASE_NAME}
         ports:
-            - ${POSTGRES_PORT}:${POSTGRES_PORT}
+            - ${DATABASE_PORT}:${DATABASE_PORT}
         profiles:
             - backend
         volumes:
@@ -31,11 +31,11 @@ services:
     postgres-e2e:
         image: postgres:latest
         environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${DATABASE_USERNAME}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+            POSTGRES_DB: ${DATABASE_NAME}
         ports:
-            - 5432
+            - ${DATABASE_PORT}
         profiles:
             - e2e
 
