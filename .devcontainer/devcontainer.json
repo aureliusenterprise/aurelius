@@ -78,7 +78,7 @@
             "packages": "age"
         },
         "ghcr.io/devcontainers-extra/features/nx-npm:1": {
-            "version": "latest"
+            "version": "21.3.0"
         },
         "ghcr.io/devcontainers-extra/features/sops:1": {
             "version": "latest"
