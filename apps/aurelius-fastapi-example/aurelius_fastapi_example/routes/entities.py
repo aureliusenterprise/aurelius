@@ -9,7 +9,7 @@ from sqlmodel import Session, select
 from aurelius_fastapi_example.models import PaginationQueryParams
 from aurelius_fastapi_example.providers import session
 
-ENTITIES = APIRouter(tags=["Entities"])
+ENTITIES = APIRouter()
 
 
 @ENTITIES.get(
