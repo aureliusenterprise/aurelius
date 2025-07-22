@@ -1,6 +1,7 @@
 export const blacklistedProperties: Set<string> = new Set([
   'ArchiMateReference',
   'archimateReference',
+  'id',
   'attributes',
   'businessOwner',
   'businessOwnerAttribute',
