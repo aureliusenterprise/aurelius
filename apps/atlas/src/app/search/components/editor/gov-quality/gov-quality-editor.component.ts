@@ -50,7 +50,12 @@ function mergeGovQualityEditorForm(
     { attributes } = form.value;
 
   merge(entity.attributes, attributes);
-
+  
+  // Set id to -1 for rule creation without using form
+  if (entity.attributes.id === undefined) {
+    entity.attributes.id = -1;
+  }
+    
   return entityDetails;
 }
 

@@ -31,20 +31,21 @@
     </ng-container>
   </div>
 
+
   <div class="field">
     <label class="label">Rule Description</label>
     <div class="grid">
       <div class="control">
         <textarea
           id="ruleDescription"
-          name="ruleDescription"
+          name="description"
           class="textarea"
-          placeholder="RuleDescription"
+          placeholder="Description"
           [formControl]="ruleDescription"
-          [class.is-warning]="rules?.definition?.isNonCompliant"
+          [class.is-warning]="rules?.ruleDescription?.isNonCompliant"
         ></textarea>
       </div>
-      <ng-container *ngIf="rules.definition as rules">
+      <ng-container *ngIf="rules.ruleDescription as rules">
         <models4insight-gov-quality-display
           [rules]="rules"
           class="is-size-7"
