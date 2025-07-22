@@ -2,7 +2,7 @@
   {
     "id": 1,
     "expressionVersion": 1,
-    "expression": "length('name', 1)",
+    "expression": "completeness('name')",
     "qualifiedName": "m4i_person--name",
     "qualityDimension": "completeness",
     "ruleTitle": "Person has a name",
@@ -16,7 +16,7 @@
   {
     "id": 2,
     "expressionVersion": 1,
-    "expression": "length('email', 1)",
+    "expression": "completeness('email')",
     "qualifiedName": "m4i_person--email",
     "qualityDimension": "completeness",
     "ruleTitle": "Person has an email address",
