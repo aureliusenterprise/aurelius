@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { EntityDetailsService } from '../../services/entity-details/entity-details.service';
 import { map } from 'rxjs/operators';
 import { FilteredPropertiesService } from '../../services/filtered-properties/filtered-properties.service';
 
@@ -12,6 +13,7 @@ export class DefaultDetailsComponent implements OnInit {
   propertyCount$: Observable<number>;
 
   constructor(
+    private readonly entityDetailsService: EntityDetailsService,
     private readonly filteredPropertiesService: FilteredPropertiesService
   ) {}
 

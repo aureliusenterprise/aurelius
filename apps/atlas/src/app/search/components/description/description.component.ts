@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { EntityDetailsService } from '../../services/entity-details/entity-details.service';
 
 @Component({
@@ -19,5 +19,13 @@ export class DescriptionComponent implements OnInit {
       ['entityDetails', 'entity', 'attributes', 'definition'],
       { includeFalsy: true }
     );
+    this.entityDetailsService.select(['entityDetails', 'entity', 'typeName'], { includeFalsy: true }).subscribe(typeName => {
+      if (typeName === 'm4i_gov_data_quality' || typeName === 'm4i_data_quality') {
+        this.description$ = this.entityDetailsService.select(
+          ['entityDetails', 'entity', 'attributes', 'ruleDescription'],
+          { includeFalsy: true }
+        );
+      }
+    });
   }
 }
