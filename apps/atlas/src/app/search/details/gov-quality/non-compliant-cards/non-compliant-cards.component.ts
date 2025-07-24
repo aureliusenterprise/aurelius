@@ -8,7 +8,7 @@ import {
   GovQualitySearchObject
 } from '@models4insight/atlas/api';
 import { untilDestroyed } from '@models4insight/utils';
-import { map } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { AppSearchResultsService } from '../../../services/app-search-results/app-search-results.service';
 import { EntitySearchResultsService } from '../../../services/app-search-results/entity-search-results.service';
 import { EntityDetailsService } from '../../../services/entity-details/entity-details.service';
@@ -46,11 +46,11 @@ export class NonCompliantEntitiesSearchService extends SearchService<
   ): AppSearchQuery<GovQualitySearchObject, NonCompliantEntitySearchObject> {
     return {
       facets: {
-        guid: { type: 'value', size: 100 },
+        guid: { type: 'value', size: 250 },
       },
       page: {
         current: 0,
-        size: 100,
+        size: 250,
       },
       query: '',
       result_fields: { entity_guid: { raw: {} } },
@@ -69,6 +69,12 @@ export class NonCompliantEntitiesSearchResultsService extends AppSearchResultsSe
     compliantEntitiesSearch: NonCompliantEntitiesSearchService
   ) {
     super(govQualitySearch, compliantEntitiesSearch);
+
+    compliantEntitiesSearch.queryObject$
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.loadAllPages()
+      });
   }
 }
 
@@ -79,8 +85,10 @@ export class NonCompliantCardsSearchService extends EntityDetailsCardsSearchServ
   ) {
     super();
 
-    this.searchResultService.allResults$
+    this.searchResultService.allResultsLoaded$
       .pipe(
+        filter((loaded) => loaded),
+        switchMap(() => this.searchResultService.allResults$),
         map((outputs) => this.createQueryObject(outputs)),
         untilDestroyed(this)
       )
