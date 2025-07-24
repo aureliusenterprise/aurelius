@@ -2,7 +2,7 @@
   {
     "id": 1,
     "expressionVersion": 1,
-    "expression": "length('name', 1)",
+    "expression": "completeness('name')",
     "qualifiedName": "m4i_system--name",
     "qualityDimension": "completeness",
     "ruleTitle": "System has a name",

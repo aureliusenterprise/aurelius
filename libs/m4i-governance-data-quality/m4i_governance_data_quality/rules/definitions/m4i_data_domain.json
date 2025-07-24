@@ -2,7 +2,7 @@
   {
     "id": 1,
     "expressionVersion": 1,
-    "expression": "length('name', 1)",
+    "expression": "completeness('name')",
     "qualifiedName": "m4i_data_domain--name",
     "qualityDimension": "completeness",
     "ruleTitle": "Data domain has a name",
@@ -16,7 +16,7 @@
   {
     "id": 2,
     "expressionVersion": 1,
-    "expression": "length('definition', 1)",
+    "expression": "completeness('definition')",
     "qualifiedName": "m4i_data_domain--definition",
     "qualityDimension": "completeness",
     "ruleTitle": "Data domain has a definition",
@@ -50,7 +50,7 @@
     "ruleTitle": "Data domain has a domain lead",
     "ruleDescription": "A data domain should have at least one domain lead",
     "compliantMessage": "This data domain has at least one domain lead",
-    "noncompliantMessage": "This data domain should have at least one domain lead",
+    "noncompliantMessage": "This data domain has at least one domain lead",
     "active": 1,
     "type": "relationship",
     "guid": "ea0ca02b-c8c6-40f0-9828-f2c90ae71c2b"
