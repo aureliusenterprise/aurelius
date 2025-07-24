@@ -1,3 +1,23 @@
+/* More aggressive targeting of static headers */
+:host ::ng-deep h3.title.is-3,
+:host ::ng-deep h3.title,
+:host-context(.box) ::ng-deep h3.title.is-3,
+:host-context(#properties-details) ::ng-deep h3.title.is-3,
+:host-context([id*="properties"]) ::ng-deep h3.title.is-3 {
+  display: none !important;
+}
+
+/* Target potential parent containers */
+:host-context(div) ::ng-deep > h3.title.is-3 {
+  display: none !important;
+}
+
+/* Preserve our component's title */
+.collapsible-header .title {
+  display: block !important;
+  flex: 1;
+}
+
 .tip .text {
   visibility: hidden;
   background-color: black;
@@ -15,4 +35,32 @@
 .tip {
   position: relative;
   display: inline-block;
+}
+
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  user-select: none;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 0.2s;
+  margin-right: 0.5rem;
+}
+
+.arrow.collapsed {
+  transform: rotate(0deg);
+}
+
+.arrow:not(.collapsed) {
+  transform: rotate(90deg);
+}
+
+.title {
+  flex: 1;
 }
