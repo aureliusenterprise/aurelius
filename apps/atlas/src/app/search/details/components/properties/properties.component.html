@@ -1,18 +1,19 @@
-<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-  <button (click)="toggleCollapse()" style="border: none; background: none; cursor: pointer; font-size: 1.5rem;">
-    <span *ngIf="isCollapsed">[+]</span>
-    <span *ngIf="!isCollapsed">[-]</span>
-  </button>
+<div class="collapsible-header" (click)="isCollapsed = !isCollapsed">
+  <span class="arrow" [class.collapsed]="isCollapsed">&#9654;</span>
+  <span class="title">Properties</span>
 </div>
-
-<div *ngIf="!isCollapsed">
-  <models4insight-sortable-table-shell [config]="tableConfigProperties" [data]="dataForTable$ | async"
-    [itemsPerPage]="1000" [rowsSelectable]="false">
+<div [hidden]="isCollapsed">
+  <models4insight-sortable-table-shell
+    [config]="tableConfigProperties"
+    [data]="dataForTable$ | async"
+    [itemsPerPage]="1000"
+    [rowsSelectable]="false"
+  >
     <ng-template let-rowData>
       <td *ngIf="rowData">
         <ng-container>
           <div>
-            {{ rowData.name |translate | titlecase }}
+            {{ rowData.name | translate | titlecase }}
           </div>
         </ng-container>
       </td>
