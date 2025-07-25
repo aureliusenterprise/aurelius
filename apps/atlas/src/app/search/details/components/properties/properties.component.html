@@ -1,4 +1,4 @@
-<div class="collapsible-header" (click)="isCollapsed = !isCollapsed">
+<!-- <div class="collapsible-header" (click)="isCollapsed = !isCollapsed">
   <span class="arrow" [class.collapsed]="isCollapsed">&#9654;</span>
   <span class="title">Properties</span>
 </div>
@@ -9,6 +9,35 @@
     [itemsPerPage]="1000"
     [rowsSelectable]="false"
   >
+    <ng-template let-rowData>
+      <td *ngIf="rowData">
+        <ng-container>
+          <div>
+            {{ rowData.name | translate | titlecase }}
+          </div>
+        </ng-container>
+      </td>
+      <td>
+        <models4insight-properties-item [data]="rowData.value"></models4insight-properties-item>
+      </td>
+    </ng-template>
+  </models4insight-sortable-table-shell>
+</div> -->
+<div class="collapsible-header" (click)="isCollapsed = !isCollapsed">
+  <span class="title">Properties</span>
+  <span class="arrow">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+      <path *ngIf="isCollapsed" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+      <path *ngIf="!isCollapsed" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+    </svg>
+  </span>
+</div>
+<div [hidden]="isCollapsed">
+  <models4insight-sortable-table-shell
+    [config]="tableConfigProperties"
+    [data]="dataForTable$ | async"
+    [itemsPerPage]="1000"
+    [rowsSelectable]="false">
     <ng-template let-rowData>
       <td *ngIf="rowData">
         <ng-container>
