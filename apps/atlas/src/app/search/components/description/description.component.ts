@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Component, Input } from '@angular/core';
+import { Observable, switchMap } from 'rxjs';
 import { EntityDetailsService } from '../../services/entity-details/entity-details.service';
 
 @Component({
@@ -7,25 +7,30 @@ import { EntityDetailsService } from '../../services/entity-details/entity-detai
   templateUrl: './description.component.html',
   styleUrls: ['./description.component.scss'],
 })
-export class DescriptionComponent implements OnInit {
-  description$: Observable<string>;
+export class DescriptionComponent {
+  description$: Observable<string> = this.entityDetailsService.select(
+    ['entityDetails', 'entity', 'typeName'],
+    { includeFalsy: true }
+  ).pipe(
+    switchMap((typeName) => this.selectDescriptionField(typeName))
+  );
 
   @Input() showPlaceholder = true;
 
   constructor(private readonly entityDetailsService: EntityDetailsService) {}
 
-  ngOnInit() {
-    this.description$ = this.entityDetailsService.select(
-      ['entityDetails', 'entity', 'attributes', 'definition'],
-      { includeFalsy: true }
-    );
-    this.entityDetailsService.select(['entityDetails', 'entity', 'typeName'], { includeFalsy: true }).subscribe(typeName => {
-      if (typeName === 'm4i_gov_data_quality' || typeName === 'm4i_data_quality') {
-        this.description$ = this.entityDetailsService.select(
-          ['entityDetails', 'entity', 'attributes', 'ruleDescription'],
-          { includeFalsy: true }
-        );
-      }
-    });
+  private selectDescriptionField(typeName: string): Observable<string> {
+    if (typeName === 'm4i_gov_data_quality' || typeName === 'm4i_data_quality') {
+      return this.entityDetailsService.select(
+        ['entityDetails', 'entity', 'attributes', 'ruleDescription'],
+        { includeFalsy: true }
+      );
+    }
+    else {
+      return this.entityDetailsService.select(
+        ['entityDetails', 'entity', 'attributes', 'definition'],
+        { includeFalsy: true }
+      );
+    }
   }
 }
