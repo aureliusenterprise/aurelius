@@ -1,23 +1,32 @@
-/* More aggressive targeting of static headers */
-:host ::ng-deep h3.title.is-3,
-:host ::ng-deep h3.title,
-:host-context(.box) ::ng-deep h3.title.is-3,
-:host-context(#properties-details) ::ng-deep h3.title.is-3,
-:host-context([id*="properties"]) ::ng-deep h3.title.is-3 {
+/* Only target static parent headers outside our component */
+:host-context(#properties-details) ::ng-deep h3.title.is-3:not(.collapsible-header *) {
   display: none !important;
 }
 
-/* Target potential parent containers */
-:host-context(div) ::ng-deep > h3.title.is-3 {
-  display: none !important;
+/* Style our collapsible header */
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 0.25rem 0;
 }
 
-/* Preserve our component's title */
-.collapsible-header .title {
+/* Make sure our title is visible */
+.collapsible-header .title.is-3 {
   display: block !important;
-  flex: 1;
+  margin: 0;
+  padding: 0;
 }
 
+/* Style the arrow with theme colors */
+.arrow {
+  display: flex;
+  align-items: center;
+  color: #0073dd;
+}
+
+/* Existing styles remain unchanged */
 .tip .text {
   visibility: hidden;
   background-color: black;
@@ -28,6 +37,7 @@
   margin: 25px;
   position: absolute;
 }
+
 .tip:hover .text {
   visibility: visible;
 }
@@ -36,66 +46,3 @@
   position: relative;
   display: inline-block;
 }
-
-// .collapsible-header {
-//   display: flex;
-//   align-items: center;
-//   cursor: pointer;
-//   font-size: 1.5rem;
-//   font-weight: bold;
-//   margin-bottom: 1rem;
-//   user-select: none;
-// }
-
-// .arrow {
-//   display: inline-block;
-//   transition: transform 0.2s;
-//   margin-right: 0.5rem;
-// }
-
-// .arrow.collapsed {
-//   transform: rotate(0deg);
-// }
-
-// .arrow:not(.collapsed) {
-//   transform: rotate(90deg);
-// }
-
-// .title {
-//   flex: 1;
-// }
-
-.collapsible-header {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  user-select: none;
-}
-
-.collapsible-header .title {
-  font-size: 1.5rem;
-  font-weight: 500;
-}
-
-.arrow {
-  display: flex;
-  align-items: center;
-  color: #0066ff;
-  transition: transform 0.2s;
-}
-
-
-.title {
-  flex: 1;
-}
-
-/* Keep the existing CSS for hiding static headers */
-:host ::ng-deep h3.title.is-3,
-:host-context(.box) ::ng-deep h3.title.is-3,
-:host-context(#properties-details) ::ng-deep h3.title.is-3 {
-  display: none !important;
-}
-
