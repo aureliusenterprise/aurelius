@@ -15,6 +15,11 @@ from confluent_kafka.schema_registry.json_schema import JSONSerializer
 from confluent_kafka.serialization import StringSerializer
 from m4i_data_dictionary_io.testing.models import Envelope
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from tenacity import (
+    Retrying,
+    stop_after_attempt,
+    wait_exponential,
+)
 from testcontainers.compose import DockerCompose
 from testcontainers.core.waiting_utils import wait_container_is_ready
 
@@ -109,9 +114,19 @@ def schema_registry_client(compose: DockerCompose) -> SchemaRegistryClient:
     schema_registry_host = compose.get_service_host("schema-registry", 8081)
     schema_registry_port = compose.get_service_port("schema-registry", 8081)
 
-    return SchemaRegistryClient(
+    schema_registry_client = SchemaRegistryClient(
         {"url": f"http://{schema_registry_host}:{schema_registry_port}"}
     )
+
+    # Wait for the Schema Registry to be ready
+    for attempt in Retrying(
+        stop=stop_after_attempt(10),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+    ):
+        with attempt:
+            schema_registry_client.get_subjects()
+
+    return schema_registry_client
 
 
 @pytest.fixture(scope="session")

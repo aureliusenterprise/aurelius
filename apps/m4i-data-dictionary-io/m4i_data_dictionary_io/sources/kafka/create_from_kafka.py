@@ -34,10 +34,7 @@ def get_cluster_id(admin_client: AdminClient) -> Union[str, None]:
 
 
 def get_external_topic_names(admin_client: AdminClient) -> List[str]:
-    """
-    Retrieve topic names for the given cluster ID,
-    filtering out internal and default topics.
-    """
+    """Retrieve topic names for the given cluster ID, filtering out internal and default topics."""
     all_topics = [str(t) for t in admin_client.list_topics().topics.values()]
 
     futures = admin_client.describe_topics(TopicCollection(all_topics))
@@ -70,10 +67,23 @@ def consume_message(topic: str, consumer: Consumer) -> Union[bytes, None]:
     return msg.value()
 
 
+def get_topic_schema(
+    topic: str,
+    schema_registry_client: SchemaRegistryClient,
+) -> Union[Schema, None]:
+    """Retrieve the schema for a Kafka topic using topic name strategy."""
+    try:
+        return schema_registry_client.get_latest_version(f"{topic}-value").schema
+    except SchemaRegistryError:
+        logging.error(f"Failed to retrieve schema for topic {topic}")
+        return None
+
+
 def get_message_schema(
     message: bytes,
     schema_registry_client: SchemaRegistryClient,
 ) -> Union[Schema, None]:
+    """Retrieve the schema for a Kafka message based on the schema registry header."""
     if not message.startswith(SCHEMA_REGISTRY_MAGIC_BYTE):
         logging.warning("Message is not schema-registered")
         return None
@@ -94,6 +104,7 @@ def get_message_schema(
 
 
 def build_system(name: str) -> System:
+    """Build a System instance with the provided name."""
     return System.from_dict(
         {
             "name": name,
@@ -106,6 +117,7 @@ def build_collection(
     name: str,
     system_qualified_name: str,
 ) -> Collection:
+    """Build a Collection instance with the provided name and system qualified name."""
     return Collection.from_dict(
         {
             "name": name,
@@ -138,12 +150,13 @@ def build_field(
     definition: Union[str, None] = None,
     parent_field: Union[str, None] = None,
 ) -> DataField:
+    """Build a DataField instance with the provided parameters."""
     return DataField.from_dict(
         {
             "name": name,
             "dataset": dataset_qualified_name,
             "definition": definition,
-            "qualifiedName": f"{dataset_qualified_name}--{get_qualified_name(name)}",
+            "qualifiedName": f"{parent_field if parent_field else dataset_qualified_name}--{get_qualified_name(name)}",
             "fieldType": type_name,
             "parentField": parent_field,
         }
@@ -155,6 +168,7 @@ def _parse_avro_schema(
     dataset_qualified_name: str,
     parent_field: Union[str, None] = None,
 ) -> Generator[DataField, None, None]:
+    """Parse an Avro schema and yield DataField instances."""
     for field in schema.fields:
         type_name = (
             " | ".join(schema.name for schema in field.type.schemas)
@@ -210,6 +224,7 @@ def parse_avro_schema(
 
 
 def _get_json_schema_definition(ref: str, defs: dict) -> Union[dict, None]:
+    """Retrieve a JSON schema definition by reference."""
     return defs.get(ref.replace("#/$defs/", ""))
 
 
@@ -217,6 +232,7 @@ def _find_json_schema_references(
     schema: dict,
     defs: dict,
 ) -> Generator[dict, None, None]:
+    """Find all JSON schema references in the given schema."""
     dependencies = [
         *schema.get("anyOf", []),
         *schema.get("allOf", []),
@@ -263,7 +279,7 @@ def _parse_json_schema_type(schema: dict, defs: dict) -> str:
         if isinstance(items, dict):
             return f"array<{_parse_json_schema_type(items, defs)}>"
         return "array"
-    
+
     if type_name == "object":
         return schema.get("title", "object")
 
@@ -276,6 +292,7 @@ def _parse_json_schema(
     defs: dict,
     parent_field: Union[str, None] = None,
 ) -> Generator[DataField, None, None]:
+    """Parse a JSON schema and yield DataField instances."""
     for key, metadata in schema.get("properties", {}).items():
         type_name = _parse_json_schema_type(metadata, defs)
 
@@ -355,11 +372,11 @@ def _parse_json_payload(
             )
 
 
-def parse_json_payload(
+def parse_raw_payload(
     payload: str,
     dataset_qualified_name: str,
 ) -> Generator[DataField, None, None]:
-    """Parse a JSON payload and yield DataField instances."""
+    """Attempt to parse the given payload as JSON and yield DataField instances."""
     try:
         data = json.loads(payload)
     except json.JSONDecodeError:
@@ -382,6 +399,19 @@ SCHEMA_PARSERS: Dict[str, Parser] = {
     "avro": parse_avro_schema,
     "json": parse_json_schema,
 }
+
+
+def parse_schema(
+    schema: Schema,
+    dataset_qualified_name: str,
+) -> Generator[DataField, None, None]:
+    """Parse a schema and yield DataField instances."""
+    if schema.schema_type.lower() not in SCHEMA_PARSERS:
+        logging.error(f"No parser found for schema type: {schema.schema_type}")
+        return
+
+    parser = SCHEMA_PARSERS[schema.schema_type.lower()]
+    yield from parser(schema.schema_str, dataset_qualified_name)
 
 
 def discover_cluster(
@@ -416,29 +446,21 @@ def discover_cluster(
         return
 
     for topic in datasets:
-        if not (data := consume_message(topic.name, consumer)):
-            logging.warning(f"No data found for topic: {topic.name}")
-            continue
+        # Attempt to retrieve schema from Schema Registry
+        if schema := get_topic_schema(topic.name, schema_registry_client):
+            yield from parse_schema(schema, topic.qualified_name)
 
-        if not (schema := get_message_schema(data, schema_registry_client)):
-            logging.info(
-                f"No schema found for topic: {topic.name}. Attempting to parse as JSON payload."
-            )
-
-            yield from parse_json_payload(
-                payload=data.decode("utf-8"),
-                dataset_qualified_name=topic.qualified_name,
-            )
-
-            continue
-
-        if not (parser := SCHEMA_PARSERS.get(schema.schema_type.lower())):
-            logging.warning(
-                f"No parser found for schema type: {schema.schema_type} in topic: {topic.name}"
-            )
-            continue
-
-        yield from parser(schema.schema_str, topic.qualified_name)
+        # If no schema is found, consume a message to infer the schema from the payload
+        elif data := consume_message(topic.name, consumer):
+            # Attempt to retrieve schema from message header
+            if schema := get_message_schema(data, schema_registry_client):
+                yield from parse_schema(schema, topic.qualified_name)
+            else:
+                # If no schema is found, parse the raw payload
+                yield from parse_raw_payload(
+                    payload=data.decode("utf-8"),
+                    dataset_qualified_name=topic.qualified_name,
+                )
 
 
 async def create_from_kafka(
