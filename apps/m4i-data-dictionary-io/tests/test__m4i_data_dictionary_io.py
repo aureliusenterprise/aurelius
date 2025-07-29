@@ -297,7 +297,7 @@ def json_topic(
     message: Message,
     string_serializer: StringSerializer,
 ) -> str:
-    """Fixture to create a Kafka topic with a JSON message without schema."""
+    """Fixture to create a Kafka topic that has a JSON message without schema."""
     for attempt in Retrying(
         stop=stop_after_attempt(10),
         wait=wait_exponential(multiplier=1, min=2, max=10),
