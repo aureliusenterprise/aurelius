@@ -1,4 +1,4 @@
-name: m4i-data-dictionary-io-e2e
+name: m4i-data-dictionary-io-tests
 
 services:
   broker:
