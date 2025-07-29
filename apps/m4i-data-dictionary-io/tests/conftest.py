@@ -13,7 +13,7 @@ from confluent_kafka.schema_registry import (
 from confluent_kafka.schema_registry.avro import AvroSerializer
 from confluent_kafka.schema_registry.json_schema import JSONSerializer
 from confluent_kafka.serialization import StringSerializer
-from m4i_data_dictionary_io.testing.message import Message
+from m4i_data_dictionary_io.testing.models import Envelope
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from testcontainers.compose import DockerCompose
 from testcontainers.core.waiting_utils import wait_container_is_ready
@@ -119,7 +119,7 @@ def avro_serializer(schema_registry_client: SchemaRegistryClient) -> AvroSeriali
     """Fixture to create an AvroSerializer."""
     return AvroSerializer(
         schema_registry_client=schema_registry_client,
-        schema_str=json.dumps(Message.avro_schema()),
+        schema_str=json.dumps(Envelope.avro_schema()),
         conf={
             "subject.name.strategy": record_subject_name_strategy,
         },
@@ -131,7 +131,7 @@ def json_serializer(schema_registry_client: SchemaRegistryClient) -> JSONSeriali
     """Fixture to create a JSONSerializer."""
     return JSONSerializer(
         schema_registry_client=schema_registry_client,
-        schema_str=json.dumps(Message.model_json_schema()),
+        schema_str=json.dumps(Envelope.model_json_schema()),
     )
 
 

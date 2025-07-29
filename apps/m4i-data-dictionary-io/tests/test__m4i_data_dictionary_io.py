@@ -18,7 +18,7 @@ from m4i_data_dictionary_io.sources.kafka.create_from_kafka import (
     build_system,
     discover_cluster,
 )
-from m4i_data_dictionary_io.testing.message import Message
+from m4i_data_dictionary_io.testing.models import Envelope, Message
 from tenacity import (
     Retrying,
     stop_after_attempt,
@@ -76,7 +76,9 @@ def kafka_topic(
         wait=wait_exponential(multiplier=1, min=2, max=10),
     ):
         with attempt:
-            descriptions = kafka_admin_client.describe_topics(TopicCollection([topic_name]))
+            descriptions = kafka_admin_client.describe_topics(
+                TopicCollection([topic_name])
+            )
 
             for future in descriptions.values():
                 future.result()
@@ -122,13 +124,15 @@ def test__discover_cluster_with_topic(
 
 
 @pytest.fixture(scope="module")
-def message() -> Message:
-    """Fixture to create a Message instance for testing."""
-    return Message(
+def message() -> Envelope:
+    """Fixture to create a sample message for testing."""
+    message = Message(
         content="Test message content",
         name="test_topic",
         version=1,
     )
+
+    return Envelope(message=message)
 
 
 @pytest.fixture()
@@ -136,7 +140,7 @@ def avro_topic(
     avro_serializer: AvroSerializer,
     kafka_producer: Producer,
     kafka_topic: str,
-    message: Message,
+    message: Envelope,
 ) -> str:
     """Fixture to create a Kafka topic with an Avro message."""
     # The tests may sometimes start before the schema registry is ready. Retry until it is.
@@ -146,7 +150,7 @@ def avro_topic(
     ):
         with attempt:
             value = avro_serializer(
-                obj=message.model_dump(mode="json"),
+                obj=message.model_dump(),
                 ctx=SerializationContext(kafka_topic, MessageField.VALUE),
             )
 
@@ -179,24 +183,41 @@ def test__discover_cluster_with_topic_and_avro_message(
         collection_qualified_name=expected_collection.qualified_name,
     )
 
+    message_field = build_field(
+        name="message",
+        dataset_qualified_name=expected_dataset.qualified_name,
+        definition="The message contained in the envelope",
+        type_name="Message",
+    )
+
     expected_fields = [
+        message_field,
         build_field(
             name="content",
             dataset_qualified_name=expected_dataset.qualified_name,
             definition="The content of the message",
+            parent_field=message_field.qualified_name,
             type_name="string",
         ),
         build_field(
             name="name",
             dataset_qualified_name=expected_dataset.qualified_name,
             definition="The topic of the message",
+            parent_field=message_field.qualified_name,
             type_name="string",
         ),
         build_field(
             name="version",
             dataset_qualified_name=expected_dataset.qualified_name,
             definition="The version of the message",
+            parent_field=message_field.qualified_name,
             type_name="long",
+        ),
+        build_field(
+            name="timestamp",
+            dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The timestamp of the message",
+            type_name="null | long",
         ),
     ]
 
@@ -223,9 +244,9 @@ def json_schema_topic(
     json_serializer: JSONSerializer,
     kafka_producer: Producer,
     kafka_topic: str,
-    message: Message,
+    message: Envelope,
 ) -> str:
-    """Fixture to create a Kafka topic with a JSON message with schema."""
+    """Fixture to create a Kafka topic that has a JSON message with schema."""
     # The tests may sometimes start before the schema registry is ready. Retry until it is.
     for attempt in Retrying(
         stop=stop_after_attempt(10),
@@ -266,24 +287,41 @@ def test__discover_cluster_with_topic_and_json_schema_message(
         collection_qualified_name=expected_collection.qualified_name,
     )
 
+    message_field = build_field(
+        name="message",
+        dataset_qualified_name=expected_dataset.qualified_name,
+        definition="The message contained in the envelope",
+        type_name="Message",
+    )
+
     expected_fields = [
+        message_field,
         build_field(
             name="content",
             dataset_qualified_name=expected_dataset.qualified_name,
             definition="The content of the message",
+            parent_field=message_field.qualified_name,
             type_name="string",
         ),
         build_field(
             name="name",
             dataset_qualified_name=expected_dataset.qualified_name,
             definition="The topic of the message",
+            parent_field=message_field.qualified_name,
             type_name="string",
         ),
         build_field(
             name="version",
             dataset_qualified_name=expected_dataset.qualified_name,
             definition="The version of the message",
+            parent_field=message_field.qualified_name,
             type_name="integer",
+        ),
+        build_field(
+            name="timestamp",
+            dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The timestamp of the message",
+            type_name="string",
         ),
     ]
 
@@ -309,7 +347,7 @@ def test__discover_cluster_with_topic_and_json_schema_message(
 def json_topic(
     kafka_producer: Producer,
     kafka_topic: str,
-    message: Message,
+    message: Envelope,
     string_serializer: StringSerializer,
 ) -> str:
     """Fixture to create a Kafka topic that has a JSON message without schema."""
@@ -352,21 +390,36 @@ def test__discover_cluster_with_topic_and_json_message(
         collection_qualified_name=expected_collection.qualified_name,
     )
 
+    message_field = build_field(
+        name="message",
+        dataset_qualified_name=expected_dataset.qualified_name,
+        type_name="object",
+    )
+
     expected_fields = [
+        message_field,
         build_field(
             name="content",
             dataset_qualified_name=expected_dataset.qualified_name,
+            parent_field=message_field.qualified_name,
             type_name="string",
         ),
         build_field(
             name="name",
             dataset_qualified_name=expected_dataset.qualified_name,
+            parent_field=message_field.qualified_name,
             type_name="string",
         ),
         build_field(
             name="version",
             dataset_qualified_name=expected_dataset.qualified_name,
+            parent_field=message_field.qualified_name,
             type_name="integer",
+        ),
+        build_field(
+            name="timestamp",
+            dataset_qualified_name=expected_dataset.qualified_name,
+            type_name="string",
         ),
     ]
 
