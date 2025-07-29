@@ -2,6 +2,7 @@ import json
 import logging
 from typing import Callable, Dict, Generator, List, Union
 
+from avro.schema import RecordSchema
 from confluent_kafka import Consumer, TopicCollection
 from confluent_kafka.admin import AdminClient
 from confluent_kafka.avro import loads
@@ -133,7 +134,9 @@ def build_field(
     name: str,
     dataset_qualified_name: str,
     type_name: str,
+    *,
     definition: Union[str, None] = None,
+    parent_field: Union[str, None] = None,
 ) -> DataField:
     return DataField.from_dict(
         {
@@ -142,8 +145,57 @@ def build_field(
             "definition": definition,
             "qualifiedName": f"{dataset_qualified_name}--{get_qualified_name(name)}",
             "fieldType": type_name,
+            "parentField": parent_field,
         }
     )
+
+
+def _parse_avro_schema(
+    schema: RecordSchema,
+    dataset_qualified_name: str,
+    parent_field: Union[str, None] = None,
+) -> Generator[DataField, None, None]:
+    for field in schema.fields:
+        type_name = (
+            " | ".join(schema.name for schema in field.type.schemas)
+            if field.type.type == "union"
+            else field.type.name
+        )
+
+        result = build_field(
+            name=field.name,
+            dataset_qualified_name=dataset_qualified_name,
+            definition=field.doc,
+            parent_field=parent_field,
+            type_name=type_name,
+        )
+
+        yield result
+
+        if field.type.type == "record":
+            # Recursively parse nested records
+            yield from _parse_avro_schema(
+                schema=field.type,
+                dataset_qualified_name=dataset_qualified_name,
+                parent_field=result.qualified_name,
+            )
+        elif field.type.type == "array":
+            # If the field is an array, parse its items
+            items = field.type.items
+            if items.type == "record":
+                yield from _parse_avro_schema(
+                    schema=items,
+                    dataset_qualified_name=dataset_qualified_name,
+                    parent_field=result.qualified_name,
+                )
+            else:
+                # For non-record items, just yield the field
+                yield build_field(
+                    name=f"{field.name}_item",
+                    dataset_qualified_name=dataset_qualified_name,
+                    type_name=items.name,
+                    parent_field=result.qualified_name,
+                )
 
 
 def parse_avro_schema(
@@ -151,14 +203,99 @@ def parse_avro_schema(
     dataset_qualified_name: str,
 ) -> Generator[DataField, None, None]:
     """Parse an Avro schema and yield DataField instances."""
-    avro_schema = loads(schema)
-    for field in avro_schema.fields:
-        yield build_field(
-            name=field.name,
-            dataset_qualified_name=dataset_qualified_name,
-            definition=field.doc,
-            type_name=field.type.name,
+    yield from _parse_avro_schema(
+        schema=loads(schema),
+        dataset_qualified_name=dataset_qualified_name,
+    )
+
+
+def _get_json_schema_definition(ref: str, defs: dict) -> Union[dict, None]:
+    return defs.get(ref.replace("#/$defs/", ""))
+
+
+def _find_json_schema_references(
+    schema: dict,
+    defs: dict,
+) -> Generator[dict, None, None]:
+    dependencies = [
+        *schema.get("anyOf", []),
+        *schema.get("allOf", []),
+        *schema.get("oneOf", []),
+    ]
+
+    if items := schema.get("items"):
+        dependencies.append(items)
+
+    for dep in dependencies:
+        if ref := dep.get("$ref"):
+            if definition := _get_json_schema_definition(ref, defs):
+                yield definition
+
+        yield from _find_json_schema_references(dep, defs)
+
+
+def _parse_json_schema_type(schema: dict, defs: dict) -> str:
+    """Parse the type from a JSON schema."""
+
+    if ref := schema.get("$ref"):
+        if definition := _get_json_schema_definition(ref, defs):
+            return _parse_json_schema_type(definition, defs)
+
+    type_name = schema.get("type", "object")
+
+    if "anyOf" in schema:
+        return " | ".join(
+            _parse_json_schema_type(item, defs) for item in schema["anyOf"]
         )
+
+    if "allOf" in schema:
+        return " & ".join(
+            _parse_json_schema_type(item, defs) for item in schema["allOf"]
+        )
+
+    if "oneOf" in schema:
+        return " ^ ".join(
+            _parse_json_schema_type(item, defs) for item in schema["oneOf"]
+        )
+
+    if type_name == "array":
+        items = schema.get("items", {})
+        if isinstance(items, dict):
+            return f"array<{_parse_json_schema_type(items, defs)}>"
+        return "array"
+    
+    if type_name == "object":
+        return schema.get("title", "object")
+
+    return type_name
+
+
+def _parse_json_schema(
+    schema: dict,
+    dataset_qualified_name: str,
+    defs: dict,
+    parent_field: Union[str, None] = None,
+) -> Generator[DataField, None, None]:
+    for key, metadata in schema.get("properties", {}).items():
+        type_name = _parse_json_schema_type(metadata, defs)
+
+        field = build_field(
+            name=key,
+            dataset_qualified_name=dataset_qualified_name,
+            definition=metadata.get("description"),
+            parent_field=parent_field,
+            type_name=type_name,
+        )
+
+        yield field
+
+        for definition in _find_json_schema_references(metadata, defs):
+            yield from _parse_json_schema(
+                schema=definition,
+                dataset_qualified_name=dataset_qualified_name,
+                defs=defs,
+                parent_field=field.qualified_name,
+            )
 
 
 def parse_json_schema(
@@ -167,13 +304,12 @@ def parse_json_schema(
 ) -> Generator[DataField, None, None]:
     """Parse a JSON schema and yield DataField instances."""
     schema_dict = json.loads(schema)
-    for field, metadata in schema_dict.get("properties", {}).items():
-        yield build_field(
-            name=field,
-            dataset_qualified_name=dataset_qualified_name,
-            definition=metadata.get("description"),
-            type_name=metadata.get("type"),
-        )
+
+    yield from _parse_json_schema(
+        schema=schema_dict,
+        dataset_qualified_name=dataset_qualified_name,
+        defs=schema_dict.get("$defs", {}),
+    )
 
 
 # Inverted index of data types to standardized names
@@ -186,6 +322,37 @@ DATA_TYPE_MAPPING = {
     "list": "array",
     "bytes": "binary",
 }
+
+
+def _parse_json_payload(
+    payload: dict,
+    dataset_qualified_name: str,
+    parent_field: Union[str, None] = None,
+) -> Generator[DataField, None, None]:
+    """Parse a JSON payload and yield DataField instances."""
+    for key, value in payload.items():
+        type_name = (
+            value.get("type", "object")
+            if isinstance(value, dict)
+            else type(value).__name__
+        )
+
+        field = build_field(
+            name=key,
+            dataset_qualified_name=dataset_qualified_name,
+            type_name=DATA_TYPE_MAPPING.get(type_name, type_name),
+            parent_field=parent_field,
+        )
+
+        yield field
+
+        if isinstance(value, dict):
+            # Recursively parse nested objects
+            yield from _parse_json_payload(
+                payload=value,
+                dataset_qualified_name=dataset_qualified_name,
+                parent_field=field.qualified_name,
+            )
 
 
 def parse_json_payload(
@@ -203,17 +370,10 @@ def parse_json_payload(
         logging.error("JSON payload is not a dictionary")
         return
 
-    for field, value in data.items():
-        if isinstance(value, dict):
-            type_name = value.get("type", "object")
-        else:
-            type_name = type(value).__name__
-
-        yield build_field(
-            name=field,
-            dataset_qualified_name=dataset_qualified_name,
-            type_name=DATA_TYPE_MAPPING.get(type_name, type_name),
-        )
+    yield from _parse_json_payload(
+        payload=data,
+        dataset_qualified_name=dataset_qualified_name,
+    )
 
 
 Parser = Callable[[str, str], Generator[DataField, None, None]]
