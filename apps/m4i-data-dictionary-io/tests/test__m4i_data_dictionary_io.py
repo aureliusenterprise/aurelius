@@ -1,7 +1,7 @@
 from typing import Generator
 
 import pytest
-from confluent_kafka import Consumer, Producer
+from confluent_kafka import Consumer, Producer, TopicCollection
 from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroSerializer
@@ -63,16 +63,19 @@ def kafka_topic(
     """Fixture to create a Kafka topic for testing."""
     topic_name = request.node.name
 
-    futures = kafka_admin_client.create_topics(
+    new_topics = kafka_admin_client.create_topics(
         [NewTopic(topic_name, num_partitions=1, replication_factor=1)]
     )
 
-    for future in futures.values():
-        if future.exception():
-            raise RuntimeError(f"Failed to create topic {topic_name}")
+    for future in new_topics.values():
         future.result()
 
-    yield topic_name
+    descriptions = kafka_admin_client.describe_topics(TopicCollection([topic_name]))
+
+    # Ensure that the topic is discoverable via the admin client
+    for future in descriptions.values():
+        description = future.result()
+        yield description.name
 
     kafka_admin_client.delete_topics([topic_name])
 
