@@ -16,7 +16,7 @@ spec:
     - host: {{ .Values.global.external_hostname }}
       http:
         paths:
-          - pathType: ImplementationSpecific
+          - pathType: Prefix
             backend:
               service:
                 name: reverse-proxy
