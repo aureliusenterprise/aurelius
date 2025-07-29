@@ -1,3 +1,5 @@
+from typing import Union
+
 import pytest
 from pyflink.datastream import StreamExecutionEnvironment
 
@@ -8,8 +10,8 @@ from .determine_change import DetermineChange
 
 def create_mock_change_message(
     operation_type: str,
-    previous: dict | None,
-    current: dict | None,
+    previous: Union[dict, None],
+    current: Union[dict, None],
 ) -> AtlasChangeMessageWithPreviousVersion:
     """
     Create a mock change message for testing purposes.
