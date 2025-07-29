@@ -130,6 +130,7 @@ def avro_topic(
     message: Message,
 ) -> str:
     """Fixture to create a Kafka topic with an Avro message."""
+    # The tests may sometimes start before the schema registry is ready. Retry until it is.
     for attempt in Retrying(
         stop=stop_after_attempt(10),
         wait=wait_exponential(multiplier=1, min=2, max=10),
@@ -213,6 +214,7 @@ def json_schema_topic(
     message: Message,
 ) -> str:
     """Fixture to create a Kafka topic with a JSON message with schema."""
+    # The tests may sometimes start before the schema registry is ready. Retry until it is.
     for attempt in Retrying(
         stop=stop_after_attempt(10),
         wait=wait_exponential(multiplier=1, min=2, max=10),
