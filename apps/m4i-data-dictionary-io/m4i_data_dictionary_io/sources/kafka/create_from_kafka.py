@@ -129,11 +129,17 @@ def build_dataset(topic: str, collection_qualified_name: str) -> Dataset:
     )
 
 
-def build_field(name: str, dataset_qualified_name: str, type_name: str) -> DataField:
+def build_field(
+    name: str,
+    dataset_qualified_name: str,
+    type_name: str,
+    definition: Union[str, None] = None,
+) -> DataField:
     return DataField.from_dict(
         {
             "name": name,
             "dataset": dataset_qualified_name,
+            "definition": definition,
             "qualifiedName": f"{dataset_qualified_name}--{get_qualified_name(name)}",
             "fieldType": type_name,
         }
@@ -150,6 +156,7 @@ def parse_avro_schema(
         yield build_field(
             name=field.name,
             dataset_qualified_name=dataset_qualified_name,
+            definition=field.doc,
             type_name=field.type.name,
         )
 
@@ -164,6 +171,7 @@ def parse_json_schema(
         yield build_field(
             name=field,
             dataset_qualified_name=dataset_qualified_name,
+            definition=metadata.get("description"),
             type_name=metadata.get("type"),
         )
 

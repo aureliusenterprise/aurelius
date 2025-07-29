@@ -183,16 +183,19 @@ def test__discover_cluster_with_topic_and_avro_message(
         build_field(
             name="content",
             dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The content of the message",
             type_name="string",
         ),
         build_field(
             name="name",
             dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The topic of the message",
             type_name="string",
         ),
         build_field(
             name="version",
             dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The version of the message",
             type_name="long",
         ),
     ]
@@ -267,16 +270,19 @@ def test__discover_cluster_with_topic_and_json_schema_message(
         build_field(
             name="content",
             dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The content of the message",
             type_name="string",
         ),
         build_field(
             name="name",
             dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The topic of the message",
             type_name="string",
         ),
         build_field(
             name="version",
             dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The version of the message",
             type_name="integer",
         ),
     ]
