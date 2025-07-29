@@ -70,12 +70,18 @@ def kafka_topic(
     for future in new_topics.values():
         future.result()
 
-    descriptions = kafka_admin_client.describe_topics(TopicCollection([topic_name]))
-
     # Ensure that the topic is discoverable via the admin client
-    for future in descriptions.values():
-        description = future.result()
-        yield description.name
+    for attempt in Retrying(
+        stop=stop_after_attempt(10),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+    ):
+        with attempt:
+            descriptions = kafka_admin_client.describe_topics(TopicCollection([topic_name]))
+
+            for future in descriptions.values():
+                future.result()
+
+    yield topic_name
 
     kafka_admin_client.delete_topics([topic_name])
 
