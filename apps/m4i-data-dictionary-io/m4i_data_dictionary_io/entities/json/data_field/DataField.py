@@ -20,13 +20,6 @@ class DataFieldBase(BaseObject):
     dataset: str
     name: str
 
-    def _qualified_name(self):
-        """
-        Returns the qualified name of the field based on its parent `dataset` and its `name`
-        """
-
-        return get_qualified_name(self.name, prefix=self.dataset)
-
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
@@ -74,7 +67,9 @@ class DataField(
         )
 
         if bool(self.parent_field):
-            parent_field_unique_attributes = M4IAttributes(qualified_name=self.parent)
+            parent_field_unique_attributes = M4IAttributes(
+                qualified_name=self.parent_field
+            )
 
             parent_field = ObjectId(
                 type_name="m4i_data_field",
@@ -97,3 +92,12 @@ class DataField(
         )
 
         return entity
+
+    def _qualified_name(self):
+        """
+        Returns the qualified name of the field based on either the parent field or the dataset and the name of the field.
+        """
+        return get_qualified_name(
+            self.name,
+            prefix=self.parent_field if self.parent_field else self.dataset,
+        )
