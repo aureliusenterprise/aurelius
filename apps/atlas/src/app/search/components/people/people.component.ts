@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { AtlasEntityWithEXTInformation } from '@models4insight/atlas/api';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { EntityDetailsService } from '../../services/entity-details/entity-details.service';
 
 @Component({
@@ -25,7 +25,12 @@ export class PeopleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.details$ = this.entityDetailsService.select('entityDetails');
+    this.details$ = this.entityDetailsService.select('entityDetails').pipe(
+    tap(details => {
+      console.log('Entity details:', details);
+      console.log('Business owners:', details?.entity?.relationshipAttributes?.businessOwner);
+    })
+  );
     this.noPeople$ = this.entityDetailsService
       .select(['entityDetails', 'entity', 'relationshipAttributes'])
       .pipe(
@@ -41,7 +46,22 @@ export class PeopleComponent implements OnInit {
       );
   }
 
-  directToDetailsPage(guid: string) {
-    this.router.navigate(['search/details', guid]);
-  }
+  deduplicate(items: any[]): any[] {
+    console.log('Items to deduplicate:', items);
+
+    if (!items) return [];
+
+    const uniqueItems = new Map();
+    items.forEach(item => {
+      console.log('Processing item:', item);
+      // The items are already the person objects, no need to access [0]
+      if (item && !uniqueItems.has(item.guid)) {
+        uniqueItems.set(item.guid, item);
+      }
+    });
+
+  const result = Array.from(uniqueItems.values());
+  console.log('Deduplicated result:', result);
+  return result;
+}
 }
