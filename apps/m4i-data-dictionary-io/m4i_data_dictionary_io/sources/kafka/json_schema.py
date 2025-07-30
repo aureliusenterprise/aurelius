@@ -1,0 +1,112 @@
+import json
+from typing import Generator, Union
+
+from m4i_data_dictionary_io.entities.json import DataField
+
+from .atlas import build_field
+
+
+def _get_json_schema_definition(ref: str, defs: dict) -> Union[dict, None]:
+    """Retrieve a JSON schema definition by reference."""
+    return defs.get(ref.replace("#/$defs/", ""))
+
+
+def _find_json_schema_references(
+    schema: dict,
+    defs: dict,
+) -> Generator[dict, None, None]:
+    """Find all JSON schema references in the given schema."""
+    dependencies = [
+        *schema.get("anyOf", []),
+        *schema.get("allOf", []),
+        *schema.get("oneOf", []),
+    ]
+
+    if items := schema.get("items"):
+        dependencies.append(items)
+
+    for dep in dependencies:
+        if ref := dep.get("$ref"):
+            if definition := _get_json_schema_definition(ref, defs):
+                yield definition
+
+        yield from _find_json_schema_references(dep, defs)
+
+
+def _parse_json_schema_type(schema: dict, defs: dict) -> str:
+    """Parse the type from a JSON schema."""
+
+    if ref := schema.get("$ref"):
+        if definition := _get_json_schema_definition(ref, defs):
+            return _parse_json_schema_type(definition, defs)
+
+    type_name = schema.get("type", "object")
+
+    if "anyOf" in schema:
+        return " | ".join(
+            _parse_json_schema_type(item, defs) for item in schema["anyOf"]
+        )
+
+    if "allOf" in schema:
+        return " & ".join(
+            _parse_json_schema_type(item, defs) for item in schema["allOf"]
+        )
+
+    if "oneOf" in schema:
+        return " ^ ".join(
+            _parse_json_schema_type(item, defs) for item in schema["oneOf"]
+        )
+
+    if type_name == "array":
+        items = schema.get("items", {})
+        if isinstance(items, dict):
+            return f"array<{_parse_json_schema_type(items, defs)}>"
+        return "array"
+
+    if type_name == "object":
+        return schema.get("title", "object")
+
+    return type_name
+
+
+def _parse_json_schema(
+    schema: dict,
+    dataset_qualified_name: str,
+    defs: dict,
+    parent_field: Union[str, None] = None,
+) -> Generator[DataField, None, None]:
+    """Parse a JSON schema and yield DataField instances."""
+    for key, metadata in schema.get("properties", {}).items():
+        type_name = _parse_json_schema_type(metadata, defs)
+
+        field = build_field(
+            name=key,
+            dataset_qualified_name=dataset_qualified_name,
+            definition=metadata.get("description"),
+            parent_field=parent_field,
+            type_name=type_name,
+        )
+
+        yield field
+
+        for definition in _find_json_schema_references(metadata, defs):
+            yield from _parse_json_schema(
+                schema=definition,
+                dataset_qualified_name=dataset_qualified_name,
+                defs=defs,
+                parent_field=field.qualified_name,
+            )
+
+
+def parse_json_schema(
+    schema: str,
+    dataset_qualified_name: str,
+) -> Generator[DataField, None, None]:
+    """Parse a JSON schema and yield DataField instances."""
+    schema_dict = json.loads(schema)
+
+    yield from _parse_json_schema(
+        schema=schema_dict,
+        dataset_qualified_name=dataset_qualified_name,
+        defs=schema_dict.get("$defs", {}),
+    )

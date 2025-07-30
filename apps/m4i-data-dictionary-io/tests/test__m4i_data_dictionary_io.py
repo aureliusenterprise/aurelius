@@ -12,11 +12,13 @@ from confluent_kafka.serialization import (
     SerializationContext,
     StringSerializer,
 )
-from m4i_data_dictionary_io.sources.kafka.create_from_kafka import (
+from m4i_data_dictionary_io.sources.kafka.atlas import (
     build_collection,
     build_dataset,
     build_field,
     build_system,
+)
+from m4i_data_dictionary_io.sources.kafka.create_from_kafka import (
     discover_cluster,
 )
 from m4i_data_dictionary_io.testing.models import Envelope, Message
