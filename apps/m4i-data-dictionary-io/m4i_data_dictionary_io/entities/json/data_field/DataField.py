@@ -51,15 +51,9 @@ class DataField(
                 unique_attributes=attribute_unique_attributes,
             )
 
-        dataset_unique_attributes = M4IAttributes(qualified_name=self.dataset)
-
-        dataset = ObjectId(
-            type_name="m4i_dataset", unique_attributes=dataset_unique_attributes
-        )
-
+       
         attributes = BusinessFieldAttributes(
             attributes=[attribute] if bool(self.attribute) else [],
-            datasets=[dataset],
             definition=self.definition,
             field_type=self.field_type,
             name=self.name,
@@ -77,6 +71,15 @@ class DataField(
             )
 
             attributes.parent_field = [parent_field]
+        
+        else:
+            dataset_unique_attributes = M4IAttributes(qualified_name=self.dataset)
+
+            dataset = ObjectId(
+                type_name="m4i_dataset", unique_attributes=dataset_unique_attributes
+            )
+
+            attributes.datasets = [dataset]
 
         if bool(self.source):
             unique_attributes = M4IAttributes(qualified_name=self.source)
