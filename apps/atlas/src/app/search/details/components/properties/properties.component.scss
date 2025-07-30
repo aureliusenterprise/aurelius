@@ -19,30 +19,30 @@
   padding: 0;
 }
 
-/* Style the arrow with theme colors */
+/* Use Bulma's color classes instead of hardcoding colors */
 .arrow {
   display: flex;
   align-items: center;
-  color: #0073dd;
-}
-
-/* Existing styles remain unchanged */
-.tip .text {
-  visibility: hidden;
-  background-color: black;
-  width: 20rem;
-  height: fit-content;
-  color: white;
-  padding: 25px;
-  margin: 25px;
-  position: absolute;
-}
-
-.tip:hover .text {
-  visibility: visible;
+  // Use CSS variable only instead of trying to fall back to Sass variable
+  color: var(--primary, #0073dd);
 }
 
 .tip {
   position: relative;
   display: inline-block;
+
+  .text {
+    visibility: hidden;
+    background-color: black;
+    width: 20rem;
+    height: fit-content;
+    color: white;
+    padding: 25px;
+    margin: 25px;
+    position: absolute;
+  }
+
+  &:hover .text {
+    visibility: visible;
+  }
 }
