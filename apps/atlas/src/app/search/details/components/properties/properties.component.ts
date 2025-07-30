@@ -2,6 +2,8 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SortableTableShellConfig } from '@models4insight/components';
 import { Observable } from 'rxjs';
 import { DataForTable, PropertiesService } from './properties.service';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+
 
 const tableConfigProperties: SortableTableShellConfig<DataForTable> = {
   name: { displayName: 'Key', isNarrow: true },
@@ -16,6 +18,9 @@ const tableConfigProperties: SortableTableShellConfig<DataForTable> = {
 })
 export class PropertiesComponent implements OnInit, AfterViewInit {
   readonly tableConfigProperties = tableConfigProperties;
+    // Add icon properties inside the component class
+  faChevronDown = faChevronDown;
+  faChevronUp = faChevronUp;
 
   dataForTable$: Observable<DataForTable[]>;
   isCollapsed = true; // collapsed by default
