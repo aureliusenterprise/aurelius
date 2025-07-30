@@ -17,20 +17,21 @@ docker run -e SOURCE=kafka m4i-data-dictionary-io
 
 In addition to the `SOURCE` environment variable, the following configuration options can be set:
 
-| Environment Variable            | Description                                                                | Required | Default Value   |
-|---------------------------------|----------------------------------------------------------------------------|----------|-----------------|
-| `ATLAS_SERVER_URL`              | The URL of the Atlas server to connect to.                                 | Yes      | None            |
-| `BOOTSTRAP_SERVERS`             | The Kafka bootstrap servers to connect to.                                 | Yes      | None            |
-| `KEYCLOAK_ATLAS_ADMIN_PASSWORD` | The password for the user with create permissions in Atlas.                | Yes      | None            |
-| `KEYCLOAK_CLIENT_ID`            | The Keycloak client ID for authentication.                                 | Yes      | `m4i_atlas`     |
-| `KEYCLOAK_CLIENT_SECRET_KEY`    | The Keycloak client secret key.                                            | Yes      | None            |
-| `KEYCLOAK_REALM_NAME`           | The Keycloak realm name.                                                   | Yes      | `m4i`           |
-| `KEYCLOAK_SERVER_URL`           | The URL of the Keycloak server.                                            | Yes      | None            |
-| `KEYCLOAK_USERNAME`             | The Keycloak username for authentication.                                  | Yes      | None            |
-| `SOURCE`                        | The source of the data to be processed. Set to `kafka` for this connector. | Yes      | `excel`         |
-| `SCHEMA_REGISTRY_URL`           | The URL of the Schema Registry to use for schema retrieval.                | No       | None            |
-| `SYSTEM_NAME`                   | The name of the system to be created in Atlas.                             | No       | `Kafka Broker`  |
-| `VALIDATE_QUALIFIED_NAME`       | Whether to validate the qualified names of entities.                       | No       | `False`         |
+| Environment Variable            | Description                                                                | Required | Default Value        |
+|---------------------------------|----------------------------------------------------------------------------|----------|----------------------|
+| `ATLAS_SERVER_URL`              | The URL of the Atlas server to connect to.                                 | Yes      | `None`               |
+| `BOOTSTRAP_SERVERS`             | The Kafka bootstrap servers to connect to.                                 | Yes      | `None`               |
+| `CONSUMER_GROUP_ID_PREFIX`      | The prefix for the consumer group ID used by the connector.                | Yes      | `data-dictionary-io` |
+| `KEYCLOAK_ATLAS_ADMIN_PASSWORD` | The password for the user with create permissions in Atlas.                | Yes      | `None`               |
+| `KEYCLOAK_CLIENT_ID`            | The Keycloak client ID for authentication.                                 | Yes      | `m4i_atlas`          |
+| `KEYCLOAK_CLIENT_SECRET_KEY`    | The Keycloak client secret key.                                            | Yes      | `None`               |
+| `KEYCLOAK_REALM_NAME`           | The Keycloak realm name.                                                   | Yes      | `m4i`                |
+| `KEYCLOAK_SERVER_URL`           | The URL of the Keycloak server.                                            | Yes      | `None`               |
+| `KEYCLOAK_USERNAME`             | The Keycloak username for authentication.                                  | Yes      | `None`               |
+| `SOURCE`                        | The source of the data to be processed. Set to `kafka` for this connector. | Yes      | `excel`              |
+| `SCHEMA_REGISTRY_URL`           | The URL of the Schema Registry to use for schema retrieval.                | No       | `None`               |
+| `SYSTEM_NAME`                   | The name of the system to be created in Atlas.                             | No       | `Kafka Broker`       |
+| `VALIDATE_QUALIFIED_NAME`       | Whether to validate the qualified names of entities.                       | No       | `False`              |
 
 ## Data Model
 
