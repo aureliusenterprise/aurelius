@@ -105,5 +105,6 @@ elif read_mode == "kafka":
             consumer=consumer,
             schema_registry_client=schema_registry_client,
             access_token=access_token,
+            system_name=store.get("system_name"),
         )
     )
