@@ -25,18 +25,17 @@
   </ng-container>
   <ng-container
     *ngFor="
-      let buiness of details.entity.relationshipAttributes
-        ?.businessOwner as business
+      let owner of deduplicate(details.entity.relationshipAttributes?.businessOwner)
     "
   >
     <div>
-      <span class="pointer" (click)="directToDetailsPage(business[0].guid)">
+      <span class="pointer" (click)="directToDetailsPage(owner.guid)">
         <span class="icon is-small">
           <fa-icon class="business" [icon]="personsIcon"> </fa-icon>
         </span>
         <span> Data Owner: </span>
         <a>
-          {{ business[0].displayText }}
+          {{ owner.displayText }}
         </a>
       </span>
     </div>
