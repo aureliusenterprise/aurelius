@@ -616,3 +616,66 @@ def test__discover_cluster_with_topic_and_json_message(
     actual = list(discovered)
 
     assert expected == actual, f"Expected {expected} but got {actual}"
+
+
+@pytest.fixture()
+def string_topic(
+    kafka_producer: Producer,
+    kafka_topic: str,
+    string_serializer: StringSerializer,
+) -> str:
+    """Fixture to create a Kafka topic that has a string message without schema."""
+    for attempt in Retrying(
+        stop=stop_after_attempt(10),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+    ):
+        with attempt:
+            value = string_serializer(
+                obj="Hello, Kafka!",
+                ctx=SerializationContext(kafka_topic, MessageField.VALUE),
+            )
+
+    kafka_producer.produce(topic=kafka_topic, value=value)
+    kafka_producer.poll(0)
+    kafka_producer.flush()
+
+    return kafka_topic
+
+
+def test__discover_cluster_with_topic_and_string_message(
+    kafka_admin_client: AdminClient,
+    kafka_cluster_id: str,
+    kafka_consumer: Consumer,
+    schema_registry_client: SchemaRegistryClient,
+    string_topic: str,
+) -> None:
+    """Test discovering a cluster with a Kafka topic that has a string message without schema."""
+    expected_system = build_system(
+        name="kafka_system",
+    )
+
+    expected_collection = build_collection(
+        name=kafka_cluster_id,
+        system_qualified_name=expected_system.qualified_name,
+    )
+
+    expected_dataset = build_dataset(
+        topic=string_topic,
+        collection_qualified_name=expected_collection.qualified_name,
+    )
+
+    expected = [
+        expected_system,
+        expected_collection,
+        expected_dataset,
+    ]
+
+    discovered = discover_cluster(
+        admin_client=kafka_admin_client,
+        consumer=kafka_consumer,
+        schema_registry_client=schema_registry_client,
+    )
+
+    actual = list(discovered)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
