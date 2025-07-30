@@ -124,14 +124,12 @@ def test__discover_cluster_with_topic(
     assert expected == actual, f"Expected {expected} but got {actual}"
 
 
-def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
-    kafka_admin_client: AdminClient,
-    kafka_cluster_id: str,
-    kafka_consumer: Consumer,
+@pytest.fixture()
+def avro_name_strategy_topic(
     kafka_topic: str,
     schema_registry_client: SchemaRegistryClient,
-) -> None:
-    """Test discovering a cluster with a Kafka topic with an Avro schema using the topic name strategy."""
+) -> str:
+    """Fixture to create a Kafka topic with an Avro schema using the topic name strategy."""
     schema = Schema(
         schema_str=json.dumps(Envelope.avro_schema()),
         schema_type="AVRO",
@@ -142,6 +140,17 @@ def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
         schema=schema,
     )
 
+    return kafka_topic
+
+
+def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
+    avro_name_strategy_topic: str,
+    kafka_admin_client: AdminClient,
+    kafka_cluster_id: str,
+    kafka_consumer: Consumer,
+    schema_registry_client: SchemaRegistryClient,
+) -> None:
+    """Test discovering a cluster with a Kafka topic with an Avro schema using the topic name strategy."""
     expected_system = build_system(
         name="kafka_system",
     )
@@ -152,7 +161,7 @@ def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
     )
 
     expected_dataset = build_dataset(
-        topic=kafka_topic,
+        topic=avro_name_strategy_topic,
         collection_qualified_name=expected_collection.qualified_name,
     )
 
@@ -212,14 +221,12 @@ def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
     assert expected == actual, f"Expected {expected} but got {actual}"
 
 
-def test__discover_cluster_with_json_schema_using_topic_name_strategy(
-    kafka_admin_client: AdminClient,
-    kafka_cluster_id: str,
-    kafka_consumer: Consumer,
+@pytest.fixture()
+def json_schema_name_strategy_topic(
     kafka_topic: str,
     schema_registry_client: SchemaRegistryClient,
-) -> None:
-    """Test discovering a cluster with a Kafka topic with a JSON schema using the topic name strategy."""
+) -> str:
+    """Fixture to create a Kafka topic with a JSON schema using the topic name strategy."""
     schema = Schema(
         schema_str=json.dumps(Envelope.model_json_schema()),
         schema_type="JSON",
@@ -230,6 +237,17 @@ def test__discover_cluster_with_json_schema_using_topic_name_strategy(
         schema=schema,
     )
 
+    return kafka_topic
+
+
+def test__discover_cluster_with_json_schema_using_topic_name_strategy(
+    json_schema_name_strategy_topic: str,
+    kafka_admin_client: AdminClient,
+    kafka_cluster_id: str,
+    kafka_consumer: Consumer,
+    schema_registry_client: SchemaRegistryClient,
+) -> None:
+    """Test discovering a cluster with a Kafka topic with a JSON schema using the topic name strategy."""
     expected_system = build_system(
         name="kafka_system",
     )
@@ -240,7 +258,7 @@ def test__discover_cluster_with_json_schema_using_topic_name_strategy(
     )
 
     expected_dataset = build_dataset(
-        topic=kafka_topic,
+        topic=json_schema_name_strategy_topic,
         collection_qualified_name=expected_collection.qualified_name,
     )
 
