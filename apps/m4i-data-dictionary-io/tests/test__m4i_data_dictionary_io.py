@@ -1,9 +1,10 @@
+import json
 from typing import Generator
 
 import pytest
 from confluent_kafka import Consumer, Producer, TopicCollection
 from confluent_kafka.admin import AdminClient, NewTopic
-from confluent_kafka.schema_registry import SchemaRegistryClient
+from confluent_kafka.schema_registry import Schema, SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroSerializer
 from confluent_kafka.schema_registry.json_schema import JSONSerializer
 from confluent_kafka.serialization import (
@@ -32,7 +33,7 @@ def test__discover_cluster_with_empty_cluster(
     kafka_consumer: Consumer,
     schema_registry_client: SchemaRegistryClient,
 ) -> None:
-    """Test discovering a cluster with an empty Kafka topic."""
+    """Test discovering a cluster with no topics."""
     expected_system = build_system(
         name="kafka_system",
     )
@@ -95,7 +96,7 @@ def test__discover_cluster_with_topic(
     kafka_topic: str,
     schema_registry_client: SchemaRegistryClient,
 ) -> None:
-    """Test discovering a cluster with a Kafka topic."""
+    """Test discovering a cluster with an empty Kafka topic."""
     expected_system = build_system(
         name="kafka_system",
     )
@@ -111,6 +112,182 @@ def test__discover_cluster_with_topic(
     )
 
     expected = [expected_system, expected_collection, expected_dataset]
+
+    discovered = discover_cluster(
+        admin_client=kafka_admin_client,
+        consumer=kafka_consumer,
+        schema_registry_client=schema_registry_client,
+    )
+
+    actual = list(discovered)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
+
+
+def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
+    kafka_admin_client: AdminClient,
+    kafka_cluster_id: str,
+    kafka_consumer: Consumer,
+    kafka_topic: str,
+    schema_registry_client: SchemaRegistryClient,
+) -> None:
+    """Test discovering a cluster with a Kafka topic with an Avro schema using the topic name strategy."""
+    schema = Schema(
+        schema_str=json.dumps(Envelope.avro_schema()),
+        schema_type="AVRO",
+    )
+
+    schema_registry_client.register_schema(
+        subject_name=f"{kafka_topic}-value",
+        schema=schema,
+    )
+
+    expected_system = build_system(
+        name="kafka_system",
+    )
+
+    expected_collection = build_collection(
+        name=kafka_cluster_id,
+        system_qualified_name=expected_system.qualified_name,
+    )
+
+    expected_dataset = build_dataset(
+        topic=kafka_topic,
+        collection_qualified_name=expected_collection.qualified_name,
+    )
+
+    message_field = build_field(
+        name="message",
+        dataset_qualified_name=expected_dataset.qualified_name,
+        definition="The message contained in the envelope",
+        type_name="Message",
+    )
+
+    expected_fields = [
+        message_field,
+        build_field(
+            name="content",
+            dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The content of the message",
+            parent_field=message_field.qualified_name,
+            type_name="string",
+        ),
+        build_field(
+            name="name",
+            dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The topic of the message",
+            parent_field=message_field.qualified_name,
+            type_name="string",
+        ),
+        build_field(
+            name="version",
+            dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The version of the message",
+            parent_field=message_field.qualified_name,
+            type_name="long",
+        ),
+        build_field(
+            name="timestamp",
+            dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The timestamp of the message",
+            type_name="null | long",
+        ),
+    ]
+
+    expected = [
+        expected_system,
+        expected_collection,
+        expected_dataset,
+        *expected_fields,
+    ]
+
+    discovered = discover_cluster(
+        admin_client=kafka_admin_client,
+        consumer=kafka_consumer,
+        schema_registry_client=schema_registry_client,
+    )
+
+    actual = list(discovered)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
+
+
+def test__discover_cluster_with_json_schema_using_topic_name_strategy(
+    kafka_admin_client: AdminClient,
+    kafka_cluster_id: str,
+    kafka_consumer: Consumer,
+    kafka_topic: str,
+    schema_registry_client: SchemaRegistryClient,
+) -> None:
+    """Test discovering a cluster with a Kafka topic with a JSON schema using the topic name strategy."""
+    schema = Schema(
+        schema_str=json.dumps(Envelope.model_json_schema()),
+        schema_type="JSON",
+    )
+
+    schema_registry_client.register_schema(
+        subject_name=f"{kafka_topic}-value",
+        schema=schema,
+    )
+
+    expected_system = build_system(
+        name="kafka_system",
+    )
+
+    expected_collection = build_collection(
+        name=kafka_cluster_id,
+        system_qualified_name=expected_system.qualified_name,
+    )
+
+    expected_dataset = build_dataset(
+        topic=kafka_topic,
+        collection_qualified_name=expected_collection.qualified_name,
+    )
+
+    message_field = build_field(
+        name="message",
+        dataset_qualified_name=expected_dataset.qualified_name,
+        definition="The message contained in the envelope",
+        type_name="Message",
+    )
+
+    expected_fields = [
+        message_field,
+        build_field(
+            name="content",
+            dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The content of the message",
+            parent_field=message_field.qualified_name,
+            type_name="string",
+        ),
+        build_field(
+            name="name",
+            dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The topic of the message",
+            parent_field=message_field.qualified_name,
+            type_name="string",
+        ),
+        build_field(
+            name="version",
+            dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The version of the message",
+            parent_field=message_field.qualified_name,
+            type_name="integer",
+        ),
+        build_field(
+            name="timestamp",
+            dataset_qualified_name=expected_dataset.qualified_name,
+            definition="The timestamp of the message",
+            type_name="string",
+        ),
+    ]
+
+    expected = [
+        expected_system,
+        expected_collection,
+        expected_dataset,
+        *expected_fields,
+    ]
 
     discovered = discover_cluster(
         admin_client=kafka_admin_client,
