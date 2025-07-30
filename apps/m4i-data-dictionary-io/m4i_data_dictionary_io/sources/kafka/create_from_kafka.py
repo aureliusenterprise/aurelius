@@ -47,9 +47,11 @@ def discover_cluster(
     admin_client: AdminClient,
     consumer: Union[Consumer, None],
     schema_registry_client: Union[SchemaRegistryClient, None],
+    *,
+    system_name: str = "kafka_system",
 ) -> Generator[ToAtlasConvertible, None, None]:
     """Main function to execute the Kafka topic message consumption process."""
-    system = build_system("kafka_system")
+    system = build_system(system_name)
 
     yield system
 
@@ -97,12 +99,15 @@ async def create_from_kafka(
     consumer: Union[Consumer, None],
     schema_registry_client: Union[SchemaRegistryClient, None],
     access_token: str,
+    *,
+    system_name: str = "kafka_system",
 ):
     """Scan a Kafka cluster and create Atlas entities from the discovered topics."""
     for entity in discover_cluster(
         admin_client=admin_client,
         consumer=consumer,
         schema_registry_client=schema_registry_client,
+        system_name=system_name,
     ):
         atlas_compatible = entity.convert_to_atlas()
         await get_ref_and_push([atlas_compatible], False, access_token)
