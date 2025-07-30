@@ -41,11 +41,6 @@ config = {
         "CONSUMER_GROUP_ID_PREFIX", "check-format-group"
     ),
     "system_name": os.getenv("SYSTEM_NAME", "Kafka Broker"),
-    "system_qualified_name": os.getenv("SYSTEM_QUALIFIED_NAME", "kafka-broker"),
-    "collection_name": os.getenv("COLLECTION_NAME", "Default Cluster"),
-    "collection_qualified_name": os.getenv(
-        "COLLECTION_QUALIFIED_NAME", "kafka-broker--default-cluster"
-    ),
 }
 
 store = ConfigStore.get_instance()
