@@ -528,15 +528,10 @@ def json_topic(
     string_serializer: StringSerializer,
 ) -> str:
     """Fixture to create a Kafka topic that has a JSON message without schema."""
-    for attempt in Retrying(
-        stop=stop_after_attempt(10),
-        wait=wait_exponential(multiplier=1, min=2, max=10),
-    ):
-        with attempt:
-            value = string_serializer(
-                obj=message.model_dump_json(),
-                ctx=SerializationContext(kafka_topic, MessageField.VALUE),
-            )
+    value = string_serializer(
+        obj=message.model_dump_json(),
+        ctx=SerializationContext(kafka_topic, MessageField.VALUE),
+    )
 
     kafka_producer.produce(topic=kafka_topic, value=value)
     kafka_producer.poll(0)
@@ -625,15 +620,10 @@ def string_topic(
     string_serializer: StringSerializer,
 ) -> str:
     """Fixture to create a Kafka topic that has a string message without schema."""
-    for attempt in Retrying(
-        stop=stop_after_attempt(10),
-        wait=wait_exponential(multiplier=1, min=2, max=10),
-    ):
-        with attempt:
-            value = string_serializer(
-                obj="Hello, Kafka!",
-                ctx=SerializationContext(kafka_topic, MessageField.VALUE),
-            )
+    value = string_serializer(
+        obj="Hello, Kafka!",
+        ctx=SerializationContext(kafka_topic, MessageField.VALUE),
+    )
 
     kafka_producer.produce(topic=kafka_topic, value=value)
     kafka_producer.poll(0)
