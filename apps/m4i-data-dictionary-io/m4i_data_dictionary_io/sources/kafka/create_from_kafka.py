@@ -77,21 +77,20 @@ def discover_cluster(
         return
 
     for topic in datasets:
-        # Attempt to retrieve schema from Schema Registry
-        if schema := get_topic_schema(topic.name, schema_registry_client):
+        # Attempt to retrieve a schema for the topic from the Schema Registry
+        schema = get_topic_schema(topic.name, schema_registry_client)
+
+        # If no schema is found, consume a message to infer the schema
+        if not schema and (data := consume_message(topic.name, consumer)):
+            schema = get_message_schema(data, schema_registry_client)
+
+        # Parse the schema if available
+        if schema:
             yield from parse_schema(schema, topic.qualified_name)
 
-        # If no schema is found, consume a message to infer the schema from the payload
-        elif data := consume_message(topic.name, consumer):
-            # Attempt to retrieve schema from message header
-            if schema := get_message_schema(data, schema_registry_client):
-                yield from parse_schema(schema, topic.qualified_name)
-            else:
-                # If no schema is found, parse the raw payload
-                yield from parse_payload(
-                    payload=data.decode("utf-8"),
-                    dataset_qualified_name=topic.qualified_name,
-                )
+        # If no schema is found, but data is available, parse the payload
+        elif data:
+            yield from parse_payload(data.decode("utf-8"), topic.qualified_name)
 
 
 async def create_from_kafka(
