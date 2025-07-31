@@ -44,7 +44,8 @@ def _environment() -> None:
 @wait_container_is_ready()  # type: ignore
 def compose() -> Generator[DockerCompose, None, None]:
     with DockerCompose(
-        Path(__file__).parent.absolute(), env_file=dotenv.find_dotenv()
+        Path(__file__).parent.absolute(),
+        env_file=dotenv.find_dotenv(),
     ) as compose:
         yield compose
 
@@ -73,9 +74,7 @@ def kafka_cluster_id(settings: Settings) -> str:
 
 
 @pytest.fixture(scope="session")
-def kafka_admin_client(
-    kafka_bootstrap_servers: str,
-) -> AdminClient:
+def kafka_admin_client(kafka_bootstrap_servers: str) -> AdminClient:
     """Fixture to create a Kafka AdminClient."""
     return AdminClient(
         {
@@ -85,9 +84,7 @@ def kafka_admin_client(
 
 
 @pytest.fixture(scope="session")
-def kafka_consumer(
-    kafka_bootstrap_servers: str,
-) -> Consumer:
+def kafka_consumer(kafka_bootstrap_servers: str) -> Consumer:
     """Fixture to create a Kafka Consumer."""
     return Consumer(
         {
