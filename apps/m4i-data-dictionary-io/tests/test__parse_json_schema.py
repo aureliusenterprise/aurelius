@@ -1,0 +1,132 @@
+from m4i_data_dictionary_io.sources.kafka.atlas import build_field
+from m4i_data_dictionary_io.sources.kafka.json_schema import parse_json_schema
+
+
+def test__parse_json_schema_empty():
+    """Test parsing an empty JSON schema."""
+    json_schema = """
+    {
+        "type": "object",
+        "properties": {}
+    }
+    """
+
+    expected = []
+
+    parsed_schema = parse_json_schema(json_schema, "example_dataset")
+
+    actual = list(parsed_schema)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
+
+
+def test__parse_json_schema_basic():
+    """Test parsing a basic JSON schema with simple fields."""
+    json_schema = """
+    {
+        "type": "object",
+        "properties": {
+            "name": {"type": "string"},
+            "age": {"type": "integer"},
+            "email": {
+                "anyOf": [
+                    {"type": "null"}, 
+                    {"type": "string"}
+                ],
+                "default": null
+            }
+        }
+    }
+    """
+
+    expected = [
+        build_field(
+            name="name",
+            dataset_qualified_name="example_dataset",
+            type_name="string",
+        ),
+        build_field(
+            name="age",
+            dataset_qualified_name="example_dataset",
+            type_name="integer",
+        ),
+        build_field(
+            name="email",
+            dataset_qualified_name="example_dataset",
+            type_name="null | string",
+        ),
+    ]
+
+    parsed_schema = parse_json_schema(json_schema, "example_dataset")
+
+    actual = list(parsed_schema)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
+
+
+def test__parse_json_schema_with_nested_fields():
+    """Test parsing a JSON schema with nested fields."""
+    json_schema = """
+    {
+        "type": "object",
+        "properties": {
+            "user": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "age": {"type": "integer"}
+                }
+            },
+            "preferences": {
+                "type": "object",
+                "properties": {
+                    "theme": {"type": "string"},
+                    "notifications": {"type": "boolean"}
+                }
+            }
+        }
+    }
+    """
+
+    expected = [
+        build_field(
+            name="user",
+            dataset_qualified_name="example_dataset",
+            type_name="object",
+        ),
+        build_field(
+            name="name",
+            dataset_qualified_name="example_dataset",
+            type_name="string",
+            parent_field="example_dataset--user",
+        ),
+        build_field(
+            name="age",
+            dataset_qualified_name="example_dataset",
+            type_name="integer",
+            parent_field="example_dataset--user",
+        ),
+        build_field(
+            name="preferences",
+            dataset_qualified_name="example_dataset",
+            type_name="object",
+        ),
+        build_field(
+            name="theme",
+            dataset_qualified_name="example_dataset",
+            type_name="string",
+            parent_field="example_dataset--preferences",
+        ),
+        build_field(
+            name="notifications",
+            dataset_qualified_name="example_dataset",
+            type_name="boolean",
+            parent_field="example_dataset--preferences",
+        ),
+    ]
+
+    parsed_schema = parse_json_schema(json_schema, "example_dataset")
+
+    actual = list(parsed_schema)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
