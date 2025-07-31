@@ -89,6 +89,15 @@ def _parse_json_schema(
 
         yield field
 
+        if type_name == "object":
+            # Recursively parse nested objects
+            yield from _parse_json_schema(
+                schema=metadata,
+                dataset_qualified_name=dataset_qualified_name,
+                defs=defs,
+                parent_field=field.qualified_name,
+            )            
+
         for definition in _find_json_schema_references(metadata, defs):
             yield from _parse_json_schema(
                 schema=definition,
