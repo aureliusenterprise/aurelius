@@ -9,11 +9,11 @@
       (click)="toggle()"
     >
       <span class="icon has-text-primary">
-        <fa-icon [icon]="collapsed ? faChevronDown : faChevronUp"></fa-icon>
+        <fa-icon [icon]="expanded ? faChevronUp : faChevronDown"></fa-icon>
       </span>
     </button>
   </header>
-  <div *ngIf="!collapsed" class="card-content">
+  <div *ngIf="expanded" class="card-content">
     <ng-content select="[content]"></ng-content>
   </div>
 </div>

@@ -12,9 +12,9 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 })
 export class AccordionComponent {
     /**
-     * Whether the accordion is collapsed or not.
+     * Whether the accordion is expanded or not.
      */
-    @Input() collapsed = true;
+    @Input() expanded = false;
 
     /**
      * The FontAwesome icons used in the accordion.
@@ -26,20 +26,20 @@ export class AccordionComponent {
      * Set the accordion to a collapsed state.
      */
     collapse() {
-        this.collapsed = true;
+        this.expanded = false;
     }
 
     /**
      * Set the accordion to an expanaded state.
      */
     expand() {
-        this.collapsed = false;
+        this.expanded = true;
     }
 
     /**
      * Toggle the accordion state. If it is expanded, it will collapse; if it is collapsed, it will expand.
      */
     toggle() {
-        this.collapsed = !this.collapsed;
+        this.expanded = !this.expanded;
     }
 }
