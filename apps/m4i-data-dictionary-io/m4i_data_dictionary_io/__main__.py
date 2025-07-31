@@ -64,7 +64,6 @@ atlas_entity_types = {
 
 register_atlas_entity_types(atlas_entity_types)
 
-
 read_mode = store.get("source", default="excel")
 
 if read_mode == "excel":
