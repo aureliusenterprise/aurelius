@@ -33,9 +33,13 @@ def _find_json_schema_references(
         yield from _find_json_schema_references(dep, defs)
 
 
+def _parse_constraint(schema: dict) -> str:
+    """Parse a constraint from a JSON schema."""
+    return " & ".join(f"{key}({value})" for key, value in schema.items())
+
+
 def _parse_json_schema_type(schema: dict, defs: dict) -> str:
     """Parse the type from a JSON schema."""
-
     if ref := schema.get("$ref"):
         if definition := _get_json_schema_definition(ref, defs):
             return _parse_json_schema_type(definition, defs)
@@ -49,7 +53,10 @@ def _parse_json_schema_type(schema: dict, defs: dict) -> str:
 
     if "allOf" in schema:
         return " & ".join(
-            _parse_json_schema_type(item, defs) for item in schema["allOf"]
+            _parse_json_schema_type(item, defs)
+            if "type" in item
+            else _parse_constraint(item)
+            for item in schema["allOf"]
         )
 
     if "oneOf" in schema:
