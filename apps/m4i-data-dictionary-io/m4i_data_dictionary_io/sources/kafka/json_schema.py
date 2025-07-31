@@ -96,7 +96,28 @@ def _parse_json_schema(
                 dataset_qualified_name=dataset_qualified_name,
                 defs=defs,
                 parent_field=field.qualified_name,
-            )            
+            )
+
+        elif type_name.startswith("array") and "items" in metadata:
+            items = metadata["items"]
+
+            if items["type"] == "object":
+                # Handle array of objects
+                yield from _parse_json_schema(
+                    schema=items,
+                    dataset_qualified_name=dataset_qualified_name,
+                    defs=defs,
+                    parent_field=field.qualified_name,
+                )
+            else:
+                # Handle array of primitive types
+                item_type = _parse_json_schema_type(items, defs)
+                yield build_field(
+                    name=f"{key}_item",
+                    dataset_qualified_name=dataset_qualified_name,
+                    type_name=item_type,
+                    parent_field=field.qualified_name,
+                )
 
         for definition in _find_json_schema_references(metadata, defs):
             yield from _parse_json_schema(
