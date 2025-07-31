@@ -58,7 +58,7 @@ def test__parse_payload_with_complex_type():
             "name": "Jane Doe",
             "age": 25,
             "email": "jane.doe@example.com"
-        },
+        }
     }
     """
 
@@ -78,7 +78,7 @@ def test__parse_payload_with_complex_type():
             name="age",
             dataset_qualified_name="example_dataset",
             parent_field="example_dataset--user",
-            type_name="int",
+            type_name="integer",
         ),
         build_field(
             name="email",
