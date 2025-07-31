@@ -35,8 +35,6 @@ def _find_json_schema_references(
             if definition := _get_json_schema_definition(ref, defs):
                 yield definition
 
-        yield from _find_json_schema_references(dep, defs)
-
 
 def _parse_constraint(schema: dict) -> str:
     """Parse a constraint from a JSON schema."""
@@ -131,7 +129,7 @@ def _parse_json_schema(
                     parent_field=field.qualified_name,
                 )
 
-        for definition in set(_find_json_schema_references(metadata, defs)):
+        for definition in _find_json_schema_references(metadata, defs):
             yield from _parse_json_schema(
                 schema=definition,
                 dataset_qualified_name=dataset_qualified_name,
