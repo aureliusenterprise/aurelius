@@ -192,3 +192,143 @@ def test__parse_json_schema_with_array():
     actual = list(parsed_schema)
 
     assert expected == actual, f"Expected {expected} but got {actual}"
+
+
+def test__parse_json_schema_with_anyOf():
+    """Test parsing a JSON schema with anyOf."""
+    json_schema = """
+    {
+        "type": "object",
+        "properties": {
+            "data": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"type": "integer"}
+                ]
+            }
+        }
+    }
+    """
+
+    expected = [
+        build_field(
+            name="data",
+            dataset_qualified_name="example_dataset",
+            type_name="string | integer",
+        ),
+    ]
+
+    parsed_schema = parse_json_schema(json_schema, "example_dataset")
+
+    actual = list(parsed_schema)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
+
+
+def test__parse_json_schema_with_allOf():
+    """Test parsing a JSON schema with allOf."""
+    json_schema = """
+    {
+        "type": "object",
+        "properties": {
+            "data": {
+                "allOf": [
+                    {"type": "string"},
+                    {"minLength": 5}
+                ]
+            }
+        }
+    }
+    """
+
+    expected = [
+        build_field(
+            name="data",
+            dataset_qualified_name="example_dataset",
+            type_name="string & minLength(5)",
+        ),
+    ]
+
+    parsed_schema = parse_json_schema(json_schema, "example_dataset")
+
+    actual = list(parsed_schema)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
+
+
+def test__parse_json_schema_with_oneOf():
+    """Test parsing a JSON schema with oneOf."""
+    json_schema = """
+    {
+        "type": "object",
+        "properties": {
+            "data": {
+                "oneOf": [
+                    {"type": "string"},
+                    {"type": "null"}
+                ]
+            }
+        }
+    }
+    """
+
+    expected = [
+        build_field(
+            name="data",
+            dataset_qualified_name="example_dataset",
+            type_name="string ^ null",
+        ),
+    ]
+
+    parsed_schema = parse_json_schema(json_schema, "example_dataset")
+
+    actual = list(parsed_schema)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
+
+
+def test__parse_json_schema_with_definitions():
+    """Test parsing a JSON schema with definitions."""
+    json_schema = """
+    {
+        "$defs": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "age": {"type": "integer"}
+                }
+            }
+        },
+        "type": "object",
+        "properties": {
+            "user": {"$ref": "#/$defs/User"}
+        }
+    }
+    """
+
+    expected = [
+        build_field(
+            name="user",
+            dataset_qualified_name="example_dataset",
+            type_name="object",
+        ),
+        build_field(
+            name="name",
+            dataset_qualified_name="example_dataset",
+            type_name="string",
+            parent_field="example_dataset--user",
+        ),
+        build_field(
+            name="age",
+            dataset_qualified_name="example_dataset",
+            type_name="integer",
+            parent_field="example_dataset--user",
+        ),
+    ]
+
+    parsed_schema = parse_json_schema(json_schema, "example_dataset")
+
+    actual = list(parsed_schema)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
