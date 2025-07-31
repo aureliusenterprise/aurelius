@@ -98,6 +98,24 @@ def test__parse_payload_with_complex_type():
 def test__parse_payload_with_array():
     """Test parsing a payload with an array."""
     payload = """
+    [
+        {"name": "Alice", "age": 28},
+        {"name": "Bob", "age": 32}
+    ]
+    """
+
+    expected = []
+
+    parsed_payload = parse_payload(payload, "example_dataset")
+
+    actual = list(parsed_payload)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
+
+
+def test__parse_payload_with_nested_array():
+    """Test parsing a payload with a nested array."""
+    payload = """
     {
         "users": [
             {"name": "Alice", "age": 28},
