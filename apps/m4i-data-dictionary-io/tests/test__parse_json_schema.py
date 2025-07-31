@@ -64,6 +64,46 @@ def test__parse_json_schema_basic():
     assert expected == actual, f"Expected {expected} but got {actual}"
 
 
+def test__parse_json_schema_with_description():
+    """Test parsing a JSON schema with descriptions."""
+    json_schema = """
+    {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "description": "The title of the item"
+            },
+            "price": {
+                "type": "number",
+                "description": "The price of the item"
+            }
+        }
+    }
+    """
+
+    expected = [
+        build_field(
+            name="title",
+            dataset_qualified_name="example_dataset",
+            definition="The title of the item",
+            type_name="string",
+        ),
+        build_field(
+            name="price",
+            dataset_qualified_name="example_dataset",
+            definition="The price of the item",
+            type_name="number",
+        ),
+    ]
+
+    parsed_schema = parse_json_schema(json_schema, "example_dataset")
+
+    actual = list(parsed_schema)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
+
+
 def test__parse_json_schema_with_nested_fields():
     """Test parsing a JSON schema with nested fields."""
     json_schema = """
