@@ -60,6 +60,41 @@ def test__parse_avro_schema_basic():
     assert expected == actual, f"Expected {expected} but got {actual}"
 
 
+def test__parse_avro_schema_with_description():
+    """Test parsing an Avro schema with field descriptions."""
+    avro_schema = """
+    {
+        "type": "record",
+        "name": "User",
+        "fields": [
+            {"name": "name", "type": "string", "doc": "The name of the user"},
+            {"name": "age", "type": "int", "doc": "The age of the user"}
+        ]
+    }
+    """
+
+    expected = [
+        build_field(
+            name="name",
+            dataset_qualified_name="example_dataset",
+            definition="The name of the user",
+            type_name="string",
+        ),
+        build_field(
+            name="age",
+            dataset_qualified_name="example_dataset",
+            definition="The age of the user",
+            type_name="int",
+        ),
+    ]
+
+    parsed_schema = parse_avro_schema(avro_schema, "example_dataset")
+
+    actual = list(parsed_schema)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
+
+
 def test__parse_avro_schema_with_nested_fields():
     """Test parsing an Avro schema with nested fields."""
     avro_schema = """
