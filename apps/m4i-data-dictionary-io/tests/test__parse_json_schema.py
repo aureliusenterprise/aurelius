@@ -130,3 +130,65 @@ def test__parse_json_schema_with_nested_fields():
     actual = list(parsed_schema)
 
     assert expected == actual, f"Expected {expected} but got {actual}"
+
+
+def test__parse_json_schema_with_array():
+    """Test parsing a JSON schema with array types."""
+    json_schema = """
+    {
+        "type": "object",
+        "properties": {
+            "tags": {
+                "type": "array",
+                "items": {"type": "string"}
+            },
+            "metadata": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "key": {"type": "string"},
+                        "value": {"type": "string"}
+                    }
+                }
+            }
+        }
+    }
+    """
+
+    expected = [
+        build_field(
+            name="tags",
+            dataset_qualified_name="example_dataset",
+            type_name="array<string>",
+        ),
+        build_field(
+            name="tags_item",
+            dataset_qualified_name="example_dataset",
+            type_name="string",
+            parent_field="example_dataset--tags",
+        ),
+        build_field(
+            name="metadata",
+            dataset_qualified_name="example_dataset",
+            type_name="array<object>",
+        ),
+        build_field(
+            name="key",
+            dataset_qualified_name="example_dataset",
+            type_name="string",
+            parent_field="example_dataset--metadata",
+        ),
+        build_field(
+            name="value",
+            dataset_qualified_name="example_dataset",
+            type_name="string",
+            parent_field="example_dataset--metadata",
+        ),
+    ]
+
+    parsed_schema = parse_json_schema(json_schema, "example_dataset")
+
+    actual = list(parsed_schema)
+
+    assert expected == actual, f"Expected {expected} but got {actual}"
