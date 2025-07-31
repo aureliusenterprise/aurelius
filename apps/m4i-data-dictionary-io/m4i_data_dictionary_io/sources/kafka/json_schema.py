@@ -16,6 +16,11 @@ def _find_json_schema_references(
     defs: dict,
 ) -> Generator[dict, None, None]:
     """Find all JSON schema references in the given schema."""
+
+    if "$ref" in schema:
+        if definition := _get_json_schema_definition(schema["$ref"], defs):
+            yield definition
+
     dependencies = [
         *schema.get("anyOf", []),
         *schema.get("allOf", []),
@@ -54,7 +59,7 @@ def _parse_json_schema_type(schema: dict, defs: dict) -> str:
     if "allOf" in schema:
         return " & ".join(
             _parse_json_schema_type(item, defs)
-            if "type" in item
+            if "type" in item or "$ref" in item
             else _parse_constraint(item)
             for item in schema["allOf"]
         )
@@ -126,7 +131,7 @@ def _parse_json_schema(
                     parent_field=field.qualified_name,
                 )
 
-        for definition in _find_json_schema_references(metadata, defs):
+        for definition in set(_find_json_schema_references(metadata, defs)):
             yield from _parse_json_schema(
                 schema=definition,
                 dataset_qualified_name=dataset_qualified_name,
