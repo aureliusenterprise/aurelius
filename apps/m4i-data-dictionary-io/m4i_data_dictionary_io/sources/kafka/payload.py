@@ -15,6 +15,7 @@ DATA_TYPE_MAPPING = {
     "dict": "object",
     "list": "array",
     "bytes": "binary",
+    "NoneType": "null",
 }
 
 
