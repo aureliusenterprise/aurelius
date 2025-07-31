@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { AccordionModule } from '@models4insight/components';
 import { DataQualityListModule } from '../../components/data-quality-list/data-quality-list.module';
 import { DescriptionModule } from '../../components/description/description.module';
 import { DetailsCardsListModule } from '../components/details-cards-list/details-cards-list.module';
@@ -13,13 +14,14 @@ import { SystemsCardsComponent } from './systems-cards/systems-cards.component';
 
 @NgModule({
   imports: [
+    AccordionModule,
     CommonModule,
     DataQualityListModule,
     DescriptionModule,
     DetailsCardsListModule,
     DetailsNavigationModule,
     GovernanceQualityCardsModule,
-    PropertiesModule
+    PropertiesModule,
   ],
   declarations: [
     CollectionsCardsComponent,
@@ -29,4 +31,4 @@ import { SystemsCardsComponent } from './systems-cards/systems-cards.component';
   ],
   exports: [SystemDetailsComponent]
 })
-export class SystemDetailsModule {}
+export class SystemDetailsModule { }
