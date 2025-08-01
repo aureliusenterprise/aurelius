@@ -26,6 +26,10 @@ from m4i_data_dictionary_io.sources.kafka.create_from_kafka import create_from_k
 
 config = {
     "atlas.server.url": os.getenv("ATLAS_SERVER_URL"),
+    "enable.kafka.consumer": os.getenv("ENABLE_KAFKA_CONSUMER", "false").lower()
+    == "true",
+    "enable.schema.registry": os.getenv("ENABLE_SCHEMA_REGISTRY", "false").lower()
+    == "true",
     "keycloak.client.id": os.environ.get("KEYCLOAK_CLIENT_ID", "m4i_atlas"),
     "keycloak.credentials.username": os.environ.get("KEYCLOAK_USERNAME"),
     "keycloak.credentials.password": os.environ.get("KEYCLOAK_ATLAS_ADMIN_PASSWORD"),
@@ -75,12 +79,16 @@ elif read_mode == "kafka":
         }
     )
 
-    consumer = Consumer(
-        {
-            "bootstrap.servers": store.get("bootstrap_servers"),
-            "group.id": f"{store.get('consumer_group_id_prefix', 'data-dictionary-io')}-group",
-            "auto.offset.reset": "earliest",
-        }
+    consumer = (
+        Consumer(
+            {
+                "bootstrap.servers": store.get("bootstrap_servers"),
+                "group.id": f"{store.get('consumer_group_id_prefix', 'data-dictionary-io')}-group",
+                "auto.offset.reset": "earliest",
+            }
+        )
+        if store.get("enable.kafka.consumer", False)
+        else None
     )
 
     schema_registry_client = (
@@ -89,7 +97,8 @@ elif read_mode == "kafka":
                 "url": schema_registry_url,
             }
         )
-        if (schema_registry_url := store.get("schema_registry_url"))
+        if store.get("enable.schema.registry", False)
+        and (schema_registry_url := store.get("schema_registry_url"))
         else None
     )
 
