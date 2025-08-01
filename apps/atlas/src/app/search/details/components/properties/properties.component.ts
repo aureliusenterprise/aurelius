@@ -18,7 +18,6 @@ export class PropertiesComponent implements OnInit {
   readonly tableConfigProperties = tableConfigProperties;
 
   dataForTable$: Observable<DataForTable[]>;
-
   constructor(
     private readonly propertiesService: PropertiesService
   ) { }

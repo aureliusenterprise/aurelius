@@ -15,7 +15,6 @@ export class PropertiesItemComponent implements OnInit {
     isStringLike: string;
 
     constructor(private readonly router: Router) { }
-
     ngOnInit() {
         this.defineTypes(this.data);
     }

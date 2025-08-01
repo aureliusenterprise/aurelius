@@ -1,4 +1,5 @@
 export * from './lib/abstract-modal-form';
+export * from './lib/accordion';
 export * from './lib/archimate-icon';
 export * from './lib/branch-name-input';
 export * from './lib/branch-select';
