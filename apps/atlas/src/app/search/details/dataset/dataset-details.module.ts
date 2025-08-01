@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { AccordionModule } from '@models4insight/components';
 import { DataQualityListModule } from '../../components/data-quality-list/data-quality-list.module';
 import { DetailsCardsListModule } from '../components/details-cards-list/details-cards-list.module';
 import { GovernanceQualityCardsModule } from '../components/governance-quality-cards/governance-quality-cards.module';
@@ -23,7 +24,8 @@ import { DescriptionModule } from '../../components/description/description.modu
     DetailsNavigationModule,
     GovernanceQualityCardsModule,
     LineageModelModule,
-    PropertiesModule
+    PropertiesModule,
+    AccordionModule
   ],
   declarations: [
     ConsumersCardsComponent,
