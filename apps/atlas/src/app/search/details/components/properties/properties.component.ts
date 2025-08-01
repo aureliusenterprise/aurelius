@@ -18,9 +18,6 @@ const tableConfigProperties: SortableTableShellConfig<DataForTable> = {
 })
 export class PropertiesComponent implements OnInit {
   readonly tableConfigProperties = tableConfigProperties;
-    // Add icon properties inside the component class
-  faChevronDown = faChevronDown;
-  faChevronUp = faChevronUp;
 
   dataForTable$: Observable<DataForTable[]>;
   constructor(

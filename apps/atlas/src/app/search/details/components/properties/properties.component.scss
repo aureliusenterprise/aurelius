@@ -1,48 +1,18 @@
-/* Only target static parent headers outside our component */
-:host-context(#properties-details) ::ng-deep h3.title.is-3:not(.collapsible-header *) {
-  display: none !important;
+.tip .text {
+  visibility: hidden;
+  background-color: black;
+  width: 20rem;
+  height: fit-content;
+  color: white;
+  padding: 25px;
+  margin: 25px;
+  position: absolute;
 }
-
-/* Style our collapsible header */
-.collapsible-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  padding: 0.25rem 0;
-}
-
-/* Make sure our title is visible */
-.collapsible-header .title.is-3 {
-  display: block !important;
-  margin: 0;
-  padding: 0;
-}
-
-/* Use Bulma's color classes instead of hardcoding colors */
-.arrow {
-  display: flex;
-  align-items: center;
-  // Use CSS variable only instead of trying to fall back to Sass variable
-  color: var(--primary, #0073dd);
+.tip:hover .text {
+  visibility: visible;
 }
 
 .tip {
   position: relative;
   display: inline-block;
-
-  .text {
-    visibility: hidden;
-    background-color: black;
-    width: 20rem;
-    height: fit-content;
-    color: white;
-    padding: 25px;
-    margin: 25px;
-    position: absolute;
-  }
-
-  &:hover .text {
-    visibility: visible;
-  }
 }
