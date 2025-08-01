@@ -21,12 +21,16 @@ import {
   switchMap,
   tap,
   withLatestFrom,
+  timeout,
+  take
 } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { SearchService } from '../search/search.service';
 
 export interface AppSearchResultsStoreContext {
   readonly isLoadingPage?: boolean;
   readonly pageSize?: number;
+  readonly allResultsLoaded?: boolean;
 }
 
 @Injectable()
@@ -88,7 +92,7 @@ export class AppSearchResultsService<
     private readonly appSearchService: AppSearchService<T, P>,
     private readonly searchService: SearchService<T, P>
   ) {
-    super({ defaultState: { isLoadingPage: false, pageSize: 10 } });
+    super({ defaultState: { isLoadingPage: false, pageSize: 10, allResultsLoaded: false } });
 
     this.isLoadingPage$ = this.select('isLoadingPage');
     this.pageSize$ = this.select('pageSize');
@@ -145,8 +149,10 @@ export class AppSearchResultsService<
 
     this.allResults$ = this.results$.pipe(tap(() => this.nextPage()));
 
-    this.allResultsLoaded$ = combineLatest([this.results$, this.meta$]).pipe(
-      map(([results, meta]) => results.length === meta.page.total_results)
+    this.allResultsLoaded$ = combineLatest([this.results$, this.meta$, this.select('allResultsLoaded')]).pipe(
+      map(([results, meta, manuallyLoaded]) => 
+        manuallyLoaded || results.length === meta.page.total_results
+      )
     );
   }
 
@@ -159,6 +165,32 @@ export class AppSearchResultsService<
 
   private getFirstPage(queryObject: AppSearchQuery<T, P>, pageSize: number) {
     return this.getPage(1, queryObject, pageSize);
+  }
+
+  async loadAllPages() {
+    const firstPage = await firstValueFrom(
+      this.firstPage$.pipe(
+        take(1),
+        timeout(10000)
+      )
+    );
+    
+    const totalPages = firstPage.meta.page.total_pages;
+    const queryObject = await firstValueFrom(
+      this.searchService.queryObject$.pipe(
+        take(1),
+        timeout(5000)
+      )
+    );
+    
+    for (let currentPage = 2; currentPage <= totalPages; currentPage++) {
+      await this.getPage(currentPage, queryObject, firstPage.meta.page.size);
+    }
+    
+    this.update({
+      description: 'All results loaded',
+      payload: { allResultsLoaded: true }
+    });
   }
 
   @ManagedTask('Loading a page of search results', { isQuiet: true })
@@ -178,7 +210,7 @@ export class AppSearchResultsService<
       page,
     };
 
-    return this.appSearchService.search(queryObject).toPromise();
+    return firstValueFrom(this.appSearchService.search(queryObject));
   }
 
   set pageSize(pageSize: number) {
