@@ -1,27 +1,26 @@
-<div class="collapsible-header" (click)="isCollapsed = !isCollapsed">
-  <h3 class="title is-3">Properties</h3>
-    <span class="arrow">
-      {{ isCollapsed ? '▼' : '▲' }}
-    </span>
-</div>
-<div *ngIf="!isCollapsed">
-  <models4insight-sortable-table-shell
-    [config]="tableConfigProperties"
-    [data]="dataForTable$ | async"
-    [itemsPerPage]="1000"
-    [rowsSelectable]="false"
-  >
-    <ng-template let-rowData>
-      <td *ngIf="rowData">
-        <ng-container>
-          <div>
-            {{ rowData.name | translate | titlecase }}
-          </div>
-        </ng-container>
-      </td>
-      <td>
-        <models4insight-properties-item [data]="rowData.value"></models4insight-properties-item>
-      </td>
-    </ng-template>
-  </models4insight-sortable-table-shell>
-</div>
+<models4insight-accordion [expanded]="!isCollapsed" (click)="isCollapsed = !isCollapsed">
+  <ng-container header>
+    <h3 class="title is-3">Properties</h3>
+  </ng-container>
+  <ng-container content>
+    <models4insight-sortable-table-shell
+      [config]="tableConfigProperties"
+      [data]="dataForTable$ | async"
+      [itemsPerPage]="1000"
+      [rowsSelectable]="false"
+    >
+      <ng-template let-rowData>
+        <td *ngIf="rowData">
+          <ng-container>
+            <div>
+              {{ rowData.name | translate | titlecase }}
+            </div>
+          </ng-container>
+        </td>
+        <td>
+          <models4insight-properties-item [data]="rowData.value"></models4insight-properties-item>
+        </td>
+      </ng-template>
+    </models4insight-sortable-table-shell>
+  </ng-container>
+</models4insight-accordion>

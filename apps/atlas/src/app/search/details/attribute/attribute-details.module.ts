@@ -9,6 +9,7 @@ import { AttributeDetailsComponent } from './attribute-details.component';
 import { FieldsCardsComponent } from './fields-cards/fields-cards.component';
 import { PropertiesModule } from '../components/properties/properties.module';
 import { GovernanceQualityCardsModule } from '../components/governance-quality-cards/governance-quality-cards.module';
+import { AccordionModule } from '@models4insight/components';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { GovernanceQualityCardsModule } from '../components/governance-quality-c
     DetailsNavigationModule,
     GovernanceQualityCardsModule,
     PeopleModule,
-    PropertiesModule
+    PropertiesModule,
+    AccordionModule
   ],
   declarations: [FieldsCardsComponent, AttributeDetailsComponent]
 })
