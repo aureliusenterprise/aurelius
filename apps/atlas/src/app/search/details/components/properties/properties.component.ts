@@ -23,8 +23,6 @@ export class PropertiesComponent implements OnInit {
   faChevronUp = faChevronUp;
 
   dataForTable$: Observable<DataForTable[]>;
-  isCollapsed = true; // collapsed by default
-
   constructor(
     private readonly propertiesService: PropertiesService
   ) { }
@@ -32,19 +30,4 @@ export class PropertiesComponent implements OnInit {
   ngOnInit() {
     this.dataForTable$ = this.propertiesService.select('propertiesList');
   }
-// ngAfterViewInit() {
-//   // Only hide parent static headers, not our own
-//   setTimeout(() => {
-//     const parentBox = document.querySelector('#properties-details');
-//     if (parentBox) {
-//       const headers = parentBox.querySelectorAll('h3.title.is-3');
-//       headers.forEach(header => {
-//         // Check if this header is a direct child of the parent box (not our header)
-//         if (header.parentElement === parentBox && header.textContent?.trim() === 'Properties') {
-//           (header as HTMLElement).style.display = 'none';
-//         }
-//       });
-//     }
-//   });
-// }
 }
