@@ -2,6 +2,8 @@ from unittest.mock import Mock, PropertyMock, patch
 
 import pytest
 from aiohttp.web import HTTPError
+from keycloak import KeycloakOpenID
+from keycloak.exceptions import KeycloakError
 from m4i_atlas_core import (
     AtlasChangeMessage,
     AtlasChangeMessageBody,
@@ -13,8 +15,6 @@ from m4i_atlas_core import (
 )
 from marshmallow import ValidationError
 from pyflink.datastream import StreamExecutionEnvironment
-
-from keycloak import KeycloakError, KeycloakOpenID
 
 from .get_entity import GetEntity, KeycloakFactory
 
@@ -243,7 +243,10 @@ def test_get_entity_handle_http_error_during_entity_lookup(
     """
     data_stream = environment.from_collection([event.to_json()])
 
-    with patch(__package__ + ".get_entity.get_entity_by_guid", new=Mock(side_effect=HTTPError())):
+    with patch(
+        __package__ + ".get_entity.get_entity_by_guid",
+        new=Mock(side_effect=HTTPError()),
+    ):
         get_entity = GetEntity(
             data_stream=data_stream,
             atlas_url="test",  # atlas_url is not used in the test
