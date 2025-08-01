@@ -16,7 +16,7 @@ const tableConfigProperties: SortableTableShellConfig<DataForTable> = {
   styleUrls: ['./properties.component.scss'],
   providers: [PropertiesService]
 })
-export class PropertiesComponent implements OnInit, AfterViewInit {
+export class PropertiesComponent implements OnInit {
   readonly tableConfigProperties = tableConfigProperties;
     // Add icon properties inside the component class
   faChevronDown = faChevronDown;
@@ -32,19 +32,19 @@ export class PropertiesComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.dataForTable$ = this.propertiesService.select('propertiesList');
   }
-ngAfterViewInit() {
-  // Only hide parent static headers, not our own
-  setTimeout(() => {
-    const parentBox = document.querySelector('#properties-details');
-    if (parentBox) {
-      const headers = parentBox.querySelectorAll('h3.title.is-3');
-      headers.forEach(header => {
-        // Check if this header is a direct child of the parent box (not our header)
-        if (header.parentElement === parentBox && header.textContent?.trim() === 'Properties') {
-          (header as HTMLElement).style.display = 'none';
-        }
-      });
-    }
-  });
-}
+// ngAfterViewInit() {
+//   // Only hide parent static headers, not our own
+//   setTimeout(() => {
+//     const parentBox = document.querySelector('#properties-details');
+//     if (parentBox) {
+//       const headers = parentBox.querySelectorAll('h3.title.is-3');
+//       headers.forEach(header => {
+//         // Check if this header is a direct child of the parent box (not our header)
+//         if (header.parentElement === parentBox && header.textContent?.trim() === 'Properties') {
+//           (header as HTMLElement).style.display = 'none';
+//         }
+//       });
+//     }
+//   });
+// }
 }

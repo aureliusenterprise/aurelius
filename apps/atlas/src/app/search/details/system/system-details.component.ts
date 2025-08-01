@@ -17,6 +17,8 @@ export class SystemDetailsComponent {
   readonly dataQualityCount$: Observable<number>;
   readonly propertyCount$: Observable<number>;
 
+  isPropertiesCollapsed = true;
+
   constructor(
     private readonly entityDetailsService: EntityDetailsService,
     private readonly filteredPropertiesService: FilteredPropertiesService,

@@ -15,6 +15,7 @@ export class PropertiesItemComponent implements OnInit {
     isStringLike: string;
 
     constructor(private readonly router: Router) { }
+    isPropertiesCollapsed = true;
 
     ngOnInit() {
         this.defineTypes(this.data);
