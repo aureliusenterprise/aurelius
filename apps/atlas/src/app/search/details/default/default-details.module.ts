@@ -4,9 +4,10 @@ import { AccordionModule } from '@models4insight/components';
 import { DetailsNavigationModule } from '../components/navigation/details-navigation.module';
 import { PropertiesModule } from '../components/properties/properties.module';
 import { DefaultDetailsComponent } from './default-details.component';
+import { DescriptionModule } from '../../components/description/description.module';
 
 @NgModule({
-  imports: [CommonModule, DetailsNavigationModule, PropertiesModule, AccordionModule],
+  imports: [CommonModule, DetailsNavigationModule, PropertiesModule , DescriptionModule, AccordionModule],
   declarations: [DefaultDetailsComponent]
 })
 export class DefaultDetailsModule {}
