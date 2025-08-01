@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { AccordionModule } from '@models4insight/components';
 import { DataQualityPieModule } from '../../components/data-quality-pie/data-quality-pie.module';
 import { DetailsCardsListModule } from '../components/details-cards-list/details-cards-list.module';
 import { DetailsNavigationModule } from '../components/navigation/details-navigation.module';
@@ -15,6 +16,7 @@ import { NonCompliantCardsComponent } from './non-compliant-cards/non-compliant-
     PropertiesModule,
     DataQualityPieModule,
     DetailsCardsListModule,
+    AccordionModule
   ],
   declarations: [
     GovQualityDetailsComponent,
