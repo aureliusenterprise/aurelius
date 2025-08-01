@@ -8,7 +8,7 @@ import {
   GovQualitySearchObject
 } from '@models4insight/atlas/api';
 import { untilDestroyed } from '@models4insight/utils';
-import { map } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { AppSearchResultsService } from '../../../services/app-search-results/app-search-results.service';
 import { EntitySearchResultsService } from '../../../services/app-search-results/entity-search-results.service';
 import { EntityDetailsService } from '../../../services/entity-details/entity-details.service';
@@ -37,7 +37,7 @@ export class CompliantEntitiesSearchService extends SearchService<
       .select('entityId')
       .pipe(untilDestroyed(this))
       .subscribe(
-        (entityId) => (this.queryObject = this.createQueryObject(entityId))
+        (entityId) => (this.queryObject = this.createQueryObject(entityId)),
       );
   }
 
@@ -46,11 +46,11 @@ export class CompliantEntitiesSearchService extends SearchService<
   ): AppSearchQuery<GovQualitySearchObject, CompliantEntitySearchObject> {
     return {
       facets: {
-        guid: { type: 'value', size: 100 },
+        guid: { type: 'value', size: 250 },
       },
       page: {
         current: 0,
-        size: 100,
+        size: 250,
       },
       query: '',
       result_fields: { entity_guid: { raw: {} } },
@@ -69,6 +69,13 @@ export class CompliantEntitiesSearchResultsService extends AppSearchResultsServi
     compliantEntitiesSearch: CompliantEntitiesSearchService
   ) {
     super(govQualitySearch, compliantEntitiesSearch);
+
+    // Load all pages when query object changes
+    compliantEntitiesSearch.queryObject$
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.loadAllPages()
+      });
   }
 }
 
@@ -79,8 +86,10 @@ export class CompliantCardsSearchService extends EntityDetailsCardsSearchService
   ) {
     super();
 
-    this.searchResultsService.allResults$
+    this.searchResultsService.allResultsLoaded$
       .pipe(
+        filter((loaded) => loaded),
+        switchMap(() => this.searchResultsService.allResults$),
         map((outputs) => this.createQueryObject(outputs)),
         untilDestroyed(this)
       )

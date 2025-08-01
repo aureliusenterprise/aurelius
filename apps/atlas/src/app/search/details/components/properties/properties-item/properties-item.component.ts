@@ -27,6 +27,8 @@ export class PropertiesItemComponent implements OnInit {
     defineTypes(data: any) {
         if (typeof data === 'string') {
             this.isStringLike = data
+        } else if (typeof data === 'boolean' || typeof data === 'number') {
+            this.isStringLike = data.toString();
         } else {
             this.isObjectLike = data
         }
