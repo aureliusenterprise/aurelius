@@ -19,7 +19,7 @@ export class AttributeDetailsComponent {
   readonly dataQualityCount$: Observable<number>;
   readonly fieldCount$: Observable<number>;
   readonly propertyCount$: Observable<number>;
-  isPropertiesCollapsed = true; // Collapsed by default
+
   constructor(
     private readonly entityDetailsService: EntityDetailsService,
     private readonly filteredPropertiesService: FilteredPropertiesService,

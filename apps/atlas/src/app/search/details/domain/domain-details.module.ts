@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { AccordionModule } from '@models4insight/components';
 import { DataQualityListModule } from '../../components/data-quality-list/data-quality-list.module';
 import { DescriptionModule } from '../../components/description/description.module';
 import { PeopleModule } from '../../components/people/people.module';
@@ -10,6 +11,7 @@ import { DomainDetailsComponent } from './domain-details.component';
 import { EntityCardsComponent } from './entity-cards/entity-cards.component';
 import { GovernanceQualityCardsModule } from '../components/governance-quality-cards/governance-quality-cards.module';
 
+
 @NgModule({
   imports: [
     CommonModule,
@@ -19,7 +21,8 @@ import { GovernanceQualityCardsModule } from '../components/governance-quality-c
     DetailsNavigationModule,
     GovernanceQualityCardsModule,
     PeopleModule,
-    PropertiesModule
+    PropertiesModule,
+    AccordionModule
   ],
   declarations: [EntityCardsComponent, DomainDetailsComponent]
 })
