@@ -7,7 +7,7 @@ import { DefaultDetailsComponent } from './default-details.component';
 import { DescriptionModule } from '../../components/description/description.module';
 
 @NgModule({
-  imports: [CommonModule, DetailsNavigationModule, PropertiesModule , DescriptionModule, AccordionModule],
+  imports: [CommonModule, DetailsNavigationModule, DescriptionModule, PropertiesModule, AccordionModule],
   declarations: [DefaultDetailsComponent]
 })
 export class DefaultDetailsModule {}
