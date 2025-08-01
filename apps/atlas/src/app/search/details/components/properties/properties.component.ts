@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SortableTableShellConfig } from '@models4insight/components';
 import { Observable } from 'rxjs';
 import { DataForTable, PropertiesService } from './properties.service';
