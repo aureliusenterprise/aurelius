@@ -25,12 +25,7 @@ export class PeopleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.details$ = this.entityDetailsService.select('entityDetails').pipe(
-    tap(details => {
-      console.log('Entity details:', details);
-      console.log('Business owners:', details?.entity?.relationshipAttributes?.businessOwner);
-    })
-  );
+    this.details$ = this.entityDetailsService.select('entityDetails');
     this.noPeople$ = this.entityDetailsService
       .select(['entityDetails', 'entity', 'relationshipAttributes'])
       .pipe(
@@ -46,22 +41,20 @@ export class PeopleComponent implements OnInit {
       );
   }
 
-  deduplicate(items: any[]): any[] {
-    console.log('Items to deduplicate:', items);
-
-    if (!items) return [];
-
-    const uniqueItems = new Map();
-    items.forEach(item => {
-      console.log('Processing item:', item);
-      // The items are already the person objects, no need to access [0]
-      if (item && !uniqueItems.has(item.guid)) {
-        uniqueItems.set(item.guid, item);
+  deduplicate(items: any[] = []): any[] {
+    if (!items || !items.length) {
+      return [];
+    }
+    // Build a map to keep the first instance of any given guid
+    const uniqueByGuid = new Map<string, any>();
+    for (const item of items) {
+      if (item?.guid && !uniqueByGuid.has(item.guid)) {
+        uniqueByGuid.set(item.guid, item);
       }
-    });
+    }
 
-  const result = Array.from(uniqueItems.values());
-  console.log('Deduplicated result:', result);
-  return result;
+    // Return an array of the unique values
+    return Array.from(uniqueByGuid.values());
 }
+
 }
