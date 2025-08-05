@@ -1,0 +1,44 @@
+@let _expanded = expanded();
+@let _logo = logo();
+@let _name = name();
+
+<header class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        @if (_logo) {
+            <a class="navbar-item" routerLink="/">
+                <img [attr.src]="_logo" [attr.alt]="_name || 'Logo'" />
+            </a>
+        } @else if (_name) {
+            <a class="navbar-item" routerLink="/">
+                <span class="title is-4">{{ _name }}</span>
+            </a>
+        }
+
+        @if (navbarStart.children.length || navbarEnd.children.length) {
+            <button
+                role="button"
+                class="navbar-burger"
+                aria-label="menu"
+                data-target="navbar-content"
+                [attr.aria-expanded]="_expanded"
+                [class.is-active]="_expanded"
+                (click)="toggle()"
+            >
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </button>
+        }
+    </div>
+
+    <nav id="navbar-content" class="navbar-menu" [class.is-active]="_expanded">
+        <div #navbarStart class="navbar-start">
+            <ng-content select="[navbar-start]"></ng-content>
+        </div>
+
+        <div #navbarEnd class="navbar-end">
+            <ng-content select="[navbar-end]"></ng-content>
+        </div>
+    </nav>
+</header>

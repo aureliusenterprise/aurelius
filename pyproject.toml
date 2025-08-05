@@ -26,8 +26,10 @@ pytest = "^8.4.1"
 pytest-asyncio = "^1.0.0"
 pytest-cov = "^6.2.1"
 pytest-mock = "^3.14.1"
+pytest-playwright = "^0.7.0"
 pytest-sugar = "^1.0.0"
 python-dotenv = "^1.1.1"
+python-keycloak = "^5.7.0"
 ruff = "^0.12.3"
 sqlalchemy = "^2.0.41"
 sqlmodel = "^0.0.24"
@@ -38,7 +40,7 @@ timeout-decorator = "^0.5.0"
 [tool.poetry.group.dev.dependencies.aurelius-aws-lambda]
 develop = true
 extras = ["kafka"]
-path = "libs/aurelius-aws-lambda"
+path = "libs/python/aurelius-aws-lambda"
 
 [tool.poetry.group.dev.dependencies.aurelius-aws-lambda-example]
 develop = true
@@ -46,7 +48,7 @@ path = "apps/aurelius-aws-lambda-example"
 
 [tool.poetry.group.dev.dependencies.aurelius-example]
 develop = true
-path = "libs/aurelius-example"
+path = "libs/python/aurelius-example"
 
 [tool.poetry.group.dev.dependencies.aurelius-fastapi-example]
 develop = true
@@ -55,12 +57,12 @@ path = "apps/aurelius-fastapi-example"
 [tool.poetry.group.dev.dependencies.aurelius-kafka]
 develop = true
 extras = ["msk"]
-path = "libs/aurelius-kafka"
+path = "libs/python/aurelius-kafka"
 
 [tool.poetry.group.dev.dependencies.aurelius-sdk]
 develop = true
 extras = ["aws", "logger", "msal", "testing"]
-path = "libs/aurelius-sdk"
+path = "libs/python/aurelius-sdk"
 
 [tool.poetry.group.dev.dependencies.confluent-kafka]
 extras = ["avro", "schema-registry"]

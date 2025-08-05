@@ -6,6 +6,7 @@ from typing import cast
 import dotenv
 import pytest
 from aurelius_sdk.testing import capture_docker_compose_logs
+from keycloak import KeycloakOpenID
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL, Engine, create_engine
@@ -17,10 +18,14 @@ from testcontainers.core.waiting_utils import wait_container_is_ready
 class Settings(BaseSettings):
     """Test configuration."""
 
+    auth_client_id: str
+    auth_realm_name: str
     database_name: str
     database_password: SecretStr
     database_port: int
     database_username: str
+    password: SecretStr
+    username: str
 
     model_config = SettingsConfigDict(
         env_file=dotenv.find_dotenv(),
@@ -44,8 +49,8 @@ def _environment() -> None:
 @wait_container_is_ready()
 def compose() -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
-    context = Path(__file__).parents[1].absolute()
-    with DockerCompose(context=context, profiles=["e2e"]) as compose:
+    context = Path(__file__).parent.absolute()
+    with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
         yield compose
         capture_docker_compose_logs(compose)
 
@@ -53,7 +58,7 @@ def compose() -> Generator[DockerCompose]:
 @pytest.fixture(scope="session", autouse=True)
 def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
     """Setup and teardown the database."""
-    hostname, port = compose.get_service_host_and_port("postgres-e2e", settings.database_port)
+    hostname, port = compose.get_service_host_and_port("postgres-app", settings.database_port)
 
     if not (hostname and port):
         message = "PostgreSQL service not found in Docker Compose"
@@ -96,3 +101,23 @@ def connection(compose: DockerCompose) -> http.client.HTTPConnection:
         raise ValueError(message)
 
     return http.client.HTTPConnection(host, cast("int", port))
+
+
+@pytest.fixture(scope="session")
+def keycloak_client(compose: DockerCompose, settings: Settings) -> KeycloakOpenID:
+    """Return a Keycloak client."""
+    host, port = compose.get_service_host_and_port("keycloak", 8080)
+    return KeycloakOpenID(
+        server_url=f"http://{host}:{port}",
+        client_id=settings.auth_client_id,
+        realm_name=settings.auth_realm_name,
+    )
+
+
+@pytest.fixture()
+def token(keycloak_client: KeycloakOpenID, settings: Settings) -> str:
+    """Return a valid access token."""
+    return keycloak_client.token(
+        settings.username,
+        settings.password.get_secret_value(),
+    )["access_token"]

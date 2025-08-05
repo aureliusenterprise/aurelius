@@ -1,0 +1,30 @@
+@let _error = searchService.error();
+
+<div class="field has-addons">
+    <div class="control has-icons-left is-expanded">
+        <input
+            class="input"
+            type="text"
+            placeholder="Search for an entity"
+            [class.is-danger]="_error"
+            [(ngModel)]="searchService.query"
+        />
+        <span class="icon is-small is-left">
+            <fa-icon [icon]="faSearch"></fa-icon>
+        </span>
+    </div>
+    <div class="control">
+        <button class="button" [ngClass]="_error ? 'is-danger' : 'is-link'" (click)="searchService.refresh()">
+            <span class="icon is-small">
+                <fa-icon [icon]="faSync" [class.fa-spin]="searchService.loading()"></fa-icon>
+            </span>
+        </button>
+    </div>
+    <div class="control">
+        <button class="button is-success" (click)="entityService.create()">
+            <span class="icon is-small">
+                <fa-icon [icon]="faPlus"></fa-icon>
+            </span>
+        </button>
+    </div>
+</div>

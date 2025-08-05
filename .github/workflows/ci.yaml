@@ -71,6 +71,9 @@ jobs:
               run: npm install
               shell: bash
 
+            - name: Install Playwright
+              run: npx playwright install --with-deps
+
             - name: Run pre-commit hooks
               uses: pre-commit/action@v3.0.1
 

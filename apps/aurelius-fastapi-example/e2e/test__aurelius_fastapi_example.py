@@ -78,6 +78,7 @@ def entities(session: Session) -> Generator[list[Entity]]:
 def test__aurelius_fastapi_example_find_many(
     connection: http.client.HTTPConnection,
     entities: list[Entity],
+    token: str,
 ) -> None:
     """
     Test the find_many endpoint of the Aurelius FastAPI example.
@@ -89,6 +90,7 @@ def test__aurelius_fastapi_example_find_many(
     connection.request(
         "GET",
         "/entities/",
+        headers={"Authorization": f"Bearer {token}"},
     )
     response = connection.getresponse()
 
@@ -99,9 +101,28 @@ def test__aurelius_fastapi_example_find_many(
     assert all(entity in data for entity in entities), "Not all entities were returned in the response"
 
 
+def test__aurelius_fastapi_example_find_many_requires_auth(
+    connection: http.client.HTTPConnection,
+) -> None:
+    """
+    Test that the find_many endpoint requires authentication.
+
+    Asserts:
+        - The API returns a 401 Unauthorized status code when no token is provided.
+    """
+    connection.request(
+        "GET",
+        "/entities/",
+    )
+    response = connection.getresponse()
+
+    assert response.status == 401, "Expected 401 Unauthorized status for unauthenticated request"
+
+
 def test__aurelius_fastapi_example_find_one(
     connection: http.client.HTTPConnection,
     session: Session,
+    token: str,
 ) -> None:
     """
     Test the find_one endpoint of the Aurelius FastAPI example.
@@ -119,6 +140,7 @@ def test__aurelius_fastapi_example_find_one(
     connection.request(
         "GET",
         f"/entities/{entity.guid}",
+        headers={"Authorization": f"Bearer {token}"},
     )
 
     response = connection.getresponse()
@@ -130,8 +152,29 @@ def test__aurelius_fastapi_example_find_one(
     assert data == entity, "The returned entity does not match the expected entity"
 
 
+def test__aurelius_fastapi_example_find_one_requires_auth(
+    connection: http.client.HTTPConnection,
+) -> None:
+    """
+    Test that the find_one endpoint requires authentication.
+
+    Asserts:
+        - The API returns a 401 Unauthorized status code when no token is provided.
+    """
+    entity_guid = "12345678-1234-5678-1234-567812345678"
+
+    connection.request(
+        "GET",
+        f"/entities/{entity_guid}",
+    )
+    response = connection.getresponse()
+
+    assert response.status == 401, "Expected 401 Unauthorized status for unauthenticated request"
+
+
 def test__aurelius_fastapi_example_find_one_not_exists(
     connection: http.client.HTTPConnection,
+    token: str,
 ) -> None:
     """
     Test the find_one endpoint of the Aurelius FastAPI example for a non-existing entity.
@@ -144,6 +187,7 @@ def test__aurelius_fastapi_example_find_one_not_exists(
     connection.request(
         "GET",
         f"/entities/{non_existing_guid}",
+        headers={"Authorization": f"Bearer {token}"},
     )
 
     response = connection.getresponse()
@@ -154,6 +198,7 @@ def test__aurelius_fastapi_example_find_one_not_exists(
 def test__aurelius_fastapi_example_create(
     connection: http.client.HTTPConnection,
     session: Session,
+    token: str,
 ) -> None:
     """
     Test the create endpoint of the Aurelius FastAPI example.
@@ -171,7 +216,7 @@ def test__aurelius_fastapi_example_create(
         "PUT",
         "/entities/",
         entity.model_dump_json(),
-        {"Content-Type": "application/json"},
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
     )
 
     response = connection.getresponse()
@@ -187,6 +232,7 @@ def test__aurelius_fastapi_example_create(
 def test__aurelius_fastapi_example_update(
     connection: http.client.HTTPConnection,
     session: Session,
+    token: str,
 ) -> None:
     """
     Test the update endpoint of the Aurelius FastAPI example.
@@ -208,7 +254,7 @@ def test__aurelius_fastapi_example_update(
         "PUT",
         "/entities/",
         entity.model_dump_json(),
-        {"Content-Type": "application/json"},
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
     )
 
     response = connection.getresponse()
@@ -221,9 +267,32 @@ def test__aurelius_fastapi_example_update(
     assert session.get(Entity, entity.guid) == entity, "The entity was not found in the database after update"
 
 
+def test__aurelius_fastapi_example_put_requires_auth(
+    connection: http.client.HTTPConnection,
+) -> None:
+    """
+    Test that the update endpoint requires authentication.
+
+    Asserts:
+        - The API returns a 401 Unauthorized status code when no token is provided.
+    """
+    entity = Entity(name="Unauthenticated Test", description="This is a test entity")
+
+    connection.request(
+        "PUT",
+        "/entities/",
+        entity.model_dump_json(),
+    )
+
+    response = connection.getresponse()
+
+    assert response.status == 401, "Expected 401 Unauthorized status for unauthenticated request"
+
+
 def test__aurelius_fastapi_example_delete(
     connection: http.client.HTTPConnection,
     session: Session,
+    token: str,
 ) -> None:
     """
     Test the delete endpoint of the Aurelius FastAPI example.
@@ -241,6 +310,7 @@ def test__aurelius_fastapi_example_delete(
     connection.request(
         "DELETE",
         f"/entities/{entity.guid}",
+        headers={"Authorization": f"Bearer {token}"},
     )
 
     response = connection.getresponse()
@@ -250,8 +320,30 @@ def test__aurelius_fastapi_example_delete(
     assert session.get(Entity, entity.guid) is None, "The entity was not deleted from the database"
 
 
+def test__aurelius_fastapi_example_delete_requires_auth(
+    connection: http.client.HTTPConnection,
+) -> None:
+    """
+    Test that the delete endpoint requires authentication.
+
+    Asserts:
+        - The API returns a 401 Unauthorized status code when no token is provided.
+    """
+    entity_guid = "12345678-1234-5678-1234-567812345678"
+
+    connection.request(
+        "DELETE",
+        f"/entities/{entity_guid}",
+    )
+
+    response = connection.getresponse()
+
+    assert response.status == 401, "Expected 401 Unauthorized status for unauthenticated request"
+
+
 def test__aurelius_fastapi_example_delete_not_exists(
     connection: http.client.HTTPConnection,
+    token: str,
 ) -> None:
     """
     Test the delete endpoint of the Aurelius FastAPI example for a non-existing entity.
@@ -264,6 +356,7 @@ def test__aurelius_fastapi_example_delete_not_exists(
     connection.request(
         "DELETE",
         f"/entities/{non_existing_guid}",
+        headers={"Authorization": f"Bearer {token}"},
     )
 
     response = connection.getresponse()

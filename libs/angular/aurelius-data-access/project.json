@@ -1,0 +1,20 @@
+{
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "name": "aurelius-data-access",
+    "prefix": "aurelius-data-access",
+    "projectType": "library",
+    "sourceRoot": "libs/angular/aurelius-data-access/src",
+    "tags": [],
+    "targets": {
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        },
+        "test": {
+            "executor": "@nx/vite:test",
+            "options": {
+                "reportsDirectory": "../../../coverage/libs/angular/aurelius-data-access"
+            },
+            "outputs": ["{options.reportsDirectory}"]
+        }
+    }
+}

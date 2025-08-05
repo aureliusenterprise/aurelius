@@ -171,3 +171,10 @@ cython_debug/
 # Node
 node_modules/
 .pnpm-store/
+
+.angular
+
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
+
+test-results

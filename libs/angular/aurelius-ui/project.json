@@ -1,0 +1,88 @@
+{
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "name": "aurelius-ui",
+    "prefix": "aurelius-ui",
+    "projectType": "library",
+    "sourceRoot": "libs/angular/aurelius-ui/src",
+    "tags": [],
+    "targets": {
+        "build-storybook": {
+            "configurations": {
+                "ci": {
+                    "quiet": true
+                }
+            },
+            "executor": "@storybook/angular:build-storybook",
+            "options": {
+                "assets": [
+                    {
+                        "glob": "**/*",
+                        "input": "libs/angular/aurelius-ui/.storybook/assets",
+                        "output": "/assets/"
+                    }
+                ],
+                "browserTarget": "aurelius-ui:build-storybook",
+                "compodoc": false,
+                "configDir": "libs/angular/aurelius-ui/.storybook",
+                "outputDir": "dist/storybook/aurelius-ui",
+                "styles": ["libs/angular/aurelius-ui/.storybook/styles.scss"]
+            },
+            "outputs": ["{options.outputDir}"]
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        },
+        "static-storybook": {
+            "configurations": {
+                "ci": {
+                    "buildTarget": "aurelius-ui:build-storybook:ci"
+                }
+            },
+            "dependsOn": ["build-storybook"],
+            "executor": "@nx/web:file-server",
+            "options": {
+                "buildTarget": "aurelius-ui:build-storybook",
+                "host": "127/.0.0.1",
+                "port": 4500,
+                "spa": true,
+                "staticFilePath": "dist/storybook/aurelius-ui"
+            }
+        },
+        "storybook": {
+            "configurations": {
+                "ci": {
+                    "quiet": true
+                }
+            },
+            "executor": "@storybook/angular:start-storybook",
+            "options": {
+                "assets": [
+                    {
+                        "glob": "**/*",
+                        "input": "libs/angular/aurelius-ui/.storybook/assets",
+                        "output": "/assets/"
+                    }
+                ],
+                "browserTarget": "aurelius-ui:build-storybook",
+                "compodoc": false,
+                "configDir": "libs/angular/aurelius-ui/.storybook",
+                "host": "127.0.0.1",
+                "port": 4400,
+                "styles": ["libs/angular/aurelius-ui/.storybook/styles.scss"]
+            }
+        },
+        "test": {
+            "executor": "@nx/vite:test",
+            "options": {
+                "reportsDirectory": "../../../coverage/libs/angular/aurelius-ui"
+            },
+            "outputs": ["{options.reportsDirectory}"]
+        },
+        "test-storybook": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "test-storybook -c libs/angular/aurelius-ui/.storybook --url=http://127.0.0.1:4400"
+            }
+        }
+    }
+}

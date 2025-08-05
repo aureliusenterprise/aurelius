@@ -1,0 +1,19 @@
+@let _expanded = expanded();
+
+<div class="card">
+    <header class="card-header">
+        <div class="card-header-title">
+            <ng-content select="[header]"></ng-content>
+        </div>
+        <button class="card-header-icon" aria-label="Toggle content" (click)="toggle()">
+            <span class="icon has-text-primary">
+                <fa-icon [icon]="_expanded ? faChevronUp : faChevronDown"></fa-icon>
+            </span>
+        </button>
+    </header>
+    @if (_expanded) {
+        <div class="card-content">
+            <ng-content select="[content]"></ng-content>
+        </div>
+    }
+</div>

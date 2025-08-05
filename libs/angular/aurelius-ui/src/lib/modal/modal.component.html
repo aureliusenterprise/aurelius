@@ -1,0 +1,13 @@
+@let _active = active();
+
+@if (_active) {
+    <div class="modal" [class.is-active]="_active">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <ng-content select="[modal-content]"></ng-content>
+        </div>
+        @if (showCloseButton()) {
+            <button class="modal-close is-large" aria-label="close" (click)="close()"></button>
+        }
+    </div>
+}

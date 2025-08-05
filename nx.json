@@ -1,6 +1,21 @@
 {
     "$schema": "./node_modules/nx/schemas/nx-schema.json",
     "defaultBase": "main",
+    "generators": {
+        "@nx/angular:application": {
+            "e2eTestRunner": "playwright",
+            "linter": "eslint",
+            "style": "scss",
+            "unitTestRunner": "vitest"
+        },
+        "@nx/angular:component": {
+            "style": "scss"
+        },
+        "@nx/angular:library": {
+            "linter": "eslint",
+            "unitTestRunner": "vitest"
+        }
+    },
     "plugins": [
         "./tools/plugins/alembic.ts",
         "./tools/plugins/docker.ts",
@@ -8,7 +23,19 @@
         "./tools/plugins/python.ts",
         "./tools/plugins/sops.ts",
         "./tools/plugins/sops-decrypt.ts",
-        "./tools/plugins/sops-encrypt.ts"
+        "./tools/plugins/sops-encrypt.ts",
+        {
+            "options": {
+                "targetName": "e2e"
+            },
+            "plugin": "@nx/playwright/plugin"
+        },
+        {
+            "options": {
+                "targetName": "eslint:lint"
+            },
+            "plugin": "@nx/eslint/plugin"
+        }
     ],
     "release": {
         "changelog": {
@@ -26,7 +53,31 @@
             "conventionalCommits": true
         }
     },
+    "targetDefaults": {
+        "@angular/build:application": {
+            "cache": true,
+            "dependsOn": ["^build"],
+            "inputs": ["default", "^default"]
+        },
+        "@nx/eslint:lint": {
+            "cache": true,
+            "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+            ]
+        },
+        "@nx/vite:test": {
+            "cache": true,
+            "inputs": ["default", "^default"]
+        },
+        "build-storybook": {
+            "cache": true,
+            "inputs": ["default", "^default", "{projectRoot}/.storybook/**/*", "{projectRoot}/tsconfig.storybook.json"]
+        }
+    },
     "tui": {
-        "enabled": true
+        "enabled": false
     }
 }

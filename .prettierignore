@@ -5,3 +5,5 @@
 /.nx/workspace-data
 **/CHANGELOG.md
 poetry.lock
+
+.angular

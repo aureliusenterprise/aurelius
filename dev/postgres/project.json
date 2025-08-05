@@ -1,0 +1,20 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "name": "aurelius-dev-postgres",
+    "projectType": "application",
+    "tags": [],
+    "targets": {
+        "serve": {
+            "continuous": true,
+            "dependsOn": [{ "target": "decrypt" }],
+            "executor": "@nxlv/python:run-commands",
+            "metadata": {
+                "description": "Run the backend for the application."
+            },
+            "options": {
+                "command": "docker compose up",
+                "cwd": "{projectRoot}"
+            }
+        }
+    }
+}

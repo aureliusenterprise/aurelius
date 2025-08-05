@@ -1,0 +1,124 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["aurelius-dev-keycloak", "aurelius-fastapi-example"],
+    "name": "aurelius-frontend-example",
+    "prefix": "aurelius-frontend-example",
+    "projectType": "application",
+    "sourceRoot": "apps/aurelius-frontend-example/src",
+    "tags": [],
+    "targets": {
+        "build": {
+            "configurations": {
+                "development": {
+                    "assets": [
+                        {
+                            "glob": "**/*",
+                            "input": "apps/aurelius-frontend-example/dev"
+                        },
+                        {
+                            "glob": "**/*",
+                            "input": "apps/aurelius-frontend-example/public"
+                        }
+                    ],
+                    "extractLicenses": false,
+                    "optimization": false,
+                    "sourceMap": true
+                },
+                "production": {
+                    "assets": [
+                        {
+                            "glob": "**/*",
+                            "input": "apps/aurelius-frontend-example/public"
+                        }
+                    ],
+                    "budgets": [
+                        {
+                            "maximumError": "4mb",
+                            "maximumWarning": "2mb",
+                            "type": "initial"
+                        },
+                        {
+                            "maximumError": "8kb",
+                            "maximumWarning": "4kb",
+                            "type": "anyComponentStyle"
+                        }
+                    ],
+                    "outputHashing": "all"
+                }
+            },
+            "defaultConfiguration": "production",
+            "executor": "@angular/build:application",
+            "options": {
+                "browser": "apps/aurelius-frontend-example/src/main.ts",
+                "inlineStyleLanguage": "scss",
+                "outputPath": "dist/apps/aurelius-frontend-example",
+                "polyfills": ["zone.js"],
+                "styles": ["apps/aurelius-frontend-example/src/styles.scss"],
+                "tsConfig": "apps/aurelius-frontend-example/tsconfig.app.json"
+            },
+            "outputs": ["{options.outputPath}"]
+        },
+        "e2e": {
+            "dependsOn": [
+                {
+                    "target": "decrypt"
+                },
+                {
+                    "target": "docker-build"
+                }
+            ],
+            "executor": "@nxlv/python:run-commands",
+            "options": {
+                "command": "pytest e2e --browser chromium --browser firefox --browser webkit --tracing retain-on-failure",
+                "cwd": "{projectRoot}"
+            }
+        },
+        "extract-i18n": {
+            "executor": "@angular/build:extract-i18n",
+            "options": {
+                "buildTarget": "aurelius-frontend-example:build"
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        },
+        "serve": {
+            "configurations": {
+                "development": {
+                    "buildTarget": "aurelius-frontend-example:build:development"
+                },
+                "production": {
+                    "buildTarget": "aurelius-frontend-example:build:production"
+                }
+            },
+            "continuous": true,
+            "defaultConfiguration": "development",
+            "dependsOn": [{ "projects": ["aurelius-dev-keycloak", "aurelius-fastapi-example"], "target": "serve" }],
+            "executor": "@angular/build:dev-server",
+            "options": {
+                "host": "127.0.0.1",
+                "port": 4200,
+                "proxyConfig": "apps/aurelius-frontend-example/proxy.conf.json"
+            }
+        },
+        "serve-static": {
+            "continuous": true,
+            "dependsOn": [{ "projects": ["aurelius-fastapi-example"], "target": "serve" }],
+            "executor": "@nx/web:file-server",
+            "options": {
+                "buildTarget": "aurelius-frontend-example:build",
+                "host": "127.0.0.1",
+                "port": 4200,
+                "spa": true,
+                "staticFilePath": "dist/apps/aurelius-frontend-example/browser"
+            }
+        },
+        "test": {
+            "executor": "@nx/vite:test",
+            "options": {
+                "reportsDirectory": "../../coverage/apps/aurelius-frontend-example"
+            },
+            "outputs": ["{options.reportsDirectory}"]
+        }
+    }
+}

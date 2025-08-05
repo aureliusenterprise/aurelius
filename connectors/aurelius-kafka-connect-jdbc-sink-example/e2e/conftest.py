@@ -52,8 +52,8 @@ def _environment() -> None:
 @wait_container_is_ready()
 def compose() -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
-    context = Path(__file__).parents[1].absolute()
-    with DockerCompose(context=context) as compose:
+    context = Path(__file__).parent.absolute()
+    with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
         yield compose
         capture_docker_compose_logs(compose)
 

@@ -6,6 +6,7 @@
     "customizations": {
         "vscode": {
             "extensions": [
+                "Angular.ng-template",
                 "bierner.markdown-mermaid",
                 "charliermarsh.ruff",
                 "DavidAnson.vscode-markdownlint",
@@ -14,6 +15,7 @@
                 "nrwl.angular-console",
                 "PKief.material-icon-theme",
                 "tamasfe.even-better-toml",
+                "vitest.explorer",
                 "-ms-python.autopep8"
             ],
             "settings": {
@@ -39,6 +41,7 @@
                     "**/.pytest_cache": true,
                     "**/.ruff_cache": true,
                     "**/__pycache__": true,
+                    ".angular": true,
                     ".nx": true,
                     ".pnpm-store": true,
                     ".tmp": true,
@@ -51,6 +54,7 @@
                     "**/.ruff_cache": true,
                     "**/__pycache__": true,
                     "**/dist": true,
+                    ".angular": true,
                     ".git/objects/**": true,
                     ".git/subtree-cache/**": true,
                     ".nx": true,
@@ -69,13 +73,15 @@
                 "python.testing.pytestEnabled": true,
                 "python.testing.unittestEnabled": false,
                 "terminal.integrated.gpuAcceleration": "on",
+                "terminal.integrated.shellIntegration.enabled": false,
+                "terminal.integrated.suggest.enabled": false,
                 "vscode.env.isTelemetryEnabled": false
             }
         }
     },
     "features": {
         "ghcr.io/devcontainers-extra/features/apt-packages:1": {
-            "packages": "age"
+            "packages": ["age", "libpq-dev"]
         },
         "ghcr.io/devcontainers-extra/features/nx-npm:1": {
             "version": "21.3.0"
@@ -96,6 +102,7 @@
     "image": "mcr.microsoft.com/devcontainers/base:noble",
     "name": "Aurelius Project Template",
     "postCreateCommand": {
+        "playwright": "bash .devcontainer/playwright.sh",
         "pre-commit": "bash .devcontainer/pre-commit.sh",
         "sops": "bash .devcontainer/sops.sh"
     },

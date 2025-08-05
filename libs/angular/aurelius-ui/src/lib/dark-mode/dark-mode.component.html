@@ -1,0 +1,21 @@
+@let _mode = darkModeService.mode();
+
+<button
+    class="button is-text"
+    title="The current theme is {{ _mode ? _mode : 'auto' }}"
+    (click)="darkModeService.next()"
+>
+    <span class="icon">
+        @switch (_mode) {
+            @case ("dark") {
+                <fa-icon [icon]="faCircleSolid"></fa-icon>
+            }
+            @case ("light") {
+                <fa-icon [icon]="faCircleRegular"></fa-icon>
+            }
+            @default {
+                <fa-icon [icon]="faCircleHalfStroke"></fa-icon>
+            }
+        }
+    </span>
+</button>

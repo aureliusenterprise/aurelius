@@ -1,0 +1,21 @@
+name: aurelius-dev-postgres
+
+services:
+    postgres:
+        image: postgres:latest
+        environment:
+            POSTGRES_USER: ${DATABASE_USERNAME}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+            POSTGRES_DB: ${DATABASE_NAME}
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready", "-d", "${DATABASE_NAME}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        ports:
+            - ${DATABASE_PORT}:${DATABASE_PORT}
+        volumes:
+            - data:/var/lib/postgresql/data
+
+volumes:
+    data:

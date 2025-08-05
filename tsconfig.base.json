@@ -1,4 +1,8 @@
 {
+    "angularCompilerOptions": {
+        "strictInjectionParameters": true,
+        "strictTemplates": true
+    },
     "compileOnSave": false,
     "compilerOptions": {
         "baseUrl": ".",
@@ -9,7 +13,10 @@
         "lib": ["es2020", "dom"],
         "module": "esnext",
         "moduleResolution": "node10",
-        "paths": {},
+        "paths": {
+            "aurelius-data-access": ["libs/angular/aurelius-data-access/src/index.ts"],
+            "aurelius-ui": ["libs/angular/aurelius-ui/src/index.ts"]
+        },
         "rootDir": ".",
         "skipDefaultLibCheck": true,
         "skipLibCheck": true,

@@ -1,0 +1,3 @@
+{
+    "keycloak": { "clientId": "$KEYCLOAK_CLIENT_ID", "realm": "$KEYCLOAK_REALM", "url": "$KEYCLOAK_URL" }
+}

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, NonNegativeInt, PositiveInt, SecretStr
+from pydantic import BaseModel, Field, HttpUrl, NonNegativeInt, PositiveInt, SecretStr
 from pydantic_settings import BaseSettings
 from sqlalchemy import URL
 
@@ -26,6 +26,14 @@ class Settings(BaseSettings):
     environment: str = Field(
         default="production",
         description="The environment in which the application is running. Set to 'development' for local testing.",
+    )
+
+    auth_realm_name: str = Field(
+        description="The name of the authentication realm.",
+    )
+
+    auth_server_url: HttpUrl = Field(
+        description="The base URL of the authentication server.",
     )
 
     auto_create_schema: bool = Field(

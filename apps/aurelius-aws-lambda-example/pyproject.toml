@@ -15,11 +15,11 @@ python = "^3.13"
 
 [tool.poetry.dependencies.aurelius-aws-lambda]
 develop = true
-path = "../../libs/aurelius-aws-lambda"
+path = "../../libs/python/aurelius-aws-lambda"
 
 [tool.poetry.dependencies.aurelius-example]
 develop = true
-path = "../../libs/aurelius-example"
+path = "../../libs/python/aurelius-example"
 
 [tool.poetry.dependencies.confluent-kafka]
 extras = ["avro", "schema-registry"]
@@ -27,7 +27,7 @@ version = "2.10.0"
 
 [tool.poetry.dependencies.aurelius-kafka]
 develop = true
-path = "../../libs/aurelius-kafka"
+path = "../../libs/python/aurelius-kafka"
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "module"

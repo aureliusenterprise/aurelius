@@ -97,10 +97,12 @@ nav:
                 - aurelius-kafka-connect-jdbc-sink-base: api-reference/docker/aurelius-kafka-connect-jdbc-sink-base.md
           - Libs:
                 - api-reference/libs/index.md
-                - aurelius-aws-lambda: api-reference/libs/aurelius-aws-lambda.md
-                - aurelius-example: api-reference/libs/aurelius-example.md
-                - aurelius-kafka: api-reference/libs/aurelius-kafka.md
-                - aurelius-sdk: api-reference/libs/aurelius-sdk.md
+                - Python:
+                      - api-reference/libs/python/index.md
+                      - aurelius-aws-lambda: api-reference/libs/python/aurelius-aws-lambda.md
+                      - aurelius-example: api-reference/libs/python/aurelius-example.md
+                      - aurelius-kafka: api-reference/libs/python/aurelius-kafka.md
+                      - aurelius-sdk: api-reference/libs/python/aurelius-sdk.md
     - Architecture:
           - architecture/index.md
           - Vision & Strategy:

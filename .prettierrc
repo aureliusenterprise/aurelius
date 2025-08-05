@@ -1,5 +1,13 @@
 {
     "jsonRecursiveSort": true,
+    "overrides": [
+        {
+            "files": ["apps/**/src/**/*.component.html", "libs/angular/**/src/**/*.component.html"],
+            "options": {
+                "parser": "angular"
+            }
+        }
+    ],
     "plugins": ["prettier-plugin-sort-json", "prettier-plugin-toml"],
     "printWidth": 120,
     "proseWrap": "preserve",

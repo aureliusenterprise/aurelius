@@ -1,0 +1,31 @@
+[tool.poetry]
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+description = "This library provides common utilities for Aurelius projects."
+name = "aurelius-sdk"
+version = "0.0.0"
+
+[[tool.poetry.packages]]
+include = "aurelius_sdk"
+
+[tool.poetry.dependencies]
+boto3 = "^1.39.6"
+coloredlogs = "^15.0.1"
+httpx = "^0.28.1"
+msal = "^1.32.3"
+testcontainers = "^4.10.0"
+types-boto3 = { extras = ["full"], version = "^1.39.6" }
+
+[tool.poetry.extras]
+aws = ["boto3", "types-boto3"]
+logger = ["coloredlogs"]
+msal = ["httpx", "msal"]
+testing = ["testcontainers"]
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "module"
+asyncio_mode = "auto"
+required_plugins = ["pytest-asyncio"]
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]

@@ -1,0 +1,8 @@
+{
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "name": "aurelius-aws-lambda",
+    "projectType": "library",
+    "sourceRoot": "{projectRoot}/aurelius_aws_lambda",
+    "tags": [],
+    "targets": {}
+}
