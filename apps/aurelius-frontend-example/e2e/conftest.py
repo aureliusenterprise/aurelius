@@ -1,6 +1,7 @@
 import re
 from collections.abc import Generator
 from pathlib import Path
+from typing import cast
 
 import dotenv
 import pytest
@@ -8,6 +9,8 @@ from aurelius_sdk.testing import capture_docker_compose_logs
 from playwright.sync_api import Page
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy import URL, Engine
+from sqlmodel import Session, SQLModel, create_engine
 from testcontainers.compose import DockerCompose
 from testcontainers.core.waiting_utils import wait_container_is_ready
 
@@ -16,6 +19,10 @@ class Settings(BaseSettings):
     """Test configuration."""
 
     auth_realm_name: str
+    database_name: str
+    database_password: SecretStr
+    database_port: int
+    database_username: str
     password: SecretStr
     username: str
 
@@ -68,3 +75,39 @@ def authenticated(page: Page, base_url: str, settings: Settings) -> Page:
     page.wait_for_url(re.compile(base_url))
 
     return page
+
+
+@pytest.fixture(scope="session", autouse=True)
+def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
+    """Setup and teardown the database."""
+    hostname, port = compose.get_service_host_and_port("postgres-app", settings.database_port)
+
+    if not (hostname and port):
+        message = "PostgreSQL service not found in Docker Compose"
+        raise ValueError(message)
+
+    url = URL.create(
+        drivername="postgresql",
+        username=settings.database_username,
+        password=settings.database_password.get_secret_value(),
+        host=hostname,
+        port=cast("int", port),
+        database=settings.database_name,
+    )
+
+    engine = create_engine(url)
+
+    # Create the database schema
+    SQLModel.metadata.create_all(engine)
+
+    yield engine
+
+    # Drop the database schema
+    SQLModel.metadata.drop_all(engine)
+
+
+@pytest.fixture()
+def session(database: Engine) -> Generator[Session]:
+    """Return a SQLModel session."""
+    with Session(database, expire_on_commit=False) as session:
+        yield session
