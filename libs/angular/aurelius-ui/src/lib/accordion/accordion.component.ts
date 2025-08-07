@@ -8,7 +8,7 @@ import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
     imports: [CommonModule, FontAwesomeModule],
     templateUrl: "./accordion.component.html",
     styleUrl: "./accordion.component.scss",
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Accordion {
     /**

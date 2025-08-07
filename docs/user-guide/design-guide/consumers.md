@@ -219,10 +219,10 @@ popular ones:
 
 Use cases for Kafka consumers can be divided into the following categories:
 
--   [Stream Processing](#stream-processing)
--   [Synchronization](#synchronization)
--   [Orchestration](#orchestration)
--   [Monitoring](#monitoring)
+- [Stream Processing](#stream-processing)
+- [Synchronization](#synchronization)
+- [Orchestration](#orchestration)
+- [Monitoring](#monitoring)
 
 ### Stream Processing
 

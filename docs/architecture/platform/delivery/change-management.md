@@ -25,10 +25,10 @@ runs automated checks and tests to ensure that the code meets the project's qual
 
 The following types of testing are performed:
 
--   **Code Quality**: Code is checked for formatting, linting, and other quality metrics.
--   **Unit Testing**: Tests individual units of code in isolation to ensure they work correctly.
--   **Integration Testing**: Tests the interaction between different units of code to ensure they work together.
--   **End-to-End Testing**: Tests the entire system to ensure it works as expected.
+- **Code Quality**: Code is checked for formatting, linting, and other quality metrics.
+- **Unit Testing**: Tests individual units of code in isolation to ensure they work correctly.
+- **Integration Testing**: Tests the interaction between different units of code to ensure they work together.
+- **End-to-End Testing**: Tests the entire system to ensure it works as expected.
 
 When the automated tests pass, the feature branch is ready for peer review. Another developer reviews the code
 changes, provides feedback, and approves the pull request. Once approved, the changes are merged into the main

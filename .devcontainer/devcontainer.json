@@ -101,14 +101,14 @@
     "forwardPorts": [8000],
     "image": "mcr.microsoft.com/devcontainers/base:noble",
     "name": "Aurelius Project Template",
+    "onCreateCommand": {
+        "npm": "bash .devcontainer/npm.sh",
+        "poetry": "bash .devcontainer/poetry.sh"
+    },
     "postCreateCommand": {
         "playwright": "bash .devcontainer/playwright.sh",
         "pre-commit": "bash .devcontainer/pre-commit.sh",
         "sops": "bash .devcontainer/sops.sh"
     },
-    "runArgs": ["--gpus", "all"],
-    "updateContentCommand": {
-        "npm": "bash .devcontainer/npm.sh",
-        "poetry": "bash .devcontainer/poetry.sh"
-    }
+    "runArgs": ["--gpus", "all"]
 }

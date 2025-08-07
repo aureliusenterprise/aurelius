@@ -6,8 +6,8 @@ This Docker image provides a base for all Kafka Connectors.
 
 This Docker image provides some additional dependencies for Kafka Connectors:
 
--   **Startup Scripts**: Included startup scripts make it easier to configure and run Kafka Connectors.
--   **Healthchecks**: The image includes healthchecks to ensure that the Kafka Connectors are running correctly.
+- **Startup Scripts**: Included startup scripts make it easier to configure and run Kafka Connectors.
+- **Healthchecks**: The image includes healthchecks to ensure that the Kafka Connectors are running correctly.
 
 ## Usage
 

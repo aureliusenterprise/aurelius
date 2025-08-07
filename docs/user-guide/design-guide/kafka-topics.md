@@ -47,9 +47,9 @@ the retention policy is met, events are deleted from the topic.
 
 There are two main types of retention policies:
 
--   **Time-based retention**: events are retained for a specific period of time, after which they are deleted.
--   **Size-based retention**: events are retained until the topic reaches a certain size, after which the oldest
-    events are deleted to make room for new events.
+- **Time-based retention**: events are retained for a specific period of time, after which they are deleted.
+- **Size-based retention**: events are retained until the topic reaches a certain size, after which the oldest
+  events are deleted to make room for new events.
 
 By default, Kafka topics are configured with a time-based retention policy of 7 days. This means that events
 are retained for 7 days before they are deleted. You can configure the retention policy for a topic by setting

@@ -78,14 +78,14 @@ before each commit.
 
 The pre-commit hooks perform the following checks:
 
--   Check JSON, TOML, and YAML files for syntax errors
--   Ensure files end with a newline
--   Trim trailing whitespace
--   Lint and format Python code with [Ruff](https://docs.astral.sh/ruff/)
--   Check for Python type issues with [Pyright](https://github.com/microsoft/pyright)
--   Format Markdown and JSON files with [Prettier](https://prettier.io/)
--   Lint Markdown files with [markdownlint](https://github.com/DavidAnson/markdownlint)
--   Scan for secrets with [Talisman](https://github.com/thoughtworks/talisman/)
+- Check JSON, TOML, and YAML files for syntax errors
+- Ensure files end with a newline
+- Trim trailing whitespace
+- Lint and format Python code with [Ruff](https://docs.astral.sh/ruff/)
+- Check for Python type issues with [Pyright](https://github.com/microsoft/pyright)
+- Format Markdown and JSON files with [Prettier](https://prettier.io/)
+- Lint Markdown files with [markdownlint](https://github.com/DavidAnson/markdownlint)
+- Scan for secrets with [Talisman](https://github.com/thoughtworks/talisman/)
 
 ??? QUESTION "What if the pre-commit hooks fail?"
 
@@ -178,9 +178,9 @@ possible solutions. If you have any questions or concerns, don't hesitate to ask
 
 A code review should focus on the following aspects:
 
--   Correctness and functionality
--   Code quality and readability
--   Adherence to the project guidelines
+- Correctness and functionality
+- Code quality and readability
+- Adherence to the project guidelines
 
 ??? EXAMPLE "Good Code Review Feedback"
 

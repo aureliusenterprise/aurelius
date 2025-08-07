@@ -43,5 +43,5 @@ export const Collapsed: Story = {
 export const Empty: Story = {
     args: {
         expanded: false,
-    }
+    },
 };
