@@ -1116,6 +1116,68 @@
         "address",
         "phone",
         "offline_access"
+      ],
+      "protocolMappers": [
+        {
+          "id": "phoneNumber-mapper",
+          "name": "Phone Number",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "phoneNumber",
+            "claim.name": "phoneNumber",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "id": "countryRegion-mapper",
+          "name": "Country Region",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "countryRegion",
+            "claim.name": "countryRegion",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "id": "areaOfInterest-mapper",
+          "name": "Area of Interest",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "areaOfInterest",
+            "claim.name": "areaOfInterest",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "id": "termsAgreement-mapper",
+          "name": "Terms Agreement",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "termsAgreement",
+            "claim.name": "termsAgreement",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
       ]
     },
     {
@@ -4130,7 +4192,9 @@
       "enabled": true,
       "defaultAction": false,
       "priority": 40,
-      "config": {}
+      "config": {
+        "required-user-attributes": "phoneNumber,countryRegion,areaOfInterest,termsAgreement"
+      }
     },
     {
       "alias": "VERIFY_EMAIL",
@@ -4174,11 +4238,23 @@
     "clientOfflineSessionMaxLifespan": "0",
     "oauth2DevicePollingInterval": "5",
     "clientSessionIdleTimeout": "0",
-    "userProfileEnabled": "false",
     "parRequestUriLifespan": "60",
     "clientSessionMaxLifespan": "0",
     "clientOfflineSessionIdleTimeout": "0",
-    "cibaInterval": "5"
+    "cibaInterval": "5",
+    "custom.registration.phoneNumber.enabled": "true",
+    "custom.registration.phoneNumber.required": "false", 
+    "custom.registration.phoneNumber.displayName": "Phone Number",
+    "custom.registration.countryRegion.enabled": "true",
+    "custom.registration.countryRegion.required": "false",
+    "custom.registration.countryRegion.displayName": "Country/Region",
+    "custom.registration.areaOfInterest.enabled": "true", 
+    "custom.registration.areaOfInterest.required": "false",
+    "custom.registration.areaOfInterest.displayName": "Area of Interest",
+    "custom.registration.termsAgreement.enabled": "true",
+    "custom.registration.termsAgreement.required": "true",
+    "custom.registration.termsAgreement.displayName": "Consent Checkbox",
+    "custom.registration.termsAgreement.type": "checkbox"
   },
   "keycloakVersion": "16.1.0",
   "userManagedAccessAllowed": false,
