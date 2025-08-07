@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { AtlasEntityWithEXTInformation } from '@models4insight/atlas/api';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { EntityDetailsService } from '../../services/entity-details/entity-details.service';
 
 @Component({
@@ -41,7 +41,18 @@ export class PeopleComponent implements OnInit {
       );
   }
 
-  directToDetailsPage(guid: string) {
-    this.router.navigate(['search/details', guid]);
-  }
+  deduplicate(items: any[] = []): any[] {
+
+    // Build a map to keep the first instance of any given guid
+    const uniqueByGuid = new Map<string, any>();
+    for (const item of items) {
+      if (item?.guid && !uniqueByGuid.has(item.guid)) {
+        uniqueByGuid.set(item.guid, item);
+      }
+    }
+
+    // Return an array of the unique values
+    return Array.from(uniqueByGuid.values());
+}
+
 }
