@@ -1177,6 +1177,36 @@
             "access.token.claim": "true",
             "userinfo.token.claim": "true"
           }
+        },
+        {
+          "id": "companyName-mapper",
+          "name": "Company Name",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "companyName",
+            "claim.name": "companyName",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "id": "positionRole-mapper",
+          "name": "Position/Role",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "positionRole",
+            "claim.name": "positionRole",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
         }
       ]
     },
@@ -4193,7 +4223,7 @@
       "defaultAction": false,
       "priority": 40,
       "config": {
-        "required-user-attributes": "phoneNumber,countryRegion,areaOfInterest,termsAgreement"
+        "required-user-attributes": "phoneNumber,countryRegion,areaOfInterest,companyName,positionRole,termsAgreement"
       }
     },
     {
@@ -4251,6 +4281,12 @@
     "custom.registration.areaOfInterest.enabled": "true", 
     "custom.registration.areaOfInterest.required": "false",
     "custom.registration.areaOfInterest.displayName": "Area of Interest",
+    "custom.registration.companyName.enabled": "true",
+    "custom.registration.companyName.required": "false",
+    "custom.registration.companyName.displayName": "Company Name",
+    "custom.registration.positionRole.enabled": "true",
+    "custom.registration.positionRole.required": "false",
+    "custom.registration.positionRole.displayName": "Position/Role",
     "custom.registration.termsAgreement.enabled": "true",
     "custom.registration.termsAgreement.required": "true",
     "custom.registration.termsAgreement.displayName": "Consent Checkbox",
