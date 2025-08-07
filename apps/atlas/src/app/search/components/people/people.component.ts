@@ -42,9 +42,7 @@ export class PeopleComponent implements OnInit {
   }
 
   deduplicate(items: any[] = []): any[] {
-    if (!items || !items.length) {
-      return [];
-    }
+
     // Build a map to keep the first instance of any given guid
     const uniqueByGuid = new Map<string, any>();
     for (const item of items) {
