@@ -81,7 +81,7 @@
     },
     "features": {
         "ghcr.io/devcontainers-extra/features/apt-packages:1": {
-            "packages": ["age", "libpq-dev"]
+            "packages": ["age", "gnupg2", "libpq-dev"]
         },
         "ghcr.io/devcontainers-extra/features/nx-npm:1": {
             "version": "21.3.0"
