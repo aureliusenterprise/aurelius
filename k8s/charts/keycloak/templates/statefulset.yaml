@@ -44,7 +44,8 @@ spec:
                  - "/bin/bash"
                  - "-c"
                  - > 
-                   /tmp/init_standard_users.sh;
+                   chmod +x /tmp/init_standard_users.sh;
+                   /tmp/init_standard_users.sh || true;
           env:
             {{- if .Values.env }}
             {{- range $key, $value := .Values.env }}
