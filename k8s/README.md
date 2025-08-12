@@ -273,7 +273,7 @@ onboard_sources:
   schema_registry_url: "http://schema-registry:8081"
 ```
 
-then you need to apply `k8s/templates/onboard-sources.yaml`
+then you need to apply `k8s/templates/onboard-sources.yaml` (remove it from `.helmignore` first)
 
 ```bash
 helm template -s templates/onboard-sources.yaml . --namespace <namespace> | kubectl apply -f - -n <namespace>

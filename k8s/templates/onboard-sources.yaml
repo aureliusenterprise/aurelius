@@ -9,13 +9,15 @@ spec:
       restartPolicy: OnFailure
       containers:
       - name: import-dataset
-        image: "ghcr.io/aureliusenterprise/m4i-data-dictionary-io:{{ .Values.global.version }}"
+        image: "nikolaev92/m4i-data-dictionary-io:latest"
         imagePullPolicy: Always
         env:
           - name: ATLAS_SERVER_URL
             value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/atlas/atlas"
           - name: KEYCLOAK_USERNAME
             value: "atlas"
+          - name: KEYCLOAK_CLIENT_ID
+            value: "m4i_atlas"
           - name: KEYCLOAK_ATLAS_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -31,14 +33,18 @@ spec:
             value: {{ .Values.onboard_sources.bootstrap_servers }}
           - name: SCHEMA_REGISTRY_URL
             value: {{ .Values.onboard_sources.schema_registry_url }}
+          - name: CONSUMER_GROUP_ID_PREFIX
+            value:  {{ .Values.onboard_sources.consumer_group_id_prefix }}
           - name: SYSTEM_NAME
-            value: "Demo System"
+            value: {{ .Values.onboard_sources.system_name }}
           - name: SYSTEM_QUALIFIED_NAME
-            value: "demo-system"
+            value: {{ .Values.onboard_sources.system_qualified_name }}
           - name: COLLECTION_NAME
-            value: "Demo Collection"
+            value: {{ .Values.onboard_sources.collection_name }}
           - name: COLLECTION_QUALIFIED_NAME
-            value: "demo-system--demo-collection"
+            value: {{ .Values.onboard_sources.collection_qualified_name }}
+          - name: ENABLE_KAFKA_CONSUMER
+            value: "true"
         volumeMounts:
         {{- if .Values.onboard_sources.excel_file }}
           - name: excel-file-volume
