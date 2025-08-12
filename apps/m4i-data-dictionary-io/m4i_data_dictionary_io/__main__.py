@@ -91,6 +91,8 @@ elif read_mode == "kafka":
         else None
     )
 
+    print(f"Kafka consumer enabled: {store.get('enable.kafka.consumer', False)}")
+
     schema_registry_client = (
         SchemaRegistryClient(
             {

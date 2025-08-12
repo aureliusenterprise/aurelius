@@ -53,6 +53,7 @@ def discover_cluster(
     """Main function to execute the Kafka topic message consumption process."""
     system = build_system(system_name)
 
+    print(f"Discovering Kafka cluster: {system_name}")
     yield system
 
     cluster_id = get_cluster_id(admin_client)
@@ -61,16 +62,20 @@ def discover_cluster(
         cluster_id or "kafka_collection", system.qualified_name
     )
 
+    print(f"Discovered Kafka cluster with ID: {cluster_id}")
     yield collection
 
     topics = get_external_topic_names(admin_client)
+    if not topics:
+        print("No topics found in the Kafka cluster.")
+        return
 
     for topic in topics:
         dataset = build_dataset(
             topic,
             collection.qualified_name,
         )
-
+        print(f"Processing topic: {topic}")
         yield dataset
 
         # Attempt to retrieve a schema for the topic from the Schema Registry
@@ -79,25 +84,31 @@ def discover_cluster(
             if schema_registry_client
             else None
         )
-
+        print(f"Schema for topic {topic}: {schema}")
         data = consume_message(topic, consumer) if consumer and not schema else None
+        print(f"Data for topic {topic}: {data}")
 
         if data and schema_registry_client and not schema:
+            print(f"Fetching schema for topic: {topic} from Schema Registry")
             schema = get_message_schema(data, schema_registry_client)
 
         # Parse the schema if available
         if schema:
+            print(f"Parsing schema for topic: {topic}")
             yield from parse_schema(
                 schema,
                 dataset.qualified_name,
             )
-
         # If no schema is found, but data is available, parse the payload
         elif data:
+            print(f"No schema found for topic: {topic}, parsing payload")
             yield from parse_payload(
                 data.decode("utf-8"),
                 dataset.qualified_name,
             )
+        else:
+            print(f"No data or schema available for topic: {topic}, skipping parsing")
+            continue
 
 
 async def create_from_kafka(

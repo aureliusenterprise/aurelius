@@ -18,6 +18,7 @@ def get_topic_schema(
     try:
         return schema_registry_client.get_latest_version(f"{topic}-value").schema
     except SchemaRegistryError:
+        print(f"Failed to retrieve schema for topic {topic}")
         logging.error(f"Failed to retrieve schema for topic {topic}")
         return None
 
