@@ -53,6 +53,7 @@ def _parse_avro_schema(
             type_name=type_name,
         )
 
+        print(f"Parsed field: {result.name} of type {result.type_name}")
         yield result
 
         if field.type.type == "record":
@@ -67,6 +68,7 @@ def _parse_avro_schema(
             # If the field is an array, parse its items
             items = field.type.items
             if items.type == "record":
+                print(f"Parsing array items for field: {field.name}")
                 yield from _parse_avro_schema(
                     schema=items,
                     dataset_qualified_name=dataset_qualified_name,
@@ -74,6 +76,7 @@ def _parse_avro_schema(
                 )
             else:
                 # For non-record items, just yield the field
+                print(f"Yielding array item field for: {field.name}")
                 yield build_field(
                     name=f"{field.name}_item",
                     dataset_qualified_name=dataset_qualified_name,
@@ -85,6 +88,7 @@ def _parse_avro_schema(
             # If the field is a map, parse its values
             values = field.type.values
             if values.type == "record":
+                print(f"Parsing map values for field: {field.name}")
                 yield from _parse_avro_schema(
                     schema=values,
                     dataset_qualified_name=dataset_qualified_name,
@@ -92,6 +96,7 @@ def _parse_avro_schema(
                 )
             else:
                 # For non-record values, just yield the field
+                print(f"Yielding map value field for: {field.name}")
                 yield build_field(
                     name=f"{field.name}_value",
                     dataset_qualified_name=dataset_qualified_name,

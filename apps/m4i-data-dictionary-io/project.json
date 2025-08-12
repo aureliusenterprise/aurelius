@@ -57,8 +57,11 @@
           "params": "forward"
         }
       ],
-      "command": "docker build . -f {projectRoot}/Dockerfile -t {projectName}:latest",
+      "command": "docker build . -f {projectRoot}/Dockerfile -t  {args.namespace}/{args.tag}:{args.version}",
       "options": {
+        "namespace": "aureliusenterprise",
+        "tag": "{projectName}",
+        "version": "latest",
         "env": {
           "DOCKER_BUILDKIT": "1"
         }

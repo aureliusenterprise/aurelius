@@ -97,10 +97,12 @@ def _parse_json_schema(
             type_name=type_name,
         )
 
+        print(f"Parsed field: {field.name} of type {field.type_name}")
         yield field
 
         if type_name == "object":
             # Recursively parse nested objects
+
             yield from _parse_json_schema(
                 schema=metadata,
                 dataset_qualified_name=dataset_qualified_name,
@@ -122,6 +124,7 @@ def _parse_json_schema(
             else:
                 # Handle array of primitive types
                 item_type = _parse_json_schema_type(items, defs)
+                print(f"Yielding array item field for: {key}")
                 yield build_field(
                     name=f"{key}_item",
                     dataset_qualified_name=dataset_qualified_name,
