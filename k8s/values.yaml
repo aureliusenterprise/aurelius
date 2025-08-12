@@ -67,5 +67,5 @@ post_install:
 onboard_sources:
   source: kafka
   #excel_file: my_excel_file.xlsx
-  bootstrap_servers: "kafka-broker.iot-kafka-data-platform.svc.cluster.local:9092"
-  schema_registry_url: "http://iot-schema-registry.iot-kafka-data-platform.svc.cluster.local:8085"
+  bootstrap_servers: "kafka:9092"
+  schema_registry_url: "http://schema-registry:8081"
