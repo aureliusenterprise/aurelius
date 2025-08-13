@@ -40,7 +40,9 @@ export class PeopleComponent implements OnInit {
         })
       );
   }
-
+  directToDetailsPage(guid: string) {
+    this.router.navigate(['search/details', guid]);
+  }
   deduplicate(items: any[] = []): any[] {
 
     // Build a map to keep the first instance of any given guid
