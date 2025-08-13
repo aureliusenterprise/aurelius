@@ -33,7 +33,7 @@
   "m4i_elastic": "Elastic",
   "qualifiedName": "Qualified Name",
   "attributeType": "Attribute Type",
-  "fieldType": "Field Type",
+  "fieldType": "Data Type",
   "dataDomain": "Data Domain",
   "systems": "Systems",
   "collections": "Collections",
