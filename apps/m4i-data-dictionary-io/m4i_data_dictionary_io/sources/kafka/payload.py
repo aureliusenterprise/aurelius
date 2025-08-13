@@ -26,6 +26,7 @@ def _parse_payload(
 ) -> Generator[DataField, None, None]:
     """Parse a JSON payload and yield DataField instances."""
     for key, value in payload.items():
+        print(f"Parsing field: {key} with value: {value} ", isinstance(value, dict), " ",  type(value).__name__)
         type_name = (
             value.get("type", "object")
             if isinstance(value, dict)
@@ -43,6 +44,7 @@ def _parse_payload(
 
         if isinstance(value, dict):
             # Recursively parse nested objects
+            print(f"Recursively parsing nested object for field: {key}")
             yield from _parse_payload(
                 payload=value,
                 dataset_qualified_name=dataset_qualified_name,
