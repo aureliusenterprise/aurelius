@@ -263,7 +263,7 @@ There is a daily job `data-quality-propagation` which propagates the data qualit
 kubectl create job --from=cronjob/data-quality-propagation data-quality-propagation -n <namespace>
 ```
 
-## Add eser registration option
+## Add user registration option
 
 ### Allow user registration
 
