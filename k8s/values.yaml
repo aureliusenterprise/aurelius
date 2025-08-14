@@ -6,7 +6,7 @@
 # container image
 # https://github.com/keycloak/keycloak-containers/blob/16.1.1/server/README.md
 keycloak:
-  tag: "16.1.0.2"
+  tag: "16.1.1.0"
   env:
     KEYCLOAK_USER: "admin"
   realm_file_name: "realm_m4i.json"
