@@ -28,10 +28,10 @@
   "derivedcollection": { "raw": ["NLHQEBSP"] },
   "dqscorecnt_accuracy": { "raw": 12.0 },
   "dqscore_validity": { "raw": 0.0 },
-  "derivedsystem": { "raw": ["eudtc1-ebsp-db1.vanoord.org"] },
+  "derivedsystem": { "raw": ["eudtc1-ebsp-db1.stratonis_group.org"] },
   "deriveddataset": { "raw": [] },
   "dqscore_uniqueness": { "raw": 0.0 },
-  "breadcrumbname": { "raw": ["eudtc1-ebsp-db1.vanoord.org", "NLHQEBSP"] },
+  "breadcrumbname": { "raw": ["eudtc1-ebsp-db1.stratonis_group.org", "NLHQEBSP"] },
   "dqscorecnt_completeness": { "raw": 8.0 },
   "breadcrumbguid": {
     "raw": [

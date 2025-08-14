@@ -10,10 +10,10 @@
         {
           "guid": "21177ac3-a4e4-402a-98ad-3a5849001c10",
           "typeName": "m4i_system",
-          "uniqueAttributes": { "qualifiedName": "eudtc1ebspdb1.vanoord.org" }
+          "uniqueAttributes": { "qualifiedName": "eudtc1ebspdb1.stratonis_group.org" }
         }
       ],
-      "qualifiedName": "eudtc1ebspdb1.vanoord.org--nlhqebsp",
+      "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp",
       "name": "NLHQEBSP",
       "definition": null,
       "source": [],
@@ -22,7 +22,7 @@
           "guid": "ac43827a-a5fc-4a7e-9b58-b997d848ffc4",
           "typeName": "m4i_dataset",
           "uniqueAttributes": {
-            "qualifiedName": "eudtc1ebspdb1.vanoord.org--nlhqebsp--xxvo_dm_persons_v"
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v"
           }
         }
       ]
@@ -43,7 +43,7 @@
           "guid": "21177ac3-a4e4-402a-98ad-3a5849001c10",
           "typeName": "m4i_system",
           "entityStatus": "ACTIVE",
-          "displayText": "eudtc1-ebsp-db1.vanoord.org",
+          "displayText": "eudtc1-ebsp-db1.stratonis_group.org",
           "relationshipType": "m4i_collection_assignment",
           "relationshipGuid": "4711087e-2f0d-4866-bbee-e7312ce8e16e",
           "relationshipStatus": "ACTIVE",
