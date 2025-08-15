@@ -83,7 +83,7 @@ elif read_mode == "kafka":
         Consumer(
             {
                 "bootstrap.servers": store.get("bootstrap_servers"),
-                "group.id": f"{store.get('consumer_group_id_prefix', 'data-dictionary-io')}-group",
+                "group.id": f"{store.get('consumer_group_id_prefix', 'data-dictionary-io')}-group-{os.getpid()}",
                 "auto.offset.reset": "earliest",
             }
         )

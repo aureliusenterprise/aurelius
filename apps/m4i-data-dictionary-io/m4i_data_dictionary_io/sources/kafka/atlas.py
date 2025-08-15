@@ -54,7 +54,7 @@ def build_field(
     type_name: str,
     *,
     definition: Union[str, None] = None,
-    parent_field: Union[str, None] = None,
+    parent_field: Union[str, None] = None
 ) -> DataField:
     """Build a DataField instance with the provided parameters."""
     return DataField.from_dict(
