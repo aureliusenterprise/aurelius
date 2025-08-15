@@ -47,8 +47,11 @@ async def handle_request(
     async with ClientSession(auth=auth, headers=headers) as session:
 
         async with request_factory(url, session) as response:
-
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except Exception as e:
+                print(f"Request failed with status: {response.status}, reason: {response.reason}, response text: {await response.text()}")
+                raise e
 
             return await response_parser(response)
         # END response

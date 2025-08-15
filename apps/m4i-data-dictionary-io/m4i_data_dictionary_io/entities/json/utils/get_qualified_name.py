@@ -1,11 +1,12 @@
 import re
+from typing import Optional
 
 DELIMITER = "--"
 WHITE_SPACE = re.compile("[\s]+")
 ILLEGAL_CHARACTERS = re.compile("[&-]+")
 
 
-def get_qualified_name(*components: str, prefix: str = ""):
+def get_qualified_name(*components: Optional[str], prefix: str = ""):
     """
     Returns a qualified name string based on the given name `components`.
     """

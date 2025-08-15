@@ -127,8 +127,8 @@ async def create_from_kafka(
         system_name=system_name,
     ):
         try:
-            print(f"Creating Atlas entity: {entity.name}, type: {entity.type_name}")
+            print(f"Creating Atlas entity: {entity.name}, type: {entity.type_name}, qualifiedName: {entity.qualified_name}")
         except:
-            print(f"Creating Atlas entity: {entity.name}")
+            print(f"Creating Atlas entity: {entity.name}, qualifiedName: {entity.qualified_name}")
         atlas_compatible = entity.convert_to_atlas()
         await get_ref_and_push([atlas_compatible], False, access_token)
