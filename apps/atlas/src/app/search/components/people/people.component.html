@@ -3,64 +3,53 @@
     No people assigned.
   </p>
 </ng-container>
-
 <ng-container *ngIf="details$ | async as details" class="container">
   <ng-container
-    *ngIf="
-      deduplicate(details.entity.relationshipAttributes?.domainLead) as domain"
+  *ngIf="deduplicate(details.entity.relationshipAttributes?.domainLead) as domainLeads"
   >
-    <div *ngIf="domain.length > 0">
-      <span class="pointer" (click)="directToDetailsPage(domain.guid)">
-        <span class="icon is-small">
-          <fa-icon class="business" [icon]="personsIcon"> </fa-icon>
-        </span>
-        <span> Domain Lead(s): </span>
-        <ng-container
-          *ngFor="let domain of domain; let last = last"
-          class="pointer"
-          (click)="directToDetailsPage(domain.guid)"
-        >
-          <a>{{ domain.displayText }}</a><span *ngIf="!last">, </span>
-        </ng-container>
+    <div *ngIf="domainLeads.length > 0">
+      <span class="icon is-small">
+        <fa-icon class="business" [icon]="personsIcon"> </fa-icon>
       </span>
+      <span> Domain Lead(s): </span>
+      <ng-container *ngFor="let domainLead of domainLeads; let last = last">
+        <span class="pointer" (click)="directToDetailsPage(domainLead.guid)">
+          <a>{{ domainLead.displayText }}</a>
+        </span>
+        <span *ngIf="!last">, </span>
+      </ng-container>
     </div>
   </ng-container>
   <ng-container
-    *ngIf="deduplicate(details.entity.relationshipAttributes?.businessOwner) as owners"
+  *ngIf="deduplicate(details.entity.relationshipAttributes?.businessOwner) as owners"
   >
     <div *ngIf="owners.length > 0">
-      <span class="pointer" (click)="directToDetailsPage(domain.guid)">
-        <span class="icon is-small">
-          <fa-icon class="business" [icon]="personsIcon"> </fa-icon>
-        </span>
-        <span> Data Owner(s): </span>
-        <ng-container
-          *ngFor="let owner of owners; let last = last"
-          class="pointer"
-          (click)="directToDetailsPage(owner.guid)"
-        >
-          <a>{{ owner.displayText }}</a><span *ngIf="!last">, </span>
-        </ng-container>
+      <span class="icon is-small">
+        <fa-icon class="business" [icon]="personsIcon"> </fa-icon>
       </span>
+      <span> Data Owner(s): </span>
+      <ng-container *ngFor="let owner of owners; let last = last">
+        <span class="pointer" (click)="directToDetailsPage(owner.guid)">
+          <a>{{ owner.displayText }}</a>
+        </span>
+        <span *ngIf="!last">, </span>
+      </ng-container>
     </div>
   </ng-container>
-    <ng-container
-    *ngIf="deduplicate(details.entity.relationshipAttributes?.steward) as stewards"
+  <ng-container
+  *ngIf="deduplicate(details.entity.relationshipAttributes?.steward) as stewards"
   >
     <div *ngIf="stewards.length > 0">
-      <span class="pointer" (click)="directToDetailsPage(domain.guid)">
-        <span class="icon is-small">
-          <fa-icon class="business" [icon]="personsIcon"> </fa-icon>
-        </span>
-        <span> Data Steward(s): </span>
-        <ng-container
-          *ngFor="let steward of stewards; let last = last"
-          class="pointer"
-          (click)="directToDetailsPage(steward.guid)"
-        >
-          <a>{{ steward.displayText }}</a><span *ngIf="!last">, </span>
-        </ng-container>
+      <span class="icon is-small">
+        <fa-icon class="business" [icon]="personsIcon"> </fa-icon>
       </span>
+      <span> Data Steward(s): </span>
+      <ng-container *ngFor="let steward of stewards; let last = last">
+        <span class="pointer" (click)="directToDetailsPage(steward.guid)">
+          <a>{{ steward.displayText }}</a>
+        </span>
+        <span *ngIf="!last">, </span>
+      </ng-container>
     </div>
   </ng-container>
 </ng-container>
