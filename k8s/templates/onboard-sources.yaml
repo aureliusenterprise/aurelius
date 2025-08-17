@@ -4,9 +4,10 @@ metadata:
   name: import-dataset
   namespace: {{ .Release.Namespace }}
 spec:
+  ttlSecondsAfterFinished: 0
   template:
     spec:
-      restartPolicy: OnFailure
+      restartPolicy: Never
       containers:
       - name: import-dataset
         image: "nikolaev92/m4i-data-dictionary-io:latest"
