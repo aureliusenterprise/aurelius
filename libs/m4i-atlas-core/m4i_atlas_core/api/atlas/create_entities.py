@@ -22,11 +22,15 @@ async def create_entities(*entities: Entity, referred_entities: Optional[Dict[st
         referred_entities=referred_entities
     )
 
-    response: str = await atlas_post(
-        path=PATH,
-        body=entities_with_ext_info.to_json(),
-        access_token=access_token
-    )
+    try:
+        response: str = await atlas_post(
+            path=PATH,
+            body=entities_with_ext_info.to_json(),
+            access_token=access_token
+        )
+    except Exception as e:
+        print(f"Error creating entities: {entities_with_ext_info.to_json()}")
+        raise e
 
     mutations = EntityMutationResponse.from_json(response)
 
