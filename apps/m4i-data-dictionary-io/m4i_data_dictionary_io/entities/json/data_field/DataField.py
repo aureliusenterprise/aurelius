@@ -66,7 +66,7 @@ class DataField(
             )
 
             parent_field = ObjectId(
-                type_name="m4i_data_field",
+                type_name="m4i_field",
                 unique_attributes=parent_field_unique_attributes,
             )
 
