@@ -12,6 +12,7 @@ from confluent_kafka.serialization import (
     SerializationContext,
     StringSerializer,
 )
+from m4i_atlas_core import get_entity_by_qualified_name
 from m4i_data_dictionary_io.sources.kafka.atlas import (
     build_collection,
     build_dataset,
@@ -19,6 +20,7 @@ from m4i_data_dictionary_io.sources.kafka.atlas import (
     build_system,
 )
 from m4i_data_dictionary_io.sources.kafka.create_from_kafka import (
+    create_from_kafka,
     discover_cluster,
 )
 from m4i_data_dictionary_io.testing.models import Envelope, Message
@@ -29,7 +31,8 @@ from tenacity import (
 )
 
 
-def test__discover_cluster_with_empty_cluster(
+@pytest.mark.asyncio
+async def test__discover_cluster_with_empty_cluster(
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
     kafka_consumer: Consumer,
@@ -45,17 +48,35 @@ def test__discover_cluster_with_empty_cluster(
         system_qualified_name=expected_system.qualified_name,
     )
 
-    expected = [expected_system, expected_collection]
-
-    discovered = discover_cluster(
+    await create_from_kafka(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
     )
 
-    actual = list(discovered)
+    expected = [
+        entity.convert_to_atlas()
+        for entity in [
+            expected_system,
+            expected_collection,
+        ]
+    ]
 
-    assert expected == actual, f"Expected {expected} but got {actual}"
+    for entity in expected:
+        # Atlas may not have the entity immediately after creation
+        for attempt in Retrying(
+            stop=stop_after_attempt(10),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+        ):
+            with attempt:
+                actual = await get_entity_by_qualified_name(
+                    entity.attributes.qualified_name,
+                    entity.type_name,
+                )
+
+                assert (
+                    actual is not None
+                ), f"Entity {entity.attributes.qualified_name} not found"
 
 
 @pytest.fixture()
@@ -91,7 +112,8 @@ def kafka_topic(
     kafka_admin_client.delete_topics([topic_name])
 
 
-def test__discover_cluster_with_topic(
+@pytest.mark.asyncio
+async def test__discover_cluster_with_topic(
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
     kafka_consumer: Consumer,
@@ -113,17 +135,36 @@ def test__discover_cluster_with_topic(
         collection_qualified_name=expected_collection.qualified_name,
     )
 
-    expected = [expected_system, expected_collection, expected_dataset]
-
-    discovered = discover_cluster(
+    await create_from_kafka(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
     )
 
-    actual = list(discovered)
+    expected = [
+        entity.convert_to_atlas()
+        for entity in [
+            expected_system,
+            expected_collection,
+            expected_dataset,
+        ]
+    ]
 
-    assert expected == actual, f"Expected {expected} but got {actual}"
+    for entity in expected:
+        # Atlas may not have the entity immediately after creation
+        for attempt in Retrying(
+            stop=stop_after_attempt(10),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+        ):
+            with attempt:
+                actual = await get_entity_by_qualified_name(
+                    entity.attributes.qualified_name,
+                    entity.type_name,
+                )
+
+                assert (
+                    actual is not None
+                ), f"Entity {entity.attributes.qualified_name} not found"
 
 
 @pytest.fixture()
@@ -145,7 +186,8 @@ def avro_name_strategy_topic(
     return kafka_topic
 
 
-def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
+@pytest.mark.asyncio
+async def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
     avro_name_strategy_topic: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
@@ -205,22 +247,37 @@ def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
         ),
     ]
 
-    expected = [
-        expected_system,
-        expected_collection,
-        expected_dataset,
-        *expected_fields,
-    ]
-
-    discovered = discover_cluster(
+    await create_from_kafka(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
     )
 
-    actual = list(discovered)
+    expected = [
+        entity.convert_to_atlas()
+        for entity in [
+            expected_system,
+            expected_collection,
+            expected_dataset,
+            *expected_fields,
+        ]
+    ]
 
-    assert expected == actual, f"Expected {expected} but got {actual}"
+    for entity in expected:
+        # Atlas may not have the entity immediately after creation
+        for attempt in Retrying(
+            stop=stop_after_attempt(10),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+        ):
+            with attempt:
+                actual = await get_entity_by_qualified_name(
+                    entity.attributes.qualified_name,
+                    entity.type_name,
+                )
+
+                assert (
+                    actual is not None
+                ), f"Entity {entity.attributes.qualified_name} not found"
 
 
 @pytest.fixture()
@@ -242,7 +299,8 @@ def json_schema_name_strategy_topic(
     return kafka_topic
 
 
-def test__discover_cluster_with_json_schema_using_topic_name_strategy(
+@pytest.mark.asyncio
+async def test__discover_cluster_with_json_schema_using_topic_name_strategy(
     json_schema_name_strategy_topic: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
@@ -302,22 +360,37 @@ def test__discover_cluster_with_json_schema_using_topic_name_strategy(
         ),
     ]
 
-    expected = [
-        expected_system,
-        expected_collection,
-        expected_dataset,
-        *expected_fields,
-    ]
-
-    discovered = discover_cluster(
+    await create_from_kafka(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
     )
 
-    actual = list(discovered)
+    expected = [
+        entity.convert_to_atlas()
+        for entity in [
+            expected_system,
+            expected_collection,
+            expected_dataset,
+            *expected_fields,
+        ]
+    ]
 
-    assert expected == actual, f"Expected {expected} but got {actual}"
+    for entity in expected:
+        # Atlas may not have the entity immediately after creation
+        for attempt in Retrying(
+            stop=stop_after_attempt(10),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+        ):
+            with attempt:
+                actual = await get_entity_by_qualified_name(
+                    entity.attributes.qualified_name,
+                    entity.type_name,
+                )
+
+                assert (
+                    actual is not None
+                ), f"Entity {entity.attributes.qualified_name} not found"
 
 
 @pytest.fixture(scope="module")
@@ -358,7 +431,8 @@ def avro_topic(
     return kafka_topic
 
 
-def test__discover_cluster_with_topic_and_avro_message(
+@pytest.mark.asyncio
+async def test__discover_cluster_with_topic_and_avro_message(
     avro_topic: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
@@ -418,22 +492,37 @@ def test__discover_cluster_with_topic_and_avro_message(
         ),
     ]
 
-    expected = [
-        expected_system,
-        expected_collection,
-        expected_dataset,
-        *expected_fields,
-    ]
-
-    discovered = discover_cluster(
+    await create_from_kafka(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
     )
 
-    actual = list(discovered)
+    expected = [
+        entity.convert_to_atlas()
+        for entity in [
+            expected_system,
+            expected_collection,
+            expected_dataset,
+            *expected_fields,
+        ]
+    ]
 
-    assert expected == actual, f"Expected {expected} but got {actual}"
+    for entity in expected:
+        # Atlas may not have the entity immediately after creation
+        for attempt in Retrying(
+            stop=stop_after_attempt(10),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+        ):
+            with attempt:
+                actual = await get_entity_by_qualified_name(
+                    entity.attributes.qualified_name,
+                    entity.type_name,
+                )
+
+                assert (
+                    actual is not None
+                ), f"Entity {entity.attributes.qualified_name} not found"
 
 
 @pytest.fixture()
@@ -462,7 +551,8 @@ def json_schema_topic(
     return kafka_topic
 
 
-def test__discover_cluster_with_topic_and_json_schema_message(
+@pytest.mark.asyncio
+async def test__discover_cluster_with_topic_and_json_schema_message(
     json_schema_topic: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
@@ -522,22 +612,37 @@ def test__discover_cluster_with_topic_and_json_schema_message(
         ),
     ]
 
-    expected = [
-        expected_system,
-        expected_collection,
-        expected_dataset,
-        *expected_fields,
-    ]
-
-    discovered = discover_cluster(
+    await create_from_kafka(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
     )
 
-    actual = list(discovered)
+    expected = [
+        entity.convert_to_atlas()
+        for entity in [
+            expected_system,
+            expected_collection,
+            expected_dataset,
+            *expected_fields,
+        ]
+    ]
 
-    assert expected == actual, f"Expected {expected} but got {actual}"
+    for entity in expected:
+        # Atlas may not have the entity immediately after creation
+        for attempt in Retrying(
+            stop=stop_after_attempt(10),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+        ):
+            with attempt:
+                actual = await get_entity_by_qualified_name(
+                    entity.attributes.qualified_name,
+                    entity.type_name,
+                )
+
+                assert (
+                    actual is not None
+                ), f"Entity {entity.attributes.qualified_name} not found"
 
 
 @pytest.fixture()
@@ -559,8 +664,8 @@ def json_topic(
 
     return kafka_topic
 
-
-def test__discover_cluster_with_topic_and_json_message(
+@pytest.mark.asyncio
+async def test__discover_cluster_with_topic_and_json_message(
     json_topic: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
@@ -615,22 +720,37 @@ def test__discover_cluster_with_topic_and_json_message(
         ),
     ]
 
-    expected = [
-        expected_system,
-        expected_collection,
-        expected_dataset,
-        *expected_fields,
-    ]
-
-    discovered = discover_cluster(
+    await create_from_kafka(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
     )
 
-    actual = list(discovered)
+    expected = [
+        entity.convert_to_atlas()
+        for entity in [
+            expected_system,
+            expected_collection,
+            expected_dataset,
+            *expected_fields,
+        ]
+    ]
 
-    assert expected == actual, f"Expected {expected} but got {actual}"
+    for entity in expected:
+        # Atlas may not have the entity immediately after creation
+        for attempt in Retrying(
+            stop=stop_after_attempt(10),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+        ):
+            with attempt:
+                actual = await get_entity_by_qualified_name(
+                    entity.attributes.qualified_name,
+                    entity.type_name,
+                )
+
+                assert (
+                    actual is not None
+                ), f"Entity {entity.attributes.qualified_name} not found"
 
 
 @pytest.fixture()
@@ -651,8 +771,8 @@ def string_topic(
 
     return kafka_topic
 
-
-def test__discover_cluster_with_topic_and_string_message(
+@pytest.mark.asyncio
+async def test__discover_cluster_with_topic_and_string_message(
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
     kafka_consumer: Consumer,
@@ -674,18 +794,33 @@ def test__discover_cluster_with_topic_and_string_message(
         collection_qualified_name=expected_collection.qualified_name,
     )
 
-    expected = [
-        expected_system,
-        expected_collection,
-        expected_dataset,
-    ]
-
-    discovered = discover_cluster(
+    await create_from_kafka(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
     )
 
-    actual = list(discovered)
+    expected = [
+        entity.convert_to_atlas()
+        for entity in [
+            expected_system,
+            expected_collection,
+            expected_dataset,
+        ]
+    ]
 
-    assert expected == actual, f"Expected {expected} but got {actual}"
+    for entity in expected:
+        # Atlas may not have the entity immediately after creation
+        for attempt in Retrying(
+            stop=stop_after_attempt(10),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+        ):
+            with attempt:
+                actual = await get_entity_by_qualified_name(
+                    entity.attributes.qualified_name,
+                    entity.type_name,
+                )
+
+                assert (
+                    actual is not None
+                ), f"Entity {entity.attributes.qualified_name} not found"
