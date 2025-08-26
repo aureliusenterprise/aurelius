@@ -7,12 +7,13 @@ from confluent_kafka.schema_registry import (
     Schema,
     SchemaRegistryClient,
 )
+from m4i_atlas_core import create_entities
 
 from m4i_data_dictionary_io.entities.json import (
     DataField,
     ToAtlasConvertible,
 )
-from m4i_data_dictionary_io.functions.create_from_excel import get_ref_and_push
+from tenacity import Retrying, stop_after_attempt, wait_exponential
 
 from .admin import get_cluster_id, get_external_topic_names
 from .atlas import build_collection, build_dataset, build_system
@@ -104,8 +105,8 @@ async def create_from_kafka(
     admin_client: AdminClient,
     consumer: Union[Consumer, None],
     schema_registry_client: Union[SchemaRegistryClient, None],
-    access_token: str,
     *,
+    access_token: Union[str, None] = None,
     system_name: str = "kafka_system",
 ):
     """Scan a Kafka cluster and create Atlas entities from the discovered topics."""
@@ -115,5 +116,12 @@ async def create_from_kafka(
         schema_registry_client=schema_registry_client,
         system_name=system_name,
     ):
-        atlas_compatible = entity.convert_to_atlas()
-        await get_ref_and_push([atlas_compatible], False, access_token)
+        # Occasionally, the entity may fail to create due to transient issues.
+        for attempt in Retrying(
+            stop=stop_after_attempt(10),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+        ):
+            with attempt:
+                await create_entities(
+                    entity.convert_to_atlas(), access_token=access_token
+                )
