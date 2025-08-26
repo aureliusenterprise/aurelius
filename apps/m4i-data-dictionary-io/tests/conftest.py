@@ -13,7 +13,16 @@ from confluent_kafka.schema_registry import (
 from confluent_kafka.schema_registry.avro import AvroSerializer
 from confluent_kafka.schema_registry.json_schema import JSONSerializer
 from confluent_kafka.serialization import StringSerializer
+from m4i_atlas_core import (
+    ConfigStore,
+    create_type_defs,
+    data_dictionary_entity_types,
+    data_dictionary_types_def,
+    register_atlas_entity_types,
+    m4i_types_def,
+)
 from m4i_data_dictionary_io.testing.models import Envelope
+from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from tenacity import (
     Retrying,
@@ -22,9 +31,12 @@ from tenacity import (
 )
 from testcontainers.compose import DockerCompose
 from testcontainers.core.waiting_utils import wait_container_is_ready
+import pytest_asyncio
 
 
 class Settings(BaseSettings):
+    atlas_username: str
+    atlas_password: SecretStr
     cluster_id: str
     kafka_port: int
 
@@ -53,6 +65,33 @@ def compose() -> Generator[DockerCompose, None, None]:
 @pytest.fixture(scope="session")
 def settings() -> Settings:
     return Settings()  # type: ignore[settings are loaded from the environment]
+
+
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def _init_atlas(compose: DockerCompose, settings: Settings) -> None:
+    """Fixture to initialize the Atlas configuration."""
+    store = ConfigStore.get_instance()
+
+    atlas_host = compose.get_service_host("atlas", 21000)
+    atlas_port = compose.get_service_port("atlas", 21000)
+
+    store.load(
+        {
+            "atlas.server.url": f"http://{atlas_host}:{atlas_port}/api/atlas",
+            "atlas.credentials.username": settings.atlas_username,
+            "atlas.credentials.password": settings.atlas_password.get_secret_value(),
+        }
+    )
+
+    register_atlas_entity_types(data_dictionary_entity_types)
+
+    # Wait for Atlas to be ready
+    for attempt in Retrying(
+        stop=stop_after_attempt(10),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+    ):
+        with attempt:
+            await create_type_defs(data_dictionary_types_def)
 
 
 @pytest.fixture(scope="session")
