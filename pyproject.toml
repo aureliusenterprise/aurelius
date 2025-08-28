@@ -86,6 +86,12 @@ pytest-asyncio = "0.23.7"
 pytest-cov = "5.0.0"
 pytest-sugar = "0.9.7"
 autopep8 = "2.0.2"
+dotenv = "0.9.9"
+pydantic = "2.8.0"
+pydantic-avro = "0.6.5"
+pydantic-settings = "2.6.0"
+tenacity = "8.5.0"
+testcontainers = "3.7.1"
 
 [build-system]
 requires = ["poetry-core==1.1.0"]

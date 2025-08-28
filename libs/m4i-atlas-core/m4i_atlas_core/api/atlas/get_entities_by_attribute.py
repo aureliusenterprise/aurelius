@@ -1,7 +1,5 @@
 from typing import Optional
 
-from aiocache import cached
-
 from ...entities import (FilterCriteria, Operator, SearchParameters,
                          SearchResult)
 from ..core import atlas_post
@@ -9,7 +7,6 @@ from ..core import atlas_post
 PATH = "v2/search/basic"
 
 
-@cached()
 async def get_entities_by_attribute(
     attribute_name: str,
     attribute_value: str,

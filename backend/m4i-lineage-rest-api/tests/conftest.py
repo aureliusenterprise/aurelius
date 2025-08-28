@@ -4,7 +4,9 @@ from m4i_atlas_core.api.atlas import get_entities_by_attribute
 
 from m4i_lineage_rest_api.app import flask_app, init_config
 
-init_config()
+@pytest.fixture(scope="session", autouse=True)
+def _init_config() -> None:
+    init_config()
 
 
 @pytest.fixture
