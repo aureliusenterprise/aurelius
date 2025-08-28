@@ -9,14 +9,14 @@
       "replicatedTo": null,
       "userDescription": null,
       "replicatedFrom": null,
-      "qualifiedName": "eudtc1ebspdb1.vanoord.org--nlhqebsp--xxvo_dm_persons_v--hier_org--45",
+      "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--45",
       "displayName": null,
       "description": null,
       "active": true,
       "source": [],
       "businessRuleDescription": "",
       "ruleDescription": "This field has to be filled at all times",
-      "name": "eudtc1ebspdb1.vanoord.org--nlhqebsp--xxvo_dm_persons_v--hier_org--45",
+      "name": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--45",
       "filterRequired": false,
       "id": 45,
       "qualityDimension": "Completeness",
@@ -26,7 +26,7 @@
           "guid": "c1c9216e-8ba6-417a-a45e-2d34782fe429",
           "typeName": "m4i_field",
           "uniqueAttributes": {
-            "qualifiedName": "eudtc1ebspdb1.vanoord.org--nlhqebsp--xxvo_dm_persons_v--hier_org"
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org"
           }
         }
       ]

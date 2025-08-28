@@ -25,7 +25,7 @@ data_field_attributes_def = [
         name="fieldType",
         type_name="string",
         description="The classification of the data type of the field",
-        display_name="Field Type"
+        display_name="Data Type"
     ),
     AttributeDef(
         name="hasContent",
