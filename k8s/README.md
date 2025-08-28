@@ -263,6 +263,25 @@ There is a daily job `data-quality-propagation` which propagates the data qualit
 kubectl create job --from=cronjob/data-quality-propagation data-quality-propagation -n <namespace>
 ```
 
+## Onboard Kafka sources
+
+To run onboard Kafka sources, youn need to config k8s/values.yaml and provide kafka and schema-registry ulrs (update release if it was alredy deployed)
+
+```yaml
+onboard_sources:
+  source: kafka
+  bootstrap_servers: "kafka:9092"
+  schema_registry_url: "http://schema-registry:8081"
+```
+
+then you need to apply `k8s/templates/onboard-sources.yaml`
+
+```bash
+helm template -s templates/onboard-sources.yaml . --namespace <namespace> | kubectl apply -f - -n <namespace>
+```
+
+In this case you will see Kafka metadata in Aurelius Atlas.
+
 ## Add user registration option
 
 ### Allow user registration
