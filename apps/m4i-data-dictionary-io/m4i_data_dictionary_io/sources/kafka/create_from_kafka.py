@@ -46,9 +46,9 @@ def parse_schema(
 
 def discover_cluster(
     admin_client: AdminClient,
-    consumer: Union[Consumer, None],
-    schema_registry_client: Union[SchemaRegistryClient, None],
     *,
+    consumer: Union[Consumer, None] = None,
+    schema_registry_client: Union[SchemaRegistryClient, None] = None,
     system_name: str = "kafka_system",
 ) -> Generator[ToAtlasConvertible, None, None]:
     """Main function to execute the Kafka topic message consumption process."""
@@ -103,9 +103,9 @@ def discover_cluster(
 
 async def create_from_kafka(
     admin_client: AdminClient,
-    consumer: Union[Consumer, None],
-    schema_registry_client: Union[SchemaRegistryClient, None],
     *,
+    consumer: Union[Consumer, None] = None,
+    schema_registry_client: Union[SchemaRegistryClient, None] = None,
     access_token: Union[str, None] = None,
     system_name: str = "kafka_system",
 ):
