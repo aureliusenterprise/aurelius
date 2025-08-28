@@ -1,77 +1,127 @@
-from typing import List
-from m4i_atlas_core.config.config_store import ConfigStore
-from m4i_data_dictionary_io.entities.json import Collection, DataField, Dataset, Source, System
-from m4i_data_dictionary_io.functions.create_from_excel import get_ref_and_push
-from m4i_data_dictionary_io.entities.json import get_qualified_name
-from m4i_data_dictionary_io.sources.kafka.discover_cluster import discover_cluster
+import logging
+from typing import Callable, Dict, Generator, Union
+
+from confluent_kafka import Consumer
+from confluent_kafka.admin import AdminClient
+from confluent_kafka.schema_registry import (
+    Schema,
+    SchemaRegistryClient,
+)
+from m4i_atlas_core import create_entities
+
+from m4i_data_dictionary_io.entities.json import (
+    DataField,
+    ToAtlasConvertible,
+)
+from tenacity import Retrying, stop_after_attempt, wait_exponential
+
+from .admin import get_cluster_id, get_external_topic_names
+from .atlas import build_collection, build_dataset, build_system
+from .avro import parse_avro_schema
+from .consumer import consume_message
+from .json_schema import parse_json_schema
+from .payload import parse_payload
+from .schema_registry import get_message_schema, get_topic_schema
+
+Parser = Callable[[str, str], Generator[DataField, None, None]]
+
+SCHEMA_PARSERS: Dict[str, Parser] = {
+    "avro": parse_avro_schema,
+    "json": parse_json_schema,
+}
 
 
-def create_source(name: str) -> Source:
-  return Source.from_dict({
-    "name": name,
-    "qualifiedName": name
-  })
+def parse_schema(
+    schema: Schema,
+    dataset_qualified_name: str,
+) -> Generator[DataField, None, None]:
+    """Parse a schema and yield DataField instances."""
+    if schema.schema_type.lower() not in SCHEMA_PARSERS:
+        logging.error(f"No parser found for schema type: {schema.schema_type}")
+        return
 
-def create_system(name: str, qualified_name: str) -> System:
-  return System.from_dict({
-    "name": name,
-    "qualifiedName": qualified_name
-  })
+    parser = SCHEMA_PARSERS[schema.schema_type.lower()]
+    yield from parser(schema.schema_str, dataset_qualified_name)
 
-def create_collection(name: str, system_qualified_name: str, qualified_name: str) -> Collection:
-  return Collection.from_dict({
-    "name": name,
-    "system": system_qualified_name,
-    "qualifiedName": qualified_name,
-  })
 
-def process_topic(item, collection_qualified_name: str) -> List:
-  """Process each topic by creating dataset and field instances."""
+def discover_cluster(
+    admin_client: AdminClient,
+    *,
+    consumer: Union[Consumer, None] = None,
+    schema_registry_client: Union[SchemaRegistryClient, None] = None,
+    system_name: str = "kafka_system",
+) -> Generator[ToAtlasConvertible, None, None]:
+    """Main function to execute the Kafka topic message consumption process."""
+    system = build_system(system_name)
 
-  elements = []
+    yield system
 
-  dataset_qualified_name = collection_qualified_name + "--" + get_qualified_name(item["name"])
-  # Create topic
-  elements.append(Dataset.from_dict({
-    "name": item["name"],
-    "collection": collection_qualified_name,
-    "qualifiedName": dataset_qualified_name,
-  }))
+    cluster_id = get_cluster_id(admin_client)
 
-  for field in item["fields"]:
-    elements.append(process_field(field, dataset_qualified_name))
+    collection = build_collection(
+        cluster_id or "kafka_collection", system.qualified_name
+    )
 
-  return elements
+    yield collection
 
-def process_field(field: str, dataset_qualified_name: str) -> DataField:
-  qualified_name = get_qualified_name(field)
+    topics = get_external_topic_names(admin_client)
 
-  return DataField.from_dict({
-      "name": field,
-      "dataset": dataset_qualified_name,
-      "qualifiedName": dataset_qualified_name + "--" + qualified_name,
-      "fieldType": "numeric",
-    })
+    for topic in topics:
+        dataset = build_dataset(
+            topic,
+            collection.qualified_name,
+        )
 
-async def create_from_kafka(access_token: str, store: ConfigStore):
+        yield dataset
 
-  # Fetch data from kafka
-  data = discover_cluster(store)
-  # Create Source, System and Collection
-  instances = []
-  system_qualified_name = store.get("system_qualified_name")
-  collection_qualified_name = store.get("collection_qualified_name")
+        # Attempt to retrieve a schema for the topic from the Schema Registry
+        schema = (
+            get_topic_schema(topic, schema_registry_client)
+            if schema_registry_client
+            else None
+        )
 
-  instances.append(create_source(store.get("data.dictionary.path")))
+        data = consume_message(topic, consumer) if consumer and not schema else None
 
-  instances.append(create_system(store.get("system_name"), store.get("system_qualified_name")))
+        if data and schema_registry_client and not schema:
+            schema = get_message_schema(data, schema_registry_client)
 
-  instances.append(create_collection(store.get("collection_name"), system_qualified_name, collection_qualified_name))
+        # Parse the schema if available
+        if schema:
+            yield from parse_schema(
+                schema,
+                dataset.qualified_name,
+            )
 
-  # Iterate over topics and fields
-  for item in data:
-    instances += process_topic(item, collection_qualified_name)
+        # If no schema is found, but data is available, parse the payload
+        elif data:
+            yield from parse_payload(
+                data.decode("utf-8"),
+                dataset.qualified_name,
+            )
 
-  for i in instances:
-    atlas_compatible = i.convert_to_atlas()
-    await get_ref_and_push([atlas_compatible], False, access_token)
+
+async def create_from_kafka(
+    admin_client: AdminClient,
+    *,
+    consumer: Union[Consumer, None] = None,
+    schema_registry_client: Union[SchemaRegistryClient, None] = None,
+    access_token: Union[str, None] = None,
+    system_name: str = "kafka_system",
+):
+    """Scan a Kafka cluster and create Atlas entities from the discovered topics."""
+    for entity in discover_cluster(
+        admin_client=admin_client,
+        consumer=consumer,
+        schema_registry_client=schema_registry_client,
+        system_name=system_name,
+    ):
+        # Occasionally, the entity may fail to create due to transient issues.
+        for attempt in Retrying(
+            stop=stop_after_attempt(10),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+        ):
+            with attempt:
+                await create_entities(
+                    entity.convert_to_atlas(), access_token=access_token
+                )

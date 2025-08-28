@@ -1,8 +1,5 @@
 import pytest
-from m4i_atlas_core import ConfigStore
 
-from config import config
-from credentials import credentials
 from ..exceptions import QualifiedNameNotValidException
 from .DataAttribute import DataAttribute
 
