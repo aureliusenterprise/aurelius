@@ -3,7 +3,7 @@
   *ngIf="validationResults$ | async as rules"
 >
   <div class="field">
-    <label class="label">Name</label>
+    <label class="label">Name*</label>
     <div class="grid">
       <div class="control">
         <input
@@ -31,20 +31,21 @@
     </ng-container>
   </div>
 
+
   <div class="field">
-    <label class="label">Description</label>
+    <label class="label">Rule Description</label>
     <div class="grid">
       <div class="control">
         <textarea
-          id="description"
+          id="ruleDescription"
           name="description"
           class="textarea"
           placeholder="Description"
-          [formControl]="description"
-          [class.is-warning]="rules?.definition?.isNonCompliant"
+          [formControl]="ruleDescription"
+          [class.is-warning]="rules?.ruleDescription?.isNonCompliant"
         ></textarea>
       </div>
-      <ng-container *ngIf="rules.definition as rules">
+      <ng-container *ngIf="rules.ruleDescription as rules">
         <models4insight-gov-quality-display
           [rules]="rules"
           class="is-size-7"
@@ -170,7 +171,7 @@
   </div>
 
   <div class="field">
-    <label class="label">Expression</label>
+    <label class="label">Expression*</label>
     <div class="grid">
       <div class="control">
         <textarea
@@ -199,5 +200,15 @@
         Expression is required.
       </p>
     </ng-container>
+  </div>
+
+  <div class="field">
+    <div class="grid">
+      <ng-container *ngIf="editorFormService.form.invalid && editorFormService.form.touched">
+        <div class="notification is-danger is-light mb-4">
+          <p><strong>This entity can't be saved because one or more required fields are missing.</strong></p>
+        </div>
+      </ng-container>
+    </div>
   </div>
 </ng-container>
