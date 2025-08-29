@@ -30,11 +30,7 @@
       "executor": "@nxlv/python:ruff-check",
       "outputs": [],
       "options": {
-        "lintFilePatterns": [
-          "m4i_atlas_post_install",
-          "tests",
-          "scripts"
-        ]
+        "lintFilePatterns": ["m4i_atlas_post_install", "tests", "scripts"]
       }
     },
     "serve": {
@@ -57,11 +53,14 @@
           "params": "forward"
         }
       ],
-      "command": "docker build . -f {projectRoot}/Dockerfile -t {projectName}:latest",
+      "command": "docker build -f {projectRoot}/Dockerfile . -t {args.namespace}/{args.tag}:{args.version}",
       "options": {
         "env": {
           "DOCKER_BUILDKIT": "1"
-        }
+        },
+        "namespace": "aureliusenterprise",
+        "tag": "{projectName}",
+        "version": "latest"
       }
     },
     "docker-publish": {

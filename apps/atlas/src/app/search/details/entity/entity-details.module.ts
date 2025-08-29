@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { AccordionModule } from '@models4insight/components';
 import { DataQualityListModule } from '../../components/data-quality-list/data-quality-list.module';
 import { DescriptionModule } from '../../components/description/description.module';
 import { PeopleModule } from '../../components/people/people.module';
@@ -21,7 +22,8 @@ import { EntityDetailsComponent } from './entity-details.component';
     DetailsNavigationModule,
     GovernanceQualityCardsModule,
     PeopleModule,
-    PropertiesModule
+    PropertiesModule,
+    AccordionModule
   ],
   declarations: [
     AttributesCardsComponent,

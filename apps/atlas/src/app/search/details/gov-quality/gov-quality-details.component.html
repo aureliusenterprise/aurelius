@@ -67,9 +67,15 @@
   <models4insight-compliant-cards></models4insight-compliant-cards>
 </div>
 
-<div id="properties-details" class="box">
-  <h3 class="title is-3">Properties</h3>
-  <models4insight-properties></models4insight-properties>
+<div id="properties-details">
+  <models4insight-accordion>
+    <ng-container header>
+      <h3 class="title is-3">Properties</h3>
+    </ng-container>
+    <ng-container content>
+      <models4insight-properties></models4insight-properties>
+    </ng-container>
+  </models4insight-accordion>
 </div>
 
 <models4insight-details-navigation>

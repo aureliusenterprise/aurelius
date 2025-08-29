@@ -262,6 +262,7 @@ There is a daily job `data-quality-propagation` which propagates the data qualit
 ```
 kubectl create job --from=cronjob/data-quality-propagation data-quality-propagation -n <namespace>
 ```
+
 ## Onboard Kafka sources
 
 To run onboard Kafka sources, youn need to config k8s/values.yaml and provide kafka and schema-registry ulrs (update release if it was alredy deployed)
@@ -280,3 +281,13 @@ helm template -s templates/onboard-sources.yaml . --namespace <namespace> | kube
 ```
 
 In this case you will see Kafka metadata in Aurelius Atlas.
+
+## Add user registration option
+
+### Allow user registration
+
+Login as admin user to admin console in Keycloak. In **Login** tab of realm settings turn on **User refistration** option (and **Verify email** if want to verify email too).
+
+### Set email verification
+
+Login as admin user to admin console in Keycloak. In **Login** tab of realm settings turn on **Verify email** option. In **Email** tab fill email and smtp settings. Notice that admin user should have an email to **Test connection** button would work.

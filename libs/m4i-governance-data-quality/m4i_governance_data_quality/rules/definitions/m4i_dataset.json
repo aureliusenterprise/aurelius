@@ -2,7 +2,7 @@
   {
     "id": 1,
     "expressionVersion": 1,
-    "expression": "length('name', 1)",
+    "expression": "completeness('name')",
     "qualifiedName": "m4i_dataset--name",
     "qualityDimension": "completeness",
     "ruleTitle": "Dataset has a name",
@@ -44,7 +44,7 @@
   {
     "id": 4,
     "expressionVersion": 1,
-    "expression": "length('definition', 1)",
+    "expression": "completeness('definition')",
     "qualifiedName": "m4i_dataset--definition",
     "qualityDimension": "completeness",
     "ruleTitle": "Dataset has a definition",

@@ -6,6 +6,7 @@ from avro.schema import (
     RecordSchema,
     UnionSchema,
     PrimitiveSchema,
+    NamedSchema,
 )
 from confluent_kafka.avro import loads
 
@@ -32,8 +33,10 @@ def _parse_type_name(
         return f"map<{_parse_type_name(schema.values)}>"
     elif isinstance(schema, ArraySchema):
         return f"array<{_parse_type_name(schema.items)}>"
+    elif isinstance(schema, NamedSchema):
+        return schema.name or schema.type  # Fallback to type if name is not present
     else:
-        return schema.name
+        return schema.type
 
 
 def _parse_avro_schema(
