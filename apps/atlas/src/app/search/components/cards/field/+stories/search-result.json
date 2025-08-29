@@ -20,11 +20,11 @@
   "derivedcollection": { "raw": ["NLHQEBSP"] },
   "dqscorecnt_accuracy": { "raw": 1.0 },
   "dqscore_validity": { "raw": 0.0 },
-  "derivedsystem": { "raw": ["eudtc1-ebsp-db1.vanoord.org"] },
+  "derivedsystem": { "raw": ["eudtc1-ebsp-db1.stratonis_group.org"] },
   "deriveddataset": { "raw": ["xxvo_dm_persons_v"] },
   "dqscore_uniqueness": { "raw": 0.0 },
   "breadcrumbname": {
-    "raw": ["eudtc1-ebsp-db1.vanoord.org", "NLHQEBSP", "xxvo_dm_persons_v"]
+    "raw": ["eudtc1-ebsp-db1.stratonis_group.org", "NLHQEBSP", "xxvo_dm_persons_v"]
   },
   "dqscorecnt_completeness": { "raw": 1.0 },
   "breadcrumbguid": {

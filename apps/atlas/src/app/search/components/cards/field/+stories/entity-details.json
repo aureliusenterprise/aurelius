@@ -8,14 +8,14 @@
       "replicatedFrom": null,
       "hasContent": null,
       "steward": [],
-      "qualifiedName": "eudtc1ebspdb1.vanoord.org--nlhqebsp--xxvo_dm_persons_v--hier_org",
+      "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org",
       "source": [],
       "datasets": [
         {
           "guid": "ac43827a-a5fc-4a7e-9b58-b997d848ffc4",
           "typeName": "m4i_dataset",
           "uniqueAttributes": {
-            "qualifiedName": "eudtc1ebspdb1.vanoord.org--nlhqebsp--xxvo_dm_persons_v"
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v"
           }
         }
       ],
@@ -65,7 +65,7 @@
           "guid": "0547eed2-9d1c-4d10-a667-e03a3a4a669f",
           "typeName": "m4i_data_quality",
           "entityStatus": "ACTIVE",
-          "displayText": "eudtc1ebspdb1.vanoord.org--nlhqebsp--xxvo_dm_persons_v--hier_org--46",
+          "displayText": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--46",
           "relationshipType": "m4i_data_quality_field_assignment",
           "relationshipGuid": "bb5d067a-0b10-45f2-882b-c634a9107ef7",
           "relationshipStatus": "ACTIVE",
@@ -77,7 +77,7 @@
           "guid": "8e41b1b0-f9c2-472d-85b7-9b9bce1bd6e7",
           "typeName": "m4i_data_quality",
           "entityStatus": "ACTIVE",
-          "displayText": "eudtc1ebspdb1.vanoord.org--nlhqebsp--xxvo_dm_persons_v--hier_org--47",
+          "displayText": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--47",
           "relationshipType": "m4i_data_quality_field_assignment",
           "relationshipGuid": "23e6fb71-f1dc-40e6-9016-f8d044c2ea23",
           "relationshipStatus": "ACTIVE",
@@ -89,7 +89,7 @@
           "guid": "c90e57ff-204d-45c0-8b1b-593cfb6e3146",
           "typeName": "m4i_data_quality",
           "entityStatus": "ACTIVE",
-          "displayText": "eudtc1ebspdb1.vanoord.org--nlhqebsp--xxvo_dm_persons_v--hier_org--45",
+          "displayText": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp--xxvo_dm_persons_v--hier_org--45",
           "relationshipType": "m4i_data_quality_field_assignment",
           "relationshipGuid": "18d2409f-800c-4a7f-8ab4-bfc851eb45f3",
           "relationshipStatus": "ACTIVE",

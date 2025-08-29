@@ -2,7 +2,7 @@
   {
     "id": 1,
     "expressionVersion": 1,
-    "expression": "length('name', 1)",
+    "expression": "completeness('name')",
     "qualifiedName": "m4i_data_entity--name",
     "qualityDimension": "completeness",
     "ruleTitle": "Data entity has a name",
@@ -16,7 +16,7 @@
   {
     "id": 2,
     "expressionVersion": 1,
-    "expression": "length('definition', 1)",
+    "expression": "completeness('definition')",
     "qualifiedName": "m4i_data_entity--definition",
     "qualityDimension": "completeness",
     "ruleTitle": "Data entity has a definition",
@@ -47,10 +47,10 @@
     "expression": "length('businessOwner', 1)",
     "qualifiedName": "m4i_data_entity--businessOwner",
     "qualityDimension": "completeness",
-    "ruleTitle": "Data entity has a business owner",
-    "ruleDescription": "A data entity should have at least one business owner",
-    "compliantMessage": "This data entity has at least one business owner",
-    "noncompliantMessage": "This data entity should have at least one business owner",
+    "ruleTitle": "Data entity has a data owner",
+    "ruleDescription": "A data entity should have at least one data owner",
+    "compliantMessage": "This data entity has at least one data owner",
+    "noncompliantMessage": "This data entity should have at least one data owner",
     "active": 1,
     "type": "relationship",
     "guid": "9f013cff-c2ea-4056-9a49-8f0cadd2c614"

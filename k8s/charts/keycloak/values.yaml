@@ -26,7 +26,7 @@ env:
 keycloakFrontendURL: "https://aureliusdev.westeurope.cloudapp.azure.com/"
 
 # ingress object
-#host: equipment2.nxtgen-dev.vanoord.com
+#host: equipment2.nxtgen-dev.stratonis_group.com
 
 ## Realm
 realm_file_name: "realm_m4i.json"

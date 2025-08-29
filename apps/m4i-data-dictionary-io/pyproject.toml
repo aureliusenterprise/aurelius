@@ -18,6 +18,7 @@ openpyxl = "^3.1.5"
 confluent-kafka = "~2.6.0"
 urllib3="1.26.2"
 apache-flink = "~1.17"
+tenacity = "8.5.0"
 
 [tool.poetry.dependencies.m4i-atlas-core]
 path = "../../libs/m4i-atlas-core"

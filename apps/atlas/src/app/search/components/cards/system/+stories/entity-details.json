@@ -13,12 +13,12 @@
           "guid": "58becc63-3ded-4f07-8a13-c9602070652a",
           "typeName": "m4i_collection",
           "uniqueAttributes": {
-            "qualifiedName": "eudtc1ebspdb1.vanoord.org--nlhqebsp"
+            "qualifiedName": "eudtc1ebspdb1.stratonis_group.org--nlhqebsp"
           }
         }
       ],
-      "qualifiedName": "eudtc1ebspdb1.vanoord.org",
-      "name": "eudtc1-ebsp-db1.vanoord.org",
+      "qualifiedName": "eudtc1ebspdb1.stratonis_group.org",
+      "name": "eudtc1-ebsp-db1.stratonis_group.org",
       "definition": null,
       "source": []
     },
