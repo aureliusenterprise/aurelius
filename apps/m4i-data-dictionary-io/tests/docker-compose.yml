@@ -7,7 +7,11 @@ services:
     ports:
       - 21000
     healthcheck:
-      test: ['CMD-SHELL', 'wget http://localhost:21000']
+      test:
+        [
+          'CMD-SHELL',
+          'wget http://localhost:21000 --http-user ${ATLAS_USERNAME} --http-password ${ATLAS_PASSWORD} --auth-no-challenge',
+        ]
       interval: 10s
       timeout: 5s
       retries: 120
@@ -55,7 +59,7 @@ services:
       test:
         [
           'CMD',
-          'curl', 
+          'curl',
           '--output',
           '/dev/null',
           '--silent',
