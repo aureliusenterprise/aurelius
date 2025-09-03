@@ -17,7 +17,7 @@ def read_data_from_dictionary(config: ExcelParserConfig) -> Iterable[dict]:
         sheet_name=config.sheet_name,
         usecols=config.column_mapping,
         keep_default_na=False,
-    )
+    ) # pyright: ignore[reportCallIssue]
 
     data: DataFrame = (
         sheet
