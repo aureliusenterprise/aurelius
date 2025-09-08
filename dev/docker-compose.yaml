@@ -1,0 +1,116 @@
+name: aurelius-dev
+
+services:
+
+  atlas:
+    build:
+      context: ../docker/apache-atlas
+      dockerfile: Dockerfile
+    depends_on:
+      broker:
+        condition: service_healthy
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - 21000:21000
+    volumes:
+      - atlas-data:/apache-atlas/data
+
+  broker:
+    image: apache/kafka:latest
+    environment:
+      CLUSTER_ID: ${CLUSTER_ID}
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://broker:9094,CONTROLLER://broker:9093,LOCAL://broker:${KAFKA_PORT}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9094,LOCAL://localhost:${KAFKA_PORT}
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,LOCAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 3
+      KAFKA_MESSAGE_MAX_BYTES: 10000000
+      KAFKA_SOCKET_REQUEST_MAX_BYTES: 100001200
+    ports:
+      - ${KAFKA_PORT}:${KAFKA_PORT}
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    healthcheck:
+      test: /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server broker:9094 || exit 1
+      interval: 1s
+      timeout: 60s
+      retries: 60
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:16.1.1
+    environment:
+      ATLAS_USERNAME: $ATLAS_USERNAME
+      ATLAS_PASSWORD: $ATLAS_PASSWORD
+      KEYCLOAK_IMPORT: '/tmp/keycloak-config/atlas-dev.json'
+      KEYCLOAK_PASSWORD: $KEYCLOAK_PASSWORD
+      KEYCLOAK_PORT: 8180
+      KEYCLOAK_REALM_NAME: 'atlas-dev'
+      KEYCLOAK_USER: $KEYCLOAK_USER
+    volumes:
+      - keycloak-data:/opt/jboss/keycloak/standalone/data
+    configs:
+      - source: keycloak-config
+        target: /opt/jboss/keycloak/standalone/configuration/standalone.xml
+      - source: keycloak-realm
+        target: /tmp/keycloak-config/atlas-dev.json
+    ports:
+      - 8180:8180
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      '
+      /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -bmanagement 0.0.0.0 -Djboss.http.port=8180 2>&1 &
+      while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' curl -X GET http://localhost:8180/ | tail -c 3)" != "200" ]]; do
+          echo "Waiting for Keycloak to start on port 8180...";
+          sleep 5;
+      done;
+      sleep 5;
+      /opt/jboss/keycloak/bin/kcadm.sh config credentials --server "http://localhost:8180/auth" --realm master --user $KEYCLOAK_USER --password $KEYCLOAK_PASSWORD;
+      /opt/jboss/keycloak/bin/kcadm.sh create users -r atlas-dev -s username=$ATLAS_USERNAME -s enabled=true;
+      /opt/jboss/keycloak/bin/kcadm.sh add-roles -r atlas-dev --uusername $ATLAS_USERNAME --rolename ROLE_ADMIN;
+      /opt/jboss/keycloak/bin/kcadm.sh add-roles -r atlas-dev --uusername $ATLAS_USERNAME --rolename DATA_STEWARD;
+      /opt/jboss/keycloak/bin/kcadm.sh set-password -r atlas-dev --username $ATLAS_USERNAME --new-password $ATLAS_PASSWORD;
+      echo "$ATLAS_USERNAME user created.";
+      tail -f /dev/null
+      '
+
+  zookeeper:
+    image: zookeeper:3.8
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181
+    ports:
+      - 2181:2181
+    healthcheck:
+      test: nc -z localhost 2181 || exit -1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+configs:
+  atlas-application:
+    file: ./atlas/atlas-application.properties
+  atlas-simple-authz-policy:
+    file: ./apache-atlas/atlas-simple-authz-policy.json
+  atlas-keycloak-conf:
+    file: ./apache-atlas/keycloak-conf.json
+  keycloak-config:
+    file: ./keycloak/settings/standalone.xml
+  keycloak-realm:
+    file: ./keycloak/realms/atlas-dev.json
+
+volumes:
+  atlas-data:
+  kafka-data:
+  keycloak-data:
