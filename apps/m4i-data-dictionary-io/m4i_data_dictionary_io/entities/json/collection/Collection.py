@@ -52,13 +52,8 @@ class Collection(
         Returns a corresponding Atlas `BusinessCollection` instance.
         """
 
-        # Skip collections with empty system names
-        if not self.system or self.system.strip() == '':
-            print(f"SKIPPING COLLECTION: name='{self.name}', system='{self.system}'")
-            return None  # or skip this collection entirely
-
         unique_attributes = M4IAttributes(
-            qualified_name=self.system
+            qualified_name=self.system if self.system and self.system.strip() else 'unknown-system'
         )
 
         system = ObjectId(
@@ -66,7 +61,6 @@ class Collection(
             unique_attributes=unique_attributes
         )
 
-        print(system)
         attributes = BusinessCollectionAttributes(
             definition=self.definition,
             name=self.name,
