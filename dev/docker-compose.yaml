@@ -6,10 +6,15 @@ services:
     build:
       context: ../docker/apache-atlas
       dockerfile: Dockerfile
+    configs:
+      - source: atlas-application
+        target: /apache-atlas/conf/atlas-application.properties
+      - source: atlas-simple-authz-policy
+        target: /apache-atlas/conf/atlas-simple-authz-policy.json
+      - source: atlas-keycloak-conf
+        target: /apache-atlas/conf/keycloak-conf.json
     depends_on:
       broker:
-        condition: service_healthy
-      zookeeper:
         condition: service_healthy
     ports:
       - 21000:21000
@@ -77,34 +82,20 @@ services:
       sleep 5;
       /opt/jboss/keycloak/bin/kcadm.sh config credentials --server "http://localhost:8180/auth" --realm master --user $KEYCLOAK_USER --password $KEYCLOAK_PASSWORD;
       /opt/jboss/keycloak/bin/kcadm.sh create users -r atlas-dev -s username=$ATLAS_USERNAME -s enabled=true;
-      /opt/jboss/keycloak/bin/kcadm.sh add-roles -r atlas-dev --uusername $ATLAS_USERNAME --rolename ROLE_ADMIN;
-      /opt/jboss/keycloak/bin/kcadm.sh add-roles -r atlas-dev --uusername $ATLAS_USERNAME --rolename DATA_STEWARD;
+      /opt/jboss/keycloak/bin/kcadm.sh add-roles -r atlas-dev --username $ATLAS_USERNAME --rolename ROLE_ADMIN;
+      /opt/jboss/keycloak/bin/kcadm.sh add-roles -r atlas-dev --username $ATLAS_USERNAME --rolename DATA_STEWARD;
       /opt/jboss/keycloak/bin/kcadm.sh set-password -r atlas-dev --username $ATLAS_USERNAME --new-password $ATLAS_PASSWORD;
       echo "$ATLAS_USERNAME user created.";
       tail -f /dev/null
       '
 
-  zookeeper:
-    image: zookeeper:3.8
-    environment:
-      ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=zoo1:2888:3888;2181
-    ports:
-      - 2181:2181
-    healthcheck:
-      test: nc -z localhost 2181 || exit -1
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    restart: unless-stopped
-
 configs:
   atlas-application:
     file: ./atlas/atlas-application.properties
   atlas-simple-authz-policy:
-    file: ./apache-atlas/atlas-simple-authz-policy.json
+    file: ./atlas/atlas-simple-authz-policy.json
   atlas-keycloak-conf:
-    file: ./apache-atlas/keycloak-conf.json
+    file: ./atlas/keycloak-conf.json
   keycloak-config:
     file: ./keycloak/settings/standalone.xml
   keycloak-realm:

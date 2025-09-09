@@ -39,15 +39,14 @@ ENV MAVEN_OPTS="-Xms2g -Xmx2g"
 RUN mvn clean install -DskipTests && \
     mvn clean -DskipTests package -Pdist,embedded-hbase-solr
 
-# Extract the built Apache Atlas server
-WORKDIR /tmp/apache-atlas
+# Extract the built Apache Atlas components
+WORKDIR /atlas-bin
 
-RUN tar -xzvf /build/apache-atlas-sources-${APACHE_ATLAS_VERSION}/distro/target/apache-atlas-${APACHE_ATLAS_VERSION}-server.tar.gz
+RUN tar xzf /build/apache-atlas-sources-${APACHE_ATLAS_VERSION}/distro/target/*bin.tar.gz --strip-components 1 -C ./
 
 # Runtime image for Apache Atlas
 FROM eclipse-temurin:${JAVA_VERSION}-jdk-noble AS runtime
 
-ARG APACHE_ATLAS_VERSION
 ARG PYTHON_VERSION
 
 # Add a non-root user for security
@@ -68,10 +67,13 @@ USER atlas
 # Copy Apache Atlas files
 WORKDIR /apache-atlas
 
-COPY --chown=atlas:atlas --chmod=0755 --from=build /tmp/apache-atlas/apache-atlas-${APACHE_ATLAS_VERSION} ./
+COPY --chown=atlas:atlas --chmod=0777 --from=build /atlas-bin ./
 
 # Create the data folder with appropriate permissions
 RUN mkdir -p data && chown atlas:atlas data && chmod 700 data
 
+# Set environment variables
+ENV PATH=/apache-atlas/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 # Start up Apache Atlas and keep the container running
-CMD bin/atlas_start.py && sleep infinity
+CMD ["/bin/bash", "-c", "/apache-atlas/bin/atlas_start.py; tail -fF -n +1 /apache-atlas/logs/application.log"]
