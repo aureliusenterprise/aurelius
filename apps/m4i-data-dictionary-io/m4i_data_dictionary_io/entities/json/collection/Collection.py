@@ -53,7 +53,7 @@ class Collection(
         """
 
         unique_attributes = M4IAttributes(
-            qualified_name=self.system if self.system and self.system.strip() else 'unknown-system'
+            qualified_name=self.system
         )
 
         system = ObjectId(

@@ -36,7 +36,7 @@ config = {
     "keycloak.realm.name": os.environ.get("KEYCLOAK_REALM_NAME", "m4i"),
     "keycloak.client.secret.key": os.environ.get("KEYCLOAK_CLIENT_SECRET_KEY"),
     "keycloak.server.url": os.environ.get("KEYCLOAK_SERVER_URL"),
-    "data.dictionary.path": "/workspace/k8s/Final_Bravilor_data_dictionary.xlsm",
+    "data.dictionary.path": os.getenv("DATA_DICTIONARY_PATH"),
     "validate_qualified_name": os.getenv("VALIDATE_QUALIFIED_NAME", False),
     "source": os.getenv("SOURCE", "excel"),
     "bootstrap_servers": os.getenv("BOOTSTRAP_SERVERS"),
