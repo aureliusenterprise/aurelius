@@ -6,6 +6,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "~3.8"
+avro-python3 = "==1.10.2"
 
 [tool.poetry.dependencies.data2model]
 path = "backend/m4i-data2model"
