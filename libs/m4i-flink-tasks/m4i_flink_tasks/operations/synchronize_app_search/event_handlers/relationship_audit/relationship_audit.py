@@ -52,7 +52,7 @@ class EntityDataNotProvidedError(SynchronizeAppSearchError):
 
 
 @retry(retry_strategy=ExponentialBackoff())
-def get_current_document(guid: str, elastic: Elasticsearch, index_name: str) -> AppSearchDocument:
+def get_document(guid: str, elastic: Elasticsearch, index_name: str) -> AppSearchDocument:
     """
     Get the document representing the entity with the given id from the Elasticsearch index.
 
@@ -333,7 +333,7 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
 
     # delete immediate children relation
     for child_guid in immediate_children:
-        child_document = updated_documents[child_guid]
+        child_document = updated_documents[child_guid] if child_guid in updated_documents else get_document(child_guid, elastic, index_name)
 
         logging.info("Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid)
 
@@ -639,7 +639,7 @@ def handle_relationship_audit(
     if message.guid in updated_documents:
         document = updated_documents[message.guid]
     else:
-        document = get_current_document(message.guid, elastic, index_name)
+        document = get_document(message.guid, elastic, index_name)
 
     updated_documents = handle_deleted_relationships(
         message,
