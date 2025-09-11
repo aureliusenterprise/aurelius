@@ -333,8 +333,12 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
 
     # delete immediate children relation
     for child_guid in immediate_children:
-        child_document = updated_documents[child_guid] if child_guid in updated_documents else get_document(child_guid, elastic, index_name)
-
+        try:
+            child_document = updated_documents[child_guid] if child_guid in updated_documents else get_document(child_guid, elastic, index_name)
+        except AppSearchDocumentNotFoundError:
+            logging.error("Immediate child document not found %s", child_guid)
+            continue
+        
         logging.info("Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid)
 
         # Query guarantees that the breadcrumb includes the guid.
@@ -493,31 +497,34 @@ def handle_inserted_relationships(  # noqa: C901, PLR0912, PLR0915
     first_parent = next(iter(parents)) if parents else None
 
     if first_parent in inserted_relationships:
-        parent_doc = updated_documents[first_parent]
+        try:
+            parent_doc = updated_documents[first_parent] if first_parent in updated_documents else get_document(first_parent, elastic, index_name)
+        except AppSearchDocumentNotFoundError:
+            logging.error("Parent document not found %s", first_parent)
+        else:
+            if parent_doc.guid not in document.breadcrumbguid:
+                document.breadcrumbname = [
+                    *parent_doc.breadcrumbname,
+                    parent_doc.name,
+                ]
+                document.breadcrumbguid = [
+                    *parent_doc.breadcrumbguid,
+                    parent_doc.guid,
+                ]
+                document.breadcrumbtype = [
+                    *parent_doc.breadcrumbtype,
+                    parent_doc.typename,
+                ]
 
-        if parent_doc.guid not in document.breadcrumbguid:
-            document.breadcrumbname = [
-                *parent_doc.breadcrumbname,
-                parent_doc.name,
-            ]
-            document.breadcrumbguid = [
-                *parent_doc.breadcrumbguid,
-                parent_doc.guid,
-            ]
-            document.breadcrumbtype = [
-                *parent_doc.breadcrumbtype,
-                parent_doc.typename,
-            ]
+                document.parentguid = parent_doc.guid
 
-            document.parentguid = parent_doc.guid
+                logging.info("Set parent of entity %s to %s", document.guid, parent_doc.guid)
+                logging.info("Breadcrumb GUID: %s", document.breadcrumbguid)
+                logging.info("Breadcrumb Name: %s", document.breadcrumbname)
+                logging.info("Breadcrumb Type: %s", document.breadcrumbtype)
 
-            logging.info("Set parent of entity %s to %s", document.guid, parent_doc.guid)
-            logging.info("Breadcrumb GUID: %s", document.breadcrumbguid)
-            logging.info("Breadcrumb Name: %s", document.breadcrumbname)
-            logging.info("Breadcrumb Type: %s", document.breadcrumbtype)
-
-            # update main entity
-            updated_documents[document.guid] = document
+                # update main entity
+                updated_documents[document.guid] = document
 
     immediate_children = {
         child.guid
