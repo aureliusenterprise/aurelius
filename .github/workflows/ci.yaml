@@ -58,7 +58,6 @@ jobs:
 
             - name: Update GITHUB_PATH
               run: echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
-              shell: bash
 
             - name: Setup Node.js and dependencies
               uses: actions/setup-node@v4
@@ -69,7 +68,6 @@ jobs:
 
             - name: Install Node.js dependencies
               run: npm install
-              shell: bash
 
             - name: Install Playwright
               run: npx playwright install --with-deps
