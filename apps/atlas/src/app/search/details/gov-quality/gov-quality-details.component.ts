@@ -46,12 +46,10 @@ export class GovQualityDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.compliantCount$ = this.compliant.searchResultsService.meta$.pipe(
-      first(),
       map((meta) => meta.page.total_results)
     );
 
     this.nonCompliantCount$ = this.nonCompliant.searchResultsService.meta$.pipe(
-      first(),
       map((meta) => meta.page.total_results)
     );
 
