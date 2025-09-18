@@ -70,11 +70,7 @@ export class NonCompliantEntitiesSearchResultsService extends AppSearchResultsSe
   ) {
     super(govQualitySearch, compliantEntitiesSearch);
 
-    compliantEntitiesSearch.queryObject$
-      .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        this.loadAllPages()
-      });
+    // this.pageSize = 1000;
   }
 }
 
@@ -85,10 +81,10 @@ export class NonCompliantCardsSearchService extends EntityDetailsCardsSearchServ
   ) {
     super();
 
-    this.searchResultService.allResultsLoaded$
+    this.searchResultService.firstPage$
       .pipe(
-        filter((loaded) => loaded),
-        switchMap(() => this.searchResultService.allResults$),
+        switchMap(() => this.searchResultService.loadAllPages())
+      ).pipe(
         map((outputs) => this.createQueryObject(outputs)),
         untilDestroyed(this)
       )
