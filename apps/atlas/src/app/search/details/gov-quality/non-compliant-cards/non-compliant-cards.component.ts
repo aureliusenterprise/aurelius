@@ -70,7 +70,7 @@ export class NonCompliantEntitiesSearchResultsService extends AppSearchResultsSe
   ) {
     super(govQualitySearch, compliantEntitiesSearch);
 
-    // this.pageSize = 1000;
+    this.pageSize = 1000;
   }
 }
 
