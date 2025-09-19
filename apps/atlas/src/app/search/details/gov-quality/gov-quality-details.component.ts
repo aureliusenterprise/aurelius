@@ -1,10 +1,10 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {
   AppSearchResult,
   AtlasEntitySearchObject
 } from '@models4insight/atlas/api';
 import { combineLatest, Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import {
   $APP_SEARCH_DOCUMENT_PROVIDER,
   AppSearchDocumentProvider
@@ -18,7 +18,7 @@ import { NonCompliantCardsComponent } from './non-compliant-cards/non-compliant-
   templateUrl: 'gov-quality-details.component.html',
   styleUrls: ['gov-quality-details.component.scss'],
 })
-export class GovQualityDetailsComponent implements OnInit {
+export class GovQualityDetailsComponent implements OnInit, AfterViewInit {
   @ViewChild(CompliantCardsComponent, { static: true })
   readonly compliant: CompliantCardsComponent;
 
@@ -43,15 +43,14 @@ export class GovQualityDetailsComponent implements OnInit {
 
     this.searchResult$ = this.searchResultService.document$;
   }
+  ngOnInit() { }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.compliantCount$ = this.compliant.searchResultsService.meta$.pipe(
-      first(),
       map((meta) => meta.page.total_results)
     );
 
     this.nonCompliantCount$ = this.nonCompliant.searchResultsService.meta$.pipe(
-      first(),
       map((meta) => meta.page.total_results)
     );
 
