@@ -43,5 +43,6 @@ export const blacklistedProperties: Set<string> = new Set([
   'stewardEntity',
   'system',
   'systems',
-  'visualizations'
+  'visualizations',
+  'ruleDescription'
 ]);
