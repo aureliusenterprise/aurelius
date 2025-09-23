@@ -160,11 +160,6 @@ export class AppSearchResultsService<
    * Triggers loading the next page of search results
    */
   nextPage() {
-    this.pageSize$.subscribe(value => console.log('pageSize$', value));
-    this.meta$.subscribe(
-      meta => console.log('meta$', meta.page.total_pages)
-    );
-
     this.nextPage$.next();
   }
 

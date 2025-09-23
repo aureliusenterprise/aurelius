@@ -83,8 +83,7 @@ export class CompliantCardsSearchService extends EntityDetailsCardsSearchService
 
     this.searchResultsService.firstPage$
       .pipe(
-        switchMap(() => this.searchResultsService.loadAllPages())
-      ).pipe(
+        switchMap(() => this.searchResultsService.loadAllPages()),
         map((outputs) => this.createQueryObject(outputs)),
         untilDestroyed(this)
       )
