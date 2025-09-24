@@ -134,6 +134,7 @@ export class NonCompliantCardsComponent {
   readonly sortingOptions = sortingOptions;
 
   constructor(
-    readonly searchResultsService: AppSearchResultsService<AtlasEntitySearchObject>
+    readonly searchResultsService: AppSearchResultsService<AtlasEntitySearchObject>,
+    readonly nonCompliantEntitiesSearchResultsService: NonCompliantEntitiesSearchResultsService
   ) {}
 }

@@ -1,10 +1,10 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {
   AppSearchResult,
   AtlasEntitySearchObject
 } from '@models4insight/atlas/api';
 import { combineLatest, Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import {
   $APP_SEARCH_DOCUMENT_PROVIDER,
   AppSearchDocumentProvider
@@ -18,7 +18,7 @@ import { NonCompliantCardsComponent } from './non-compliant-cards/non-compliant-
   templateUrl: 'gov-quality-details.component.html',
   styleUrls: ['gov-quality-details.component.scss'],
 })
-export class GovQualityDetailsComponent implements OnInit {
+export class GovQualityDetailsComponent implements OnInit, AfterViewInit {
   @ViewChild(CompliantCardsComponent, { static: true })
   readonly compliant: CompliantCardsComponent;
 
@@ -43,18 +43,19 @@ export class GovQualityDetailsComponent implements OnInit {
 
     this.searchResult$ = this.searchResultService.document$;
   }
+  ngOnInit() { }
 
-  ngOnInit() {
-    this.compliantCount$ = this.compliant.searchResultsService.meta$.pipe(
-      first(),
+  ngAfterViewInit() {
+    // Use the services with entity-specific filters, not the shared ones
+    this.compliantCount$ = this.compliant.compliantEntitiesSearchResultsService.meta$.pipe(
+      startWith({ page: { total_results: 0 } }), // Start with 0 to avoid flash
       map((meta) => meta.page.total_results)
     );
 
-    this.nonCompliantCount$ = this.nonCompliant.searchResultsService.meta$.pipe(
-      first(),
+    this.nonCompliantCount$ = this.nonCompliant.nonCompliantEntitiesSearchResultsService.meta$.pipe(
+      startWith({ page: { total_results: 0 } }), // Start with 0 to avoid flash
       map((meta) => meta.page.total_results)
     );
-
     this.govQualityScore$ = combineLatest([
       this.compliantCount$,
       this.nonCompliantCount$,
