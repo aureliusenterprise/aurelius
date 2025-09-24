@@ -140,6 +140,7 @@ export class CompliantCardsComponent {
   readonly sortingOptions = sortingOptions;
 
   constructor(
-    readonly searchResultsService: AppSearchResultsService<AtlasEntitySearchObject>
+    readonly searchResultsService: AppSearchResultsService<AtlasEntitySearchObject>,
+    readonly compliantEntitiesSearchResultsService: CompliantEntitiesSearchResultsService
   ) {}
 }

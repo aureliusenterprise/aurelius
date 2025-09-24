@@ -4,7 +4,7 @@ import {
   AtlasEntitySearchObject
 } from '@models4insight/atlas/api';
 import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import {
   $APP_SEARCH_DOCUMENT_PROVIDER,
   AppSearchDocumentProvider
@@ -46,14 +46,16 @@ export class GovQualityDetailsComponent implements OnInit, AfterViewInit {
   ngOnInit() { }
 
   ngAfterViewInit() {
-    this.compliantCount$ = this.compliant.searchResultsService.meta$.pipe(
+    // Use the services with entity-specific filters, not the shared ones
+    this.compliantCount$ = this.compliant.compliantEntitiesSearchResultsService.meta$.pipe(
+      startWith({ page: { total_results: 0 } }), // Start with 0 to avoid flash
       map((meta) => meta.page.total_results)
     );
 
-    this.nonCompliantCount$ = this.nonCompliant.searchResultsService.meta$.pipe(
+    this.nonCompliantCount$ = this.nonCompliant.nonCompliantEntitiesSearchResultsService.meta$.pipe(
+      startWith({ page: { total_results: 0 } }), // Start with 0 to avoid flash
       map((meta) => meta.page.total_results)
     );
-
     this.govQualityScore$ = combineLatest([
       this.compliantCount$,
       this.nonCompliantCount$,
