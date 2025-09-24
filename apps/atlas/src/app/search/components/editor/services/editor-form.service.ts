@@ -4,7 +4,7 @@ import { AtlasEntityWithEXTInformation } from '@models4insight/atlas/api';
 import { ManagedTask } from '@models4insight/task-manager';
 import { untilDestroyed } from '@models4insight/utils';
 import { cloneDeep } from 'lodash';
-import { combineLatest, Subject, Subscription } from 'rxjs';
+import { combineLatest, Subject, Subscription, BehaviorSubject} from 'rxjs';
 import { exhaustMap, startWith } from 'rxjs/operators';
 import { EntityDetailsService } from '../../../services/entity-details/entity-details.service';
 import { EntityUpdateService } from '../../../services/entity-update/entity-update.service';
@@ -39,6 +39,9 @@ export class EditorFormService implements OnDestroy {
 
   private readonly submit$ = new Subject<void>();
   private readonly update$ = new Subject<void>();
+  private readonly submitted$ = new BehaviorSubject<boolean>(false);
+
+  readonly submitted = this.submitted$.asObservable();
 
   private formData$: Subscription;
   private submissions$: Subscription;
@@ -82,7 +85,12 @@ export class EditorFormService implements OnDestroy {
   }
 
   submit() {
+    this.submitted$.next(true);
     this.submit$.next();
+  }
+
+  resetSubmitted() {
+    this.submitted$.next(false);
   }
 
   update() {
