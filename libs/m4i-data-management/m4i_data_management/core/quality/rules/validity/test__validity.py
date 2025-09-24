@@ -17,7 +17,6 @@ def test_validity_with_one_existing_value():
     result = validity(data, "value", exampleValues)
 
     assert result.sum() == 1
-# END test_validity_with_one_existing_value
 
 
 def test_validity_with_two_existing_values():
@@ -36,7 +35,6 @@ def test_validity_with_two_existing_values():
     result = validity(data, "value", exampleValues)
 
     assert result.sum() == 2
-# END test_validity_with_two_existing_values
 
 
 def test_validity_with_nonexisting_value():
@@ -52,7 +50,6 @@ def test_validity_with_nonexisting_value():
     result = validity(data, "value", exampleValues)
 
     assert result.sum() == 0
-# END test_validity_with_nonexisting_value
 
 
 def test_validity_with_empty_values():
@@ -71,4 +68,18 @@ def test_validity_with_empty_values():
     result = validity(data, "value", exampleValues)
 
     assert result.sum() == 0
-# END test_validity_with_empty_values
+
+
+def test_validity_with_non_existing_column():
+
+    exampleValues = ['Definite Contract', 'Indefinite Contract']
+
+    data = DataFrame([
+        {
+            "value": "Definite Contract"
+        }
+    ])
+
+    result = validity(data, "non_existing_column", exampleValues)
+
+    assert result.sum() == 0

@@ -15,7 +15,6 @@ def test__length_with_equal_length():
     result = length(data, "id", 4)
 
     assert result.sum() == 1
-# END test__length_with_equal_length
 
 
 def test__length_with_greater_length():
@@ -29,7 +28,6 @@ def test__length_with_greater_length():
     result = length(data, "id", 4)
 
     assert result.sum() == 1
-# END test__length_with_equal_length
 
 
 def test__length_with_smaller_length():
@@ -43,7 +41,6 @@ def test__length_with_smaller_length():
     result = length(data, "id", 4)
 
     assert result.sum() == 0
-# END test__length_with_smaller_length
 
 
 def test__length_without_value():
@@ -57,7 +54,6 @@ def test__length_without_value():
     result = length(data, "id", 4)
 
     assert result.sum() == 0
-# END test__length_without_value
 
 
 def test__length_with_list():
@@ -71,7 +67,6 @@ def test__length_with_list():
     result = length(data, "id", 4)
 
     assert result.sum() == 1
-# END test__length_without_value
 
 
 def test__length_with_empty_list():
@@ -85,4 +80,16 @@ def test__length_with_empty_list():
     result = length(data, "id", 4)
 
     assert result.sum() == 0
-# END test__length_without_value
+
+
+def test__length_with_non_existing_column():
+
+    data = DataFrame([
+        {
+            "id": "1234"
+        }
+    ])
+
+    result = length(data, "non_existing_column", 4)
+
+    assert result.sum() == 0

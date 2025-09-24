@@ -19,7 +19,9 @@ def conditional_completeness(data: DataFrame, key_column: str, value_column: str
 
     def filter(key: str):
         return any(value in key for value in values)
-    # END FILTER
+
+    if key_column not in data.columns or value_column not in data.columns:
+        return Series([0] * len(data), index=data.index)
 
     # Values can also be substrings of the values in the rows to check
     row_matches_values = data[key_column].apply(filter)
@@ -27,7 +29,5 @@ def conditional_completeness(data: DataFrame, key_column: str, value_column: str
 
     if len(rows_to_check) == 0:
         return Series()
-    # END IF
 
     return completeness(rows_to_check, value_column)
-# END conditional_completeness

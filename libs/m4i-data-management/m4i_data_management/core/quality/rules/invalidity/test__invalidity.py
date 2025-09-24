@@ -16,7 +16,7 @@ def test_invalidity_with_one_existing_value():
     result = invalidity(data, "value", exampleValues)
 
     assert result.sum() == 0
-# END test_invalidity_with_one_existing_value
+
 
 def test_invalidity_without_existing_value():
 
@@ -31,4 +31,18 @@ def test_invalidity_without_existing_value():
     result = invalidity(data, "value", exampleValues)
 
     assert result.sum() == 1
-# END test_invalidity_without_existing_value
+
+
+def test_invalidity_with_non_existing_column():
+
+    exampleValues = ['x', 'X', 'TBD', 'Name']
+
+    data = DataFrame([
+        {
+            "value": "Something Else"
+        }
+    ])
+
+    result = invalidity(data, "non_existing_column", exampleValues)
+
+    assert result.sum() == 0

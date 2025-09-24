@@ -13,7 +13,8 @@ def validity(data: DataFrame, column_name: str, values: Iterable[Any]) -> Series
 
     def check(value):
         return 0 if not value in values else 1
-    # END check
+
+    if column_name not in data.columns:
+        return Series([0] * len(data), index=data.index)
 
     return data[column_name].apply(check)
-# END validity

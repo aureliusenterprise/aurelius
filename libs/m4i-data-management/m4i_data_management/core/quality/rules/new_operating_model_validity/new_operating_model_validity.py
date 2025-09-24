@@ -21,7 +21,8 @@ def new_operating_model_validity(data: DataFrame, basket_column: str, hierarchic
         is_applicable_basket = value[basket_column] in BASKETS
         are_orgs_equal = value[hierarchical_org] == value[functional_org]
         return 1 if not is_applicable_basket or are_orgs_equal else 0
-    # END check
+
+    if any(col not in data.columns for col in [basket_column, hierarchical_org, functional_org]):
+        return Series([0] * len(data), index=data.index)
 
     return data[[basket_column, hierarchical_org, functional_org]].apply(check, axis=1)
-# END new_operating_model_validity

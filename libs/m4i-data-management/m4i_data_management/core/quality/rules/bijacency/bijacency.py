@@ -16,14 +16,15 @@ def bijacency(data: DataFrame, column_a: str, column_b: str) -> Series:
 
     def get_values(row: Series):
         return str(row[column_a]), str(row[column_b])
-    # END get_values
+    
+    if column_a not in data.columns or column_b not in data.columns:
+        return Series([0] * len(data), index=data.index)
 
     combinations = BidirectionalMutliMap()
 
     for _, row in data.iterrows():
         a, b = get_values(row)
         combinations.add(a, b)
-    # END LOOP
 
     def check(row: Series):
         a, b = get_values(row)
@@ -32,7 +33,7 @@ def bijacency(data: DataFrame, column_a: str, column_b: str) -> Series:
         inverse_unique = len(combinations.inverse[b]) <= 1
 
         return 1 if unique and inverse_unique else 0
-    # END check
+
+
 
     return data[[column_a, column_b]].apply(check, axis='columns')
-# END bijacency

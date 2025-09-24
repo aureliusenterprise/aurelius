@@ -16,10 +16,11 @@ def compare_first_characters_starting_without(data: DataFrame, first_column_name
 
   def check(value):
     return 1 if value["same_first_char"] == 1 and value['start_with'] == 0 else 0
-  # END check
+
+  if first_column_name not in data.columns or second_column_name not in data.columns:
+      return Series([0] * len(data), index=data.index)
 
   same_first_char = compare_first_characters(data, first_column_name, second_column_name, number_of_characters)
   start_with = starts_with(data, first_column_name, *prefixes)
 
   return DataFrame({"same_first_char": same_first_char, "start_with": start_with}).apply(check, axis=1)
-# END compare_first_characters_starting_without

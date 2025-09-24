@@ -24,7 +24,6 @@ def test__bijacency_with_bijacent_columns():
     result = bijacency(data, "id", "name")
 
     assert result.sum() == 2
-# END test__bijacency_with_bijacent_columns
 
 
 def test__bijacency_with_non_bijacent_columns():
@@ -47,7 +46,6 @@ def test__bijacency_with_non_bijacent_columns():
     result = bijacency(data, "id", "name")
 
     assert result.sum() == 0
-# END test__bijacency_with_non_bijacent_columns
 
 
 def test__bijacency_with_one_empty_value():
@@ -70,7 +68,6 @@ def test__bijacency_with_one_empty_value():
     result = bijacency(data, "id", "name")
 
     assert result.sum() == 0
-# END test__bijacency_with_one_empty_value
 
 
 def test__bijacency_with_both_empty_values():
@@ -93,4 +90,25 @@ def test__bijacency_with_both_empty_values():
     result = bijacency(data, "id", "name")
 
     assert result.sum() == 2
-# END test__bijacency_with_both_empty_values
+
+
+def test__bijacency_with_non_existing_columns():
+
+    data = DataFrame([
+        {
+            "id": 1234,
+            "name": "John Doe",
+            "function": "Developer",
+            "from": "01-01-2021"
+        },
+        {
+            "id": 1234,
+            "name": "John Doe",
+            "function": "Senior developer",
+            "from": "01-01-2022"
+        }
+    ])
+
+    result = bijacency(data, "non_existing_column_a", "non_existing_column_b")
+
+    assert result.sum() == 0
