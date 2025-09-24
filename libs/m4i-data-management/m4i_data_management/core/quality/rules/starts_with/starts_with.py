@@ -16,12 +16,12 @@ def starts_with(data: DataFrame, column_name: str, *prefixes: str) -> Series:
 
         if isna(value):
             return 1
-        # END IF
 
         str_value = str(value)
 
         return 1 if str_value.startswith(prefixes) else 0
-    # END check
+    
+    if column_name not in data.columns:
+        return Series([0] * len(data), index=data.index)
 
     return data[column_name].apply(check)
-# END starts_with

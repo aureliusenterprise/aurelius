@@ -18,7 +18,6 @@ def test__conditional_completeness_condition_met_with_value():
     result = conditional_completeness(data,  "conditional", "value", values)
 
     assert result.sum() == 1
-# END test__conditional_completeness_condition_met_with_value
 
 
 def test__conditional_completeness_condition_met_without_value():
@@ -35,7 +34,6 @@ def test__conditional_completeness_condition_met_without_value():
     result = conditional_completeness(data, "conditional", "value", values)
 
     assert result.sum() == 0
-# END test__conditional_completeness_condition_met_without_value
 
 
 def test__conditional_completeness_condition_unmet_with_value():
@@ -52,4 +50,19 @@ def test__conditional_completeness_condition_unmet_with_value():
     result = conditional_completeness(data, "conditional", "value", values)
 
     assert result.sum() == 0
-# END test__conditional_completeness_condition_unmet_with_value
+
+
+def test__conditional_completeness_with_non_existing_columns():
+
+    values = ['.TMP', '.FREE']
+
+    data = DataFrame([
+        {
+            "value": "Something",
+            "conditional": "xx.FREE.eur"
+        }
+    ])
+
+    result = conditional_completeness(data, "non_existing_column_a", "non_existing_column_b", values)
+
+    assert result.sum() == 0

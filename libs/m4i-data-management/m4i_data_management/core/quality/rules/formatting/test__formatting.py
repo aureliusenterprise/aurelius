@@ -13,7 +13,7 @@ def test__formatting_with_correct_numeric_format():
     result = formatting(data, "name", r'^[0-9]+$')
 
     assert result.sum() == 1
-# END test__formatting_with_correct_numeric_format
+
 
 def test__formatting_with_correct_text_format():
 
@@ -26,7 +26,7 @@ def test__formatting_with_correct_text_format():
     result = formatting(data, "name", r'^[a-zA-Z]+$')
 
     assert result.sum() == 1
-# END test__formatting_with_correct_text_format
+
 
 def test__formatting_with_incorrect_text_format():
 
@@ -39,7 +39,7 @@ def test__formatting_with_incorrect_text_format():
     result = formatting(data, "name", r'^[a-zA-Z]+$')
 
     assert result.sum() == 0
-# END test__formatting_with_incorrect_text_format
+
 
 def test__formatting_with_incorrect_text_format_combined():
 
@@ -52,7 +52,7 @@ def test__formatting_with_incorrect_text_format_combined():
     result = formatting(data, "name", r'^[a-zA-Z]+$')
 
     assert result.sum() == 0
-# END test__formatting_with_incorrect_text_format_combined
+
 
 def test__formatting_with_incorrect_numeric_format_combined():
 
@@ -65,7 +65,7 @@ def test__formatting_with_incorrect_numeric_format_combined():
     result = formatting(data, "name", r'^[0-9]+$')
 
     assert result.sum() == 0
-# END test__formatting_with_incorrect_numeric_format_combined
+
 
 def test__formatting_without_value():
 
@@ -78,4 +78,16 @@ def test__formatting_without_value():
     result = formatting(data, "name", r'^[a-zA-Z]+$')
 
     assert result.sum() == 0
-# END test__formatting_without_value
+
+
+def test__formatting_with_non_existing_column():
+
+    data = DataFrame([
+        {
+            "name": "ExampleText"
+        }
+    ])
+
+    result = formatting(data, "non_existing_column", r'^[a-zA-Z]+$')
+
+    assert result.sum() == 0

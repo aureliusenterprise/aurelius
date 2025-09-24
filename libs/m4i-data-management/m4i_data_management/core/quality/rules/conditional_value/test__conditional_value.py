@@ -20,7 +20,6 @@ def test__conditional_value_condition_met_with_expected_value():
     result = conditional_value(data, "conditional", "value", values)
 
     assert result.sum() == 1
-# END test__test__conditional_value_condition_met_with_expected_value
 
 
 def test__conditional_value_condition_met_with_multiple_possible_values():
@@ -39,7 +38,6 @@ def test__conditional_value_condition_met_with_multiple_possible_values():
     result = conditional_value(data, "conditional", "value", values)
 
     assert result.sum() == 1
-# END test__test__conditional_value_condition_met_with_expected_value
 
 
 def test__conditional_value_condition_met_with_no_valid_values():
@@ -58,8 +56,6 @@ def test__conditional_value_condition_met_with_no_valid_values():
     result = conditional_value(data, "conditional", "value", values)
 
     assert result.sum() == 0
-# END test__test__conditional_value_condition_met_with_expected_value
-
 
 
 def test__conditional_value_condition_met_with_non_expected_value():
@@ -78,7 +74,6 @@ def test__conditional_value_condition_met_with_non_expected_value():
     result = conditional_value(data,  "conditional", "value", values)
 
     assert result.sum() == 0
-# END test__test__conditional_value_condition_met_with_non_expected_value
 
 
 def test__conditional_value_condition_unmet_with_expected_value():
@@ -97,7 +92,6 @@ def test__conditional_value_condition_unmet_with_expected_value():
     result = conditional_value(data, "conditional", "value", values)
 
     assert result.sum() == 0
-# END test__test__conditional_value_condition_unmet_wih_expected_value
 
 
 def test__conditional_value_condition_unmet_with_no_value():
@@ -116,4 +110,21 @@ def test__conditional_value_condition_unmet_with_no_value():
     result = conditional_value(data, "conditional", "value", values)
 
     assert result.sum() == 0
-# END test__test__conditional_value_condition_unmet_wih_no_value
+
+
+def test__conditional_value_with_non_existing_columns():
+
+    values = {
+        "xx.TMP": "XX No Grade"
+    }
+
+    data = DataFrame([
+        {
+            "value": "XX No Grade",
+            "conditional": "xx.TMP"
+        }
+    ])
+
+    result = conditional_value(data, "non_existing_column_a", "non_existing_column_b", values)
+
+    assert result.sum() == 0

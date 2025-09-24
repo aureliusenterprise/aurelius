@@ -19,14 +19,14 @@ def conditional_unallowed_text(data: DataFrame, key_column: str, value_column: s
     # Values can also be substrings of the values in the rows to check
     def filter(key: str):
         return any(value in key for value in values)
-    # END FILTER
+
+    if key_column not in data.columns or value_column not in data.columns:
+        return Series([0] * len(data), index=data.index)
 
     row_matches_values = data[key_column].apply(filter)
     rows_to_check = data[row_matches_values]
 
     if len(rows_to_check) == 0:
         return Series()
-    # END IF
 
     return unallowed_text(rows_to_check, value_column, text)
-# END conditional_unallowed_text
