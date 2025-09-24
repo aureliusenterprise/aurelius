@@ -15,14 +15,14 @@ def length(data: DataFrame, column_name: str, required_length: int) -> Series:
 
         if not isinstance(value, list) and isna(value):
             return 0
-        # END IF
 
         has_required_length = (
             required_length <= len(value)
         )
 
         return 1 if has_required_length else 0
-    # END check
+    
+    if column_name not in data.columns:
+        return Series([0] * len(data), index=data.index)
 
     return data[column_name].apply(check)
-# END length

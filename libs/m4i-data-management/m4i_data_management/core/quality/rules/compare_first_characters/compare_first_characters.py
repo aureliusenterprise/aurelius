@@ -12,17 +12,16 @@ def compare_first_characters(data: DataFrame, first_column_name: str, second_col
 
         if isna(value[first_column_name]):
             return 0
-        # END IF
 
         if isna(value[second_column_name]):
             return 0
-        # END IF
 
         str_first_value = str(value[first_column_name])
         str_second_value = str(value[second_column_name])
 
         return 1 if str_first_value[:number_of_characters] == str_second_value[:number_of_characters] else 0
-    # END check
+
+    if first_column_name not in data.columns or second_column_name not in data.columns:
+        return Series([0] * len(data), index=data.index)
 
     return data[[first_column_name, second_column_name]].apply(check, axis=1)
-# END compare_first_characters

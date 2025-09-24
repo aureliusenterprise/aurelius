@@ -21,9 +21,6 @@ def test__compare_first_characters_starting_without_match_without():
     assert result.sum() == 1
 
 
-# END test___compare_first_characters_with_similar_values
-
-
 def test__compare_first_characters_starting_without_notmatch_without():
     # Don't Match, 'id' doesnt start with BE
     data = DataFrame([
@@ -39,8 +36,6 @@ def test__compare_first_characters_starting_without_notmatch_without():
 
     assert result.sum() == 0
 
-
-# END test__compare_first_characters_starting_without_notmatch_without
 
 def test__compare_first_characters_starting_without_match_with():
     # Match, but 'id' start with BE
@@ -58,9 +53,6 @@ def test__compare_first_characters_starting_without_match_with():
     assert result.sum() == 0
 
 
-# END test__compare_first_characters_starting_without_match_with
-
-
 def test__compare_first_characters_starting_without_nan():
     data = DataFrame([
         {
@@ -75,8 +67,6 @@ def test__compare_first_characters_starting_without_nan():
 
     assert result.sum() == 0
 
-
-# END test__compare_first_characters_starting_without_nan
 
 def test__compare_first_characters_starting_without_all():
 
@@ -95,7 +85,6 @@ def test__compare_first_characters_starting_without_all():
         data, "id", "name", 2, 'BE')
 
     assert (result == [1, 0, 0, 0, 0, 0]).all()
-# END test__compare_first_characters_starting_without_all
 
 
 def test__result_index_matches_original_index():
@@ -111,4 +100,19 @@ def test__result_index_matches_original_index():
         data, "id", "name", 2, "BE")
 
     assert all(data.index == result.index)
-# END test__result_index_matches_original_index
+
+
+def test__compare_first_characters_starting_without_with_non_existing_columns():
+
+    data = DataFrame([
+        {
+            "id": "NL.xxx",
+            "name": "NL.xxx",
+        }
+    ])
+
+    result = compare_first_characters_starting_without(
+        data, "non_existing_column_a", "non_existing_column_b", 2, 'BE')
+
+    assert result.sum() == 0
+    

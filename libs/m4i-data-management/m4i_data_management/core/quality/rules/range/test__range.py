@@ -14,7 +14,6 @@ def test__range_with_value_within_range():
     result = range(data, "value", 0, 1)
 
     assert result.sum() == 1
-# END test__range_with_value_within_range
 
 
 def test__range_with_value_out_of_range():
@@ -28,7 +27,6 @@ def test__range_with_value_out_of_range():
     result = range(data, "value", 0, 1)
 
     assert result.sum() == 0
-# END test__range_with_value_out_of_range
 
 
 def test__range_with_empty_values():
@@ -45,4 +43,15 @@ def test__range_with_empty_values():
     result = range(data, "value", 0, 1)
 
     assert result.sum() == 0
-# END test__range_with_empty_values
+
+
+def test__range_with_non_existing_column():
+    data = DataFrame([
+        {
+            "value": 0.1
+        }
+    ])
+
+    result = range(data, "non_existing_column", 0, 1)
+
+    assert result.sum() == 0

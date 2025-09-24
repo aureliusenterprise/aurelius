@@ -8,12 +8,14 @@ import { PropertiesModule } from '../components/properties/properties.module';
 import { CompliantCardsComponent } from './compliant-cards/compliant-cards.component';
 import { GovQualityDetailsComponent } from './gov-quality-details.component';
 import { NonCompliantCardsComponent } from './non-compliant-cards/non-compliant-cards.component';
+import { DescriptionModule } from '../../components/description/description.module';
 
 @NgModule({
   imports: [
     CommonModule,
     DetailsNavigationModule,
     PropertiesModule,
+    DescriptionModule,
     DataQualityPieModule,
     DetailsCardsListModule,
     AccordionModule

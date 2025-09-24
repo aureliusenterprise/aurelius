@@ -14,6 +14,9 @@ def uniqueness(data: DataFrame, column_name: str) -> Series:
     Otherwise, assigns a score of 0.
     """
 
+    if column_name not in data.columns:
+        return Series([0] * len(data), index=data.index)
+
     records_per_value = defaultdict(set)
 
     for index, row in data.iterrows():
@@ -21,20 +24,17 @@ def uniqueness(data: DataFrame, column_name: str) -> Series:
 
         if isna(value):
             continue
-        # END IF
 
         records_per_value[str(value)].add(str(index))
-    # END LOOP
 
     def check(value):
         if isna(value):
             return 1
-        # END IF
 
         occurrences = records_per_value[str(value)]
 
         return 1 if len(occurrences) == 1 else 0
-    # END check
+    
+
 
     return data[column_name].apply(check)
-# END uniqueness

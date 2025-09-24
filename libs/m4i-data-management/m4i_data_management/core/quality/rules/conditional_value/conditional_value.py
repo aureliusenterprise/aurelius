@@ -21,7 +21,6 @@ def conditional_value(
 
         if isna(key):
             return 0
-        # END IF
 
         expected_value = value_mapping[key]
 
@@ -29,17 +28,16 @@ def conditional_value(
             has_valid_value = row[value_column] in expected_value
         else:
             has_valid_value = row[value_column] == expected_value
-        # END IF
 
         return 1 if has_valid_value else 0
-    # END check
+    
+    if key_column not in data.columns or value_column not in data.columns:
+        return Series([0] * len(data), index=data.index)
 
     # Limit the sample to rows containing a value we want to check for
     rows_to_check = data[data[key_column].isin(value_mapping)]
 
     if len(rows_to_check) == 0:
         return Series()
-    # END IF
 
     return rows_to_check[[value_column, key_column]].apply(check, axis=1)
-# END conditional_value

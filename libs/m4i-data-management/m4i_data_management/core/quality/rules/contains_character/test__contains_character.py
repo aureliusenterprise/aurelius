@@ -15,7 +15,6 @@ def test__contains_character_with_single_occurrence():
     result = contains_character(data, "id", ".", 1)
 
     assert result.sum() == 1
-# END test__contains_character_with_single_occurrence
 
 
 def test__contains_character_with_multiple_occurrences():
@@ -29,7 +28,6 @@ def test__contains_character_with_multiple_occurrences():
     result = contains_character(data, "id", ".", 2)
 
     assert result.sum() == 1
-# END test__contains_character_with_multiple_occurrences
 
 
 def test__contains_character_with_no_occurrence():
@@ -43,7 +41,6 @@ def test__contains_character_with_no_occurrence():
     result = contains_character(data, "id", ".", 1)
 
     assert result.sum() == 0
-# END test__contains_character_with_no_occurrences
 
 
 def test__contains_character_with_multiple_characters():
@@ -57,7 +54,6 @@ def test__contains_character_with_multiple_characters():
     result = contains_character(data, "id", "12", 1)
 
     assert result.sum() == 1
-# END test__contains_character_with_multiple_characters
 
 
 def test__contains_character_with_empty_value():
@@ -71,4 +67,16 @@ def test__contains_character_with_empty_value():
     result = contains_character(data, "id", ".", 1)
 
     assert result.sum() == 1
-# END test__contains_character_without_value
+
+
+def test__contains_character_with_non_existing_column():
+
+    data = DataFrame([
+        {
+            "id": "12.12"
+        }
+    ])
+
+    result = contains_character(data, "non_existing_column", ".", 1)
+
+    assert result.sum() == 0

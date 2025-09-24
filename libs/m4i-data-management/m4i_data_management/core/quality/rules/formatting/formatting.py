@@ -20,10 +20,10 @@ def formatting(data: DataFrame, column_name: str, pattern: str) -> Series:
 
         if isna(value):
             return 0
-        # END IF
 
         return 1 if regex.match(str(value)) else 0
-    # END check
+
+    if column_name not in data.columns:
+        return Series([0] * len(data), index=data.index)
 
     return data[column_name].apply(check)
-# END formatting

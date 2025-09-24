@@ -20,7 +20,7 @@ def test__conditional_unallowed_text_condition_met_with_allowed_value():
     result = conditional_unallowed_text(data, "conditional", "value", values, unallowed_text_item)
 
     assert result.sum() == 1
-# END test__conditional_unallowed_text_condition_met_with_allowed_value
+
 
 def test__conditional_unallowed_text_condition_met_with_unallowed_value():
 
@@ -38,7 +38,7 @@ def test__conditional_unallowed_text_condition_met_with_unallowed_value():
     result = conditional_unallowed_text(data, "conditional", "value", values, unallowed_text_item)
 
     assert result.sum() == 0
-# END test__conditional_unallowed_text_condition_met_with_unallowed_value
+
 
 def test__conditional_unallowed_text_condition_met_without_value():
 
@@ -56,4 +56,21 @@ def test__conditional_unallowed_text_condition_met_without_value():
     result = conditional_unallowed_text(data, "conditional", "value", values, unallowed_text_item)
 
     assert result.sum() == 1
-# END test__conditional_unallowed_text_condition_met_without_value
+
+
+def test__conditional_unallowed_text_with_non_existing_columns():
+
+    values = ['.TMP', '.FREE']
+
+    unallowed_text_item = "(1)"
+
+    data = DataFrame([
+        {
+            "value": "Something",
+            "conditional": "xx.FREE.eur"
+        }
+    ])
+
+    result = conditional_unallowed_text(data, "non_existing_column_a", "non_existing_column_b", values, unallowed_text_item)
+
+    assert result.sum() == 0

@@ -18,7 +18,6 @@ def test__uniqueness_with_single_duplicate_value():
     result = uniqueness(data, "id")
 
     assert result.sum() == 0
-# END test__uniqueness_with_single_duplicate_value
 
 
 def test__uniqueness_with_duplicate_and_unique_values():
@@ -38,7 +37,6 @@ def test__uniqueness_with_duplicate_and_unique_values():
     result = uniqueness(data, "id")
 
     assert result.sum() == 1
-# END test__uniqueness_with_duplicate_and_unique_values
 
 
 def test__uniqueness_without_duplicate_value():
@@ -55,7 +53,6 @@ def test__uniqueness_without_duplicate_value():
     result = uniqueness(data, "id")
 
     assert result.sum() == 2
-# END test__uniqueness_without_duplicate_value
 
 
 def test__uniqueness_without_any_values():
@@ -72,4 +69,16 @@ def test__uniqueness_without_any_values():
     result = uniqueness(data, "id")
 
     assert result.sum() == 2
-# END test__uniqueness_without_any_values
+
+
+def test__uniqueness_with_non_existing_column():
+
+    data = DataFrame([
+        {
+            "id": "1234"
+        }
+    ])
+
+    result = uniqueness(data, "non_existing_column")
+
+    assert result.sum() == 0

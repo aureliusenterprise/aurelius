@@ -15,5 +15,7 @@ def invalidity(data: DataFrame, column_name: str, values: Iterable[Any]) -> Seri
     Otherwise, assign a score of 0.
     """
 
+    if column_name not in data.columns:
+        return Series([0] * len(data), index=data.index)
+
     return 1 - validity(data, column_name, values)
-# END invalidity
