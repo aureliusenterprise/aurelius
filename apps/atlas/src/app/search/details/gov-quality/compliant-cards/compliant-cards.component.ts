@@ -66,16 +66,11 @@ export class CompliantEntitiesSearchResultsService extends AppSearchResultsServi
 > {
   constructor(
     govQualitySearch: GovernanceQualitySearchService<CompliantEntitySearchObject>,
-    compliantEntitiesSearch: CompliantEntitiesSearchService
+    compliantEntitiesSearch: CompliantEntitiesSearchService,
   ) {
     super(govQualitySearch, compliantEntitiesSearch);
-
-    // Load all pages when query object changes
-    compliantEntitiesSearch.queryObject$
-      .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        this.loadAllPages()
-      });
+    
+    this.pageSize = 1000;
   }
 }
 
@@ -86,10 +81,9 @@ export class CompliantCardsSearchService extends EntityDetailsCardsSearchService
   ) {
     super();
 
-    this.searchResultsService.allResultsLoaded$
+    this.searchResultsService.firstPage$
       .pipe(
-        filter((loaded) => loaded),
-        switchMap(() => this.searchResultsService.allResults$),
+        switchMap(() => this.searchResultsService.loadAllPages()),
         map((outputs) => this.createQueryObject(outputs)),
         untilDestroyed(this)
       )
@@ -128,7 +122,7 @@ const sortingOptions: string[] = ['name'];
       provide: AppSearchResultsService,
       useClass: EntitySearchResultsService,
     },
-    CompliantCardsSearchService,
+        CompliantCardsSearchService,
     {
       provide: DetailsCardsSearchService,
       useExisting: CompliantCardsSearchService,

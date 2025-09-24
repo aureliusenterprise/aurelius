@@ -167,14 +167,14 @@ export class AppSearchResultsService<
     return this.getPage(1, queryObject, pageSize);
   }
 
-  async loadAllPages() {
+  async loadAllPages(): Promise<AppSearchResult<P>[]> {
     const firstPage = await firstValueFrom(
       this.firstPage$.pipe(
         take(1),
         timeout(10000)
       )
     );
-    
+
     const totalPages = firstPage.meta.page.total_pages;
     const queryObject = await firstValueFrom(
       this.searchService.queryObject$.pipe(
@@ -182,15 +182,20 @@ export class AppSearchResultsService<
         timeout(5000)
       )
     );
-    
+
+    const allResults: AppSearchResult<P>[] = [...firstPage.results];
+
     for (let currentPage = 2; currentPage <= totalPages; currentPage++) {
-      await this.getPage(currentPage, queryObject, firstPage.meta.page.size);
+      const page = await this.getPage(currentPage, queryObject, firstPage.meta.page.size);
+      allResults.push(...page.results);
     }
-    
+
     this.update({
       description: 'All results loaded',
       payload: { allResultsLoaded: true }
     });
+
+    return allResults;
   }
 
   @ManagedTask('Loading a page of search results', { isQuiet: true })
