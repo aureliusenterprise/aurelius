@@ -73,7 +73,7 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-  registry: docker.io
+  registry: public.ecr.aws
   repository: bitnami/zookeeper
   tag: 3.8.0-debian-11-r23
   ## Specify a imagePullPolicy
