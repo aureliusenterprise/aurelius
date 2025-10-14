@@ -275,3 +275,69 @@ def test__convert_to_atlas_entity_with_parent_entity_and_link_yes():
     assert getattr(domain_entity.unique_attributes,
                    "qualified_name") == instance.data_domain
 # END test__data_entity_convert_to_atlas_entity_with_parent_entity
+
+
+def test__convert_to_atlas_entity_with_parent_entity_and_link_none():
+    """
+    Tests that child entity with domain_link=None keeps the data domain.
+    """
+    data_entity = {
+        "dataDomain": "data-domain",
+        "name": "data entity",
+        "qualifiedName": "data-domain--parent-entity--data-entity",
+        "parentEntity": "data-domain--parent-entity",
+        "domainLink": None
+    }
+
+    instance = DataEntity.from_dict(data_entity)
+    atlas_instance = instance.convert_to_atlas()
+    atlas_attributes = atlas_instance.attributes
+
+    # Should keep the domain
+    assert atlas_attributes.data_domain is not None
+    domain_entity = atlas_attributes.data_domain[0]
+    assert domain_entity.type_name == "m4i_data_domain"
+    assert getattr(domain_entity.unique_attributes, "qualified_name") == instance.data_domain
+# END test__convert_to_atlas_entity_with_parent_entity_and_link_none
+
+def test__convert_to_atlas_entity_with_parent_entity_and_link_no():
+    """
+    Tests that child entity with domain_link="No" removes the data domain.
+    """
+    data_entity = {
+        "dataDomain": "data-domain",
+        "name": "data entity",
+        "qualifiedName": "data-domain--parent-entity--data-entity",
+        "parentEntity": "data-domain--parent-entity",
+        "domainLink": "No"
+    }
+
+    instance = DataEntity.from_dict(data_entity)
+    atlas_instance = instance.convert_to_atlas()
+    atlas_attributes = atlas_instance.attributes
+
+    # Should remove the domain
+    assert atlas_attributes.data_domain is None
+# END test__convert_to_atlas_entity_with_parent_entity_and_link_no
+
+def test__convert_to_atlas_entity_with_parent_entity_no_domain_link():
+    """
+    Tests that child entity without domainLink field keeps the data domain.
+    """
+    data_entity = {
+        "dataDomain": "data-domain",
+        "name": "data entity",
+        "qualifiedName": "data-domain--parent-entity--data-entity",
+        "parentEntity": "data-domain--parent-entity"
+        # No domainLink field
+    }
+
+    instance = DataEntity.from_dict(data_entity)
+    atlas_instance = instance.convert_to_atlas()
+    atlas_attributes = atlas_instance.attributes
+
+    # Should keep the domain (default behavior)
+    assert atlas_attributes.data_domain is not None
+    domain_entity = atlas_attributes.data_domain[0]
+    assert domain_entity.type_name == "m4i_data_domain"
+#END test__convert_to_atlas_entity_with_parent_entity_no_domain_link

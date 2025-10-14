@@ -81,7 +81,7 @@ class DataEntity(
             )
 
             attributes.parent_entity = [parent_entity]
-            if self.domain_link != "Yes":
+            if self.domain_link == "No":
                 attributes.data_domain = None
         # END IF
 
