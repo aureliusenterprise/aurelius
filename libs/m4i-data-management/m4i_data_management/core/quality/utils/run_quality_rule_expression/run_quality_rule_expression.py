@@ -26,11 +26,30 @@ def run_quality_rule_expression(data: DataFrame, rule_expression: str) -> Series
     # Run the function.
     # Reduce security risks by restricting the global execution context.
     # Make the data variable and quality functions available in the local execution context.
-    result = eval(
-        function_string,
-        {"__builtins__": {}},
-        {"data": data, **quality_functions}
-    )
+    # result = eval(
+    #     function_string,
+    #     {"__builtins__": {}},
+    #     {"data": data, **quality_functions}
+    # )
+    # Handle | operator for OR logic
+    if '|' in rule_expression:
+        parts = rule_expression.split(' | ')
+        results = []
+        for part in parts:
+            part_string = f"{part[:part.index('(') + 1]}data, {part[part.index('(') + 1:]}"
+            part_result = eval(part_string, {"__builtins__": {}}, {"data": data, **quality_functions})
+            results.append(part_result)
+
+        # Combine with OR logic
+        result = results[0]
+        for part_result in results[1:]:
+            result = result | part_result  # Pandas Series OR operation
+    else:
+        result = eval(
+            function_string,
+            {"__builtins__": {}},
+            {"data": data, **quality_functions}
+        )
 
     return result
 # END run_quality_rule_expression

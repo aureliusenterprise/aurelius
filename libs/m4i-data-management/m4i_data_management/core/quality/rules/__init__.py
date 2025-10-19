@@ -14,3 +14,4 @@ from .conditional_completeness import *
 from .conditional_value import *
 from .conditional_unallowed_text import *
 from .compare_first_characters import *
+from .logical_or import *

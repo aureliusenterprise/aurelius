@@ -66,9 +66,9 @@ export class NonCompliantEntitiesSearchResultsService extends AppSearchResultsSe
 > {
   constructor(
     govQualitySearch: GovernanceQualitySearchService<NonCompliantEntitySearchObject>,
-    compliantEntitiesSearch: NonCompliantEntitiesSearchService
+    noncompliantEntitiesSearch: NonCompliantEntitiesSearchService
   ) {
-    super(govQualitySearch, compliantEntitiesSearch);
+    super(govQualitySearch, noncompliantEntitiesSearch);
 
     this.pageSize = 1000;
   }
