@@ -81,6 +81,8 @@ class DataEntity(
             )
 
             attributes.parent_entity = [parent_entity]
+            # If domain_link is "No", child should NOT inherit domain from parent
+            # If domain_link is "Yes" or None, child should keep/inherit domain
             if self.domain_link == "No":
                 attributes.data_domain = None
         # END IF

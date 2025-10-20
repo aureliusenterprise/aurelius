@@ -231,17 +231,6 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
 
             document.parentguid = parent_doc.guid
 
-            # Inherit domain information from parent
-            if (
-                hasattr(parent_doc, 'deriveddatadomainguid') 
-                and parent_doc.deriveddatadomainguid 
-                and not document.deriveddatadomainguid
-            ):
-                document.deriveddatadomainguid = parent_doc.deriveddatadomainguid.copy()
-                document.deriveddatadomain = parent_doc.deriveddatadomain.copy()
-                logging.info("Inherited domains from parent %s to child %s: %s", 
-                           parent_doc.guid, document.guid, document.deriveddatadomainguid)
-
             logging.info("Set parent of entity %s to %s", document.guid, parent_doc.guid)
             logging.info("Breadcrumb GUID: %s", document.breadcrumbguid)
             logging.info("Breadcrumb Name: %s", document.breadcrumbname)
@@ -287,17 +276,6 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
 
         child_doc.parentguid = document.guid
 
-        # Inherit domain information from parent to child
-        if (
-            hasattr(document, 'deriveddatadomainguid') 
-            and document.deriveddatadomainguid 
-            and not child_doc.deriveddatadomainguid
-        ):
-            child_doc.deriveddatadomainguid = document.deriveddatadomainguid.copy()
-            child_doc.deriveddatadomain = document.deriveddatadomain.copy()
-            logging.info("Inherited domains from parent %s to child %s: %s", 
-                       document.guid, child_doc.guid, child_doc.deriveddatadomainguid)
-
         logging.info("Set parent relationship of entity %s to %s", child_doc.guid, child_doc.parentguid)
         logging.debug("Breadcrumb GUID: %s", child_doc.breadcrumbguid)
         logging.debug("Breadcrumb Name: %s", child_doc.breadcrumbname)
@@ -339,16 +317,6 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
         ]
 
         child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
-
-        # Inherit domain information through the breadcrumb hierarchy
-        # Check if any parent in the breadcrumb has domains and inherit them
-        if not child_document.deriveddatadomainguid:
-            # Try to inherit from immediate parent (document)
-            if hasattr(document, 'deriveddatadomainguid') and document.deriveddatadomainguid:
-                child_document.deriveddatadomainguid = document.deriveddatadomainguid.copy()
-                child_document.deriveddatadomain = document.deriveddatadomain.copy()
-                logging.info("Inherited domains from breadcrumb parent %s to child %s: %s", 
-                           document.guid, child_document.guid, child_document.deriveddatadomainguid)
 
         logging.info("Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid)
         logging.debug("Breadcrumb GUID: %s", child_document.breadcrumbguid)
