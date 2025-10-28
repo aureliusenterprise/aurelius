@@ -58,7 +58,7 @@
   {
     "id": 5,
     "expressionVersion": 1,
-    "expression": "length('dataDomain', 1) | length('parentEntity')",
+    "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
     "qualifiedName": "m4i_data_entity--dataDomain",
     "qualityDimension": "completeness",
     "ruleTitle": "Data entity belongs to a data domain or data entity",
