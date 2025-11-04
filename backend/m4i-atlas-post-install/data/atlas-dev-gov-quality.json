@@ -620,19 +620,20 @@
         "id": "6039f1e8-a433-42c2-a1f3-e35af6882a94--c4d10911-7661-4058-a2df-a25fbed0e093"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "6039f1e8-a433-42c2-a1f3-e35af6882a94--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -2980,19 +2981,20 @@
         "id": "9915c74c-4fa8-4d7b-8ee6-ac3dc5a3977a--b7e35a21-90ef-43db-949b-8fedba5c1fec"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "55675c25-d300-4d79-ab69-c0b2591b4cd0--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -3300,19 +3302,20 @@
         "id": "4fb8e1e8-96f3-4edd-a951-e98310526654--a5965332-bb1d-4c34-90ba-0cc45948b0a4"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "19736d3b-e7c6-4f95-8ce6-a6f215eff467--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -4580,19 +4583,20 @@
         "id": "b2cef95b-d46a-42e6-9ec4-6ca8f2d57d07--2e844586-30c2-434f-b872-a7e468fc3206"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "8238db6d-5b6f-486e-9ede-336ddf4694e7--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -5440,19 +5444,20 @@
         "id": "39496a21-bf35-4d73-b18f-13f03fc31cde--ed526686-f4eb-4552-b871-c606eb7711b2"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "2841f995-9618-43d7-b73c-13ec3448a971--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -9020,39 +9025,41 @@
         "id": "515c596a-bdde-49a5-96b1-95bd20903019--d1952aa1-5d80-4d58-b520-cf2b8915aa8b"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "c0af931d-1cd3-4ecb-970f-ab804d289ada--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
-        "compliant": "0",
+        "compliant": "1",
         "entity_guid": "c0af931d-1cd3-4ecb-970f-ab804d289ada",
         "id": "c0af931d-1cd3-4ecb-970f-ab804d289ada--3cb9ab0b-050c-40db-9f12-f136045a77a0"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "0ed13fa1-bbce-4368-adee-8199e4266463--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -11540,19 +11547,20 @@
         "id": "193e678e-4572-4ac1-b453-c6cc61682648--d1952aa1-5d80-4d58-b520-cf2b8915aa8b"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "7566f525-deb2-43fd-9557-a8017efa8cd9--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -14480,19 +14488,20 @@
         "id": "d784272d-d0ed-4ec9-852f-a8fd7338d611--a5965332-bb1d-4c34-90ba-0cc45948b0a4"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "fd88a9c5-9393-4843-85db-7881c68d9134--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -14800,19 +14809,20 @@
         "id": "48d1cece-05e7-4e9e-9ec9-65a40a67f19a--cad0a3bf-9f7f-464f-aeb5-9ce97eb993b3"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "97e544aa-47c6-4326-8975-76df2203f39d--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -15000,19 +15010,20 @@
         "id": "c2e2c2d9-f0b2-4f0d-b994-9684395dfdd4--ed526686-f4eb-4552-b871-c606eb7711b2"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "0947802f-d016-4031-b90f-10d27b102439--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -21320,19 +21331,20 @@
         "id": "13e70e33-8a59-4c1f-a367-228870bed138--69c6a273-9255-4454-ba81-e58cf1a1d055"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "1cf84182-97b1-4630-b373-8b1d6bbec8ea--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "0",
@@ -22600,19 +22612,20 @@
         "id": "a1957cf3-b8dc-4396-8fef-72a29b5dbc5d--18ac4a3b-3aec-4e62-8ff7-47f96c74e90d"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "b2cef95b-d46a-42e6-9ec4-6ca8f2d57d07--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -24740,19 +24753,20 @@
         "id": "62fd8e1a-0226-4ed6-98e0-4f909f8bdf2b--d1952aa1-5d80-4d58-b520-cf2b8915aa8b"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "a4e20c5a-fd37-4fe4-9189-6c4e06f1f34d--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",
@@ -24880,22 +24894,23 @@
         "id": "dc82651d-d03f-461f-a0cd-4e61f9514015--f6ae2088-3557-4014-a9d7-9ef9a29ad8a8"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "818f6d40-b74d-4971-a039-efe8ccdc8f5b--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
-        "compliant": "0",
+        "compliant": "1",
         "entity_guid": "818f6d40-b74d-4971-a039-efe8ccdc8f5b",
         "id": "818f6d40-b74d-4971-a039-efe8ccdc8f5b--3cb9ab0b-050c-40db-9f12-f136045a77a0"
     },
@@ -30520,19 +30535,20 @@
         "id": "547cb8a7-392b-4b3e-8ba9-2428125aaa78--09e41d1f-0b00-4092-8ad3-389fab3ec848"
     },
     {
-        "expression": "length('dataDomain', 1)",
-        "noncompliant_message": "This data entity should have at least one data domain",
+        "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
+        "noncompliant_message": "This data entity should belong to at least one data domain or data entity",
         "usedattributes": [
-            "dataDomain"
+            "dataDomain",
+            "parentEntity"
         ],
         "qualifiedname": "114af845-1ccc-4534-a1f2-45f136959c6e--3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "qualityqualifiedname": "m4i_data_entity--dataDomain",
         "dataqualityruletypename": "m4i_data_entity",
         "dataqualitytype": "relationship",
-        "dataqualityruledescription": "A data entity should belong to at least one data domain",
+        "dataqualityruledescription": "A data entity should belong to at least one data domain or data entity",
         "dataqualityruledimension": "completeness",
         "result_id": "0",
-        "name": "Data entity belongs to a data domain",
+        "name": "Data entity belongs to a data domain or data entity",
         "business_rule_id": "1",
         "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0",
         "compliant": "1",

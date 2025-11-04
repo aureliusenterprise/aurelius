@@ -58,13 +58,13 @@
   {
     "id": 5,
     "expressionVersion": 1,
-    "expression": "length('dataDomain', 1)",
+    "expression": "length('dataDomain', 1) | length('parentEntity', 1)",
     "qualifiedName": "m4i_data_entity--dataDomain",
     "qualityDimension": "completeness",
-    "ruleTitle": "Data entity belongs to a data domain",
-    "ruleDescription": "A data entity should belong to at least one data domain",
-    "compliantMessage": "This data entity has at least one data domain",
-    "noncompliantMessage": "This data entity should have at least one data domain",
+    "ruleTitle": "Data entity belongs to a data domain or data entity",
+    "ruleDescription": "A data entity should belong to at least one data domain or data entity or data entity",
+    "compliantMessage": "This data entity belongs to at least one data domain or data entity",
+    "noncompliantMessage": "This data entity should belongs to at least one data domain or data entity",
     "active": 1,
     "type": "relationship",
     "guid": "3cb9ab0b-050c-40db-9f12-f136045a77a0"

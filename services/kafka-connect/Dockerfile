@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.source https://github.com/aureliusenterprise/aure
 USER root
 
 # Install gettext for envsubst
-RUN yum update -y && yum install -y gettext jq
+RUN microdnf update -y && microdnf install -y gettext jq && microdnf clean all
 USER appuser
 
 ARG CONNECT_ELASTICSEARCH_VERSION=latest

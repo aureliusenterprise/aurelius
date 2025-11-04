@@ -9,6 +9,13 @@ def run_quality_rule_expression(data: DataFrame, rule_expression: str) -> Series
     Runs the given quality `rule_expression` on the given `data`.
     Returns a Pandas `Series` containing the quality score per row (between 0 and 1).
     """
+    if '|' in rule_expression:
+        # Split the expression by logical OR operator
+        # Evaluate each part separately and combine the results
+        return DataFrame([
+            run_quality_rule_expression(data, expression.strip())
+            for expression in rule_expression.split(' | ')
+        ]).any(axis=0)
 
     # Index all available quality functions
     quality_functions = get_quality_functions()
@@ -26,11 +33,10 @@ def run_quality_rule_expression(data: DataFrame, rule_expression: str) -> Series
     # Run the function.
     # Reduce security risks by restricting the global execution context.
     # Make the data variable and quality functions available in the local execution context.
-    result = eval(
+    return eval(
         function_string,
         {"__builtins__": {}},
         {"data": data, **quality_functions}
     )
 
-    return result
 # END run_quality_rule_expression
