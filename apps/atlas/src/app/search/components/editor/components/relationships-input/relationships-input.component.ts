@@ -49,8 +49,9 @@ export class RelationshipsInputComponent implements OnInit, OnDestroy {
   @Input() relationshipTypeName: string;
   @Input() tags: FormArray<FormControl<AssignedEntity>>;
   @Input() rule: EntityValidationResult;
+  @Input() singleRelationship = false;
 
-  @ViewChild('inputElement', { static: true })
+  @ViewChild('inputElement', { static: false })
   private readonly inputElement: ElementRef<HTMLInputElement>;
 
   constructor(
@@ -88,13 +89,18 @@ export class RelationshipsInputComponent implements OnInit, OnDestroy {
       displayText: searchResult.name?.raw,
       entityStatus: 'ACTIVE',
       relationshipGuid: generatePlaceholderId(),
-      relationshipType: this.relationshipTypeName,
+      relationshipType: this.relationshipTypeName || '',
       relationshipStatus: 'ACTIVE',
       relationshipAttributes: {
-        typeName: this.relationshipTypeName,
+        typeName: this.relationshipTypeName || '',
       },
     };
 
+    if (this.singleRelationship) {
+      // Clear existing relationships and add the new one
+      this.tags.clear();
+    }
+    
     this.tags.push(new FormControl(relationship));
     this.input.reset('');
   }
@@ -104,7 +110,14 @@ export class RelationshipsInputComponent implements OnInit, OnDestroy {
   }
 
   focusInput() {
-    this.inputElement.nativeElement.focus();
+    // Only focus if we can add relationships and the input element exists
+    if (this.canAddRelationship) {
+      setTimeout(() => {
+        if (this.inputElement?.nativeElement) {
+          this.inputElement.nativeElement.focus();
+        }
+      }, 0);
+    }
   }
 
   preventBlur(event: Event) {
@@ -117,5 +130,9 @@ export class RelationshipsInputComponent implements OnInit, OnDestroy {
 
   @Input() set typeName(typeName: string) {
     this.relationshipsInputService.typeName = typeName;
+  }
+
+  get canAddRelationship(): boolean {
+    return !this.singleRelationship || this.tags.length === 0;
   }
 }
