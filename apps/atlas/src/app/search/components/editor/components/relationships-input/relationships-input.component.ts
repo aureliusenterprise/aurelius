@@ -89,10 +89,10 @@ export class RelationshipsInputComponent implements OnInit, OnDestroy {
       displayText: searchResult.name?.raw,
       entityStatus: 'ACTIVE',
       relationshipGuid: generatePlaceholderId(),
-      relationshipType: this.relationshipTypeName || '',
+      relationshipType: this.relationshipTypeName,
       relationshipStatus: 'ACTIVE',
       relationshipAttributes: {
-        typeName: this.relationshipTypeName || '',
+        typeName: this.relationshipTypeName,
       },
     };
 
