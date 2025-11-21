@@ -75,12 +75,12 @@ nav:
                 - Producers: user-guide/design-guide/producers.md
                 - Kafka Topics: user-guide/design-guide/kafka-topics.md
                 - Schemas: user-guide/design-guide/schemas.md
-          - How to Contribute:
-                - user-guide/how-to-contribute/index.md
-                - Development Environment: user-guide/how-to-contribute/development-environment.md
-                - Documentation: user-guide/how-to-contribute/documentation.md
-                - Secrets Management: user-guide/how-to-contribute/secrets-management.md
-                - Version Control: user-guide/how-to-contribute/version-control.md
+    - Contributor Guide:
+          - contributor-guide/index.md
+          - Development Environment: contributor-guide/development-environment.md
+          - Documentation: contributor-guide/documentation.md
+          - Secrets Management: contributor-guide/secrets-management.md
+          - Version Control: contributor-guide/version-control.md
     - API Reference:
           - api-reference/index.md
           - Apps:

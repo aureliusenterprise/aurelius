@@ -7,7 +7,7 @@ environment, including the all tools and dependencies required for local develop
 
 !!! NOTE "Prerequisites"
 
-    [Docker](https://www.docker.com) must be installed on your system to use the development container.
+    [Docker](https://www.docker.com) and the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) must be installed on your system to use the development container.
 
     If you're using **Rancher Desktop**, follow the instructions in the [Rancher Desktop documentation](https://docs.rancherdesktop.io/how-to-guides/vs-code-remote-containers/)
     to prepare your environment for use with the development container.
