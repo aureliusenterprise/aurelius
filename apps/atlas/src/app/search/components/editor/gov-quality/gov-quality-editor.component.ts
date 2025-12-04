@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import {
   UntypedFormControl,
   UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
   Validators
 } from '@angular/forms';
 import {
@@ -17,6 +19,17 @@ import {
   EDITOR_UPDATE_STRATEGY
 } from '../services/editor-form.service';
 import { EntityValidateService } from '../services/entity-validate/entity-validate.service';
+
+function rightSingleQuotationMarkValidator(): ValidatorFn {
+  return (control): ValidationErrors | null => {
+    if (!control.value) {
+      return null;
+    }
+    // Check for right single quotation mark (U+2019)
+    const hasRightSingleQuotation = /[’]/.test(control.value);
+    return hasRightSingleQuotation ? { rightSingleQuotationMark: true } : null;
+  };
+}
 
 function createGovQualityEditorForm(): UntypedFormGroup {
   const compliantMessage = new UntypedFormControl(null),

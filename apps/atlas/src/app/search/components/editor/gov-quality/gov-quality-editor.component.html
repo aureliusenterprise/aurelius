@@ -29,6 +29,12 @@
         Name is required.
       </p>
     </ng-container>
+    <ng-container *ngIf="name.value && name.value.includes('\u2019')">
+      <p class="help is-warning">
+        Importing the character ' (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
+        Please replace it with a standard apostrophe (') before importing your text.
+      </p>
+    </ng-container>
   </div>
 
 
@@ -52,6 +58,12 @@
         ></models4insight-gov-quality-display
       ></ng-container>
     </div>
+    <ng-container *ngIf="ruleDescription.value && ruleDescription.value.includes('\u2019')">
+      <p class="help is-warning">
+        Importing the character ' (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
+        Please replace it with a standard apostrophe (') before importing your text.
+      </p>
+    </ng-container>
   </div>
 
   <div class="field">
@@ -129,6 +141,12 @@
         Compliant message is required.
       </p>
     </ng-container>
+    <ng-container *ngIf="compliantMessage.value && compliantMessage.value.includes('\u2019')">
+      <p class="help is-warning">
+        Importing the character ' (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
+        Please replace it with a standard apostrophe (') before importing your text.
+      </p>
+    </ng-container>
   </div>
 
   <div class="field">
@@ -160,6 +178,12 @@
     >
       <p *ngIf="nonCompliantMessage.errors?.required" class="help is-danger">
         Non-compliant message is required.
+      </p>
+    </ng-container>
+    <ng-container *ngIf="nonCompliantMessage.value && nonCompliantMessage.value.includes('\u2019')">
+      <p class="help is-warning">
+        Importing the character ' (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
+        Please replace it with a standard apostrophe (') before importing your text.
       </p>
     </ng-container>
   </div>
