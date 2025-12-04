@@ -26,7 +26,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.repository }}:{{ .Values.tag }}"
+          image: "{{ .Values.repository }}:{{ .Values.global.version }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - name: http

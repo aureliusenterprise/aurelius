@@ -1,7 +1,6 @@
 replicaCount: 1
-repository: aureliusatlas/docker-python-rest
+repository: ghcr.io/aureliusenterprise/m4i-atlas-rest-api
 pullPolicy: Always
-tag: "1.0.7"
 service:
   name: reverse-proxy
   type: ClusterIP

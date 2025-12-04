@@ -1,0 +1,73 @@
+{
+  "name": "m4i-atlas-rest-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "backend/m4i-atlas-rest-api/src",
+  "targets": {
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "update": {
+      "executor": "@nxlv/python:update",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": [
+        "{workspaceRoot}/dist/backend/m4i-atlas-rest-api"
+      ],
+      "options": {
+        "outputPath": "{workspaceRoot}/dist/backend/m4i-atlas-rest-api",
+        "publish": false,
+        "lockedVersions": false,
+        "bundleLocalDependencies": true
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:ruff-check",
+      "outputs": [],
+      "options": {
+        "lintFilePatterns": [
+          "atlas_mock",
+          "core",
+          "compare",
+          "consistency_metrics",
+          "data2model",
+          "data_governance_dashboard",
+          "lineage_model",
+          "extra_modules",
+          "logging_to_elastic"
+        ]
+      }
+    },
+    "docker-build": {
+      "dependsOn": [],
+      "command": "docker build -f {projectRoot}/src/Dockerfile {projectRoot}/src -t {args.namespace}/{args.tag}:{args.version}",
+      "options": {
+        "namespace": "ghcr.io/aureliusenterprise",
+        "tag": "m4i-atlas-rest-api",
+        "version": "1.0.7"
+      }
+    },
+    "docker-publish": {
+      "dependsOn": [
+        {
+          "target": "docker-build",
+          "params": "forward"
+        }
+      ],
+      "command": "docker push {args.namespace}/{args.tag}:{args.version}",
+      "options": {
+        "namespace": "ghcr.io/aureliusenterprise",
+        "tag": "m4i-atlas-rest-api",
+        "version": "1.0.7"
+      }
+    }
+  },
+  "tags": []
+}

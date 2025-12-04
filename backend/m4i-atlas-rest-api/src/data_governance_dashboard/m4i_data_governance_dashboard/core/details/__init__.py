@@ -1,0 +1,1 @@
+from .Details import Details

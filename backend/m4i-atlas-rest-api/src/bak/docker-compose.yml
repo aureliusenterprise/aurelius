@@ -1,0 +1,9 @@
+version: '3'
+services:
+  api:
+    build: .
+    ports:
+     - "8080:8080"
+    environment:
+      - ES_URL="https://test.westeurope.azure.elastic-cloud.com:9243/"
+      - ES_INDEX="testindex"

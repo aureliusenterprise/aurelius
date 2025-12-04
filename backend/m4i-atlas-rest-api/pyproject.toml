@@ -1,0 +1,83 @@
+[tool.poetry]
+name = "m4i-atlas-rest-api"
+version = "1.0.7"
+description = "Docker Python REST services for Aurelius Atlas"
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+license = 'UNLICENSED'
+readme = 'README.md'
+
+[[tool.poetry.packages]]
+include = "m4i_atlas_mock"
+from = "atlas_mock"
+
+[[tool.poetry.packages]]
+include = "m4i_backend_core"
+from = "core"
+
+[[tool.poetry.packages]]
+include = "m4i_compare"
+from = "compare"
+
+[[tool.poetry.packages]]
+include = "m4i_consistency_metrics"
+from = "consistency_metrics"
+
+[[tool.poetry.packages]]
+include = "m4i_data2model"
+from = "data2model"
+
+[[tool.poetry.packages]]
+include = "m4i_data_governance_dashboard"
+from = "data_governance_dashboard"
+
+[[tool.poetry.packages]]
+include = "m4i_lineage_model"
+from = "lineage_model"
+
+[[tool.poetry.packages]]
+include = "m4i_metrics"
+from = "extra_modules/metrics"
+
+[[tool.poetry.packages]]
+include = "m4i_graphviz_layouts"
+from = "extra_modules/graphviz_layouts"
+
+[[tool.poetry.packages]]
+include = "m4i_logging_to_elastic"
+from = "logging_to_elastic"
+
+[tool.poetry.dependencies]
+python = "~3.7"
+werkzeug = "2.1.2"
+Flask = "2.1.2"
+flask-restx = "1.0.3"
+bokeh = "*"
+numpy = "*"
+pandas = "*"
+xlrd = "*"
+requests-cache = "*"
+deepdiff = "5.8.1"
+dataclasses-json = "*"
+msgpack = "*"
+ujson = "*"
+requests = "*"
+SQLAlchemy = "*"
+MarkupSafe = "2.0.1"
+keycloak-client = "*"
+gunicorn = {extras = ["gevent"], version = "*"}
+
+[tool.poetry.dependencies.m4i-atlas-core]
+git = "https://github.com/aureliusenterprise/m4i_atlas_core.git"
+develop = true
+
+[tool.poetry.dependencies.m4i-analytics]
+git = "https://github.com/aureliusenterprise/analytics-library.git"
+develop = true
+
+[tool.poetry.dependencies.m4i-lineage-rest-api]
+git = "https://github.com/aureliusenterprise/linage_restAPI.git"
+develop = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

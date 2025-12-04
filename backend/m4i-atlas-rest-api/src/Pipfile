@@ -1,0 +1,41 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+werkzeug = "==2.1.2"
+Flask = "==2.1.2"
+flask-restx = "==1.0.3"
+bokeh = "*"
+numpy = "*"
+pandas = "*"
+xlrd = "*"
+requests-cache = "*"
+deepdiff = "==5.8.1"
+dataclasses-json = "*"
+m4i-atlas-core = { git = "https://github.com/aureliusenterprise/m4i_atlas_core.git",  editable = true }
+msgpack = "*"
+ujson = "*"
+requests = "*"
+SQLAlchemy = "*"
+MarkupSafe = "==2.0.1"
+keycloak-client = "*"
+m4i-atlas-mock = { editable = true, path = "./atlas_mock" }
+m4i-backend-core = { editable = true, path = "./core" }#{git = "https://github.com/aureliusenterprise/m4i_backend_core.git", editable = true}
+m4i-compare = { editable = true, path = "./compare" }
+m4i-consistency-metrics = { editable = true, path = "./consistency_metrics" }
+m4i-analytics = { git = "https://github.com/aureliusenterprise/analytics-library.git", editable = true }
+m4i-data2model = { editable = true, path = "./data2model" }
+m4i-data-governance-dashboard = { editable = true, path = "./data_governance_dashboard" }
+m4i-lineage-model = { editable = true, path = "./lineage_model" }
+m4i-metrics = { editable = true, path = "./extra_modules/metrics" }
+m4i-graphviz-layouts = { editable = true, path = "./extra_modules/graphviz_layouts" }
+m4i-logging-to-elastic = { editable = true, path = "./logging_to_elastic" }
+m4i-lineage-rest-api = { git = "https://github.com/aureliusenterprise/linage_restAPI.git", editable = true }
+
+
+[dev-packages]
+
+[requires]
+python_version = "3.7.2"
