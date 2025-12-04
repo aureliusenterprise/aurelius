@@ -6,8 +6,8 @@ on:
       - v*.*.*
 
 jobs:
-  test:
-    name: Publish
+  publish-containers:
+    name: Publish Containers
     runs-on: ubuntu-latest
     permissions: write-all
     timeout-minutes: 15
@@ -44,10 +44,52 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish containers
-        run: npx nx run-many -t docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
+      - name: Publish containers (excluding Flink jobs)
+        run: npx nx run-many -t docker-publish --exclude aurelius-flink-jobs -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
         shell: bash
 
       - name: Publish helm chart
         run: npx nx run-many -t helm-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
+        shell: bash
+
+  publish-flink-jobs:
+    name: Publish Flink Jobs
+    runs-on: ubuntu-latest
+    permissions: write-all
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+        shell: bash
+
+      - name: Print Environment Info
+        run: npx nx report
+        shell: bash
+
+      - name: Setup Python, Poetry and Dependencies
+        uses: packetcoders/action-setup-cache-python-poetry@main
+        with:
+          python-version: 3.8
+          poetry-version: 1.8.4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Flink jobs container
+        run: npx nx run aurelius-flink-jobs:docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
         shell: bash
