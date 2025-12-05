@@ -8,9 +8,6 @@ on:
         branches:
             - main
 
-env:
-    POETRY_VIRTUALENVS_IN_PROJECT: true
-
 jobs:
     publish:
         runs-on: ubuntu-latest
@@ -28,20 +25,21 @@ jobs:
               with:
                   python-version: 3.13
 
-            - name: Install poetry
-              run: python -m pip install poetry
+            - name: Install uv
+              run: python -m pip install uv
 
             - name: Cache the virtualenv
               uses: actions/cache@v4
               with:
                   path: ./.venv
-                  key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
+                  key: ${{ runner.os }}-venv-${{ hashFiles('**/uv.lock') }}
 
-            - run: poetry install
+            - name: Install Python dependencies
+              run: uv venv --allow-existing && uv sync
 
             - name: Publish documentation for main branch
               run: |
                   REF_NAME=${{ github.ref_name }}
                   SANITIZED_REF_NAME=${REF_NAME//"/"/"-"}
-                  poetry run mike deploy -b public-docs --push $SANITIZED_REF_NAME
+                  uv run mike deploy -b public-docs --push $SANITIZED_REF_NAME
               shell: bash

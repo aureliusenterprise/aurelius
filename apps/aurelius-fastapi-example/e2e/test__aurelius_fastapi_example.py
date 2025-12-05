@@ -5,6 +5,7 @@ from collections.abc import Generator
 import pytest
 from aurelius_example import Entity
 from sqlmodel import Session
+from tenacity import Retrying, stop_after_attempt, wait_fixed
 
 
 def test__aurelius_fastapi_example_has_swagger_docs(connection: http.client.HTTPConnection) -> None:
@@ -226,7 +227,10 @@ def test__aurelius_fastapi_example_create(
     data = Entity.model_validate(json.loads(response.read()))
 
     assert data == entity, "The created entity does not match the expected entity"
-    assert session.get(Entity, entity.guid) == entity, "The entity was not found in the database after creation"
+
+    for attempt in Retrying(wait=wait_fixed(1), stop=stop_after_attempt(5)):
+        with attempt:
+            assert session.get(Entity, entity.guid) == entity, "The entity was not found in the database after creation"
 
 
 def test__aurelius_fastapi_example_update(
@@ -264,7 +268,15 @@ def test__aurelius_fastapi_example_update(
     data = Entity.model_validate(json.loads(response.read()))
 
     assert data == entity, "The updated entity does not match the expected entity"
-    assert session.get(Entity, entity.guid) == entity, "The entity was not found in the database after update"
+
+    for attempt in Retrying(wait=wait_fixed(1), stop=stop_after_attempt(5)):
+        with attempt:
+            actual = session.get(Entity, entity.guid)
+            try:
+                assert actual == entity, "The entity was not found in the database after update"
+            except AssertionError:
+                session.expunge(actual)
+                raise
 
 
 def test__aurelius_fastapi_example_put_requires_auth(
@@ -317,7 +329,14 @@ def test__aurelius_fastapi_example_delete(
 
     assert response.status == 200
 
-    assert session.get(Entity, entity.guid) is None, "The entity was not deleted from the database"
+    for attempt in Retrying(wait=wait_fixed(1), stop=stop_after_attempt(5)):
+        with attempt:
+            actual = session.get(Entity, entity.guid)
+            try:
+                assert actual is None, "The entity was not deleted from the database"
+            except AssertionError:
+                session.expunge(actual)
+                raise
 
 
 def test__aurelius_fastapi_example_delete_requires_auth(

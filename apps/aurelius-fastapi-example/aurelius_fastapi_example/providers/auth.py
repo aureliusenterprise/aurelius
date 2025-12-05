@@ -10,7 +10,7 @@ from pydantic import BaseModel, HttpUrl
 
 from aurelius_fastapi_example.globals import LOGGER, SETTINGS
 
-auth_base_url = f"{SETTINGS.auth_server_url}/realms/{SETTINGS.auth_realm_name}"
+auth_base_url = f"{SETTINGS.auth_server_url}realms/{SETTINGS.auth_realm_name}"
 
 auth = OAuth2PasswordBearer(
     tokenUrl=f"{auth_base_url}/protocol/openid-connect/token",

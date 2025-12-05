@@ -97,7 +97,7 @@ The pre-commit hooks perform the following checks:
     Pre-commit hooks can also be run manually using the following command:
 
     ```bash
-    poetry run pre-commit
+    uv run pre-commit
     ```
 
 The pre-commit hooks are intended to help us keep the codebase maintainable. If there are rules that you believe

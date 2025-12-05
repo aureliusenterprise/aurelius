@@ -1,25 +1,24 @@
-[tool.poetry]
-authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+[project]
+authors = [{ name = "Aurelius Enterprise" }]
 description = "This library provides common utilities for working with Apache Kafka."
 name = "aurelius-kafka"
+requires-python = ">=3.13"
 version = "0.0.0"
 
-[[tool.poetry.packages]]
-include = "aurelius_kafka"
+dependencies = [
+    "aurelius-sdk",
+    "aws-msk-iam-sasl-signer-python>=1.0.2",
+    "confluent-kafka[avro,schema-registry]==2.10.0",
+]
 
-[tool.poetry.dependencies]
-aws-msk-iam-sasl-signer-python = "^1.0.2"
+[tool.hatch.build.targets.wheel]
+packages = ["aurelius_kafka"]
 
-[tool.poetry.dependencies.aurelius-sdk]
-develop = true
-path = "../../../libs/python/aurelius-sdk"
+[tool.hatch.metadata]
+allow-direct-references = true
 
-[tool.poetry.dependencies.confluent-kafka]
-extras = ["avro", "schema-registry"]
-version = "2.10.0"
-
-[tool.poetry.extras]
-msk = ["aws-msk-iam-sasl-signer-python"]
+[tool.uv.sources.aurelius-sdk]
+workspace = true
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "module"
@@ -27,5 +26,5 @@ asyncio_mode = "auto"
 required_plugins = ["pytest-asyncio"]
 
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core"]
+build-backend = "hatchling.build"
+requires = ["hatchling"]

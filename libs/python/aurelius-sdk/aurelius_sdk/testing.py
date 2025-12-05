@@ -9,16 +9,17 @@ import logging
 
 from testcontainers.compose import DockerCompose
 
-DEFAULT_LOGGER = logging.getLogger()
-
 
 def capture_docker_compose_logs(
     compose: DockerCompose,
     *services: str,
-    logger: logging.Logger = DEFAULT_LOGGER,
+    logger: logging.Logger | None = None,
 ) -> None:
     """Capture logs from the given Docker Compose services. Omit services to capture all available logs."""
     stdout, stderr = compose.get_logs(*services)
+
+    if logger is None:
+        logger = logging.getLogger(__name__)
 
     logger.info("---------- Docker Compose Logs ----------")
 

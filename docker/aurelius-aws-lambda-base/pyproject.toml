@@ -1,11 +1,8 @@
-[tool.poetry]
+[project]
 name = "aurelius-aws-lambda-base"
-package-mode = false
 version = "0.0.0"
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "module"
 asyncio_mode = "auto"
-log_format = "%(message)s"
-log_level = "INFO"
 required_plugins = ["pytest-asyncio"]

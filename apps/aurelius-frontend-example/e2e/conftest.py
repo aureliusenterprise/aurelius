@@ -12,7 +12,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL, Engine
 from sqlmodel import Session, SQLModel, create_engine
 from testcontainers.compose import DockerCompose
-from testcontainers.core.waiting_utils import wait_container_is_ready
+from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
 
 
 class Settings(BaseSettings):
@@ -45,12 +45,15 @@ def _environment() -> None:
 
 
 @pytest.fixture(scope="session")
-@wait_container_is_ready()
 def compose() -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
     context = Path(__file__).parent.absolute()
     with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
-        yield compose
+        yield compose.waiting_for(
+            {
+                "aurelius-frontend-example": HealthcheckWaitStrategy(),
+            },
+        )
         capture_docker_compose_logs(compose)
 
 

@@ -7,9 +7,10 @@ This library provides common utilities for example projects.
 You can include `aurelius-example` in your project by adding it to your `pyproject.toml`:
 
 ```toml
-[tool.poetry.dependencies.aurelius-example]
-develop = true
-path = "../../libs/python/aurelius-example"
+dependencies = ["aurelius-example"]
+
+[tool.uv.sources.aurelius-example]
+workspace = true
 ```
 
 Ensure the path points to the correct location of the `aurelius-example` library.

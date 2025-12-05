@@ -4,6 +4,6 @@
 /.nx/cache
 /.nx/workspace-data
 **/CHANGELOG.md
-poetry.lock
+uv.lock
 
 .angular

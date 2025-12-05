@@ -7,9 +7,10 @@ This library provides common utilities for working with AWS lambda functions.
 You can include `aurelius-aws-lambda` in your project by adding it to your `pyproject.toml`:
 
 ```toml
-[tool.poetry.dependencies.aurelius-aws-lambda]
-develop = true
-path = "../../libs/python/aurelius-aws-lambda"
+dependencies = ["aurelius-aws-lambda"]
+
+[tool.uv.sources.aurelius-aws-lambda]
+workspace = true
 ```
 
 Ensure the path points to the correct location of the `aurelius-aws-lambda` library.

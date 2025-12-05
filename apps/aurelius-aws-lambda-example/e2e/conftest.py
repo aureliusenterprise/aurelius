@@ -18,7 +18,7 @@ from confluent_kafka.schema_registry.avro import AvroDeserializer, AvroSerialize
 from confluent_kafka.serialization import StringDeserializer, StringSerializer
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from testcontainers.compose import DockerCompose
-from testcontainers.core.waiting_utils import wait_container_is_ready
+from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
 
 
 class Settings(BaseSettings):
@@ -46,12 +46,15 @@ def _environment() -> None:
 
 
 @pytest.fixture(scope="session", autouse=True)
-@wait_container_is_ready()
 def compose() -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
     context = Path(__file__).parent.absolute()
     with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
-        yield compose
+        yield compose.waiting_for(
+            {
+                "aurelius-aws-lambda-example": HealthcheckWaitStrategy(),
+            },
+        )
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -166,4 +169,4 @@ def connection(compose: DockerCompose) -> http.client.HTTPConnection:
         message = "Could not find the host and port for the lambda service."
         raise ValueError(message)
 
-    return http.client.HTTPConnection(host, port)  # type: ignore[reportArgumentType]
+    return http.client.HTTPConnection(host, port)

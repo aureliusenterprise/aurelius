@@ -1,6 +1,5 @@
 {
     "containerEnv": {
-        "POETRY_VIRTUALENVS_IN_PROJECT": "true",
         "SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/secrets/keys.txt"
     },
     "customizations": {
@@ -94,7 +93,7 @@
             "version": "lts"
         },
         "ghcr.io/devcontainers/features/python:1": {
-            "toolsToInstall": ["poetry"],
+            "toolsToInstall": ["uv"],
             "version": "3.13"
         }
     },
@@ -103,7 +102,7 @@
     "name": "Aurelius Project Template",
     "onCreateCommand": {
         "npm": "bash .devcontainer/npm.sh",
-        "poetry": "bash .devcontainer/poetry.sh"
+        "uv": "bash .devcontainer/uv.sh"
     },
     "postCreateCommand": {
         "playwright": "bash .devcontainer/playwright.sh",

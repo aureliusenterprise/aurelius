@@ -3,7 +3,6 @@
     "defaultBase": "main",
     "generators": {
         "@nx/angular:application": {
-            "e2eTestRunner": "playwright",
             "linter": "eslint",
             "style": "scss",
             "unitTestRunner": "vitest"
@@ -24,12 +23,6 @@
         "./tools/plugins/sops.ts",
         "./tools/plugins/sops-decrypt.ts",
         "./tools/plugins/sops-encrypt.ts",
-        {
-            "options": {
-                "targetName": "e2e"
-            },
-            "plugin": "@nx/playwright/plugin"
-        },
         {
             "options": {
                 "targetName": "eslint:lint"

@@ -40,7 +40,7 @@ repos:
       hooks:
           - id: pyright
             name: Check for Python type errors
-            entry: poetry run pyright
+            entry: uv run pyright
             language: system
             "types_or": [python, pyi]
             require_serial: true

@@ -1,15 +1,17 @@
-[tool.poetry]
-authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+[project]
+authors = [{ name = "Aurelius Enterprise" }]
 description = "This library provides common utilities for working with AWS lambda functions."
 name = "aurelius-aws-lambda"
+requires-python = ">=3.13"
 version = "0.0.0"
 
-[[tool.poetry.packages]]
-include = "aurelius_aws_lambda"
+dependencies = ["aws-lambda-powertools>=3.17.0", "pydantic>=2.11.7"]
 
-[tool.poetry.dependencies]
-aws-lambda-powertools = "^3.17.0"
-pydantic = "^2.11.7"
+[tool.hatch.build.targets.wheel]
+packages = ["aurelius_aws_lambda"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "module"
@@ -17,5 +19,5 @@ asyncio_mode = "auto"
 required_plugins = ["pytest-asyncio"]
 
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core"]
+build-backend = "hatchling.build"
+requires = ["hatchling"]

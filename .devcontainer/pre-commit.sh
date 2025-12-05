@@ -4,4 +4,4 @@
 git config --global --add safe.directory $PWD
 
 # Install pre-commit hooks
-poetry run pre-commit install
+uv run pre-commit install

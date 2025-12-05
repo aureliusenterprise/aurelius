@@ -69,7 +69,7 @@
             ],
             "executor": "@nxlv/python:run-commands",
             "options": {
-                "command": "pytest e2e --browser chromium --browser firefox --browser webkit --tracing retain-on-failure",
+                "command": "uv run pytest e2e --browser chromium --browser firefox --browser webkit --tracing retain-on-failure",
                 "cwd": "{projectRoot}"
             }
         },

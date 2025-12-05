@@ -1,41 +1,39 @@
-[tool.poetry]
-authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+[project]
+authors = [{ name = "Aurelius Enterprise" }]
 description = "This is an example FastAPI application."
 name = "aurelius-fastapi-example"
+requires-python = ">=3.13"
 version = "0.0.0"
 
-[[tool.poetry.packages]]
-include = "aurelius_fastapi_example"
+dependencies = [
+    "aurelius-example",
+    "aurelius-sdk",
+    "fastapi>=0.116.1",
+    "httpx>=0.28.1",
+    "psycopg2>=2.9.10",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "pyjwt>=2.10.1",
+    "uvicorn[standard]>=0.35.0",
+]
 
-[tool.poetry.dependencies]
-fastapi = "^0.116.1"
-httpx = "^0.28.1"
-psycopg2 = "^2.9.10"
-pydantic = "^2.11.7"
-pydantic-settings = "^2.10.1"
-pyjwt = "^2.10.1"
-python = "^3.13"
+[tool.hatch.build.targets.wheel]
+packages = ["aurelius_fastapi_example"]
 
-[tool.poetry.dependencies.uvicorn]
-extras = ["standard"]
-version = "^0.35.0"
-
-[tool.poetry.dependencies.aurelius-example]
-develop = true
-path = "../../libs/python/aurelius-example"
-
-[tool.poetry.dependencies.aurelius-sdk]
-develop = true
-extras = ["logger"]
-path = "../../libs/python/aurelius-sdk"
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "module"
 asyncio_mode = "auto"
-log_format = "%(message)s"
-log_level = "INFO"
 required_plugins = ["pytest-asyncio"]
 
+[tool.uv.sources.aurelius-example]
+workspace = true
+
+[tool.uv.sources.aurelius-sdk]
+workspace = true
+
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core"]
+build-backend = "hatchling.build"
+requires = ["hatchling"]

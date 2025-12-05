@@ -1,41 +1,40 @@
-[tool.poetry]
-authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+[project]
+authors = [{ name = "Aurelius Enterprise " }]
 description = "This is an example AWS lambda function."
 name = "aurelius-aws-lambda-example"
+requires-python = ">=3.13"
 version = "0.0.0"
 
-[[tool.poetry.packages]]
-include = "aurelius_aws_lambda_example"
+dependencies = [
+    "aurelius-aws-lambda",
+    "aurelius-example",
+    "aurelius-kafka",
+    "aws-lambda-powertools>=3.17.0",
+    "confluent-kafka[avro,schema-registry]==2.10.0",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+]
 
-[tool.poetry.dependencies]
-aws-lambda-powertools = "^3.17.0"
-pydantic = "^2.11.7"
-pydantic-settings = "^2.10.1"
-python = "^3.13"
+[tool.hatch.build.targets.wheel]
+packages = ["aurelius_aws_lambda_example"]
 
-[tool.poetry.dependencies.aurelius-aws-lambda]
-develop = true
-path = "../../libs/python/aurelius-aws-lambda"
-
-[tool.poetry.dependencies.aurelius-example]
-develop = true
-path = "../../libs/python/aurelius-example"
-
-[tool.poetry.dependencies.confluent-kafka]
-extras = ["avro", "schema-registry"]
-version = "2.10.0"
-
-[tool.poetry.dependencies.aurelius-kafka]
-develop = true
-path = "../../libs/python/aurelius-kafka"
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "module"
 asyncio_mode = "auto"
-log_format = "%(message)s"
-log_level = "INFO"
 required_plugins = ["pytest-asyncio"]
 
+[tool.uv.sources.aurelius-aws-lambda]
+workspace = true
+
+[tool.uv.sources.aurelius-example]
+workspace = true
+
+[tool.uv.sources.aurelius-kafka]
+workspace = true
+
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core"]
+build-backend = "hatchling.build"
+requires = ["hatchling"]

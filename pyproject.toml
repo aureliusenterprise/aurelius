@@ -1,76 +1,53 @@
-[tool.poetry]
+[project]
 name = "aurelius-project-template"
-package-mode = false
+readme = "docs/README.md"
+requires-python = ">=3.13"
 version = "0.0.0"
 
-[tool.poetry.dependencies]
-python = "^3.13"
+[[project.authors]]
+name = "Aurelius Enterprise"
 
-[tool.poetry.group.dev.dependencies]
-alembic = "^1.16.4"
-boto3 = "^1.39.6"
-mike = "^2.1.3"
-mkdocs = "^1.6.1"
-mkdocs-material = "^9.6.15"
-mkdocs-print-site-plugin = "^2.7.3"
-mkdocstrings = "^0.29.1"
-mkdocstrings-python = "^1.16.12"
-pre-commit = "^4.2.0"
-psycopg2-binary = "^2.9.10"
-pydantic = "^2.11.7"
-pydantic-avro = "^0.9.0"
-pydantic-settings = "^2.10.1"
-pymdown-extensions = "^10.16"
-pyright = "^1.1.403"
-pytest = "^8.4.1"
-pytest-asyncio = "^1.0.0"
-pytest-cov = "^6.2.1"
-pytest-mock = "^3.14.1"
-pytest-playwright = "^0.7.0"
-pytest-sugar = "^1.0.0"
-python-dotenv = "^1.1.1"
-python-keycloak = "^5.7.0"
-ruff = "^0.12.3"
-sqlalchemy = "^2.0.41"
-sqlmodel = "^0.0.24"
-tenacity = "^9.1.2"
-testcontainers = "^4.10.0"
-timeout-decorator = "^0.5.0"
-
-[tool.poetry.group.dev.dependencies.aurelius-aws-lambda]
-develop = true
-extras = ["kafka"]
-path = "libs/python/aurelius-aws-lambda"
-
-[tool.poetry.group.dev.dependencies.aurelius-aws-lambda-example]
-develop = true
-path = "apps/aurelius-aws-lambda-example"
-
-[tool.poetry.group.dev.dependencies.aurelius-example]
-develop = true
-path = "libs/python/aurelius-example"
-
-[tool.poetry.group.dev.dependencies.aurelius-fastapi-example]
-develop = true
-path = "apps/aurelius-fastapi-example"
-
-[tool.poetry.group.dev.dependencies.aurelius-kafka]
-develop = true
-extras = ["msk"]
-path = "libs/python/aurelius-kafka"
-
-[tool.poetry.group.dev.dependencies.aurelius-sdk]
-develop = true
-extras = ["aws", "logger", "msal", "testing"]
-path = "libs/python/aurelius-sdk"
-
-[tool.poetry.group.dev.dependencies.confluent-kafka]
-extras = ["avro", "schema-registry"]
-version = "2.10.0"
-
-[tool.poetry.group.dev.dependencies.types-boto3]
-extras = ["full"]
-version = "1.39.6"
+[dependency-groups]
+dev = [
+    "aurelius-aws-lambda",
+    "aurelius-aws-lambda-example",
+    "aurelius-example",
+    "aurelius-fastapi-example",
+    "aurelius-kafka",
+    "aurelius-sdk",
+    "alembic>=1.16.4",
+    "boto3>=1.39.6",
+    "confluent-kafka[avro,schema-registry]>=2.10.0",
+    "mike>=2.1.3",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.15",
+    "mkdocs-print-site-plugin>=2.7.3",
+    "mkdocstrings>=0.29.1",
+    "mkdocstrings-python>=1.16.12",
+    "playwright>=1.56.0",
+    "pre-commit>=4.2.0",
+    "psycopg2-binary>=2.9.10",
+    "pydantic>=2.11.7",
+    "pydantic-avro>=0.9.0",
+    "pydantic-settings>=2.10.1",
+    "pymdown-extensions>=10.16",
+    "pyright>=1.1.403",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=6.2.1",
+    "pytest-mock>=3.14.1",
+    "pytest-playwright>=0.7.0",
+    "pytest-sugar>=1.0.0",
+    "python-dotenv>=1.1.1",
+    "python-keycloak>=5.7.0",
+    "ruff>=0.12.3",
+    "sqlalchemy>=2.0.41",
+    "sqlmodel>=0.0.24",
+    "tenacity>=9.1.2",
+    "testcontainers>=4.10.0",
+    "timeout-decorator>=0.5.0",
+    "types-boto3[full]>=1.39.6",
+]
 
 [tool.pyright]
 exclude = [".venv"]
@@ -104,3 +81,31 @@ runtime-evaluated-decorators = ["pydantic.validate_call", "attrs.define"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.uv.sources.aurelius-aws-lambda]
+workspace = true
+
+[tool.uv.sources.aurelius-aws-lambda-example]
+workspace = true
+
+[tool.uv.sources.aurelius-example]
+workspace = true
+
+[tool.uv.sources.aurelius-fastapi-example]
+workspace = true
+
+[tool.uv.sources.aurelius-kafka]
+workspace = true
+
+[tool.uv.sources.aurelius-sdk]
+workspace = true
+
+[tool.uv.workspace]
+members = [
+    "apps/aurelius-aws-lambda-example",
+    "apps/aurelius-fastapi-example",
+    "libs/python/aurelius-aws-lambda",
+    "libs/python/aurelius-example",
+    "libs/python/aurelius-kafka",
+    "libs/python/aurelius-sdk",
+]
