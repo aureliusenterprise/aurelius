@@ -11,6 +11,7 @@ from m4i_flink_tasks import (
     EntityMessageType,
     SynchronizeAppSearchError,
 )
+from m4i_flink_tasks.operations.error_handler import safe_map
 
 from .event_handlers import (
     handle_delete_breadcrumbs,
@@ -77,10 +78,11 @@ class SynchronizeAppSearchFunction(MapFunction):
         """
         self.elastic = self.elastic_factory()
 
+    @safe_map
     def map(
         self,
         value: Union[EntityMessage, Exception],
-    ) -> Union[List[Tuple[str, Union[AppSearchDocument, None]]], List[Exception]]:
+    ) -> Union[List[Tuple[str, Union[AppSearchDocument, None]]], Exception]:
         """
         Process an EntityMessage and perform actions based on the type of change event.
 
@@ -96,7 +98,7 @@ class SynchronizeAppSearchFunction(MapFunction):
         """
         if isinstance(value, Exception):
             logging.debug("Passing down error: %s", value)
-            return [value]
+            return value
 
         logging.info("SynchronizeAppSearchFunction: %s", value)
 
@@ -105,7 +107,7 @@ class SynchronizeAppSearchFunction(MapFunction):
         if event_type not in EVENT_HANDLERS:
             message = f"Unknown event type: {event_type}"
             logging.error(message)
-            return [NotImplementedError(message)]
+            return NotImplementedError(message)
 
         event_handlers = EVENT_HANDLERS[event_type]
 
@@ -121,7 +123,7 @@ class SynchronizeAppSearchFunction(MapFunction):
             if event_type == EntityMessageType.ENTITY_DELETED:
                 updated_documents[value.guid] = None  # type: ignore
         except SynchronizeAppSearchError as e:
-            return [e]
+            return e
 
         result = list(updated_documents.items())
 
@@ -161,7 +163,7 @@ class SynchronizeAppSearch:
         ).name("synchronize_app_search")
 
         self.main = self.app_search_documents.flat_map(
-            lambda documents: (
-                document for document in documents if not isinstance(document, Exception)
-            ),
+            lambda output_message: (
+                document for document in output_message 
+            ) if not isinstance(output_message, Exception) else output_message,
         ).name("app_search_documents")

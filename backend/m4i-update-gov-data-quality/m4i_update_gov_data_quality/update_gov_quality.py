@@ -3,6 +3,7 @@ from typing import List, TypedDict, Union
 
 from elastic_transport._models import DefaultType
 from keycloak import KeycloakOpenID
+from m4i_flink_tasks.operations.error_handler import extract_errors, filter_successful
 from m4i_flink_tasks.operations.get_rules.get_rules import GetRules
 from pyflink.common import Configuration, Types
 from pyflink.common.serialization import SimpleStringSchema
@@ -132,7 +133,7 @@ def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
         .build()
     )
 
-    (
+    error_sink: KafkaSink = (
         KafkaSink.builder()
         .set_bootstrap_servers(kafka_bootstrap_server)
         .set_record_serializer(
@@ -160,7 +161,10 @@ def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
         input_stream,
     )
 
-    get_rules.main.map(
+    # Extract and sink errors from get_rules
+    extract_errors(get_rules.main, "UpdateGovQuality_GetRules").sink_to(error_sink).name("GetRules Errors")
+
+    filter_successful(get_rules.main).map(
         lambda document: json.dumps(
             {
                 "id": document[0],

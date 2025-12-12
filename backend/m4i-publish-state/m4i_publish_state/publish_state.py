@@ -3,6 +3,7 @@ from typing import List, TypedDict, Union
 
 from keycloak import KeycloakOpenID
 from m4i_flink_tasks import GetEntity
+from m4i_flink_tasks.operations.error_handler import extract_errors, filter_successful
 from m4i_flink_tasks.operations.publish_state.operations import (
     PrepareNotificationToIndex,
 )
@@ -116,7 +117,7 @@ def main(config: PublishStateConfig, jars_path: List[str]) -> None:
         .build()
     )
 
-    (
+    error_sink: KafkaSink = (
         KafkaSink.builder()
         .set_bootstrap_servers(kafka_bootstrap_server)
         .set_record_serializer(
@@ -147,12 +148,18 @@ def main(config: PublishStateConfig, jars_path: List[str]) -> None:
         (config["keycloak_username"], config["keycloak_password"]),
     )
 
+    # Extract and sink errors from get_entity
+    extract_errors(get_entity.main, "PublishState_GetEntity").sink_to(error_sink).name("GetEntity Errors")
+
     # Initialize the stage for preparing the validated notifications for indexing.
     publish_state_notification = PrepareNotificationToIndex(
-        get_entity.main,
+        filter_successful(get_entity.main),
     )
 
-    publish_state_notification.main.map(
+    # Extract and sink errors from publish_state_notification
+    extract_errors(publish_state_notification.main, "PublishState_PrepareNotification").sink_to(error_sink).name("PrepareNotification Errors")
+
+    filter_successful(publish_state_notification.main).map(
         lambda document: json.dumps(
             {
                 "id": document.doc_id,

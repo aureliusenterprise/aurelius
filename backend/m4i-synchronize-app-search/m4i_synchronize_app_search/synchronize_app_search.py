@@ -11,6 +11,7 @@ from m4i_flink_tasks import (
     GetEntity,
     SynchronizeAppSearch,
 )
+from m4i_flink_tasks.operations.error_handler import extract_errors, filter_successful
 from m4i_flink_tasks.operations.publish_state.operations import GetPreviousEntity
 from pyflink.common import Configuration, Types
 from pyflink.common.serialization import SimpleStringSchema
@@ -126,7 +127,7 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
         .build()
     )
 
-    (
+    error_sink: KafkaSink = (
         KafkaSink.builder()
         .set_bootstrap_servers(kafka_bootstrap_server)
         .set_record_serializer(
@@ -168,19 +169,31 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
         (config["keycloak_username"], config["keycloak_password"]),
     )
 
+    # Extract and sink errors from get_entity
+    extract_errors(get_entity.main, "GetEntity").sink_to(error_sink).name("GetEntity Errors")
+
     previous_entity = GetPreviousEntity(
-        get_entity.main,
+        filter_successful(get_entity.main),
         create_elasticsearch_client,
         config["elasticsearch_publish_state_index_name"],
     )
 
-    determine_change = DetermineChange(previous_entity.main)
+    # Extract and sink errors from previous_entity
+    extract_errors(previous_entity.main, "GetPreviousEntity").sink_to(error_sink).name("GetPreviousEntity Errors")
+
+    determine_change = DetermineChange(filter_successful(previous_entity.main))
+
+    # Extract and sink errors from determine_change
+    extract_errors(determine_change.main, "DetermineChange").sink_to(error_sink).name("DetermineChange Errors")
 
     synchronize_app_search = SynchronizeAppSearch(
-        determine_change.main,
+        filter_successful(determine_change.main),
         create_elasticsearch_client,
         config["elasticsearch_app_search_index_name"],
     )
+
+    # Extract and sink errors from synchronize_app_search.app_search_documents
+    extract_errors(synchronize_app_search.app_search_documents, "SynchronizeAppSearch").sink_to(error_sink).name("SynchronizeAppSearch Errors")
 
     def waiting_mapper(
         value: Tuple[str, Union[AppSearchDocument, None]]

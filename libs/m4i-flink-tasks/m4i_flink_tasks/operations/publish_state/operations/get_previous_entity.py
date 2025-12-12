@@ -8,6 +8,7 @@ from m4i_atlas_core import AtlasChangeMessage, Entity, EntityAuditAction, get_en
 from pyflink.datastream import DataStream, MapFunction, RuntimeContext
 
 from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion
+from m4i_flink_tasks.operations.error_handler import safe_map
 from m4i_flink_tasks.operations.publish_state.operations.delayed_map import DelayedMap
 from m4i_flink_tasks.utils import ExponentialBackoff, retry
 
@@ -69,6 +70,7 @@ class GetPreviousEntityFunction(MapFunction):
         """
         self.elasticsearch = self.elastic_factory()
 
+    @safe_map
     def map(
         self,
         value: Union[AtlasChangeMessage, Exception],
