@@ -20,7 +20,8 @@ def safe_map(func: Callable) -> Callable:
     Decorator to wrap MapFunction.map() methods with comprehensive error handling.
 
     Catches any uncaught exceptions that occur during message processing and returns
-    them as Exception objects, preventing the Flink job from crashing.
+    them as Exception objects with the input document attached, preventing the Flink 
+    job from crashing.
 
     Usage:
         class MyMapFunction(MapFunction):
@@ -42,16 +43,23 @@ def safe_map(func: Callable) -> Callable:
     @functools.wraps(func)
     def wrapper(self, value: Any) -> Union[Any, Exception]:
         try:
-            return func(self, value)
+            result = func(self, value)
+            if isinstance(result, Exception):
+                if not hasattr(result, '_flink_input_document'):
+                    result._flink_input_document = value  # type: ignore
+                if not hasattr(result, '_flink_function_name'):
+                    result._flink_function_name = f"{self.__class__.__name__}.{func.__name__}"  # type: ignore
+            return result
         except Exception as e:
-            # Log the error with full context
             logging.exception(
                 "Uncaught exception in %s.%s while processing value: %s",
                 self.__class__.__name__,
                 func.__name__,
                 value,
             )
-            # Return the exception so it can be routed to error topic
+            e._flink_input_document = value  # type: ignore
+            e._flink_function_name = f"{self.__class__.__name__}.{func.__name__}"  # type: ignore
+
             return e
     return wrapper
 
@@ -78,13 +86,34 @@ def format_error_message(
     str
         JSON-formatted error message
     """
+    if input_document is None and hasattr(error, '_flink_input_document'):
+        input_document = getattr(error, '_flink_input_document')
+    
+    function_name = getattr(error, '_flink_function_name', None)
+    
+    input_doc_str = None
+    if input_document is not None:
+        try:
+            if isinstance(input_document, str):
+                input_doc_str = input_document
+            elif isinstance(input_document, (dict, list)):
+                input_doc_str = json.dumps(input_document)
+            else:
+                try:
+                    input_doc_str = json.dumps(input_document, default=str)
+                except (TypeError, ValueError):
+                    input_doc_str = str(input_document)
+        except Exception:
+            input_doc_str = str(input_document)
+    
     error_data = {
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(datetime.timezone.utc).isoformat(),
         "job_name": job_name,
+        "function_name": function_name,
         "error_type": type(error).__name__,
         "error_message": str(error),
         "stack_trace": "".join(traceback.format_exception(type(error), error, error.__traceback__)),
-        "input_document": str(input_document) if input_document is not None else None,
+        "input_document": input_doc_str,
     }
 
     return json.dumps(error_data)
