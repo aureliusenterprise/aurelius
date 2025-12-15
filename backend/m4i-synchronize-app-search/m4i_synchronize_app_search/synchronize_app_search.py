@@ -103,7 +103,7 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
             deserialization_schema=SimpleStringSchema(),
         )
         .set_commit_offsets_on_checkpoints(commit_on_checkpoints=True)
-        .set_start_from_latest()
+        .set_start_from_earliest()
     )
 
     # Set up the Kafka sink

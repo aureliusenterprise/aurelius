@@ -1,9 +1,3 @@
-"""
-Error handling utilities for Flink streaming jobs.
-
-Provides functions to capture and publish errors from streaming operations to a Kafka error topic.
-"""
-
 import functools
 import json
 import logging
@@ -96,8 +90,6 @@ def format_error_message(
         try:
             if isinstance(input_document, str):
                 input_doc_str = input_document
-            elif isinstance(input_document, (dict, list)):
-                input_doc_str = json.dumps(input_document)
             else:
                 try:
                     input_doc_str = json.dumps(input_document, default=str)
