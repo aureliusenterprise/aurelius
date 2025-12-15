@@ -84,7 +84,8 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
 
     env_config = Configuration()  # type: ignore
     env_config.set_string("restart-strategy.type", "fixed-delay")
-    env_config.set_integer("restart-strategy.attempts", 999)
+    env_config.set_integer("restart-strategy.fixed-delay.attempts", 999)
+    env_config.set_string("restart-strategy.fixed-delay.delay", "10s")
 
     env = StreamExecutionEnvironment.get_execution_environment(env_config)
 

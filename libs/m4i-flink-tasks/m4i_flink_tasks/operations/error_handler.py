@@ -2,7 +2,7 @@ import functools
 import json
 import logging
 import traceback
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Callable, Union
 
 from pyflink.common import Types
@@ -99,7 +99,7 @@ def format_error_message(
             input_doc_str = str(input_document)
     
     error_data = {
-        "timestamp": datetime.now(datetime.timezone.utc).isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "job_name": job_name,
         "function_name": function_name,
         "error_type": type(error).__name__,
