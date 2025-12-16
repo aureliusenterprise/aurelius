@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     timeout-minutes: 15
+    env:
+      DOCKER_BUILDKIT: 1
+      BUILDX_GC_KEEP_STORAGE: 5GB
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,22 +48,26 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish containers
-        run: npx nx run-many -t docker-publish --exclude aurelius-flink-jobs --exclude m4i-atlas-post-install -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
+        run: npx nx run-many -t docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
         shell: bash
 
-      - name: Clean up disk space
-        run: |
-          docker system prune -af --volumes
-          df -h
-        shell: bash
+      # - name: Publish containers
+      #   run: npx nx run-many -t docker-publish --exclude aurelius-flink-jobs --exclude m4i-atlas-post-install -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
+      #   shell: bash
 
-      - name: Publish Flink jobs container
-        run: npx nx run aurelius-flink-jobs:docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
-        shell: bash
+      # - name: Clean up disk space
+      #   run: |
+      #     docker system prune -af --volumes
+      #     df -h
+      #   shell: bash
 
-      - name: Publish Flink jobs container
-        run: npx nx run m4i-atlas-post-install:docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
-        shell: bash
+      # - name: Publish Flink jobs container
+      #   run: npx nx run aurelius-flink-jobs:docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
+      #   shell: bash
+
+      # - name: Publish Flink jobs container
+      #   run: npx nx run m4i-atlas-post-install:docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
+      #   shell: bash
 
       - name: Publish helm chart
         run: npx nx run-many -t helm-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
