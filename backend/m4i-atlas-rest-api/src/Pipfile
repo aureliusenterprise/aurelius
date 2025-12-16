@@ -38,4 +38,4 @@ m4i-lineage-rest-api = { git = "https://github.com/aureliusenterprise/linage_res
 [dev-packages]
 
 [requires]
-python_version = "3.7.2"
+python_version = "3.10"
