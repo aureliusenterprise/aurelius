@@ -47,27 +47,41 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish containers
-        run: npx nx run-many -t docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
+      - name: Publish lightweight containers (parallel)
+        run: |
+          npx nx run-many -t docker-publish \
+            --exclude aurelius-flink-jobs \
+            --exclude m4i-atlas-post-install \
+            --exclude m4i-publish-state \
+            --exclude m4i-update-gov-data-quality \
+            --exclude m4i-synchronize-app-search \
+            -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
         shell: bash
 
-      # - name: Publish containers
-      #   run: npx nx run-many -t docker-publish --exclude aurelius-flink-jobs --exclude m4i-atlas-post-install -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
-      #   shell: bash
+      - name: Clean up after lightweight containers
+        run: docker system prune -af --volumes
+        shell: bash
 
-      # - name: Clean up disk space
-      #   run: |
-      #     docker system prune -af --volumes
-      #     df -h
-      #   shell: bash
-
-      # - name: Publish Flink jobs container
-      #   run: npx nx run aurelius-flink-jobs:docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
-      #   shell: bash
-
-      # - name: Publish Flink jobs container
-      #   run: npx nx run m4i-atlas-post-install:docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
-      #   shell: bash
+      - name: Publish heavy Flink containers (sequential with cleanup)
+        run: |
+          # Array of heavy containers that need isolated builds
+          HEAVY_CONTAINERS=(
+            "m4i-publish-state"
+            "m4i-update-gov-data-quality"
+            "m4i-synchronize-app-search"
+            "aurelius-flink-jobs"
+            "m4i-atlas-post-install"
+          )
+          
+          for project in "${HEAVY_CONTAINERS[@]}"; do
+            echo "Publishing $project..."
+            npx nx run $project:docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
+            
+            # echo "Cleaning up after $project..."
+            # docker system prune -af --volumes
+            df -h
+          done
+        shell: bash
 
       - name: Publish helm chart
         run: npx nx run-many -t helm-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
