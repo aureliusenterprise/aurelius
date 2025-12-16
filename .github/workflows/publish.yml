@@ -59,28 +59,16 @@ jobs:
         shell: bash
 
       - name: Clean up after lightweight containers
-        run: docker system prune -af --volumes
+        run: |
+          docker system prune -af --volumes
+          df -h
         shell: bash
 
-      - name: Publish heavy Flink containers (sequential with cleanup)
+      - name: Publish heavy Flink containers (parallel)
         run: |
-          # Array of heavy containers that need isolated builds
-          HEAVY_CONTAINERS=(
-            "m4i-publish-state"
-            "m4i-update-gov-data-quality"
-            "m4i-synchronize-app-search"
-            "aurelius-flink-jobs"
-            "m4i-atlas-post-install"
-          )
-          
-          for project in "${HEAVY_CONTAINERS[@]}"; do
-            echo "Publishing $project..."
-            npx nx run $project:docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
-            
-            # echo "Cleaning up after $project..."
-            # docker system prune -af --volumes
-            df -h
-          done
+          npx nx run-many -t docker-publish \
+            --projects=m4i-publish-state,m4i-update-gov-data-quality,m4i-synchronize-app-search,aurelius-flink-jobs,m4i-atlas-post-install \
+            -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
         shell: bash
 
       - name: Publish helm chart
