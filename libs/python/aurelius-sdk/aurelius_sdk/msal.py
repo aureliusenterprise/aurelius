@@ -1,15 +1,5 @@
-"""
-This module provides auth utilities for the Microsoft Identity Platform.
-
-Note:
-    Please install the `msal` extra to use this module.
-"""
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    import httpx
-    import msal
+import httpx
+import msal
 
 
 class MSALOAuthTokenProvider:

@@ -1,14 +1,4 @@
-"""
-This module provides AWS utilities for Aurelius applications.
-
-Note:
-    Please install the `aws` extra to use this module.
-"""
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from types_boto3_secretsmanager import SecretsManagerClient
+from types_boto3_secretsmanager import SecretsManagerClient
 
 
 def get_secret(client: SecretsManagerClient, secret_name: str) -> str:

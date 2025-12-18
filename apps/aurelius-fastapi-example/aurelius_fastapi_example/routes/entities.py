@@ -1,4 +1,6 @@
-from typing import TYPE_CHECKING, Annotated
+from collections.abc import Sequence
+from typing import Annotated
+from uuid import UUID
 
 from aurelius_example import Entity
 from fastapi import APIRouter, Depends, HTTPException, Security
@@ -6,13 +8,8 @@ from sqlalchemy.dialects.postgresql.ext import plainto_tsquery
 from sqlmodel import Session, col, or_, select
 
 from aurelius_fastapi_example.globals import LOGGER
+from aurelius_fastapi_example.models import PaginationQueryParams
 from aurelius_fastapi_example.providers import session, user_info
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from uuid import UUID
-
-    from aurelius_fastapi_example.models import PaginationQueryParams
 
 ENTITIES = APIRouter()
 

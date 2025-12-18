@@ -1,14 +1,11 @@
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import TYPE_CHECKING
 
 from aurelius_sdk.logger import setup_logger
 from fastapi import FastAPI
 
 from aurelius_fastapi_example.globals import LOGGER, METADATA, NAME, SETTINGS
 from aurelius_fastapi_example.routes import ENTITIES
-
-if TYPE_CHECKING:
-    from collections.abc import AsyncGenerator
 
 
 def main() -> FastAPI:

@@ -1,15 +1,6 @@
-"""
-This module provides testing utilities for Aurelius applications.
-
-Note:
-    Please install the `testing` extra to use this module.
-"""
-
 import logging
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from testcontainers.compose import DockerCompose
+from testcontainers.compose import DockerCompose
 
 
 def capture_docker_compose_logs(

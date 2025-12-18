@@ -1,14 +1,12 @@
+from collections.abc import Generator
 from functools import cache
-from typing import TYPE_CHECKING, Annotated
+from typing import Annotated
 
 from fastapi import Depends, HTTPException
 from sqlalchemy import Engine, create_engine
 from sqlmodel import Session, SQLModel
 
 from aurelius_fastapi_example.globals import LOGGER, SETTINGS
-
-if TYPE_CHECKING:
-    from collections.abc import Generator
 
 
 @cache

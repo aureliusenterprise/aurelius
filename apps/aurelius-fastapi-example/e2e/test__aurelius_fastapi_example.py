@@ -1,15 +1,11 @@
+import http.client
 import json
-from typing import TYPE_CHECKING
+from collections.abc import Generator
 
 import pytest
 from aurelius_example import Entity
+from sqlmodel import Session
 from tenacity import Retrying, stop_after_attempt, wait_fixed
-
-if TYPE_CHECKING:
-    import http.client
-    from collections.abc import Generator
-
-    from sqlmodel import Session
 
 
 def test__aurelius_fastapi_example_has_swagger_docs(connection: http.client.HTTPConnection) -> None:

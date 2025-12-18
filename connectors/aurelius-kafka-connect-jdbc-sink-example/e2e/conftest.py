@@ -1,6 +1,7 @@
 import json
+from collections.abc import Generator
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 import dotenv
 import pytest
@@ -12,16 +13,12 @@ from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.schema_registry import SchemaRegistryClient, record_subject_name_strategy
 from confluent_kafka.schema_registry.avro import AvroSerializer
 from confluent_kafka.serialization import Serializer, StringSerializer
+from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL, Engine, create_engine
 from sqlmodel import Session, SQLModel
 from testcontainers.compose import DockerCompose
 from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
-
-if TYPE_CHECKING:
-    from collections.abc import Generator
-
-    from pydantic import SecretStr
 
 
 class Settings(BaseSettings):

@@ -1,7 +1,7 @@
 import http.client
 import json
+from collections.abc import Generator
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import dotenv
 import pytest
@@ -19,9 +19,6 @@ from confluent_kafka.serialization import StringDeserializer, StringSerializer
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from testcontainers.compose import DockerCompose
 from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
-
-if TYPE_CHECKING:
-    from collections.abc import Generator
 
 
 class Settings(BaseSettings):

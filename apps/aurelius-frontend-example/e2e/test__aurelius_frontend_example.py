@@ -1,13 +1,10 @@
 import re
-from typing import TYPE_CHECKING
+from collections.abc import Generator
 
 import pytest
 from aurelius_example import Entity
 from playwright.sync_api import Page, expect
 from sqlmodel import Session, select
-
-if TYPE_CHECKING:
-    from collections.abc import Generator
 
 
 def test__main_page_has_welcome_message(authenticated: Page) -> None:

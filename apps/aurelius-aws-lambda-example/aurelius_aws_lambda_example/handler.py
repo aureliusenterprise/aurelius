@@ -1,20 +1,17 @@
 import json
 from functools import cache
-from typing import TYPE_CHECKING
 
 from aurelius_aws_lambda import AWSLambdaKafkaEvent
 from aurelius_example import Entity
 from aurelius_kafka import KafkaProducer
 from aws_lambda_powertools.utilities.parser import event_parser
+from aws_lambda_powertools.utilities.typing import LambdaContext
 from confluent_kafka import Producer
 from confluent_kafka.schema_registry import SchemaRegistryClient, record_subject_name_strategy
 from confluent_kafka.schema_registry.avro import AvroDeserializer, AvroSerializer
 
 from aurelius_aws_lambda_example.globals import LOGGER, METADATA, SETTINGS
 from aurelius_aws_lambda_example.processing import EntityProcessor
-
-if TYPE_CHECKING:
-    from aws_lambda_powertools.utilities.typing import LambdaContext
 
 
 @cache

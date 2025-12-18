@@ -68,7 +68,7 @@ line-length = 120
 target-version = "py314"
 
 [tool.ruff.lint]
-ignore = ["D100", "D104", "D105", "D212", "D107", "LOG015", "S311", "FIX002", "PT001"]
+ignore = ["D100", "D104", "D105", "D212", "D107", "LOG015", "S311", "FIX002", "PT001", "TC001", "TC002", "TC003"]
 select = ["ALL"]
 
 [tool.ruff.lint.flake8-type-checking]
