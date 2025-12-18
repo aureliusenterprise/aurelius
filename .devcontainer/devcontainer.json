@@ -80,7 +80,7 @@
     },
     "features": {
         "ghcr.io/devcontainers-extra/features/apt-packages:1": {
-            "packages": ["age", "gnupg2", "libpq-dev"]
+            "packages": ["age", "gnupg2", "libpq-dev", "librdkafka-dev"]
         },
         "ghcr.io/devcontainers-extra/features/nx-npm:1": {
             "version": "21.5.2"
@@ -94,7 +94,7 @@
         },
         "ghcr.io/devcontainers/features/python:1": {
             "toolsToInstall": ["uv"],
-            "version": "3.13"
+            "version": "3.14"
         }
     },
     "forwardPorts": [8000],

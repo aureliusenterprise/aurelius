@@ -1,11 +1,15 @@
-from uuid import UUID
+from typing import TYPE_CHECKING
 
 import pytest
 from aurelius_example import Entity
-from aurelius_kafka import KafkaProducer
-from confluent_kafka.serialization import Serializer
-from sqlmodel import Session
 from tenacity import retry, stop_after_attempt, wait_fixed
+
+if TYPE_CHECKING:
+    from uuid import UUID
+
+    from aurelius_kafka import KafkaProducer
+    from confluent_kafka.serialization import Serializer
+    from sqlmodel import Session
 
 
 def produce_message(

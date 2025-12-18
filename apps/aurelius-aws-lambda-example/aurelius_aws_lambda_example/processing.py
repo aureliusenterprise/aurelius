@@ -1,10 +1,14 @@
-from collections.abc import Generator
+from typing import TYPE_CHECKING
 
-from aurelius_aws_lambda.kafka import AWSLambdaKafkaEvent
 from aurelius_example import Entity
-from confluent_kafka.serialization import Deserializer, Serializer
 
 from aurelius_aws_lambda_example.globals import LOGGER
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
+    from aurelius_aws_lambda.kafka import AWSLambdaKafkaEvent
+    from confluent_kafka.serialization import Deserializer, Serializer
 
 
 class EntityProcessor:

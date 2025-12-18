@@ -1,7 +1,7 @@
 [project]
 name = "aurelius-project-template"
 readme = "docs/README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 version = "0.0.0"
 
 [[project.authors]]
@@ -51,7 +51,7 @@ dev = [
 
 [tool.pyright]
 exclude = [".venv"]
-pythonVersion = "3.13"
+pythonVersion = "3.14"
 reportUnnecessaryTypeIgnoreComment = "error"
 typeCheckingMode = "standard"
 venvPath = "."
@@ -65,7 +65,7 @@ required_plugins = ["pytest-asyncio"]
 
 [tool.ruff]
 line-length = 120
-target-version = "py313"
+target-version = "py314"
 
 [tool.ruff.lint]
 ignore = ["D100", "D104", "D105", "D212", "D107", "LOG015", "S311", "FIX002", "PT001"]

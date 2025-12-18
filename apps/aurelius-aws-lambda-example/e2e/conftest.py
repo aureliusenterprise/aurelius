@@ -1,7 +1,7 @@
 import http.client
 import json
-from collections.abc import Generator
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import dotenv
 import pytest
@@ -19,6 +19,9 @@ from confluent_kafka.serialization import StringDeserializer, StringSerializer
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from testcontainers.compose import DockerCompose
 from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 
 class Settings(BaseSettings):
@@ -144,7 +147,7 @@ def value_schema() -> str:
 def value_deserializer(schema_registry_client: SchemaRegistryClient, value_schema: str) -> AvroDeserializer:
     """Return an Avro deserializer."""
     return AvroDeserializer(
-        schema_registry_client,
+        schema_registry_client,  # type: ignore[arg-type]
         schema_str=value_schema,
         conf={"subject.name.strategy": record_subject_name_strategy},
     )
@@ -154,7 +157,7 @@ def value_deserializer(schema_registry_client: SchemaRegistryClient, value_schem
 def value_serializer(schema_registry_client: SchemaRegistryClient, value_schema: str) -> AvroSerializer:
     """Return an Avro serializer."""
     return AvroSerializer(
-        schema_registry_client,
+        schema_registry_client,  # type: ignore[arg-type]
         schema_str=value_schema,
         conf={"subject.name.strategy": record_subject_name_strategy},
     )

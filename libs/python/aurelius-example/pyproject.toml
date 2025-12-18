@@ -2,7 +2,7 @@
 authors = [{ name = "Aurelius Enterprise" }]
 description = "This library provides common utilities for example projects."
 name = "aurelius-example"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 version = "0.0.0"
 
 dependencies = ["pydantic>=2.11.7", "pydantic-avro>=0.9.0", "sqlmodel>=0.0.24"]

@@ -5,8 +5,11 @@ Note:
     Please install the `msal` extra to use this module.
 """
 
-import httpx
-import msal
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import httpx
+    import msal
 
 
 class MSALOAuthTokenProvider:

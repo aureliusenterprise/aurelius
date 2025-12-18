@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Use the official Python image as a base image for building the application
-FROM python:3.13 AS build-image
+FROM python:3.14 AS build-image
 
 # Set the working directory
 WORKDIR /build

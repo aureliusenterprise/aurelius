@@ -2,7 +2,7 @@
 authors = [{ name = "Aurelius Enterprise " }]
 description = "This is an example AWS lambda function."
 name = "aurelius-aws-lambda-example"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 version = "0.0.0"
 
 dependencies = [
@@ -10,7 +10,7 @@ dependencies = [
     "aurelius-example",
     "aurelius-kafka",
     "aws-lambda-powertools>=3.17.0",
-    "confluent-kafka[avro,schema-registry]==2.10.0",
+    "confluent-kafka[avro,schema-registry]>=2.12.2",
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
 ]

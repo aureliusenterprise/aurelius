@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Use a slim version of the base Python image to reduce the final image size
-FROM python:3.13-slim
+FROM python:3.14-slim
 
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"

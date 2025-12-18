@@ -1,13 +1,17 @@
-import http.client
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 import pytest
 from aurelius_aws_lambda.testing import generate_payload
 from aurelius_example import Entity
-from confluent_kafka import Consumer
-from confluent_kafka.schema_registry.avro import AvroDeserializer, AvroSerializer
-from confluent_kafka.serialization import StringDeserializer, StringSerializer
 from timeout_decorator import timeout
+
+if TYPE_CHECKING:
+    import http.client
+
+    from confluent_kafka import Consumer
+    from confluent_kafka.schema_registry.avro import AvroDeserializer, AvroSerializer
+    from confluent_kafka.serialization import StringDeserializer, StringSerializer
 
 
 @timeout(10)

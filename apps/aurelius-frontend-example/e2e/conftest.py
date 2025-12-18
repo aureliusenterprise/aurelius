@@ -1,18 +1,21 @@
 import re
-from collections.abc import Generator
 from pathlib import Path
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import dotenv
 import pytest
 from aurelius_sdk.testing import capture_docker_compose_logs
-from playwright.sync_api import Page
-from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL, Engine
 from sqlmodel import Session, SQLModel, create_engine
 from testcontainers.compose import DockerCompose
 from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
+    from playwright.sync_api import Page
+    from pydantic import SecretStr
 
 
 class Settings(BaseSettings):

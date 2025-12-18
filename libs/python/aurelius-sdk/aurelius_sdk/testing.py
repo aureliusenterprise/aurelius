@@ -6,8 +6,10 @@ Note:
 """
 
 import logging
+from typing import TYPE_CHECKING
 
-from testcontainers.compose import DockerCompose
+if TYPE_CHECKING:
+    from testcontainers.compose import DockerCompose
 
 
 def capture_docker_compose_logs(

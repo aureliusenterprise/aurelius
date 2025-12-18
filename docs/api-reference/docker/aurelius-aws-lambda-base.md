@@ -11,7 +11,7 @@ Lambda functions based on Python.
 
 This Docker image provides the following key dependencies for Lambda functions based on Python:
 
-- **Python 3.13**: This is the Python runtime used for executing your Lambda functions.
+- **Python 3.14**: This is the Python runtime used for executing your Lambda functions.
 - [**AWS Lambda Runtime Interface Client**](https://github.com/aws/aws-lambda-python-runtime-interface-client):
   This is used to communicate with the AWS Lambda service.
 - [**AWS Lambda Insights Extension**](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights.html):

@@ -1,7 +1,6 @@
 import json
-from collections.abc import Generator
 from pathlib import Path
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import dotenv
 import pytest
@@ -13,12 +12,16 @@ from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.schema_registry import SchemaRegistryClient, record_subject_name_strategy
 from confluent_kafka.schema_registry.avro import AvroSerializer
 from confluent_kafka.serialization import Serializer, StringSerializer
-from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL, Engine, create_engine
 from sqlmodel import Session, SQLModel
 from testcontainers.compose import DockerCompose
 from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
+    from pydantic import SecretStr
 
 
 class Settings(BaseSettings):
@@ -168,7 +171,7 @@ def value_schema() -> str:
 def value_serializer(schema_registry_client: SchemaRegistryClient, value_schema: str) -> Serializer:
     """Return the value serializer."""
     return AvroSerializer(
-        conf={"subject.name.strategy": record_subject_name_strategy},
-        schema_registry_client=schema_registry_client,
-        schema_str=value_schema,
+        conf={"subject.name.strategy": record_subject_name_strategy},  # type: ignore[arg-type]
+        schema_registry_client=schema_registry_client,  # type: ignore[arg-type]
+        schema_str=value_schema,  # type: ignore[arg-type]
     )
