@@ -96,10 +96,13 @@ def main(config: PublishStateConfig, jars_path: List[str]) -> None:
             properties={
                 "bootstrap.servers": kafka_bootstrap_server,
                 "group.id": config["kafka_consumer_group_id"],
+                # Commit offsets immediately after reading to prevent reprocessing on failure
+                "enable.auto.commit": "true",
+                "auto.commit.interval.ms": "1000",  # Commit every second
             },
             deserialization_schema=SimpleStringSchema(),
         )
-        .set_commit_offsets_on_checkpoints(commit_on_checkpoints=True)
+        .set_commit_offsets_on_checkpoints(commit_on_checkpoints=False)  # Disable checkpoint-based commits
         .set_start_from_earliest()
     )
 
