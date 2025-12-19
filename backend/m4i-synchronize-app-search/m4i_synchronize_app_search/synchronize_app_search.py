@@ -199,6 +199,9 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
     # Extract and sink errors from synchronize_app_search.app_search_documents
     extract_errors(synchronize_app_search.app_search_documents, "SynchronizeAppSearch").sink_to(error_sink).name("SynchronizeAppSearch Errors")
 
+    # Extract and sink errors from synchronize_app_search.main to prevent crashes in downstream processing
+    extract_errors(synchronize_app_search.main, "SynchronizeAppSearch_Main").sink_to(error_sink).name("SynchronizeAppSearch Main Errors")
+
     def waiting_mapper(
         value: Tuple[str, Union[AppSearchDocument, None]]
     ) -> Tuple[str, Union[AppSearchDocument, None]]:
@@ -206,7 +209,7 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
         time.sleep(1)
         return value
 
-    synchronize_app_search.main.map(waiting_mapper).map(
+    filter_successful(synchronize_app_search.main).map(waiting_mapper).map(
         lambda document: json.dumps(
             {
                 "id": document[0],
