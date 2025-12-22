@@ -129,7 +129,7 @@ class GetPreviousEntityFunction(MapFunction):
         """Close the Elasticsearch client."""
         self.elasticsearch.close()
 
-    @retry(retry_strategy=ExponentialBackoff(), catch=(ApiError, NoPreviousVersionError))
+    @retry(retry_strategy=ExponentialBackoff(), catch=(NoPreviousVersionError,))
     def get_previous_entity(
         self,
         current_version: Entity,
