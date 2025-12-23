@@ -103,13 +103,14 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
             properties={
                 "bootstrap.servers": kafka_bootstrap_server,
                 "group.id": config["kafka_consumer_group_id"],
-                # Commit offsets immediately after reading to prevent reprocessing on failure
+                # Enable auto-commit to immediately commit offsets after reading
+                # This prevents reprocessing messages when job restarts after failures
                 "enable.auto.commit": "true",
-                "auto.commit.interval.ms": "1000",  # Commit every second
+                "auto.commit.interval.ms": "1000",
             },
             deserialization_schema=SimpleStringSchema(),
         )
-        .set_commit_offsets_on_checkpoints(commit_on_checkpoints=False)  # Disable checkpoint-based commits
+        .set_commit_offsets_on_checkpoints(commit_on_checkpoints=False)  # Disable checkpoint-based commits, use auto-commit instead
         .set_start_from_earliest()
     )
 
@@ -201,9 +202,6 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
 
     # Extract and sink errors from synchronize_app_search.app_search_documents
     extract_errors(synchronize_app_search.app_search_documents, "SynchronizeAppSearch").sink_to(error_sink).name("SynchronizeAppSearch Errors")
-
-    # Extract and sink errors from synchronize_app_search.main to prevent crashes in downstream processing
-    extract_errors(synchronize_app_search.main, "SynchronizeAppSearch_Main").sink_to(error_sink).name("SynchronizeAppSearch Main Errors")
 
     def waiting_mapper(
         value: Tuple[str, Union[AppSearchDocument, None]]

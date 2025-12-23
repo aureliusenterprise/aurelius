@@ -82,7 +82,6 @@ def main(config: PublishStateConfig, jars_path: List[str]) -> None:
 
     env = StreamExecutionEnvironment.get_execution_environment(env_config)
 
-    # Enable checkpointing every 60 seconds to commit Kafka offsets
     env.enable_checkpointing(60000)  # 60 seconds in milliseconds
 
     env.set_parallelism(1)
@@ -96,13 +95,14 @@ def main(config: PublishStateConfig, jars_path: List[str]) -> None:
             properties={
                 "bootstrap.servers": kafka_bootstrap_server,
                 "group.id": config["kafka_consumer_group_id"],
-                # Commit offsets immediately after reading to prevent reprocessing on failure
+                # Enable auto-commit to immediately commit offsets after reading
+                # This prevents reprocessing messages when job restarts after failures
                 "enable.auto.commit": "true",
-                "auto.commit.interval.ms": "1000",  # Commit every second
+                "auto.commit.interval.ms": "1000",
             },
             deserialization_schema=SimpleStringSchema(),
         )
-        .set_commit_offsets_on_checkpoints(commit_on_checkpoints=False)  # Disable checkpoint-based commits
+        .set_commit_offsets_on_checkpoints(commit_on_checkpoints=False)  # Disable checkpoint-based commits, use auto-commit instead
         .set_start_from_earliest()
     )
 
