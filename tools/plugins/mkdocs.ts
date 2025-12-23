@@ -36,7 +36,7 @@ async function createNodesInternal(
                             description: "Serve the Mkdocs documentation locally",
                         },
                         options: {
-                            command: "mkdocs serve",
+                            command: "uv run mkdocs serve",
                         },
                     },
                 },
