@@ -43,7 +43,8 @@ class DetermineChangeFunction(MapFunction):
         """
         logging.debug("DetermineChangeFunction: %s", value)
 
-        if isinstance(value, Exception):
+        # Check if value is an error dict from upstream
+        if isinstance(value, dict) and value.get("is_error"):
             return [value]
 
         operation_type = value.message.operation_type

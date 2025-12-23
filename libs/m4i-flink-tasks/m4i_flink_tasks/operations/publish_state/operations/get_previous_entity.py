@@ -85,6 +85,14 @@ class GetPreviousEntityFunction(MapFunction):
 
         Returns
         -------
+        AtlasChangeMessageWithPreviousVersion | Exception
+            A message enriched with the previous entity version or an exception.
+        """
+        # Check if value is an error dict from upstream
+        if isinstance(value, dict) and value.get("is_error"):
+            logging.debug("Passing down error: %s", value.get("error_message"))
+            return value
+        -------
         AtlasChangeMessageWithPreviousVersion or Exception
             The enriched message with the previous entity version or an error.
         """

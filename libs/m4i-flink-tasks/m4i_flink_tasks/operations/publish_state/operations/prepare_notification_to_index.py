@@ -36,7 +36,9 @@ class PrepareNotificationToIndexFunction(MapFunction):
         """
         logging.debug("PrepareNotificationToIndexFunction %s", value)
 
-        if isinstance(value, Exception):
+        # Check if value is an error dict from upstream
+        if isinstance(value, dict) and value.get("is_error"):
+            logging.debug("Passing down error: %s", value.get("error_message"))
             return value
 
         msg_creation_time = value.msg_creation_time

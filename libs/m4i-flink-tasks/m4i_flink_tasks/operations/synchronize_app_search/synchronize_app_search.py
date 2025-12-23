@@ -93,11 +93,12 @@ class SynchronizeAppSearchFunction(MapFunction):
 
         Returns
         -------
-        list[tuple[str, AppSearchDocument | None]] | list[Exception]
-            A list of tuples containing document GUIDs and documents, or a list of Exceptions.
+        list[tuple[str, AppSearchDocument | None]] | dict
+            A list of tuples containing document GUIDs and documents, or an error dict.
         """
-        if isinstance(value, Exception):
-            logging.debug("Passing down error: %s", value)
+        # Check if value is an error dict from upstream
+        if isinstance(value, dict) and value.get("is_error"):
+            logging.debug("Passing down error: %s", value.get("error_message"))
             return value
 
         logging.info("SynchronizeAppSearchFunction: %s", value)
@@ -162,8 +163,12 @@ class SynchronizeAppSearch:
             SynchronizeAppSearchFunction(elastic_factory, index_name),
         ).name("synchronize_app_search")
 
+        def is_error(value):
+            """Check if value is an error dict."""
+            return isinstance(value, dict) and value.get("is_error") == True
+
         self.main = self.app_search_documents.flat_map(
             lambda output_message: (
-                document for document in output_message 
-            ) if not isinstance(output_message, Exception) else (output_message, ),
+                [] if is_error(output_message) else (document for document in output_message)
+            ),
         ).name("app_search_documents")
