@@ -92,12 +92,6 @@ class GetPreviousEntityFunction(MapFunction):
         if isinstance(value, dict) and value.get("is_error"):
             logging.debug("Passing down error: %s", value.get("error_message"))
             return value
-        -------
-        AtlasChangeMessageWithPreviousVersion or Exception
-            The enriched message with the previous entity version or an error.
-        """
-        if isinstance(value, Exception):
-            return value
 
         logging.debug("AtlasChangeMessage: %s", value)
 
