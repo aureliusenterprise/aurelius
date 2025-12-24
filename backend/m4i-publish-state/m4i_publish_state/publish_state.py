@@ -82,8 +82,6 @@ def main(config: PublishStateConfig, jars_path: List[str]) -> None:
 
     env = StreamExecutionEnvironment.get_execution_environment(env_config)
 
-    env.enable_checkpointing(60000)  # 60 seconds in milliseconds
-
     env.set_parallelism(1)
     env.add_jars(*jars_path)
 

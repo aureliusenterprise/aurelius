@@ -89,9 +89,6 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
 
     env = StreamExecutionEnvironment.get_execution_environment(env_config)
 
-    # Enable checkpointing every 60 seconds to commit Kafka offsets
-    env.enable_checkpointing(60000)  # 60 seconds in milliseconds
-
     env.set_parallelism(1)
     env.add_jars(*jars_path)
 
@@ -102,11 +99,7 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
             topics=config["kafka_source_topic_name"],
             properties={
                 "bootstrap.servers": kafka_bootstrap_server,
-                "group.id": config["kafka_consumer_group_id"],
-                # Enable auto-commit to immediately commit offsets after reading
-                # This prevents reprocessing messages when job restarts after failures
-                "enable.auto.commit": "true",
-                "auto.commit.interval.ms": "1000",
+                "group.id": config["kafka_consumer_group_id"]
             },
             deserialization_schema=SimpleStringSchema(),
         )
