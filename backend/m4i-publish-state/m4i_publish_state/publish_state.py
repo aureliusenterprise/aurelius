@@ -95,10 +95,6 @@ def main(config: PublishStateConfig, jars_path: List[str]) -> None:
             properties={
                 "bootstrap.servers": kafka_bootstrap_server,
                 "group.id": config["kafka_consumer_group_id"],
-                # Enable auto-commit to immediately commit offsets after reading
-                # This prevents reprocessing messages when job restarts after failures
-                "enable.auto.commit": "true",
-                "auto.commit.interval.ms": "1000",
             },
             deserialization_schema=SimpleStringSchema(),
         )
