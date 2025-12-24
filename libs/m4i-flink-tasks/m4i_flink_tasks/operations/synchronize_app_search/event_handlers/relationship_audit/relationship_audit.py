@@ -341,8 +341,12 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
         
         logging.info("Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid)
 
-        # Query guarantees that the breadcrumb includes the guid.
-        idx = child_document.breadcrumbguid.index(document.guid)
+        try:
+            # Query guarantees that the breadcrumb includes the guid.
+            idx = child_document.breadcrumbguid.index(document.guid)
+        except ValueError:
+            logging.exception("Document is not in child document breadcrumb (%s)", child_document.guid)
+            continue
 
         child_document.breadcrumbguid = child_document.breadcrumbguid[idx + 1 :]
         child_document.breadcrumbname = child_document.breadcrumbname[idx + 1 :]
