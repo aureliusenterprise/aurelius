@@ -120,7 +120,7 @@ def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
             deserialization_schema=SimpleStringSchema(),
         )
         .set_commit_offsets_on_checkpoints(commit_on_checkpoints=False)  # Disable checkpoint-based commits, use auto-commit instead
-        .set_start_from_earliest()
+        .set_start_from_latest()
     )
 
     gov_data_quality_sink = (
