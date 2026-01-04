@@ -72,7 +72,7 @@
             }
         },
         "test": {
-            "executor": "@nx/vite:test",
+            "executor": "@nx/vitest:test",
             "options": {
                 "reportsDirectory": "../../../coverage/libs/angular/aurelius-ui"
             },

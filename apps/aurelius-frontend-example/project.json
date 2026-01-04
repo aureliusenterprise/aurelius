@@ -93,7 +93,12 @@
             },
             "continuous": true,
             "defaultConfiguration": "development",
-            "dependsOn": [{ "projects": ["aurelius-dev-keycloak", "aurelius-fastapi-example"], "target": "serve" }],
+            "dependsOn": [
+                {
+                    "projects": ["aurelius-dev-keycloak", "aurelius-fastapi-example"],
+                    "target": "serve"
+                }
+            ],
             "executor": "@angular/build:dev-server",
             "options": {
                 "host": "127.0.0.1",
@@ -103,7 +108,12 @@
         },
         "serve-static": {
             "continuous": true,
-            "dependsOn": [{ "projects": ["aurelius-fastapi-example"], "target": "serve" }],
+            "dependsOn": [
+                {
+                    "projects": ["aurelius-fastapi-example"],
+                    "target": "serve"
+                }
+            ],
             "executor": "@nx/web:file-server",
             "options": {
                 "buildTarget": "aurelius-frontend-example:build",
@@ -114,7 +124,7 @@
             }
         },
         "test": {
-            "executor": "@nx/vite:test",
+            "executor": "@nx/vitest:test",
             "options": {
                 "reportsDirectory": "../../coverage/apps/aurelius-frontend-example"
             },

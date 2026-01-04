@@ -5,14 +5,14 @@
         "@nx/angular:application": {
             "linter": "eslint",
             "style": "scss",
-            "unitTestRunner": "vitest"
+            "unitTestRunner": "vitest-analog"
         },
         "@nx/angular:component": {
             "style": "scss"
         },
         "@nx/angular:library": {
             "linter": "eslint",
-            "unitTestRunner": "vitest"
+            "unitTestRunner": "vitest-analog"
         }
     },
     "plugins": [
@@ -61,7 +61,7 @@
                 "{workspaceRoot}/eslint.config.mjs"
             ]
         },
-        "@nx/vite:test": {
+        "@nx/vitest:test": {
             "cache": true,
             "inputs": ["default", "^default"]
         },

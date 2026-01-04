@@ -10,12 +10,19 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "importHelpers": true,
-        "lib": ["es2020", "dom"],
+        "lib": [
+            "es2022",
+            "dom"
+        ],
         "module": "esnext",
         "moduleResolution": "node10",
         "paths": {
-            "aurelius-data-access": ["libs/angular/aurelius-data-access/src/index.ts"],
-            "aurelius-ui": ["libs/angular/aurelius-ui/src/index.ts"]
+            "aurelius-data-access": [
+                "libs/angular/aurelius-data-access/src/index.ts"
+            ],
+            "aurelius-ui": [
+                "libs/angular/aurelius-ui/src/index.ts"
+            ]
         },
         "rootDir": ".",
         "skipDefaultLibCheck": true,
@@ -23,5 +30,8 @@
         "sourceMap": true,
         "target": "es2015"
     },
-    "exclude": ["node_modules", "tmp"]
+    "exclude": [
+        "node_modules",
+        "tmp"
+    ]
 }
