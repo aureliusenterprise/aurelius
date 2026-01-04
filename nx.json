@@ -69,8 +69,5 @@
             "cache": true,
             "inputs": ["default", "^default", "{projectRoot}/.storybook/**/*", "{projectRoot}/tsconfig.storybook.json"]
         }
-    },
-    "tui": {
-        "enabled": false
     }
 }

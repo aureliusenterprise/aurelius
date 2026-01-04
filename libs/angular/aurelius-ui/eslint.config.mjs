@@ -34,5 +34,5 @@ export default [
         // Override or add rules here
         rules: {},
     },
-    ...storybook.configs["flat/recommended"]
+    ...storybook.configs["flat/recommended"],
 ];
