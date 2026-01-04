@@ -24,6 +24,7 @@
                 "browserTarget": "aurelius-ui:build-storybook",
                 "compodoc": false,
                 "configDir": "libs/angular/aurelius-ui/.storybook",
+                "experimentalZoneless": true,
                 "outputDir": "dist/storybook/aurelius-ui",
                 "styles": ["libs/angular/aurelius-ui/.storybook/styles.scss"]
             },
@@ -66,6 +67,7 @@
                 "browserTarget": "aurelius-ui:build-storybook",
                 "compodoc": false,
                 "configDir": "libs/angular/aurelius-ui/.storybook",
+                "experimentalZoneless": true,
                 "host": "127.0.0.1",
                 "port": 4400,
                 "styles": ["libs/angular/aurelius-ui/.storybook/styles.scss"]

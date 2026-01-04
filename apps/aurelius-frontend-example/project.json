@@ -52,7 +52,6 @@
                 "browser": "apps/aurelius-frontend-example/src/main.ts",
                 "inlineStyleLanguage": "scss",
                 "outputPath": "dist/apps/aurelius-frontend-example",
-                "polyfills": ["zone.js"],
                 "styles": ["apps/aurelius-frontend-example/src/styles.scss"],
                 "tsConfig": "apps/aurelius-frontend-example/tsconfig.app.json"
             },

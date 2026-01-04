@@ -72,7 +72,6 @@
         "@fortawesome/free-solid-svg-icons": "^7.0.0",
         "keycloak-angular": "^21.0.0",
         "keycloak-js": "^26.2.0",
-        "rxjs": "~7.8.0",
-        "zone.js": "0.16.0"
+        "rxjs": "~7.8.0"
     }
 }

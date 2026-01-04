@@ -1,5 +1,5 @@
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from "@angular/core";
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from "@angular/core";
 import { provideRouter } from "@angular/router";
 import {
     INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
@@ -31,7 +31,7 @@ export async function initialize(): Promise<ApplicationConfig> {
             },
             provideRouter(routes),
             provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
-            provideZoneChangeDetection({ eventCoalescing: true }),
+            provideZonelessChangeDetection(),
         ],
     };
 }
