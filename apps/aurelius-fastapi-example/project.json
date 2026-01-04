@@ -17,7 +17,7 @@
                 "description": "Serve the application on a local development server"
             },
             "options": {
-                "command": "python -m aurelius_fastapi_example"
+                "command": "uv run python -m aurelius_fastapi_example"
             }
         }
     }
