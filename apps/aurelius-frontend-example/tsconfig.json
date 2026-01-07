@@ -7,7 +7,6 @@
         "typeCheckHostBindings": true
     },
     "compilerOptions": {
-        "emitDecoratorMetadata": false,
         "isolatedModules": true,
         "module": "preserve",
         "moduleResolution": "bundler",

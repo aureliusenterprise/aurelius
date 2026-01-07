@@ -1,7 +1,12 @@
-import { inject, Injectable, Signal, signal } from "@angular/core";
+import { inject, Injectable, InjectionToken, Signal, signal } from "@angular/core";
 import { toObservable, toSignal } from "@angular/core/rxjs-interop";
 import { EntitiesService, Entity } from "aurelius-data-access";
 import { catchError, debounceTime, EMPTY, finalize, merge, Observable, Subject, switchMap, tap } from "rxjs";
+
+export const SEARCH_SERVICE_DEBOUNCE_MS = new InjectionToken<number>("SEARCH_SERVICE_DEBOUNCE_MS", {
+    providedIn: "root",
+    factory: () => 300,
+});
 
 @Injectable({
     providedIn: "root",
@@ -28,6 +33,11 @@ export class SearchService {
     readonly query = signal<string>("");
 
     /**
+     * The debounce delay for search queries in milliseconds.
+     */
+    private readonly debounceMillis = inject<number>(SEARCH_SERVICE_DEBOUNCE_MS);
+
+    /**
      * The API client for making HTTP requests.
      */
     private readonly entitiesService = inject(EntitiesService);
@@ -39,7 +49,7 @@ export class SearchService {
 
     constructor() {
         const entities$ = merge(this.refresh$, toObservable(this.query)).pipe(
-            debounceTime(300),
+            debounceTime(this.debounceMillis),
             tap(() => this.startSearch()),
             switchMap(() =>
                 this.entitiesService.findAll({ search: this.query() }).pipe(

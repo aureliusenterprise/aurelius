@@ -6,6 +6,21 @@
     "sourceRoot": "libs/angular/aurelius-ui/src",
     "tags": [],
     "targets": {
+        "build": {
+            "configurations": {
+                "development": {},
+                "production": {
+                    "tsConfig": "libs/angular/aurelius-ui/tsconfig.lib.prod.json"
+                }
+            },
+            "defaultConfiguration": "production",
+            "executor": "@nx/angular:ng-packagr-lite",
+            "options": {
+                "project": "libs/angular/aurelius-ui/ng-package.json",
+                "tsConfig": "libs/angular/aurelius-ui/tsconfig.lib.json"
+            },
+            "outputs": ["{workspaceRoot}/dist/{projectRoot}"]
+        },
         "build-storybook": {
             "configurations": {
                 "ci": {
@@ -74,11 +89,8 @@
             }
         },
         "test": {
-            "executor": "@nx/vitest:test",
-            "options": {
-                "reportsDirectory": "../../../coverage/libs/angular/aurelius-ui"
-            },
-            "outputs": ["{options.reportsDirectory}"]
+            "executor": "@nx/angular:unit-test",
+            "options": {}
         },
         "test-storybook": {
             "executor": "nx:run-commands",

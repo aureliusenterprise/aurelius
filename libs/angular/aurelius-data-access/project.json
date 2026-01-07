@@ -6,15 +6,27 @@
     "sourceRoot": "libs/angular/aurelius-data-access/src",
     "tags": [],
     "targets": {
+        "build": {
+            "configurations": {
+                "development": {},
+                "production": {
+                    "tsConfig": "libs/angular/aurelius-data-access/tsconfig.lib.prod.json"
+                }
+            },
+            "defaultConfiguration": "production",
+            "executor": "@nx/angular:ng-packagr-lite",
+            "options": {
+                "project": "libs/angular/aurelius-data-access/ng-package.json",
+                "tsConfig": "libs/angular/aurelius-data-access/tsconfig.lib.json"
+            },
+            "outputs": ["{workspaceRoot}/dist/{projectRoot}"]
+        },
         "lint": {
             "executor": "@nx/eslint:lint"
         },
         "test": {
-            "executor": "@nx/vitest:test",
-            "options": {
-                "reportsDirectory": "../../../coverage/libs/angular/aurelius-data-access"
-            },
-            "outputs": ["{options.reportsDirectory}"]
+            "executor": "@nx/angular:unit-test",
+            "options": {}
         }
     }
 }

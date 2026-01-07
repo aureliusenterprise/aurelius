@@ -52,6 +52,15 @@
             "dependsOn": ["^build"],
             "inputs": ["default", "^default"]
         },
+        "@nx/angular:ng-packagr-lite": {
+            "cache": true,
+            "dependsOn": ["^build"],
+            "inputs": ["default", "^default"]
+        },
+        "@nx/angular:unit-test": {
+            "cache": true,
+            "inputs": ["default", "^default"]
+        },
         "@nx/eslint:lint": {
             "cache": true,
             "inputs": [

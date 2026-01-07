@@ -123,11 +123,8 @@
             }
         },
         "test": {
-            "executor": "@nx/vitest:test",
-            "options": {
-                "reportsDirectory": "../../coverage/apps/aurelius-frontend-example"
-            },
-            "outputs": ["{options.reportsDirectory}"]
+            "executor": "@nx/angular:unit-test",
+            "options": {}
         }
     }
 }

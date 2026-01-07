@@ -6,22 +6,7 @@
         "outDir": "../../../dist/out-tsc",
         "types": []
     },
-    "exclude": [
-        "src/**/*.spec.ts",
-        "src/test-setup.ts",
-        "jest.config.ts",
-        "src/**/*.test.ts",
-        "vite.config.ts",
-        "vite.config.mts",
-        "vitest.config.ts",
-        "vitest.config.mts",
-        "src/**/*.test.tsx",
-        "src/**/*.spec.tsx",
-        "src/**/*.test.js",
-        "src/**/*.spec.js",
-        "src/**/*.test.jsx",
-        "src/**/*.spec.jsx"
-    ],
+    "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
     "extends": "./tsconfig.json",
     "include": ["src/**/*.ts"]
 }

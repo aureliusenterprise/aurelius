@@ -45,7 +45,7 @@ export class AuthService {
         });
 
         const profile$ = toObservable(this.authenticated).pipe(
-            switchMap((authenticated) => (authenticated ? this.keycloak.loadUserProfile() : Promise.resolve(null))),
+            switchMap((authenticated) => this.loadUserProfile(authenticated)),
         );
 
         this.profile = toSignal(profile$, { initialValue: null });

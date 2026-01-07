@@ -4,22 +4,15 @@
         "types": []
     },
     "exclude": [
-        "jest.config.ts",
-        "src/test-setup.ts",
         "src/**/*.test.ts",
         "src/**/*.spec.ts",
-        "vite.config.ts",
-        "vite.config.mts",
-        "vitest.config.ts",
-        "vitest.config.mts",
         "src/**/*.test.tsx",
         "src/**/*.spec.tsx",
         "src/**/*.test.js",
         "src/**/*.spec.js",
         "src/**/*.test.jsx",
-        "src/**/*.spec.jsx",
-        "src/test-setup.ts"
+        "src/**/*.spec.jsx"
     ],
     "extends": "./tsconfig.json",
-    "include": ["src/**/*.ts", "../../libs/angular/aurelius-data-access/src/lib/entities.service.ts"]
+    "include": ["src/**/*.ts"]
 }

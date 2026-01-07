@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { EntitiesService } from "aurelius-data-access";
 import { Card } from "aurelius-ui";
 import { EntityService } from "../services/entity.service";
 import { SearchService } from "../services/search.service";
@@ -15,11 +14,6 @@ import { SearchService } from "../services/search.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchResults {
-    /**
-     * The entities service is used to perform CRUD operations on entities.
-     */
-    protected readonly entitiesService = inject(EntitiesService);
-
     /**
      * The entity service is used to control the current entity being edited.
      */
