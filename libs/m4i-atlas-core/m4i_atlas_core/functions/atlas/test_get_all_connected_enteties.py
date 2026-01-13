@@ -1,9 +1,17 @@
 from unittest.mock import AsyncMock, patch
+from typing import List
+import sys
 
 import pytest
 
-from ...entities import Entity
-from .get_all_connected_enteties import get_all_connected_entities
+from ...entities import Entity, Attributes, ObjectId
+from .get_all_connected_entities import get_all_connected_entities
+
+def make_object_ids(guids: List[str]) -> List[ObjectId]:
+    return [
+        ObjectId(type_name="test_entity", guid=guid, unique_attributes=Attributes())
+        for guid in guids
+    ]
 
 
 @pytest.mark.asyncio
@@ -11,7 +19,8 @@ async def test__get_all_connected_entities_single_entity_no_references():
     """Test with a single entity that has no references to other entities."""
     entity = Entity(guid="entity-1")
     
-    with patch.object(entity, 'get_referred_entities', return_value=[]):
+    with patch.object(entity, 'get_parents', return_value=[]), \
+         patch.object(entity, 'get_children', return_value=[]):
         result = await get_all_connected_entities(entity)
         
         assert len(result) == 1
@@ -24,13 +33,18 @@ async def test__get_all_connected_entities_with_single_reference():
     """Test with an entity that references one other entity."""
     entity = Entity(guid="entity-1")
     referenced_entity = Entity(guid="entity-2")
+        
+    # Get the actual module (not the function) from sys.modules
+    gace_module = sys.modules['m4i_atlas_core.functions.atlas.get_all_connected_entities']
     
-    with patch.object(entity, 'get_referred_entities', return_value=["entity-2"]), \
-         patch("m4i_atlas_core.functions.atlas.get_all_connected_enteties.get_entities_by_guids", new_callable=AsyncMock) as mock_get_entities, \
-         patch.object(referenced_entity, 'get_referred_entities', return_value=[]):
+    with patch.object(entity, 'get_parents', return_value=make_object_ids(["entity-2"])), \
+         patch.object(entity, 'get_children', return_value=[]), \
+         patch.object(gace_module, 'get_entities_by_guids', new=AsyncMock()) as mock_get_entities, \
+         patch.object(referenced_entity, 'get_parents', return_value=[]), \
+         patch.object(referenced_entity, 'get_children', return_value=[]):
         
         # Return entity based on input guids
-        def get_entities_side_effect(guids):
+        def get_entities_side_effect(guids, **kwargs):
             if "entity-2" in guids:
                 return {"entity-2": referenced_entity}
             return {}
@@ -45,8 +59,7 @@ async def test__get_all_connected_entities_with_single_reference():
         assert result["entity-1"] == entity
         assert result["entity-2"] == referenced_entity
         
-        mock_get_entities.assert_called_once_with(guids=["entity-2"])
-
+        mock_get_entities.assert_called_once_with(guids=["entity-2"], ignore_relationships=False, access_token=None)
 
 @pytest.mark.asyncio
 async def test__get_all_connected_entities_with_multiple_references():
@@ -55,13 +68,19 @@ async def test__get_all_connected_entities_with_multiple_references():
     referenced_entity_2 = Entity(guid="entity-2")
     referenced_entity_3 = Entity(guid="entity-3")
     
-    with patch.object(entity, 'get_referred_entities', return_value=["entity-2", "entity-3"]), \
-         patch("m4i_atlas_core.functions.atlas.get_all_connected_enteties.get_entities_by_guids", new_callable=AsyncMock) as mock_get_entities, \
-         patch.object(referenced_entity_2, 'get_referred_entities', return_value=[]), \
-         patch.object(referenced_entity_3, 'get_referred_entities', return_value=[]):
+    # Get the actual module (not the function) from sys.modules
+    gace_module = sys.modules['m4i_atlas_core.functions.atlas.get_all_connected_entities']
+    
+    with patch.object(entity, 'get_parents', return_value=make_object_ids(["entity-2"])), \
+         patch.object(entity, 'get_children', return_value=make_object_ids(["entity-3"])), \
+         patch.object(gace_module, 'get_entities_by_guids', new=AsyncMock()) as mock_get_entities, \
+         patch.object(referenced_entity_2, 'get_parents', return_value=[]), \
+         patch.object(referenced_entity_2, 'get_children', return_value=[]), \
+         patch.object(referenced_entity_3, 'get_parents', return_value=[]), \
+         patch.object(referenced_entity_3, 'get_children', return_value=[]):
         
         # Return entities based on input guids
-        def get_entities_side_effect(guids):
+        def get_entities_side_effect(guids, **kwargs):
             result = {}
             if "entity-2" in guids:
                 result["entity-2"] = referenced_entity_2
@@ -81,7 +100,7 @@ async def test__get_all_connected_entities_with_multiple_references():
         assert result["entity-2"] == referenced_entity_2
         assert result["entity-3"] == referenced_entity_3
         
-        mock_get_entities.assert_called_once_with(guids=["entity-2", "entity-3"])
+        mock_get_entities.assert_called_once_with(guids=["entity-2", "entity-3"], ignore_relationships=False, access_token=None)
 
 
 @pytest.mark.asyncio
@@ -91,13 +110,19 @@ async def test__get_all_connected_entities_with_nested_references():
     referenced_entity_2 = Entity(guid="entity-2")
     referenced_entity_3 = Entity(guid="entity-3")
     
-    with patch.object(entity, 'get_referred_entities', return_value=["entity-2"]), \
-         patch("m4i_atlas_core.functions.atlas.get_all_connected_enteties.get_entities_by_guids", new_callable=AsyncMock) as mock_get_entities, \
-         patch.object(referenced_entity_2, 'get_referred_entities', return_value=["entity-3"]), \
-         patch.object(referenced_entity_3, 'get_referred_entities', return_value=[]):
+    # Get the actual module (not the function) from sys.modules
+    gace_module = sys.modules['m4i_atlas_core.functions.atlas.get_all_connected_entities']
+    
+    with patch.object(entity, 'get_parents', return_value=make_object_ids(["entity-2"])), \
+         patch.object(entity, 'get_children', return_value=[]), \
+         patch.object(gace_module, 'get_entities_by_guids', new=AsyncMock()) as mock_get_entities, \
+         patch.object(referenced_entity_2, 'get_parents', return_value=make_object_ids(["entity-3"])), \
+         patch.object(referenced_entity_2, 'get_children', return_value=[]), \
+         patch.object(referenced_entity_3, 'get_parents', return_value=[]), \
+         patch.object(referenced_entity_3, 'get_children', return_value=[]):
         
         # Return different entities based on input guids
-        def get_entities_side_effect(guids):
+        def get_entities_side_effect(guids, **kwargs):
             if guids == ["entity-2"]:
                 return {"entity-2": referenced_entity_2}
             elif guids == ["entity-3"]:
@@ -125,12 +150,17 @@ async def test__get_all_connected_entities_with_circular_references():
     entity = Entity(guid="entity-1")
     referenced_entity_2 = Entity(guid="entity-2")
     
-    with patch.object(entity, 'get_referred_entities', return_value=["entity-2"]), \
-         patch("m4i_atlas_core.functions.atlas.get_all_connected_enteties.get_entities_by_guids", new_callable=AsyncMock) as mock_get_entities, \
-         patch.object(referenced_entity_2, 'get_referred_entities', return_value=["entity-1"]):
+    # Get the actual module (not the function) from sys.modules
+    gace_module = sys.modules['m4i_atlas_core.functions.atlas.get_all_connected_entities']
+    
+    with patch.object(entity, 'get_parents', return_value=make_object_ids(["entity-2"])), \
+         patch.object(entity, 'get_children', return_value=[]), \
+         patch.object(gace_module, 'get_entities_by_guids', new=AsyncMock()) as mock_get_entities, \
+         patch.object(referenced_entity_2, 'get_parents', return_value=make_object_ids(["entity-1"])), \
+         patch.object(referenced_entity_2, 'get_children', return_value=[]):
         
         # Return entity based on input guids
-        def get_entities_side_effect(guids):
+        def get_entities_side_effect(guids, **kwargs):
             if "entity-2" in guids:
                 return {"entity-2": referenced_entity_2}
             return {}
@@ -147,7 +177,7 @@ async def test__get_all_connected_entities_with_circular_references():
         assert result["entity-2"] == referenced_entity_2
         
         # Should only call get_entities_by_guids once because entity-1 is already visited
-        mock_get_entities.assert_called_once_with(guids=["entity-2"])
+        mock_get_entities.assert_called_once_with(guids=["entity-2"], ignore_relationships=False, access_token=None)
 
 
 @pytest.mark.asyncio
@@ -166,17 +196,27 @@ async def test__get_all_connected_entities_with_complex_graph():
     # entity-4 -> []
     # entity-5 -> []
     
-    with patch.object(entity_1, 'get_referred_entities', return_value=["entity-2", "entity-3"]), \
-         patch("m4i_atlas_core.functions.atlas.get_all_connected_enteties.get_entities_by_guids", new_callable=AsyncMock) as mock_get_entities, \
-         patch.object(entity_2, 'get_referred_entities', return_value=["entity-4"]), \
-         patch.object(entity_3, 'get_referred_entities', return_value=["entity-4", "entity-5"]), \
-         patch.object(entity_4, 'get_referred_entities', return_value=[]), \
-         patch.object(entity_5, 'get_referred_entities', return_value=[]):
+    # Get the actual module (not the function) from sys.modules
+    gace_module = sys.modules['m4i_atlas_core.functions.atlas.get_all_connected_entities']
+    
+    with patch.object(gace_module, 'get_entities_by_guids', new=AsyncMock()) as mock_get_entities, \
+         patch.object(entity_1, 'get_parents', return_value=make_object_ids(["entity-2"])), \
+         patch.object(entity_1, 'get_children', return_value=make_object_ids(["entity-3"])), \
+         patch.object(entity_2, 'get_parents', return_value=make_object_ids(["entity-4"])), \
+         patch.object(entity_2, 'get_children', return_value=[]), \
+         patch.object(entity_3, 'get_parents', return_value=make_object_ids(["entity-4"])), \
+         patch.object(entity_3, 'get_children', return_value=make_object_ids(["entity-5"])), \
+         patch.object(entity_4, 'get_parents', return_value=[]), \
+         patch.object(entity_4, 'get_children', return_value=[]), \
+         patch.object(entity_5, 'get_parents', return_value=[]), \
+         patch.object(entity_5, 'get_children', return_value=[]):
         
         # Return different entities based on input guids
-        def get_entities_side_effect(guids):
+        def get_entities_side_effect(guids, **kwargs):
             result = {}
             for guid in guids:
+                if guid == "entity-1":
+                    result[guid] = entity_1
                 if guid == "entity-2":
                     result[guid] = entity_2
                 elif guid == "entity-3":
@@ -209,13 +249,18 @@ async def test__get_all_connected_entities_duplicate_references_in_single_entity
     entity = Entity(guid="entity-1")
     referenced_entity = Entity(guid="entity-2")
     
+    # Get the actual module (not the function) from sys.modules
+    gace_module = sys.modules['m4i_atlas_core.functions.atlas.get_all_connected_entities']
+    
     # Simulate duplicate references (shouldn't happen but good to test)
-    with patch.object(entity, 'get_referred_entities', return_value=["entity-2", "entity-2"]), \
-         patch("m4i_atlas_core.functions.atlas.get_all_connected_enteties.get_entities_by_guids", new_callable=AsyncMock) as mock_get_entities, \
-         patch.object(referenced_entity, 'get_referred_entities', return_value=[]):
+    with patch.object(entity, 'get_parents', return_value=make_object_ids(["entity-2", "entity-2"])), \
+         patch.object(entity, 'get_children', return_value=[]), \
+         patch.object(gace_module, 'get_entities_by_guids', new=AsyncMock()) as mock_get_entities, \
+         patch.object(referenced_entity, 'get_parents', return_value=[]), \
+         patch.object(referenced_entity, 'get_children', return_value=[]):
         
         # Return entity based on input guids
-        def get_entities_side_effect(guids):
+        def get_entities_side_effect(guids, **kwargs):
             if "entity-2" in guids:
                 return {"entity-2": referenced_entity}
             return {}
@@ -241,7 +286,8 @@ async def test__get_all_connected_entities_self_reference():
     entity = Entity(guid="entity-1")
     
     # Entity references itself
-    with patch.object(entity, 'get_referred_entities', return_value=["entity-1"]):
+    with patch.object(entity, 'get_parents', return_value=make_object_ids(["entity-1"])), \
+         patch.object(entity, 'get_children', return_value=[]):
         result = await get_all_connected_entities(entity)
         
         # Should only have the single entity and not loop infinitely

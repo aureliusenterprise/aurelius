@@ -1,8 +1,8 @@
-from typing import Optional
+from typing import Dict, List, Optional
 
 from ...api.atlas import get_entity_by_guid
 from ...entities import Entity
-from .get_all_connected_enteties import get_all_connected_entities
+from .get_all_connected_entities import get_all_connected_entities
 
 
 class MultipleParentsError(Exception):
@@ -14,7 +14,7 @@ async def get_breadcrumbs(
     entity: Entity, 
     choose_first_parent: bool = False,
     access_token: Optional[str] = None
-) -> list[Entity]:
+) -> List[Entity]:
     """
     Returns the breadcrumbs for the given entity.
     
@@ -28,7 +28,7 @@ async def get_breadcrumbs(
     Raises:
         MultipleParentsError: If an entity has multiple parents and choose_first_parent is False.
     """
-    breadcrumb: list[Entity] = [entity]
+    breadcrumb: List[Entity] = []
     
     current_entity = entity
     
@@ -73,7 +73,7 @@ async def get_breadcrumbs_for_all_descendants(
     entity: Entity, 
     choose_first_parent: bool = False,
     access_token: Optional[str] = None
-) -> dict[str, list[Entity]]:
+) -> Dict[str, List[Entity]]:
     """
     Returns the breadcrumbs for all descendants of the given entity.
 
@@ -89,77 +89,30 @@ async def get_breadcrumbs_for_all_descendants(
         MultipleParentsError: If an entity has multiple parents and choose_first_parent is False.
     """
     # Fetch all connected entities upfront
-    all_entities = await get_all_connected_entities(entity)
+    all_entities = await get_all_connected_entities(entity, access_token=access_token)
     
-    result: dict[str, list[Entity]] = {}
+    result: Dict[str, List[Entity]] = {}
     
-    # Process entities in breadth-first order starting from the root entity
-    queue: list[str] = [entity.guid]
-    visited: set[str] = set()
-    
-    while queue:
-        current_guid = queue.pop(0)
-        
-        # Skip if already visited
-        if current_guid in visited:
-            continue
-        
-        visited.add(current_guid)
-        current_entity = all_entities[current_guid]
-        
-        # Get parent entities
-        parent_object_ids = list(current_entity.get_parents())
-        parent_guids = [obj_id.guid for obj_id in parent_object_ids if obj_id.guid]
-        
-        # Build breadcrumb for current entity
-        if not parent_guids:
-            # Root entity - breadcrumb is just itself
-            breadcrumb = [current_entity]
-        else:
-            # Check for multiple parents
-            if len(parent_guids) > 1 and not choose_first_parent:
-                raise MultipleParentsError(
-                    f"Entity {current_guid} has multiple parents {parent_guids}. "
-                    "Set choose_first_parent=True to automatically select the first parent."
-                )
-            
-            # Select which parent to follow
-            selected_parent_guid = parent_guids[0]
-            
-            # Reuse parent's breadcrumb and append current entity
-            if selected_parent_guid in result:
-                # Parent already processed, reuse its breadcrumb
-                breadcrumb = result[selected_parent_guid] + [current_entity]
-            elif selected_parent_guid in all_entities:
-                # Parent exists but not yet processed, compute its breadcrumb first
-                parent_breadcrumb = _compute_breadcrumb_internal(
-                    entity_guid=selected_parent_guid,
-                    all_entities=all_entities,
-                    choose_first_parent=choose_first_parent,
-                    result=result
-                )
-                breadcrumb = parent_breadcrumb + [current_entity]
-            else:
-                # Parent not in connected entities, just start with current
-                breadcrumb = [current_entity]
-        
-        result[current_guid] = breadcrumb
-        
-        # Add all children to queue
-        child_object_ids = list(current_entity.get_children())
-        for child_obj_id in child_object_ids:
-            if child_obj_id.guid and child_obj_id.guid not in visited and child_obj_id.guid in all_entities:
-                queue.append(child_obj_id.guid)
+    # Compute breadcrumbs for all entities using recursive memoization
+    # This ensures parents are always processed before children
+    for entity_guid in all_entities.keys():
+        if entity_guid not in result:
+            _compute_breadcrumb_internal(
+                entity_guid=entity_guid,
+                all_entities=all_entities,
+                choose_first_parent=choose_first_parent,
+                result=result
+            )
     
     return result
 
 
 def _compute_breadcrumb_internal(
     entity_guid: str,
-    all_entities: dict[str, Entity],
+    all_entities: Dict[str, Entity],
     choose_first_parent: bool,
-    result: dict[str, list[Entity]]
-) -> list[Entity]:
+    result: Dict[str, List[Entity]]
+) -> List[Entity]:
     """
     Internal helper to compute breadcrumb for an entity using already fetched entities.
     Uses recursion with memoization via the result dict.
@@ -177,7 +130,7 @@ def _compute_breadcrumb_internal(
     # Build breadcrumb
     if not parent_guids:
         # Root entity
-        breadcrumb = [current_entity]
+        breadcrumb = []
     else:
         # Check for multiple parents
         if len(parent_guids) > 1 and not choose_first_parent:
@@ -197,10 +150,10 @@ def _compute_breadcrumb_internal(
                 choose_first_parent=choose_first_parent,
                 result=result
             )
-            breadcrumb = parent_breadcrumb + [current_entity]
+            breadcrumb = parent_breadcrumb + [all_entities[selected_parent_guid]]
         else:
             # Parent not available, start with current
-            breadcrumb = [current_entity]
+            breadcrumb = [all_entities[selected_parent_guid]]
     
     # Memoize result
     result[entity_guid] = breadcrumb

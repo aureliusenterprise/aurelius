@@ -7,15 +7,17 @@ from typing import List, Optional
 
 import click
 from elasticsearch import Elasticsearch
+from m4i_atlas_core import register_atlas_entity_types
+from m4i_atlas_core.entities.atlas.data_dictionary import data_dictionary_entity_types
 
 from m4i_update_breadcrumbs.breadcrumb_updater import BreadcrumbUpdater
 
 
+# Register entity types so they can be properly deserialized
+register_atlas_entity_types(data_dictionary_entity_types)
+
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
+logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
 logger = logging.getLogger(__name__)
 
 
@@ -55,6 +57,26 @@ logger = logging.getLogger(__name__)
     "--atlas-password",
     default=None,
     help="Atlas password for basic authentication (alternative to access token)",
+)
+@click.option(
+    "--keycloak-url",
+    default=None,
+    help="Keycloak server URL (e.g., https://<your-domain>/<namespace>/auth)",
+)
+@click.option(
+    "--keycloak-client-id",
+    default="m4i_public",
+    help="Keycloak client ID (default: m4i_public)",
+)
+@click.option(
+    "--keycloak-realm",
+    default="m4i",
+    help="Keycloak realm name (default: m4i)",
+)
+@click.option(
+    "--keycloak-client-secret",
+    default=None,
+    help="Keycloak client secret key",
 )
 @click.option(
     "--include-descendants",
@@ -103,6 +125,10 @@ def main(
     access_token: Optional[str],
     atlas_user: Optional[str],
     atlas_password: Optional[str],
+    keycloak_url: Optional[str],
+    keycloak_client_id: str,
+    keycloak_realm: str,
+    keycloak_client_secret: Optional[str],
     include_descendants: bool,
     choose_first_parent: bool,
     elastic_user: Optional[str],
@@ -152,27 +178,25 @@ def main(
     logger.info(f"Dry run: {dry_run}")
 
     try:
-        # Create Elasticsearch client
-        elastic_kwargs = {"hosts": [elastic_url]}
-        if elastic_api_key:
-            elastic_kwargs["api_key"] = elastic_api_key
-            logger.info("Using Elasticsearch API key authentication")
-        elif elastic_user and elastic_password:
-            elastic_kwargs["basic_auth"] = (elastic_user, elastic_password)
-            logger.info("Using Elasticsearch basic authentication")
+        if dry_run:
+            elastic = None
+            logger.info("[DRY RUN] Skipping Elasticsearch connection check")
+        else:
+            # Create Elasticsearch client
+            elastic_kwargs = {"hosts": [elastic_url]}
+            if elastic_api_key:
+                elastic_kwargs["api_key"] = elastic_api_key
+                logger.info("Using Elasticsearch API key authentication")
+            elif elastic_user and elastic_password:
+                elastic_kwargs["basic_auth"] = (elastic_user, elastic_password)
+                logger.info("Using Elasticsearch basic authentication")
 
-        elastic = Elasticsearch(**elastic_kwargs)
-
-        # Verify connection (skip in dry-run mode)
-        if not dry_run:
+            elastic = Elasticsearch(**elastic_kwargs)
             if not elastic.ping():
                 logger.error("Failed to connect to Elasticsearch")
                 sys.exit(1)
             logger.info("Successfully connected to Elasticsearch")
-        else:
-            logger.info("[DRY RUN] Skipping Elasticsearch connection check")
 
-        # Create updater
         updater = BreadcrumbUpdater(
             elastic=elastic,
             index_name=index,
@@ -180,11 +204,14 @@ def main(
             access_token=access_token,
             atlas_username=atlas_user,
             atlas_password=atlas_password,
+            keycloak_url=keycloak_url,
+            keycloak_client_id=keycloak_client_id,
+            keycloak_realm=keycloak_realm,
+            keycloak_client_secret=keycloak_client_secret,
             choose_first_parent=choose_first_parent,
             dry_run=dry_run,
         )
 
-        # Run the update
         total_updated = asyncio.run(
             updater.update_multiple_entities_breadcrumbs(
                 entity_guids=entity_guids,
@@ -195,10 +222,8 @@ def main(
         if dry_run:
             logger.info(f"[DRY RUN] Would have updated {total_updated} documents")
         else:
+            elastic.close()
             logger.info(f"Breadcrumb update completed. Total documents updated: {total_updated}")
-
-        # Close Elasticsearch connection
-        elastic.close()
 
     except KeyboardInterrupt:
         logger.info("Operation cancelled by user")

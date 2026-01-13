@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "m4i-atlas-core"
-version = "1.0.0"
+version = "1.1.0"
 description = "Aurelius atlas core package"
 authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
 license = "UNLICENSED"

@@ -1,12 +1,12 @@
 
 import asyncio
 import json
-from typing import Dict, List, Optional
+from typing import Awaitable, Dict, List, Optional
 
 from aiocache import Cache
 from aiohttp import ClientResponse
 
-from ...entities import Entity
+from ...entities import Entity, get_entity_type_by_type_name
 from ..core import atlas_get
 from .get_entity_by_guid import get_entity_by_guid
 
@@ -45,34 +45,43 @@ def _get_future_fetch_entities_batch(
     ignore_relationships: bool = True,
     min_ext_info: bool = True,
     access_token: Optional[str] = None
-) -> asyncio.Future[Dict[str, Entity]]:
+) -> Awaitable[Dict[str, Entity]]:
     """
     Create a future to fetch a batch of entities from Atlas.
     
     Returns a coroutine that will fetch and return a dictionary mapping GUIDs to Entity objects.
     """
-    # Build query parameters
+    # Build query parameters - convert booleans to strings for aiohttp
     params = {
         "guid": batch,
-        "ignoreRelationships": ignore_relationships,
-        "minExtInfo": min_ext_info
+        "ignoreRelationships": str(ignore_relationships).lower(),
+        "minExtInfo": str(min_ext_info).lower()
     }
     
     # Return the coroutine (future) without awaiting
     return atlas_get(
         path=BASE_PATH,
-        params=json.dumps(params),
+        params=params,
         parser=ClientResponse.json,
         access_token=access_token
     )
 
 
 async def _parse_batch_response(response: dict) -> Dict[str, Entity]:
-    """Parse entities from batch response."""
+    """Parse entities from batch response with automatic type detection."""
     result: Dict[str, Entity] = {}
     entities_list = response.get('entities', [])
     for entity_dict in entities_list:
-        entity = Entity.from_dict(entity_dict)
+        # Auto-detect the correct entity type from typeName
+        entity_type = Entity
+        if 'typeName' in entity_dict:
+            try:
+                entity_type = get_entity_type_by_type_name(entity_dict['typeName'])
+            except Exception:
+                # If type resolution fails, fall back to generic Entity
+                pass
+        
+        entity = entity_type.from_dict(entity_dict)
         result[entity.guid] = entity
     return result
 
