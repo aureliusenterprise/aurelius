@@ -1,0 +1,138 @@
+[
+    {
+        "disabled": false,
+        "env": [],
+        "id": "5a4a8e8f52d828be",
+        "info": "",
+        "label": "Events",
+        "type": "tab"
+    },
+    {
+        "cacert": "",
+        "clientcert": "",
+        "hosts": "${KAFKA_BOOTSTRAP_SERVERS}",
+        "id": "505a57449226f076",
+        "name": "",
+        "passphrase": "",
+        "privatekey": "",
+        "selfsign": false,
+        "type": "kafka-broker",
+        "usetls": false
+    },
+    {
+        "crontab": "",
+        "id": "0e5158fb4db438c1",
+        "name": "generate message",
+        "once": true,
+        "onceDelay": "30",
+        "payload": "{\"description\":\"This is an example message\",\"name\":\"Example\"}",
+        "payloadType": "json",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "10",
+        "topic": "",
+        "type": "inject",
+        "wires": [["d658b6cbe4f41fcd"]],
+        "x": 140,
+        "y": 160,
+        "z": "5a4a8e8f52d828be"
+    },
+    {
+        "action": "",
+        "from": "",
+        "id": "58737f5c0a9bb461",
+        "name": "format message",
+        "property": "",
+        "reg": false,
+        "rules": [
+            {
+                "p": "key",
+                "pt": "msg",
+                "t": "set",
+                "to": "msg.payload.guid",
+                "tot": "msg"
+            },
+            {
+                "p": "topic",
+                "pt": "msg",
+                "t": "set",
+                "to": "KAFKA_TOPIC_NAME",
+                "tot": "env"
+            },
+            {
+                "p": "payload",
+                "pt": "msg",
+                "t": "move",
+                "to": "payload.value",
+                "tot": "msg"
+            }
+        ],
+        "to": "",
+        "type": "change",
+        "wires": [["4c515a03634c585a"]],
+        "x": 520,
+        "y": 160,
+        "z": "5a4a8e8f52d828be"
+    },
+    {
+        "action": "",
+        "id": "4c515a03634c585a",
+        "name": "",
+        "pretty": false,
+        "property": "payload",
+        "type": "json",
+        "wires": [["c43db97ea22128aa", "6733a7e302da5d8d"]],
+        "x": 690,
+        "y": 160,
+        "z": "5a4a8e8f52d828be"
+    },
+    {
+        "ackTimeoutMs": 100,
+        "attributes": 0,
+        "broker": "505a57449226f076",
+        "id": "6733a7e302da5d8d",
+        "name": "produce message",
+        "requireAcks": 1,
+        "topic": "${KAFKA_TOPIC_NAME}",
+        "type": "kafka-producer",
+        "wires": [],
+        "x": 870,
+        "y": 160,
+        "z": "5a4a8e8f52d828be"
+    },
+    {
+        "active": true,
+        "complete": "true",
+        "console": false,
+        "id": "c43db97ea22128aa",
+        "name": "debug output",
+        "statusType": "auto",
+        "statusVal": "",
+        "targetType": "full",
+        "tosidebar": true,
+        "tostatus": false,
+        "type": "debug",
+        "wires": [],
+        "x": 850,
+        "y": 220,
+        "z": "5a4a8e8f52d828be"
+    },
+    {
+        "field": "payload.guid",
+        "fieldType": "msg",
+        "id": "d658b6cbe4f41fcd",
+        "name": "set guid",
+        "namespace": "",
+        "namespaceCustom": "",
+        "namespaceType": "",
+        "type": "uuid",
+        "uuidVersion": "v4",
+        "wires": [["58737f5c0a9bb461"]],
+        "x": 340,
+        "y": 160,
+        "z": "5a4a8e8f52d828be"
+    }
+]

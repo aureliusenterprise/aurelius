@@ -29,6 +29,7 @@
         "@vitest/coverage-v8": "4.0.9",
         "@vitest/ui": "4.0.9",
         "angular-eslint": "21.1.0",
+        "aurelius-node-red-example": "file:apps/aurelius-node-red-example",
         "autoprefixer": "^10.4.0",
         "eslint": "^9.8.0",
         "eslint-config-prettier": "^10.0.0",

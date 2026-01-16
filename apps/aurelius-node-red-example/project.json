@@ -1,0 +1,12 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "name": "aurelius-node-red-example",
+    "projectType": "application",
+    "tags": [],
+    "targets": {
+        "serve": {
+            "command": "node-red -u {projectRoot} --title aurelius-node-red-example",
+            "dependsOn": [{ "target": "decrypt" }, { "projects": ["aurelius-dev-kafka"], "target": "serve" }]
+        }
+    }
+}

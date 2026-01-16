@@ -35,7 +35,7 @@ async function createNodesInternal(
                             ".env": {
                                 inputPath: `${projectRoot}/.env`,
                                 inputType: "dotenv",
-                                outputPath: `${projectRoot}/.env.lock`,
+                                outputPath: `${projectRoot}/.env.enc`,
                                 outputType: "dotenv",
                             },
                         },

@@ -11,7 +11,7 @@ to manage secrets in the repository. This tool allows us to encrypt and decrypt 
 
 ??? QUESTION "How do I identify encrypted files?"
 
-    Encrypted files have the `.lock` extension. For example, the `.env.lock` file is an encrypted version of the
+    Encrypted files have the `.lock` extension. For example, the `.env.enc` file is an encrypted version of the
     `.env` file.
 
 During initial setup of the development container, a unique key pair consisting of a public and a private key
@@ -70,7 +70,7 @@ If you need to decrypt the settings manually, you can run the following command:
 nx decrypt <project-name>
 ```
 
-Replace `<project-name>` with the name of the project you are working on. This will decrypt the `.env.lock` file
+Replace `<project-name>` with the name of the project you are working on. This will decrypt the `.env.enc` file
 and save the contents to a corresponding `.env` file.
 
 !!! DANGER "Security Warning"
@@ -86,4 +86,4 @@ nx encrypt <project-name>
 ```
 
 Replace `<project-name>` with the name of the project you are working on. This will encrypt the `.env` file for
-that project and save the contents to a corresponding `.env.lock` file.
+that project and save the contents to a corresponding `.env.enc` file.
