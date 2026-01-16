@@ -99,7 +99,7 @@
             "version": "3.14"
         }
     },
-    "forwardPorts": [1880, 4200, 4400, 8000, 8080, 8082, 9092],
+    "forwardPorts": [1880, 4200, 4400, 8000, 8080, 8081, 8082, 9092],
     "image": "mcr.microsoft.com/devcontainers/base:noble",
     "name": "Aurelius Project Template",
     "onCreateCommand": {
@@ -124,6 +124,9 @@
         },
         "8080": {
             "label": "Keycloak"
+        },
+        "8081": {
+            "label": "Schema Registry"
         },
         "8082": {
             "label": "Kafka UI",
