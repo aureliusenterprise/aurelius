@@ -11,7 +11,7 @@ to manage secrets in the repository. This tool allows us to encrypt and decrypt 
 
 ??? QUESTION "How do I identify encrypted files?"
 
-    Encrypted files have the `.lock` extension. For example, the `.env.enc` file is an encrypted version of the
+    Encrypted files have the `.enc` extension. For example, the `.env.enc` file is an encrypted version of the
     `.env` file.
 
 During initial setup of the development container, a unique key pair consisting of a public and a private key
