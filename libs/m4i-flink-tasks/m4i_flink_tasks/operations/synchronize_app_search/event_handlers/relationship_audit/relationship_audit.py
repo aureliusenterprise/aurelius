@@ -1,7 +1,7 @@
 import logging
 from typing import Dict, List
 
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, NotFoundError
 from elasticsearch.helpers import scan
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
@@ -335,7 +335,7 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
     for child_guid in immediate_children:
         try:
             child_document = updated_documents[child_guid] if child_guid in updated_documents else get_document(child_guid, elastic, index_name)
-        except AppSearchDocumentNotFoundError:
+        except (AppSearchDocumentNotFoundError, NotFoundError):
             logging.error("Immediate child document not found %s", child_guid)
             continue
         
