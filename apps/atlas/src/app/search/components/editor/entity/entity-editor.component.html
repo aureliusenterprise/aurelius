@@ -105,6 +105,7 @@
           [tags]="dataDomains"
           typeName="m4i_data_domain"
           [rule]="rules?.dataDomain"
+          [singleRelationship]="true"
         ></models4insight-relationships-input>
       </div>
       <ng-container *ngIf="rules.dataDomain as rules">
@@ -124,6 +125,7 @@
           [tags]="parentEntities"
           typeName="m4i_data_entity"
           [rule]="rules.parentEntity"
+          [singleRelationship]="true"
         ></models4insight-relationships-input>
       </div>
       <ng-container *ngIf="rules.parentEntity as rules">

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   UntypedFormArray,
@@ -13,7 +13,7 @@ import {
   EntityValidationResponse
 } from '@models4insight/atlas/api';
 import { merge } from 'lodash';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {
   EditorFormService,
   EDITOR_FORM_FACTORY,
@@ -181,12 +181,40 @@ function updateEntityEditorForm(
 })
 export class EntityEditorComponent {
   readonly validationResults$: Observable<EntityValidationResponse>;
+  private readonly subscriptions: Subscription[] = [];
 
   constructor(
     readonly editorFormService: EditorFormService,
     private readonly entityValidateService: EntityValidateService
   ) {
     this.validationResults$ = this.entityValidateService.validationResults$;
+  }
+
+  ngOnInit(): void {
+    const parents = this.parentEntities as unknown as UntypedFormArray;
+    const domains = this.dataDomains as unknown as UntypedFormArray;
+
+    if (parents && domains) {
+      this.subscriptions.push(
+        parents.valueChanges.subscribe(() => {
+          if (parents.length > 0 && domains.length > 0) {
+            domains.clear();
+          }
+        })
+      );
+
+      this.subscriptions.push(
+        domains.valueChanges.subscribe(() => {
+          if (domains.length > 0 && parents.length > 0) {
+            parents.clear();
+          }
+        })
+      );
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
   get attributes() {

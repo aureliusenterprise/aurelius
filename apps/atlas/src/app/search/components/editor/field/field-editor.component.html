@@ -94,6 +94,7 @@
           [tags]="datasets"
           typeName="m4i_dataset"
           [rule]="rules.datasets"
+          [singleRelationship]="true"
         ></models4insight-relationships-input>
       </div>
       <ng-container *ngIf="rules.datasets as rules">
@@ -113,6 +114,7 @@
           [tags]="parentFields"
           typeName="m4i_field"
           [rule]="rules.parentField"
+          [singleRelationship]="true"
         ></models4insight-relationships-input>
       </div>
       <ng-container *ngIf="rules.parentField as rules">
