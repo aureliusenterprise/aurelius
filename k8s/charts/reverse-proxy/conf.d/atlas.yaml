@@ -18,7 +18,7 @@ Alias "/{{ .Release.Namespace }}/atlas" "/usr/local/apache2/atlas"
 </Directory>
 
 ## models4insight backend
-<Location /{{ .Release.Namespace }}/atlas/repository>
+<Location /{{ .Release.Namespace }}/atlas/repository/api>
         ProxyPass "http://python-rest.{{ .Release.Namespace }}.svc.cluster.local:5000/{{ .Release.Namespace }}/atlas/logging/"
         ProxyPassReverse "http://python-rest.{{ .Release.Namespace }}.svc.cluster.local:5000/{{ .Release.Namespace }}/atlas/logging/"
 </Location>

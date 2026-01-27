@@ -1,6 +1,6 @@
 import { validateRequiredArguments } from '@models4insight/utils';
 import { Observable } from 'rxjs';
-import { repositoryApiBasePath } from '../constants';
+import { repositoryLogBasePath } from '../constants';
 import { getHttpClient } from '../utils';
 
 export interface ClickstreamEvent {
@@ -22,7 +22,7 @@ export function logClickstreamEvent(
   event: ClickstreamEvent
 ): Observable<void> {
   const http = getHttpClient(),
-    path = `${repositoryApiBasePath}/log`;
+    path = `${repositoryLogBasePath}`;
 
   validateRequiredArguments(arguments, 'logClickstreamEvent');
 
