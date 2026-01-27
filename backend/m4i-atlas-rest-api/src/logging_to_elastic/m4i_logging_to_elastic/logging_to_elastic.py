@@ -34,7 +34,7 @@ def write_to_elastic(index_name: str, message: dict):
 def logging_to_elastic(access_token=None):
     """
     This is the endpoint /log which is used to push logs (body of the request) to elastic index "atlas-logging".
-    For the frontend the path will be /repository/api/log.
+    For the frontend the path will be /repository/log.
 
     :param access_token: the bearer token of the frontend used to verify where this request is coming from.
     :return: Empty response
@@ -52,7 +52,7 @@ def logging_to_elastic(access_token=None):
 def errors_to_elastic(access_token=None):
     """
     This is the endpoint /error which is used to push reported errors (body of the request) to elastic index "atlas-error".
-    For the frontend the path will be /repository/api/error.
+    For the frontend the path will be /repository/error.
 
     :param access_token: the bearer token of the frontend used to verify where this request is coming from.
     :return: Empty response
