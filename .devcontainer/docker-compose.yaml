@@ -132,7 +132,7 @@ services:
       context: ..
       dockerfile: ./services/kafka-connect/Dockerfile
       args:
-        CONNECT_ELASTICSEARCH_VERSION: '15.0.0'
+        CONNECT_ELASTICSEARCH_VERSION: '14.1.5'
         CONNECT_VERSION: '7.3.2'
     depends_on:
       kafka-broker:
