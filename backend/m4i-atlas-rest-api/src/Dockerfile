@@ -10,7 +10,7 @@ RUN apt-get -y install graphviz && \
 ADD . /rest-services
 WORKDIR /rest-services
 
-RUN pipenv install --system --skip-lock
+RUN pip install bokeh==2.4.3
 
 RUN pip install gunicorn[gevent]
 
