@@ -4,7 +4,7 @@ from json import loads
 from typing import Dict
 
 from bokeh.embed import json_item
-from bokeh.plotting.figure import Figure
+from bokeh.plotting import Figure
 from flask import request
 from m4i_analytics.graphs.languages.archimate.ArchimateUtils import \
   ArchimateUtils

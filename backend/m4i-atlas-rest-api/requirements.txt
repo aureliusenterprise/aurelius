@@ -1,0 +1,115 @@
+aiocache==0.12.2
+aiohttp==3.8.6
+aiosignal==1.3.1
+aniso8601==9.0.1
+async-timeout==4.0.3
+asynctest==0.13.0
+attrs==23.2.0
+bokeh==2.4.3
+cattrs==23.1.2
+certifi==2023.7.22
+charset-normalizer==3.3.2
+click==8.1.7
+cycler==0.11.0
+dataclasses-json==0.6.4
+deepdiff==5.8.1
+deprecation==2.1.0
+distlib==0.3.7
+ecdsa==0.18.0
+elastic-transport==8.12.0
+elasticsearch==8.12.0
+enum-compat==0.0.3
+exceptiongroup==1.2.0
+filelock==3.12.2
+Flask==2.1.3
+Flask-HTTPAuth==4.8.0
+flask-restx==1.0.3
+fonttools==4.38.0
+frozenlist==1.3.3
+future==0.18.3
+gevent==22.10.2
+graphviz==0.20.1
+greenlet==3.0.3
+gunicorn==21.2.0
+idna==3.6
+importlib-metadata==6.7.0
+importlib-resources==5.12.0
+itsdangerous==2.1.2
+Jinja2==3.1.3
+jsonschema==4.17.3
+keycloak-client==0.15.4
+kiwisolver==1.4.5
+-e git+https://github.com/aureliusenterprise/analytics-library.git@e1508e03a4ab4265111a23c3e7b0c871563a
+3f7d#egg=m4i_analytics
+-e git+https://github.com/aureliusenterprise/m4i_atlas_core.git@7666722940fb1c002a04000eca64f82ee4cda59
+3#egg=m4i_atlas_core
+-e git+https://github.com/aureliusenterprise/docker-python-rest.git@8b9ddd732367783776ea3b3bf70e2a13d5e
+1b814#egg=m4i_atlas_mock&subdirectory=atlas_mock
+-e git+https://github.com/aureliusenterprise/docker-python-rest.git@8b9ddd732367783776ea3b3bf70e2a13d5e
+1b814#egg=m4i_backend_core&subdirectory=core
+-e git+https://github.com/aureliusenterprise/docker-python-rest.git@8b9ddd732367783776ea3b3bf70e2a13d5e
+1b814#egg=m4i_compare&subdirectory=compare
+-e git+https://github.com/aureliusenterprise/docker-python-rest.git@8b9ddd732367783776ea3b3bf70e2a13d5e
+1b814#egg=m4i_consistency_metrics&subdirectory=consistency_metrics
+-e git+https://github.com/aureliusenterprise/docker-python-rest.git@8b9ddd732367783776ea3b3bf70e2a13d5e
+1b814#egg=m4i_data_governance_dashboard&subdirectory=data_governance_dashboard
+-e git+https://github.com/aureliusenterprise/docker-python-rest.git@8b9ddd732367783776ea3b3bf70e2a13d5e
+1b814#egg=m4i_data2model&subdirectory=data2model
+-e git+https://github.com/aureliusenterprise/docker-python-rest.git@8b9ddd732367783776ea3b3bf70e2a13d5e
+1b814#egg=m4i_graphviz_layouts&subdirectory=extra_modules/graphviz_layouts
+-e git+https://github.com/aureliusenterprise/docker-python-rest.git@8b9ddd732367783776ea3b3bf70e2a13d5e
+1b814#egg=m4i_lineage_model&subdirectory=lineage_model
+-e git+https://github.com/aureliusenterprise/linage_restAPI.git@e156f0eb949d799cbad3d4f32b02e9e38ecf5ec
+0#egg=m4i_lineage_rest_api
+-e git+https://github.com/aureliusenterprise/docker-python-rest.git@8b9ddd732367783776ea3b3bf70e2a13d5e
+1b814#egg=m4i_logging_to_elastic&subdirectory=logging_to_elastic
+-e git+https://github.com/aureliusenterprise/docker-python-rest.git@8b9ddd732367783776ea3b3bf70e2a13d5e
+1b814#egg=m4i_metrics&subdirectory=extra_modules/metrics
+MarkupSafe==2.0.1
+marshmallow==3.19.0
+matplotlib==3.5.3
+msgpack==1.0.5
+multidict==6.0.5
+mypy-extensions==1.0.0
+networkx==2.6.3
+numpy==1.21.6
+ordered-set==4.1.0
+packaging==23.2
+pandas==1.3.5
+Pillow==9.5.0
+pipenv==2022.8.5
+pkgutil_resolve_name==1.3.10
+platformdirs==3.11.0
+pyasn1==0.5.1
+pycryptodome==3.20.0
+pydotplus==2.0.2
+pyparsing==3.1.1
+pyrsistent==0.19.3
+python-dateutil==2.8.2
+python-jose==3.3.0
+python-keycloak==3.6.0
+pytz==2024.1
+PyYAML==6.0.1
+requests==2.31.0
+requests-cache==1.1.1
+requests-toolbelt==1.0.0
+rsa==4.9
+Rx==3.2.0
+six==1.16.0
+SQLAlchemy==2.0.25
+sqlparse==0.4.4
+tornado==6.2
+typing-inspect==0.9.0
+typing_extensions==4.7.1
+ujson==5.7.0
+url-normalize==1.4.3
+urllib3==2.0.7
+uuid==1.30
+virtualenv==20.24.6
+virtualenv-clone==0.5.7
+Werkzeug==2.1.2
+xlrd==2.0.1
+yarl==1.9.4
+zipp==3.15.0
+zope.event==5.0
+zope.interface==6.1
