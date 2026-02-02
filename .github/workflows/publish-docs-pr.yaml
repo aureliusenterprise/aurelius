@@ -52,4 +52,4 @@ jobs:
                   repository: ${{ github.repository }}
                   number: ${{ github.event.number }}
                   id: docs-link
-                  message: "Documentation for this PR is available at: <https://project-template-3nr.pages.dev/${{ env.SANITIZED_REF_NAME }}/>"
+                  message: "Documentation for this PR is available at: <https://aureliusenterprise.github.io/project-template/${{ env.SANITIZED_REF_NAME }}/>"
