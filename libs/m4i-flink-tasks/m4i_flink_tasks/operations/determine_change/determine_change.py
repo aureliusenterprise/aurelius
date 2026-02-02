@@ -4,6 +4,7 @@ from typing import List, Union
 from pyflink.datastream import DataStream, MapFunction, OutputTag
 
 from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion, EntityMessage
+from m4i_flink_tasks.operations.error_handler import safe_map
 
 from .event_handlers import EVENT_HANDLERS
 
@@ -21,6 +22,7 @@ class DetermineChangeFunction(MapFunction):
     handling.
     """
 
+    @safe_map
     def map(
         self,
         value: Union[AtlasChangeMessageWithPreviousVersion, Exception],
@@ -41,7 +43,8 @@ class DetermineChangeFunction(MapFunction):
         """
         logging.debug("DetermineChangeFunction: %s", value)
 
-        if isinstance(value, Exception):
+        # Check if value is an error dict from upstream
+        if isinstance(value, dict) and value.get("is_error"):
             return [value]
 
         operation_type = value.message.operation_type

@@ -18,6 +18,7 @@ from m4i_atlas_core import (
     GenericProcess,
 )
 from m4i_flink_tasks.model.gov_data_quality_document import GovDataQualityDocument
+from m4i_flink_tasks.operations.error_handler import safe_map
 from marshmallow import ValidationError
 from pyflink.datastream import DataStream
 from pyflink.datastream.functions import MapFunction
@@ -52,6 +53,7 @@ class GetRulesFunction(MapFunction):
     error message to a side output. Utilizes a Keycloak instance to manage authentication tokens.
     """
 
+    @safe_map
     def map(
         self, value: str
     ) -> Union[List[Tuple[str, Union[GovDataQualityDocument, None]]], Exception]:
