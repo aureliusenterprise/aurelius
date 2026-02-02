@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "m4i-atlas-core"
-version = "1.0.0"
+version = "1.1.0"
 description = "Aurelius atlas core package"
 authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
 license = "UNLICENSED"
@@ -10,7 +10,7 @@ readme = "README.md"
 include = "m4i_atlas_core"
 
 [tool.poetry.dependencies]
-python = "~3.8"
+python = ">=3.8,<4.0"
 aiocache = "~0.12"
 aiohttp = "~3.9"
 dataclasses-json = "~0.6"
