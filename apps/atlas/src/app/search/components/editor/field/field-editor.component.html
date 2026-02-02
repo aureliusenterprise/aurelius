@@ -87,13 +87,14 @@
   </div>
 
   <div class="field">
-    <label class="label">Datasets</label>
+    <label class="label">Dataset</label>
     <div class="grid">
       <div class="control">
         <models4insight-relationships-input
           [tags]="datasets"
           typeName="m4i_dataset"
           [rule]="rules.datasets"
+          [singleRelationship]="true"
         ></models4insight-relationships-input>
       </div>
       <ng-container *ngIf="rules.datasets as rules">
@@ -106,13 +107,14 @@
   </div>
 
   <div class="field">
-    <label class="label">Parent fields</label>
+    <label class="label">Parent field</label>
     <div class="grid">
       <div class="control">
         <models4insight-relationships-input
           [tags]="parentFields"
           typeName="m4i_field"
           [rule]="rules.parentField"
+          [singleRelationship]="true"
         ></models4insight-relationships-input>
       </div>
       <ng-container *ngIf="rules.parentField as rules">
@@ -144,13 +146,14 @@
   </div>
 
   <div class="field">
-    <label class="label">Data attributes</label>
+    <label class="label">Data attribute</label>
     <div class="grid">
       <div class="control">
         <models4insight-relationships-input
           [tags]="dataAttributes"
           typeName="m4i_data_attribute"
           [rule]="rules.attributes"
+          [singleRelationship]="true"
         ></models4insight-relationships-input>
       </div>
       <ng-container *ngIf="rules.attributes as rules">

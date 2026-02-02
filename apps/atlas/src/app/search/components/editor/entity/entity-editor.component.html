@@ -98,13 +98,14 @@
   </div>
 
   <div class="field">
-    <label class="label">Data domains</label>
+    <label class="label">Data domain</label>
     <div class="grid">
       <div class="control">
         <models4insight-relationships-input
           [tags]="dataDomains"
           typeName="m4i_data_domain"
           [rule]="rules?.dataDomain"
+          [singleRelationship]="true"
         ></models4insight-relationships-input>
       </div>
       <ng-container *ngIf="rules.dataDomain as rules">
@@ -117,13 +118,14 @@
   </div>
 
   <div class="field">
-    <label class="label">Parent entities</label>
+    <label class="label">Parent entity</label>
     <div class="grid">
       <div class="control">
         <models4insight-relationships-input
           [tags]="parentEntities"
           typeName="m4i_data_entity"
           [rule]="rules.parentEntity"
+          [singleRelationship]="true"
         ></models4insight-relationships-input>
       </div>
       <ng-container *ngIf="rules.parentEntity as rules">

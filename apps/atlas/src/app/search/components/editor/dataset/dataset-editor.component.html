@@ -86,7 +86,7 @@
   </div>
 
   <div class="field">
-    <label class="label">Collections</label>
+    <label class="label">Collection</label>
     <div class="grid">
       <div class="control">
         <models4insight-relationships-input
@@ -106,13 +106,14 @@
   </div>
 
   <div class="field">
-    <label class="label">Parent datasets</label>
+    <label class="label">Parent dataset</label>
     <div class="grid">
       <div class="control">
         <models4insight-relationships-input
           [tags]="parentDatasets"
           typeName="m4i_dataset"
           [rule]="rules.parentDataset"
+          [singleRelationship]="true"
         ></models4insight-relationships-input>
       </div>
       <ng-container *ngIf="rules.parentDataset as rules">

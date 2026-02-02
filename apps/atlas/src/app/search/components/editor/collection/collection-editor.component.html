@@ -89,13 +89,14 @@
   </div>
 
   <div class="field">
-    <label class="label">Systems</label>
+    <label class="label">System</label>
     <div class="grid">
       <div class="control">
         <models4insight-relationships-input
           [tags]="systems"
           typeName="m4i_system"
           [rule]="rules.systems"
+          [singleRelationship]="true"
         ></models4insight-relationships-input>
       </div>
       <ng-container *ngIf="rules.systems as rules">
