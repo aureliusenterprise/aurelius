@@ -24,7 +24,7 @@ jobs:
         steps:
             - name: Install SOPS
               env:
-                  SOPS_VERSION: v3.9.1
+                  SOPS_VERSION: v3.11.0
               run: |
                   curl -LO https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64
                   sudo mv sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
