@@ -56,9 +56,9 @@ The schema is registered in the schema registry as `aurelius_example.models.Enti
 
 ## Tombstone Messages
 
-The connector also supports tombstone messages, which are used to delete records from the database. Tombstone messages
-should have a key that matches the entity's [`guid`][aurelius_example.models.Entity.guid]
-field and a value that is `null`.
+The connector also supports tombstone messages, which are used to delete records from the database. Tombstone
+messages should have a key that matches the entity's [`guid`][aurelius_example.models.Entity.guid] field and a
+value that is `null`.
 
 ## Configuration
 
