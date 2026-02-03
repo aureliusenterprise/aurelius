@@ -140,6 +140,5 @@
         "playwright": "bash .devcontainer/playwright.sh",
         "pre-commit": "bash .devcontainer/pre-commit.sh",
         "sops": "bash .devcontainer/sops.sh"
-    },
-    "runArgs": ["--gpus", "all"]
+    }
 }
