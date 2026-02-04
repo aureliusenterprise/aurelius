@@ -1,6 +1,6 @@
 [project]
 name = "aurelius-kafka-connect-jdbc-sink-example"
-version = "0.0.0"
+version = "0.1.0"
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "module"

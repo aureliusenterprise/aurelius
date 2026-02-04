@@ -1,15 +1,16 @@
 [project]
-authors = [{ name = "Aurelius Enterprise" }]
-description = "This library provides common utilities for working with Apache Kafka."
-name = "aurelius-kafka"
-requires-python = ">=3.14"
-version = "0.0.0"
-
 dependencies = [
     "aurelius-sdk",
     "aws-msk-iam-sasl-signer-python>=1.0.2",
     "confluent-kafka[avro,schema-registry]>=2.12.2",
 ]
+description = "This library provides common utilities for working with Apache Kafka."
+name = "aurelius-kafka"
+requires-python = ">=3.14"
+version = "0.1.0"
+
+[[project.authors]]
+name = "Aurelius Enterprise"
 
 [tool.hatch.build.targets.wheel]
 packages = ["aurelius_kafka"]

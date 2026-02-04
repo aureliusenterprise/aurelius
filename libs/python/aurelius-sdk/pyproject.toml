@@ -1,10 +1,4 @@
 [project]
-authors = [{ name = "Aurelius Enterprise" }]
-description = "This library provides common utilities for Aurelius projects."
-name = "aurelius-sdk"
-requires-python = ">=3.14"
-version = "0.0.0"
-
 dependencies = [
     "boto3>=1.39.6",
     "coloredlogs>=15.0.1",
@@ -13,6 +7,13 @@ dependencies = [
     "testcontainers>=4.10.0",
     "types-boto3[full]>=1.39.6",
 ]
+description = "This library provides common utilities for Aurelius projects."
+name = "aurelius-sdk"
+requires-python = ">=3.14"
+version = "0.1.0"
+
+[[project.authors]]
+name = "Aurelius Enterprise"
 
 [tool.hatch.build.targets.wheel]
 packages = ["aurelius_sdk"]

@@ -1,10 +1,4 @@
 [project]
-authors = [{ name = "Aurelius Enterprise " }]
-description = "This is an example AWS lambda function."
-name = "aurelius-aws-lambda-example"
-requires-python = ">=3.14"
-version = "0.0.0"
-
 dependencies = [
     "aurelius-aws-lambda",
     "aurelius-example",
@@ -14,6 +8,13 @@ dependencies = [
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
 ]
+description = "This is an example AWS lambda function."
+name = "aurelius-aws-lambda-example"
+requires-python = ">=3.14"
+version = "0.1.0"
+
+[[project.authors]]
+name = "Aurelius Enterprise "
 
 [tool.hatch.build.targets.wheel]
 packages = ["aurelius_aws_lambda_example"]
