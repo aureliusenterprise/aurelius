@@ -3,6 +3,7 @@ import { dirname } from "path";
 
 export interface DockerPluginOptions {
     readonly buildTargetName?: string;
+    readonly publishTargetName?: string;
 }
 
 const glob = "**/Dockerfile";
@@ -31,19 +32,17 @@ async function createNodesInternal(
                 tags: ["docker"],
                 targets: {
                     [buildTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {projectName}:latest`,
-                        dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
+                        command: `docker buildx build . -f ${configFilePath} -o {args.output} -t {args.namespace}/{args.tag}:{args.version}`,
                         configurations: {
-                            ci: {
-                                options: {
-                                    "cache-from": "type=gha",
-                                    "cache-to": "type=gha",
-                                    env: {
-                                        DOCKER_BUILDKIT: "1",
-                                    },
-                                },
+                            local: {
+                                output: "type=image",
+                            },
+                            publish: {
+                                output: "type=registry,unpack=false",
                             },
                         },
+                        defaultConfiguration: "local",
+                        dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
                         metadata: {
                             description: "Build the Docker image for the application",
                         },
@@ -51,6 +50,9 @@ async function createNodesInternal(
                             env: {
                                 DOCKER_BUILDKIT: "1",
                             },
+                            namespace: "ghcr.io/aureliusenterprise",
+                            tag: "{projectName}",
+                            version: "latest",
                         },
                     },
                 },

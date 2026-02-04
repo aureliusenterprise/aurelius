@@ -1,0 +1,57 @@
+name: Publish Containers
+
+on:
+    push:
+        tags:
+            - v*.*.*
+
+permissions:
+    contents: read
+    packages: write
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: 3.14
+
+            - name: Install uv
+              run: python -m pip install uv
+
+            - name: Cache the virtualenv
+              uses: actions/cache@v4
+              with:
+                  path: ./.venv
+                  key: ${{ runner.os }}-venv-${{ hashFiles('**/uv.lock') }}
+
+            - name: Install Python dependencies
+              run: uv venv --allow-existing && uv sync
+
+            - name: Setup Node.js and dependencies
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  registry-url: "https://npm.pkg.github.com"
+
+            - name: Install Node.js dependencies
+              run: npm install
+
+            - name: Log in to the Container registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Publish containers
+              run: npx nx run-many -t docker-build -c publish -- --version ${{ github.ref_name }}
