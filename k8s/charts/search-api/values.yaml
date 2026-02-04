@@ -1,0 +1,36 @@
+replicaCount: 1
+repository: ghcr.io/aureliusenterprise/m4i-search-api
+pullPolicy: Always
+tag: ""
+
+service:
+  name: search-api
+  type: ClusterIP
+  externalPort: 6970
+  internalPort: 6970
+
+appSearch:
+  baseUrl: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/api/as/v1/engines
+  token: ""
+  tokenSecret: ""
+  tokenSecretKey: token
+  timeoutSeconds: 15
+  verifySsl: false
+  engines:
+    atlas: atlas-dev
+    dataQuality: atlas-dev-quality
+    govQuality: atlas-dev-gov-quality
+
+auth:
+  issuer: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/realms/m4i"
+  publicKey: ""
+  publicKeySecret: ""
+  publicKeySecretKey: public-key
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+podAnnotations: {}
+imagePullSecrets: []
+extraEnv: []

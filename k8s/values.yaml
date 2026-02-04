@@ -14,9 +14,9 @@ keycloak:
     enabled: true
     accessMode: ReadWriteOnce
     size: 1Gi
-  external_ip: 51.138.48.239
+  external_ip: 34.78.34.4
 
-  keycloakFrontendURL: "https://aureliusdev.westeurope.cloudapp.azure.com/" # Replace with your URL here
+  keycloakFrontendURL: "https://uatest.aureliusenterprise.dev/" # Replace with your URL here
 
 atlas:
   tag: "2.2.1"
@@ -28,7 +28,7 @@ atlas:
 reverse-proxy:
   tag: "1.0.9.7"
 
-host_ip: 51.138.48.239   # Replace with your IP address
+host_ip: 34.78.34.4   # Replace with your IP address
 
 elastic:
   elastic_search:
@@ -58,8 +58,8 @@ ingress:
   email_address: lorand.vatamany@aureliusenterprise.com
 
 global:
-  external_hostname: "aureliusdev.westeurope.cloudapp.azure.com"
-  version: v2.1.7
+  external_hostname: "uatest.aureliusenterprise.dev"
+  version: v2.1.9-alpha.44
 
 post_install:
   upload_data: "true"

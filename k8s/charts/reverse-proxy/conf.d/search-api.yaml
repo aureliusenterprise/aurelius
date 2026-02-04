@@ -1,0 +1,14 @@
+<Location /{{ .Release.Namespace }}/atlas/elastic>
+ProxyPass "http://{{ tpl .Values.search_api.serviceName . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.search_api.port }}/{{ .Values.search_api.engines.atlas }}/search.json"
+ProxyPassReverse "http://{{ tpl .Values.search_api.serviceName . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.search_api.port }}/{{ .Values.search_api.engines.atlas }}/search.json"
+</Location>
+
+<Location /{{ .Release.Namespace }}/atlas/data_quality>
+ProxyPass "http://{{ tpl .Values.search_api.serviceName . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.search_api.port }}/{{ .Values.search_api.engines.dataQuality }}/search.json"
+ProxyPassReverse "http://{{ tpl .Values.search_api.serviceName . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.search_api.port }}/{{ .Values.search_api.engines.dataQuality }}/search.json"
+</Location>
+
+<Location /{{ .Release.Namespace }}/atlas/gov_quality>
+ProxyPass "http://{{ tpl .Values.search_api.serviceName . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.search_api.port }}/{{ .Values.search_api.engines.govQuality }}/search.json"
+ProxyPassReverse "http://{{ tpl .Values.search_api.serviceName . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.search_api.port }}/{{ .Values.search_api.engines.govQuality }}/search.json"
+</Location>

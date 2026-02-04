@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "search-api.fullname" . }}
+  labels:
+    {{- include "search-api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "search-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "search-api.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.repository }}:{{ .Values.tag | default .Values.global.version | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.internalPort }}
+              protocol: TCP
+          env:
+            - name: APP_SEARCH_BASE_URL
+              value: {{ tpl .Values.appSearch.baseUrl . | quote }}
+            {{- if .Values.appSearch.tokenSecret }}
+            - name: APP_SEARCH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.appSearch.tokenSecret }}
+                  key: {{ .Values.appSearch.tokenSecretKey | default "token" }}
+            {{- else if .Values.appSearch.token }}
+            - name: APP_SEARCH_TOKEN
+              value: {{ .Values.appSearch.token | quote }}
+            {{- end }}
+            - name: APP_SEARCH_TIMEOUT_SECONDS
+              value: "{{ .Values.appSearch.timeoutSeconds }}"
+            - name: APP_SEARCH_VERIFY_SSL
+              value: "{{ .Values.appSearch.verifySsl }}"
+            {{- if or .Values.auth.issuer .Values.auth.publicKey .Values.auth.publicKeySecret }}
+            - name: AUTH_ISSUER
+              value: {{ tpl .Values.auth.issuer . | quote }}
+            {{- if .Values.auth.publicKeySecret }}
+            - name: AUTH_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.auth.publicKeySecret }}
+                  key: {{ .Values.auth.publicKeySecretKey | default "public-key" }}
+            {{- else if .Values.auth.publicKey }}
+            - name: AUTH_PUBLIC_KEY
+              value: |
+{{ .Values.auth.publicKey | nindent 16 }}
+            {{- end }}
+            {{- end }}
+            {{- range .Values.extraEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
