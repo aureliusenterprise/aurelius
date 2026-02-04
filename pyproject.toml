@@ -97,9 +97,6 @@ workspace = true
 [tool.uv.sources.aurelius-kafka]
 workspace = true
 
-[tool.uv.sources.aurelius-kafka-connect-jdbc-sink-example]
-workspace = true
-
 [tool.uv.sources.aurelius-sdk]
 workspace = true
 
@@ -107,7 +104,6 @@ workspace = true
 members = [
     "apps/aurelius-aws-lambda-example",
     "apps/aurelius-fastapi-example",
-    "connectors/aurelius-kafka-connect-jdbc-sink-example",
     "libs/python/aurelius-aws-lambda",
     "libs/python/aurelius-example",
     "libs/python/aurelius-kafka",
