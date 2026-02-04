@@ -2,7 +2,7 @@ name: aurelius-frontend-example-e2e
 
 services:
     aurelius-frontend-example:
-        image: aurelius-frontend-example:latest
+        image: aurelius-frontend-example:local
         depends_on:
             aurelius-fastapi-example:
                 condition: service_healthy
@@ -17,7 +17,7 @@ services:
             - 80
 
     aurelius-fastapi-example:
-        image: aurelius-fastapi-example:latest
+        image: aurelius-fastapi-example:local
         depends_on:
             postgres-app:
                 condition: service_healthy

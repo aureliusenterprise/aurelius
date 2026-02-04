@@ -29,7 +29,7 @@ services:
 
     aurelius-aws-lambda-example:
         command: ["python", "-m", "awslambdaric", "aurelius_aws_lambda_example.main"]
-        image: aurelius-aws-lambda-example:latest
+        image: aurelius-aws-lambda-example:local
         depends_on:
             broker:
                 condition: service_healthy

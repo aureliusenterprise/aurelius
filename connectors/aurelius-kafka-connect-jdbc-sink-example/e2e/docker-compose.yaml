@@ -28,7 +28,7 @@ services:
         restart: unless-stopped
 
     kafka-connect:
-        image: aurelius-kafka-connect-jdbc-sink-example:latest
+        image: aurelius-kafka-connect-jdbc-sink-example:local
         depends_on:
             broker:
                 condition: service_healthy

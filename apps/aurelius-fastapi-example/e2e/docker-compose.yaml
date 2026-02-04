@@ -2,7 +2,7 @@ name: aurelius-fastapi-example-e2e
 
 services:
     aurelius-fastapi-example:
-        image: aurelius-fastapi-example:latest
+        image: aurelius-fastapi-example:local
         depends_on:
             postgres-app:
                 condition: service_healthy
