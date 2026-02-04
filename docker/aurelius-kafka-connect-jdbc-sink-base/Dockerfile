@@ -1,4 +1,4 @@
-FROM ghcr.io/aureliusenterprise/aurelius-kafka-connect-base:latest
+FROM aurelius-kafka-connect-base:local
 
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"

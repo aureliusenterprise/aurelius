@@ -22,7 +22,7 @@ export const createNodesV2: CreateNodesV2<DockerPluginOptions> = [
 
 async function createNodesInternal(
     configFilePath: string,
-    { buildTargetName = "docker-build" }: DockerPluginOptions = {},
+    { buildTargetName = "docker-build", publishTargetName = "docker-publish" }: DockerPluginOptions = {},
 ): Promise<CreateNodesResult> {
     const projectRoot = dirname(configFilePath);
 
@@ -32,16 +32,7 @@ async function createNodesInternal(
                 tags: ["docker"],
                 targets: {
                     [buildTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -o {args.output} -t {args.namespace}/{args.tag}:{args.version}`,
-                        configurations: {
-                            local: {
-                                output: "type=image",
-                            },
-                            publish: {
-                                output: "type=registry,unpack=false",
-                            },
-                        },
-                        defaultConfiguration: "local",
+                        command: `docker buildx build . -f ${configFilePath} -t {projectName}:local`,
                         dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
                         metadata: {
                             description: "Build the Docker image for the application",
@@ -50,8 +41,19 @@ async function createNodesInternal(
                             env: {
                                 DOCKER_BUILDKIT: "1",
                             },
+                        },
+                    },
+                    [publishTargetName]: {
+                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --push`,
+                        dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
+                        metadata: {
+                            description: "Publish the Docker image for the application",
+                        },
+                        options: {
+                            env: {
+                                DOCKER_BUILDKIT: "1",
+                            },
                             namespace: "ghcr.io/aureliusenterprise",
-                            tag: "{projectName}",
                             version: "latest",
                         },
                     },

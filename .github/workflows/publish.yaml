@@ -54,4 +54,4 @@ jobs:
                   password: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Publish containers
-              run: npx nx run-many -t docker-build -c publish -- --version ${{ github.ref_name }}
+              run: npx nx run-many -t docker-publish -- --version ${{ github.ref_name }}

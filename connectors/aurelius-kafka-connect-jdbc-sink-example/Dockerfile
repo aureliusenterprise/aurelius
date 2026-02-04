@@ -1,4 +1,4 @@
-FROM ghcr.io/aureliusenterprise/aurelius-kafka-connect-jdbc-sink-base:latest
+FROM aurelius-kafka-connect-jdbc-sink-base:local
 
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"

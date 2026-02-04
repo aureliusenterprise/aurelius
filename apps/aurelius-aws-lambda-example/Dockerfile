@@ -15,7 +15,7 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
     rm ./*.whl
 
 # Use the AWS Lambda base image for the final image
-FROM ghcr.io/aureliusenterprise/aurelius-aws-lambda-base:latest
+FROM aurelius-aws-lambda-base:local
 
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"
