@@ -9,6 +9,7 @@ members = [
     "aurelius-example",
     "aurelius-fastapi-example",
     "aurelius-kafka",
+    "aurelius-kafka-connect-jdbc-sink-example",
     "aurelius-project-template",
     "aurelius-sdk",
 ]
@@ -187,6 +188,11 @@ requires-dist = [
     { name = "aws-msk-iam-sasl-signer-python", specifier = ">=1.0.2" },
     { name = "confluent-kafka", extras = ["avro", "schema-registry"], specifier = ">=2.12.2" },
 ]
+
+[[package]]
+name = "aurelius-kafka-connect-jdbc-sink-example"
+version = "0.1.0"
+source = { virtual = "connectors/aurelius-kafka-connect-jdbc-sink-example" }
 
 [[package]]
 name = "aurelius-project-template"

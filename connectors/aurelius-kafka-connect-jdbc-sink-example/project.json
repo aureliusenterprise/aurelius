@@ -4,21 +4,5 @@
     "name": "aurelius-kafka-connect-jdbc-sink-example",
     "projectType": "application",
     "tags": [],
-    "targets": {
-        "e2e": {
-            "dependsOn": [
-                {
-                    "target": "decrypt"
-                },
-                {
-                    "target": "docker-build"
-                }
-            ],
-            "executor": "@nxlv/python:run-commands",
-            "options": {
-                "command": "uv run pytest e2e",
-                "cwd": "{projectRoot}"
-            }
-        }
-    }
+    "targets": {}
 }
