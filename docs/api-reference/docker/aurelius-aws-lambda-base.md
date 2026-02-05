@@ -29,7 +29,7 @@ Follow the steps below to use this Docker image as part of a Lambda function:
 Start your `Dockerfile` with the following line:
 
 ```dockerfile
-FROM aurelius-aws-lambda-base:latest
+FROM aurelius-aws-lambda-base:local
 ```
 
 Next, you can add your Python code and any additional dependencies.

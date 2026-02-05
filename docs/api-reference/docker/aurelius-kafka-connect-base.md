@@ -18,7 +18,7 @@ Follow the steps below to use this Docker image as part of a Kafka Connector:
 Start your `Dockerfile` with the following line:
 
 ```dockerfile
-FROM aurelius-kafka-connect:latest
+FROM aurelius-kafka-connect-base:local
 ```
 
 Next, you can add your worker configurations and any additional dependencies.
