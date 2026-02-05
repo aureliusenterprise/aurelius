@@ -38,7 +38,7 @@ async function createNodesInternal(
                 targets: {
                     [serveTargetName]: {
                         continuous: true,
-                        command: `docker compose up`,
+                        command: "docker compose up",
                         dependsOn: [
                             { target: "decrypt" },
                             { target: "docker-build" },
