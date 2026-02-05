@@ -5,10 +5,13 @@ requires-python = ">=3.14"
 [manifest]
 members = [
     "aurelius-aws-lambda",
+    "aurelius-aws-lambda-base",
     "aurelius-aws-lambda-example",
     "aurelius-example",
     "aurelius-fastapi-example",
     "aurelius-kafka",
+    "aurelius-kafka-connect-base",
+    "aurelius-kafka-connect-jdbc-sink-base",
     "aurelius-kafka-connect-jdbc-sink-example",
     "aurelius-project-template",
     "aurelius-sdk",
@@ -102,6 +105,11 @@ requires-dist = [
 ]
 
 [[package]]
+name = "aurelius-aws-lambda-base"
+version = "0.1.0"
+source = { virtual = "docker/aurelius-aws-lambda-base" }
+
+[[package]]
 name = "aurelius-aws-lambda-example"
 version = "0.1.0"
 source = { editable = "apps/aurelius-aws-lambda-example" }
@@ -188,6 +196,16 @@ requires-dist = [
     { name = "aws-msk-iam-sasl-signer-python", specifier = ">=1.0.2" },
     { name = "confluent-kafka", extras = ["avro", "schema-registry"], specifier = ">=2.12.2" },
 ]
+
+[[package]]
+name = "aurelius-kafka-connect-base"
+version = "0.1.0"
+source = { virtual = "docker/aurelius-kafka-connect-base" }
+
+[[package]]
+name = "aurelius-kafka-connect-jdbc-sink-base"
+version = "0.1.0"
+source = { virtual = "docker/aurelius-kafka-connect-jdbc-sink-base" }
 
 [[package]]
 name = "aurelius-kafka-connect-jdbc-sink-example"
