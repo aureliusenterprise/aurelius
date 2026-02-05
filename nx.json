@@ -18,6 +18,7 @@
     "plugins": [
         "./tools/plugins/alembic.ts",
         "./tools/plugins/docker.ts",
+        "./tools/plugins/docker-compose.ts",
         "./tools/plugins/mkdocs.ts",
         "./tools/plugins/python.ts",
         "./tools/plugins/sops.ts",
