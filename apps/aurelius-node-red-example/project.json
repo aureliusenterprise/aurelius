@@ -4,6 +4,21 @@
     "projectType": "application",
     "tags": [],
     "targets": {
+        "e2e": {
+            "dependsOn": [
+                {
+                    "target": "decrypt"
+                },
+                {
+                    "target": "docker-build"
+                }
+            ],
+            "executor": "@nxlv/python:run-commands",
+            "options": {
+                "command": "uv run pytest e2e",
+                "cwd": "{projectRoot}"
+            }
+        },
         "serve": {
             "command": "node-red -u {projectRoot} --title aurelius-node-red-example",
             "dependsOn": [{ "target": "decrypt" }, { "projects": ["aurelius-dev-kafka"], "target": "serve" }]

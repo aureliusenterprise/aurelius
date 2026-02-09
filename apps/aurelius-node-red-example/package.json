@@ -4,8 +4,8 @@
     "private": true,
     "version": "0.1.0",
     "dependencies": {
+        "@oriolrius/node-red-contrib-kafka": "^6.1.1",
         "node-red": "^4.1.3",
-        "node-red-contrib-kafka-client": "^0.1.0",
         "node-red-contrib-uuid": "^0.0.4"
     }
 }

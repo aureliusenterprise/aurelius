@@ -1,6 +1,20 @@
-name: aurelius-dev-kafka
-
+name: aurelius-node-red-example-e2e
 services:
+    aurelius-node-red-example:
+        image: aurelius-node-red-example:local
+        depends_on:
+            schema-registry:
+                condition: service_healthy
+        environment:
+            KAFKA_BOOTSTRAP_SERVERS: broker:9094
+            KAFKA_TOPIC_NAME: ${KAFKA_TOPIC_NAME}
+            SCHEMA_REGISTRY_URL: http://schema-registry:8081
+            SCHEMA_SUBJECT_NAME: ${SCHEMA_SUBJECT_NAME}
+            SCHEMA_SUBJECT_VERSION: ${SCHEMA_SUBJECT_VERSION}
+        restart: unless-stopped
+        ports:
+            - 1880
+
     broker:
         image: apache/kafka:latest
         environment:
@@ -27,8 +41,6 @@ services:
             timeout: 60s
             retries: 60
         restart: unless-stopped
-        volumes:
-            - data:/var/lib/kafka/data
 
     schema-registry:
         image: confluentinc/cp-schema-registry:7.6.1
@@ -40,7 +52,7 @@ services:
             SCHEMA_REGISTRY_HOST_NAME: "schema-registry"
         restart: unless-stopped
         ports:
-            - 8081:${SCHEMA_REGISTRY_PORT}
+            - 8081
         healthcheck:
             test:
                 [
@@ -56,20 +68,3 @@ services:
             interval: 30s
             timeout: 10s
             retries: 10
-
-    kafka-ui:
-        image: kafbat/kafka-ui:latest
-        depends_on:
-            - broker
-            - schema-registry
-        environment:
-            KAFKA_CLUSTERS_0_NAME: aurelius-dev-kafka
-            KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: broker:9094
-            KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8081
-            SERVER_PORT: ${KAFKA_UI_PORT}
-        ports:
-            - ${KAFKA_UI_PORT}:${KAFKA_UI_PORT}
-        restart: unless-stopped
-
-volumes:
-    data:
