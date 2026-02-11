@@ -52,7 +52,7 @@ schema.
 
     ::: aurelius_example.models.Entity
 
-The schema is registered in the schema registry as `aurelius_example.models.Entity`.
+The schema is registered in the schema registry as `com.aureliusenterprise.example.Entity`.
 
 ## Tombstone Messages
 

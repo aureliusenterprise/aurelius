@@ -18,6 +18,9 @@
                 "-ms-python.autopep8"
             ],
             "settings": {
+                "[java]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
                 "[json]": {
                     "editor.defaultFormatter": "esbenp.prettier-vscode"
                 },
@@ -41,10 +44,12 @@
                     "**/.ruff_cache": true,
                     "**/__pycache__": true,
                     ".angular": true,
+                    ".gradle": true,
                     ".nx": true,
                     ".pnpm-store": true,
                     ".tmp": true,
                     ".venv": true,
+                    "build": true,
                     "node_modules": true
                 },
                 "files.insertFinalNewline": true,
@@ -56,10 +61,12 @@
                     ".angular": true,
                     ".git/objects/**": true,
                     ".git/subtree-cache/**": true,
+                    ".gradle": true,
                     ".nx": true,
                     ".pnpm-store": true,
                     ".tmp": true,
                     ".venv": true,
+                    "build": true,
                     "node_modules": true
                 },
                 "material-icon-theme.files.associations": {
@@ -91,6 +98,10 @@
             "version": "latest"
         },
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/java:1": {
+            "installGradle": true,
+            "version": "21.0.9-tem"
+        },
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts"
         },

@@ -1,4 +1,3 @@
-import http.client
 import json
 from collections.abc import Generator
 from pathlib import Path
@@ -14,8 +13,8 @@ from confluent_kafka.schema_registry import (
     SchemaRegistryClient,
     record_subject_name_strategy,
 )
-from confluent_kafka.schema_registry.avro import AvroDeserializer, AvroSerializer
-from confluent_kafka.serialization import StringDeserializer, StringSerializer
+from confluent_kafka.schema_registry.avro import AvroDeserializer
+from confluent_kafka.serialization import StringDeserializer
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from testcontainers.compose import DockerCompose
 from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
@@ -52,7 +51,7 @@ def compose() -> Generator[DockerCompose]:
     with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
         yield compose.waiting_for(
             {
-                "aurelius-aws-lambda-example": HealthcheckWaitStrategy(),
+                "aurelius-java-producer-example": HealthcheckWaitStrategy(),
             },
         )
 
@@ -129,12 +128,6 @@ def key_deserializer() -> StringDeserializer:
 
 
 @pytest.fixture(scope="session")
-def key_serializer() -> StringSerializer:
-    """Return a string serializer."""
-    return StringSerializer()
-
-
-@pytest.fixture(scope="session")
 def value_schema() -> str:
     """Return the Avro schema as a string."""
     return json.dumps(Entity.avro_schema(namespace="com.aureliusenterprise.example"))
@@ -148,25 +141,3 @@ def value_deserializer(schema_registry_client: SchemaRegistryClient, value_schem
         schema_str=value_schema,
         conf={"subject.name.strategy": record_subject_name_strategy},
     )
-
-
-@pytest.fixture(scope="session")
-def value_serializer(schema_registry_client: SchemaRegistryClient, value_schema: str) -> AvroSerializer:
-    """Return an Avro serializer."""
-    return AvroSerializer(
-        schema_registry_client,  # type: ignore[arg-type]
-        schema_str=value_schema,
-        conf={"subject.name.strategy": record_subject_name_strategy},
-    )
-
-
-@pytest.fixture()
-def connection(compose: DockerCompose) -> http.client.HTTPConnection:
-    """Return an HTTP connection to the lambda service."""
-    host, port = compose.get_service_host_and_port("aurelius-aws-lambda-example", 8080)
-
-    if not (host and port):
-        message = "Could not find the host and port for the lambda service."
-        raise ValueError(message)
-
-    return http.client.HTTPConnection(host, port)

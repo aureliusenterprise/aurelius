@@ -132,7 +132,7 @@ def key_deserializer() -> StringDeserializer:
 @pytest.fixture(scope="session")
 def value_schema() -> str:
     """Return the Avro schema as a string."""
-    return json.dumps(Entity.avro_schema(namespace="aurelius_example.models"))
+    return json.dumps(Entity.avro_schema(namespace="com.aureliusenterprise.example"))
 
 
 @pytest.fixture(scope="session")

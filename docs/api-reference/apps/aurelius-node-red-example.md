@@ -1,4 +1,4 @@
-# aurelius-kafka-connect-jdbc-sink-example
+# aurelius-node-red-example
 
 This is an example Node-RED application that demonstrates how to set up a simple Kafka producer.
 
@@ -12,7 +12,7 @@ Keys should be string representations of the entity's [`guid`][aurelius_example.
 ## Value Schema
 
 Values are Avro-encoded records that conform to the [`Entity`][aurelius_example.models.Entity] schema. The schema
-is registered in the schema registry as `aurelius_example.models.Entity`.
+is registered in the schema registry as `com.aureliusenterprise.example.Entity`.
 
 ## Deployment
 

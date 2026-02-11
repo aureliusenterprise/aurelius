@@ -15,6 +15,10 @@
             "unitTestRunner": "vitest-analog"
         }
     },
+    "namedInputs": {
+        "default": ["{projectRoot}/**/*"],
+        "production": ["default", "!{projectRoot}/src/test/**/*"]
+    },
     "plugins": [
         "./tools/plugins/alembic.ts",
         "./tools/plugins/docker.ts",
@@ -29,6 +33,14 @@
                 "targetName": "eslint:lint"
             },
             "plugin": "@nx/eslint/plugin"
+        },
+        {
+            "options": {
+                "buildTargetName": "build",
+                "classesTargetName": "classes",
+                "testTargetName": "test"
+            },
+            "plugin": "@nx/gradle"
         }
     ],
     "release": {

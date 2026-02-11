@@ -21,7 +21,7 @@ def initialize() -> tuple[EntityProcessor, KafkaProducer]:
         {"url": str(SETTINGS.schema_registry_url)},
     )
 
-    value_schema = Entity.avro_schema(namespace="aurelius_example.models")
+    value_schema = Entity.avro_schema(namespace="com.aureliusenterprise.example")
 
     deserializer = AvroDeserializer(
         conf={"subject.name.strategy": record_subject_name_strategy},  # type: ignore[arg-type]

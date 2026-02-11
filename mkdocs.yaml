@@ -87,6 +87,7 @@ nav:
                 - api-reference/apps/index.md
                 - aurelius-aws-lambda-example: api-reference/apps/aurelius-aws-lambda-example.md
                 - aurelius-fastapi-example: api-reference/apps/aurelius-fastapi-example.md
+                - aurelius-java-producer-example: api-reference/apps/aurelius-java-producer-example.md
                 - aurelius-node-red-example: api-reference/apps/aurelius-node-red-example.md
           - Connectors:
                 - api-reference/connectors/index.md

@@ -1,0 +1,15 @@
+{
+    "fields": [
+        { "default": null, "doc": "A description of the entity", "name": "description", "type": ["null", "string"] },
+        {
+            "default": null,
+            "doc": "The unique identifier for the entity",
+            "name": "guid",
+            "type": ["null", { "logicalType": "uuid", "type": "string" }]
+        },
+        { "default": null, "doc": "The name of the entity", "name": "name", "type": ["null", "string"] }
+    ],
+    "name": "Entity",
+    "namespace": "com.aureliusenterprise.example",
+    "type": "record"
+}

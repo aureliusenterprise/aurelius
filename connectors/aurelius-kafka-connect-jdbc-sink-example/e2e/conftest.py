@@ -160,7 +160,7 @@ def schema_registry_client(compose: DockerCompose) -> SchemaRegistryClient:
 @pytest.fixture(scope="session")
 def value_schema() -> str:
     """Return the Avro schema for the value."""
-    schema = Entity.avro_schema(namespace="aurelius_example.models")
+    schema = Entity.avro_schema(namespace="com.aureliusenterprise.example")
     return json.dumps(schema)
 
 
