@@ -1,3 +1,14 @@
+## 0.2.0 (2026-02-12)
+
+### 🚀 Features
+
+- add example kafka producer in java ([#16](https://github.com/aureliusenterprise/project-template/pull/16))
+- add interval loop for java producer ([#19](https://github.com/aureliusenterprise/project-template/pull/19))
+
+### 🩹 Fixes
+
+- resolve Node-RED to Kafka connectivity issues ([#14](https://github.com/aureliusenterprise/project-template/pull/14))
+
 # Changelog
 
 ## 0.1.0 (2026-02-04)
