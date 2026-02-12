@@ -69,6 +69,7 @@
                     "build": true,
                     "node_modules": true
                 },
+                "java.diagnostic.filter": ["**/aurelius-java-example/src/main/java/**/*"],
                 "material-icon-theme.files.associations": {
                     "*.enc": "key",
                     "keys.txt": "key",
