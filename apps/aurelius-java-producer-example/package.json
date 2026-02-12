@@ -1,0 +1,6 @@
+{
+    "name": "aurelius-java-producer-example",
+    "description": "This is an example Java Kafka producer application.",
+    "private": true,
+    "version": "0.1.0"
+}
