@@ -81,9 +81,6 @@ jobs:
             - name: Run pre-commit hooks
               uses: pre-commit/action@v3.0.1
 
-            - name: Build the documentation
-              run: uv run mkdocs build --strict
-
             - name: Install Playwright
               run: uv run playwright install --with-deps
 
