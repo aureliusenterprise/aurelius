@@ -9,8 +9,6 @@
 
 - resolve Node-RED to Kafka connectivity issues ([#14](https://github.com/aureliusenterprise/project-template/pull/14))
 
-# Changelog
-
 ## 0.1.0 (2026-02-04)
 
 ### 🚀 Features
@@ -32,3 +30,5 @@
 - remove duplicate route tags ([6f5d6cc](https://github.com/aureliusenterprise/project-template/commit/6f5d6cc))
 - add missing image metadata ([0e0342c](https://github.com/aureliusenterprise/project-template/commit/0e0342c))
 - revert TYPE_CHECKING blocks ([a15a1ba](https://github.com/aureliusenterprise/project-template/commit/a15a1ba))
+
+<!-- markdownlint-disable-file MD041 -->
