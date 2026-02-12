@@ -33,13 +33,9 @@ allprojects {
     }
 }
 
-val generateAvro = tasks.register<GenerateAvroJavaTask>("generateAvro") {
+tasks.register<GenerateAvroJavaTask>("generateAvro") {
     source("../../../schemas/avro")
     setOutputDir(file("src/main/java"))
-}
-
-tasks.named("compileJava").configure {
-    dependsOn(generateAvro)
 }
 
 tasks.register("projectReportAll") {
