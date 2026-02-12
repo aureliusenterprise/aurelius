@@ -313,15 +313,35 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
         updated_documents[document.guid] = document
 
     elif len(remaining_parent_relationships) == 0:
-        document.breadcrumbguid = []
-        document.breadcrumbname = []
-        document.breadcrumbtype = []
+        # Check if new parent relationships are being inserted in the same transaction
+        # to avoid clearing breadcrumbs when a parent is being replaced
+        has_incoming_parents = False
+        if message.new_value is not None and message.inserted_relationships is not None:
+            new_parents = {ref.guid for ref in message.new_value.get_parents() if ref.guid is not None}
+            inserted_relationships_flat = [
+                rel.guid
+                for rels in message.inserted_relationships.values()
+                for rel in rels
+                if rel.guid is not None
+            ]
+            has_incoming_parents = bool(new_parents.intersection(inserted_relationships_flat))
 
-        document.parentguid = None
+        if has_incoming_parents:
+            logging.info(
+                "Parent relationship removed but new parent being inserted for entity %s. "
+                "Skipping breadcrumb clearing to avoid race condition.",
+                document.guid
+            )
+        else:
+            document.breadcrumbguid = []
+            document.breadcrumbname = []
+            document.breadcrumbtype = []
 
-        logging.info("Removed parent of entity %s", document.guid)
+            document.parentguid = None
 
-        updated_documents[document.guid] = document
+            logging.info("Removed parent of entity %s", document.guid)
+
+            updated_documents[document.guid] = document
 
     immediate_children = {
         child.guid

@@ -69,12 +69,12 @@ export class BreadCrumbsService extends BasicStore<BreadCrumbsStoreContext> {
       names = searchResult?.breadcrumbname?.raw ?? [],
       typeNames = searchResult?.breadcrumbtype?.raw ?? [];
 
-    // If the lengths of the arrays do not match, assume no breadcrumb is available.
-    if (!(guids.length === names.length && names.length === typeNames.length)) {
-      this.breadcrumbs = [];
-      return;
+    // Only update breadcrumbs if we have valid, complete data
+    // Otherwise, preserve existing breadcrumbs (don't clear them)
+    if (guids.length > 0 &&
+        guids.length === names.length &&
+        names.length === typeNames.length) {
+      this.breadcrumbs = zip(guids, names, typeNames).map(fmtBreadcrumb);
     }
-
-    this.breadcrumbs = zip(guids, names, typeNames).map(fmtBreadcrumb);
   }
 }
