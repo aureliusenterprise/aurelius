@@ -9,7 +9,7 @@ USER root
 RUN microdnf update -y && microdnf install -y gettext jq && microdnf clean all
 USER appuser
 
-ARG CONNECT_ELASTICSEARCH_VERSION=14.1.5
+ARG CONNECT_ELASTICSEARCH_VERSION=latest
 RUN confluent-hub install confluentinc/kafka-connect-elasticsearch:${CONNECT_ELASTICSEARCH_VERSION} --no-prompt
 
 ARG CONNECT_TRANSFORMS_VERSION=latest
