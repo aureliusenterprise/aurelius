@@ -11,12 +11,38 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The {@link App} class is the entry point for the Aurelius Java Producer Example application.
+ * It produces {@link Entity} messages to a Kafka topic at a configurable interval.
+ * <p>
+ * Configure the application using environment variables:
+ * <ul>
+ *   <li>{@code KAFKA_BOOTSTRAP_SERVERS}: Kafka bootstrap servers</li>
+ *   <li>{@code SCHEMA_REGISTRY_URL}: URL for the schema registry</li>
+ *   <li>{@code KAFKA_TOPIC_NAME}: Name of the Kafka topic to produce messages to</li>
+ *   <li>{@code MESSAGE_INTERVAL_MILLIS}: Interval in milliseconds between messages (optional, defaults to 10000)</li>
+ * </ul>
+ */
 public class App {
 
+    /**
+     * Logger instance for the application.
+     */
     private static final Logger logger = LoggerFactory.getLogger(App.class);
+
+    /**
+     * Stores the environment variables as an unmodifiable map of key-value pairs.
+     * The map is initialized from the system's environment variables at runtime.
+     */
     private static final Map<String, String> env = System.getenv();
 
+    /**
+     * Entry point for the Kafka producer application.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
+        // Initialize Kafka producer properties
         Properties props = new Properties();
 
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -36,6 +62,7 @@ public class App {
             System.exit(1);
         }
 
+        // Retrieve the Kafka topic name from environment variables
         String kafkaTopicName = null;
 
         try {
@@ -45,6 +72,7 @@ public class App {
             System.exit(1);
         }
 
+        // Retrieve the message interval from environment variables, defaulting to 10000 ms if not set or invalid
         long intervalMillis = 10000;
 
         try {
@@ -57,6 +85,7 @@ public class App {
             App.logger.warn("Invalid MESSAGE_INTERVAL_MILLIS value. Using default of " + intervalMillis + " ms.");
         }
 
+        // Create the Kafka producer instance
         KafkaProducer<String, Entity> kafkaProducer = new KafkaProducer<>(props);
 
         // Add shutdown hook for graceful shutdown
@@ -70,6 +99,7 @@ public class App {
 
         EntityProducer entityProducer = new EntityProducer(kafkaProducer, kafkaTopicName);
 
+        // Start producing messages at the specified interval
         long currentTimeMillis = System.currentTimeMillis();
         App.logger.info("Starting message production on a " + intervalMillis + " ms interval");
 
