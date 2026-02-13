@@ -30,7 +30,7 @@ RUN pip install --no-cache-dir *.whl && \
 
 # Copy scripts and data into the container
 COPY --chown=flink:flink --chmod=0550 backend/m4i-atlas-post-install/bin /app/bin
-COPY --chown=flink:flink --chmod=0640 backend/m4i-atlas-post-install/data /app/data
+COPY --chown=flink:flink --chmod=0750 backend/m4i-atlas-post-install/data /app/data
 COPY --chown=flink:flink --chmod=0550 backend/m4i-atlas-post-install/scripts /app/scripts
 
 # Copy the main script into the container
