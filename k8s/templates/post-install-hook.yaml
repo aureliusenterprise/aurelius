@@ -27,7 +27,6 @@ spec:
       - name: post-install-job
         image: "ghcr.io/aureliusenterprise/m4i-atlas-post-install:{{ .Values.global.version }}"
         imagePullPolicy: Always
-        command: ["sleep", "infinity"]
         env:
           - name: NAMESPACE
             value: "{{ .Release.Namespace }}"
