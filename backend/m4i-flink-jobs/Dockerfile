@@ -29,10 +29,10 @@ RUN pip install --no-cache-dir *.whl && rm *.whl
 COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/main.py .
 
 # Copy the jar files into the container
-COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/jars/*.jar ./jars/
+COPY --chown=flink:flink --chmod=0500 backend/m4i-flink-jobs/jars/*.jar ./jars/
 
 # Switch to the non-root user
 USER flink
 
 # Command to run the application
-CMD ["/opt/flink/bin/flink", "run", "-d", "-py", "main.py"]
+CMD ["/opt/flink/bin/flink", "run", "-d", "-py", "main.py", "--jarfile", "/app/jars/flink-sql-connector-kafka-1.17.1.jar", "--jarfile", "/app/jars/flink-sql-connector-elasticsearch7-3.0.1-1.17.jar"]
