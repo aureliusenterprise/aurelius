@@ -1,0 +1,96 @@
+name: aurelius-atlas-dev
+
+services:
+
+  atlas:
+    build:
+      context: .
+      dockerfile: ../docker/apache-atlas/Dockerfile
+    depends_on:
+      - broker
+    network_mode: service:keycloak
+    volumes:
+      - atlas-data:/apache-atlas/data
+    configs:
+      - source: atlas-application
+        target: /apache-atlas/conf/atlas-application.properties
+      - source: atlas-simple-authz-policy
+        target: /apache-atlas/conf/atlas-simple-authz-policy.json
+      - source: atlas-keycloak-conf
+        target: /apache-atlas/conf/keycloak-conf.json
+    healthcheck:
+      test: [ "CMD-SHELL", "wget http://localhost:21000" ]
+      interval: 10s
+      timeout: 5s
+      retries: 120
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:16.1.1
+    environment:
+      KEYCLOAK_IMPORT: '/tmp/keycloak-config/atlas-dev.json'
+      KEYCLOAK_PASSWORD: 'admin'
+      KEYCLOAK_PORT: 8180
+      KEYCLOAK_REALM_NAME: 'atlas-dev'
+      KEYCLOAK_USER: 'admin'
+    volumes:
+      - keycloak-data:/opt/jboss/keycloak/standalone/data
+    configs:
+      - source: keycloak-config
+        target: /opt/jboss/keycloak/standalone/configuration/standalone.xml
+      - source: keycloak-realm
+        target: /tmp/keycloak-config/atlas-dev.json
+    ports:
+      - 8180:8180
+      - 21000:21000
+    restart: unless-stopped
+    entrypoint: [ "/bin/sh", "-c" ]
+    command: >
+      ' /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -bmanagement 0.0.0.0 -Djboss.http.port=8180 2>&1 & while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' curl -X GET http://localhost:8180/ | tail -c 3)" != "200" ]]; do
+          echo "Waiting for Keycloak to start on port 8180...";
+          sleep 5;
+      done; sleep 5; /opt/jboss/keycloak/bin/kcadm.sh config credentials --server "http://localhost:8180/auth" --realm master --user admin --password admin; /opt/jboss/keycloak/bin/kcadm.sh create users -r atlas-dev -s username=atlas -s enabled=true; /opt/jboss/keycloak/bin/kcadm.sh add-roles -r atlas-dev --uusername atlas --rolename ROLE_ADMIN; /opt/jboss/keycloak/bin/kcadm.sh add-roles -r atlas-dev --uusername atlas --rolename DATA_STEWARD; /opt/jboss/keycloak/bin/kcadm.sh set-password -r atlas-dev --username atlas --new-password atlas; echo "atlas user created."; tail -f /dev/null '
+
+  broker:
+    image: apache/kafka:latest
+    environment:
+        KAFKA_NODE_ID: 1
+        KAFKA_PROCESS_ROLES: broker,controller
+        KAFKA_LISTENERS: PLAINTEXT://localhost:9094,CONTROLLER://localhost:9093,LOCAL://localhost:9092
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9094,LOCAL://localhost:9092
+        KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,LOCAL:PLAINTEXT
+        KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+        KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+        KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+        KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+        KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+        KAFKA_NUM_PARTITIONS: 3
+        KAFKA_MESSAGE_MAX_BYTES: 10000000
+        KAFKA_SOCKET_REQUEST_MAX_BYTES: 100001200
+    network_mode: service:keycloak
+    healthcheck:
+        test: /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9094 || exit 1
+        interval: 1s
+        timeout: 60s
+        retries: 60
+    restart: unless-stopped
+    volumes:
+        - kafka-data:/var/lib/kafka/data
+
+configs:
+  atlas-application:
+    file: ./apache-atlas/atlas-application.properties
+  atlas-simple-authz-policy:
+    file: ./apache-atlas/atlas-simple-authz-policy.json
+  atlas-keycloak-conf:
+    file: ./apache-atlas/keycloak-conf.json
+  keycloak-config:
+    file: ./keycloak/settings/standalone.xml
+  keycloak-realm:
+    file: ./keycloak/realms/atlas-dev.json
+
+volumes:
+  atlas-data:
+  kafka-data:
+  keycloak-data:
