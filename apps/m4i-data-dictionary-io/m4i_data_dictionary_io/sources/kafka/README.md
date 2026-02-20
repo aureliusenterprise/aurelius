@@ -22,6 +22,8 @@ In addition to the `SOURCE` environment variable, the following configuration op
 | `ATLAS_SERVER_URL`              | The URL of the Atlas server to connect to.                                 | Yes      | `None`               |
 | `BOOTSTRAP_SERVERS`             | The Kafka bootstrap servers to connect to.                                 | Yes      | `None`               |
 | `CONSUMER_GROUP_ID_PREFIX`      | The prefix for the consumer group ID used by the connector.                | Yes      | `data-dictionary-io` |
+| `ENABLE_KAFKA_CONSUMER`         | Whether to consume messages from the Kafka cluster.                        | No       | `false`              |
+| `ENABLE_SCHEMA_REGISTRY`        | Whether to look up schemas in the Schema Registry.                         | No       | `false`              |
 | `KEYCLOAK_ATLAS_ADMIN_PASSWORD` | The password for the user with create permissions in Atlas.                | Yes      | `None`               |
 | `KEYCLOAK_CLIENT_ID`            | The Keycloak client ID for authentication.                                 | Yes      | `m4i_atlas`          |
 | `KEYCLOAK_CLIENT_SECRET_KEY`    | The Keycloak client secret key.                                            | Yes      | `None`               |
