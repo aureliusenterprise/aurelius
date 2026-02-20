@@ -3,6 +3,8 @@ from unittest.mock import Mock, patch
 from m4i_atlas_core import (
     BusinessDataDomain,
     BusinessDataDomainAttributes,
+    BusinessDataEntity,
+    BusinessDataEntityAttributes,
     EntityAuditAction,
     M4IAttributes,
     ObjectId,
@@ -89,19 +91,15 @@ def test__handle_relationship_audit_inserted_relationship() -> None:
         ),
     ]
 
-    with (
-        patch(
-            __package__ + ".relationship_audit.get_current_document",
-            return_value=current_document,
-        ),
-        patch(
-            __package__ + ".relationship_audit.get_related_documents",
-            return_value=related_documents,
-        ),
-        patch(
-            __package__ + ".relationship_audit.get_child_documents",
-            return_value=child_documents,
-        ),
+    with patch(
+        __package__ + ".relationship_audit.get_document",
+        return_value=current_document,
+    ), patch(
+        __package__ + ".relationship_audit.get_related_documents",
+        return_value=related_documents,
+    ), patch(
+        __package__ + ".relationship_audit.get_child_documents",
+        return_value=child_documents,
     ):
         updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
@@ -208,19 +206,15 @@ def test__handle_relationship_audit_deleted_relationship() -> None:
         ),
     ]
 
-    with (
-        patch(
-            __package__ + ".relationship_audit.get_current_document",
-            return_value=current_document,
-        ),
-        patch(
-            __package__ + ".relationship_audit.get_related_documents",
-            return_value=related_documents,
-        ),
-        patch(
-            __package__ + ".relationship_audit.get_child_documents",
-            return_value=child_documents,
-        ),
+    with patch(
+        __package__ + ".relationship_audit.get_document",
+        return_value=current_document,
+    ), patch(
+        __package__ + ".relationship_audit.get_related_documents",
+        return_value=related_documents,
+    ), patch(
+        __package__ + ".relationship_audit.get_child_documents",
+        return_value=child_documents,
     ):
         updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
@@ -236,3 +230,100 @@ def test__handle_relationship_audit_deleted_relationship() -> None:
         assert updated_entity.breadcrumbguid == []
         assert updated_entity.breadcrumbname == []
         assert updated_entity.breadcrumbtype == []
+
+
+def test__handle_relationship_audit_replaced_parent_relationship() -> None:
+    """
+    Test that breadcrumbs are not cleared when a parent relationship is being replaced.
+
+    When a parent is deleted AND a new parent is inserted in the same transaction,
+    breadcrumbs should not be cleared. This test verifies the fix that checks for
+    incoming parent relationships before clearing breadcrumbs.
+
+    Asserts
+    -------
+    - Breadcrumbs are preserved (not cleared to empty arrays) when parent is being replaced
+    """
+    # Simulate an entity (child) losing its parent in a relationship audit
+    # but having a new parent being inserted in the same message
+    message = EntityMessage(
+        type_name="m4i_data_entity",
+        guid="entity-1",
+        original_event_type=EntityAuditAction.ENTITY_UPDATE,
+        event_type=EntityMessageType.ENTITY_RELATIONSHIP_AUDIT,
+        old_value=BusinessDataEntity(
+            guid="entity-1",
+            type_name="m4i_data_entity",
+            attributes=BusinessDataEntityAttributes(
+                qualified_name="test_entity",
+                name="Test Entity",
+            ),
+        ),
+        new_value=BusinessDataEntity(
+            guid="entity-1",
+            type_name="m4i_data_entity",
+            attributes=BusinessDataEntityAttributes(
+                qualified_name="test_entity",
+                name="Test Entity",
+            ),
+        ),
+        # No relationships in the flat deleted_relationships (parent guids are filtered out)
+        deleted_relationships={},
+        # New parent relationship being inserted
+        inserted_relationships={
+            "data_domain": [
+                ObjectId(
+                    type_name="m4i_data_domain",
+                    guid="domain-new",
+                    unique_attributes=M4IAttributes.from_dict({"qualifiedName": "New Domain"}),
+                ),
+            ],
+        },
+    )
+
+    # Entity currently has breadcrumbs from old parent
+    current_document = AppSearchDocument(
+        guid="entity-1",
+        typename="m4i_data_entity",
+        name="Test Entity",
+        referenceablequalifiedname="test_entity",
+        breadcrumbguid=["domain-old"],
+        breadcrumbname=["Old Domain"],
+        breadcrumbtype=["m4i_data_domain"],
+        parentguid="domain-old",
+    )
+
+    # New parent domain
+    new_domain_document = AppSearchDocument(
+        guid="domain-new",
+        typename="m4i_data_domain",
+        name="New Domain",
+        referenceablequalifiedname="new_domain",
+    )
+
+    with patch(
+        __package__ + ".relationship_audit.get_document",
+        return_value=current_document,
+    ), patch(
+        __package__ + ".relationship_audit.get_related_documents",
+        return_value=[new_domain_document],
+    ), patch(
+        __package__ + ".relationship_audit.get_child_documents",
+        return_value=[],
+    ):
+        updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
+
+        # Verify the fix: breadcrumbs should NOT be cleared when new parent is incoming
+        assert "entity-1" in updated_documents
+        updated_entity = updated_documents["entity-1"]
+
+        # CRITICAL: Breadcrumbs should NOT be empty when a new parent is being inserted
+        # Before the fix, they would be cleared to []
+        # With the fix, they are preserved until the new parent relationship is established
+        assert len(updated_entity.breadcrumbguid) > 0, "Breadcrumbs should not be cleared when parent is being replaced"
+        assert len(updated_entity.breadcrumbname) > 0, "Breadcrumb names should not be cleared"
+        assert len(updated_entity.breadcrumbtype) > 0, "Breadcrumb types should not be cleared"
+
+        # The breadcrumbs will be updated by a subsequent relationship insertion event
+        # or when the new parent relationship is fully established
+        # For now, we just verify they weren't cleared
