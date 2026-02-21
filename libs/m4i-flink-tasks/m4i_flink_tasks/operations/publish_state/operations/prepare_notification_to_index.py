@@ -6,6 +6,7 @@ from pyflink.datastream import DataStream, OutputTag
 from pyflink.datastream.functions import MapFunction
 
 from m4i_flink_tasks import EntityVersion
+from m4i_flink_tasks.operations.error_handler import safe_map
 
 NO_ENTITY_TAG = OutputTag("no_entity")
 
@@ -18,6 +19,7 @@ class PrepareNotificationToIndexFunction(MapFunction):
     object suitable for indexing.
     """
 
+    @safe_map
     def map(self, value: Union[AtlasChangeMessage, Exception]) -> Union[EntityVersion, Exception]:
         """
         Transform a ValidatedInput message into an EntityVersion object.
@@ -34,7 +36,9 @@ class PrepareNotificationToIndexFunction(MapFunction):
         """
         logging.debug("PrepareNotificationToIndexFunction %s", value)
 
-        if isinstance(value, Exception):
+        # Check if value is an error dict from upstream
+        if isinstance(value, dict) and value.get("is_error"):
+            logging.debug("Passing down error: %s", value.get("error_message"))
             return value
 
         msg_creation_time = value.msg_creation_time

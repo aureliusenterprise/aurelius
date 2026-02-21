@@ -21,6 +21,7 @@ from marshmallow import ValidationError
 from pyflink.datastream import DataStream
 from pyflink.datastream.functions import MapFunction, RuntimeContext
 
+from m4i_flink_tasks.operations.error_handler import safe_map
 from m4i_flink_tasks.utils import ExponentialBackoff, retry
 from keycloak import KeycloakOpenID
 from keycloak.exceptions import KeycloakError
@@ -90,6 +91,7 @@ class GetEntityFunction(MapFunction):
         """Close the event loop."""
         self.loop.close()
 
+    @safe_map
     def map(self, value: str) -> Union[AtlasChangeMessage, Exception]:  # noqa: PLR0911
         """
         Process the incoming message and enrich it with entity details.

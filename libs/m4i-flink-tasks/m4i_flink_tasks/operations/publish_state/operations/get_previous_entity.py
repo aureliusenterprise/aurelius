@@ -8,6 +8,7 @@ from m4i_atlas_core import AtlasChangeMessage, Entity, EntityAuditAction, get_en
 from pyflink.datastream import DataStream, MapFunction, RuntimeContext
 
 from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion
+from m4i_flink_tasks.operations.error_handler import safe_map
 from m4i_flink_tasks.operations.publish_state.operations.delayed_map import DelayedMap
 from m4i_flink_tasks.utils import ExponentialBackoff, retry
 
@@ -69,6 +70,7 @@ class GetPreviousEntityFunction(MapFunction):
         """
         self.elasticsearch = self.elastic_factory()
 
+    @safe_map
     def map(
         self,
         value: Union[AtlasChangeMessage, Exception],
@@ -83,10 +85,12 @@ class GetPreviousEntityFunction(MapFunction):
 
         Returns
         -------
-        AtlasChangeMessageWithPreviousVersion or Exception
-            The enriched message with the previous entity version or an error.
+        AtlasChangeMessageWithPreviousVersion | Exception
+            A message enriched with the previous entity version or an exception.
         """
-        if isinstance(value, Exception):
+        # Check if value is an error dict from upstream
+        if isinstance(value, dict) and value.get("is_error"):
+            logging.debug("Passing down error: %s", value.get("error_message"))
             return value
 
         logging.debug("AtlasChangeMessage: %s", value)
@@ -127,7 +131,7 @@ class GetPreviousEntityFunction(MapFunction):
         """Close the Elasticsearch client."""
         self.elasticsearch.close()
 
-    @retry(retry_strategy=ExponentialBackoff(), catch=(ApiError, NoPreviousVersionError))
+    @retry(retry_strategy=ExponentialBackoff(), catch=(NoPreviousVersionError,))
     def get_previous_entity(
         self,
         current_version: Entity,

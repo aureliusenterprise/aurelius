@@ -3,6 +3,7 @@ from typing import List, TypedDict, Union
 
 from elastic_transport._models import DefaultType
 from keycloak import KeycloakOpenID
+from m4i_flink_tasks.operations.error_handler import extract_errors, filter_successful
 from m4i_flink_tasks.operations.get_rules.get_rules import GetRules
 from pyflink.common import Configuration, Types
 from pyflink.common.serialization import SimpleStringSchema
@@ -92,7 +93,8 @@ def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
 
     env_config = Configuration()  # type: ignore
     env_config.set_string("restart-strategy.type", "fixed-delay")
-    env_config.set_integer("restart-strategy.attempts", 999)
+    env_config.set_integer("restart-strategy.fixed-delay.attempts", 999)
+    env_config.set_string("restart-strategy.fixed-delay.delay", "10s")
 
     env = StreamExecutionEnvironment.get_execution_environment(env_config)
 
@@ -110,7 +112,7 @@ def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
             },
             deserialization_schema=SimpleStringSchema(),
         )
-        .set_commit_offsets_on_checkpoints(commit_on_checkpoints=True)
+        .set_commit_offsets_on_checkpoints(commit_on_checkpoints=False)  # Disable checkpoint-based commits, use auto-commit instead
         .set_start_from_latest()
     )
 
@@ -132,7 +134,7 @@ def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
         .build()
     )
 
-    (
+    error_sink: KafkaSink = (
         KafkaSink.builder()
         .set_bootstrap_servers(kafka_bootstrap_server)
         .set_record_serializer(
@@ -160,7 +162,10 @@ def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
         input_stream,
     )
 
-    get_rules.main.map(
+    # Extract and sink errors from get_rules
+    extract_errors(get_rules.main, "UpdateGovQuality_GetRules").sink_to(error_sink).name("GetRules Errors")
+
+    filter_successful(get_rules.main).map(
         lambda document: json.dumps(
             {
                 "id": document[0],
