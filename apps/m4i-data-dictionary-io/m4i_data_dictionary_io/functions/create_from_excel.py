@@ -15,8 +15,13 @@ async def get_ref_and_push(atlas_entities: List[T], with_referred_entities: bool
         atlas_entities
     ) if with_referred_entities else None
 
-    mutation_response = await create_entities(*atlas_entities, referred_entities=referred_entities, access_token=access_token)
-    print(mutation_response)
+    try:
+      mutation_response = await create_entities(*atlas_entities, referred_entities=referred_entities, access_token=access_token)
+      print(mutation_response)
+    except ClientResponseError as e:
+      print(f"ERROR: Failed to create entities. Status: {e.status}, Message: {e.message}")
+      print(f"URL: {e.request_info.url}")
+      raise
 
 
 async def create_from_excel(
@@ -41,13 +46,17 @@ async def create_from_excel(
     for sheet_entities in atlas_entities_per_sheet:
 
         atlas_entities = list(sheet_entities)
+        atlas_entities = [entity for entity in atlas_entities if entity is not None]
 
         if len(atlas_entities) > 0:
             try:
                 await get_ref_and_push(atlas_entities, with_referred_entities, access_token)
             except ClientResponseError:
-                for i in atlas_entities:
-                    await get_ref_and_push([i], with_referred_entities, access_token)
+                for i, entity in enumerate(atlas_entities):
+                    try:
+                        await get_ref_and_push([entity], with_referred_entities, access_token)
+                    except ClientResponseError as e:
+                        print(f"  FAILED: Entity {i} - Status: {e.status}, Message: {e.message}")
 
     # END LOOP
 # END create_from_excel

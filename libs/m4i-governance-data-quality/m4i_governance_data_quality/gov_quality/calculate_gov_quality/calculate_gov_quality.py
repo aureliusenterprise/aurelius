@@ -32,6 +32,11 @@ def calculate_gov_quality(*entities: BusinessReferenceable, rules: List[GovQuali
         "attribute": DataFrame((entity.attributes for entity in entities), index=index),
         "relationship": DataFrame((entity.relationship_attributes for entity in entities), index=index)
     }
+    print(f"Available attribute columns: {data['attribute'].columns.tolist()}")
+    print(f"Available relationship columns: {data['relationship'].columns.tolist()}")
+
+    for rule in rules:
+      print(f"Rule type: {rule.type}, Rule expression: {rule.expression}")
 
     results = DataFrame(
         run_quality_rule_expression(data[rule.type], rule.expression)
