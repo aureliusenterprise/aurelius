@@ -15,6 +15,7 @@ services:
             KC_DB_USERNAME: ${DATABASE_USERNAME}
             KC_DB_PASSWORD: ${DATABASE_PASSWORD}
             KC_HEALTH_ENABLED: true
+            KC_HOSTNAME: keycloak.localhost
         healthcheck:
             test:
                 [

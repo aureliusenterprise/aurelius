@@ -12,7 +12,9 @@ services:
             AURELIUS_BACKEND_URL: http://aurelius-fastapi-example:8000
             KEYCLOAK_CLIENT_ID: ${AUTH_CLIENT_ID}
             KEYCLOAK_REALM: ${AUTH_REALM_NAME}
-            KEYCLOAK_URL: http://localhost:8180
+            KEYCLOAK_URL: http://keycloak.localhost:${KEYCLOAK_PORT}
+        extra_hosts:
+            - keycloak.localhost:host-gateway
         ports:
             - 80
 
@@ -25,7 +27,7 @@ services:
                 condition: service_healthy
         environment:
             AUTH_REALM_NAME: ${AUTH_REALM_NAME}
-            AUTH_SERVER_URL: http://keycloak:8180
+            AUTH_SERVER_URL: http://keycloak.localhost:${KEYCLOAK_PORT}
             DATABASE_NAME: ${DATABASE_NAME}
             DATABASE_HOST: postgres-app
             DATABASE_PASSWORD: ${DATABASE_PASSWORD}
@@ -33,12 +35,14 @@ services:
             DATABASE_USERNAME: ${DATABASE_USERNAME}
             ENVIRONMENT: ${ENVIRONMENT}
             LOG_LEVEL: ${LOG_LEVEL}
+        extra_hosts:
+            - keycloak.localhost:host-gateway
         ports:
             - 8000
 
     keycloak:
         image: keycloak/keycloak:latest
-        command: ["start-dev", "--http-port=8180", "--import-realm"]
+        command: ["start-dev", "--http-port=${KEYCLOAK_PORT}", "--import-realm"]
         depends_on:
             postgres-keycloak:
                 condition: service_healthy
@@ -50,6 +54,7 @@ services:
             KC_DB_USERNAME: ${DATABASE_USERNAME}
             KC_DB_PASSWORD: ${DATABASE_PASSWORD}
             KC_HEALTH_ENABLED: true
+            KC_HOSTNAME: keycloak.localhost
         healthcheck:
             test:
                 [
@@ -60,7 +65,7 @@ services:
             timeout: 5s
             retries: 10
         ports:
-            - 8180:8180
+            - ${KEYCLOAK_PORT}:${KEYCLOAK_PORT}
         volumes:
             - ../../../dev/keycloak/import:/opt/keycloak/data/import:ro
 

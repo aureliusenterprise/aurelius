@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     database_password: SecretStr
     database_port: int
     database_username: str
+    keycloak_port: int
     password: SecretStr
     username: str
 
@@ -107,11 +108,10 @@ def connection(compose: DockerCompose) -> http.client.HTTPConnection:
 
 
 @pytest.fixture(scope="session")
-def keycloak_client(compose: DockerCompose, settings: Settings) -> KeycloakOpenID:
+def keycloak_client(settings: Settings) -> KeycloakOpenID:
     """Return a Keycloak client."""
-    host, port = compose.get_service_host_and_port("keycloak", 8080)
     return KeycloakOpenID(
-        server_url=f"http://{host}:{port}",
+        server_url=f"http://keycloak.localhost:{settings.keycloak_port}",
         client_id=settings.auth_client_id,
         realm_name=settings.auth_realm_name,
     )

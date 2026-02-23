@@ -79,8 +79,8 @@ def user_info(
             token,
             key=key,
             algorithms=["RS256"],
-            issuer=f"{SETTINGS.auth_server_url}/realms/{SETTINGS.auth_realm_name}",
-            options={"verify_aud": False, "verify_iss": not SETTINGS.is_development},
+            issuer=auth_base_url,
+            options={"verify_aud": False},
         )
     except jwt.PyJWTError as e:
         LOGGER.exception("Failed to verify JWT")

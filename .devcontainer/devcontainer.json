@@ -152,5 +152,6 @@
         "playwright": "bash .devcontainer/playwright.sh",
         "pre-commit": "bash .devcontainer/pre-commit.sh",
         "sops": "bash .devcontainer/sops.sh"
-    }
+    },
+    "runArgs": ["--add-host=keycloak.localhost:127.0.0.1"]
 }
