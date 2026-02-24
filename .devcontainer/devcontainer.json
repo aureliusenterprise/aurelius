@@ -73,5 +73,6 @@
         "-ms-python.autopep8"
       ]
     }
-  }
+  },
+  "runArgs": ["--add-host=keycloak.localhost:127.0.0.1"]
 }
