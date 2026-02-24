@@ -2,4 +2,8 @@
 /dist
 /coverage
 /.nx/cache
+/.nx/workspace-data
+**/CHANGELOG.md
+poetry.lock
+
 .angular

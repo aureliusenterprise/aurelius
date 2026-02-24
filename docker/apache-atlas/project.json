@@ -1,0 +1,8 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": [],
+    "name": "aurelius-docker-apache-atlas",
+    "projectType": "application",
+    "tags": [],
+    "targets": {}
+}

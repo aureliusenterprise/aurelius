@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -20,8 +23,13 @@
   "targetDefaults": {
     "@angular-devkit/build-angular:browser": {
       "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production"
+      ]
     },
     "@nx/eslint:lint": {
       "cache": true,
@@ -34,7 +42,11 @@
     },
     "@nx/jest:jest": {
       "cache": true,
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/jest.preset.js"
+      ],
       "options": {
         "passWithNoTests": true
       },
@@ -60,9 +72,20 @@
       "plugin": "@nx/eslint/plugin",
       "options": {
         "targetName": "lint",
-        "extensions": ["ts", "tsx", "js", "jsx", "html", "vue"]
+        "extensions": [
+          "ts",
+          "tsx",
+          "js",
+          "jsx",
+          "html",
+          "vue"
+        ]
       }
-    }
+    },
+    "./tools/plugins/docker.ts",
+    "./tools/plugins/sops.ts",
+    "./tools/plugins/sops-encrypt.ts",
+    "./tools/plugins/sops-decrypt.ts"
   ],
   "generators": {
     "@nx/angular:application": {

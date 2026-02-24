@@ -219,3 +219,6 @@ pyrightconfig.json
 
 # local cache
 consistency_metrics.sqlite
+
+# Environment files
+.env

@@ -1,3 +1,19 @@
 {
-  "singleQuote": true
+    "jsonRecursiveSort": true,
+    "overrides": [
+        {
+            "files": ["apps/**/src/**/*.component.html", "libs/angular/**/src/**/*.component.html"],
+            "options": {
+                "parser": "angular"
+            }
+        }
+    ],
+    "plugins": ["prettier-plugin-java", "prettier-plugin-sort-json", "prettier-plugin-toml"],
+    "printWidth": 120,
+    "proseWrap": "preserve",
+    "reorderKeys": true,
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 4,
+    "useTabs": false
 }

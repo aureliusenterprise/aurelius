@@ -1,0 +1,62 @@
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v5.0.0
+      hooks:
+          - id: check-merge-conflict
+            name: Check for merge conflicts
+          - id: check-json
+            name: Check for JSON syntax errors
+          - id: check-toml
+            name: Check for TOML syntax errors
+          - id: check-yaml
+            name: Check for YAML syntax errors
+            args: [--unsafe]
+          - id: end-of-file-fixer
+            name: Ensure files end with a newline
+          - id: trailing-whitespace
+            name: Trim trailing whitespace
+            args: [--markdown-linebreak-ext=md]
+
+    - repo: https://github.com/pre-commit/mirrors-prettier
+      rev: v3.1.0
+      hooks:
+          - id: prettier
+            name: Format code with Prettier
+            additional_dependencies:
+                - prettier@3.6.2
+                - prettier-plugin-java@2.8.1
+                - prettier-plugin-sort-json@4.1.1
+                - prettier-plugin-toml@2.0.6
+
+    - repo: https://github.com/astral-sh/ruff-pre-commit
+      rev: v0.12.3
+      hooks:
+          - id: ruff
+            name: Check for Python linting errors
+            args: [--fix]
+          - id: ruff-format
+
+    - repo: https://github.com/RobertCraigie/pyright-python
+      rev: v1.1.403
+      hooks:
+          - id: pyright
+            name: Check for Python type errors
+            entry: uv run pyright
+            language: system
+            "types_or": [python, pyi]
+            require_serial: true
+
+    - repo: https://github.com/igorshubovych/markdownlint-cli
+      rev: v0.45.0
+      hooks:
+          - id: markdownlint
+            name: Check for Markdown linting errors
+            args: ["--ignore", "**/CHANGELOG.md"]
+
+    - repo: https://github.com/thoughtworks/talisman
+      rev: v1.37.0
+      hooks:
+          - id: talisman-commit
+            name: Scan for secrets
+            entry: cmd --githook pre-commit
+            args: ["--checksum", "*.lock"]

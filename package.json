@@ -1,18 +1,12 @@
 {
-  "name": "@aurelius/source",
+  "name": "aurelius",
   "version": "0.0.0",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
     "cz": "cz",
     "prebuild": "node git-version.js",
-    "prepare": "husky install",
     "release": "nx release --skip-publish"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   },
   "dependencies": {
     "@angular/animations": "~17.3.0",
@@ -138,7 +132,9 @@
     "mermaid": "^9.1.7",
     "npm": "^6.14.5",
     "nx": "^19.0.4",
-    "prettier": "^2.6.2",
+    "prettier": "^3.6.2",
+    "prettier-plugin-sort-json": "^4.1.1",
+    "prettier-plugin-toml": "^2.0.6",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "tslib": "^2.4.0",
