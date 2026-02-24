@@ -98,69 +98,69 @@
         "tamasfe.even-better-toml",
         "vitest.explorer",
         "-ms-python.autopep8"
-      ]
-    },
-    "settings": {
-      "[json]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-      "[markdown]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-      "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff"
-      },
-      "[toml]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-      "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-      "[yaml]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-      "dev.containers.mountWaylandSocket": false,
-      "editor.formatOnSave": true,
-      "editor.formatOnSaveMode": "file",
-      "files.exclude": {
-        "**/.pytest_cache": true,
-        "**/.ruff_cache": true,
-        "**/__pycache__": true,
-        ".angular": true,
-        ".nx": true,
-        ".tmp": true,
-        ".venv": true,
-        "build": true,
-        "node_modules": true
-      },
-      "files.insertFinalNewline": true,
-      "files.watcherExclude": {
-        "**/.pytest_cache": true,
-        "**/.ruff_cache": true,
-        "**/__pycache__": true,
-        "**/dist": true,
-        ".angular": true,
-        ".git/objects/**": true,
-        ".git/subtree-cache/**": true,
-        ".nx": true,
-        ".tmp": true,
-        ".venv": true,
-        "build": true,
-        "node_modules": true
-      },
-      "material-icon-theme.files.associations": {
-        "*.enc": "key",
-        "keys.txt": "key",
-        "project.json": "nx"
-      },
-      "material-icon-theme.folders.associations": {
-        "connectors": "connection"
-      },
-      "python.analysis.typeCheckingMode": "standard",
-      "python.testing.pytestEnabled": true,
-      "python.testing.unittestEnabled": false,
-      "terminal.integrated.shellIntegration.enabled": true,
-      "vscode.env.isTelemetryEnabled": false
+      ],
+      "settings": {
+        "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        },
+        "[toml]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[yaml]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "dev.containers.mountWaylandSocket": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file",
+        "files.exclude": {
+          "**/.pytest_cache": true,
+          "**/.ruff_cache": true,
+          "**/__pycache__": true,
+          ".angular": true,
+          ".nx": true,
+          ".tmp": true,
+          ".venv": true,
+          "build": true,
+          "node_modules": true
+        },
+        "files.insertFinalNewline": true,
+        "files.watcherExclude": {
+          "**/.pytest_cache": true,
+          "**/.ruff_cache": true,
+          "**/__pycache__": true,
+          "**/dist": true,
+          ".angular": true,
+          ".git/objects/**": true,
+          ".git/subtree-cache/**": true,
+          ".nx": true,
+          ".tmp": true,
+          ".venv": true,
+          "build": true,
+          "node_modules": true
+        },
+        "material-icon-theme.files.associations": {
+          "*.enc": "key",
+          "keys.txt": "key",
+          "project.json": "nx"
+        },
+        "material-icon-theme.folders.associations": {
+          "connectors": "connection"
+        },
+        "python.analysis.typeCheckingMode": "standard",
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "terminal.integrated.shellIntegration.enabled": true,
+        "vscode.env.isTelemetryEnabled": false
+      }
     }
   },
   "runArgs": [
