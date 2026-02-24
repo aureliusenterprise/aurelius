@@ -5,95 +5,96 @@ autoActivate = true
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "~3.8"
 avro-python3 = "==1.10.2"
+python = "~3.8"
 
 [tool.poetry.dependencies.data2model]
-path = "backend/m4i-data2model"
 develop = true
+path = "backend/m4i-data2model"
 
 [tool.poetry.dependencies.m4i-analytics]
-path = "libs/m4i-analytics"
 develop = true
+path = "libs/m4i-analytics"
 
 [tool.poetry.dependencies.m4i-atlas-core]
-path = "libs/m4i-atlas-core"
 develop = true
+path = "libs/m4i-atlas-core"
 
 [tool.poetry.dependencies.m4i-data-management]
-path = "libs/m4i-data-management"
 develop = true
+path = "libs/m4i-data-management"
 
 [tool.poetry.dependencies.m4i-governance-data-quality]
-path = "libs/m4i-governance-data-quality"
 develop = true
+path = "libs/m4i-governance-data-quality"
 
 [tool.poetry.dependencies.m4i-backend-core]
-path = "libs/m4i-backend-core"
 develop = true
+path = "libs/m4i-backend-core"
 
 [tool.poetry.dependencies.m4i-consistency-metrics]
-path = "backend/m4i-consistency-metrics"
 develop = true
+path = "backend/m4i-consistency-metrics"
 
 [tool.poetry.dependencies.m4i-data-dictionary-io]
-path = "apps/m4i-data-dictionary-io"
 develop = true
+path = "apps/m4i-data-dictionary-io"
 
 [tool.poetry.dependencies.m4i-flink-tasks]
-path = "libs/m4i-flink-tasks"
 develop = true
+path = "libs/m4i-flink-tasks"
 
 [tool.poetry.dependencies.m4i-publish-state]
-path = "backend/m4i-publish-state"
 develop = true
+path = "backend/m4i-publish-state"
 
 [tool.poetry.dependencies.m4i-synchronize-app-search]
-path = "backend/m4i-synchronize-app-search"
 develop = true
+path = "backend/m4i-synchronize-app-search"
 
 [tool.poetry.dependencies.m4i-update-gov-data-quality]
-path = "backend/m4i-update-gov-data-quality"
 develop = true
+path = "backend/m4i-update-gov-data-quality"
 
 [tool.poetry.dependencies.m4i-lineage-rest-api]
-path = "backend/m4i-lineage-rest-api"
 develop = true
+path = "backend/m4i-lineage-rest-api"
 
 [tool.poetry.dependencies.m4i-graphviz-layouts]
-path = "libs/m4i-analytics-extensions/m4i-graphviz-layouts"
 develop = true
+path = "libs/m4i-analytics-extensions/m4i-graphviz-layouts"
 
 [tool.poetry.dependencies.m4i-lineage-model]
-path = "backend/m4i-lineage-model"
 develop = true
+path = "backend/m4i-lineage-model"
 
 [tool.poetry.dependencies.m4i-metrics]
-path = "libs/m4i-metrics"
 develop = true
+path = "libs/m4i-metrics"
 
 [tool.poetry.dependencies.m4i-validate-entity]
-path = "backend/m4i-validate-entity"
 develop = true
+path = "backend/m4i-validate-entity"
 
 [tool.poetry.dependencies.m4i-atlas-post-install]
-path = "backend/m4i-atlas-post-install"
 develop = true
+path = "backend/m4i-atlas-post-install"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "0.1.5"
+autopep8 = "2.0.2"
+dotenv = "0.9.9"
+pre-commit = "3.4.0"
+pydantic = "2.8.0"
+pydantic-avro = "0.6.5"
+pydantic-settings = "2.6.0"
 pytest = "7.3.1"
 pytest-asyncio = "0.23.7"
 pytest-cov = "5.0.0"
 pytest-sugar = "0.9.7"
-autopep8 = "2.0.2"
-dotenv = "0.9.9"
-pydantic = "2.8.0"
-pydantic-avro = "0.6.5"
-pydantic-settings = "2.6.0"
+ruff = "0.1.5"
 tenacity = "8.5.0"
 testcontainers = "3.7.1"
 
 [build-system]
-requires = ["poetry-core==1.1.0"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core==1.1.0"]
