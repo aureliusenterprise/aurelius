@@ -19,11 +19,6 @@ services:
               target: /apache-atlas/conf/atlas-simple-authz-policy.json
             - source: atlas-keycloak-conf
               target: /apache-atlas/conf/keycloak-conf.json
-        healthcheck:
-            test: ['CMD-SHELL', 'wget http://localhost:21000']
-            interval: 10s
-            timeout: 5s
-            retries: 120
 
     keycloak:
         image: quay.io/keycloak/keycloak:16.1.1

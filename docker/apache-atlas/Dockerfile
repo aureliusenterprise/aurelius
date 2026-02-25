@@ -73,5 +73,8 @@ RUN mkdir -p data && chown atlas:atlas data && chmod 700 data
 # Set environment variables
 ENV PATH=/apache-atlas/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+# Add healthcheck script
+HEALTHCHECK --interval=30s --timeout=30s --start-period=180s --retries=3 CMD [ "sh", "-c", "curl -I -f -s http://localhost:21000 || exit 1" ]
+
 # Start up Apache Atlas and keep the container running
 CMD ["/bin/bash", "-c", "/apache-atlas/bin/atlas_start.py; tail -fF -n +1 /apache-atlas/logs/application.log"]
