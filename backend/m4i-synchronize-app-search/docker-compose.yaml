@@ -1,0 +1,14 @@
+name: m4i-synchronize-app-search
+
+services:
+    m4i-synchronize-app-search:
+        image: m4i-synchronize-app-search:local
+        env_file: .env
+        environment:
+            - FLINK_PROPERTIES="rest.address=172.17.0.1:8081"
+        volumes:
+            - aurelius-atlas-dev_certs:/opt/flink/certs:ro
+
+volumes:
+    aurelius-atlas-dev_certs:
+        external: true

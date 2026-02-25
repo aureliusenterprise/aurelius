@@ -1,100 +1,43 @@
 {
-  "name": "m4i-synchronize-app-search",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "application",
-  "sourceRoot": "backend/m4i-synchronize-app-search/m4i_synchronize_app_search",
-  "targets": {
-    "add": {
-      "executor": "@nxlv/python:add",
-      "options": {}
-    },
-    "update": {
-      "executor": "@nxlv/python:update",
-      "options": {}
-    },
-    "remove": {
-      "executor": "@nxlv/python:remove",
-      "options": {}
-    },
-    "build": {
-      "executor": "@nxlv/python:build",
-      "outputs": [
-        "{workspaceRoot}/dist/backend/m4i-synchronize-app-search"
-      ],
-      "options": {
-        "outputPath": "{workspaceRoot}/dist/backend/m4i-synchronize-app-search",
-        "publish": false,
-        "lockedVersions": false,
-        "bundleLocalDependencies": true
-      }
-    },
-    "lint": {
-      "executor": "@nxlv/python:ruff-check",
-      "outputs": [],
-      "options": {
-        "lintFilePatterns": [
-          "m4i_synchronize_app_search",
-          "tests"
-        ]
-      }
-    },
-    "test": {
-      "executor": "@nxlv/python:run-commands",
-      "outputs": [
-        "{workspaceRoot}/reports/backend/m4i-synchronize-app-search/unittests",
-        "{workspaceRoot}/coverage/backend/m4i-synchronize-app-search"
-      ],
-      "options": {
-        "command": "poetry run pytest tests/",
-        "cwd": "backend/m4i-synchronize-app-search"
-      }
-    },
-    "load-jars": {
-      "command": "bash {projectRoot}/jars/load-jars.sh"
-    },
-    "serve": {
-      "executor": "@nxlv/python:run-commands",
-      "outputs": [],
-      "dependsOn": [
-        {
-          "target": "load-jars"
-        }
-      ],
-      "options": {
-        "command": "/opt/flink/bin/flink run -d -py {projectRoot}/main.py"
-      }
-    },
-    "docker-build": {
-      "dependsOn": [
-        {
-          "target": "build",
-          "params": "forward"
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "name": "m4i-synchronize-app-search",
+    "projectType": "application",
+    "sourceRoot": "backend/m4i-synchronize-app-search/m4i_synchronize_app_search",
+    "tags": [],
+    "targets": {
+        "docker-build": {
+            "command": "docker buildx build . --build-arg PROJECT_DIR={projectRoot} --build-arg PYTHON_MODULE_NAME={args.moduleName} -f {args.file} -t {args.tag}",
+            "dependsOn": ["load-jars", "build"],
+            "metadata": {
+                "description": "Build the Docker image for the application"
+            },
+            "options": {
+                "env": {
+                    "DOCKER_BUILDKIT": "1"
+                },
+                "file": "{workspaceRoot}/docker/aurelius-flink-base/Dockerfile",
+                "moduleName": "m4i_synchronize_app_search",
+                "tag": "{projectName}:local"
+            }
         },
-        {
-          "target": "load-jars"
+        "docker-publish": {
+            "command": "docker buildx build . --build-arg PROJECT_DIR={projectRoot} --build-arg PYTHON_MODULE_NAME={args.moduleName} -f {args.file} -t {args.namespace}/{projectName}:{args.version} --push",
+            "dependsOn": [{ "target": "build" }],
+            "metadata": {
+                "description": "Publish the Docker image for the application"
+            },
+            "options": {
+                "env": {
+                    "DOCKER_BUILDKIT": "1"
+                },
+                "file": "{workspaceRoot}/docker/aurelius-flink-base/Dockerfile",
+                "moduleName": "m4i_synchronize_app_search",
+                "namespace": "ghcr.io/aureliusenterprise",
+                "version": "latest"
+            }
+        },
+        "load-jars": {
+            "command": "bash {projectRoot}/jars/load-jars.sh"
         }
-      ],
-      "command": "docker build -f {projectRoot}/Dockerfile . -t {args.namespace}/{args.tag}:{args.version}",
-      "options": {
-        "namespace": "aureliusenterprise",
-        "tag": "{projectName}",
-        "version": "latest"
-      }
-    },
-    "docker-publish": {
-      "dependsOn": [
-        {
-          "target": "docker-build",
-          "params": "forward"
-        }
-      ],
-      "command": "docker push {args.namespace}/{args.tag}:{args.version}",
-      "options": {
-        "namespace": "aureliusenterprise",
-        "tag": "{projectName}",
-        "version": "latest"
-      }
     }
-  },
-  "tags": []
 }

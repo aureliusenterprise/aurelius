@@ -44,6 +44,7 @@
         },
         "./tools/plugins/docker-compose.ts",
         "./tools/plugins/docker.ts",
+        "./tools/plugins/python.ts",
         "./tools/plugins/sops.ts",
         "./tools/plugins/sops-encrypt.ts",
         "./tools/plugins/sops-decrypt.ts"

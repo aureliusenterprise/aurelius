@@ -41,9 +41,9 @@ repos:
       hooks:
           - id: pyright
             name: Check for Python type errors
-            entry: uv run pyright
+            entry: poetry run pyright
             language: system
-            "types_or": [python, pyi]
+            'types_or': [python, pyi]
             require_serial: true
 
     - repo: https://github.com/igorshubovych/markdownlint-cli
@@ -51,7 +51,7 @@ repos:
       hooks:
           - id: markdownlint
             name: Check for Markdown linting errors
-            args: ["--ignore", "**/CHANGELOG.md"]
+            args: ['--ignore', '**/CHANGELOG.md']
 
     - repo: https://github.com/thoughtworks/talisman
       rev: v1.37.0
@@ -59,4 +59,4 @@ repos:
           - id: talisman-commit
             name: Scan for secrets
             entry: cmd --githook pre-commit
-            args: ["--checksum", "*.lock"]
+            args: ['--checksum', '*.lock']
