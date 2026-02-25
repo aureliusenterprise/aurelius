@@ -1,169 +1,151 @@
 {
-  "containerEnv": {
-    "POETRY_VIRTUALENVS_IN_PROJECT": "true",
-    "SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/secrets/keys.txt"
-  },
-  "name": "Aurelius",
-  "image": "mcr.microsoft.com/devcontainers/base:noble",
-  "features": {
-    "ghcr.io/devcontainers-extra/features/apt-packages:1": {
-      "packages": [
-        "age",
-        "gdb",
-        "graphviz",
-        "gnupg2",
-        "libpq-dev",
-        "librdkafka-dev",
-        "openssh-client"
-      ]
+    "containerEnv": {
+        "POETRY_VIRTUALENVS_IN_PROJECT": "true",
+        "SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/secrets/keys.txt"
     },
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers-extra/features/nx-npm:1": {
-      "version": "19.0.4"
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "Angular.ng-template",
+                "bierner.markdown-mermaid",
+                "charliermarsh.ruff",
+                "DavidAnson.vscode-markdownlint",
+                "esbenp.prettier-vscode",
+                "KnisterPeter.vscode-commitizen",
+                "nrwl.angular-console",
+                "PKief.material-icon-theme",
+                "tamasfe.even-better-toml",
+                "vitest.explorer",
+                "-ms-python.autopep8"
+            ],
+            "settings": {
+                "[json]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[markdown]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[python]": {
+                    "editor.defaultFormatter": "charliermarsh.ruff"
+                },
+                "[toml]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[typescript]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[yaml]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "dev.containers.mountWaylandSocket": false,
+                "editor.formatOnSave": true,
+                "editor.formatOnSaveMode": "file",
+                "files.exclude": {
+                    "**/.pytest_cache": true,
+                    "**/.ruff_cache": true,
+                    "**/__pycache__": true,
+                    ".angular": true,
+                    ".nx": true,
+                    ".tmp": true,
+                    ".venv": true,
+                    "build": true,
+                    "node_modules": true
+                },
+                "files.insertFinalNewline": true,
+                "files.watcherExclude": {
+                    "**/.pytest_cache": true,
+                    "**/.ruff_cache": true,
+                    "**/__pycache__": true,
+                    "**/dist": true,
+                    ".angular": true,
+                    ".git/objects/**": true,
+                    ".git/subtree-cache/**": true,
+                    ".nx": true,
+                    ".tmp": true,
+                    ".venv": true,
+                    "build": true,
+                    "node_modules": true
+                },
+                "material-icon-theme.files.associations": {
+                    "*.enc": "key",
+                    "keys.txt": "key",
+                    "project.json": "nx"
+                },
+                "material-icon-theme.folders.associations": {
+                    "connectors": "connection"
+                },
+                "python.analysis.typeCheckingMode": "standard",
+                "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+                "python.testing.pytestEnabled": true,
+                "python.testing.unittestEnabled": false,
+                "terminal.integrated.shellIntegration.enabled": true,
+                "vscode.env.isTelemetryEnabled": false
+            }
+        }
     },
-    "ghcr.io/devcontainers-extra/features/sops:1": {
-      "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/python:1": {
-      "toolsToInstall": [
-        "poetry"
-      ],
-      "version": "3.8"
-    },
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "lts"
-    }
-  },
-  "forwardPorts": [
-    5601,
-    8081,
-    8082,
-    9200,
-    8180,
-    21000
-  ],
-  "onCreateCommand": {
-    "npm": "bash .devcontainer/npm.sh",
-    "poetry": "bash .devcontainer/poetry.sh"
-  },
-  "portsAttributes": {
-    "4200": {
-      "label": "Angular",
-      "onAutoForward": "openBrowser"
-    },
-    "4400": {
-      "label": "Storybook",
-      "onAutoForward": "openBrowser"
-    },
-    "5601": {
-      "label": "Kibana UI",
-      "onAutoForward": "silent"
-    },
-    "8081": {
-      "label": "Flink UI",
-      "onAutoForward": "silent"
-    },
-    "8082": {
-      "label": "Kafka UI",
-      "onAutoForward": "silent"
-    },
-    "8180": {
-      "label": "Keycloak",
-      "onAutoForward": "silent"
-    },
-    "9200": {
-      "label": "Elasticsearch API",
-      "onAutoForward": "silent"
-    },
-    "21000": {
-      "label": "Apache Atlas",
-      "onAutoForward": "silent"
-    }
-  },
-  "postCreateCommand": {
-    "pre-commit": "bash .devcontainer/pre-commit.sh",
-    "sops": "bash .devcontainer/sops.sh"
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "Angular.ng-template",
-        "bierner.markdown-mermaid",
-        "charliermarsh.ruff",
-        "DavidAnson.vscode-markdownlint",
-        "esbenp.prettier-vscode",
-        "KnisterPeter.vscode-commitizen",
-        "nrwl.angular-console",
-        "PKief.material-icon-theme",
-        "tamasfe.even-better-toml",
-        "vitest.explorer",
-        "-ms-python.autopep8"
-      ],
-      "settings": {
-        "[json]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "features": {
+        "ghcr.io/devcontainers-extra/features/apt-packages:1": {
+            "packages": ["age", "gdb", "graphviz", "gnupg2", "libpq-dev", "librdkafka-dev", "openssh-client"]
         },
-        "[markdown]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "ghcr.io/devcontainers-extra/features/nx-npm:1": {
+            "version": "19.0.4"
         },
-        "[python]": {
-          "editor.defaultFormatter": "charliermarsh.ruff"
+        "ghcr.io/devcontainers-extra/features/sops:1": {
+            "version": "latest"
         },
-        "[toml]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "lts"
         },
-        "[typescript]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "ghcr.io/devcontainers/features/python:1": {
+            "toolsToInstall": ["poetry"],
+            "version": "3.8"
+        }
+    },
+    "forwardPorts": [5601, 8081, 8082, 9200, 8180, 21000],
+    "image": "mcr.microsoft.com/devcontainers/base:noble",
+    "name": "Aurelius",
+    "onCreateCommand": {
+        "npm": "bash .devcontainer/npm.sh",
+        "poetry": "bash .devcontainer/poetry.sh"
+    },
+    "portsAttributes": {
+        "21000": {
+            "label": "Apache Atlas",
+            "onAutoForward": "silent"
         },
-        "[yaml]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "4200": {
+            "label": "Angular",
+            "onAutoForward": "openBrowser"
         },
-        "dev.containers.mountWaylandSocket": false,
-        "editor.formatOnSave": true,
-        "editor.formatOnSaveMode": "file",
-        "files.exclude": {
-          "**/.pytest_cache": true,
-          "**/.ruff_cache": true,
-          "**/__pycache__": true,
-          ".angular": true,
-          ".nx": true,
-          ".tmp": true,
-          ".venv": true,
-          "build": true,
-          "node_modules": true
+        "4400": {
+            "label": "Storybook",
+            "onAutoForward": "openBrowser"
         },
-        "files.insertFinalNewline": true,
-        "files.watcherExclude": {
-          "**/.pytest_cache": true,
-          "**/.ruff_cache": true,
-          "**/__pycache__": true,
-          "**/dist": true,
-          ".angular": true,
-          ".git/objects/**": true,
-          ".git/subtree-cache/**": true,
-          ".nx": true,
-          ".tmp": true,
-          ".venv": true,
-          "build": true,
-          "node_modules": true
+        "5601": {
+            "label": "Kibana UI",
+            "onAutoForward": "silent"
         },
-        "material-icon-theme.files.associations": {
-          "*.enc": "key",
-          "keys.txt": "key",
-          "project.json": "nx"
+        "8081": {
+            "label": "Flink UI",
+            "onAutoForward": "silent"
         },
-        "material-icon-theme.folders.associations": {
-          "connectors": "connection"
+        "8082": {
+            "label": "Kafka UI",
+            "onAutoForward": "silent"
         },
-        "python.analysis.typeCheckingMode": "standard",
-        "python.testing.pytestEnabled": true,
-        "python.testing.unittestEnabled": false,
-        "terminal.integrated.shellIntegration.enabled": true,
-        "vscode.env.isTelemetryEnabled": false
-      }
-    }
-  },
-  "runArgs": [
-    "--add-host=keycloak.localhost:127.0.0.1"
-  ]
+        "8180": {
+            "label": "Keycloak",
+            "onAutoForward": "silent"
+        },
+        "9200": {
+            "label": "Elasticsearch API",
+            "onAutoForward": "silent"
+        }
+    },
+    "postCreateCommand": {
+        "pre-commit": "bash .devcontainer/pre-commit.sh",
+        "sops": "bash .devcontainer/sops.sh"
+    },
+    "runArgs": ["--add-host=keycloak.localhost:127.0.0.1"]
 }
