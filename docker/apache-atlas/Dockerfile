@@ -1,11 +1,9 @@
-ARG APACHE_ATLAS_VERSION=2.4.0
 ARG JAVA_VERSION=8
 ARG PYTHON_VERSION=3.9
 
 # Build Apache Atlas from source
 FROM eclipse-temurin:${JAVA_VERSION}-jdk-noble AS build
 
-ARG APACHE_ATLAS_VERSION
 ARG PYTHON_VERSION
 
 # Install required system dependencies
@@ -27,12 +25,12 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 WORKDIR /build
 
 # Download Apache Atlas source code
-ADD https://dlcdn.apache.org/atlas/${APACHE_ATLAS_VERSION}/apache-atlas-${APACHE_ATLAS_VERSION}-sources.tar.gz ./
+COPY docker/apache-atlas/apache-atlas-sources.tar.gz ./
 
-RUN tar -xzvf apache-atlas-${APACHE_ATLAS_VERSION}-sources.tar.gz
+RUN tar -xzvf apache-atlas-sources.tar.gz
 
 # Build Apache Atlas
-WORKDIR /build/apache-atlas-sources-${APACHE_ATLAS_VERSION}
+WORKDIR /build/apache-atlas-sources
 
 ENV MAVEN_OPTS="-Xms2g -Xmx2g"
 
@@ -42,7 +40,7 @@ RUN mvn clean install -DskipTests && \
 # Extract the built Apache Atlas components
 WORKDIR /atlas-bin
 
-RUN tar xzf /build/apache-atlas-sources-${APACHE_ATLAS_VERSION}/distro/target/*bin.tar.gz --strip-components 1 -C ./
+RUN tar xzf /build/apache-atlas-sources/distro/target/*bin.tar.gz --strip-components 1 -C ./
 
 # Runtime image for Apache Atlas
 FROM eclipse-temurin:${JAVA_VERSION}-jdk-noble AS runtime
