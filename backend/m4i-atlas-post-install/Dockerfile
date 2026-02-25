@@ -30,13 +30,13 @@ RUN pip install --no-cache-dir *.whl && \
 
 # Copy scripts and data into the container
 COPY --chown=flink:flink --chmod=0550 backend/m4i-atlas-post-install/bin /app/bin
-COPY --chown=flink:flink --chmod=0750 backend/m4i-atlas-post-install/data /app/data
-COPY --chown=flink:flink --chmod=0550 backend/m4i-atlas-post-install/scripts /app/scripts
+COPY --chown=flink:flink --chmod=0640 backend/m4i-atlas-post-install/data /app/data
+COPY --chown=flink:flink --chmod=0440 backend/m4i-atlas-post-install/scripts /app/scripts
 
 # Copy the main script into the container
 COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/main.py .
-COPY --chown=flink:flink --chmod=0500 backend/m4i-flink-jobs/m4i_flink_jobs/*.py ./m4i_flink_jobs/
-COPY --chown=flink:flink --chmod=0500 backend/m4i-flink-jobs/jars/*.jar ./jars/
+COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/m4i_flink_jobs/*.py ./m4i_flink_jobs/
+COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/jars/*.jar ./jars/
 
 # Switch to the Flink user
 USER flink

@@ -35,4 +35,4 @@ COPY --chown=flink:flink --chmod=0500 backend/m4i-flink-jobs/jars/*.jar ./jars/
 USER flink
 
 # Command to run the application
-CMD ["/opt/flink/bin/flink", "run", "-d", "-py", "main.py", "--jarfile", "/app/jars/flink-sql-connector-kafka-1.17.1.jar", "--jarfile", "/app/jars/flink-sql-connector-elasticsearch7-3.0.1-1.17.jar"]
+CMD ["/opt/flink/bin/flink", "run", "-d", "-py", "main.py"]

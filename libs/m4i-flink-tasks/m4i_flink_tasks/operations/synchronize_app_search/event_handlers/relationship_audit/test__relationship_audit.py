@@ -234,15 +234,15 @@ def test__handle_relationship_audit_deleted_relationship() -> None:
 
 def test__handle_relationship_audit_replaced_parent_relationship() -> None:
     """
-    Test that breadcrumbs are not cleared when a parent relationship is being replaced.
+    Test that breadcrumbs are preserved when a parent relationship is being replaced.
 
-    When a parent is deleted AND a new parent is inserted in the same transaction,
-    breadcrumbs should not be cleared. This test verifies the fix that checks for
-    incoming parent relationships before clearing breadcrumbs.
+    When a new parent is inserted in the same transaction as the old parent is removed,
+    breadcrumbs should retain the old parent's values until the insertion event fully
+    establishes the new parent relationship.
 
     Asserts
     -------
-    - Breadcrumbs are preserved (not cleared to empty arrays) when parent is being replaced
+    - Breadcrumbs reflect the old parent exactly when a replacement is in progress
     """
     # Simulate an entity (child) losing its parent in a relationship audit
     # but having a new parent being inserted in the same message
@@ -313,17 +313,12 @@ def test__handle_relationship_audit_replaced_parent_relationship() -> None:
     ):
         updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
-        # Verify the fix: breadcrumbs should NOT be cleared when new parent is incoming
         assert "entity-1" in updated_documents
         updated_entity = updated_documents["entity-1"]
 
-        # CRITICAL: Breadcrumbs should NOT be empty when a new parent is being inserted
-        # Before the fix, they would be cleared to []
-        # With the fix, they are preserved until the new parent relationship is established
-        assert len(updated_entity.breadcrumbguid) > 0, "Breadcrumbs should not be cleared when parent is being replaced"
-        assert len(updated_entity.breadcrumbname) > 0, "Breadcrumb names should not be cleared"
-        assert len(updated_entity.breadcrumbtype) > 0, "Breadcrumb types should not be cleared"
-
-        # The breadcrumbs will be updated by a subsequent relationship insertion event
-        # or when the new parent relationship is fully established
-        # For now, we just verify they weren't cleared
+        # The old parent's breadcrumbs are preserved until the new parent relationship
+        # is fully established by a subsequent insertion event.
+        assert updated_entity.breadcrumbguid == ["domain-old"]
+        assert updated_entity.breadcrumbname == ["Old Domain"]
+        assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
+        assert updated_entity.parentguid == "domain-old"

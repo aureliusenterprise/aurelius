@@ -37,6 +37,7 @@ function fmtBreadcrumb([guid, name, typeName]: [
 
 export interface BreadCrumbsStoreContext {
   readonly breadcrumbs?: Breadcrumb[];
+  readonly breadcrumbWarning?: string;
 }
 
 @Injectable()
@@ -55,26 +56,28 @@ export class BreadCrumbsService extends BasicStore<BreadCrumbsStoreContext> {
       .subscribe((searchResult) => this.handleUpdateBreadcrumbs(searchResult));
   }
 
-  set breadcrumbs(breadcrumbs: Breadcrumb[]) {
-    this.update({
-      description: 'New breadcrumbs available',
-      payload: { breadcrumbs },
-    });
-  }
-
   private handleUpdateBreadcrumbs(
     searchResult: AppSearchResult<AtlasEntitySearchObject>
   ) {
+    // Preserve breadcrumbs when the document hasn't loaded yet
+    if (searchResult == null) return;
+
     const guids = searchResult?.breadcrumbguid?.raw ?? [],
       names = searchResult?.breadcrumbname?.raw ?? [],
       typeNames = searchResult?.breadcrumbtype?.raw ?? [];
 
-    // Only update breadcrumbs if we have valid, complete data
-    // Otherwise, preserve existing breadcrumbs (don't clear them)
-    if (guids.length > 0 &&
-        guids.length === names.length &&
-        names.length === typeNames.length) {
-      this.breadcrumbs = zip(guids, names, typeNames).map(fmtBreadcrumb);
+    // Clear breadcrumbs and show warning when data is mismatched (indicates partial/corrupt data)
+    if (guids.length !== names.length || names.length !== typeNames.length) {
+      this.update({
+        description: 'Breadcrumb data is incomplete',
+        payload: { breadcrumbs: [], breadcrumbWarning: 'Breadcrumb path could not be determined' },
+      });
+      return;
     }
+
+    this.update({
+      description: 'New breadcrumbs available',
+      payload: { breadcrumbs: zip(guids, names, typeNames).map(fmtBreadcrumb), breadcrumbWarning: undefined },
+    });
   }
 }

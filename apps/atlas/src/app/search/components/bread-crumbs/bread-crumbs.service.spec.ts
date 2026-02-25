@@ -51,7 +51,7 @@ describe('BreadCrumbsService', () => {
     mockDocument$.next(mockSearchResult);
   });
 
-  it('should preserve breadcrumbs when empty arrays are received', (done) => {
+  it('should clear breadcrumbs when empty arrays are received', (done) => {
     const initialData = {
       breadcrumbguid: { raw: ['guid1'] },
       breadcrumbname: { raw: ['Name 1'] },
@@ -67,30 +67,20 @@ describe('BreadCrumbsService', () => {
     let emitCount = 0;
     service.select('breadcrumbs').subscribe(breadcrumbs => {
       emitCount++;
-      if (emitCount === 1 && breadcrumbs) {
-        // First emit: breadcrumbs should be set
+      if (emitCount === 1) {
         expect(breadcrumbs.length).toBe(1);
         expect(breadcrumbs[0].guid).toBe('guid1');
         mockDocument$.next(emptyData);
       } else if (emitCount === 2) {
-        // Second emit should not happen because breadcrumbs are preserved
-        fail('Breadcrumbs should not be updated when empty data is received');
+        expect(breadcrumbs.length).toBe(0);
+        done();
       }
     });
 
     mockDocument$.next(initialData);
-
-    // Wait and verify breadcrumbs were preserved
-    setTimeout(() => {
-      service.select('breadcrumbs').subscribe(breadcrumbs => {
-        expect(breadcrumbs.length).toBe(1);
-        expect(breadcrumbs[0].guid).toBe('guid1');
-        done();
-      });
-    }, 100);
   });
 
-  it('should preserve breadcrumbs when mismatched arrays are received', (done) => {
+  it('should clear breadcrumbs and set warning when mismatched arrays are received', (done) => {
     const initialData = {
       breadcrumbguid: { raw: ['guid1', 'guid2'] },
       breadcrumbname: { raw: ['Name 1', 'Name 2'] },
@@ -104,47 +94,62 @@ describe('BreadCrumbsService', () => {
     } as AppSearchResult<AtlasEntitySearchObject>;
 
     let emitCount = 0;
-    service.select('breadcrumbs').subscribe(breadcrumbs => {
+    service.select('breadcrumbs', { includeFalsy: true }).subscribe(breadcrumbs => {
       emitCount++;
-      if (emitCount === 1 && breadcrumbs) {
-        // First emit: breadcrumbs should be set
+      if (emitCount === 1) {
         expect(breadcrumbs.length).toBe(2);
         mockDocument$.next(mismatchedData);
       } else if (emitCount === 2) {
-        // Should not happen
-        fail('Breadcrumbs should not be updated when mismatched data is received');
+        expect(breadcrumbs.length).toBe(0);
+        service.select('breadcrumbWarning').subscribe(warning => {
+          expect(warning).toBe('Breadcrumb path could not be determined');
+          done();
+        });
       }
     });
 
     mockDocument$.next(initialData);
-
-    // Wait and verify breadcrumbs were preserved
-    setTimeout(() => {
-      service.select('breadcrumbs').subscribe(breadcrumbs => {
-        expect(breadcrumbs.length).toBe(2);
-        expect(breadcrumbs[0].guid).toBe('guid1');
-        done();
-      });
-    }, 100);
   });
 
-  it('should preserve breadcrumbs when undefined fields are received', (done) => {
+  it('should clear breadcrumbs when document has no breadcrumb fields', (done) => {
     const initialData = {
       breadcrumbguid: { raw: ['guid1'] },
       breadcrumbname: { raw: ['Name 1'] },
       breadcrumbtype: { raw: ['Type1'] }
     } as AppSearchResult<AtlasEntitySearchObject>;
 
-    const undefinedData = {} as AppSearchResult<AtlasEntitySearchObject>;
+    const noFieldsData = {} as AppSearchResult<AtlasEntitySearchObject>;
+
+    let emitCount = 0;
+    service.select('breadcrumbs').subscribe(breadcrumbs => {
+      emitCount++;
+      if (emitCount === 1) {
+        expect(breadcrumbs.length).toBe(1);
+        mockDocument$.next(noFieldsData);
+      } else if (emitCount === 2) {
+        expect(breadcrumbs.length).toBe(0);
+        done();
+      }
+    });
+
+    mockDocument$.next(initialData);
+  });
+
+  it('should preserve breadcrumbs when null document is received', (done) => {
+    const initialData = {
+      breadcrumbguid: { raw: ['guid1'] },
+      breadcrumbname: { raw: ['Name 1'] },
+      breadcrumbtype: { raw: ['Type1'] }
+    } as AppSearchResult<AtlasEntitySearchObject>;
 
     let emitCount = 0;
     service.select('breadcrumbs').subscribe(breadcrumbs => {
       emitCount++;
       if (emitCount === 1 && breadcrumbs) {
         expect(breadcrumbs.length).toBe(1);
-        mockDocument$.next(undefinedData);
+        mockDocument$.next(null);
       } else if (emitCount === 2) {
-        fail('Breadcrumbs should not be updated when undefined fields are received');
+        fail('Breadcrumbs should not be updated when document is null');
       }
     });
 
@@ -157,6 +162,36 @@ describe('BreadCrumbsService', () => {
         done();
       });
     }, 100);
+  });
+
+  it('should preserve breadcrumbs while document is null during navigation', (done) => {
+    const initialData = {
+      breadcrumbguid: { raw: ['guid1'] },
+      breadcrumbname: { raw: ['Name 1'] },
+      breadcrumbtype: { raw: ['Type1'] }
+    } as AppSearchResult<AtlasEntitySearchObject>;
+
+    const nextData = {
+      breadcrumbguid: { raw: ['guid2'] },
+      breadcrumbname: { raw: ['Name 2'] },
+      breadcrumbtype: { raw: ['Type2'] }
+    } as AppSearchResult<AtlasEntitySearchObject>;
+
+    let emitCount = 0;
+    service.select('breadcrumbs').subscribe(breadcrumbs => {
+      emitCount++;
+      if (emitCount === 1) {
+        expect(breadcrumbs[0].guid).toBe('guid1');
+        // Simulate navigation: document resets to null before new result arrives
+        mockDocument$.next(null);
+        mockDocument$.next(nextData);
+      } else if (emitCount === 2) {
+        expect(breadcrumbs[0].guid).toBe('guid2');
+        done();
+      }
+    });
+
+    mockDocument$.next(initialData);
   });
 
   it('should update breadcrumbs when new valid data replaces old data', (done) => {
