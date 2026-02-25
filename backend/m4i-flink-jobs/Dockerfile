@@ -1,6 +1,6 @@
 FROM flink:1.17.0
 
-LABEL org.opencontainers.image.source https://github.com/aureliusenterprise/aurelius
+LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/aurelius
 
 # Install Python 3.8
 RUN apt-get update && \
@@ -29,7 +29,7 @@ RUN pip install --no-cache-dir *.whl && rm *.whl
 COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/main.py .
 
 # Copy the jar files into the container
-COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/jars/*.jar ./jars/
+COPY --chown=flink:flink --chmod=0500 backend/m4i-flink-jobs/jars/*.jar ./jars/
 
 # Switch to the non-root user
 USER flink

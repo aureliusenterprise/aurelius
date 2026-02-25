@@ -1,7 +1,7 @@
 ARG CONNECT_VERSION=latest
 FROM confluentinc/cp-kafka-connect:${CONNECT_VERSION}
 
-LABEL org.opencontainers.image.source https://github.com/aureliusenterprise/aurelius
+LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/aurelius
 
 USER root
 
