@@ -13,9 +13,8 @@ WORKDIR /app
 # Copy the wheel file into the container
 COPY ../../dist/backend/m4i-search-api/*.whl .
 
-# Install the wheel file, enforce compatible Werkzeug, then remove wheels
+# Install the wheel file and remove it afterwards
 RUN pip install --no-cache-dir *.whl && \
-  pip install --no-cache-dir 'werkzeug>=2.1,<3.0' && \
   rm *.whl
 
 # Create a non-root user
