@@ -5,7 +5,8 @@ autoActivate = true
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "~3.8"
+# CI is pinned to Python 3.8; allow local tooling up to 3.10
+python = ">=3.8,<3.11"
 avro-python3 = "==1.10.2"
 
 [tool.poetry.dependencies.data2model]

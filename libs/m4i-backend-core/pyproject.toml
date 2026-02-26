@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "m4i-backend-core"
-version = "1.0.0"
+version = "1.0.1"
 description = "Shared code for the M4I backend"
 authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
 license = 'UNLICENSED'
@@ -10,8 +10,9 @@ readme = 'README.md'
 include = "m4i_backend_core"
 
 [tool.poetry.dependencies]
-python = "~3.8"
-flask = "2.1.2"
+# Stay compatible with 3.8 runtime while allowing tooling up to 3.10.x
+python = ">=3.8,<3.11"
+flask = "2.2.2"
 python-jose = { version = "3.1.0", extras = ["pycryptodome"] }
 
 [build-system]
