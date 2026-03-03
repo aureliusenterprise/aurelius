@@ -74,6 +74,8 @@
                 "material-icon-theme.folders.associations": {
                     "connectors": "connection"
                 },
+                "python-envs.defaultEnvManager": "ms-python.python:poetry",
+                "python-envs.defaultPackageManager": "ms-python.python:poetry",
                 "python.analysis.typeCheckingMode": "standard",
                 "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
                 "python.testing.pytestEnabled": true,
@@ -102,7 +104,7 @@
             "version": "3.8"
         }
     },
-    "forwardPorts": [5601, 8081, 8082, 9200, 8180, 21000],
+    "forwardPorts": [5601, 8081, 8082, 9200, 8180, 18081, 18082, 18083, 21000],
     "image": "mcr.microsoft.com/devcontainers/base:noble",
     "name": "Aurelius",
     "onCreateCommand": {
@@ -110,6 +112,18 @@
         "poetry": "bash .devcontainer/poetry.sh"
     },
     "portsAttributes": {
+        "18081": {
+            "label": "Synchronize App Search UI",
+            "onAutoForward": "silent"
+        },
+        "18082": {
+            "label": "Update Gov Data Quality UI",
+            "onAutoForward": "silent"
+        },
+        "18083": {
+            "label": "Publish State UI",
+            "onAutoForward": "silent"
+        },
         "21000": {
             "label": "Apache Atlas",
             "onAutoForward": "silent"
@@ -124,10 +138,6 @@
         },
         "5601": {
             "label": "Kibana UI",
-            "onAutoForward": "silent"
-        },
-        "8081": {
-            "label": "Flink UI",
             "onAutoForward": "silent"
         },
         "8082": {

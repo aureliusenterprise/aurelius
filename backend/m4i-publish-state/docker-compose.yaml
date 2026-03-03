@@ -1,19 +1,19 @@
-name: m4i-synchronize-app-search
+name: m4i-publish-state
 
 services:
     jobmanager:
-        image: m4i-synchronize-app-search:local
-        command: standalone-job -pym m4i_synchronize_app_search
+        image: m4i-publish-state:local
+        command: standalone-job -pym m4i_publish_state
         env_file: .env
         environment:
             FLINK_PROPERTIES: |
-                jobmanager.rpc.address: m4i-synchronize-app-search-jobmanager
+                jobmanager.rpc.address: m4i-publish-state-jobmanager
                 jobmanager.rpc.port: ${FLINK_JOB_MANAGER_RPC_PORT}
-                rest.address: m4i-synchronize-app-search-jobmanager
+                rest.address: m4i-publish-state-jobmanager
                 rest.port: ${FLINK_JOB_MANAGER_REST_PORT}
         extra_hosts:
             - keycloak.localhost:host-gateway
-        hostname: m4i-synchronize-app-search-jobmanager
+        hostname: m4i-publish-state-jobmanager
         networks:
             - aurelius-atlas-dev-network
         ports:
@@ -24,20 +24,20 @@ services:
             - checkpoints:/tmp/flink-checkpoints-directory
 
     taskmanager:
-        image: m4i-synchronize-app-search:local
+        image: m4i-publish-state:local
         command: taskmanager
         depends_on:
             - jobmanager
         env_file: .env
         environment:
             FLINK_PROPERTIES: |
-                jobmanager.rpc.address: m4i-synchronize-app-search-jobmanager
+                jobmanager.rpc.address: m4i-publish-state-jobmanager
                 jobmanager.rpc.port: ${FLINK_JOB_MANAGER_RPC_PORT}
-                rest.address: m4i-synchronize-app-search-jobmanager
+                rest.address: m4i-publish-state-jobmanager
                 rest.port: ${FLINK_JOB_MANAGER_REST_PORT}
         extra_hosts:
             - keycloak.localhost:host-gateway
-        hostname: m4i-synchronize-app-search-taskmanager
+        hostname: m4i-publish-state-taskmanager
         networks:
             - aurelius-atlas-dev-network
         volumes:

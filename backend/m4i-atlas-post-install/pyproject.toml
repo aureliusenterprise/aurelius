@@ -1,43 +1,39 @@
 [tool.poetry]
-name = "m4i-atlas-post-install"
-version = "1.0.0"
-description = "Post-install automation for Aurelius Atlas"
 authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+description = "Post-install automation for Aurelius Atlas"
 license = 'UNLICENSED'
+name = "m4i-atlas-post-install"
 readme = 'README.md'
+version = "1.0.0"
 
 [[tool.poetry.packages]]
 include = "m4i_atlas_post_install"
 
 [tool.poetry.dependencies]
-python = "~3.8"
 dictdiffer = "0.9.0"
+elastic-transport = "8.13.1"
 elastic_enterprise_search = "~8.11"
 elasticsearch = "~8.9"
-urlpath="1.2.0"
-urllib3="1.26.2"
-elastic-transport = "8.13.1"
+python = "~3.8"
+urllib3 = "1.26.2"
+urlpath = "1.2.0"
 
 [tool.poetry.dependencies.m4i-atlas-core]
+develop = true
 path = "../../libs/m4i-atlas-core"
-develop = true
-
-[tool.poetry.dependencies.m4i-flink-jobs]
-path = "../m4i-flink-jobs"
-develop = true
 
 [tool.poetry.dependencies.m4i-publish-state]
-path = "../m4i-publish-state"
 develop = true
+path = "../m4i-publish-state"
 
 [tool.poetry.dependencies.m4i-synchronize-app-search]
-path = "../m4i-synchronize-app-search"
 develop = true
+path = "../m4i-synchronize-app-search"
 
 [tool.poetry.dependencies.m4i-update-gov-data-quality]
-path = "../m4i-update-gov-data-quality"
 develop = true
+path = "../m4i-update-gov-data-quality"
 
 [build-system]
-requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]

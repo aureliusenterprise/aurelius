@@ -6,35 +6,10 @@
     "tags": [],
     "targets": {
         "docker-build": {
-            "command": "docker buildx build . --build-arg PROJECT_DIR={projectRoot} --build-arg PYTHON_MODULE_NAME={args.moduleName} -f {args.file} -t {args.tag}",
-            "dependsOn": ["load-jars", "build"],
-            "metadata": {
-                "description": "Build the Docker image for the application"
-            },
-            "options": {
-                "env": {
-                    "DOCKER_BUILDKIT": "1"
-                },
-                "file": "{workspaceRoot}/docker/aurelius-flink-base/Dockerfile",
-                "moduleName": "m4i_synchronize_app_search",
-                "tag": "{projectName}:local"
-            }
+            "dependsOn": ["load-jars", "build"]
         },
         "docker-publish": {
-            "command": "docker buildx build . --build-arg PROJECT_DIR={projectRoot} --build-arg PYTHON_MODULE_NAME={args.moduleName} -f {args.file} -t {args.namespace}/{projectName}:{args.version} --push",
-            "dependsOn": [{ "target": "build" }],
-            "metadata": {
-                "description": "Publish the Docker image for the application"
-            },
-            "options": {
-                "env": {
-                    "DOCKER_BUILDKIT": "1"
-                },
-                "file": "{workspaceRoot}/docker/aurelius-flink-base/Dockerfile",
-                "moduleName": "m4i_synchronize_app_search",
-                "namespace": "ghcr.io/aureliusenterprise",
-                "version": "latest"
-            }
+            "dependsOn": ["load-jars", "build"]
         },
         "load-jars": {
             "command": "bash {projectRoot}/jars/load-jars.sh"

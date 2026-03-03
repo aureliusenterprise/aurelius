@@ -260,21 +260,6 @@ services:
             timeout: 10s
             retries: 120
 
-    jobmanager:
-        image: flink:1.17.0
-        command: jobmanager
-        environment:
-            FLINK_PROPERTIES: |
-                jobmanager.rpc.address: localhost
-                jobmanager.rpc.port: ${FLINK_JOB_MANAGER_RPC_PORT}
-                rest.port: ${FLINK_JOB_MANAGER_REST_PORT}
-        ports:
-            - ${FLINK_JOB_MANAGER_REST_PORT}:${FLINK_JOB_MANAGER_REST_PORT}
-            - ${FLINK_JOB_MANAGER_RPC_PORT}:${FLINK_JOB_MANAGER_RPC_PORT}
-        volumes:
-            - checkpoints:/tmp/flink-checkpoints-directory
-        restart: unless-stopped
-
 configs:
     atlas-application:
         file: ./apache-atlas/atlas-application.properties
@@ -287,10 +272,14 @@ configs:
     keycloak-realm:
         file: ./keycloak/realms/atlas-dev.json
 
+networks:
+    default:
+        name: aurelius-atlas-dev-network
+
 volumes:
     atlas-data:
     certs:
-    checkpoints:
+        name: aurelius-atlas-dev-certs
     es-data:
     kafka-data:
     keycloak-data:
