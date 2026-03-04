@@ -322,3 +322,101 @@ def test__handle_relationship_audit_replaced_parent_relationship() -> None:
         assert updated_entity.breadcrumbname == ["Old Domain"]
         assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
         assert updated_entity.parentguid == "domain-old"
+
+
+def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
+    """
+    Test that breadcrumbs are updated to the new parent's chain when the new parent domain
+    sends the insertion event linking the entity as a child.
+
+    This represents the second step of a parent replacement: the new domain inserts the
+    entity as a child, which triggers the breadcrumb update.
+
+    Asserts
+    -------
+    - The entity's breadcrumbs reflect the new parent's chain (new domain's breadcrumbs + new domain)
+    - parentguid is updated to the new domain
+    """
+    message = EntityMessage(
+        type_name="m4i_data_domain",
+        guid="domain-new",
+        original_event_type=EntityAuditAction.ENTITY_UPDATE,
+        event_type=EntityMessageType.ENTITY_RELATIONSHIP_AUDIT,
+        new_value=BusinessDataDomain(
+            guid="domain-new",
+            type_name="m4i_data_domain",
+            attributes=BusinessDataDomainAttributes(
+                qualified_name="new_domain",
+                name="New Domain",
+                data_entity=[
+                    ObjectId(
+                        type_name="m4i_data_entity",
+                        guid="entity-1",
+                        unique_attributes=M4IAttributes.from_dict({"qualifiedName": "test_entity"}),
+                    ),
+                ],
+            ),
+        ),
+        old_value=BusinessDataDomain(
+            guid="domain-new",
+            type_name="m4i_data_domain",
+            attributes=BusinessDataDomainAttributes(
+                qualified_name="new_domain",
+                name="New Domain",
+            ),
+        ),
+        inserted_relationships={
+            "data_entity": [
+                ObjectId(
+                    type_name="m4i_data_entity",
+                    guid="entity-1",
+                    unique_attributes=M4IAttributes.from_dict({"qualifiedName": "test_entity"}),
+                ),
+            ],
+        },
+        deleted_relationships={},
+    )
+
+    # New domain has no breadcrumbs of its own (top-level)
+    new_domain_document = AppSearchDocument(
+        guid="domain-new",
+        typename="m4i_data_domain",
+        name="New Domain",
+        referenceablequalifiedname="new_domain",
+        breadcrumbguid=[],
+        breadcrumbname=[],
+        breadcrumbtype=[],
+    )
+
+    # The entity still has the old parent's breadcrumbs (preserved from the replacement event)
+    entity_document = AppSearchDocument(
+        guid="entity-1",
+        typename="m4i_data_entity",
+        name="Test Entity",
+        referenceablequalifiedname="test_entity",
+        breadcrumbguid=["domain-old"],
+        breadcrumbname=["Old Domain"],
+        breadcrumbtype=["m4i_data_domain"],
+        parentguid="domain-old",
+    )
+
+    with patch(
+        __package__ + ".relationship_audit.get_document",
+        return_value=new_domain_document,
+    ), patch(
+        __package__ + ".relationship_audit.get_related_documents",
+        return_value=[entity_document],
+    ), patch(
+        __package__ + ".relationship_audit.get_child_documents",
+        return_value=[],
+    ):
+        updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
+
+        assert "entity-1" in updated_documents
+        updated_entity = updated_documents["entity-1"]
+
+        # Breadcrumbs should now reflect the new domain
+        assert updated_entity.breadcrumbguid == ["domain-new"]
+        assert updated_entity.breadcrumbname == ["New Domain"]
+        assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
+        assert updated_entity.parentguid == "domain-new"

@@ -135,7 +135,7 @@ describe('BreadCrumbsService', () => {
     mockDocument$.next(initialData);
   });
 
-  it('should preserve breadcrumbs when null document is received', (done) => {
+  it('should clear breadcrumbs when null document is received', (done) => {
     const initialData = {
       breadcrumbguid: { raw: ['guid1'] },
       breadcrumbname: { raw: ['Name 1'] },
@@ -143,28 +143,21 @@ describe('BreadCrumbsService', () => {
     } as AppSearchResult<AtlasEntitySearchObject>;
 
     let emitCount = 0;
-    service.select('breadcrumbs').subscribe(breadcrumbs => {
+    service.select('breadcrumbs', { includeFalsy: true }).subscribe(breadcrumbs => {
       emitCount++;
-      if (emitCount === 1 && breadcrumbs) {
+      if (emitCount === 1) {
         expect(breadcrumbs.length).toBe(1);
         mockDocument$.next(null);
       } else if (emitCount === 2) {
-        fail('Breadcrumbs should not be updated when document is null');
+        expect(breadcrumbs.length).toBe(0);
+        done();
       }
     });
 
     mockDocument$.next(initialData);
-
-    setTimeout(() => {
-      service.select('breadcrumbs').subscribe(breadcrumbs => {
-        expect(breadcrumbs.length).toBe(1);
-        expect(breadcrumbs[0].guid).toBe('guid1');
-        done();
-      });
-    }, 100);
   });
 
-  it('should preserve breadcrumbs while document is null during navigation', (done) => {
+  it('should clear then update breadcrumbs during navigation to a new entity', (done) => {
     const initialData = {
       breadcrumbguid: { raw: ['guid1'] },
       breadcrumbname: { raw: ['Name 1'] },
@@ -178,14 +171,15 @@ describe('BreadCrumbsService', () => {
     } as AppSearchResult<AtlasEntitySearchObject>;
 
     let emitCount = 0;
-    service.select('breadcrumbs').subscribe(breadcrumbs => {
+    service.select('breadcrumbs', { includeFalsy: true }).subscribe(breadcrumbs => {
       emitCount++;
       if (emitCount === 1) {
         expect(breadcrumbs[0].guid).toBe('guid1');
-        // Simulate navigation: document resets to null before new result arrives
         mockDocument$.next(null);
-        mockDocument$.next(nextData);
       } else if (emitCount === 2) {
+        expect(breadcrumbs.length).toBe(0);
+        mockDocument$.next(nextData);
+      } else if (emitCount === 3) {
         expect(breadcrumbs[0].guid).toBe('guid2');
         done();
       }

@@ -59,14 +59,18 @@ export class BreadCrumbsService extends BasicStore<BreadCrumbsStoreContext> {
   private handleUpdateBreadcrumbs(
     searchResult: AppSearchResult<AtlasEntitySearchObject>
   ) {
-    // Preserve breadcrumbs when the document hasn't loaded yet
-    if (searchResult == null) return;
+    if (searchResult == null) {
+      this.update({
+        description: 'No search result available',
+        payload: { breadcrumbs: [], breadcrumbWarning: undefined },
+      });
+      return;
+    }
 
     const guids = searchResult?.breadcrumbguid?.raw ?? [],
       names = searchResult?.breadcrumbname?.raw ?? [],
       typeNames = searchResult?.breadcrumbtype?.raw ?? [];
 
-    // Clear breadcrumbs and show warning when data is mismatched (indicates partial/corrupt data)
     if (guids.length !== names.length || names.length !== typeNames.length) {
       this.update({
         description: 'Breadcrumb data is incomplete',
