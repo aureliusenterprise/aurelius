@@ -1,5 +1,6 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["m4i-flink-tasks"],
     "name": "m4i-publish-state",
     "projectType": "application",
     "sourceRoot": "backend/m4i-publish-state/m4i_publish_state",

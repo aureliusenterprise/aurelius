@@ -130,11 +130,11 @@
         },
         "4200": {
             "label": "Angular",
-            "onAutoForward": "openBrowser"
+            "onAutoForward": "openBrowserOnce"
         },
         "4400": {
             "label": "Storybook",
-            "onAutoForward": "openBrowser"
+            "onAutoForward": "openBrowserOnce"
         },
         "5601": {
             "label": "Kibana UI",

@@ -1,7 +1,6 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "implicitDependencies": [],
-    "name": "aurelius-docker-apache-atlas",
+    "name": "aurelius-kafka-connect-base",
     "projectType": "application",
     "tags": [],
     "targets": {}

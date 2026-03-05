@@ -24,8 +24,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 WORKDIR /build
 
-# Download Apache Atlas source code
-COPY docker/apache-atlas/apache-atlas-sources.tar.gz ./
+# Copy the Apache Atlas source code into the Docker image
+COPY docker/aurelius-docker-apache-atlas/apache-atlas-sources.tar.gz ./
 
 RUN tar -xzvf apache-atlas-sources.tar.gz
 

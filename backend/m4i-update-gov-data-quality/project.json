@@ -1,5 +1,6 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["m4i-flink-tasks"],
     "name": "m4i-update-gov-data-quality",
     "projectType": "application",
     "sourceRoot": "backend/m4i-update-gov-data-quality/m4i_update_gov_data_quality",
