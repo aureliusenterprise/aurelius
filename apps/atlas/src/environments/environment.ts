@@ -3,32 +3,32 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  name: 'm4i_atlas',
-  googleAnalyticsMeasurementID: 'UA-138345924-1',
-  atlas: {
-    appSearchToken: 'search-6pp14sogy788iyqrb3bhbvon',
-  },
-  i18n: {
-    defaultLanguage: 'en-US',
-    languages: {},
-  },
-  keycloak: {
-    url: '/auth',
-    realm: 'atlas-dev',
-    clientId: 'm4i_aurelius_atlas_dev',
-  },
-  notifications: {
-    badgePath: 'assets/m4i-icon.png',
-    iconPath: 'assets/m4i-icon.png',
-  },
-  production: false,
-  shell: {
-    appCopyright: 2022,
-    appLogoPath: 'assets/aurelius-atlas-logo.png',
-    appName: 'Aurelius Atlas Data Governance',
-    standalone: true,
-  },
-  telemetry: false,
+    name: 'm4i_atlas',
+    googleAnalyticsMeasurementID: 'UA-138345924-1',
+    atlas: {
+        appSearchToken: 'search-xsvpa4oqsmgcwaz99zhd9j81',
+    },
+    i18n: {
+        defaultLanguage: 'en-US',
+        languages: {},
+    },
+    keycloak: {
+        url: 'http://keycloak.localhost:8180/auth',
+        realm: 'atlas-dev',
+        clientId: 'm4i_aurelius_atlas_dev',
+    },
+    notifications: {
+        badgePath: 'assets/m4i-icon.png',
+        iconPath: 'assets/m4i-icon.png',
+    },
+    production: false,
+    shell: {
+        appCopyright: 2022,
+        appLogoPath: 'assets/aurelius-atlas-logo.png',
+        appName: 'Aurelius Atlas Data Governance',
+        standalone: true,
+    },
+    telemetry: false,
 };
 
 /*
@@ -39,4 +39,3 @@ export const environment = {
  * on performance if an error is thrown.
  */
 import 'zone.js/plugins/zone-error'; // Included with Angular CLI.
-

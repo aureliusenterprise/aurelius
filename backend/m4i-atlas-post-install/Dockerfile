@@ -33,11 +33,6 @@ COPY --chown=flink:flink --chmod=0550 backend/m4i-atlas-post-install/bin /app/bi
 COPY --chown=flink:flink --chmod=0640 backend/m4i-atlas-post-install/data /app/data
 COPY --chown=flink:flink --chmod=0440 backend/m4i-atlas-post-install/scripts /app/scripts
 
-# Copy the main script into the container
-COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/main.py .
-COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/m4i_flink_jobs/*.py ./m4i_flink_jobs/
-COPY --chown=flink:flink --chmod=0400 backend/m4i-flink-jobs/jars/*.jar ./jars/
-
 # Switch to the Flink user
 USER flink
 

@@ -4,6 +4,12 @@ services:
     jobmanager:
         image: m4i-update-gov-data-quality:local
         command: standalone-job -pym m4i_update_gov_data_quality
+        configs:
+            - source: certs
+              target: /opt/flink/certs
+              uid: '0'
+              gid: '0'
+              mode: 0640
         env_file: .env
         environment:
             FLINK_PROPERTIES: |
@@ -20,12 +26,17 @@ services:
             - ${FLINK_JOB_MANAGER_REST_PORT}:${FLINK_JOB_MANAGER_REST_PORT}
             - ${FLINK_JOB_MANAGER_RPC_PORT}
         volumes:
-            - aurelius-atlas-dev-certs:/opt/flink/certs:ro
             - checkpoints:/tmp/flink-checkpoints-directory
 
     taskmanager:
         image: m4i-update-gov-data-quality:local
         command: taskmanager
+        configs:
+            - source: certs
+              target: /opt/flink/certs
+              uid: '0'
+              gid: '0'
+              mode: 0640
         depends_on:
             - jobmanager
         env_file: .env
@@ -41,14 +52,15 @@ services:
         networks:
             - aurelius-atlas-dev-network
         volumes:
-            - aurelius-atlas-dev-certs:/opt/flink/certs:ro
             - checkpoints:/tmp/flink-checkpoints-directory
+
+configs:
+    certs:
+        file: ../../dev/certs
 
 networks:
     aurelius-atlas-dev-network:
         external: true
 
 volumes:
-    aurelius-atlas-dev-certs:
-        external: true
     checkpoints:

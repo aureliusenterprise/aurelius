@@ -1,0 +1,8 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["aurelius-kafka-connect-base"],
+    "name": "aurelius-kafka-connect",
+    "projectType": "application",
+    "tags": [],
+    "targets": {}
+}

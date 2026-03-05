@@ -1,164 +1,152 @@
 {
-  "name": "atlas",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "application",
-  "sourceRoot": "apps/atlas/src",
-  "prefix": "models4insight",
-  "tags": [],
-  "generators": {
-    "@nx/workspace:component": {
-      "style": "scss"
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "generators": {
+        "@nx/workspace:component": {
+            "style": "scss"
+        }
+    },
+    "name": "atlas",
+    "prefix": "models4insight",
+    "projectType": "application",
+    "sourceRoot": "apps/atlas/src",
+    "tags": [],
+    "targets": {
+        "build": {
+            "configurations": {
+                "development": {
+                    "extractLicenses": false,
+                    "optimization": false,
+                    "sourceMap": true
+                },
+                "production": {
+                    "budgets": [
+                        {
+                            "maximumError": "5mb",
+                            "maximumWarning": "2mb",
+                            "type": "initial"
+                        }
+                    ],
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/atlas/src/environments/environment.ts",
+                            "with": "apps/atlas/src/environments/environment.prod.ts"
+                        }
+                    ],
+                    "outputHashing": "all",
+                    "serviceWorker": "apps/atlas/ngsw-config.json"
+                },
+                "standalone": {
+                    "budgets": [
+                        {
+                            "maximumError": "5mb",
+                            "maximumWarning": "2mb",
+                            "type": "initial"
+                        }
+                    ],
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/atlas/src/environments/environment.ts",
+                            "with": "apps/atlas/src/environments/environment.standalone.ts"
+                        }
+                    ],
+                    "outputHashing": "all",
+                    "serviceWorker": "apps/atlas/ngsw-config.json"
+                }
+            },
+            "defaultConfiguration": "standalone",
+            "executor": "@angular-devkit/build-angular:application",
+            "options": {
+                "assets": [
+                    "apps/atlas/src/favicon.ico",
+                    "apps/atlas/src/assets",
+                    "apps/atlas/src/manifest.webmanifest",
+                    {
+                        "glob": "**/*",
+                        "input": "libs/assets/src/assets",
+                        "output": "/assets/"
+                    }
+                ],
+                "browser": "apps/atlas/src/main.ts",
+                "index": "libs/core/src/index.html",
+                "inlineStyleLanguage": "scss",
+                "outputPath": "dist/apps/atlas",
+                "polyfills": ["apps/atlas/src/polyfills.ts"],
+                "scripts": [],
+                "styles": ["apps/atlas/src/styles.scss"],
+                "tsConfig": "apps/atlas/tsconfig.app.json"
+            }
+        },
+        "build-storybook": {
+            "configurations": {
+                "ci": {
+                    "quiet": true
+                }
+            },
+            "executor": "@storybook/angular:build-storybook",
+            "options": {
+                "browserTarget": "atlas:build",
+                "compodoc": false,
+                "configDir": "apps/atlas/.storybook",
+                "outputDir": "dist/storybook/atlas",
+                "styles": ["libs/storybook/storybook.scss"]
+            },
+            "outputs": ["{options.outputPath}"]
+        },
+        "extract-i18n": {
+            "executor": "@angular-devkit/build-angular:extract-i18n",
+            "options": {
+                "browserTarget": "atlas:build"
+            }
+        },
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "options": {
+                "lintFilePatterns": ["apps/atlas/**/*.ts", "apps/atlas/**/*.html"]
+            }
+        },
+        "serve": {
+            "configurations": {
+                "development": {
+                    "browserTarget": "atlas:build:development"
+                },
+                "production": {
+                    "browserTarget": "atlas:build:production"
+                }
+            },
+            "defaultConfiguration": "development",
+            "executor": "@angular-devkit/build-angular:dev-server",
+            "options": {
+                "browserTarget": "atlas:build",
+                "host": "127.0.0.1",
+                "open": false,
+                "proxyConfig": "apps/atlas/proxy.conf.json",
+                "watch": false
+            }
+        },
+        "storybook": {
+            "configurations": {
+                "ci": {
+                    "quiet": true
+                }
+            },
+            "executor": "@storybook/angular:start-storybook",
+            "options": {
+                "browserTarget": "atlas:build",
+                "compodoc": false,
+                "configDir": "apps/atlas/.storybook",
+                "port": 4400,
+                "styles": ["libs/storybook/storybook.scss"]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "apps/atlas/jest.config.js",
+                "passWithNoTests": true,
+                "setupFile": "apps/atlas/src/test-setup.ts",
+                "tsConfig": "apps/atlas/tsconfig.spec.json"
+            },
+            "outputs": ["{workspaceRoot}/coverage/apps/atlas"]
+        }
     }
-  },
-  "targets": {
-    "build": {
-      "executor": "@angular-devkit/build-angular:application",
-      "options": {
-        "outputPath": "dist/apps/atlas",
-        "index": "libs/core/src/index.html",
-        "browser": "apps/atlas/src/main.ts",
-        "polyfills": ["apps/atlas/src/polyfills.ts"],
-        "tsConfig": "apps/atlas/tsconfig.app.json",
-        "inlineStyleLanguage": "scss",
-        "assets": [
-          "apps/atlas/src/favicon.ico",
-          "apps/atlas/src/assets",
-          "apps/atlas/src/manifest.webmanifest",
-          {
-            "glob": "**/*",
-            "input": "libs/assets/src/assets",
-            "output": "/assets/"
-          }
-        ],
-        "styles": [
-          "apps/atlas/src/styles.scss"
-        ],
-        "scripts": []
-      },
-      "defaultConfiguration": "standalone",
-      "configurations": {
-        "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/atlas/src/environments/environment.ts",
-              "with": "apps/atlas/src/environments/environment.prod.ts"
-            }
-          ],
-          "outputHashing": "all",
-          "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "2mb",
-              "maximumError": "5mb"
-            }
-          ],
-          "serviceWorker": "apps/atlas/ngsw-config.json"
-        },
-        "standalone": {
-          "fileReplacements": [
-            {
-              "replace": "apps/atlas/src/environments/environment.ts",
-              "with": "apps/atlas/src/environments/environment.standalone.ts"
-            }
-          ],
-          "outputHashing": "all",
-          "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "2mb",
-              "maximumError": "5mb"
-            }
-          ],
-          "serviceWorker": "apps/atlas/ngsw-config.json"
-        },
-        "development": {
-          "optimization": false,
-          "extractLicenses": false,
-          "sourceMap": true
-        }
-      }
-    },
-    "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
-      "options": {
-        "browserTarget": "atlas:build",
-        "host": "127.0.0.1",
-        "proxyConfig": "apps/atlas/proxy.conf.json",
-        "open": false
-      },
-      "configurations": {
-        "production": {
-          "browserTarget": "atlas:build:production"
-        },
-        "development": {
-          "browserTarget": "atlas:build:development"
-        }
-      },
-      "defaultConfiguration": "development"
-    },
-    "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
-      "options": {
-        "browserTarget": "atlas:build"
-      }
-    },
-    "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": [
-          "apps/atlas/**/*.ts",
-          "apps/atlas/**/*.html"
-        ]
-      }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/apps/atlas"
-      ],
-      "options": {
-        "jestConfig": "apps/atlas/jest.config.js",
-        "tsConfig": "apps/atlas/tsconfig.spec.json",
-        "setupFile": "apps/atlas/src/test-setup.ts",
-        "passWithNoTests": true
-      }
-    },
-    "storybook": {
-      "executor": "@storybook/angular:start-storybook",
-      "options": {
-        "port": 4400,
-        "configDir": "apps/atlas/.storybook",
-        "browserTarget": "atlas:build",
-        "compodoc": false,
-        "styles": [
-          "libs/storybook/storybook.scss"
-        ]
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
-        }
-      }
-    },
-    "build-storybook": {
-      "executor": "@storybook/angular:build-storybook",
-      "outputs": [
-        "{options.outputPath}"
-      ],
-      "options": {
-        "outputDir": "dist/storybook/atlas",
-        "configDir": "apps/atlas/.storybook",
-        "browserTarget": "atlas:build",
-        "compodoc": false,
-        "styles": [
-          "libs/storybook/storybook.scss"
-        ]
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
-        }
-      }
-    }
-  }
 }

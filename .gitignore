@@ -222,3 +222,6 @@ consistency_metrics.sqlite
 
 # Environment files
 .env
+
+# Certificates
+certs/

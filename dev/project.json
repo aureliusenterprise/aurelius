@@ -4,5 +4,56 @@
     "name": "aurelius-atlas-dev",
     "projectType": "application",
     "tags": [],
-    "targets": {}
+    "targets": {
+        "generate-certs": {
+            "command": " bash {projectRoot}/bin/generate-certs.sh",
+            "dependsOn": ["decrypt"],
+            "metadata": {
+                "description": "Generate self-signed certificates for Elasticsearch, Kibana, and Enterprise Search."
+            }
+        },
+        "init-app-search-engines": {
+            "dependsOn": ["decrypt", "generate-certs"],
+            "executor": "@nxlv/python:run-commands",
+            "metadata": {
+                "description": "Initialize the search engines for Aurelius Atlas."
+            },
+            "options": {
+                "command": "poetry run python backend/m4i-atlas-post-install/scripts/init_app_search_engines.py"
+            }
+        },
+        "init-atlas-types": {
+            "dependsOn": ["decrypt"],
+            "executor": "@nxlv/python:run-commands",
+            "metadata": {
+                "description": "Initialize the types in Apache Atlas for Aurelius Atlas."
+            },
+            "options": {
+                "command": "poetry run python backend/m4i-atlas-post-install/scripts/init_atlas_types.py"
+            }
+        },
+        "serve": {
+            "dependsOn": ["decrypt", "docker-build", "^docker-build", "generate-certs"]
+        },
+        "update-app-search-token": {
+            "dependsOn": ["decrypt"],
+            "executor": "@nxlv/python:run-commands",
+            "metadata": {
+                "description": "Update the App Search token in the Aurelius Atlas frontend environment file."
+            },
+            "options": {
+                "command": "poetry run {projectRoot}/bin/update-app-search-token.sh"
+            }
+        },
+        "upload-sample-data": {
+            "dependsOn": ["decrypt", "init-atlas-types"],
+            "executor": "@nxlv/python:run-commands",
+            "metadata": {
+                "description": "Upload sample data to Aurelius Atlas."
+            },
+            "options": {
+                "command": "poetry run backend/m4i-atlas-post-install/bin/upload_sample_data.sh"
+            }
+        }
+    }
 }
