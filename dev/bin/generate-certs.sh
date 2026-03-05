@@ -33,7 +33,7 @@ fi
 
 ES_IMAGE="docker.elastic.co/elasticsearch/elasticsearch:$ELASTIC_STACK_VERSION"
 
-docker run --rm -i -v "$CERTS_DIR:/certs" $ES_IMAGE bash -c '
+docker run --rm -i -u root -v "$CERTS_DIR:/certs" $ES_IMAGE bash -c '
 	if [ ! -f /certs/ca.zip ]; then
 		echo "[INFO] Creating CA..."
 		bin/elasticsearch-certutil ca --silent --pem -out /certs/ca.zip
