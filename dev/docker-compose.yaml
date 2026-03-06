@@ -21,29 +21,69 @@ services:
               target: /apache-atlas/conf/keycloak-conf.json
 
     keycloak:
-        image: quay.io/keycloak/keycloak:16.1.1
-        environment:
-            KEYCLOAK_IMPORT: '/tmp/keycloak-config/atlas-dev.json'
-            KEYCLOAK_PASSWORD: 'admin'
-            KEYCLOAK_PORT: 8180
-            KEYCLOAK_REALM_NAME: 'atlas-dev'
-            KEYCLOAK_USER: 'admin'
-        volumes:
-            - keycloak-data:/opt/jboss/keycloak/standalone/data
+        image: keycloak/keycloak:${KEYCLOAK_VERSION}
+        command: ['start-dev', '--import-realm']
         configs:
-            - source: keycloak-config
-              target: /opt/jboss/keycloak/standalone/configuration/standalone.xml
             - source: keycloak-realm
-              target: /tmp/keycloak-config/atlas-dev.json
+              target: /opt/keycloak/data/import/atlas-dev.json
+        depends_on:
+            keycloak-db:
+                condition: service_healthy
+        environment:
+            KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_BOOTSTRAP_ADMIN_PASSWORD}
+            KEYCLOAK_ADMIN: ${KEYCLOAK_BOOTSTRAP_ADMIN_USERNAME}
+            KC_DB: postgres
+            KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+            KC_DB_USERNAME: ${KEYCLOAK_DB_USERNAME}
+            KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+            KC_HEALTH_ENABLED: true
+            KC_HOSTNAME: keycloak.localhost
+            KC_HTTP_PORT: ${KEYCLOAK_HTTP_PORT}
+        healthcheck:
+            test:
+                [
+                    'CMD-SHELL',
+                    "exec 3<>/dev/tcp/127.0.0.1/${KEYCLOAK_HTTP_PORT};echo -e \"GET /health/ready HTTP/1.1\r\nhost: http://localhost\r\nConnection: close\r\n\r\n\" >&3;grep \"HTTP/1.1 200 OK\" <&3",
+                ]
+            interval: 5s
+            timeout: 5s
+            retries: 3
         ports:
             - 8180:8180
-        restart: unless-stopped
-        entrypoint: ['/bin/sh', '-c']
-        command: >
-            ' /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -bmanagement 0.0.0.0 -Djboss.http.port=8180 2>&1 & while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' curl -X GET http://localhost:8180/ | tail -c 3)" != "200" ]]; do
-                echo "Waiting for Keycloak to start on port 8180...";
-                sleep 5;
-            done; sleep 5; /opt/jboss/keycloak/bin/kcadm.sh config credentials --server "http://localhost:8180/auth" --realm master --user admin --password admin; /opt/jboss/keycloak/bin/kcadm.sh create users -r atlas-dev -s username=atlas -s enabled=true; /opt/jboss/keycloak/bin/kcadm.sh add-roles -r atlas-dev --uusername atlas --rolename ROLE_ADMIN; /opt/jboss/keycloak/bin/kcadm.sh add-roles -r atlas-dev --uusername atlas --rolename DATA_STEWARD; /opt/jboss/keycloak/bin/kcadm.sh set-password -r atlas-dev --username atlas --new-password atlas; echo "atlas user created."; tail -f /dev/null '
+
+    keycloak-db:
+        image: postgres:latest
+        environment:
+            POSTGRES_USER: ${KEYCLOAK_DB_USERNAME}
+            POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+            POSTGRES_DB: keycloak
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready', '-d', 'keycloak']
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        ports:
+            - 5432
+        volumes:
+            - keycloak-data:/var/lib/postgresql
+
+    keycloak-setup:
+        image: keycloak/keycloak:${KEYCLOAK_VERSION}
+        command: ['/aurelius/keycloak-setup.sh']
+        configs:
+            - source: keycloak-setup
+              target: /aurelius/keycloak-setup.sh
+              uid: '1000'
+              gid: '1000'
+              mode: 500
+        depends_on:
+            keycloak:
+                condition: service_healthy
+        entrypoint: ['/bin/bash']
+        env_file: .env
+        extra_hosts:
+            - keycloak.localhost:host-gateway
+        restart: on-failure
 
     broker:
         image: apache/kafka:latest
@@ -102,7 +142,7 @@ services:
             - ${KAFKA_UI_PORT}:${KAFKA_UI_PORT}
         restart: unless-stopped
 
-    setup:
+    elasticsearch-setup:
         image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
         user: '0'
         env_file: .env
@@ -136,7 +176,7 @@ services:
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
         depends_on:
-            setup:
+            elasticsearch-setup:
                 condition: service_healthy
         env_file: .env
         environment:
@@ -182,7 +222,7 @@ services:
         depends_on:
             elasticsearch:
                 condition: service_healthy
-            setup:
+            elasticsearch-setup:
                 condition: service_completed_successfully
         image: docker.elastic.co/kibana/kibana:8.2.2
         configs:
@@ -261,6 +301,8 @@ configs:
         file: ./keycloak/settings/standalone.xml
     keycloak-realm:
         file: ./keycloak/realms/atlas-dev.json
+    keycloak-setup:
+        file: ./keycloak/scripts/keycloak-setup.sh
 
 networks:
     default:
