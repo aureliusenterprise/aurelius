@@ -1,0 +1,175 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "search-api.fullname" . }}
+  labels:
+    {{- include "search-api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "search-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "search-api.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if or (and (not .Values.appSearch.tokenSecret) (not .Values.appSearch.token)) (and .Values.auth.fetchPublicKey (not .Values.auth.publicKeySecret) (not .Values.auth.publicKey)) }}
+      initContainers:
+        {{- if and (not .Values.appSearch.tokenSecret) (not .Values.appSearch.token) }}
+        - name: fetch-app-search-token
+          image: curlimages/curl:8.5.0
+          env:
+            - name: ENTERPRISE_SEARCH_INTERNAL_URL
+              value: {{ tpl .Values.enterpriseSearchInternalUrl . | quote }}
+            - name: ELASTIC_USERNAME
+              value: {{ .Values.elastic.username | quote }}
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.elastic.passwordSecret | quote }}
+                  key: {{ .Values.elastic.passwordKey | default "elastic" | quote }}
+          volumeMounts:
+            - name: app-search-token
+              mountPath: /app-search-token
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -eu
+              resp=$(curl -s -k -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" "${ENTERPRISE_SEARCH_INTERNAL_URL}api/as/v1/credentials/search-key")
+              token=$(printf '%s' "$resp" | sed -n 's/.*"key":"\([^"]*\)".*/\1/p')
+              if [ -z "$token" ]; then
+                echo "Failed to fetch App Search token"
+                exit 1
+              fi
+              printf "%s" "$token" > /app-search-token/token
+        {{- end }}
+        {{- if and .Values.auth.fetchPublicKey (not .Values.auth.publicKeySecret) (not .Values.auth.publicKey) }}
+        - name: fetch-auth-public-key
+          image: alpine:3.19
+          env:
+            - name: REALM_CERT_URL
+              value: {{ tpl (default (printf "%s/protocol/openid-connect/certs" (tpl .Values.auth.issuer .)) .Values.auth.realmCertUrl) . | quote }}
+          volumeMounts:
+            - name: auth-public-key
+              mountPath: /auth-public-key
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -eu
+              apk add --no-cache curl jq openssl
+              resp=$(curl -s "$REALM_CERT_URL")
+              cert_b64=$(printf '%s' "$resp" | jq -r '.keys[0].x5c[0]')
+              if [ -z "$cert_b64" ] || [ "$cert_b64" = "null" ]; then
+                echo "Failed to fetch realm certificate"
+                exit 1
+              fi
+              { echo "-----BEGIN CERTIFICATE-----"; echo "$cert_b64" | fold -w 64; echo "-----END CERTIFICATE-----"; } > /auth-public-key/cert.pem
+              openssl x509 -pubkey -noout -in /auth-public-key/cert.pem > /auth-public-key/public-key
+              if [ ! -s /auth-public-key/public-key ]; then
+                echo "Failed to extract public key"
+                exit 1
+              fi
+        {{- end }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.repository }}:{{ .Values.tag | default .Values.global.version | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          {{- if or (and (not .Values.appSearch.tokenSecret) (not .Values.appSearch.token)) (and .Values.auth.fetchPublicKey (not .Values.auth.publicKeySecret) (not .Values.auth.publicKey)) }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -eu
+              {{- if and (not .Values.appSearch.tokenSecret) (not .Values.appSearch.token) }}
+              export APP_SEARCH_TOKEN=$(cat /app-search-token/token)
+              {{- end }}
+              {{- if and .Values.auth.fetchPublicKey (not .Values.auth.publicKeySecret) (not .Values.auth.publicKey) }}
+              export AUTH_PUBLIC_KEY="$(cat /auth-public-key/public-key)"
+              {{- end }}
+              exec gunicorn 'm4i_search_api:register_get_app()' --bind 0.0.0.0:${WSGI_PORT:-6970}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.internalPort }}
+              protocol: TCP
+          env:
+            - name: APP_SEARCH_BASE_URL
+              value: {{ tpl .Values.appSearch.baseUrl . | quote }}
+            {{- if .Values.appSearch.tokenSecret }}
+            - name: APP_SEARCH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.appSearch.tokenSecret }}
+                  key: {{ .Values.appSearch.tokenSecretKey | default "token" }}
+            {{- else if .Values.appSearch.token }}
+            - name: APP_SEARCH_TOKEN
+              value: {{ .Values.appSearch.token | quote }}
+            {{- end }}
+            - name: APP_SEARCH_TIMEOUT_SECONDS
+              value: "{{ .Values.appSearch.timeoutSeconds }}"
+            - name: APP_SEARCH_VERIFY_SSL
+              value: "{{ .Values.appSearch.verifySsl }}"
+            {{- if or .Values.auth.issuer .Values.auth.publicKey .Values.auth.publicKeySecret }}
+            - name: AUTH_ISSUER
+              value: {{ tpl .Values.auth.issuer . | quote }}
+            {{- if .Values.auth.publicKeySecret }}
+            - name: AUTH_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.auth.publicKeySecret }}
+                  key: {{ .Values.auth.publicKeySecretKey | default "public-key" }}
+            {{- else if .Values.auth.publicKey }}
+            - name: AUTH_PUBLIC_KEY
+              value: |
+{{ .Values.auth.publicKey | nindent 16 }}
+            {{- end }}
+            {{- end }}
+            {{- range .Values.extraEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          {{- if or (and (not .Values.appSearch.tokenSecret) (not .Values.appSearch.token)) (and .Values.auth.fetchPublicKey (not .Values.auth.publicKeySecret) (not .Values.auth.publicKey)) }}
+          volumeMounts:
+            {{- if and (not .Values.appSearch.tokenSecret) (not .Values.appSearch.token) }}
+            - name: app-search-token
+              mountPath: /app-search-token
+            {{- end }}
+            {{- if and .Values.auth.fetchPublicKey (not .Values.auth.publicKeySecret) (not .Values.auth.publicKey) }}
+            - name: auth-public-key
+              mountPath: /auth-public-key
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if or (and (not .Values.appSearch.tokenSecret) (not .Values.appSearch.token)) (and .Values.auth.fetchPublicKey (not .Values.auth.publicKeySecret) (not .Values.auth.publicKey)) }}
+      volumes:
+        {{- if and (not .Values.appSearch.tokenSecret) (not .Values.appSearch.token) }}
+        - name: app-search-token
+          emptyDir: {}
+        {{- end }}
+        {{- if and .Values.auth.fetchPublicKey (not .Values.auth.publicKeySecret) (not .Values.auth.publicKey) }}
+        - name: auth-public-key
+          emptyDir: {}
+        {{- end }}
+      {{- end }}

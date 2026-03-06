@@ -1,0 +1,49 @@
+replicaCount: 1
+repository: ghcr.io/aureliusenterprise/m4i-search-api
+pullPolicy: Always
+tag: ""
+
+service:
+  name: search-api
+  type: ClusterIP
+  externalPort: 6970
+  internalPort: 6970
+
+appSearch:
+  baseUrl: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/api/as/v1/engines
+  token: ""
+  tokenSecret: ""
+  tokenSecretKey: token
+  timeoutSeconds: 15
+  verifySsl: false
+  engines:
+    atlas: atlas-dev
+    dataQuality: atlas-dev-quality
+    govQuality: atlas-dev-gov-quality
+
+# Internal Enterprise Search endpoint and credentials used to fetch the search token dynamically.
+# When provided, the chart can retrieve the token at runtime instead of requiring it inline.
+enterpriseSearchInternalUrl: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/
+
+elastic:
+  username: elastic
+  passwordSecret: elastic-search-es-elastic-user
+  passwordKey: elastic
+
+auth:
+  issuer: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/realms/m4i"
+  # Optional: override the JWKS URL; defaults to issuer + /protocol/openid-connect/certs
+  realmCertUrl: ""
+  publicKey: ""
+  publicKeySecret: ""
+  publicKeySecretKey: public-key
+  # If no publicKey/publicKeySecret is supplied, fetch the public key at runtime via init container.
+  fetchPublicKey: true
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+podAnnotations: {}
+imagePullSecrets: []
+extraEnv: []
