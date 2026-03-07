@@ -59,6 +59,7 @@ def event() -> KafkaNotification:
                 entity=Entity(guid="1234"),
                 relationship=None,
             ),
+            source={},
             spooled=False,
         ),
     )

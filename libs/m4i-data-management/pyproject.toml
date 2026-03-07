@@ -1,27 +1,27 @@
 [tool.poetry]
-name = "m4i-data-management"
-version = "1.0.0"
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
 description = "Library of Data Management"
-authors = [ "Aurelius Enterprise <info@aureliusenterprise.com>" ]
 license = "UNLICENSED"
+name = "m4i-data-management"
 readme = "README.md"
+version = "1.0.0"
 
-  [[tool.poetry.packages]]
-  include = "m4i_data_management"
+[[tool.poetry.packages]]
+include = "m4i_data_management"
 
-    [tool.poetry.dependencies]
-    python = "~3.8"
-    dataclasses-json = "~0.6"
-    dict_hash = "~1.3"
-    pandas = "1.3.0"
-    confluent-kafka = "~2.6.0"
-    elasticsearch = "~8.9"
-    jsonschema = "~4.23"
+[tool.poetry.dependencies]
+confluent-kafka = "~2.6.0"
+dataclasses-json = "~0.6"
+dict_hash = "~1.3"
+elasticsearch = "~8.9"
+jsonschema = "~4.23"
+pandas = "1.3.0"
+python = "~3.8"
 
-    [tool.poetry.dependencies.m4i-atlas-core]
-    path = "../m4i-atlas-core"
-    develop = true
+[tool.poetry.dependencies.m4i-atlas-core]
+develop = true
+path = "../m4i-atlas-core"
 
 [build-system]
-requires = [ "poetry-core" ]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
