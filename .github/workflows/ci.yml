@@ -45,9 +45,6 @@ jobs:
             - name: Expose GitHub Runtime
               uses: crazy-max/ghaction-github-runtime@v3
 
-            - name: Update GITHUB_PATH
-              run: echo "$(uv python find)" >> $GITHUB_PATH
-
             - name: Setup Node.js and dependencies
               uses: actions/setup-node@v4
               with:
