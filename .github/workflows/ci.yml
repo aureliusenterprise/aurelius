@@ -41,7 +41,6 @@ jobs:
               with:
                   python-version: ${{ env.PYTHON_VERSION }}
                   poetry-version: ${{ env.POETRY_VERSION }}
-                  install-args: --no-root
 
             - name: Expose GitHub Runtime
               uses: crazy-max/ghaction-github-runtime@v3
