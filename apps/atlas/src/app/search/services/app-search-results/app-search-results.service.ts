@@ -88,6 +88,11 @@ export class AppSearchResultsService<
    */
   private readonly nextPage$: Subject<void>;
 
+  /**
+   * Triggers a forced re-fetch of the first page.
+   */
+  private readonly refresh$: Subject<void>;
+
   constructor(
     private readonly appSearchService: AppSearchService<T, P>,
     private readonly searchService: SearchService<T, P>
@@ -96,10 +101,12 @@ export class AppSearchResultsService<
 
     this.isLoadingPage$ = this.select('isLoadingPage');
     this.pageSize$ = this.select('pageSize');
+    this.refresh$ = new Subject<void>();
 
     this.firstPage$ = combineLatest([
       this.searchService.queryObject$,
       this.pageSize$,
+      this.refresh$.pipe(startWith(undefined as void)),
     ]).pipe(
       switchMap(([queryObject, pageSize]) =>
         this.getFirstPage(queryObject, pageSize)
@@ -161,6 +168,13 @@ export class AppSearchResultsService<
    */
   nextPage() {
     this.nextPage$.next();
+  }
+
+  /**
+   * Forces a re-fetch of the first page using the current query
+   */
+  refresh() {
+    this.refresh$.next();
   }
 
   private getFirstPage(queryObject: AppSearchQuery<T, P>, pageSize: number) {
