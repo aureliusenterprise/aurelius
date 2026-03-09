@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     timeout-minutes: 15
+    env:
+      DOCKER_BUILDKIT: 1
+      BUILDX_GC_KEEP_STORAGE: 5GB
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -44,8 +47,28 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish containers
-        run: npx nx run-many -t docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
+      - name: Publish lightweight containers (parallel)
+        run: |
+          npx nx run-many -t docker-publish \
+            --exclude aurelius-flink-jobs \
+            --exclude m4i-atlas-post-install \
+            --exclude m4i-publish-state \
+            --exclude m4i-update-gov-data-quality \
+            --exclude m4i-synchronize-app-search \
+            -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
+        shell: bash
+
+      - name: Clean up after lightweight containers
+        run: |
+          docker system prune -af --volumes
+          df -h
+        shell: bash
+
+      - name: Publish heavy Flink containers (parallel)
+        run: |
+          npx nx run-many -t docker-publish \
+            --projects=m4i-publish-state,m4i-update-gov-data-quality,m4i-synchronize-app-search,aurelius-flink-jobs,m4i-atlas-post-install \
+            -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
         shell: bash
 
       - name: Publish helm chart
