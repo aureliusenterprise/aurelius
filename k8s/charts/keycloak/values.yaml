@@ -2,38 +2,47 @@
 # Example values for service
 
 # container image
-# https://github.com/keycloak/keycloak-containers/blob/16.1.1/server/README.md
+# https://github.com/keycloak/keycloak-containers/blob/22.0.5/server/README.md
 replicaCount: 1
-repository: aureliusatlas/docker-keycloak
+repository: quay.io/keycloak/keycloak
 pullPolicy: Always
-tag: "16.1.0.2"
+tag: '22.0.5'
+
 service:
-  name: keycloak
-  type: ClusterIP
-  externalPort: 8080
-  internalPort: 8080
-cmd: "echo test successfull"
+    name: keycloak
+    type: ClusterIP
+    externalPort: 8080
+    internalPort: 8080
+
+cmd: 'echo test successful'
+
 env:
-  KEYCLOAK_USER: "admin"
-  PROXY_ADDRESS_FORWARDING: "true"
-  KEYCLOAK_IMPORT: "/tmp/realm.json"
-  KEYCLOAK_PORT: 8080
-  REALM_NAME: "m4i"
-# KEYCLOAK_DEFAULT_THEME
-# KEYCLOAK_WELCOME_THEME
-#  ES_URL: "https://nxtgen-dev.es.westeurope.azure.elastic-cloud.com:9243/"
-#  ES_INDEX: "eis--public--equipment--flattened"
-keycloakFrontendURL: "https://aureliusdev.westeurope.cloudapp.azure.com/"
+    KEYCLOAK_USER: 'admin'
+    PROXY_ADDRESS_FORWARDING: 'true'
+    KEYCLOAK_IMPORT: '/tmp/realm.json'
 
-# ingress object
+# Keycloak admin password - can be set here or will use secret file
+keycloakAdminPassword: ''
+
+# Keycloak 22+ uses KC_* prefix for most configuration options
+keycloakFrontendURL: 'https://aureliusdev.westeurope.cloudapp.azure.com/'
+
+# Realm configuration
+realm_file_name: 'realm_m4i.json'
+
+## PostgreSQL Database Configuration
+postgresql:
+    enabled: true
+    image:
+        repository: postgres
+        tag: '15'
+        pullPolicy: IfNotPresent
+    globalVariables:
+        POSTGRES_USER: keycloak
+        POSTGRES_DB: keycloak
+    persistence:
+        enabled: true
+        accessMode: ReadWriteOnce
+        size: 1Gi
+## Ingress configuration
 #host: equipment2.nxtgen-dev.stratonis_group.com
-
-## Realm
-realm_file_name: "realm_m4i.json"
-
-# Persistent Volume
-persistence:
-  enabled: true
-  # storageClass: "-"
-  accessMode: ReadWriteOnce
-  size: 1Gi
