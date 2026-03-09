@@ -49,8 +49,11 @@ spec:
               value: {{ .Values.elasticsearchEndpoint | quote }}
             - name: ELASTICSEARCH_USERNAME
               value: {{ .Values.elasticsearchUsername | quote }}
-            - name: ELASTICSEARCH_PASSWORD_FILE
-              value: {{ .Values.elasticsearchPasswordFile | quote }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: elastic-search-es-elastic-user
+                  key: elastic
             - name: ELASTICSEARCH_CERTIFICATE_PATH
               value: {{ .Values.elasticsearchCertificatePath | quote }}
             - name: KAFKA_APP_SEARCH_TOPIC_NAME
@@ -77,10 +80,16 @@ spec:
             - name: KEYCLOAK_CLIENT_SECRET_KEY
               value: {{ .Values.keycloakClientSecretKey | quote }}
             {{- end }}
-            - name: KEYCLOAK_USERNAME_FILE
-              value: {{ .Values.keycloakUsernameFile | quote }}
-            - name: KEYCLOAK_PASSWORD_FILE
-              value: {{ .Values.keycloakPasswordFile | quote }}
+            - name: KEYCLOAK_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-admin
+                  key: username
+            - name: KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-admin
+                  key: password
             - name: KEYCLOAK_REALM_NAME
               value: {{ .Values.keycloakRealmName | quote }}
             - name: KEYCLOAK_SERVER_URL
@@ -93,9 +102,6 @@ spec:
               mountPath: /tmp/flink-checkpoints
             - name: savepoints
               mountPath: /tmp/flink-savepoints
-            - name: keycloak-credentials
-              mountPath: /mnt/secrets/keycloak-secret-user-admin
-              readOnly: true
       volumes:
         - name: certificates
           secret:
@@ -104,6 +110,3 @@ spec:
           emptyDir: {}
         - name: savepoints
           emptyDir: {}
-        - name: keycloak-credentials
-          secret:
-            secretName: keycloak-secret-user-admin

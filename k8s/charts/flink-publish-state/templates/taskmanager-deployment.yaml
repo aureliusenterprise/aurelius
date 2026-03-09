@@ -49,8 +49,11 @@ spec:
               value: {{ .Values.elasticsearchEndpoint | quote }}
             - name: ELASTICSEARCH_USERNAME
               value: {{ .Values.elasticsearchUsername | quote }}
-            - name: ELASTICSEARCH_PASSWORD_FILE
-              value: {{ .Values.elasticsearchPasswordFile | quote }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: elastic-search-es-elastic-user
+                  key: elastic
             - name: ELASTICSEARCH_CERTIFICATE_PATH
               value: {{ .Values.elasticsearchCertificatePath | quote }}
             - name: KAFKA_APP_SEARCH_TOPIC_NAME
