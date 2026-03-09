@@ -22,18 +22,6 @@ urlpath = "1.2.0"
 develop = true
 path = "../../libs/m4i-atlas-core"
 
-[tool.poetry.dependencies.m4i-publish-state]
-develop = true
-path = "../m4i-publish-state"
-
-[tool.poetry.dependencies.m4i-synchronize-app-search]
-develop = true
-path = "../m4i-synchronize-app-search"
-
-[tool.poetry.dependencies.m4i-update-gov-data-quality]
-develop = true
-path = "../m4i-update-gov-data-quality"
-
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]

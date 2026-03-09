@@ -1,40 +1,27 @@
-# Use the Flink image as the base
-FROM flink:1.17.0
+# Use the official Python image as the base
+FROM python:3.8
 
-LABEL org.opencontainers.image.source https://github.com/aureliusenterprise/aurelius
+LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/aurelius
 
 # Install dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends curl
-
-# Install Python 3.8 and necessary tools
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends software-properties-common && \
-    apt-get update && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends python3.8 python3.8-distutils curl && \
-    curl -sS https://bootstrap.pypa.io/pip/3.8/get-pip.py | python3.8 && \
-    ln -s /usr/bin/python3.8 /usr/bin/python && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends curl
 
 # Set the working directory
 WORKDIR /app
 
+# Copy the scripts and data into the container
+COPY --chown=root:root --chmod=0550 backend/m4i-atlas-post-install/bin ./bin
+COPY --chown=root:root --chmod=0440 backend/m4i-atlas-post-install/scripts ./scripts
+COPY --chown=root:root --chmod=0640 backend/m4i-atlas-post-install/data ./data
+
 # Copy the wheel file into the container
-COPY ../../dist/backend/m4i-atlas-post-install/*.whl .
+COPY --chown=root:root --chmod=0755 backend/m4i-atlas-post-install/dist/*.whl ./
 
-# Install the wheel file and remove it afterwards
-RUN pip install --no-cache-dir *.whl && \
-    rm *.whl
-
-# Copy scripts and data into the container
-COPY --chown=flink:flink --chmod=0550 backend/m4i-atlas-post-install/bin /app/bin
-COPY --chown=flink:flink --chmod=0640 backend/m4i-atlas-post-install/data /app/data
-COPY --chown=flink:flink --chmod=0440 backend/m4i-atlas-post-install/scripts /app/scripts
-
-# Switch to the Flink user
-USER flink
+# Install the wheel file
+RUN  --mount=type=cache,mode=0755,target=/root/.cache/pip \
+    pip install ./*.whl
 
 # Run the main script
 CMD ["/app/bin/run.sh"]
