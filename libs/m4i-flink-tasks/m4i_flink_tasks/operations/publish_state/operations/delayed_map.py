@@ -30,7 +30,9 @@ class DelayedMap(MapFunction):
         AppSearchDocument | Exception
             Returns the message unchanged with a delay.
         """
-        if isinstance(value, Exception):
+        # Check if value is an error dict from upstream
+        if isinstance(value, dict) and value.get("is_error"):
+            logging.debug("Passing down error: %s", value.get("error_message"))
             return value
 
         current_timestamp = time.time()
