@@ -41,7 +41,7 @@ spec:
             {{- if .Values.env }}
             {{- range $key, $value := .Values.env }}
             - name: {{ $key }}
-              value: {{ $value }} 
+              value: {{ $value }}
             {{- end }}
             {{- end }}
             - name: KEYCLOAK_ATLAS_ADMIN_PASSWORD
@@ -64,20 +64,20 @@ spec:
           ]
           volumeMounts:
             - name: atlas-application-properties--volume
-              mountPath: /opt/apache-atlas-2.2.0/conf/atlas-application.properties
+              mountPath: /apache-atlas/conf/atlas-application.properties
               subPath: atlas-application.properties
             - name: users-credentials-properties--volume
-              mountPath: /opt/apache-atlas-2.2.0/conf/users-credentials.properties
+              mountPath: /apache-atlas/conf/users-credentials.properties
               subPath: users-credentials.properties
             - name: atlas-simple-authz-policy--volume
-              mountPath: /opt/apache-atlas-2.2.0/conf/atlas-simple-authz-policy.json
+              mountPath: /apache-atlas/conf/atlas-simple-authz-policy.json
               subPath: atlas-simple-authz-policy.json
             - name: keycloak-conf--volume
-              mountPath: /opt/apache-atlas-2.2.0/conf/keycloak-conf.json
+              mountPath: /apache-atlas/conf/keycloak-conf.json
               subPath: keycloak-conf.json
             {{- if .Values.persistence.enabled }}
             - name: data
-              mountPath: /opt/apache-atlas-2.2.0/data
+              mountPath: /apache-atlas/data
               subPath: data
             {{- end }}
       volumes:

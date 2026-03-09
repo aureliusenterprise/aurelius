@@ -1,0 +1,42 @@
+# Default values for flink-publish-state
+
+image: ghcr.io/aureliusenterprise/m4i-publish-state
+imageTag: latest
+imagePullPolicy: Always
+
+jobName: publish-state
+
+flinkJobManagerPort: 8081
+flinkJobManagerRpcPort: 6123
+
+# Atlas configuration - using Kubernetes service URL
+atlasServerUrl: 'http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/api/atlas'
+
+# Elasticsearch configuration
+elasticsearchAppSearchIndexName: .ent-search-engine-documents-atlas-dev
+elasticsearchStateIndexName: publish_state
+elasticsearchEndpoint: https://elastic-search-es-http:9200
+elasticsearchUsername: elastic
+elasticsearchCertificatePath: /opt/flink/certs/ca.crt
+
+# Kafka configuration
+kafkaAppSearchTopicName: .ent-search-engine-documents-atlas-dev
+kafkaPublishStateTopicName: publish_state
+kafkaBootstrapServerHostname: kafka.{{ .Release.Namespace }}.svc.cluster.local
+kafkaBootstrapServerPort: 9092
+kafkaConsumerGroupId: PUBLISH_STATE_CONSUMER
+kafkaErrorTopicName: DEAD_LETTER_BOX
+kafkaProducerGroupId: PUBLISH_STATE_PRODUCER
+kafkaSourceTopicName: ATLAS_ENTITIES
+
+# Keycloak configuration - using keycloak-secret-user-admin for credentials
+keycloakClientId: m4i_atlas
+keycloakClientSecretKey: '' # Optional
+keycloakRealmName: m4i
+keycloakServerUrl: 'https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}'
+
+# Checkpointing
+enableCheckpoints: true
+checkpointInterval: 300000
+checkpointTimeout: 60000
+maxConcurrentCheckpoints: 1

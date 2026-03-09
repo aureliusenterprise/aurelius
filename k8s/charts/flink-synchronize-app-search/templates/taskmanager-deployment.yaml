@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.jobName }}-taskmanager
+  labels:
+    app.kubernetes.io/name: flink-{{ .Values.jobName }}
+    app.kubernetes.io/component: taskmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: flink-{{ .Values.jobName }}
+      app.kubernetes.io/component: taskmanager
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: flink-{{ .Values.jobName }}
+        app.kubernetes.io/component: taskmanager
+    spec:
+      containers:
+        - name: taskmanager
+          image: "{{ .Values.image }}:{{ .Values.imageTag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          command: ["/opt/flink/bin/taskmanager.sh"]
+          ports:
+            - name: rpc
+              containerPort: {{ .Values.flinkJobManagerRpcPort }}
+          env:
+            - name: FLINK_PROPERTIES
+              value: |
+                jobmanager.rpc.address: flink-{{ .Values.jobName }}-jobmanager
+                jobmanager.rpc.port: {{ .Values.flinkJobManagerRpcPort }}
+                taskmanager.numberOfTaskSlots: 1
+                {{- if .Values.enableCheckpoints }}
+                execution.checkpointing.interval: {{ .Values.checkpointInterval }}ms
+                execution.checkpointing.timeout: {{ .Values.checkpointTimeout }}ms
+                execution.checkpointing.max-concurrent-checkpoints: {{ .Values.maxConcurrentCheckpoints }}
+                state.backend: rocksdb
+                state.checkpoints.dir: file:///tmp/flink-checkpoints
+                state.savepoints.dir: file:///tmp/flink-savepoints
+                {{- end }}
+            - name: ATLAS_SERVER_URL
+              value: {{ .Values.atlasServerUrl | quote }}
+            - name: ELASTICSEARCH_APP_SEARCH_INDEX_NAME
+              value: {{ .Values.elasticsearchAppSearchIndexName | quote }}
+            - name: ELASTICSEARCH_STATE_INDEX_NAME
+              value: {{ .Values.elasticsearchStateIndexName | quote }}
+            - name: ELASTICSEARCH_ENDPOINT
+              value: {{ .Values.elasticsearchEndpoint | quote }}
+            - name: ELASTICSEARCH_USERNAME
+              value: {{ .Values.elasticsearchUsername | quote }}
+            - name: ELASTICSEARCH_PASSWORD_FILE
+              value: {{ .Values.elasticsearchPasswordFile | quote }}
+            - name: ELASTICSEARCH_CERTIFICATE_PATH
+              value: {{ .Values.elasticsearchCertificatePath | quote }}
+            - name: KAFKA_APP_SEARCH_TOPIC_NAME
+              value: {{ .Values.kafkaAppSearchTopicName | quote }}
+            - name: KAFKA_PUBLISH_STATE_TOPIC_NAME
+              value: {{ .Values.kafkaPublishStateTopicName | quote }}
+            - name: KAFKA_BOOTSTRAP_SERVER_HOSTNAME
+              value: {{ .Values.kafkaBootstrapServerHostname | quote }}
+            - name: KAFKA_BOOTSTRAP_SERVER_PORT
+              value: {{ .Values.kafkaBootstrapServerPort | quote }}
+            - name: KAFKA_CONSUMER_GROUP_ID
+              value: {{ .Values.kafkaConsumerGroupId | quote }}
+            - name: KAFKA_ERROR_TOPIC_NAME
+              value: {{ .Values.kafkaErrorTopicName | quote }}
+            - name: KAFKA_PRODUCER_GROUP_ID
+              value: {{ .Values.kafkaProducerGroupId | quote }}
+            - name: KAFKA_SOURCE_TOPIC_NAME
+              value: {{ .Values.kafkaSourceTopicName | quote }}
+            - name: KEYCLOAK_CLIENT_ID
+              value: {{ .Values.keycloakClientId | quote }}
+            {{- if .Values.keycloakClientSecretKey }}
+            - name: KEYCLOAK_CLIENT_SECRET_KEY
+              value: {{ .Values.keycloakClientSecretKey | quote }}
+            {{- end }}
+            - name: KEYCLOAK_USERNAME_FILE
+              value: {{ .Values.keycloakUsernameFile | quote }}
+            - name: KEYCLOAK_PASSWORD_FILE
+              value: {{ .Values.keycloakPasswordFile | quote }}
+            - name: KEYCLOAK_REALM_NAME
+              value: {{ .Values.keycloakRealmName | quote }}
+            - name: KEYCLOAK_SERVER_URL
+              value: {{ .Values.keycloakServerUrl | quote }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /opt/flink/certs
+              readOnly: true
+            - name: checkpoints
+              mountPath: /tmp/flink-checkpoints
+            - name: savepoints
+              mountPath: /tmp/flink-savepoints
+            - name: keycloak-credentials
+              mountPath: /mnt/secrets/keycloak-secret-user-admin
+              readOnly: true
+      volumes:
+        - name: certificates
+          secret:
+            secretName: {{ .Values.jobName }}-elasticsearch-certs
+        - name: checkpoints
+          emptyDir: {}
+        - name: savepoints
+          emptyDir: {}
+        - name: keycloak-credentials
+          secret:
+            secretName: keycloak-secret-user-admin
