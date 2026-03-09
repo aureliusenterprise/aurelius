@@ -119,6 +119,14 @@ spec:
                   name: elastic-search-es-elastic-user
                   key: elastic
             # CONFIG_* environment variables for FileConfigProvider support
+            - name: CONFIG_ELASTIC_URL
+              value: {{ .Values.customEnv.CONFIG_ELASTIC_URL | default "https://elastic-search-es-http:9200" | quote }}
+            - name: CONFIG_ELASTIC_USERNAME
+              value: {{ .Values.customEnv.CONFIG_ELASTIC_USERNAME | default "elastic" | quote }}
+            - name: CONFIG_ELASTIC_KEYSTORE_LOCATION
+              value: {{ .Values.customEnv.CONFIG_ELASTIC_KEYSTORE_LOCATION | default "/home/appuser/elastic.jks" | quote }}
+            - name: CONFIG_ELASTIC_TRUSTSTORE_LOCATION
+              value: {{ .Values.customEnv.CONFIG_ELASTIC_TRUSTSTORE_LOCATION | default "/home/appuser/elastic.jks" | quote }}
             {{- if .Values.customEnv.CONFIG_ELASTIC_PASSWORD }}
             - name: CONFIG_ELASTIC_PASSWORD
               valueFrom:
@@ -164,7 +172,7 @@ spec:
               value: {{ $value | quote }}
             {{- end }}
             {{- range $key, $value := .Values.customEnv }}
-            {{- if not (or (eq $key "CONFIG_ELASTIC_PASSWORD") (eq $key "CONFIG_ELASTIC_KEY_PASSWORD") (eq $key "CONFIG_ELASTIC_KEYSTORE_PASSWORD") (eq $key "CONFIG_ELASTIC_TRUSTSTORE_PASSWORD") (eq $key "CONFIG_APP_SEARCH_KAFKA_TOPIC") (eq $key "CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC") (eq $key "CONFIG_PUBLISH_STATE_KAFKA_TOPIC")) }}
+            {{- if not (or (eq $key "CONFIG_ELASTIC_PASSWORD") (eq $key "CONFIG_ELASTIC_KEY_PASSWORD") (eq $key "CONFIG_ELASTIC_KEYSTORE_PASSWORD") (eq $key "CONFIG_ELASTIC_TRUSTSTORE_PASSWORD") (eq $key "CONFIG_APP_SEARCH_KAFKA_TOPIC") (eq $key "CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC") (eq $key "CONFIG_PUBLISH_STATE_KAFKA_TOPIC") (eq $key "CONFIG_ELASTIC_URL") (eq $key "CONFIG_ELASTIC_USERNAME") (eq $key "CONFIG_ELASTIC_KEYSTORE_LOCATION") (eq $key "CONFIG_ELASTIC_TRUSTSTORE_LOCATION")) }}
             - name: {{ $key | quote }}
               value: {{ $value | quote }}
             {{- end }}

@@ -132,16 +132,20 @@ with `CONFIG_`. These can be used to reference secrets or config files at runtim
 
 The following environment variables are supported for connector configurations:
 
-| Parameter                                       | Description                                  | Default               |
-| ----------------------------------------------- | -------------------------------------------- | --------------------- |
-| `customEnv.CONFIG_ELASTIC_PASSWORD`             | Elasticsearch password (stored in secret)    | Not set               |
-| `customEnv.CONFIG_ELASTIC_KEY_PASSWORD`         | SSL keystore key password (stored in secret) | Not set               |
-| `customEnv.CONFIG_ELASTIC_KEYSTORE_PASSWORD`    | SSL keystore password (stored in secret)     | Not set               |
-| `customEnv.CONFIG_ELASTIC_TRUSTSTORE_PASSWORD`  | SSL truststore password (stored in secret)   | Not set               |
-| `customEnv.CONFIG_APP_SEARCH_KAFKA_TOPIC`       | Kafka topic for app search documents         | Not set               |
-| `customEnv.CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC` | Kafka topic for gov data quality documents   | Not set               |
-| `customEnv.CONFIG_PUBLISH_STATE_KAFKA_TOPIC`    | Kafka topic for publish state                | Not set               |
-| `customEnv.SECRET_FILE_PATH`                    | Path to CA certificate file                  | `secret_certs/ca.crt` |
+| Parameter                                       | Description                                  | Default                               |
+| ----------------------------------------------- | -------------------------------------------- | ------------------------------------- |
+| `customEnv.CONFIG_ELASTIC_PASSWORD`             | Elasticsearch password (stored in secret)    | Not set                               |
+| `customEnv.CONFIG_ELASTIC_URL`                  | Elasticsearch connection URL                 | `https://elastic-search-es-http:9200` |
+| `customEnv.CONFIG_ELASTIC_USERNAME`             | Elasticsearch username                       | `elastic`                             |
+| `customEnv.CONFIG_ELASTIC_KEY_PASSWORD`         | SSL keystore key password (stored in secret) | Not set                               |
+| `customEnv.CONFIG_ELASTIC_KEYSTORE_LOCATION`    | SSL keystore file path                       | `/home/appuser/elastic.jks`           |
+| `customEnv.CONFIG_ELASTIC_KEYSTORE_PASSWORD`    | SSL keystore password (stored in secret)     | Not set                               |
+| `customEnv.CONFIG_ELASTIC_TRUSTSTORE_LOCATION`  | SSL truststore file path                     | `/home/appuser/elastic.jks`           |
+| `customEnv.CONFIG_ELASTIC_TRUSTSTORE_PASSWORD`  | SSL truststore password (stored in secret)   | Not set                               |
+| `customEnv.CONFIG_APP_SEARCH_KAFKA_TOPIC`       | Kafka topic for app search documents         | Not set                               |
+| `customEnv.CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC` | Kafka topic for gov data quality documents   | Not set                               |
+| `customEnv.CONFIG_PUBLISH_STATE_KAFKA_TOPIC`    | Kafka topic for publish state                | Not set                               |
+| `customEnv.SECRET_FILE_PATH`                    | Path to CA certificate file                  | `secret_certs/ca.crt`                 |
 
 ### Volumes
 

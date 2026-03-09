@@ -55,6 +55,9 @@ customEnv: {}
     # CONFIG_ELASTIC_URL: https://elastic-search-es-http:9200
     # CONFIG_ELASTIC_USERNAME: elastic
     # CONFIG_ELASTIC_PASSWORD: ""  # Set via secrets
+    # SSL/TLS keystore and truststore paths
+    # CONFIG_ELASTIC_KEYSTORE_LOCATION: /home/appuser/elastic.jks
+    # CONFIG_ELASTIC_TRUSTSTORE_LOCATION: /home/appuser/elastic.jks
     # SSL/TLS keystore and truststore passwords
     # CONFIG_ELASTIC_KEY_PASSWORD: ""  # Set via secrets
     # CONFIG_ELASTIC_KEYSTORE_PASSWORD: ""  # Set via secrets
