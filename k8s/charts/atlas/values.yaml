@@ -1,18 +1,18 @@
 ---
 replicaCount: 1
-repository: aureliusatlas/docker-apache-atlas
+repository: ghcr.io/aureliusenterprise/aurelius-docker-apache-atlas
 pullPolicy: Always
-tag: "2.2.1"
+tag: 'latest'
 service:
-  name: atlas
-  type: ClusterIP
-  externalPort: 21000
-  internalPort: 21000
-  internalPort_kafka: 9027
+    name: atlas
+    type: ClusterIP
+    externalPort: 21000
+    internalPort: 21000
+    internalPort_kafka: 9027
 persistence:
-  enabled: true
-  accessMode: ReadWriteOnce
-  size: 1Gi
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 1Gi
 env:
-  KEYCLOAK_ATLAS_ADMIN_USERNAME: "atlas"
-external_hostname: "aureliusdev.westeurope.cloudapp.azure.com"
+    KEYCLOAK_ATLAS_ADMIN_USERNAME: 'atlas'
+external_hostname: 'aureliusdev.westeurope.cloudapp.azure.com'
