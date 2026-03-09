@@ -1,38 +1,38 @@
-FROM flink:1.17.0
+# syntax=docker/dockerfile:1
 
-# Create a non-root user
-RUN addgroup --system m4i-synchronize-app-search && \
-  adduser --system --ingroup m4i-synchronize-app-search m4i-synchronize-app-search
+# Set global build arguments
+ARG FLINK_VERSION=1.17.0
 
-# Install Python 3.8
-RUN apt-get update && \
-  apt-get install -y --no-install-recommends software-properties-common && \
-  apt-get update && \
-  add-apt-repository ppa:deadsnakes/ppa && \
-  apt-get update && \
-  apt-get install -y --no-install-recommends python3.8 python3.8-distutils && \
-  curl -sS https://bootstrap.pypa.io/pip/3.8/get-pip.py | python3.8 && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+# Use the official Flink image as the base image
+FROM flink:${FLINK_VERSION}
+
+# Set build arguments
+ARG PYTHON_VERSION=3.8
+
+# Install Python 3.8. Use cache mounts to speed up the process.
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    apt-get install -y --no-install-recommends software-properties-common && \
+    apt-get update && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends python${PYTHON_VERSION} python${PYTHON_VERSION}-distutils && \
+    curl -sS https://bootstrap.pypa.io/pip/${PYTHON_VERSION}/get-pip.py | python${PYTHON_VERSION} && \
+    ln -sf /usr/bin/python${PYTHON_VERSION} /usr/bin/python
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the wheel file into the container
-COPY ../../dist/backend/m4i-synchronize-app-search/*.whl .
-
-# Install the wheel file and remove it afterwards
-RUN pip install --no-cache-dir *.whl && \
-  rm *.whl
-
-# Copy the main script into the container
-COPY --chown=m4i-synchronize-app-search:m4i-synchronize-app-search --chmod=0400 backend/m4i-synchronize-app-search/main.py .
+# Set environment variables
+ENV JARS_ROOT=/app/jars/
 
 # Copy the jar files into the container
-COPY --chown=m4i-synchronize-app-search:m4i-synchronize-app-search --chmod=0400 backend/m4i-synchronize-app-search/*.jar ./jars/
+COPY --chown=flink:flink --chmod=0500 backend/m4i-synchronize-app-search/jars/*.jar ${JARS_ROOT}
 
-# Switch to the non-root user
-USER m4i-synchronize-app-search
+# Copy the wheel file into the container
+COPY --chown=flink:flink --chmod=0400 backend/m4i-synchronize-app-search/dist/*.whl ./
 
-# Command to run the application
-CMD ["/opt/flink/bin/flink", "run", "-d", "-py", "main.py"]
+# Install package dependencies, then clean up. Use a cache mount to speed up the process.
+RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
+    pip install ./*.whl

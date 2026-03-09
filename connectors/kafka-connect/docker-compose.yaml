@@ -1,0 +1,51 @@
+services:
+    kafka-connect:
+        image: aurelius-kafka-connect:local
+        configs:
+            - source: certs
+              target: /home/appuser/certs
+              uid: '0'
+              gid: '0'
+              mode: 0640
+        environment:
+            CONFIG_ELASTIC_KEY_PASSWORD: ${ELASTIC_KEY_PASSWORD}
+            CONFIG_ELASTIC_KEYSTORE_PASSWORD: ${ELASTIC_KEYSTORE_PASSWORD}
+            CONFIG_ELASTIC_TRUSTSTORE_PASSWORD: ${ELASTIC_TRUSTSTORE_PASSWORD}
+            CONFIG_ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+            CONFIG_ELASTIC_URL: ${ELASTIC_URL}
+            CONFIG_ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+            CONFIG_APP_SEARCH_KAFKA_TOPIC: ${APP_SEARCH_KAFKA_TOPIC}
+            CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC: ${GOV_DATA_QUALITY_KAFKA_TOPIC}
+            CONFIG_PUBLISH_STATE_KAFKA_TOPIC: ${PUBLISH_STATE_KAFKA_TOPIC}
+            CONNECT_BOOTSTRAP_SERVERS: 'broker:9094'
+            CONNECT_CONFIG_PROVIDERS: file
+            CONNECT_CONFIG_PROVIDERS_FILE_CLASS: org.apache.kafka.common.config.provider.FileConfigProvider
+            CONNECT_CONFIG_STORAGE_CLEANUP_POLICY: 'compact'
+            CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+            CONNECT_CONFIG_STORAGE_TOPIC: 'kafka-connect-configs'
+            CONNECT_GROUP_ID: 'kafka-connect-group'
+            CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.storage.StringConverter'
+            CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: 'false'
+            CONNECT_LOG4J_ROOT_LOGLEVEL: 'INFO'
+            CONNECT_OFFSET_STORAGE_CLEANUP_POLICY: 'compact'
+            CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+            CONNECT_OFFSET_STORAGE_TOPIC: 'kafka-connect-offsets'
+            CONNECT_REST_ADVERTISED_HOST_NAME: 'localhost'
+            CONNECT_REST_PORT: 8083
+            CONNECT_STATUS_STORAGE_CLEANUP_POLICY: 'compact'
+            CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+            CONNECT_STATUS_STORAGE_TOPIC: 'kafka-connect-status'
+            CONNECT_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+            CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'false'
+            SECRET_FILE_PATH: /home/appuser/certs/ca/ca.crt
+        networks:
+            - aurelius-atlas-dev-network
+        ports:
+            - 8083
+configs:
+    certs:
+        file: ../../dev/certs
+
+networks:
+    aurelius-atlas-dev-network:
+        external: true

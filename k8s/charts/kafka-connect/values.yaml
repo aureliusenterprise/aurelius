@@ -24,38 +24,59 @@ servicePort: 8083
 ## Kafka Connect properties
 ## ref: https://docs.confluent.io/current/connect/userguide.html#configuring-workers
 configurationOverrides:
-  "plugin.path": "/usr/share/java,/usr/share/confluent-hub-components"
-  # "key.converter": "io.confluent.connect.avro.AvroConverter"
-  # "value.converter": "io.confluent.connect.avro.AvroConverter"
-  "key.converter": "org.apache.kafka.connect.storage.StringConverter"
-  "value.converter": "org.apache.kafka.connect.json.JsonConverter"
-  "key.converter.schemas.enable": "false"
-  "value.converter.schemas.enable": "false"
-  "internal.key.converter": "org.apache.kafka.connect.storage.StringConverter"
-  "internal.value.converter": "org.apache.kafka.connect.json.JsonConverter"
-  "config.storage.replication.factor": "1"
-  "offset.storage.replication.factor": "1"
-  "status.storage.replication.factor": "1"
+    'plugin.path': '/usr/share/java,/usr/share/confluent-hub-components'
+    # "key.converter": "io.confluent.connect.avro.AvroConverter"
+    # "value.converter": "io.confluent.connect.avro.AvroConverter"
+    'key.converter': 'org.apache.kafka.connect.storage.StringConverter'
+    'value.converter': 'org.apache.kafka.connect.json.JsonConverter'
+    'key.converter.schemas.enable': 'false'
+    'value.converter.schemas.enable': 'false'
+    'internal.key.converter': 'org.apache.kafka.connect.storage.StringConverter'
+    'internal.value.converter': 'org.apache.kafka.connect.json.JsonConverter'
+    'config.storage.replication.factor': '1'
+    'offset.storage.replication.factor': '1'
+    'status.storage.replication.factor': '1'
+    # File-based config provider for dynamic configuration
+    'CONNECT_CONFIG_PROVIDERS': 'file'
+    'CONNECT_CONFIG_PROVIDERS_FILE_CLASS': 'org.apache.kafka.common.config.provider.FileConfigProvider'
+    'CONNECT_CONFIG_STORAGE_CLEANUP_POLICY': 'compact'
+    'CONNECT_OFFSET_STORAGE_CLEANUP_POLICY': 'compact'
+    'CONNECT_STATUS_STORAGE_CLEANUP_POLICY': 'compact'
 
 ## Kafka Connect JVM Heap Option
-heapOptions: "-Xms512M -Xmx512M"
+heapOptions: '-Xms512M -Xmx512M'
 
 ## Additional env variables
 ## CUSTOM_SCRIPT_PATH is the path of the custom shell script to be ran mounted in a volume
+## CONFIG_* variables are used by FileConfigProvider for connector configurations
 customEnv: {}
-  # CUSTOM_SCRIPT_PATH: /etc/scripts/create-connectors.sh
+    # CUSTOM_SCRIPT_PATH: /etc/scripts/create-connectors.sh
+    # Elasticsearch connection configuration (used by FileConfigProvider)
+    # CONFIG_ELASTIC_URL: https://elastic-search-es-http:9200
+    # CONFIG_ELASTIC_USERNAME: elastic
+    # CONFIG_ELASTIC_PASSWORD: ""  # Set via secrets
+    # SSL/TLS keystore and truststore passwords
+    # CONFIG_ELASTIC_KEY_PASSWORD: ""  # Set via secrets
+    # CONFIG_ELASTIC_KEYSTORE_PASSWORD: ""  # Set via secrets
+    # CONFIG_ELASTIC_TRUSTSTORE_PASSWORD: ""  # Set via secrets
+    # Kafka topic configurations for connectors
+    # CONFIG_APP_SEARCH_KAFKA_TOPIC: ".ent-search-engine-documents-atlas-dev"
+    # CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC: ""  # Set via values
+    # CONFIG_PUBLISH_STATE_KAFKA_TOPIC: ""  # Set via values
+    # Path to CA certificate for Elasticsearch SSL connection
+    # SECRET_FILE_PATH: /home/appuser/certs/ca/ca.crt
 
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
 
 ## Custom pod annotations
 podAnnotations: {}
@@ -76,41 +97,41 @@ affinity: {}
 ## Kafka Connect JMX Settings
 ## ref: https://kafka.apache.org/documentation/#connect_monitoring
 jmx:
-  port: 5555
+    port: 5555
 
 ## Prometheus Exporter Configuration
 ## ref: https://prometheus.io/docs/instrumenting/exporters/
 prometheus:
-  ## JMX Exporter Configuration
-  ## ref: https://github.com/prometheus/jmx_exporter
-  jmx:
-    enabled: false
-    image: solsson/kafka-prometheus-jmx-exporter@sha256
-    imageTag: 6f82e2b0464f50da8104acd7363fb9b995001ddff77d248379f8788e78946143
-    imagePullPolicy: IfNotPresent
-    port: 5556
+    ## JMX Exporter Configuration
+    ## ref: https://github.com/prometheus/jmx_exporter
+    jmx:
+        enabled: false
+        image: solsson/kafka-prometheus-jmx-exporter@sha256
+        imageTag: 6f82e2b0464f50da8104acd7363fb9b995001ddff77d248379f8788e78946143
+        imagePullPolicy: IfNotPresent
+        port: 5556
 
-    ## Resources configuration for the JMX exporter container.
-    ## See the `resources` documentation above for details.
-    resources: {}
+        ## Resources configuration for the JMX exporter container.
+        ## See the `resources` documentation above for details.
+        resources: {}
 
 ## You can list load balanced service endpoint, or list of all brokers (which is hard in K8s).  e.g.:
 ## bootstrapServers: "PLAINTEXT://dozing-prawn-kafka-headless:9092"
 kafka:
-  bootstrapServers:
-    #bootstrapServers: PLAINTEXT://kafka.{{ .Release.Namespace }}.svc.cluster.local:9092
+    bootstrapServers:
+        #bootstrapServers: PLAINTEXT://kafka.{{ .Release.Namespace }}.svc.cluster.local:9092
 
 ## If the Kafka Chart is disabled a URL and port are required to connect
 ## e.g. gnoble-panther-cp-schema-registry:8081
 cp-schema-registry:
-  url: ""
+    url: ''
 
 ## Secret with multiple keys to serve the purpose of multiple secrets
 ## Values for all the keys will be base64 encoded when the Secret is created or updated
 ## ref: https://kubernetes.io/docs/concepts/configuration/secret/
 secrets:
-  # username: kafka123
-  # password: connect321
+    # username: kafka123
+    # password: connect321
 
 ## These values are used only when "customEnv.CUSTOM_SCRIPT_PATH" is defined.
 ## "livenessProbe" is required only for the edge cases where the custom script to be ran takes too much time
@@ -118,32 +139,32 @@ secrets:
 ## As an example such a similar script is added to "cp-helm-charts/examples/create-connectors.sh"
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
-  exec:
-    command:
-    - /bin/sh
-    - -c
-    - /tmp/aurelius/bin/livenessprobe.sh
-  initialDelaySeconds: 60
-  periodSeconds: 10
+    exec:
+        command:
+            - /bin/sh
+            - -c
+            - /tmp/aurelius/bin/livenessprobe.sh
+    initialDelaySeconds: 60
+    periodSeconds: 10
 
 volumeMounts:
-  - name: v-elastic-certs
-    mountPath: home/appuser/secret_certs
-  - name: kafka-connect-config-volume
-    mountPath: /etc/conf
+    - name: v-elastic-certs
+      mountPath: home/appuser/secret_certs
+    - name: kafka-connect-config-volume
+      mountPath: /etc/conf
 
 volumes:
-  - name: v-elastic-certs
-    secret:
-      secretName: elastic-search-es-http-certs-public
-  - name: kafka-connect-config-volume
-    configMap:
-      name: kafka-connect-config
-      items:
-        - key: app_search_documents.json
-          path: app_search_documents.json
-        - key: publish_state.json
-          path: publish_state.json
+    - name: v-elastic-certs
+      secret:
+          secretName: elastic-search-es-http-certs-public
+    - name: kafka-connect-config-volume
+      configMap:
+          name: kafka-connect-config
+          items:
+              - key: app_search_documents.json
+                path: app_search_documents.json
+              - key: publish_state.json
+                path: publish_state.json
 
 elastic_secret_crt_name: elastic-search-es-http-certs-public
 enterprise_search_internal_url: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/
