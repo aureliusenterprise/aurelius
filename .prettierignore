@@ -7,3 +7,5 @@
 poetry.lock
 
 .angular
+
+**/templates/*.yaml
