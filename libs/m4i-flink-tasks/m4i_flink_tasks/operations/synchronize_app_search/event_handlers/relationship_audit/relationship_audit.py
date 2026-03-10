@@ -360,13 +360,28 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
             continue
         
         logging.info("Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid)
+        
+        try:
+            # Query guarantees that the breadcrumb includes the guid.
+            # upd: but sometimes it doesn't
+            idx = child_document.breadcrumbguid.index(document.guid)
+        except ValueError:
+            logging.exception("Document is not in child document breadcrumb (%s)", child_document.guid)
+            continue
 
-        # Query guarantees that the breadcrumb includes the guid.
-        idx = child_document.breadcrumbguid.index(document.guid)
+        child_document.breadcrumbguid = [
+            *document.breadcrumbguid,
+            *child_document.breadcrumbguid[idx + 1 :],
+        ]
+        child_document.breadcrumbname = [
+            *document.breadcrumbname,
+            *child_document.breadcrumbname[idx + 1 :],
+        ]
+        child_document.breadcrumbtype = [
+            *document.breadcrumbtype,
+            *child_document.breadcrumbtype[idx + 1 :],
+        ]
 
-        child_document.breadcrumbguid = child_document.breadcrumbguid[idx + 1 :]
-        child_document.breadcrumbname = child_document.breadcrumbname[idx + 1 :]
-        child_document.breadcrumbtype = child_document.breadcrumbtype[idx + 1 :]
         child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
 
         logging.info("Breadcrumb GUID: %s", child_document.breadcrumbguid)
@@ -394,9 +409,19 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
             logging.exception("Document is not in child document breadcrumb (%s)", child_document.guid)
             continue
 
-        child_document.breadcrumbguid = child_document.breadcrumbguid[idx + 1 :]
-        child_document.breadcrumbname = child_document.breadcrumbname[idx + 1 :]
-        child_document.breadcrumbtype = child_document.breadcrumbtype[idx + 1 :]
+        child_document.breadcrumbguid = [
+            *document.breadcrumbguid,
+            *child_document.breadcrumbguid[idx + 1 :],
+        ]
+        child_document.breadcrumbname = [
+            *document.breadcrumbname,
+            *child_document.breadcrumbname[idx + 1 :],
+        ]
+        child_document.breadcrumbtype = [
+            *document.breadcrumbtype,
+            *child_document.breadcrumbtype[idx + 1 :],
+        ]
+
         child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
 
         logging.info("Breadcrumb GUID: %s", child_document.breadcrumbguid)
