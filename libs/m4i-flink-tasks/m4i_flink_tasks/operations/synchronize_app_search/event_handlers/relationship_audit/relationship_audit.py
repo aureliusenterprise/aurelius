@@ -245,7 +245,6 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
             continue
 
         field = RELATIONSHIP_MAP[related_document.typename]
-        related_field = RELATIONSHIP_MAP[document.typename]
 
         guids: list[str] = getattr(document, f"{field}guid")
         names: list[str] = getattr(document, field)
@@ -260,6 +259,7 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
         logging.debug("Updated ids: %s", guids)
         logging.debug("Updated names: %s", names)
 
+        related_field = RELATIONSHIP_MAP[document.typename]
         related_guids: list[str] = getattr(related_document, f"{related_field}guid")
         related_names: list[str] = getattr(related_document, related_field)
 
@@ -285,7 +285,7 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
     parents = {ref.guid for ref in message.old_value.get_parents() if ref.guid is not None}
     remaining_parent_relationships = list(parents.difference(deleted_relationships))
 
-    if len(remaining_parent_relationships) < len(parents):
+    if len(remaining_parent_relationships) > 0:
         parent_document = updated_documents[remaining_parent_relationships[0]]
 
         document.breadcrumbguid = [
@@ -312,7 +312,7 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
 
         updated_documents[document.guid] = document
 
-    elif len(remaining_parent_relationships) == 0:
+    else:
         # Check if new parent relationships are being inserted in the same transaction
         # to avoid clearing breadcrumbs when a parent is being replaced
         has_incoming_parents = False
@@ -351,49 +351,49 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
 
     logging.info("Immediate children: %s", immediate_children)
 
-    # delete immediate children relation
-    for child_guid in immediate_children:
-        try:
-            child_document = updated_documents[child_guid] if child_guid in updated_documents else get_document(child_guid, elastic, index_name)
-        except (AppSearchDocumentNotFoundError, NotFoundError):
-            logging.error("Immediate child document not found %s", child_guid)
-            continue
+    # # delete immediate children relation
+    # for child_guid in immediate_children:
+    #     try:
+    #         child_document = updated_documents[child_guid] if child_guid in updated_documents else get_document(child_guid, elastic, index_name)
+    #     except (AppSearchDocumentNotFoundError, NotFoundError):
+    #         logging.error("Immediate child document not found %s", child_guid)
+    #         continue
         
-        logging.info("Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid)
+    #     logging.info("Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid)
         
-        try:
-            # Query guarantees that the breadcrumb includes the guid.
-            # upd: but sometimes it doesn't
-            idx = child_document.breadcrumbguid.index(document.guid)
-        except ValueError:
-            logging.exception("Document is not in child document breadcrumb (%s)", child_document.guid)
-            continue
+    #     try:
+    #         # Query guarantees that the breadcrumb includes the guid.
+    #         # upd: but sometimes it doesn't
+    #         idx = child_document.breadcrumbguid.index(document.guid)
+    #     except ValueError:
+    #         logging.exception("Document is not in child document breadcrumb (%s)", child_document.guid)
+    #         continue
 
-        child_document.breadcrumbguid = [
-            *document.breadcrumbguid,
-            *child_document.breadcrumbguid[idx + 1 :],
-        ]
-        child_document.breadcrumbname = [
-            *document.breadcrumbname,
-            *child_document.breadcrumbname[idx + 1 :],
-        ]
-        child_document.breadcrumbtype = [
-            *document.breadcrumbtype,
-            *child_document.breadcrumbtype[idx + 1 :],
-        ]
+    #     child_document.breadcrumbguid = [
+    #         *document.breadcrumbguid,
+    #         *child_document.breadcrumbguid[idx :],
+    #     ]
+    #     child_document.breadcrumbname = [
+    #         *document.breadcrumbname,
+    #         *child_document.breadcrumbname[idx:],
+    #     ]
+    #     child_document.breadcrumbtype = [
+    #         *document.breadcrumbtype,
+    #         *child_document.breadcrumbtype[idx:],
+    #     ]
 
-        child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
+    #     child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
 
-        logging.info("Breadcrumb GUID: %s", child_document.breadcrumbguid)
-        logging.info("Breadcrumb Name: %s", child_document.breadcrumbname)
-        logging.info("Breadcrumb Type: %s", child_document.breadcrumbtype)
+    #     logging.info("Breadcrumb GUID: %s", child_document.breadcrumbguid)
+    #     logging.info("Breadcrumb Name: %s", child_document.breadcrumbname)
+    #     logging.info("Breadcrumb Type: %s", child_document.breadcrumbtype)
 
-        updated_documents[child_document.guid] = child_document
+    #     updated_documents[child_document.guid] = child_document
 
     logging.info("Deletion operation - breadcrumb_refs %s", list(breadcrumb_refs))
 
     for child_document in get_child_documents(
-        list(breadcrumb_refs),
+        [document.guid],
         elastic,
         index_name,
     ):
@@ -411,15 +411,15 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
 
         child_document.breadcrumbguid = [
             *document.breadcrumbguid,
-            *child_document.breadcrumbguid[idx + 1 :],
+            *child_document.breadcrumbguid[idx:],
         ]
         child_document.breadcrumbname = [
             *document.breadcrumbname,
-            *child_document.breadcrumbname[idx + 1 :],
+            *child_document.breadcrumbname[idx:],
         ]
         child_document.breadcrumbtype = [
             *document.breadcrumbtype,
-            *child_document.breadcrumbtype[idx + 1 :],
+            *child_document.breadcrumbtype[idx:],
         ]
 
         child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
@@ -580,44 +580,44 @@ def handle_inserted_relationships(  # noqa: C901, PLR0912, PLR0915
     logging.info("Immediate children %s. (%s)", immediate_children, inserted_relationships)
 
     # update immediate children
-    for guid in list(immediate_children):
-        # update children breadcrumb
+    # for guid in list(immediate_children):
+    #     # update children breadcrumb
 
-        if guid not in updated_documents:
-            logging.error("Immediate children not found in updated_documents %s", guid)
-            continue
+    #     if guid not in updated_documents:
+    #         logging.error("Immediate children not found in updated_documents %s", guid)
+    #         continue
 
-        child_doc = updated_documents[guid]
+    #     child_doc = updated_documents[guid]
 
-        if document.guid in child_doc.breadcrumbguid:
-            continue
+    #     if document.guid in child_doc.breadcrumbguid:
+    #         continue
 
-        child_doc.breadcrumbname = [
-            *document.breadcrumbname,
-            document.name,
-        ]
+    #     child_doc.breadcrumbname = [
+    #         *document.breadcrumbname,
+    #         document.name,
+    #     ]
 
-        child_doc.breadcrumbguid = [
-            *document.breadcrumbguid,
-            document.guid,
-        ]
+    #     child_doc.breadcrumbguid = [
+    #         *document.breadcrumbguid,
+    #         document.guid,
+    #     ]
 
-        child_doc.breadcrumbtype = [
-            *document.breadcrumbtype,
-            document.typename,
-        ]
+    #     child_doc.breadcrumbtype = [
+    #         *document.breadcrumbtype,
+    #         document.typename,
+    #     ]
 
-        child_doc.parentguid = document.guid
+    #     child_doc.parentguid = document.guid
 
-        logging.info("Set parent relationship of entity %s to %s", child_doc.guid, child_doc.parentguid)
-        logging.debug("Breadcrumb GUID: %s", child_doc.breadcrumbguid)
-        logging.debug("Breadcrumb Name: %s", child_doc.breadcrumbname)
-        logging.debug("Breadcrumb Type: %s", child_doc.breadcrumbtype)
+    #     logging.info("Set parent relationship of entity %s to %s", child_doc.guid, child_doc.parentguid)
+    #     logging.debug("Breadcrumb GUID: %s", child_doc.breadcrumbguid)
+    #     logging.debug("Breadcrumb Name: %s", child_doc.breadcrumbname)
+    #     logging.debug("Breadcrumb Type: %s", child_doc.breadcrumbtype)
 
-        updated_documents[guid] = child_doc
+    #     updated_documents[guid] = child_doc
 
     for child_document in get_child_documents(
-        list(breadcrumb_refs),
+        [document.guid],
         elastic,
         index_name,
     ):
@@ -627,26 +627,25 @@ def handle_inserted_relationships(  # noqa: C901, PLR0912, PLR0915
         if child_document.guid in updated_documents:
             child_document = updated_documents[child_document.guid]  # noqa: PLW2901
 
-        # If breadcrumb already contains the id of the current element, skip to avoid cycles in the breadcrumb
-        if document.guid in child_document.breadcrumbguid:
+        try:
+            idx = child_document.breadcrumbguid.index(document.guid)
+        except ValueError:
+            logging.exception("Document is not in child document breadcrumb (%s)", child_document.guid)
             continue
 
         child_document.breadcrumbguid = [
             *document.breadcrumbguid,
-            document.guid,
-            *child_document.breadcrumbguid,
+            *child_document.breadcrumbguid[idx:],
         ]
 
         child_document.breadcrumbname = [
             *document.breadcrumbname,
-            document.name,
-            *child_document.breadcrumbname,
+            *child_document.breadcrumbname[idx:],
         ]
 
         child_document.breadcrumbtype = [
             *document.breadcrumbtype,
-            document.typename,
-            *child_document.breadcrumbtype,
+            *child_document.breadcrumbtype[idx:],
         ]
 
         child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
