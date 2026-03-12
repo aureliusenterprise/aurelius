@@ -1,5 +1,6 @@
 {
     "containerEnv": {
+        "NX_DAEMON": "true",
         "SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/secrets/keys.txt"
     },
     "customizations": {
@@ -93,7 +94,7 @@
             "packages": ["age", "gnupg2", "libpq-dev", "librdkafka-dev"]
         },
         "ghcr.io/devcontainers-extra/features/nx-npm:1": {
-            "version": "22.3.3"
+            "version": "22.5.4"
         },
         "ghcr.io/devcontainers-extra/features/sops:1": {
             "version": "latest"
