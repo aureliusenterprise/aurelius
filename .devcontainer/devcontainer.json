@@ -12,6 +12,8 @@
                 "DavidAnson.vscode-markdownlint",
                 "esbenp.prettier-vscode",
                 "KnisterPeter.vscode-commitizen",
+                "mtxr.sqltools",
+                "mtxr.sqltools-driver-pg",
                 "nrwl.angular-console",
                 "PKief.material-icon-theme",
                 "tamasfe.even-better-toml",

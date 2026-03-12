@@ -190,3 +190,6 @@ build
 
 # Ignore Kotlin plugin data
 .kotlin
+
+# SQLTools
+*.session.sql
