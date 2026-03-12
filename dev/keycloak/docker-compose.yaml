@@ -46,5 +46,9 @@ services:
         volumes:
             - data:/var/lib/postgresql
 
+networks:
+    default:
+        name: aurelius-dev-keycloak-network
+
 volumes:
     data:

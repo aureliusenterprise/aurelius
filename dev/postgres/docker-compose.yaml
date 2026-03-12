@@ -17,5 +17,9 @@ services:
         volumes:
             - data:/var/lib/postgresql
 
+networks:
+    default:
+        name: aurelius-dev-postgres-network
+
 volumes:
     data:

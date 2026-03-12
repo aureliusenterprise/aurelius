@@ -7,7 +7,7 @@ This is an example Kafka Connect JDBC Sink application.
 ```mermaid
 graph LR
     subgraph A["Kafka"]
-        a[("example.entities")]
+        a[("example.entity")]
     end
 
     subgraph B["Connector"]
@@ -19,7 +19,7 @@ graph LR
     end
 
     subgraph D["Kafka"]
-        d[("example.entities-dlq")]
+        d[("example.entity-dlq")]
     end
 
     a -->|"Messages"| b
@@ -27,7 +27,7 @@ graph LR
     b -->|"Errors"| d
 ```
 
-The connector reads messages from the `example.entities` Kafka topic, processes each message, and writes the resulting
+The connector reads messages from the `example.entity` Kafka topic, processes each message, and writes the resulting
 data to the `Entity` table in Postgres.
 
 ??? QUESTION "What happens if the database is unavailable?"
@@ -36,7 +36,7 @@ data to the `Entity` table in Postgres.
 
 ??? QUESTION "What happens if processing fails?"
 
-    If processing fails, the connector forwards the problematic message to the dead-letter queue topic `example.entities-dlq`.
+    If processing fails, the connector forwards the problematic message to the dead-letter queue topic `example.entity-dlq`.
 
 ## Key Schema
 

@@ -71,5 +71,9 @@ services:
             - ${KAFKA_UI_PORT}:${KAFKA_UI_PORT}
         restart: unless-stopped
 
+networks:
+    default:
+        name: aurelius-dev-kafka-network
+
 volumes:
     data:
