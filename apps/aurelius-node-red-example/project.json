@@ -1,5 +1,6 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["aurelius-dev-kafka"],
     "name": "aurelius-node-red-example",
     "projectType": "application",
     "tags": [],
