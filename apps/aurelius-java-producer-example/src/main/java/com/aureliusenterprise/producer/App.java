@@ -2,6 +2,7 @@ package com.aureliusenterprise.producer;
 
 import com.aureliusenterprise.example.Entity;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import io.confluent.kafka.serializers.subject.RecordNameStrategy;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -57,6 +58,7 @@ public class App {
 
         try {
             props.put("schema.registry.url", App.env.get("SCHEMA_REGISTRY_URL"));
+            props.put("value.subject.name.strategy", RecordNameStrategy.class);
         } catch (NullPointerException e) {
             App.logger.error("SCHEMA_REGISTRY_URL environment variable is not set.");
             System.exit(1);
