@@ -43,6 +43,7 @@ async function createNodesInternal(
                             { target: "decrypt" },
                             { target: "docker-build" },
                             { target: "docker-build", dependencies: true },
+                            { target: serveTargetName, dependencies: true },
                         ],
                         metadata: {
                             description: "Run the service locally.",
