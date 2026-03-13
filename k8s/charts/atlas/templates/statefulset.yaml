@@ -57,11 +57,6 @@ spec:
             initialDelaySeconds: 120
             periodSeconds: 60
             timeoutSeconds: 10
-          command: [
-              "/bin/bash",
-              "-c",
-              "apt update && apt install lsof -y && /opt/apache-atlas-2.2.0/bin/startup.sh"
-          ]
           volumeMounts:
             - name: atlas-application-properties--volume
               mountPath: /apache-atlas/conf/atlas-application.properties
