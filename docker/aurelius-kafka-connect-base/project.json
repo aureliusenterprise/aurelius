@@ -3,5 +3,9 @@
     "name": "aurelius-kafka-connect-base",
     "projectType": "application",
     "tags": [],
-    "targets": {}
+    "targets": {
+        "docker-publish": {
+            "executor": "nx:noop"
+        }
+    }
 }
