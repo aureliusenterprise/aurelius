@@ -2,10 +2,13 @@ package com.aureliusenterprise.producer;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import com.aureliusenterprise.example.Entity;
 import java.util.UUID;
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +43,7 @@ class EntityProducerTest {
         String expectedKeyString = key.toString();
         ProducerRecord<String, Entity> expectedRecord = new ProducerRecord<>(TEST_TOPIC, expectedKeyString, entity);
 
-        verify(mockKafkaProducer, times(1)).send(expectedRecord);
+        verify(mockKafkaProducer, times(1)).send(eq(expectedRecord), any(Callback.class));
     }
 
     @Test
@@ -53,7 +56,7 @@ class EntityProducerTest {
         String expectedKeyString = key.toString();
         ProducerRecord<String, Entity> expectedRecord = new ProducerRecord<>(TEST_TOPIC, expectedKeyString, entity);
 
-        verify(mockKafkaProducer, times(1)).send(expectedRecord);
+        verify(mockKafkaProducer, times(1)).send(eq(expectedRecord), any(Callback.class));
     }
 
     @Test

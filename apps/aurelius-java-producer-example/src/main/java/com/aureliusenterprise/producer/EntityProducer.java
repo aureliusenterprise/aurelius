@@ -4,12 +4,20 @@ import com.aureliusenterprise.example.Entity;
 import java.util.UUID;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * EntityProducer is responsible for producing {@link Entity} messages to a Kafka topic.
  * It wraps a {@link KafkaProducer} and provides a method to send entities with a UUID key.
  */
 public class EntityProducer {
+
+    /**
+     * Logger instance for the producer instance.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(App.class);
 
     /**
      * KafkaProducer instance used to send {@link Entity} objects with String keys to a Kafka topic.
@@ -50,6 +58,25 @@ public class EntityProducer {
         String keyString = key.toString();
         ProducerRecord<String, Entity> record = new ProducerRecord<>(this.topicName, keyString, entity);
 
-        this.producer.send(record);
+        this.producer.send(record, this::handleCallback);
+    }
+
+    /**
+     * Callback handler invoked by Kafka producer after a message send attempt completes.
+     * Logs success details including partition and offset, or logs the failure with stack trace.
+     *
+     * @param metadata   the record metadata containing partition and offset information if successful; may be {@code null} on failure
+     * @param exception  the exception thrown during the send operation; {@code null} if the send was successful
+     */
+    private void handleCallback(RecordMetadata metadata, Exception exception) {
+        if (exception != null) {
+            EntityProducer.logger.error("Failed to produce message", exception);
+        } else {
+            EntityProducer.logger.debug(
+                "Message produced to partition {} at offset {}",
+                metadata.partition(),
+                metadata.offset()
+            );
+        }
     }
 }
