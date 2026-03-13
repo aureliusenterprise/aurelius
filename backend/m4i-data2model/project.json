@@ -2,7 +2,7 @@
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "name": "backend-data2model",
     "projectType": "application",
-    "sourceRoot": "{projectRoot}/data2model",
+    "sourceRoot": "{projectRoot}/m4i_data2model",
     "tags": [],
     "targets": {
         "serve": {
