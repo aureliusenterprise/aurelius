@@ -2,7 +2,6 @@
 replicaCount: 1
 repository: ghcr.io/aureliusenterprise/aurelius-docker-apache-atlas
 pullPolicy: Always
-tag: 'latest'
 service:
     name: atlas
     type: ClusterIP

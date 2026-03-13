@@ -1,7 +1,6 @@
 # Default values for flink-update-gov-data-quality
 
 image: ghcr.io/aureliusenterprise/m4i-update-gov-data-quality
-imageTag: latest
 imagePullPolicy: Always
 
 jobName: update-gov-data-quality

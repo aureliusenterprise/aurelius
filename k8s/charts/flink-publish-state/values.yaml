@@ -1,7 +1,6 @@
 # Default values for flink-publish-state
 
 image: ghcr.io/aureliusenterprise/m4i-publish-state
-imageTag: latest
 imagePullPolicy: Always
 
 jobName: publish-state

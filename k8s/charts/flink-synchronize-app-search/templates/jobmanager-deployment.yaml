@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: jobmanager
-          image: "{{ .Values.image }}:{{ .Values.imageTag }}"
+          image: "{{ .Values.image }}:{{ .Values.global.version }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           command: ["/opt/flink/bin/standalone-job.sh", "-pym", "m4i_synchronize_app_search"]
           ports:

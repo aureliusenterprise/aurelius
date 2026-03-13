@@ -1,7 +1,6 @@
 # Default values for flink-synchronize-app-search
 
 image: ghcr.io/aureliusenterprise/m4i-synchronize-app-search
-imageTag: latest
 imagePullPolicy: Always
 
 jobName: synchronize-app-search
