@@ -8,20 +8,20 @@ ENV WSGI_PORT=7000
 EXPOSE ${WSGI_PORT}
 
 # Install system dependencies
-RUN apt-get update && \
-  apt-get install -y graphviz && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  apt-get update && \
+  apt-get install -y graphviz
 
 # Set the working directory
 WORKDIR /app
 
 # Copy the wheel file into the container
-COPY ../../dist/backend/m4i-data2model/*.whl .
+COPY backend/m4i-data2model/dist/*.whl .
 
 # Install the wheel file and remove it afterwards
-RUN pip install --no-cache-dir *.whl && \
-  rm *.whl
+RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
+  pip install --no-cache-dir *.whl
 
 # Create a non-root user
 RUN addgroup --system m4i-data2model && \
