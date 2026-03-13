@@ -11,7 +11,7 @@ EXPOSE ${WSGI_PORT}
 WORKDIR /app
 
 # Copy the wheel file into the container
-COPY ../../dist/backend/m4i-lineage-model/*.whl .
+COPY backend/m4i-lineage-model/dist/*.whl .
 
 # Install the wheel file and remove it afterwards
 RUN pip install --no-cache-dir *.whl && \
