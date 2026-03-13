@@ -41,7 +41,7 @@ spec:
               value: {{ .Values.postgresql.globalVariables.POSTGRES_DB | quote }}
           volumeMounts:
             - name: postgresql-data
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/postgresql
           livenessProbe:
             exec:
               command:
