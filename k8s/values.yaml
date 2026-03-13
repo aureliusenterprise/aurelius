@@ -33,9 +33,9 @@ elastic:
         replicaCount: 1
         version: 8.2.2
         persistence:
-        enabled: true
-        accessMode: ReadWriteOnce
-        size: 4Gi
+            enabled: true
+            accessMode: ReadWriteOnce
+            size: 4Gi
     kibana:
         replicaCount: 1
         version: 8.2.2
