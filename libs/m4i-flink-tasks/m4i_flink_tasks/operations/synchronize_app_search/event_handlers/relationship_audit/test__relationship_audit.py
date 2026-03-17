@@ -19,13 +19,11 @@ def test__handle_relationship_audit_inserted_relationship() -> None:
     """
     Test that the `handle_relationship_audit` function correctly handles added relationships.
 
-    The function should update the documents with the new relationships and return the updated
-    documents.
+    The function should rebuild the current document relationship fields from `new_value`.
 
     Asserts
     -------
-    - The updated documents contain the new relationships
-    - The updated documents contain the correct breadcrumb information
+    - The updated current document contains the new relationships
     """
     message = EntityMessage(
         type_name="m4i_data_domain",
@@ -103,32 +101,22 @@ def test__handle_relationship_audit_inserted_relationship() -> None:
     ):
         updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
-        assert len(updated_documents) == 2
+        assert len(updated_documents) == 1
 
         updated_domain = updated_documents["2345"]
         assert updated_domain.deriveddataentity == ["Data Entity"]
         assert updated_domain.deriveddataentityguid == ["1234"]
-
-        updated_entity = updated_documents["1234"]
-        assert updated_entity.deriveddatadomain == ["Domain Name"]
-        assert updated_entity.deriveddatadomainguid == ["2345"]
-        assert updated_entity.breadcrumbguid == ["2345"]
-        assert updated_entity.breadcrumbname == ["Domain Name"]
-        assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
-        assert updated_entity.parentguid == "2345"
 
 
 def test__handle_relationship_audit_deleted_relationship() -> None:
     """
     Test that the `handle_relationship_audit` function correctly handles deleted relationships.
 
-    The function should update the documents with the removed relationships and return the updated
-    documents.
+    The function should rebuild the current document relationship fields from `new_value`.
 
     Asserts
     -------
-    - The updated documents do not contain the removed relationships
-    - The updated documents contain the correct breadcrumb information
+    - The updated current document does not contain the removed relationships
     """
     message = EntityMessage(
         type_name="m4i_data_domain",
@@ -218,34 +206,21 @@ def test__handle_relationship_audit_deleted_relationship() -> None:
     ):
         updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
-        assert len(updated_documents) == 2
+        assert len(updated_documents) == 1
 
         updated_domain = updated_documents["2345"]
         assert updated_domain.deriveddataentity == []
         assert updated_domain.deriveddataentityguid == []
 
-        updated_entity = updated_documents["1234"]
-        assert updated_entity.deriveddatadomain == []
-        assert updated_entity.deriveddatadomainguid == []
-        assert updated_entity.breadcrumbguid == []
-        assert updated_entity.breadcrumbname == []
-        assert updated_entity.breadcrumbtype == []
-
 
 def test__handle_relationship_audit_replaced_parent_relationship() -> None:
     """
-    Test that breadcrumbs are preserved when a parent relationship is being replaced.
-
-    When a new parent is inserted in the same transaction as the old parent is removed,
-    breadcrumbs should retain the old parent's values until the insertion event fully
-    establishes the new parent relationship.
+    Test that breadcrumbs are cleared when the current parent is removed.
 
     Asserts
     -------
-    - Breadcrumbs reflect the old parent exactly when a replacement is in progress
+    - Breadcrumbs are cleared when the entity has no parent in `new_value`
     """
-    # Simulate an entity (child) losing its parent in a relationship audit
-    # but having a new parent being inserted in the same message
     message = EntityMessage(
         type_name="m4i_data_entity",
         guid="entity-1",
@@ -257,6 +232,13 @@ def test__handle_relationship_audit_replaced_parent_relationship() -> None:
             attributes=BusinessDataEntityAttributes(
                 qualified_name="test_entity",
                 name="Test Entity",
+                data_domain=[
+                    ObjectId(
+                        type_name="m4i_data_domain",
+                        guid="domain-old",
+                        unique_attributes=M4IAttributes.from_dict({"qualifiedName": "Old Domain"}),
+                    ),
+                ],
             ),
         ),
         new_value=BusinessDataEntity(
@@ -267,21 +249,17 @@ def test__handle_relationship_audit_replaced_parent_relationship() -> None:
                 name="Test Entity",
             ),
         ),
-        # No relationships in the flat deleted_relationships (parent guids are filtered out)
-        deleted_relationships={},
-        # New parent relationship being inserted
-        inserted_relationships={
+        deleted_relationships={
             "data_domain": [
                 ObjectId(
                     type_name="m4i_data_domain",
-                    guid="domain-new",
-                    unique_attributes=M4IAttributes.from_dict({"qualifiedName": "New Domain"}),
+                    guid="domain-old",
+                    unique_attributes=M4IAttributes.from_dict({"qualifiedName": "Old Domain"}),
                 ),
             ],
         },
     )
 
-    # Entity currently has breadcrumbs from old parent
     current_document = AppSearchDocument(
         guid="entity-1",
         typename="m4i_data_entity",
@@ -293,20 +271,12 @@ def test__handle_relationship_audit_replaced_parent_relationship() -> None:
         parentguid="domain-old",
     )
 
-    # New parent domain
-    new_domain_document = AppSearchDocument(
-        guid="domain-new",
-        typename="m4i_data_domain",
-        name="New Domain",
-        referenceablequalifiedname="new_domain",
-    )
-
     with patch(
         __package__ + ".relationship_audit.get_document",
         return_value=current_document,
     ), patch(
         __package__ + ".relationship_audit.get_related_documents",
-        return_value=[new_domain_document],
+        return_value=[],
     ), patch(
         __package__ + ".relationship_audit.get_child_documents",
         return_value=[],
@@ -316,21 +286,15 @@ def test__handle_relationship_audit_replaced_parent_relationship() -> None:
         assert "entity-1" in updated_documents
         updated_entity = updated_documents["entity-1"]
 
-        # The old parent's breadcrumbs are preserved until the new parent relationship
-        # is fully established by a subsequent insertion event.
-        assert updated_entity.breadcrumbguid == ["domain-old"]
-        assert updated_entity.breadcrumbname == ["Old Domain"]
-        assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
-        assert updated_entity.parentguid == "domain-old"
+        assert updated_entity.breadcrumbguid == []
+        assert updated_entity.breadcrumbname == []
+        assert updated_entity.breadcrumbtype == []
+        assert updated_entity.parentguid is None
 
 
 def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
     """
-    Test that breadcrumbs are updated to the new parent's chain when the new parent domain
-    sends the insertion event linking the entity as a child.
-
-    This represents the second step of a parent replacement: the new domain inserts the
-    entity as a child, which triggers the breadcrumb update.
+    Test that breadcrumbs are updated to the new parent's chain when the entity gets a new parent.
 
     Asserts
     -------
@@ -338,46 +302,52 @@ def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
     - parentguid is updated to the new domain
     """
     message = EntityMessage(
-        type_name="m4i_data_domain",
-        guid="domain-new",
+        type_name="m4i_data_entity",
+        guid="entity-1",
         original_event_type=EntityAuditAction.ENTITY_UPDATE,
         event_type=EntityMessageType.ENTITY_RELATIONSHIP_AUDIT,
-        new_value=BusinessDataDomain(
-            guid="domain-new",
-            type_name="m4i_data_domain",
-            attributes=BusinessDataDomainAttributes(
-                qualified_name="new_domain",
-                name="New Domain",
-                data_entity=[
+        new_value=BusinessDataEntity(
+            guid="entity-1",
+            type_name="m4i_data_entity",
+            attributes=BusinessDataEntityAttributes(
+                qualified_name="test_entity",
+                name="Test Entity",
+                data_domain=[
                     ObjectId(
-                        type_name="m4i_data_entity",
-                        guid="entity-1",
-                        unique_attributes=M4IAttributes.from_dict({"qualifiedName": "test_entity"}),
+                        type_name="m4i_data_domain",
+                        guid="domain-new",
+                        unique_attributes=M4IAttributes.from_dict({"qualifiedName": "new_domain"}),
                     ),
                 ],
             ),
         ),
-        old_value=BusinessDataDomain(
-            guid="domain-new",
-            type_name="m4i_data_domain",
-            attributes=BusinessDataDomainAttributes(
-                qualified_name="new_domain",
-                name="New Domain",
+        old_value=BusinessDataEntity(
+            guid="entity-1",
+            type_name="m4i_data_entity",
+            attributes=BusinessDataEntityAttributes(
+                qualified_name="test_entity",
+                name="Test Entity",
+                data_domain=[
+                    ObjectId(
+                        type_name="m4i_data_domain",
+                        guid="domain-old",
+                        unique_attributes=M4IAttributes.from_dict({"qualifiedName": "old_domain"}),
+                    ),
+                ],
             ),
         ),
         inserted_relationships={
-            "data_entity": [
+            "data_domain": [
                 ObjectId(
-                    type_name="m4i_data_entity",
-                    guid="entity-1",
-                    unique_attributes=M4IAttributes.from_dict({"qualifiedName": "test_entity"}),
+                    type_name="m4i_data_domain",
+                    guid="domain-new",
+                    unique_attributes=M4IAttributes.from_dict({"qualifiedName": "new_domain"}),
                 ),
             ],
         },
         deleted_relationships={},
     )
 
-    # New domain has no breadcrumbs of its own (top-level)
     new_domain_document = AppSearchDocument(
         guid="domain-new",
         typename="m4i_data_domain",
@@ -388,7 +358,6 @@ def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
         breadcrumbtype=[],
     )
 
-    # The entity still has the old parent's breadcrumbs (preserved from the replacement event)
     entity_document = AppSearchDocument(
         guid="entity-1",
         typename="m4i_data_entity",
@@ -402,10 +371,10 @@ def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
 
     with patch(
         __package__ + ".relationship_audit.get_document",
-        return_value=new_domain_document,
+        side_effect=lambda guid, *_args: entity_document if guid == "entity-1" else new_domain_document,
     ), patch(
         __package__ + ".relationship_audit.get_related_documents",
-        return_value=[entity_document],
+        return_value=[],
     ), patch(
         __package__ + ".relationship_audit.get_child_documents",
         return_value=[],
@@ -415,7 +384,6 @@ def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
         assert "entity-1" in updated_documents
         updated_entity = updated_documents["entity-1"]
 
-        # Breadcrumbs should now reflect the new domain
         assert updated_entity.breadcrumbguid == ["domain-new"]
         assert updated_entity.breadcrumbname == ["New Domain"]
         assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
