@@ -245,7 +245,6 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
             continue
 
         field = RELATIONSHIP_MAP[related_document.typename]
-        related_field = RELATIONSHIP_MAP[document.typename]
 
         guids: list[str] = getattr(document, f"{field}guid")
         names: list[str] = getattr(document, field)
@@ -260,6 +259,7 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
         logging.debug("Updated ids: %s", guids)
         logging.debug("Updated names: %s", names)
 
+        related_field = RELATIONSHIP_MAP[document.typename]
         related_guids: list[str] = getattr(related_document, f"{related_field}guid")
         related_names: list[str] = getattr(related_document, related_field)
 
@@ -285,7 +285,7 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
     parents = {ref.guid for ref in message.old_value.get_parents() if ref.guid is not None}
     remaining_parent_relationships = list(parents.difference(deleted_relationships))
 
-    if len(remaining_parent_relationships) < len(parents):
+    if len(remaining_parent_relationships) > 0:
         parent_document = updated_documents[remaining_parent_relationships[0]]
 
         document.breadcrumbguid = [
@@ -312,7 +312,7 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
 
         updated_documents[document.guid] = document
 
-    elif len(remaining_parent_relationships) == 0:
+    else:
         # Check if new parent relationships are being inserted in the same transaction
         # to avoid clearing breadcrumbs when a parent is being replaced
         has_incoming_parents = False
@@ -343,42 +343,8 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
 
             updated_documents[document.guid] = document
 
-    immediate_children = {
-        child.guid
-        for child in message.old_value.get_children()
-        if child.guid is not None and child.guid in deleted_relationships
-    }
-
-    logging.info("Immediate children: %s", immediate_children)
-
-    # delete immediate children relation
-    for child_guid in immediate_children:
-        try:
-            child_document = updated_documents[child_guid] if child_guid in updated_documents else get_document(child_guid, elastic, index_name)
-        except (AppSearchDocumentNotFoundError, NotFoundError):
-            logging.error("Immediate child document not found %s", child_guid)
-            continue
-        
-        logging.info("Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid)
-
-        # Query guarantees that the breadcrumb includes the guid.
-        idx = child_document.breadcrumbguid.index(document.guid)
-
-        child_document.breadcrumbguid = child_document.breadcrumbguid[idx + 1 :]
-        child_document.breadcrumbname = child_document.breadcrumbname[idx + 1 :]
-        child_document.breadcrumbtype = child_document.breadcrumbtype[idx + 1 :]
-        child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
-
-        logging.info("Breadcrumb GUID: %s", child_document.breadcrumbguid)
-        logging.info("Breadcrumb Name: %s", child_document.breadcrumbname)
-        logging.info("Breadcrumb Type: %s", child_document.breadcrumbtype)
-
-        updated_documents[child_document.guid] = child_document
-
-    logging.info("Deletion operation - breadcrumb_refs %s", list(breadcrumb_refs))
-
     for child_document in get_child_documents(
-        list(breadcrumb_refs),
+        [document.guid],
         elastic,
         index_name,
     ):
@@ -394,9 +360,19 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
             logging.exception("Document is not in child document breadcrumb (%s)", child_document.guid)
             continue
 
-        child_document.breadcrumbguid = child_document.breadcrumbguid[idx + 1 :]
-        child_document.breadcrumbname = child_document.breadcrumbname[idx + 1 :]
-        child_document.breadcrumbtype = child_document.breadcrumbtype[idx + 1 :]
+        child_document.breadcrumbguid = [
+            *document.breadcrumbguid,
+            *child_document.breadcrumbguid[idx:],
+        ]
+        child_document.breadcrumbname = [
+            *document.breadcrumbname,
+            *child_document.breadcrumbname[idx:],
+        ]
+        child_document.breadcrumbtype = [
+            *document.breadcrumbtype,
+            *child_document.breadcrumbtype[idx:],
+        ]
+
         child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
 
         logging.info("Breadcrumb GUID: %s", child_document.breadcrumbguid)
@@ -408,7 +384,7 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
     return updated_documents
 
 
-def handle_inserted_relationships(  # noqa: C901, PLR0912, PLR0915
+def update_relationship_attributes(  # noqa: C901, PLR0912, PLR0915
     message: EntityMessage,
     document: AppSearchDocument,
     elastic: Elasticsearch,
@@ -416,7 +392,7 @@ def handle_inserted_relationships(  # noqa: C901, PLR0912, PLR0915
     updated_documents: Dict[str, AppSearchDocument],
 ) -> Dict[str, AppSearchDocument]:
     """
-    Handle the inserted relationships in the entity message.
+    Update document relationship fields from new_value.
 
     Parameters
     ----------
@@ -431,202 +407,154 @@ def handle_inserted_relationships(  # noqa: C901, PLR0912, PLR0915
     updated_documents : Dict[str, AppSearchDocument]
         The dictionary of updated AppSearchDocuments.
     """
-    if message.inserted_relationships is None:
-        logging.warning("Inserted relationships not provided for entity %s", message.guid)
-        return updated_documents
-
     if message.new_value is None:
         logging.error("Entity data not provided for entity %s", message.guid)
         raise EntityDataNotProvidedError(message.guid)
 
-    parents = [parent.guid for parent in message.new_value.get_parents()]
+    # --- Step 1: Build document relationship fields directly from new_value ---
 
-    logging.info("Relationships before filter: %s", message.inserted_relationships)
+    new_parents = {ref.guid for ref in message.new_value.get_parents() if ref.guid is not None}
 
-    inserted_relationships = [
-        rel.guid
-        for rels in message.inserted_relationships.values()
-        for rel in rels
-        if rel.guid is not None and rel.guid not in parents
-    ]
+    # Collect all non-parent related GUIDs from new_value.relationship_attributes (full current state)
+    all_related_guids: List[str] = []
+    if message.new_value.relationship_attributes:
+        for rel_objects in message.new_value.relationship_attributes.values():
+            if rel_objects:
+                for obj in rel_objects:
+                    if obj.guid is not None and obj.guid not in new_parents and obj.guid not in all_related_guids:
+                        all_related_guids.append(obj.guid)
 
-    logging.info("Relationships to insert: %s", inserted_relationships)
-    logging.info("Parents: %s", parents)
+    logging.info("All related GUIDs from new_value: %s", all_related_guids)
 
-    if not inserted_relationships:
-        logging.info("No relationships to insert for entity %s", message.guid)
-        return updated_documents
+    related_documents: List[AppSearchDocument] = []
+    if all_related_guids:
+        try:
+            related_documents = get_related_documents(all_related_guids, elastic, index_name)
+        except RetryError as e:
+            logging.exception("Error retrieving related documents for entity %s", message.guid)
+            raise SynchronizeAppSearchError(message) from e
+        except SynchronizeAppSearchWithPayloadError as e:
+            related_documents = e.partial_result
+            logging.warning("Gave up retrieving all documents")
 
-    try:
-        related_documents = get_related_documents(inserted_relationships, elastic, index_name)
-    except RetryError as e:
-        logging.exception("Error retrieving related documents for entity %s", message.guid)
-        raise SynchronizeAppSearchError(message) from e
+    logging.info("Found related documents: %s", [d.guid for d in related_documents])
+
+    # Reset document's relationship fields and rebuild directly from fetched related documents
+    if document.typename in RELATIONSHIP_MAP:
+        for field_name in RELATIONSHIP_MAP.values():
+            setattr(document, f"{field_name}guid", [])
+            setattr(document, field_name, [])
+
+    docs_by_field: Dict[str, List[AppSearchDocument]] = {field: [] for field in RELATIONSHIP_MAP.values()}
 
     for related_document in related_documents:
         if related_document.guid in updated_documents:
             related_document = updated_documents[related_document.guid]  # noqa: PLW2901
 
-        if related_document.typename not in RELATIONSHIP_MAP or document.typename not in RELATIONSHIP_MAP:
+        if related_document.typename not in RELATIONSHIP_MAP:
             logging.warning("Entity is not mapped. (%s %s)", related_document.guid, related_document.typename)
             continue
 
         field = RELATIONSHIP_MAP[related_document.typename]
-        related_field = RELATIONSHIP_MAP[document.typename]
+        docs_by_field[field].append(related_document)
 
-        guids: list[str] = getattr(document, f"{field}guid")
-        names: list[str] = getattr(document, field)
+    for field, field_documents in docs_by_field.items():
+        guid_values = [related_document.guid for related_document in field_documents]
+        name_values = [related_document.name for related_document in field_documents]
 
-        if related_document.guid not in guids:
-            guids.append(related_document.guid)
-            names.append(related_document.name)
+        setattr(document, f"{field}guid", guid_values)
+        setattr(document, field, name_values)
 
-        logging.info("Inserted relationship %s for entity %s", document.typename, document.guid)
-        logging.debug("Updated ids: %s", guids)
-        logging.debug("Updated names: %s", names)
+        if guid_values:
+            logging.info("Built relationship field %s for entity %s", field, document.guid)
+            logging.debug("Updated ids: %s", guid_values)
+            logging.debug("Updated names: %s", name_values)
 
-        related_guids: list[str] = getattr(related_document, f"{related_field}guid")
-        related_names: list[str] = getattr(related_document, related_field)
+    updated_documents[document.guid] = document
 
-        if document.guid not in related_guids:
-            related_guids.append(document.guid)
-            related_names.append(document.name)
+    return updated_documents
 
-        logging.info("Inserted relationship %s for entity %s", related_document.typename, related_document.guid)
-        logging.debug("Updated ids: %s", related_guids)
-        logging.debug("Updated names: %s", related_names)
 
-        updated_documents[document.guid] = document
-        updated_documents[related_document.guid] = related_document
-
+def update_breadcrumbs(
+    message: EntityMessage,
+    document: AppSearchDocument,
+    elastic: Elasticsearch,
+    index_name: str,
+    updated_documents: Dict[str, AppSearchDocument],
+) -> Dict[str, AppSearchDocument]:
+    """
+    Update breadcrumbs when parent changes and propagate to descendants.
+    """
     if message.new_value is None:
+        logging.error("Entity data not provided for entity %s", message.guid)
+        raise EntityDataNotProvidedError(message.guid)
+
+    updated_parents_set = {ref.guid for ref in message.new_value.get_parents() if ref.guid is not None}
+
+    # Parent is unchanged, no need to update breadcrumbs
+    if document.parentguid in updated_parents_set or (document.parentguid is None and len(updated_parents_set) == 0):
         return updated_documents
 
-    breadcrumb_refs = {
-        child.guid
-        for child in message.new_value.get_children()
-        if child.guid is not None and child.guid in inserted_relationships
-    }
+    # Parent is removed, clear breadcrumbs
+    if len(updated_parents_set) == 0:
+        document.breadcrumbname = []
+        document.breadcrumbguid = []
+        document.breadcrumbtype = []
+        document.parentguid = None
 
-    logging.info("Breadcrumb references: %s. (%s)", breadcrumb_refs, inserted_relationships)
-
-    # Add self to the breadcrumb refs in case of child -> parent relationship
-    parents = {ref.guid for ref in message.new_value.get_parents() if ref.guid is not None}
-
-    # Inserted relationship was a parent relation
-    first_parent = next(iter(parents)) if parents else None
-
-    if first_parent in inserted_relationships:
+        logging.info("Removed parent for entity %s; breadcrumbs cleared", document.guid)
+    # Parent is changed, update breadcrumbs based on new parent
+    else:
+        new_parent_guid = next(iter(updated_parents_set))
         try:
-            parent_doc = updated_documents[first_parent] if first_parent in updated_documents else get_document(first_parent, elastic, index_name)
-        except AppSearchDocumentNotFoundError:
-            logging.error("Parent document not found %s", first_parent)
-        else:
-            if parent_doc.guid not in document.breadcrumbguid:
-                document.breadcrumbname = [
-                    *parent_doc.breadcrumbname,
-                    parent_doc.name,
-                ]
-                document.breadcrumbguid = [
-                    *parent_doc.breadcrumbguid,
-                    parent_doc.guid,
-                ]
-                document.breadcrumbtype = [
-                    *parent_doc.breadcrumbtype,
-                    parent_doc.typename,
-                ]
+            parent_doc = (
+                updated_documents[new_parent_guid]
+                if new_parent_guid in updated_documents
+                else get_document(new_parent_guid, elastic, index_name)
+            )
+        except (AppSearchDocumentNotFoundError, NotFoundError):
+            logging.error("Parent document not found %s", new_parent_guid)
+            return updated_documents
 
-                document.parentguid = parent_doc.guid
+        document.breadcrumbname = [*parent_doc.breadcrumbname, parent_doc.name]
+        document.breadcrumbguid = [*parent_doc.breadcrumbguid, parent_doc.guid]
+        document.breadcrumbtype = [*parent_doc.breadcrumbtype, parent_doc.typename]
+        document.parentguid = parent_doc.guid
 
-                logging.info("Set parent of entity %s to %s", document.guid, parent_doc.guid)
-                logging.info("Breadcrumb GUID: %s", document.breadcrumbguid)
-                logging.info("Breadcrumb Name: %s", document.breadcrumbname)
-                logging.info("Breadcrumb Type: %s", document.breadcrumbtype)
+        logging.info("Updated parent of entity %s to %s", document.guid, parent_doc.guid)
+        logging.info("Breadcrumb GUID: %s", document.breadcrumbguid)
+        logging.info("Breadcrumb Name: %s", document.breadcrumbname)
+        logging.info("Breadcrumb Type: %s", document.breadcrumbtype)
 
-                # update main entity
-                updated_documents[document.guid] = document
+    updated_documents[document.guid] = document
 
-    immediate_children = {
-        child.guid
-        for child in message.new_value.get_children()
-        if child.guid is not None and child.guid in inserted_relationships
-    }
-
-    logging.info("Immediate children %s. (%s)", immediate_children, inserted_relationships)
-
-    # update immediate children
-    for guid in list(immediate_children):
-        # update children breadcrumb
-
-        if guid not in updated_documents:
-            logging.error("Immediate children not found in updated_documents %s", guid)
-            continue
-
-        child_doc = updated_documents[guid]
-
-        if document.guid in child_doc.breadcrumbguid:
-            continue
-
-        child_doc.breadcrumbname = [
-            *document.breadcrumbname,
-            document.name,
-        ]
-
-        child_doc.breadcrumbguid = [
-            *document.breadcrumbguid,
-            document.guid,
-        ]
-
-        child_doc.breadcrumbtype = [
-            *document.breadcrumbtype,
-            document.typename,
-        ]
-
-        child_doc.parentguid = document.guid
-
-        logging.info("Set parent relationship of entity %s to %s", child_doc.guid, child_doc.parentguid)
-        logging.debug("Breadcrumb GUID: %s", child_doc.breadcrumbguid)
-        logging.debug("Breadcrumb Name: %s", child_doc.breadcrumbname)
-        logging.debug("Breadcrumb Type: %s", child_doc.breadcrumbtype)
-
-        updated_documents[guid] = child_doc
-
-    for child_document in get_child_documents(
-        list(breadcrumb_refs),
-        elastic,
-        index_name,
-    ):
-        if child_document.guid in immediate_children:
-            continue
-
+    # Update breadcrumbs of all documents where this document appears in breadcrumbs
+    for child_document in get_child_documents([document.guid], elastic, index_name):
         if child_document.guid in updated_documents:
             child_document = updated_documents[child_document.guid]  # noqa: PLW2901
 
-        # If breadcrumb already contains the id of the current element, skip to avoid cycles in the breadcrumb
-        if document.guid in child_document.breadcrumbguid:
+        try:
+            idx = child_document.breadcrumbguid.index(document.guid)
+        except ValueError:
+            logging.exception("Document is not in child document breadcrumb (%s)", child_document.guid)
             continue
 
         child_document.breadcrumbguid = [
             *document.breadcrumbguid,
-            document.guid,
-            *child_document.breadcrumbguid,
+            *child_document.breadcrumbguid[idx:],
         ]
-
         child_document.breadcrumbname = [
             *document.breadcrumbname,
-            document.name,
-            *child_document.breadcrumbname,
+            *child_document.breadcrumbname[idx:],
         ]
-
         child_document.breadcrumbtype = [
             *document.breadcrumbtype,
-            document.typename,
-            *child_document.breadcrumbtype,
+            *child_document.breadcrumbtype[idx:],
         ]
 
         child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
 
-        logging.info("Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid)
+        logging.info("Updated breadcrumb of child entity %s", child_document.guid)
         logging.debug("Breadcrumb GUID: %s", child_document.breadcrumbguid)
         logging.debug("Breadcrumb Name: %s", child_document.breadcrumbname)
         logging.debug("Breadcrumb Type: %s", child_document.breadcrumbtype)
@@ -668,7 +596,7 @@ def handle_relationship_audit(
     else:
         document = get_document(message.guid, elastic, index_name)
 
-    updated_documents = handle_deleted_relationships(
+    updated_documents = update_relationship_attributes(
         message,
         document,
         elastic,
@@ -676,16 +604,12 @@ def handle_relationship_audit(
         updated_documents,
     )
 
-    updated_documents = handle_inserted_relationships(
+    updated_documents = update_breadcrumbs(
         message,
         document,
         elastic,
         index_name,
         updated_documents,
     )
-
-    if document.guid in updated_documents:
-        doc = updated_documents[document.guid]
-        updated_documents[doc.guid].parentguid = doc.breadcrumbguid[-1] if doc.breadcrumbguid else None
 
     return updated_documents
