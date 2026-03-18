@@ -343,55 +343,6 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
 
             updated_documents[document.guid] = document
 
-    immediate_children = {
-        child.guid
-        for child in message.old_value.get_children()
-        if child.guid is not None and child.guid in deleted_relationships
-    }
-
-    logging.info("Immediate children: %s", immediate_children)
-
-    # # delete immediate children relation
-    # for child_guid in immediate_children:
-    #     try:
-    #         child_document = updated_documents[child_guid] if child_guid in updated_documents else get_document(child_guid, elastic, index_name)
-    #     except (AppSearchDocumentNotFoundError, NotFoundError):
-    #         logging.error("Immediate child document not found %s", child_guid)
-    #         continue
-        
-    #     logging.info("Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid)
-        
-    #     try:
-    #         # Query guarantees that the breadcrumb includes the guid.
-    #         # upd: but sometimes it doesn't
-    #         idx = child_document.breadcrumbguid.index(document.guid)
-    #     except ValueError:
-    #         logging.exception("Document is not in child document breadcrumb (%s)", child_document.guid)
-    #         continue
-
-    #     child_document.breadcrumbguid = [
-    #         *document.breadcrumbguid,
-    #         *child_document.breadcrumbguid[idx :],
-    #     ]
-    #     child_document.breadcrumbname = [
-    #         *document.breadcrumbname,
-    #         *child_document.breadcrumbname[idx:],
-    #     ]
-    #     child_document.breadcrumbtype = [
-    #         *document.breadcrumbtype,
-    #         *child_document.breadcrumbtype[idx:],
-    #     ]
-
-    #     child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
-
-    #     logging.info("Breadcrumb GUID: %s", child_document.breadcrumbguid)
-    #     logging.info("Breadcrumb Name: %s", child_document.breadcrumbname)
-    #     logging.info("Breadcrumb Type: %s", child_document.breadcrumbtype)
-
-    #     updated_documents[child_document.guid] = child_document
-
-    logging.info("Deletion operation - breadcrumb_refs %s", list(breadcrumb_refs))
-
     for child_document in get_child_documents(
         [document.guid],
         elastic,
