@@ -15,7 +15,7 @@ keycloak:
         size: 1Gi
     external_ip: 51.138.48.239
 
-    keycloakFrontendURL: 'https://aureliusdev.westeurope.cloudapp.azure.com/' # Replace with your URL here
+    keycloakFrontendURL: 'https://uatest.aureliusenterprise.dev/' # Replace with your URL here
 
 atlas:
     persistence:
@@ -55,8 +55,8 @@ ingress:
     email_address: lorand.vatamany@aureliusenterprise.com
 
 global:
-    external_hostname: 'aureliusdev.westeurope.cloudapp.azure.com'
-    version: v2.1.7
+    external_hostname: 'uatest.aureliusenterprise.dev'
+    version: v2.1.10-alpha.41
 
 post_install:
     upload_data: 'true'

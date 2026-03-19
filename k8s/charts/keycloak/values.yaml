@@ -16,16 +16,8 @@ service:
 
 cmd: 'echo test successful'
 
-env:
-    KEYCLOAK_USER: 'admin'
-    PROXY_ADDRESS_FORWARDING: 'true'
-    KEYCLOAK_IMPORT: '/tmp/realm.json'
-
 # Keycloak admin password - can be set here or will use secret file
 keycloakAdminPassword: ''
-
-# Keycloak 22+ uses KC_* prefix for most configuration options
-keycloakFrontendURL: 'https://aureliusdev.westeurope.cloudapp.azure.com/'
 
 # Realm configuration
 realm_file_name: 'realm_m4i.json'

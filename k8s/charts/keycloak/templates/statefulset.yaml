@@ -33,13 +33,12 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.repository }}:{{ .Values.tag }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
-          command: ["/opt/keycloak/bin/kc.sh", "start"]
+          command: ["/opt/keycloak/bin/kc.sh", "start-dev"]
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
           env:
-            # Keycloak admin credentials using KEYCLOAK_ADMIN and KEYCLOAK_ADMIN_PASSWORD
             - name: KEYCLOAK_ADMIN
               valueFrom:
                 secretKeyRef:
@@ -50,15 +49,8 @@ spec:
                 secretKeyRef:
                     name: keycloak-secret
                     key: admin-password
-            # Keycloak 22+ production configuration using KC_* prefix
             - name: KC_HTTP_PORT
               value: "8080"
-            - name: KC_HOSTNAME
-              value: {{ .Values.keycloakFrontendURL | trimSuffix "/" }}
-            - name: KC_HOSTNAME_STRICT
-              value: "false"
-            - name: KC_HOSTNAME_STRICT_HTTPS
-              value: "false"
             - name: KC_DB
               value: postgres
             - name: KC_DB_URL
@@ -73,20 +65,24 @@ spec:
                 secretKeyRef:
                   name: {{ include "keycloak.fullname" . }}-postgresql-secret
                   key: postgres-password
-            # Production mode settings
             - name: KC_LOG_LEVEL
               value: INFO
             - name: KC_METRICS_ENABLED
               value: "true"
             - name: KC_HEALTH_ENABLED
               value: "true"
-            # Legacy KEYCLOAK_* variables for backward compatibility
-            - name: KEYCLOAK_FRONTEND_URL
-              value: {{ .Values.keycloakFrontendURL }}{{ .Release.Namespace }}/auth
-            - name: PROXY_ADDRESS_FORWARDING
+            - name: KC_HOSTNAME
+              value: {{ .Values.global.external_hostname }}
+            - name: KC_HTTP_RELATIVE_PATH
+              value: /auth
+            - name: KC_HTTP_ENABLED
               value: "true"
+            - name: KC_PROXY
+              value: edge
             - name: KEYCLOAK_IMPORT
               value: /tmp/realm.json
+            - name: KC_HOSTNAME_STRICT
+              value: "false"
           envFrom:
             - secretRef:
                 name: keycloak-secret-user-admin
