@@ -1,12 +1,15 @@
 #!/bin/bash
 
 # to get the password to keycloak admin user:
-echo "keycloak admin user pwd: "
-echo "username: admin"
-kubectl get secret keycloak-secret -o=jsonpath='{.data.password}' -n ${1} | base64 --decode; echo
+KC_ADMIN_USERNAME=$(kubectl get secret keycloak-secret -o=jsonpath='{.data.admin-username}' -n ${1} | base64 --decode)
+KC_ADMIN_PASSWORD=$(kubectl get secret keycloak-secret -o=jsonpath='{.data.admin-password}' -n ${1} | base64 --decode)
+
+echo "keycloak admin:"
+echo "username: ${KC_ADMIN_USERNAME}"
+echo "password: ${KC_ADMIN_PASSWORD}"
 echo "----"
 # get keycloak passwords for the default  users of Atlas
-echo "keycloak Atlas admin user pwd: "
+echo "atlas admin user:"
 echo "username: atlas"
 kubectl get secret keycloak-secret-user-admin -o=jsonpath='{.data.password}' -n ${1} | base64 --decode; echo
 echo "----"

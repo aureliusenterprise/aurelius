@@ -33,7 +33,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.repository }}:{{ .Values.tag }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
-          command: ["/opt/keycloak/bin/kc.sh", "start-dev"]
+          command: ["/opt/keycloak/bin/kc.sh", "start-dev", "--import-realm"]
           ports:
             - name: http
               containerPort: 8080
@@ -74,13 +74,11 @@ spec:
             - name: KC_HOSTNAME
               value: {{ .Values.global.external_hostname }}
             - name: KC_HTTP_RELATIVE_PATH
-              value: /auth
+              value: /{{ .Release.Namespace }}/auth
             - name: KC_HTTP_ENABLED
               value: "true"
             - name: KC_PROXY
               value: edge
-            - name: KEYCLOAK_IMPORT
-              value: /tmp/realm.json
             - name: KC_HOSTNAME_STRICT
               value: "false"
           envFrom:
@@ -92,7 +90,7 @@ spec:
                 name: keycloak-secret-user-data
           volumeMounts:
             - name: realm-single-file-volume
-              mountPath: /tmp/realm.json
+              mountPath: /opt/keycloak/data/import/realm.json
               subPath: realm.json
       volumes:
         - name: realm-single-file-volume

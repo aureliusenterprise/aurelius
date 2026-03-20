@@ -1,0 +1,76 @@
+{{- if .Values.keycloakSetupJob.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "keycloak.fullname" . }}-setup-script
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
+data:
+  keycloak-setup.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "Setting up Keycloak users..."
+
+    # Configure credentials for admin
+    /opt/keycloak/bin/kcadm.sh config credentials \
+      --server "${KEYCLOAK_SERVER_URL}" \
+      --realm master \
+      --user "${KEYCLOAK_ADMIN_USERNAME}" \
+      --password "${KEYCLOAK_ADMIN_PASSWORD}"
+
+    # Function to create user with roles
+    create_user_with_roles() {
+      local username=$1
+      local password=$2
+      local roles=$3
+      
+      
+      # Check if user already exists
+      local user_exists=$(/opt/keycloak/bin/kcadm.sh get users -r "${KEYCLOAK_REALM_NAME}" \
+        -q -a -f username="$username" 2>/dev/null | grep -q "$username" && echo "true" || echo "false")
+
+      if [ "$user_exists" = "false" ]; then
+        echo "Creating user: $username"
+
+        # Create the user
+        /opt/keycloak/bin/kcadm.sh create users \
+          -r "${KEYCLOAK_REALM_NAME}" \
+          -s "username=$username" \
+          -s "enabled=true"
+
+        echo "Setting password for user: $username"
+        
+        # Set password
+        /opt/keycloak/bin/kcadm.sh set-password \
+          -r "${KEYCLOAK_REALM_NAME}" \
+          --username "$username" \
+          --new-password "$password"
+      
+        # Add roles
+        if [ ! -z "$roles" ]; then
+          for role in $roles; do
+            echo "Adding role $role to user: $username"
+            /opt/keycloak/bin/kcadm.sh add-roles \
+              -r "${KEYCLOAK_REALM_NAME}" \
+              --uusername "$username" \
+              --rolename "$role" || echo "Role $role could not be added (may already be assigned)"
+          done
+        fi
+
+        echo "User $username created successfully"
+      fi
+    }
+
+    # Create admin user with ROLE_ADMIN and DATA_STEWARD roles
+    create_user_with_roles "${ATLAS_ADMIN_USERNAME}" "${ATLAS_ADMIN_PASSWORD}" "ROLE_ADMIN DATA_STEWARD"
+
+    # Create steward user with DATA_STEWARD role
+    create_user_with_roles "${ATLAS_STEWARD_USERNAME}" "${ATLAS_STEWARD_PASSWORD}" "DATA_STEWARD"
+
+    # Create data scientist user with appropriate role
+    create_user_with_roles "${ATLAS_DATA_SCIENTIST_USERNAME}" "${ATLAS_DATA_SCIENTIST_PASSWORD}" "DATA_SCIENTIST"
+
+    echo "Keycloak setup completed successfully!"
+  {{- end }}

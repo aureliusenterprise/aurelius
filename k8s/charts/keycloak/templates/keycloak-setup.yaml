@@ -1,0 +1,87 @@
+{{- if .Values.keycloakSetupJob.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "keycloak.fullname" . }}-setup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
+spec:
+  backoffLimit: 5
+  template:
+    metadata:
+      labels:
+        {{- include "keycloak.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: setup
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-keycloak
+          image: "busybox:1.35"
+          command: ['sh', '-c']
+          args:
+            - |
+              echo "Waiting for Keycloak to be ready..."
+              for i in {1..60}; do
+                if wget -q -O- http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/{{ .Release.Namespace }}/auth/health/ready > /dev/null 2>&1; then
+                  echo "Keycloak is ready"
+                  exit 0
+                fi
+                echo "Attempt $i: Keycloak not ready yet, waiting..."
+                sleep 10
+              done
+              echo "Keycloak failed to become ready"
+              exit 1
+      containers:
+        - name: keycloak-setup
+          image: "{{ .Values.repository }}:{{ .Values.tag }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          command: ['/bin/bash', '/scripts/keycloak-setup.sh']
+          env:
+            - name: KEYCLOAK_SERVER_URL
+              value: http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/{{ .Release.Namespace }}/auth
+            - name: KEYCLOAK_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: admin-username
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: admin-password
+            - name: KEYCLOAK_REALM_NAME
+              value: "m4i"
+            # Admin user credentials
+            - name: ATLAS_ADMIN_USERNAME
+              value: "admin"
+            - name: ATLAS_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-admin
+                  key: password
+            # Steward user credentials
+            - name: ATLAS_STEWARD_USERNAME
+              value: "steward"
+            - name: ATLAS_STEWARD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-steward
+                  key: password
+            # Data Scientist user credentials
+            - name: ATLAS_DATA_SCIENTIST_USERNAME
+              value: "data-scientist"
+            - name: ATLAS_DATA_SCIENTIST_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-data
+                  key: password
+          volumeMounts:
+            - name: setup-script
+              mountPath: /scripts
+      volumes:
+        - name: setup-script
+          configMap:
+            name: {{ include "keycloak.fullname" . }}-setup-script
+            defaultMode: 0755
+{{- end }}

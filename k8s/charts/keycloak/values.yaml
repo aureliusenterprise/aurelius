@@ -22,6 +22,9 @@ keycloakAdminPassword: ''
 # Realm configuration
 realm_file_name: 'realm_m4i.json'
 
+keycloakSetupJob:
+    enabled: true
+
 ## PostgreSQL Database Configuration
 postgresql:
     enabled: true
