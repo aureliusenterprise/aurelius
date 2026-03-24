@@ -45,6 +45,13 @@
             },
             "outputs": ["{options.outputDir}"]
         },
+        "chromatic": {
+            "dependsOn": ["build-storybook", "decrypt"],
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "chromatic --storybook-build-dir=dist/storybook/aurelius-ui --no-interactive --exit-once-uploaded"
+            }
+        },
         "lint": {
             "executor": "@nx/eslint:lint"
         },

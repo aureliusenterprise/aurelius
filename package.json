@@ -32,6 +32,7 @@
         "angular-eslint": "21.2.0",
         "aurelius-node-red-example": "file:apps/aurelius-node-red-example",
         "autoprefixer": "^10.4.0",
+        "chromatic": "^15.3.0",
         "eslint": "^9.8.0",
         "eslint-config-prettier": "^10.0.0",
         "eslint-plugin-storybook": "10.2.17",

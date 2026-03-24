@@ -89,3 +89,10 @@ jobs:
 
             - name: Test affected projects
               run: npx nx affected -t test e2e -c ci
+
+            - name: Run Chromatic
+              uses: chromaui/action@latest
+              with:
+                  buildCommand: "npx nx build-storybook aurelius-ui"
+                  outputDir: "dist/storybook/aurelius-ui"
+                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
