@@ -6,7 +6,7 @@ from flask import Flask, Response, jsonify, request
 from m4i_backend_core.auth import requires_auth
 from m4i_backend_core.shared import register as register_shared
 
-from .settings import AppSearchSettings, build_target_url
+from .settings import AppSearchSettings
 
 log = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ def _proxy_request(settings: AppSearchSettings, path: str):
         "Content-Type": request.headers.get("Content-Type", "application/json"),
     }
 
-    for header_name in ("X-Request-ID", "X-Correlation-ID"):
+    for header_name in ("X-Request-ID", "X-Correlation-ID", "Host", "X-Forwarded-Proto", "X-Real-IP", "X-Forwarded-For"):
         header_value = request.headers.get(header_name)
         if header_value:
             headers[header_name] = header_value
@@ -51,8 +51,7 @@ def _proxy_request(settings: AppSearchSettings, path: str):
             method=request.method,
             url=url,
             headers=headers,
-            json=payload if isinstance(payload, dict) else None,
-            data=payload if not isinstance(payload, dict) else None,
+            data=payload,
             params=request.args,
             timeout=settings.timeout_seconds,
             verify=settings.verify_ssl,
@@ -68,5 +67,10 @@ def _proxy_request(settings: AppSearchSettings, path: str):
     )
 
 
-def register_get_app() -> Flask:
-    return create_app()
+def build_target_url(base_url: str, path: str) -> str:
+    clean_base = base_url.rstrip("/")
+    clean_path = path.lstrip("/")
+    if not clean_path:
+        return clean_base
+    return f"{clean_base}/{clean_path}"
+

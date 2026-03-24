@@ -5,8 +5,6 @@ import { AtlasEntitySearchService } from './engines/atlas-entity-search.service'
 import { DataQualitySearchService } from './engines/data-quality-search.service';
 import { GovernanceQualitySearchService } from './engines/gov-quality-search.service';
 
-export interface ElasticApiConfig {}
-
 export function getHttpClient(): HttpService {
   if (!ElasticApiModule.injector) {
     throw new Error(
@@ -40,9 +38,7 @@ export class ElasticApiModule {
     ElasticApiModule.injector = injector;
   }
 
-  static forRoot(
-    _config: ElasticApiConfig = {}
-  ): ModuleWithProviders<ElasticApiModule> {
+  static forRoot(): ModuleWithProviders<ElasticApiModule> {
     return {
       ngModule: ElasticApiModule,
       providers: [],

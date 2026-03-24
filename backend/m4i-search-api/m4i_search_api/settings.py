@@ -37,11 +37,3 @@ class AppSearchSettings:
             timeout_seconds=timeout_seconds,
             verify_ssl=verify_ssl,
         )
-
-
-def build_target_url(base_url: str, path: str) -> str:
-    clean_base = base_url.rstrip("/")
-    clean_path = path.lstrip("/")
-    if not clean_path:
-        return clean_base
-    return f"{clean_base}/{clean_path}"

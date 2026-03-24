@@ -28,4 +28,4 @@ COPY --chown=m4i-search-api:m4i-search-api backend/m4i-search-api/conf.py .
 USER m4i-search-api
 
 # Command to run the application
-CMD ["sh", "-c", "gunicorn 'm4i_search_api:register_get_app()' --bind 0.0.0.0:${WSGI_PORT}"]
+CMD ["sh", "-c", "gunicorn 'm4i_search_api:create_app()' --bind 0.0.0.0:${WSGI_PORT}"]
