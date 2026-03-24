@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-reverse-proxy-configs-search-api-conf
+data:
+  search-api.conf: |
+{{ tpl ( .Files.Get "conf.d/search-api.yaml" ) . | indent 4}}

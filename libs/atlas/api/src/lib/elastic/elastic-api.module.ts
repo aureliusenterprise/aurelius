@@ -1,13 +1,9 @@
 import { Injector, ModuleWithProviders, NgModule } from '@angular/core';
 import { HttpCacheService, HttpService } from '@models4insight/http';
-import { AppSearchClient, APP_SEARCH_TOKEN } from './app-search-client.service';
+import { AppSearchClient } from './app-search-client.service';
 import { AtlasEntitySearchService } from './engines/atlas-entity-search.service';
 import { DataQualitySearchService } from './engines/data-quality-search.service';
 import { GovernanceQualitySearchService } from './engines/gov-quality-search.service';
-
-export interface ElasticApiConfig {
-  readonly appSearchToken?: string;
-}
 
 export function getHttpClient(): HttpService {
   if (!ElasticApiModule.injector) {
@@ -42,17 +38,10 @@ export class ElasticApiModule {
     ElasticApiModule.injector = injector;
   }
 
-  static forRoot(
-    config: ElasticApiConfig = {}
-  ): ModuleWithProviders<ElasticApiModule> {
+  static forRoot(): ModuleWithProviders<ElasticApiModule> {
     return {
       ngModule: ElasticApiModule,
-      providers: [
-        {
-          provide: APP_SEARCH_TOKEN,
-          useValue: config.appSearchToken,
-        },
-      ],
+      providers: [],
     };
   }
 }

@@ -51,12 +51,6 @@ Alias "/{{ .Release.Namespace }}/atlas" "/usr/local/apache2/atlas"
 ##       ProxyPassReverse "https://atlas-search.ent.westeurope.azure.elastic-cloud.com/api/as/v1/engines/atlas-dev/search.json"
 ##</Location>
 #
-Redirect 307 "/{{ .Release.Namespace }}/atlas/elastic" "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/api/as/v1/engines/atlas-dev/search.json"
-
-Redirect 307 "/{{ .Release.Namespace }}/atlas/data_quality" "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/api/as/v1/engines/atlas-dev-quality/search.json"
-
-Redirect 307 "/{{ .Release.Namespace }}/atlas/gov_quality" "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/api/as/v1/engines/atlas-dev-gov-quality/search.json"
-
 
 #Redirect 307 "/atlas/elastic" "https://aureliusdev.westeurope.cloudapp.azure.com/gaby/app-search/api/as/v1/engines/atlas-dev/search.json"
 #
