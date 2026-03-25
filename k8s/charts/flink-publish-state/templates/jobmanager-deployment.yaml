@@ -21,7 +21,7 @@ spec:
         - name: jobmanager
           image: "{{ .Values.image }}:{{ .Values.global.version }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          command: ["/opt/flink/bin/standalone-job.sh", "-pym", "m4i_publish_state"]
+          command: ["/opt/flink/bin/standalone-job.sh", "start", "-pym", "m4i_publish_state"]
           ports:
             - name: rpc
               containerPort: {{ .Values.flinkJobManagerRpcPort }}
@@ -57,8 +57,6 @@ spec:
                 secretKeyRef:
                   name: elastic-search-es-elastic-user
                   key: elastic
-            - name: ELASTICSEARCH_CERTIFICATE_PATH
-              value: {{ .Values.elasticsearchCertificatePath | quote }}
             - name: KAFKA_APP_SEARCH_TOPIC_NAME
               value: {{ .Values.kafkaAppSearchTopicName | quote }}
             - name: KAFKA_PUBLISH_STATE_TOPIC_NAME
@@ -96,17 +94,11 @@ spec:
             - name: KEYCLOAK_SERVER_URL
               value: {{ .Values.keycloakServerUrl | quote }}
           volumeMounts:
-            - name: certificates
-              mountPath: /opt/flink/certs
-              readOnly: true
             - name: checkpoints
               mountPath: /tmp/flink-checkpoints
             - name: savepoints
               mountPath: /tmp/flink-savepoints
       volumes:
-        - name: certificates
-          secret:
-            secretName: {{ .Values.jobName }}-elasticsearch-certs
         - name: checkpoints
           emptyDir: {}
         - name: savepoints

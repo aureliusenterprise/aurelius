@@ -54,8 +54,6 @@ spec:
                 secretKeyRef:
                   name: elastic-search-es-elastic-user
                   key: elastic
-            - name: ELASTICSEARCH_CERTIFICATE_PATH
-              value: {{ .Values.elasticsearchCertificatePath | quote }}
             - name: KAFKA_APP_SEARCH_TOPIC_NAME
               value: {{ .Values.kafkaAppSearchTopicName | quote }}
             - name: KAFKA_PUBLISH_STATE_TOPIC_NAME
@@ -95,17 +93,11 @@ spec:
             - name: KEYCLOAK_SERVER_URL
               value: {{ .Values.keycloakServerUrl | quote }}
           volumeMounts:
-            - name: certificates
-              mountPath: /opt/flink/certs
-              readOnly: true
             - name: checkpoints
               mountPath: /tmp/flink-checkpoints
             - name: savepoints
               mountPath: /tmp/flink-savepoints
       volumes:
-        - name: certificates
-          secret:
-            secretName: {{ .Values.jobName }}-elasticsearch-certs
         - name: checkpoints
           emptyDir: {}
         - name: savepoints

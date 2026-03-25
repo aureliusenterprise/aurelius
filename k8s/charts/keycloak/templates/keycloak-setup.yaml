@@ -22,13 +22,15 @@ spec:
           args:
             - |
               echo "Waiting for Keycloak to be ready..."
-              for i in {1..60}; do
+              i=1
+              while [ $i -le 60 ]; do
                 if wget -q -O- http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/{{ .Release.Namespace }}/auth/health/ready > /dev/null 2>&1; then
                   echo "Keycloak is ready"
                   exit 0
                 fi
                 echo "Attempt $i: Keycloak not ready yet, waiting..."
                 sleep 10
+                i=$((i + 1))
               done
               echo "Keycloak failed to become ready"
               exit 1
@@ -54,7 +56,10 @@ spec:
               value: "m4i"
             # Admin user credentials
             - name: ATLAS_ADMIN_USERNAME
-              value: "admin"
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-admin
+                  key: username
             - name: ATLAS_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -62,7 +67,10 @@ spec:
                   key: password
             # Steward user credentials
             - name: ATLAS_STEWARD_USERNAME
-              value: "steward"
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-steward
+                  key: username
             - name: ATLAS_STEWARD_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -70,7 +78,10 @@ spec:
                   key: password
             # Data Scientist user credentials
             - name: ATLAS_DATA_SCIENTIST_USERNAME
-              value: "data-scientist"
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret-user-data
+                  key: username
             - name: ATLAS_DATA_SCIENTIST_PASSWORD
               valueFrom:
                 secretKeyRef:

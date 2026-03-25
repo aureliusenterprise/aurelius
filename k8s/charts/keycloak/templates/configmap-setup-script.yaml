@@ -13,8 +13,31 @@ data:
 
     echo "Setting up Keycloak users..."
 
-    # Configure credentials for admin
-    /opt/keycloak/bin/kcadm.sh config credentials \
+    # Retry configuration for API calls
+    MAX_RETRIES=5
+    RETRY_DELAY=5
+
+    # Function to execute a command with retry logic
+    retry_cmd() {
+      local attempt=1
+      
+      while [ $attempt -le $MAX_RETRIES ]; do
+        echo "Attempt $attempt"
+        if "$@"; then
+          return 0
+        fi
+        
+        echo "Command failed. Retrying in ${RETRY_DELAY}s..."
+        sleep $RETRY_DELAY
+        attempt=$((attempt + 1))
+      done
+      
+      echo "Error: Command failed after $MAX_RETRIES attempts" >&2
+      return 1
+    }
+
+    # Configure credentials for admin with retry
+    retry_cmd /opt/keycloak/bin/kcadm.sh config credentials \
       --server "${KEYCLOAK_SERVER_URL}" \
       --realm master \
       --user "${KEYCLOAK_ADMIN_USERNAME}" \
@@ -26,24 +49,28 @@ data:
       local password=$2
       local roles=$3
       
+      # Check if user already exists with retry
+      local user_exists="false"
+      local check_result=$(retry_cmd /opt/keycloak/bin/kcadm.sh get users -r "${KEYCLOAK_REALM_NAME}" \
+        -q -a -f username="$username" 2>/dev/null) || true
       
-      # Check if user already exists
-      local user_exists=$(/opt/keycloak/bin/kcadm.sh get users -r "${KEYCLOAK_REALM_NAME}" \
-        -q -a -f username="$username" 2>/dev/null | grep -q "$username" && echo "true" || echo "false")
+      if echo "$check_result" | grep -q "$username"; then
+        user_exists="true"
+      fi
 
       if [ "$user_exists" = "false" ]; then
         echo "Creating user: $username"
 
-        # Create the user
-        /opt/keycloak/bin/kcadm.sh create users \
+        # Create the user with retry
+        retry_cmd /opt/keycloak/bin/kcadm.sh create users \
           -r "${KEYCLOAK_REALM_NAME}" \
           -s "username=$username" \
           -s "enabled=true"
 
         echo "Setting password for user: $username"
         
-        # Set password
-        /opt/keycloak/bin/kcadm.sh set-password \
+        # Set password with retry
+        retry_cmd /opt/keycloak/bin/kcadm.sh set-password \
           -r "${KEYCLOAK_REALM_NAME}" \
           --username "$username" \
           --new-password "$password"
@@ -52,7 +79,7 @@ data:
         if [ ! -z "$roles" ]; then
           for role in $roles; do
             echo "Adding role $role to user: $username"
-            /opt/keycloak/bin/kcadm.sh add-roles \
+            retry_cmd /opt/keycloak/bin/kcadm.sh add-roles \
               -r "${KEYCLOAK_REALM_NAME}" \
               --uusername "$username" \
               --rolename "$role" || echo "Role $role could not be added (may already be assigned)"
