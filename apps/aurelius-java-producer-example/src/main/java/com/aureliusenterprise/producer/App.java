@@ -2,10 +2,9 @@ package com.aureliusenterprise.producer;
 
 import com.aureliusenterprise.example.Entity;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import io.confluent.kafka.serializers.schema.id.HeaderSchemaIdSerializer;
 import io.confluent.kafka.serializers.subject.RecordNameStrategy;
-import java.util.Map;
 import java.util.Properties;
-import java.util.UUID;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -32,60 +31,34 @@ public class App {
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
     /**
-     * Stores the environment variables as an unmodifiable map of key-value pairs.
-     * The map is initialized from the system's environment variables at runtime.
-     */
-    private static final Map<String, String> env = System.getenv();
-
-    /**
      * Entry point for the Kafka producer application.
      *
      * @param args Command-line arguments (not used).
      */
     public static void main(String[] args) {
+        // Load and validate configuration using AppConfig (similar to Pydantic Settings in Python)
+        AppConfig config;
+        try {
+            config = AppConfig.load();
+        } catch (MissingKeyException e) {
+            logger.error(e.getMessage());
+            System.exit(1);
+            return; // Unreachable, but needed for compilation
+        }
+
+        logger.info("Configuration loaded: {}", config);
+
         // Initialize Kafka producer properties
         Properties props = new Properties();
 
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
 
-        try {
-            props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, App.env.get("KAFKA_BOOTSTRAP_SERVERS"));
-        } catch (NullPointerException e) {
-            App.logger.error("KAFKA_BOOTSTRAP_SERVERS environment variable is not set.");
-            System.exit(1);
-        }
-
-        try {
-            props.put("schema.registry.url", App.env.get("SCHEMA_REGISTRY_URL"));
-            props.put("value.subject.name.strategy", RecordNameStrategy.class);
-        } catch (NullPointerException e) {
-            App.logger.error("SCHEMA_REGISTRY_URL environment variable is not set.");
-            System.exit(1);
-        }
-
-        // Retrieve the Kafka topic name from environment variables
-        String kafkaTopicName = null;
-
-        try {
-            kafkaTopicName = App.env.get("KAFKA_TOPIC_NAME");
-        } catch (NullPointerException e) {
-            App.logger.error("KAFKA_TOPIC_NAME environment variable is not set.");
-            System.exit(1);
-        }
-
-        // Retrieve the message interval from environment variables, defaulting to 10000 ms if not set or invalid
-        long intervalMillis = 10000;
-
-        try {
-            intervalMillis = Long.parseLong(App.env.get("MESSAGE_INTERVAL_MILLIS"));
-        } catch (NullPointerException e) {
-            App.logger.warn(
-                "MESSAGE_INTERVAL_MILLIS environment variable is not set. Using default of " + intervalMillis + " ms."
-            );
-        } catch (NumberFormatException e) {
-            App.logger.warn("Invalid MESSAGE_INTERVAL_MILLIS value. Using default of " + intervalMillis + " ms.");
-        }
+        // Configure producer with validated settings from AppConfig
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.kafkaBootstrapServers());
+        props.put("schema.registry.url", config.schemaRegistryUrl());
+        props.put("value.subject.name.strategy", RecordNameStrategy.class);
+        props.put("value.schema.id.serializer", HeaderSchemaIdSerializer.class);
 
         // Create the Kafka producer instance
         KafkaProducer<String, Entity> kafkaProducer = new KafkaProducer<>(props);
@@ -99,16 +72,16 @@ public class App {
             })
         );
 
-        EntityProducer entityProducer = new EntityProducer(kafkaProducer, kafkaTopicName);
+        EntityProducer entityProducer = new EntityProducer(kafkaProducer, config.kafkaTopicName());
 
         // Start producing messages at the specified interval
         long currentTimeMillis = System.currentTimeMillis();
-        App.logger.info("Starting message production on a " + intervalMillis + " ms interval");
+        App.logger.info("Starting message production on a " + config.messageIntervalMillis() + " ms interval");
 
         try {
             while (true) {
                 // Generate a random UUID for the message key
-                UUID key = UUID.randomUUID();
+                java.util.UUID key = java.util.UUID.randomUUID();
 
                 // Create an example Entity message
                 Entity entity = Entity.newBuilder()
@@ -122,7 +95,10 @@ public class App {
                 entityProducer.produce(key, entity);
 
                 // Wait for the specified interval before producing the next message
-                long sleepTimeMillis = Math.max(currentTimeMillis + intervalMillis - System.currentTimeMillis(), 0);
+                long sleepTimeMillis = Math.max(
+                    currentTimeMillis + config.messageIntervalMillis() - System.currentTimeMillis(),
+                    0
+                );
 
                 App.logger.debug("Sleeping for " + sleepTimeMillis + " ms before producing the next message");
                 Thread.sleep(sleepTimeMillis);

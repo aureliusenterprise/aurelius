@@ -6,11 +6,17 @@ from typing import cast
 import dotenv
 import pytest
 from aurelius_example import Entity
-from aurelius_kafka import KafkaAdminClient, KafkaProducer
+from aurelius_kafka import KafkaAdminClient
 from aurelius_sdk.testing import capture_docker_compose_logs
 from confluent_kafka import Producer
-from confluent_kafka.admin import AdminClient, NewTopic
-from confluent_kafka.schema_registry import SchemaRegistryClient, record_subject_name_strategy
+from confluent_kafka.admin import AdminClient
+from confluent_kafka.cimpl import NewTopic
+from confluent_kafka.schema_registry import (
+    SchemaRegistryClient,
+    header_schema_id_serializer,
+    prefix_schema_id_serializer,
+    record_subject_name_strategy,
+)
 from confluent_kafka.schema_registry.avro import AvroSerializer
 from confluent_kafka.serialization import Serializer, StringSerializer
 from pydantic import SecretStr
@@ -105,18 +111,6 @@ def kafka_bootstrap_servers(compose: DockerCompose, settings: Settings) -> str:
 
 
 @pytest.fixture(scope="session")
-def kafka_producer(kafka_bootstrap_servers: str) -> KafkaProducer:
-    """Return a Kafka producer instance."""
-    return KafkaProducer(
-        producer=Producer(
-            {
-                "bootstrap.servers": kafka_bootstrap_servers,
-            },
-        ),
-    )
-
-
-@pytest.fixture(scope="session")
 def kafka_admin_client(kafka_bootstrap_servers: str) -> KafkaAdminClient:
     """Return a KafkaAdminClient instance."""
     return KafkaAdminClient(
@@ -165,10 +159,38 @@ def value_schema() -> str:
 
 
 @pytest.fixture(scope="session")
-def value_serializer(schema_registry_client: SchemaRegistryClient, value_schema: str) -> Serializer:
-    """Return the value serializer."""
+def value_serializer_with_header_schema_id(
+    schema_registry_client: SchemaRegistryClient,
+    value_schema: str,
+) -> Serializer:
+    """Return a value serializer that uses the header schema ID serializer."""
     return AvroSerializer(
-        conf={"subject.name.strategy": record_subject_name_strategy},  # type: ignore[arg-type]
+        conf={  # type: ignore[arg-type]
+            "schema.id.serializer": header_schema_id_serializer,
+            "subject.name.strategy": record_subject_name_strategy,
+        },
         schema_registry_client=schema_registry_client,  # type: ignore[arg-type]
         schema_str=value_schema,  # type: ignore[arg-type]
     )
+
+
+@pytest.fixture(scope="session")
+def value_serializer_with_prefix_schema_id(
+    schema_registry_client: SchemaRegistryClient,
+    value_schema: str,
+) -> Serializer:
+    """Return a value serializer that uses the prefix schema ID serializer."""
+    return AvroSerializer(
+        conf={  # type: ignore[arg-type]
+            "schema.id.serializer": prefix_schema_id_serializer,
+            "subject.name.strategy": record_subject_name_strategy,
+        },
+        schema_registry_client=schema_registry_client,  # type: ignore[arg-type]
+        schema_str=value_schema,  # type: ignore[arg-type]
+    )
+
+
+@pytest.fixture(scope="session")
+def kafka_producer(kafka_bootstrap_servers: str) -> Producer:
+    """Return a Kafka producer instance."""
+    return Producer({"bootstrap.servers": kafka_bootstrap_servers})

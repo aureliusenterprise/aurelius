@@ -9,7 +9,8 @@ from aurelius_example import Entity
 from aurelius_kafka import KafkaAdminClient
 from aurelius_sdk.testing import capture_docker_compose_logs
 from confluent_kafka import Consumer
-from confluent_kafka.admin import AdminClient, NewTopic
+from confluent_kafka.admin import AdminClient
+from confluent_kafka.cimpl import NewTopic
 from confluent_kafka.schema_registry import (
     SchemaRegistryClient,
     record_subject_name_strategy,

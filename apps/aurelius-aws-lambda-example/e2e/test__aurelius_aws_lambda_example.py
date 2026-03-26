@@ -34,7 +34,7 @@ def consume_message(consumer: Consumer, topic: str) -> tuple[bytes | None, bytes
         Entity(name="Hello World", description="This is a test"),
     ],
 )
-def test__aurelius_aws_lambda_example(  # noqa: PLR0913
+def test__aurelius_aws_lambda_example(
     connection: http.client.HTTPConnection,
     consumer: Consumer,
     entity: Entity,

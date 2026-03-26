@@ -1,4 +1,4 @@
-ARG CONNECT_VERSION=7.9.1
+ARG CONNECT_VERSION=8.1.1
 FROM confluentinc/cp-kafka-connect:${CONNECT_VERSION}
 
 # Add image metadata
@@ -11,8 +11,7 @@ LABEL org.opencontainers.image.title="Aurelius Kafka Connect Base"
 USER root
 
 # Install dependencies
-ARG CONNECT_AVRO_CONVERTER_VERSION=latest
-ARG CSID_SECRETS_PROVIDER_AWS_VERSION=latest
+ARG CONNECT_AVRO_CONVERTER_VERSION=8.1.1
 
 RUN confluent-hub install confluentinc/kafka-connect-avro-converter:${CONNECT_AVRO_CONVERTER_VERSION} --no-prompt && \
     chown -R appuser:appuser /usr/share/confluent-hub-components && \

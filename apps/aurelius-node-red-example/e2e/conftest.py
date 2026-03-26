@@ -8,7 +8,8 @@ from aurelius_example import Entity
 from aurelius_kafka import KafkaAdminClient
 from aurelius_sdk.testing import capture_docker_compose_logs
 from confluent_kafka import Consumer
-from confluent_kafka.admin import AdminClient, NewTopic
+from confluent_kafka.admin import AdminClient
+from confluent_kafka.cimpl import NewTopic
 from confluent_kafka.schema_registry import (
     SchemaRegistryClient,
     record_subject_name_strategy,
@@ -73,22 +74,6 @@ def kafka_bootstrap_servers(compose: DockerCompose, settings: Settings) -> str:
 
 
 @pytest.fixture(scope="session")
-def consumer(kafka_bootstrap_servers: str) -> Generator[Consumer]:
-    """Return a Kafka consumer."""
-    consumer = Consumer(
-        {
-            "bootstrap.servers": kafka_bootstrap_servers,
-            "group.id": "test-group",
-            "auto.offset.reset": "earliest",
-        },
-    )
-
-    yield consumer
-
-    consumer.close()
-
-
-@pytest.fixture(scope="session")
 def kafka_admin_client(kafka_bootstrap_servers: str) -> KafkaAdminClient:
     """Return a KafkaAdminClient instance."""
     return KafkaAdminClient(
@@ -143,3 +128,19 @@ def value_deserializer(schema_registry_client: SchemaRegistryClient, value_schem
         schema_str=value_schema,
         conf={"subject.name.strategy": record_subject_name_strategy},
     )
+
+
+@pytest.fixture(scope="session")
+def consumer(kafka_bootstrap_servers: str) -> Generator[Consumer]:
+    """Return a Kafka consumer."""
+    consumer = Consumer(
+        {
+            "bootstrap.servers": kafka_bootstrap_servers,
+            "group.id": "test-group",
+            "auto.offset.reset": "earliest",
+        },
+    )
+
+    yield consumer
+
+    consumer.close()

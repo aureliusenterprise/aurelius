@@ -66,7 +66,7 @@ class EntityProcessor:
 
         return Entity.model_validate(entity_dict)
 
-    def serialize(self, entity: Entity) -> bytes:
+    def serialize(self, entity: Entity) -> bytes | None:
         """
         Serialize an Entity into bytes.
 

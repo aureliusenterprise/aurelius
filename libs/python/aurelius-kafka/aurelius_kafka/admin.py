@@ -1,6 +1,7 @@
 import logging
 
-from confluent_kafka.admin import AdminClient, KafkaException, NewTopic
+from confluent_kafka.admin import AdminClient
+from confluent_kafka.cimpl import KafkaException, NewTopic
 
 LOGGER = logging.getLogger("KafkaAdminClient")
 
