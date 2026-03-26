@@ -193,3 +193,6 @@ build
 
 # SQLTools
 *.session.sql
+
+.claude/worktrees
+.claude/settings.local.json

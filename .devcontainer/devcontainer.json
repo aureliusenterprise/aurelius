@@ -95,7 +95,7 @@
             "packages": ["age", "gnupg2", "libpq-dev", "librdkafka-dev"]
         },
         "ghcr.io/devcontainers-extra/features/nx-npm:1": {
-            "version": "22.5.4"
+            "version": "22.6.1"
         },
         "ghcr.io/devcontainers-extra/features/sops:1": {
             "version": "latest"
