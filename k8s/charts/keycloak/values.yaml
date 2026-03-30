@@ -4,9 +4,8 @@
 # container image
 # https://github.com/keycloak/keycloak-containers/blob/22.0.5/server/README.md
 replicaCount: 1
-repository: quay.io/keycloak/keycloak
+repository: ghcr.io/aureliusenterprise/aurelius-docker-keycloak
 pullPolicy: Always
-tag: '22.0.5'
 
 service:
     name: keycloak

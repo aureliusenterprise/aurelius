@@ -56,7 +56,7 @@ ingress:
 
 global:
     external_hostname: 'uatest.aureliusenterprise.dev'
-    version: v2.1.10-alpha.41
+    version: v2.2.0-alpha.1
 
 post_install:
     upload_data: 'true'
