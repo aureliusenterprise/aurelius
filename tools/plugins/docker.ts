@@ -1,58 +1,63 @@
-import { CreateNodesResult, CreateNodes } from "@nx/devkit";
-import { dirname } from "path";
+import { CreateNodes, CreateNodesResult } from '@nx/devkit';
+import { dirname } from 'path';
+import { execSync } from 'child_process';
 
 export interface DockerPluginOptions {
     readonly buildTargetName?: string;
     readonly publishTargetName?: string;
 }
 
-const glob = "**/Dockerfile";
+const glob = '**/Dockerfile';
 
 export const createNodes: CreateNodes<DockerPluginOptions> = [
     glob,
     async (configFilePath, options) => {
-        return createNodesInternal(
-            configFilePath,
-            options,
-        );
+        return createNodesInternal(configFilePath, options);
     },
 ];
 
+function getBranchName(): string {
+    const branchName = process.env.GITHUB_REF_NAME || execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
+    return branchName.replace(/\//g, '-');
+}
+
 async function createNodesInternal(
     configFilePath: string,
-    { buildTargetName = "docker-build", publishTargetName = "docker-publish" }: DockerPluginOptions = {},
+    { buildTargetName = 'docker-build', publishTargetName = 'docker-publish' }: DockerPluginOptions = {},
 ): Promise<CreateNodesResult> {
     const projectRoot = dirname(configFilePath);
+    const branchName = getBranchName();
 
     return {
         projects: {
             [projectRoot]: {
-                tags: ["docker"],
+                tags: ['docker'],
                 targets: {
                     [buildTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {projectName}:local`,
-                        dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
+                        command: `docker buildx build . -f ${configFilePath} -t {projectName}:local --cache-from=type=registry,ref={args.namespace}/{projectName}-cache:${branchName},ref={args.namespace}/{projectName}-cache:main,ref={args.namespace}/{projectName}-cache:latest --cache-to=type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max`,
+                        dependsOn: [{ target: 'build' }, { target: buildTargetName, dependencies: true }],
                         metadata: {
-                            description: "Build the Docker image for the application",
+                            description: 'Build the Docker image for the application',
                         },
                         options: {
                             env: {
-                                DOCKER_BUILDKIT: "1",
+                                DOCKER_BUILDKIT: '1',
                             },
+                            namespace: 'ghcr.io/aureliusenterprise',
                         },
                     },
                     [publishTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --push`,
-                        dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
+                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --push --cache-from=type=registry,ref={args.namespace}/{projectName}-cache:${branchName},ref={args.namespace}/{projectName}-cache:main,ref={args.namespace}/{projectName}-cache:latest --cache-to=type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max`,
+                        dependsOn: [{ target: 'build' }, { target: buildTargetName, dependencies: true }],
                         metadata: {
-                            description: "Publish the Docker image for the application",
+                            description: 'Publish the Docker image for the application',
                         },
                         options: {
                             env: {
-                                DOCKER_BUILDKIT: "1",
+                                DOCKER_BUILDKIT: '1',
                             },
-                            namespace: "ghcr.io/aureliusenterprise",
-                            version: "latest",
+                            namespace: 'ghcr.io/aureliusenterprise',
+                            version: 'latest',
                         },
                     },
                 },
