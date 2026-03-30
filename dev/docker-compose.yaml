@@ -21,7 +21,7 @@ services:
               target: /apache-atlas/conf/keycloak-conf.json
 
     keycloak:
-        image: keycloak/keycloak:${KEYCLOAK_VERSION}
+        image: aurelius-docker-keycloak:local
         command: ['start-dev', '--import-realm']
         configs:
             - source: keycloak-realm
@@ -36,7 +36,6 @@ services:
             KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
             KC_DB_USERNAME: ${KEYCLOAK_DB_USERNAME}
             KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-            KC_HEALTH_ENABLED: true
             KC_HOSTNAME: keycloak.localhost
             KC_HTTP_PORT: ${KEYCLOAK_HTTP_PORT}
         healthcheck:
@@ -68,7 +67,7 @@ services:
             - keycloak-data:/var/lib/postgresql
 
     keycloak-setup:
-        image: keycloak/keycloak:${KEYCLOAK_VERSION}
+        image: aurelius-docker-keycloak:local
         command: ['/aurelius/keycloak-setup.sh']
         configs:
             - source: keycloak-setup
