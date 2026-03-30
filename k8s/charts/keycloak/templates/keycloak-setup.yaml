@@ -24,7 +24,7 @@ spec:
               echo "Waiting for Keycloak to be ready..."
               i=1
               while [ $i -le 60 ]; do
-                if wget -q -O- http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/{{ .Release.Namespace }}/auth/health/ready > /dev/null 2>&1; then
+                if wget -q -O- http://keycloak:8080/{{ .Release.Namespace }}/auth/health/ready > /dev/null 2>&1; then
                   echo "Keycloak is ready"
                   exit 0
                 fi
@@ -41,7 +41,7 @@ spec:
           command: ['/bin/bash', '/scripts/keycloak-setup.sh']
           env:
             - name: KEYCLOAK_SERVER_URL
-              value: http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/{{ .Release.Namespace }}/auth
+              value: http://keycloak:8080/{{ .Release.Namespace }}/auth
             - name: KEYCLOAK_ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
