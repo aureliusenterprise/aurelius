@@ -34,7 +34,7 @@ async function createNodesInternal(
                 tags: ['docker'],
                 targets: {
                     [buildTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {projectName}:local --cache-from=type=registry,ref={args.namespace}/{projectName}-cache:${branchName},ref={args.namespace}/{projectName}-cache:main,ref={args.namespace}/{projectName}-cache:latest --cache-to=type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max`,
+                        command: `docker buildx build . -f ${configFilePath} -t {projectName}:local --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
                         dependsOn: [{ target: 'build' }, { target: buildTargetName, dependencies: true }],
                         metadata: {
                             description: 'Build the Docker image for the application',
@@ -47,7 +47,7 @@ async function createNodesInternal(
                         },
                     },
                     [publishTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --push --cache-from=type=registry,ref={args.namespace}/{projectName}-cache:${branchName},ref={args.namespace}/{projectName}-cache:main,ref={args.namespace}/{projectName}-cache:latest --cache-to=type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max`,
+                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --push --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
                         dependsOn: [{ target: 'build' }, { target: buildTargetName, dependencies: true }],
                         metadata: {
                             description: 'Publish the Docker image for the application',
