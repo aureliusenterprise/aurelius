@@ -21,27 +21,13 @@ spec:
         - name: jobmanager
           image: "{{ .Values.image }}:{{ .Values.global.version }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          command: ["/opt/flink/bin/standalone-job.sh", "start", "-pym", "m4i_publish_state"]
+          command: ["/opt/flink/bin/standalone-job.sh", "start-foreground", "-pym", "m4i_publish_state"]
           ports:
             - name: rpc
               containerPort: {{ .Values.flinkJobManagerRpcPort }}
             - name: webui
               containerPort: {{ .Values.flinkJobManagerPort }}
           env:
-            - name: FLINK_PROPERTIES
-              value: |
-                jobmanager.rpc.address: flink-{{ .Values.jobName }}-jobmanager
-                jobmanager.rpc.port: {{ .Values.flinkJobManagerRpcPort }}
-                rest.address: flink-{{ .Values.jobName }}-jobmanager
-                rest.port: {{ .Values.flinkJobManagerPort }}
-                {{- if .Values.enableCheckpoints }}
-                execution.checkpointing.interval: {{ .Values.checkpointInterval }}ms
-                execution.checkpointing.timeout: {{ .Values.checkpointTimeout }}ms
-                execution.checkpointing.max-concurrent-checkpoints: {{ .Values.maxConcurrentCheckpoints }}
-                state.backend: rocksdb
-                state.checkpoints.dir: file:///tmp/flink-checkpoints
-                state.savepoints.dir: file:///tmp/flink-savepoints
-                {{- end }}
             - name: ATLAS_SERVER_URL
               value: {{ .Values.atlasServerUrl | quote }}
             - name: ELASTICSEARCH_APP_SEARCH_INDEX_NAME
@@ -92,14 +78,24 @@ spec:
             - name: KEYCLOAK_REALM_NAME
               value: {{ .Values.keycloakRealmName | quote }}
             - name: KEYCLOAK_SERVER_URL
-              value: {{ .Values.keycloakServerUrl | quote }}
+              value: https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth
           volumeMounts:
             - name: checkpoints
               mountPath: /tmp/flink-checkpoints
+            - name: flink-conf
+              mountPath: /opt/flink/conf
             - name: savepoints
               mountPath: /tmp/flink-savepoints
       volumes:
         - name: checkpoints
           emptyDir: {}
+        - name: flink-conf
+          configMap:
+            name: {{ .Values.jobName }}-config
+            items:
+            - key: flink-conf.yaml
+              path: flink-conf.yaml
+            - key: log4j-console.properties
+              path: log4j-console.properties
         - name: savepoints
           emptyDir: {}

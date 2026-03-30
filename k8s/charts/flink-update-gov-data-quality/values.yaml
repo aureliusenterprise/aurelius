@@ -9,7 +9,7 @@ flinkJobManagerPort: 8081
 flinkJobManagerRpcPort: 6123
 
 # Atlas configuration - using Kubernetes service URL
-atlasServerUrl: 'http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/api/atlas'
+atlasServerUrl: 'http://atlas:21000/api/atlas'
 
 # Elasticsearch configuration
 elasticsearchAppSearchIndexName: .ent-search-engine-documents-atlas-dev
@@ -22,7 +22,7 @@ elasticsearchCertificatePath: /opt/flink/certs/ca.crt
 kafkaAppSearchTopicName: .ent-search-engine-documents-atlas-dev
 kafkaPublishStateTopicName: publish-state
 kafkaGovDataQualityTopicName: '.ent-search-engine-documents-atlas-dev-gov-quality'
-kafkaBootstrapServerHostname: kafka.{{ .Release.Namespace }}.svc.cluster.local
+kafkaBootstrapServerHostname: kafka
 kafkaBootstrapServerPort: 9092
 kafkaConsumerGroupId: UPDATE_GOV_DATA_QUALITY_CONSUMER
 kafkaErrorTopicName: DEAD_LETTER_BOX
@@ -33,7 +33,7 @@ kafkaSourceTopicName: ATLAS_ENTITIES
 keycloakClientId: m4i_atlas
 keycloakClientSecretKey: '' # Optional
 keycloakRealmName: m4i
-keycloakServerUrl: 'https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}'
+keycloakServerUrl: 'https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth'
 
 # Checkpointing
 enableCheckpoints: true

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.jobName }}-jobmanager
+  labels:
+    app.kubernetes.io/name: flink-{{ .Values.jobName }}
+    app.kubernetes.io/component: jobmanager
+spec:
+  type: ClusterIP
+  ports:
+    - name: rpc
+      port: {{ .Values.flinkJobManagerRpcPort }}
+      targetPort: rpc
+    - name: webui
+      port: {{ .Values.flinkJobManagerPort }}
+      targetPort: webui
+  selector:
+    app.kubernetes.io/name: flink-{{ .Values.jobName }}
+    app.kubernetes.io/component: jobmanager
