@@ -13,7 +13,7 @@ export const environment = {
         languages: {},
     },
     keycloak: {
-        url: 'http://keycloak.localhost:8180/auth',
+        url: 'http://keycloak.localhost:8180',
         realm: 'atlas-dev',
         clientId: 'm4i_aurelius_atlas_dev',
     },
