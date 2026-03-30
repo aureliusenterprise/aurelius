@@ -22,9 +22,9 @@ atlas.graph.index.search.max-result-set-size=150
 atlas.notification.embedded=false
 #atlas.kafka.data=${sys:atlas.home}/data/kafka
 #atlas.kafka.zookeeper.connect=localhost:9026
-atlas.kafka.zookeeper.connect=zookeeper.{{ .Release.Namespace }}.svc.cluster.local:2181
+atlas.kafka.zookeeper.connect=zookeeper:2181
 #atlas.kafka.bootstrap.servers=localhost:9027
-atlas.kafka.bootstrap.servers=kafka.{{ .Release.Namespace }}.svc.cluster.local:9092
+atlas.kafka.bootstrap.servers=kafka:9092
 atlas.kafka.zookeeper.session.timeout.ms=400
 atlas.kafka.zookeeper.connection.timeout.ms=200
 atlas.kafka.zookeeper.sync.time.ms=20
@@ -63,7 +63,7 @@ atlas.audit.hbase.zookeeper.quorum=localhost:2181
 
 atlas.server.ha.enabled=false
 atlas.authorizer.impl=simple
-atlas.authorizer.simple.authz.policy.file=atlas-simple-authz-policy.json
+atlas.authorizer.simple.authz.policy.file=${sys:atlas.home}/conf/atlas-simple-authz-policy.json
 atlas.rest-csrf.enabled=false
 atlas.rest-csrf.browser-useragents-regex=^Mozilla.*,^Opera.*,^Chrome.*
 atlas.rest-csrf.methods-to-ignore=GET,OPTIONS,HEAD,TRACE
@@ -74,7 +74,7 @@ atlas.metric.query.cache.ttlInSecs=900
 atlas.search.gremlin.enable=true
 
 atlas.authentication.method.keycloak=true
-atlas.authentication.method.keycloak.file=/opt/apache-atlas-2.2.0/conf/keycloak-conf.json
+atlas.authentication.method.keycloak.file=${sys:atlas.home}/conf/keycloak-conf.json
 atlas.authentication.method.keycloak.ugi-groups=false
 atlas.authentication.method.keycloak.groups_claim=claims
 

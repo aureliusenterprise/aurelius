@@ -20,6 +20,11 @@ spec:
         {{- include "atlas.selectorLabels" . | nindent 8 }}
     spec:
       hostname: atlas
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        fsGroupChangePolicy: "Always"
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
