@@ -13,6 +13,8 @@ from confluent_kafka.admin import AdminClient
 from confluent_kafka.cimpl import NewTopic
 from confluent_kafka.schema_registry import (
     SchemaRegistryClient,
+    header_schema_id_serializer,
+    prefix_schema_id_serializer,
     record_subject_name_strategy,
 )
 from confluent_kafka.schema_registry.avro import AvroDeserializer, AvroSerializer
@@ -152,12 +154,34 @@ def value_deserializer(schema_registry_client: SchemaRegistryClient, value_schem
 
 
 @pytest.fixture(scope="session")
-def value_serializer(schema_registry_client: SchemaRegistryClient, value_schema: str) -> AvroSerializer:
-    """Return an Avro serializer."""
+def value_serializer_with_header_schema_id(
+    schema_registry_client: SchemaRegistryClient,
+    value_schema: str,
+) -> AvroSerializer:
+    """Return a value serializer that uses the header schema ID serializer."""
     return AvroSerializer(
-        schema_registry_client,  # type: ignore[arg-type]
-        schema_str=value_schema,
-        conf={"subject.name.strategy": record_subject_name_strategy},
+        conf={  # type: ignore[arg-type]
+            "schema.id.serializer": header_schema_id_serializer,
+            "subject.name.strategy": record_subject_name_strategy,
+        },
+        schema_registry_client=schema_registry_client,  # type: ignore[arg-type]
+        schema_str=value_schema,  # type: ignore[arg-type]
+    )
+
+
+@pytest.fixture(scope="session")
+def value_serializer_with_prefix_schema_id(
+    schema_registry_client: SchemaRegistryClient,
+    value_schema: str,
+) -> AvroSerializer:
+    """Return a value serializer that uses the prefix schema ID serializer."""
+    return AvroSerializer(
+        conf={  # type: ignore[arg-type]
+            "schema.id.serializer": prefix_schema_id_serializer,
+            "subject.name.strategy": record_subject_name_strategy,
+        },
+        schema_registry_client=schema_registry_client,  # type: ignore[arg-type]
+        schema_str=value_schema,  # type: ignore[arg-type]
     )
 
 

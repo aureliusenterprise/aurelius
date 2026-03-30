@@ -33,6 +33,8 @@ services:
         depends_on:
             broker:
                 condition: service_healthy
+            schema-registry:
+                condition: service_healthy
         entrypoint: ["/aws-lambda/aws-lambda-rie"]
         environment:
             AWS_REGION: ${AWS_REGION}
