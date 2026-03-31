@@ -42,14 +42,14 @@ def test__aurelius_fastapi_example_has_openapi_spec(connection: http.client.HTTP
 
 def test__aurelius_fastapi_example_has_healthcheck(connection: http.client.HTTPConnection) -> None:
     """
-    Test that the API has a healthcheck endpoint.
+    Test that the API has a readiness check endpoint.
 
     Asserts:
-        - The API returns a 200 OK status code when the healthcheck endpoint is requested.
+        - The API returns a 200 OK status code when the readiness check endpoint is requested.
     """
     connection.request(
         "GET",
-        "/healthcheck",
+        "/health/ready",
     )
     response = connection.getresponse()
 

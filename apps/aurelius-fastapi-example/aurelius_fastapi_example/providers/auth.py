@@ -4,18 +4,13 @@ from typing import Annotated
 import httpx
 import jwt
 import jwt.algorithms
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Request
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel, HttpUrl
 
-from aurelius_fastapi_example.globals import LOGGER, SETTINGS
+from aurelius_fastapi_example.globals import LOGGER
 
-auth_base_url = f"{SETTINGS.auth_server_url}realms/{SETTINGS.auth_realm_name}"
-
-auth = OAuth2PasswordBearer(
-    tokenUrl=f"{auth_base_url}/protocol/openid-connect/token",
-    description="Bearer token for authentication with the data source.",
-)
+from .settings import Settings
 
 
 class OpenIdConfig(BaseModel):
@@ -30,7 +25,22 @@ class OpenIdConfig(BaseModel):
 
 
 @cache
-def openid_configuration() -> OpenIdConfig:
+def auth_base_url(settings: Settings) -> str:
+    """Return the base URL for the authentication server."""
+    return f"{settings.auth_server_url}realms/{settings.auth_realm_name}"
+
+
+@cache
+def auth_provider(auth_base_url: Annotated[str, Depends(auth_base_url)]) -> OAuth2PasswordBearer:
+    """Return the OAuth2PasswordBearer instance for the authentication configuration."""
+    return OAuth2PasswordBearer(
+        tokenUrl=f"{auth_base_url}/protocol/openid-connect/token",
+        description="Bearer token for authentication with the data source.",
+    )
+
+
+@cache
+def openid_configuration(auth_base_url: Annotated[str, Depends(auth_base_url)]) -> OpenIdConfig:
     """Return the OpenID configuration for the configured issuer."""
     well_known_url = f"{auth_base_url}/.well-known/openid-configuration"
 
@@ -57,23 +67,31 @@ def jwks(openid: Annotated[OpenIdConfig, Depends(openid_configuration)]) -> dict
     return result
 
 
-def user_info(
+async def user_info(
+    auth_base_url: Annotated[str, Depends(auth_base_url)],
+    auth_provider: Annotated[OAuth2PasswordBearer, Depends(auth_provider)],
     jwks: Annotated[dict, Depends(jwks)],
-    token: Annotated[str, Depends(auth)],
+    request: Request,
 ) -> dict:
-    """Decode the JWT token using the JWT authentication configuration."""
+    """Decode the authentication token to verify the user's identity and return their information."""
     try:
+        token = await auth_provider(request)
+
+        if token is None:
+            LOGGER.error("No authentication token provided")
+            raise HTTPException(status_code=401)
+
         headers = jwt.get_unverified_header(token)
 
         if not (kid := headers.get("kid")):
-            LOGGER.error("No key ID found in JWT token")
+            LOGGER.error("No key ID found in authentication token")
             raise HTTPException(status_code=401)
 
         if not (key := jwks.get(kid)):
             LOGGER.error("No key found for key ID %s", kid)
             raise HTTPException(status_code=401)
 
-        LOGGER.debug("Decoding JWT token with key %s", kid)
+        LOGGER.debug("Decoding authentication token with key %s", kid)
 
         return jwt.decode(
             token,
@@ -83,5 +101,5 @@ def user_info(
             options={"verify_aud": False},
         )
     except jwt.PyJWTError as e:
-        LOGGER.exception("Failed to verify JWT")
+        LOGGER.exception("Failed to verify authentication token")
         raise HTTPException(status_code=401) from e

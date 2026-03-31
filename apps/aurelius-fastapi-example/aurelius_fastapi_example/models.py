@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, HttpUrl, NonNegativeInt, PositiveInt, SecretStr
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 
 DEVELOPMENT = "development"
@@ -101,3 +101,7 @@ class Settings(BaseSettings):
             port=self.database_port,
             database=self.database_name,
         )
+
+    model_config = SettingsConfigDict(
+        frozen=True,
+    )

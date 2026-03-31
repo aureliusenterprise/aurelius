@@ -6,18 +6,20 @@ from fastapi import Depends, HTTPException
 from sqlalchemy import Engine, create_engine
 from sqlmodel import Session, SQLModel
 
-from aurelius_fastapi_example.globals import LOGGER, SETTINGS
+from aurelius_fastapi_example.globals import LOGGER
+
+from .settings import Settings
 
 
 @cache
-def database() -> Engine:
+def database(settings: Settings) -> Engine:
     """Return a database engine instance."""
-    database_url = SETTINGS.database_url
+    database_url = settings.database_url
 
     engine = create_engine(database_url)
     LOGGER.info("Connected to database %s", str(database_url).split("@")[-1])
 
-    if SETTINGS.auto_create_schema:
+    if settings.auto_create_schema:
         SQLModel.metadata.create_all(engine)
         LOGGER.info("Database schema created successfully")
 

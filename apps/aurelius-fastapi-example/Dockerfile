@@ -49,7 +49,7 @@ USER aurelius-fastapi-example
 
 # Configure a healthcheck to ensure the application is running
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD ["sh", "-c", "curl --fail \"http://localhost:${PORT}/healthcheck\" || exit 1"]
+    CMD ["sh", "-c", "curl --fail \"http://localhost:${PORT}/health/ready\" || exit 1"]
 
 # Start the application
 ENTRYPOINT [ "python", "-m", "aurelius_fastapi_example" ]
