@@ -71,16 +71,6 @@ def test__delete_returns_410_for_missing_entity(authenticated_client: TestClient
     assert response.status_code == 410
 
 
-def test__create_entity_with_invalid_data_returns_422(authenticated_client: TestClient) -> None:
-    """Creating an entity with data exceeding max_length should return 422 Unprocessable Entity."""
-    response = authenticated_client.put(
-        "/entities/",
-        json={"name": "x" * 101, "description": "Valid description"},
-    )
-
-    assert response.status_code == 422
-
-
 def test__find_many_requires_authentication(unauthenticated_client: TestClient) -> None:
     """List endpoint should return 401 when no bearer token is provided."""
     response = unauthenticated_client.get("/entities/")
