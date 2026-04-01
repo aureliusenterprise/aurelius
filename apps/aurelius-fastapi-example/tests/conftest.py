@@ -56,13 +56,8 @@ def app(settings: Settings) -> FastAPI:
 def unauthenticated_client(app: FastAPI, session: Session, settings: Settings) -> Generator[TestClient]:
     """Provide a TestClient that forces authentication failure with a 401 response."""
 
-    def override_session() -> Generator[Session]:
-        try:
-            yield session
-            session.commit()
-        except HTTPException:
-            session.rollback()
-            raise
+    def override_session() -> Session:
+        return session
 
     def override_user_info() -> dict:
         raise HTTPException(status_code=401)
@@ -81,13 +76,8 @@ def unauthenticated_client(app: FastAPI, session: Session, settings: Settings) -
 def authenticated_client(app: FastAPI, mock_user: dict, session: Session, settings: Settings) -> Generator[TestClient]:
     """Provide a FastAPI TestClient with DB and auth overrides."""
 
-    def override_session() -> Generator[Session]:
-        try:
-            yield session
-            session.commit()
-        except HTTPException:
-            session.rollback()
-            raise
+    def override_session() -> Session:
+        return session
 
     def override_user_info() -> dict:
         return mock_user

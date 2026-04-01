@@ -106,7 +106,12 @@ def create_or_update(
     Returns:
         Entity: The created or updated entity.
     """
-    if not entity.guid:
+    # Pydantic will not always correctly deserialize the guid field when validating from the request body, so we
+    # re-validate it here to ensure it's in the correct format.
+    if isinstance(entity.guid, str):
+        entity = Entity.model_validate(entity.model_dump(mode="json"))
+
+    if not session.get(Entity, entity.guid):
         LOGGER.info("User %s is creating a new entity", user_info.get("sub"))
     else:
         LOGGER.info("User %s is updating entity with GUID %s", user_info.get("sub"), entity.guid)

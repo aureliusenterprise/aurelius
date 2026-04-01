@@ -1,4 +1,7 @@
+import pytest
+from aurelius_example import Entity
 from fastapi.testclient import TestClient
+from sqlmodel import Session
 
 
 def test__find_many_returns_empty_list(authenticated_client: TestClient) -> None:
@@ -9,52 +12,129 @@ def test__find_many_returns_empty_list(authenticated_client: TestClient) -> None
     assert response.json() == []
 
 
-def test__create_find_and_delete_entity(authenticated_client: TestClient) -> None:
-    """Create an entity, retrieve it by GUID, delete it, and verify it is gone."""
-    create_response = authenticated_client.put(
+@pytest.fixture()
+def entities(session: Session) -> list[Entity]:
+    """Create and return a list of test entities."""
+    test_entities = [
+        Entity(name="Test Entity 1", description="First test entity"),
+        Entity(name="Test Entity 2", description="Second test entity"),
+        Entity(name="Test Entity 3", description="Third test entity"),
+    ]
+    session.add_all(test_entities)
+    return test_entities
+
+
+def test__find_many_returns_entities(authenticated_client: TestClient, entities: list[Entity]) -> None:
+    """Entities list should return created entities."""
+    response = authenticated_client.get("/entities/")
+
+    assert response.status_code == 200
+
+    actual = [Entity.model_validate(entity) for entity in response.json()]
+
+    assert entities == actual
+
+
+def test__find_many_respects_pagination(authenticated_client: TestClient, entities: list[Entity]) -> None:
+    """The list endpoint should apply skip and limit pagination values."""
+    response = authenticated_client.get("/entities/?skip=1&limit=1")
+
+    assert response.status_code == 200
+
+    actual = [Entity.model_validate(entity) for entity in response.json()]
+
+    assert actual == [entities[1]]
+
+
+def test__find_many_rejects_limit_over_max(authenticated_client: TestClient) -> None:
+    """The list endpoint should return 422 when given a limit value over the maximum."""
+    response = authenticated_client.get("/entities/?limit=1001")
+
+    assert response.status_code == 422
+
+
+def test__find_many_rejects_negative_limit(authenticated_client: TestClient) -> None:
+    """The list endpoint should return 422 when given a negative limit value."""
+    response = authenticated_client.get("/entities/?limit=-1")
+
+    assert response.status_code == 422
+
+
+def test__find_many_rejects_negative_skip(authenticated_client: TestClient) -> None:
+    """The list endpoint should return 422 when given a negative skip value."""
+    response = authenticated_client.get("/entities/?skip=-1")
+
+    assert response.status_code == 422
+
+
+def test__find_many_rejects_non_integer_limit(authenticated_client: TestClient) -> None:
+    """The list endpoint should return 422 when given a non-integer limit value."""
+    response = authenticated_client.get("/entities/?limit=abc")
+
+    assert response.status_code == 422
+
+
+def test__find_many_rejects_non_integer_skip(authenticated_client: TestClient) -> None:
+    """The list endpoint should return 422 when given a non-integer skip value."""
+    response = authenticated_client.get("/entities/?skip=abc")
+
+    assert response.status_code == 422
+
+
+def test__create_entity(authenticated_client: TestClient, session: Session) -> None:
+    """Creating an entity should return the created entity with a GUID."""
+    entity = Entity(name="New Entity", description="A newly created entity")
+
+    response = authenticated_client.put(
         "/entities/",
-        json={"name": "Unit Test Entity", "description": "Created by unit test"},
+        json=entity.model_dump(mode="json"),
     )
 
-    assert create_response.status_code == 200
+    assert response.status_code == 200
 
-    created = create_response.json()
-    assert created["guid"]
-    assert created["name"] == "Unit Test Entity"
+    actual = Entity.model_validate(response.json())
 
-    guid = created["guid"]
+    assert entity == actual
 
-    find_response = authenticated_client.get(f"/entities/{guid}")
-    assert find_response.status_code == 200
-    assert find_response.json()["guid"] == guid
+    stored = session.get(Entity, actual.guid)
 
-    delete_response = authenticated_client.delete(f"/entities/{guid}")
-    assert delete_response.status_code == 200
-
-    not_found_response = authenticated_client.get(f"/entities/{guid}")
-    assert not_found_response.status_code == 410
+    assert stored == actual
 
 
-def test__find_many_respects_pagination(authenticated_client: TestClient) -> None:
-    """The list endpoint should apply skip and limit pagination values."""
-    created_entities = []
-    try:
-        for i in range(3):
-            response = authenticated_client.put(
-                "/entities/",
-                json={"name": f"Entity {i}", "description": f"Description {i}"},
-            )
-            assert response.status_code == 200
-            created_entities.append(response.json())
+@pytest.fixture()
+def entity(session: Session) -> Entity:
+    """Create and return a single test entity."""
+    entity = Entity(name="Test Entity", description="A test entity")
+    session.add(entity)
+    return entity
 
-        paginated = authenticated_client.get("/entities/?skip=1&limit=2")
 
-        assert paginated.status_code == 200
-        assert len(paginated.json()) == 2
-    finally:
-        # Clean up test entities to ensure isolation
-        for entity in created_entities:
-            authenticated_client.delete(f"/entities/{entity['guid']}")
+def test__update_entity(authenticated_client: TestClient, session: Session, entity: Entity) -> None:
+    """Updating an entity should change its values but keep the same GUID."""
+    updated = entity.model_copy(update={"name": "Updated Name", "description": "Updated description"})
+
+    response = authenticated_client.put(
+        "/entities/",
+        json=updated.model_dump(mode="json"),
+    )
+
+    assert response.status_code == 200
+
+    actual = Entity.model_validate(response.json())
+
+    assert updated == actual
+
+    stored = session.get(Entity, entity.guid)
+
+    assert stored == actual
+
+
+def test__delete_entity(authenticated_client: TestClient, session: Session, entity: Entity) -> None:
+    """Deleting an entity should remove it from the database."""
+    response = authenticated_client.delete(f"/entities/{entity.guid}")
+
+    assert response.status_code == 200
+    assert entity in session.deleted
 
 
 def test__find_one_returns_410_for_missing_entity(authenticated_client: TestClient) -> None:
@@ -87,10 +167,8 @@ def test__find_one_requires_authentication(unauthenticated_client: TestClient) -
 
 def test__create_requires_authentication(unauthenticated_client: TestClient) -> None:
     """Create/update endpoint should return 401 when no bearer token is provided."""
-    response = unauthenticated_client.put(
-        "/entities/",
-        json={"name": "Auth Fail", "description": "No token"},
-    )
+    entity = Entity(name="Auth Fail", description="No token")
+    response = unauthenticated_client.put("/entities/", json=entity.model_dump(mode="json"))
 
     assert response.status_code == 401
 
