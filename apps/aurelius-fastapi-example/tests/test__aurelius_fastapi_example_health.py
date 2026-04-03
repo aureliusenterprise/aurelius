@@ -6,4 +6,4 @@ def test__ready_returns_200(authenticated_client: TestClient) -> None:
     response = authenticated_client.get("/health/ready")
 
     assert response.status_code == 200
-    assert response.content == b"null"
+    assert response.content == b""
