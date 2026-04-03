@@ -3,9 +3,10 @@ from typing import Annotated, cast
 
 import httpx
 import jwt
-import jwt.algorithms
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from fastapi import Depends, HTTPException, Request
 from fastapi.security import OAuth2PasswordBearer
+from jwt.algorithms import RSAAlgorithm
 from pydantic import BaseModel, HttpUrl
 
 from aurelius_fastapi_example.globals import LOGGER
@@ -53,17 +54,14 @@ def openid_configuration(auth_base_url: Annotated[str, Depends(auth_base_url)]) 
 
 
 @cache
-def jwks(openid: Annotated[OpenIdConfig, Depends(openid_configuration)]) -> dict[str, jwt.algorithms.AllowedPublicKeys]:
+def jwks(openid: Annotated[OpenIdConfig, Depends(openid_configuration)]) -> dict[str, RSAPublicKey]:
     """Return the JWKS configuration for the JWT authentication."""
     response = httpx.get(str(openid.jwks_uri))
 
     response.raise_for_status()
     response_json = response.json()
 
-    result = {
-        key["kid"]: cast("jwt.algorithms.AllowedPublicKeys", jwt.algorithms.RSAAlgorithm.from_jwk(key))
-        for key in response_json["keys"]
-    }
+    result = {key["kid"]: cast("RSAPublicKey", RSAAlgorithm.from_jwk(key)) for key in response_json["keys"]}
 
     LOGGER.info("Loaded JWKS configuration from %s", openid.jwks_uri)
 
@@ -86,8 +84,8 @@ async def auth_token(
 
 def jwk(
     auth_token: Annotated[str, Depends(auth_token)],
-    jwks: Annotated[dict[str, jwt.algorithms.AllowedPublicKeys], Depends(jwks)],
-) -> jwt.algorithms.AllowedPublicKeys:
+    jwks: Annotated[dict[str, RSAPublicKey], Depends(jwks)],
+) -> RSAPublicKey:
     """Return the JWK key for decoding the authentication token."""
     try:
         headers = jwt.get_unverified_header(auth_token)
@@ -109,7 +107,7 @@ def jwk(
 def user_info(
     auth_base_url: Annotated[str, Depends(auth_base_url)],
     auth_token: Annotated[str, Depends(auth_token)],
-    jwk: Annotated[jwt.algorithms.AllowedPublicKeys, Depends(jwk)],
+    jwk: Annotated[RSAPublicKey, Depends(jwk)],
 ) -> dict:
     """Decode the authentication token to verify the user's identity and return their information."""
     try:
