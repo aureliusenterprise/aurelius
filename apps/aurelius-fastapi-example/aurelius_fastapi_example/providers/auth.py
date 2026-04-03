@@ -67,21 +67,28 @@ def jwks(openid: Annotated[OpenIdConfig, Depends(openid_configuration)]) -> dict
     return result
 
 
+async def auth_token(
+    auth_provider: Annotated[OAuth2PasswordBearer, Depends(auth_provider)],
+    request: Request,
+) -> str:
+    """Return the authentication token from the request."""
+    token = await auth_provider(request)
+
+    if token is None:
+        LOGGER.error("No authentication token provided")
+        raise HTTPException(status_code=401)
+
+    return token
+
+
 async def user_info(
     auth_base_url: Annotated[str, Depends(auth_base_url)],
-    auth_provider: Annotated[OAuth2PasswordBearer, Depends(auth_provider)],
+    auth_token: Annotated[str, Depends(auth_token)],
     jwks: Annotated[dict, Depends(jwks)],
-    request: Request,
 ) -> dict:
     """Decode the authentication token to verify the user's identity and return their information."""
     try:
-        token = await auth_provider(request)
-
-        if token is None:
-            LOGGER.error("No authentication token provided")
-            raise HTTPException(status_code=401)
-
-        headers = jwt.get_unverified_header(token)
+        headers = jwt.get_unverified_header(auth_token)
 
         if not (kid := headers.get("kid")):
             LOGGER.error("No key ID found in authentication token")
@@ -94,7 +101,7 @@ async def user_info(
         LOGGER.debug("Decoding authentication token with key %s", kid)
 
         return jwt.decode(
-            token,
+            auth_token,
             key=key,
             algorithms=["RS256"],
             issuer=auth_base_url,
