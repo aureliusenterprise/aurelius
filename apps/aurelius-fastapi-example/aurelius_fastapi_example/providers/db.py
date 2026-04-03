@@ -2,7 +2,7 @@ from collections.abc import Generator
 from functools import cache
 from typing import Annotated
 
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 from sqlalchemy import Engine, create_engine
 from sqlmodel import Session, SQLModel
 
@@ -33,9 +33,12 @@ def session(db_engine: Annotated[Engine, Depends(database)]) -> Generator[Sessio
     with Session(db_engine) as session:
         try:
             yield session
-            LOGGER.debug("Committing any changes to the database")
-            session.commit()
-        except HTTPException:
+
+            if session.new or session.dirty or session.deleted:
+                LOGGER.info("Committing all changes to the database")
+                session.commit()
+
+        except Exception:
             LOGGER.error("Rolling back any changes to the database")
             session.rollback()
             raise
