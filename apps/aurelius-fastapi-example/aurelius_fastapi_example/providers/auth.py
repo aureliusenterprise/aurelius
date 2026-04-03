@@ -81,7 +81,7 @@ async def auth_token(
     return token
 
 
-async def user_info(
+def user_info(
     auth_base_url: Annotated[str, Depends(auth_base_url)],
     auth_token: Annotated[str, Depends(auth_token)],
     jwks: Annotated[dict, Depends(jwks)],
