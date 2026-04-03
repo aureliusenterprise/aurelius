@@ -34,12 +34,6 @@ def session(engine: Engine) -> Generator[Session]:
         session.rollback()
 
 
-@pytest.fixture()
-def mock_user() -> dict:
-    """Return a minimal decoded JWT payload for use in tests."""
-    return {"sub": "test-user-id", "preferred_username": "testuser"}
-
-
 @pytest.fixture(scope="session")
 def settings() -> Settings:
     """Return a mock Settings instance for testing."""
@@ -70,6 +64,12 @@ def unauthenticated_client(app: FastAPI, session: Session, settings: Settings) -
         yield test_client
 
     app.dependency_overrides.clear()
+
+
+@pytest.fixture()
+def mock_user() -> dict:
+    """Return a minimal decoded JWT payload for use in tests."""
+    return {"sub": "test-user-id", "preferred_username": "testuser"}
 
 
 @pytest.fixture()
