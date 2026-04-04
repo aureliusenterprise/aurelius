@@ -1,3 +1,4 @@
+import re
 from collections.abc import Sequence
 from typing import Annotated
 from uuid import UUID
@@ -12,6 +13,39 @@ from aurelius_fastapi_example.models import PaginationQueryParams
 from aurelius_fastapi_example.providers import session, user_info
 
 ENTITIES = APIRouter()
+
+
+def sanitize_search_query(search: str | None) -> str | None:
+    """
+    Sanitize search query for PostgreSQL full-text search.
+
+    Escapes special characters that could be interpreted as tsquery operators:
+    - &: AND operator
+    - |: OR operator
+    - !: NOT operator
+    - (: grouping
+    - ): grouping
+    - " : phrase matching
+
+    Also removes control characters (ASCII 0x00-0x1F) to prevent potential issues.
+
+    Args:
+        search: The raw search query string.
+
+    Returns:
+        Sanitized search query or None if input is empty/whitespace only.
+    """
+    if not search:
+        return None
+
+    # Escape special tsquery operators by prefixing with backslash
+    # Order matters - escape " first to avoid double-escaping
+    sanitized = re.sub(r'(["&|!:()])', r"\\\1", search)
+
+    # Remove null bytes and control characters (ASCII 0x00-0x1F)
+    sanitized = re.sub(r"[\x00-\x1f]", "", sanitized)
+
+    return sanitized if sanitized.strip() else None
 
 
 @ENTITIES.get(
@@ -41,7 +75,7 @@ def find_all(
 
     query = select(Entity).offset(pagination.skip).limit(pagination.limit)
 
-    if search:
+    if search := sanitize_search_query(search):
         tsquery = plainto_tsquery("english", search)
         query = query.where(or_(col(Entity.name).op("@@")(tsquery), col(Entity.description).op("@@")(tsquery)))
 
@@ -77,9 +111,7 @@ def find_one(
     """
     LOGGER.info("User %s is retrieving entity with GUID %s", user_info.get("sub"), guid)
 
-    entity = session.get(Entity, guid)
-
-    if not entity:
+    if not (entity := session.get(Entity, guid)):
         raise HTTPException(status_code=410, detail="Entity not found")
 
     return entity
@@ -111,12 +143,12 @@ def create_or_update(
     if isinstance(entity.guid, str):
         entity = Entity.model_validate(entity.model_dump(mode="json"))
 
-    if not session.get(Entity, entity.guid):
-        LOGGER.info("User %s is creating a new entity", user_info.get("sub"))
-    else:
-        LOGGER.info("User %s is updating entity with GUID %s", user_info.get("sub"), entity.guid)
+    LOGGER.info("User %s is creating or updating entity with GUID %s", user_info.get("sub"), entity.guid)
 
-    return session.merge(entity)
+    session.merge(entity)
+    session.commit()
+
+    return session.get_one(Entity, entity.guid)
 
 
 @ENTITIES.delete(
@@ -145,9 +177,8 @@ def delete(
     """
     LOGGER.info("User %s is deleting entity with GUID %s", user_info.get("sub"), guid)
 
-    entity = session.get(Entity, guid)
-
-    if not entity:
+    if not (entity := session.get(Entity, guid)):
         raise HTTPException(status_code=410, detail="Entity not found")
 
     session.delete(entity)
+    session.commit()

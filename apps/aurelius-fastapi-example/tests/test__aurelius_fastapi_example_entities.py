@@ -1,3 +1,5 @@
+from collections.abc import Generator
+
 import pytest
 from aurelius_example import Entity
 from fastapi.testclient import TestClient
@@ -13,15 +15,26 @@ def test__find_many_returns_empty_list(authenticated_client: TestClient) -> None
 
 
 @pytest.fixture()
-def entities(session: Session) -> list[Entity]:
+def entities(session: Session) -> Generator[list[Entity]]:
     """Create and return a list of test entities."""
     test_entities = [
         Entity(name="Test Entity 1", description="First test entity"),
         Entity(name="Test Entity 2", description="Second test entity"),
         Entity(name="Test Entity 3", description="Third test entity"),
     ]
+
     session.add_all(test_entities)
-    return test_entities
+    session.commit()
+
+    for entity in test_entities:
+        session.refresh(entity)
+
+    yield test_entities
+
+    for entity in test_entities:
+        session.delete(entity)
+
+    session.commit()
 
 
 def test__find_many_returns_entities(authenticated_client: TestClient, entities: list[Entity]) -> None:
@@ -102,11 +115,19 @@ def test__create_entity(authenticated_client: TestClient, session: Session) -> N
 
 
 @pytest.fixture()
-def entity(session: Session) -> Entity:
+def entity(session: Session) -> Generator[Entity]:
     """Create and return a single test entity."""
     entity = Entity(name="Test Entity", description="A test entity")
+
     session.add(entity)
-    return entity
+    session.commit()
+
+    session.refresh(entity)
+
+    yield entity
+
+    session.delete(entity)
+    session.commit()
 
 
 def test__update_entity(authenticated_client: TestClient, session: Session, entity: Entity) -> None:
@@ -134,7 +155,10 @@ def test__delete_entity(authenticated_client: TestClient, session: Session, enti
     response = authenticated_client.delete(f"/entities/{entity.guid}")
 
     assert response.status_code == 200
-    assert entity in session.deleted
+
+    stored = session.get(Entity, entity.guid)
+
+    assert stored is None
 
 
 def test__find_one_returns_410_for_missing_entity(authenticated_client: TestClient) -> None:
