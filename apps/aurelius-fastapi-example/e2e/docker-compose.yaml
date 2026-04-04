@@ -55,6 +55,7 @@ services:
 
     postgres-app:
         image: postgres:latest
+        user: ${DATABASE_USERNAME}
         environment:
             POSTGRES_USER: ${DATABASE_USERNAME}
             POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -69,6 +70,7 @@ services:
 
     postgres-keycloak:
         image: postgres:latest
+        user: ${DATABASE_USERNAME}
         environment:
             POSTGRES_USER: ${DATABASE_USERNAME}
             POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
