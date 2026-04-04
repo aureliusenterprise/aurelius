@@ -2,6 +2,7 @@
 dependencies = [
     "aurelius-example",
     "aurelius-sdk",
+    "cachetools>=6.2.2",
     "fastapi>=0.116.1",
     "httpx>=0.28.1",
     "psycopg2>=2.9.10",

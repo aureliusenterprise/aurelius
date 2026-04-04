@@ -158,6 +158,7 @@ source = { editable = "apps/aurelius-fastapi-example" }
 dependencies = [
     { name = "aurelius-example" },
     { name = "aurelius-sdk" },
+    { name = "cachetools" },
     { name = "fastapi" },
     { name = "httpx" },
     { name = "psycopg2" },
@@ -171,6 +172,7 @@ dependencies = [
 requires-dist = [
     { name = "aurelius-example", editable = "libs/python/aurelius-example" },
     { name = "aurelius-sdk", editable = "libs/python/aurelius-sdk" },
+    { name = "cachetools", specifier = ">=6.2.2" },
     { name = "fastapi", specifier = ">=0.116.1" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "psycopg2", specifier = ">=2.9.10" },
