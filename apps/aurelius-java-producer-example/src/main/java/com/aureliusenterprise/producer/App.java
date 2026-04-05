@@ -108,6 +108,8 @@ public class App {
         } catch (Exception e) {
             App.logger.error("An error occurred while producing messages: " + e.getMessage());
             Thread.currentThread().interrupt();
+        } finally {
+            kafkaProducer.flush();
         }
     }
 }
