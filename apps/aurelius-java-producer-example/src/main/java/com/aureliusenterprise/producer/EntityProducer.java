@@ -17,7 +17,7 @@ public class EntityProducer {
     /**
      * Logger instance for the producer instance.
      */
-    private static final Logger logger = LoggerFactory.getLogger(App.class);
+    private static final Logger logger = LoggerFactory.getLogger(EntityProducer.class);
 
     /**
      * KafkaProducer instance used to send {@link Entity} objects with String keys to a Kafka topic.
