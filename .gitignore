@@ -185,6 +185,9 @@ __screenshots__/
 # Ignore Gradle project-specific cache directory
 .gradle
 
+# Compiled class files
+*.class
+
 # Ignore Gradle build output directory
 build
 
