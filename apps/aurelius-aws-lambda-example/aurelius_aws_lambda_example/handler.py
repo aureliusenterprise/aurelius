@@ -23,6 +23,7 @@ def initialize() -> tuple[Settings, AvroDeserializer, AvroSerializer, Producer]:
     settings = Settings()  # type: ignore[load settings from environment variables]
 
     LOGGER.setLevel(settings.log_level)
+    LOGGER.log_uncaught_exceptions = settings.is_development
 
     schema_registry_client = SchemaRegistryClient(
         {"url": str(settings.schema_registry_url)},
@@ -52,6 +53,9 @@ def initialize() -> tuple[Settings, AvroDeserializer, AvroSerializer, Producer]:
 
     LOGGER.info("Successfully initialized %s (%s)", name, version)
     LOGGER.debug("Settings: %s", settings)
+
+    if settings.is_development:
+        LOGGER.warning("🚨 Running in development mode. Not for production use! 🚨")
 
     return settings, value_deserializer, value_serializer, kafka_producer
 

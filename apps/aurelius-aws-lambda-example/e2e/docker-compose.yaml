@@ -38,6 +38,7 @@ services:
         entrypoint: ["/aws-lambda/aws-lambda-rie"]
         environment:
             AWS_REGION: ${AWS_REGION}
+            ENVIRONMENT: ${ENVIRONMENT}
             KAFKA_BOOTSTRAP_SERVERS: broker:9094
             KAFKA_TOPIC_NAME: ${KAFKA_TOPIC_NAME}
             LOG_LEVEL: ${LOG_LEVEL}
