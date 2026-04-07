@@ -60,7 +60,7 @@ def compose() -> Generator[DockerCompose]:
 @pytest.fixture(scope="session")
 def base_url(compose: DockerCompose) -> str:
     """Return the base URL for the application."""
-    port = compose.get_service_port("aurelius-frontend-example", 80)
+    port = compose.get_service_port("aurelius-frontend-example", 8080)
     return f"http://localhost:{port}"
 
 

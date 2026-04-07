@@ -62,14 +62,14 @@ export class AuthService {
      * Log in the user.
      */
     login(): Promise<void> {
-        return this.keycloak.login({ redirectUri: window.location.origin });
+        return this.keycloak.login({ redirectUri: globalThis.location.origin });
     }
 
     /**
      * Log out the user.
      */
     logout(): Promise<void> {
-        return this.keycloak.logout({ redirectUri: window.location.origin });
+        return this.keycloak.logout({ redirectUri: globalThis.location.origin });
     }
 
     /**

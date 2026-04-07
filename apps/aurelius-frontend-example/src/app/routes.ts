@@ -8,7 +8,7 @@ async function rootAuthGuard(
 ): Promise<boolean> {
     // If not authenticated, redirect to login
     if (!authenticated) {
-        await keycloak.login({ redirectUri: window.location.origin + state.url });
+        await keycloak.login({ redirectUri: globalThis.location.origin + state.url });
     }
     return authenticated;
 }

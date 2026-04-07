@@ -22,7 +22,7 @@ export async function initialize(): Promise<ApplicationConfig> {
                 config: keycloak,
                 initOptions: {
                     onLoad: "check-sso",
-                    silentCheckSsoRedirectUri: window.location.origin + "/silent-check-sso.html",
+                    silentCheckSsoRedirectUri: globalThis.location.origin + "/silent-check-sso.html",
                 },
             }),
             {

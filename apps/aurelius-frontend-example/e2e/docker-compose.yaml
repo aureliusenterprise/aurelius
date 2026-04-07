@@ -16,7 +16,7 @@ services:
         extra_hosts:
             - keycloak.localhost:host-gateway
         ports:
-            - 80
+            - 8080
 
     aurelius-fastapi-example:
         image: aurelius-fastapi-example:local
