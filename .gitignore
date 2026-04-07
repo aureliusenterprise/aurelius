@@ -203,3 +203,6 @@ build
 
 # Sonarqube
 .sonar/
+
+# Vitest coverage
+coverage/
