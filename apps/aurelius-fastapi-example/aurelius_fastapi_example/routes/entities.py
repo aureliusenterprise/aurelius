@@ -1,4 +1,3 @@
-import re
 from collections.abc import Sequence
 from typing import Annotated
 from uuid import UUID
@@ -9,43 +8,10 @@ from sqlalchemy.dialects.postgresql.ext import plainto_tsquery
 from sqlmodel import Session, col, or_, select
 
 from aurelius_fastapi_example.globals import LOGGER
-from aurelius_fastapi_example.models import PaginationQueryParams
+from aurelius_fastapi_example.models import FindAllQueryParams
 from aurelius_fastapi_example.providers import session, user_info
 
 ENTITIES = APIRouter()
-
-
-def sanitize_search_query(search: str | None) -> str | None:
-    """
-    Sanitize search query for PostgreSQL full-text search.
-
-    Escapes special characters that could be interpreted as tsquery operators:
-    - &: AND operator
-    - |: OR operator
-    - !: NOT operator
-    - (: grouping
-    - ): grouping
-    - " : phrase matching
-
-    Also removes control characters (ASCII 0x00-0x1F) to prevent potential issues.
-
-    Args:
-        search: The raw search query string.
-
-    Returns:
-        Sanitized search query or None if input is empty/whitespace only.
-    """
-    if not search:
-        return None
-
-    # Escape special tsquery operators by prefixing with backslash
-    # Order matters - escape " first to avoid double-escaping
-    sanitized = re.sub(r'(["&|!:()])', r"\\\1", search)
-
-    # Remove null bytes and control characters (ASCII 0x00-0x1F)
-    sanitized = re.sub(r"[\x00-\x1f]", "", sanitized)
-
-    return sanitized if sanitized.strip() else None
 
 
 @ENTITIES.get(
@@ -54,29 +20,27 @@ def sanitize_search_query(search: str | None) -> str | None:
     description="Retrieve all entities in the database.",
 )
 def find_all(
-    pagination: Annotated[PaginationQueryParams, Depends()],
+    params: Annotated[FindAllQueryParams, Depends()],
     session: Annotated[Session, Depends(session)],
     user_info: Annotated[dict, Security(user_info)],
-    search: str | None = None,
 ) -> Sequence[Entity]:
     """
     Retrieve all entities from the database.
 
     Args:
-        pagination (PaginationQueryParams): Pagination parameters for the query.
+        params (FindAllQueryParams): Query parameters for the find all endpoint.
         session (Session): The database session to use for the query.
         user_info (dict): Decoded user information from the authentication token.
-        search (str | None): Optional search query to filter entities.
 
     Returns:
         Sequence[Entity]: All entities in the database.
     """
     LOGGER.info("User %s is retrieving entities", user_info.get("sub"))
 
-    query = select(Entity).offset(pagination.skip).limit(pagination.limit)
+    query = select(Entity).offset(params.skip).limit(params.limit)
 
-    if search := sanitize_search_query(search):
-        tsquery = plainto_tsquery("english", search)
+    if params.search:
+        tsquery = plainto_tsquery("english", params.search)
         query = query.where(or_(col(Entity.name).op("@@")(tsquery), col(Entity.description).op("@@")(tsquery)))
 
     return session.exec(query).all()

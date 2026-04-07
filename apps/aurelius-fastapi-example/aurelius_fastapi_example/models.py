@@ -1,4 +1,5 @@
-from pydantic import BaseModel, Field, HttpUrl, NonNegativeInt, PositiveInt, SecretStr
+from aurelius_sdk.postgresql import sanitize_tsquery
+from pydantic import BaseModel, Field, HttpUrl, NonNegativeInt, PositiveInt, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 
@@ -18,6 +19,29 @@ class PaginationQueryParams(BaseModel):
         description="Maximum number of items to return per page.",
         le=1000,
     )
+
+
+class FindAllQueryParams(PaginationQueryParams):
+    """Query parameters for the find all endpoint."""
+
+    search: str | None = Field(
+        default=None,
+        description="Optional search query to filter entities.",
+    )
+
+    @field_validator("search", mode="before")
+    @classmethod
+    def sanitize_search(cls, value: str | None) -> str | None:
+        """
+        Sanitize search query for PostgreSQL full-text search.
+
+        Args:
+            value: The raw search query string.
+
+        Returns:
+            Sanitized search query or None if input is empty/whitespace only.
+        """
+        return sanitize_tsquery(value)
 
 
 class Settings(BaseSettings):

@@ -140,6 +140,7 @@ nav:
                       - architecture/platform/delivery/index.md
                       - Configuration Management: architecture/platform/delivery/configuration-management.md
                       - Change Management: architecture/platform/delivery/change-management.md
+                      - Testing: architecture/platform/delivery/testing.md
                       - Release Management: architecture/platform/delivery/release-management.md
                       - Deployment: architecture/platform/delivery/deployment.md
                 - Observability:
