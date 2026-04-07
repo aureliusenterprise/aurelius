@@ -21,6 +21,9 @@ export class PersonDetailsComponent implements OnInit {
   dataStewardEntityCount$: Observable<number>;
   domainLeadCount$: Observable<number>;
   propertyCount$: Observable<number>;
+  systemOwnerSystemCount$: Observable<number>;
+  technicalDataStewardCollectionCount$: Observable<number>;
+  technicalDataStewardDatasetCount$: Observable<number>;
 
   constructor(
     private readonly entityDetailsService: EntityDetailsService,
@@ -96,11 +99,50 @@ export class PersonDetailsComponent implements OnInit {
     this.propertyCount$ = this.filteredPropertiesService.state.pipe(
       map((properties) => Object.keys(properties).length)
     );
+
+    this.systemOwnerSystemCount$ = this.entityDetailsService
+      .select(
+        [
+          'entityDetails',
+          'entity',
+          'relationshipAttributes',
+          'systemOwnerSystem',
+          'length',
+        ],
+        { includeFalsy: true }
+      )
+      .pipe(defaultIfFalsy(0));
+
+    this.technicalDataStewardCollectionCount$ = this.entityDetailsService
+      .select(
+        [
+          'entityDetails',
+          'entity',
+          'relationshipAttributes',
+          'technicalDataStewardCollection',
+          'length',
+        ],
+        { includeFalsy: true }
+      )
+      .pipe(defaultIfFalsy(0));
+
+    this.technicalDataStewardDatasetCount$ = this.entityDetailsService
+      .select(
+        [
+          'entityDetails',
+          'entity',
+          'relationshipAttributes',
+          'technicalDataStewardDataset',
+          'length',
+        ],
+        { includeFalsy: true }
+      )
+      .pipe(defaultIfFalsy(0));
   }
 
   async filterResponsibilitiesByType(
     typeName: string,
-    role: 'datasteward' | 'dataowner' | 'domainlead'
+    role: 'datasteward' | 'dataowner' | 'domainlead' | 'systemowner' | 'technicaldatasteward'
   ) {
     const [id, queryObject] = await Promise.all([
       this.entityDetailsService.get('entityId'),

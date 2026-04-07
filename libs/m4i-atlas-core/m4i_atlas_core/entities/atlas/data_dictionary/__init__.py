@@ -15,6 +15,9 @@ from .BusinessDataQuality import *
 from .BusinessDataset import *
 from .BusinessField import *
 from .BusinessSystem import *
+from .BusinessSystem import m4i_system_owner_rel_def
+from .BusinessCollection import m4i_tech_steward_collection_rel_def
+from .BusinessDataset import m4i_tech_steward_dataset_rel_def
 
 data_dictionary_types_def = TypesDef(
     entity_defs=[
@@ -53,7 +56,10 @@ data_dictionary_types_def = TypesDef(
         m4i_pfield_cfield_rel_def,
         m4i_lead_entity_rel_def,
         m4i_person_gprocess_rel_def,
-        m4i_system_process_rel_def
+        m4i_system_process_rel_def,
+        m4i_system_owner_rel_def,
+        m4i_tech_steward_collection_rel_def,
+        m4i_tech_steward_dataset_rel_def
     ],
     classification_defs=[
         m4i_classification_pii,

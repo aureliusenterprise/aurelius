@@ -52,4 +52,36 @@
       </ng-container>
     </div>
   </ng-container>
+  <ng-container
+  *ngIf="deduplicate(details.entity.relationshipAttributes?.systemOwner) as systemOwners"
+  >
+    <div *ngIf="systemOwners.length > 0">
+      <span class="icon is-small">
+        <fa-icon class="business" [icon]="personsIcon"> </fa-icon>
+      </span>
+      <span> System Owner(s): </span>
+      <ng-container *ngFor="let owner of systemOwners; let last = last">
+        <span class="pointer" (click)="directToDetailsPage(owner.guid)">
+          <a>{{ owner.displayText }}</a>
+        </span>
+        <span *ngIf="!last">, </span>
+      </ng-container>
+    </div>
+  </ng-container>
+  <ng-container
+  *ngIf="deduplicate(details.entity.relationshipAttributes?.technicalDataSteward) as techStewards"
+  >
+    <div *ngIf="techStewards.length > 0">
+      <span class="icon is-small">
+        <fa-icon class="business" [icon]="personsIcon"> </fa-icon>
+      </span>
+      <span> Technical Data Steward(s): </span>
+      <ng-container *ngFor="let steward of techStewards; let last = last">
+        <span class="pointer" (click)="directToDetailsPage(steward.guid)">
+          <a>{{ steward.displayText }}</a>
+        </span>
+        <span *ngIf="!last">, </span>
+      </ng-container>
+    </div>
+  </ng-container>
 </ng-container>

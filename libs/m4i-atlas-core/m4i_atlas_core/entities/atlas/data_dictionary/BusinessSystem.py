@@ -52,6 +52,14 @@ atlas_system_attributes_def = [
         description="The functional names of the Process that belong to the System",
         display_name="Child Process",
         cardinality=Cardinality.SET
+    ),
+    AttributeDef(
+        name="systemOwner",
+        type_name="array<m4i_person>",
+        is_indexable=False,
+        description="The system owner of the system",
+        display_name="System Owner",
+        cardinality=Cardinality.SET
     )
 ]
 
@@ -86,6 +94,24 @@ m4i_psystem_csystem_rel_def = RelationshipDef(
     description="The relationship between the system to other systems"
 )
 
+end_1_system_owner = RelationshipEndDef(
+    type="m4i_person",
+    name="systemOwnerSystem"
+)
+end_2_system_owner = RelationshipEndDef(
+    type="m4i_system",
+    name="systemOwner"
+)
+
+m4i_system_owner_rel_def = RelationshipDef(
+    end_def1=end_1_system_owner,
+    end_def2=end_2_system_owner,
+    name="m4i_system_owner_assignment",
+    category=TypeCategory.RELATIONSHIP,
+    type_version="1.0",
+    description="The relationship between the system and its system owner"
+)
+
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
@@ -103,6 +129,7 @@ class BusinessSystemAttributesDefaultsBase(Attributes):
     child_system: List[ObjectId] = field(default_factory=list)
     processes: List[ObjectId] = field(default_factory=list)
     source: List[ObjectId] = field(default_factory=list)
+    system_owner: List[ObjectId] = field(default_factory=list)
 # END BusinessSystemAttributesDefaultsBase
 
 
@@ -153,7 +180,8 @@ class BusinessSystem(BusinessSystemDefaultsBase, BusinessSystemBase, Entity):
             *self.attributes.parent_system,
             *self.attributes.child_system,
             *self.attributes.processes,
-            *self.attributes.source
+            *self.attributes.source,
+            *self.attributes.system_owner
         ]
 
         return filter(None, references)

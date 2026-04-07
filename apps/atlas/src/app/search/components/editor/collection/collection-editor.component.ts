@@ -47,9 +47,10 @@ function createCollectionEditorForm(): UntypedFormGroup {
   });
 
   const datasets = new UntypedFormArray([]),
-    systems = new UntypedFormArray([]);
+    systems = new UntypedFormArray([]),
+    technicalDataSteward = new UntypedFormArray([]);
 
-  const relationshipAttributes = new UntypedFormGroup({ datasets, systems });
+  const relationshipAttributes = new UntypedFormGroup({ datasets, systems, technicalDataSteward });
 
   return new UntypedFormGroup({ attributes, relationshipAttributes });
 }
@@ -93,6 +94,15 @@ function updateCollectionEditorForm(
   systems.clear();
   entityDetails.entity.relationshipAttributes.systems?.forEach((system) =>
     systems.push(new UntypedFormControl(system))
+  );
+
+  const technicalDataSteward = relationshipAttributes.get(
+    'technicalDataSteward'
+  ) as UntypedFormArray;
+
+  technicalDataSteward.clear();
+  entityDetails.entity.relationshipAttributes.technicalDataSteward?.forEach(
+    (person) => technicalDataSteward.push(new UntypedFormControl(person))
   );
 }
 
@@ -140,6 +150,12 @@ export class CollectionEditorComponent {
 
   get systems() {
     return this.editorFormService.form.get('relationshipAttributes.systems');
+  }
+
+  get technicalDataSteward() {
+    return this.editorFormService.form.get(
+      'relationshipAttributes.technicalDataSteward'
+    );
   }
 
   get typeAlias() {

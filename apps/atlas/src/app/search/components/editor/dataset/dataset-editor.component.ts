@@ -52,7 +52,8 @@ function createDatasetEditorForm(): UntypedFormGroup {
     collections = new UntypedFormArray([]),
     inputToProcesses = new UntypedFormArray([]),
     outputFromProcesses = new UntypedFormArray([]),
-    parentDataset = new UntypedFormArray([]);
+    parentDataset = new UntypedFormArray([]),
+    technicalDataSteward = new UntypedFormArray([]);
 
   const relationshipAttributes = new UntypedFormGroup({
     fields,
@@ -61,6 +62,7 @@ function createDatasetEditorForm(): UntypedFormGroup {
     inputToProcesses,
     outputFromProcesses,
     parentDataset,
+    technicalDataSteward,
   });
 
   return new UntypedFormGroup({ attributes, relationshipAttributes });
@@ -145,6 +147,15 @@ function updateDatasetEditorForm(
   parentDataset.clear();
   entityDetails.entity.relationshipAttributes.parentDataset?.forEach(
     (dataset) => parentDataset.push(new UntypedFormControl(dataset))
+  );
+
+  const technicalDataSteward: UntypedFormArray = relationshipAttributes.get(
+    'technicalDataSteward'
+  ) as UntypedFormArray;
+
+  technicalDataSteward.clear();
+  entityDetails.entity.relationshipAttributes.technicalDataSteward?.forEach(
+    (person) => technicalDataSteward.push(new UntypedFormControl(person))
   );
 }
 
@@ -246,6 +257,12 @@ export class DatasetEditorComponent {
 
   get relationshipAttributes() {
     return this.editorFormService.form.get('relationshipAttributes');
+  }
+
+  get technicalDataSteward() {
+    return this.editorFormService.form.get(
+      'relationshipAttributes.technicalDataSteward'
+    );
   }
 
   get typeAlias() {

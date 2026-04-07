@@ -20,6 +20,15 @@ RELATIONSHIP_MAP = {
     "m4i_generic_process": "derivedprocess",
 }
 
+# Maps relationship attribute names to governance GUID fields on the entity document
+GOVERNANCE_GUID_MAP = {
+    "systemOwner": "derivedsystemownerguid",
+    "technicalDataSteward": "derivedtechnicaldatastewardguid",
+    "businessOwner": "deriveddataownerguid",
+    "steward": "deriveddatastewardguid",
+    "domainLead": "deriveddomainleadguid",
+}
+
 
 class AppSearchDocumentNotFoundError(SynchronizeAppSearchError):
     """Exception raised when the AppSearchDocument is not found in the index."""
@@ -219,6 +228,17 @@ def handle_deleted_relationships(  # noqa: C901, PLR0915, PLR0912
     ]
 
     logging.info("Relationships to delete: %s", deleted_relationships)
+
+    # Update governance GUID fields for deleted relationships
+    for rel_key, rel_values in message.deleted_relationships.items():
+        if rel_key in GOVERNANCE_GUID_MAP:
+            gov_field = GOVERNANCE_GUID_MAP[rel_key]
+            deleted_guids = {rel.guid for rel in rel_values if rel.guid is not None}
+            current_value = getattr(document, gov_field, None)
+            if current_value:
+                remaining = [g for g in current_value.split(",") if g not in deleted_guids]
+                setattr(document, gov_field, ",".join(remaining) if remaining else None)
+            updated_documents[document.guid] = document
 
     if not deleted_relationships:
         logging.info("No relationships to delete for entity %s", message.guid)
@@ -452,6 +472,17 @@ def handle_inserted_relationships(  # noqa: C901, PLR0912, PLR0915
 
     logging.info("Relationships to insert: %s", inserted_relationships)
     logging.info("Parents: %s", parents)
+
+    # Update governance GUID fields for inserted relationships
+    for rel_key, rel_values in message.inserted_relationships.items():
+        if rel_key in GOVERNANCE_GUID_MAP:
+            gov_field = GOVERNANCE_GUID_MAP[rel_key]
+            new_guids = [rel.guid for rel in rel_values if rel.guid is not None]
+            current_value = getattr(document, gov_field, None)
+            existing = current_value.split(",") if current_value else []
+            merged = list(dict.fromkeys(existing + new_guids))
+            setattr(document, gov_field, ",".join(merged) if merged else None)
+            updated_documents[document.guid] = document
 
     if not inserted_relationships:
         logging.info("No relationships to insert for entity %s", message.guid)

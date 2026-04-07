@@ -28,6 +28,15 @@ RELATIONSHIP_MAP = {
 
 RELATIONSHIP_BLACKLIST = ["m4i_data_quality", "m4i_gov_data_quality", "m4i_source"]
 
+# Maps relationship attribute names to governance GUID fields on the entity document
+GOVERNANCE_GUID_MAP = {
+    "systemOwner": "derivedsystemownerguid",
+    "technicalDataSteward": "derivedtechnicaldatastewardguid",
+    "businessOwner": "deriveddataownerguid",
+    "steward": "deriveddatastewardguid",
+    "domainLead": "deriveddomainleadguid",
+}
+
 TECHNICAL_TYPES = {
     "m4i_system",
     "m4i_collection",
@@ -124,6 +133,16 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
     )
     # Add document to created documents
     updated_documents[document.guid] = document
+
+    # Populate governance GUID fields from inserted relationships
+    if message.inserted_relationships:
+        for rel_key, rel_values in message.inserted_relationships.items():
+            if rel_key in GOVERNANCE_GUID_MAP:
+                gov_field = GOVERNANCE_GUID_MAP[rel_key]
+                person_guids = [rel.guid for rel in rel_values if rel.guid is not None]
+                if person_guids:
+                    setattr(document, gov_field, ",".join(person_guids))
+                    updated_documents[document.guid] = document
 
     parents = [parent.guid for parent in message.new_value.get_parents()]
 

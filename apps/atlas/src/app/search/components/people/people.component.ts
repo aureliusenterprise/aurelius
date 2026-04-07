@@ -33,7 +33,9 @@ export class PeopleComponent implements OnInit {
           const people = [
             ...(relationshipAttributes.domainLead || []),
             ...(relationshipAttributes.businessOwner || []),
-            ...(relationshipAttributes.steward || [])
+            ...(relationshipAttributes.steward || []),
+            ...(relationshipAttributes.systemOwner || []),
+            ...(relationshipAttributes.technicalDataSteward || [])
           ];
 
           return people.length === 0;

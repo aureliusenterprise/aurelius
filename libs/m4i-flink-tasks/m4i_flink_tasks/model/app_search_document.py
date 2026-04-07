@@ -46,6 +46,8 @@ class AppSearchDocument(DataClassJsonMixin):
     deriveddataownerguid: Union[str, None] = None
     deriveddomainleadguid: Union[str, None] = None
     deriveddatastewardguid: Union[str, None] = None
+    derivedsystemownerguid: Union[str, None] = None
+    derivedtechnicaldatastewardguid: Union[str, None] = None
     sourcetype: Union[str, None] = None
 
     # Relationships

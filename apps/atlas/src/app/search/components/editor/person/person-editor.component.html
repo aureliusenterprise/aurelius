@@ -186,6 +186,64 @@
       ></ng-container>
     </div>
   </div>
+
+  <div class="field">
+    <label class="label">System owner systems</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="systemOwnerSystems"
+          typeName="m4i_system"
+          [rule]="rules.systemOwnerSystem"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.systemOwnerSystem as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Technical data steward collections</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="technicalDataStewardCollections"
+          typeName="m4i_collection"
+          [rule]="rules.technicalDataStewardCollection"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.technicalDataStewardCollection as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Technical data steward datasets</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="technicalDataStewardDatasets"
+          typeName="m4i_dataset"
+          [rule]="rules.technicalDataStewardDataset"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.technicalDataStewardDataset as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
   <div class="field">
     <div class="grid">
       <ng-container *ngIf="(editorFormService.submitted | async) && editorFormService.form.invalid">

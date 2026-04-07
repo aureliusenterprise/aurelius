@@ -123,6 +123,67 @@
     </div>
   </div>
 </div>
+<div class="columns is-centered has-text-centered">
+  <div class="column">
+    <div class="box">
+      <p class="heading">System owner</p>
+      <nav class="level">
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">
+              <a
+                models4insightDetailsNavigationItem="#governance-roles"
+                (click)="
+                  filterResponsibilitiesByType('m4i_system', 'systemowner')
+                "
+              >
+                Systems
+              </a>
+            </p>
+            <p class="title">{{ systemOwnerSystemCount$ | async }}</p>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <div class="column">
+    <div class="box">
+      <p class="heading">Technical data steward</p>
+      <nav class="level is-mobile">
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">
+              <a
+                models4insightDetailsNavigationItem="#governance-roles"
+                (click)="
+                  filterResponsibilitiesByType('m4i_collection', 'technicaldatasteward')
+                "
+              >
+                Collections
+              </a>
+            </p>
+            <p class="title">{{ technicalDataStewardCollectionCount$ | async }}</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">
+              <a
+                models4insightDetailsNavigationItem="#governance-roles"
+                (click)="
+                  filterResponsibilitiesByType('m4i_dataset', 'technicaldatasteward')
+                "
+              >
+                Datasets
+              </a>
+            </p>
+            <p class="title">{{ technicalDataStewardDatasetCount$ | async }}</p>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
 
 <div id="governance-roles" class="box">
   <models4insight-governance-roles-cards></models4insight-governance-roles-cards>

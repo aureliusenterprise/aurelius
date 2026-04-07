@@ -48,12 +48,14 @@ function createSystemEditorForm(): UntypedFormGroup {
 
   const childSystem = new UntypedFormArray([]),
     collections = new UntypedFormArray([]),
-    parentSystem = new UntypedFormArray([]);
+    parentSystem = new UntypedFormArray([]),
+    systemOwner = new UntypedFormArray([]);
 
   const relationshipAttributes = new UntypedFormGroup({
     childSystem,
     collections,
     parentSystem,
+    systemOwner,
   });
 
   return new UntypedFormGroup({ attributes, relationshipAttributes });
@@ -96,6 +98,10 @@ function updateSystemEditorForm(
     'parentSystem'
   ) as UntypedFormArray;
 
+  const systemOwner = relationshipAttributes.get(
+    'systemOwner'
+  ) as UntypedFormArray;
+
   attributes.patchValue(entityDetails.entity.attributes);
 
   childSystem.clear();
@@ -111,6 +117,11 @@ function updateSystemEditorForm(
   parentSystem.clear();
   entityDetails.entity.relationshipAttributes.parentSystem?.forEach((system) =>
     parentSystem.push(new UntypedFormControl(system))
+  );
+
+  systemOwner.clear();
+  entityDetails.entity.relationshipAttributes.systemOwner?.forEach((person) =>
+    systemOwner.push(new UntypedFormControl(person))
   );
 }
 
@@ -172,6 +183,12 @@ export class SystemEditorComponent {
 
   get relationshipAttributes() {
     return this.editorFormService.form.get('relationshipAttributes');
+  }
+
+  get systemOwner() {
+    return this.editorFormService.form.get(
+      'relationshipAttributes.systemOwner'
+    );
   }
 
   get typeAlias() {

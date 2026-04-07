@@ -54,7 +54,10 @@ function createPersonEditorForm(): UntypedFormGroup {
     businessOwnerEntity = new UntypedFormArray([]),
     domainLead = new UntypedFormArray([]),
     stewardAttribute = new UntypedFormArray([]),
-    stewardEntity = new UntypedFormArray([]);
+    stewardEntity = new UntypedFormArray([]),
+    systemOwnerSystem = new UntypedFormArray([]),
+    technicalDataStewardCollection = new UntypedFormArray([]),
+    technicalDataStewardDataset = new UntypedFormArray([]);
 
   const relationshipAttributes = new UntypedFormGroup({
     businessOwnerAttribute,
@@ -62,6 +65,9 @@ function createPersonEditorForm(): UntypedFormGroup {
     domainLead,
     stewardAttribute,
     stewardEntity,
+    systemOwnerSystem,
+    technicalDataStewardCollection,
+    technicalDataStewardDataset,
   });
 
   return new UntypedFormGroup({ attributes, relationshipAttributes });
@@ -139,6 +145,33 @@ function updateProcessEditorForm(
   entityDetails.entity.relationshipAttributes.stewardEntity?.forEach((entity) =>
     stewardEntity.push(new UntypedFormControl(entity))
   );
+
+  const systemOwnerSystem = relationshipAttributes.get(
+    'systemOwnerSystem'
+  ) as UntypedFormArray;
+
+  systemOwnerSystem.clear();
+  entityDetails.entity.relationshipAttributes.systemOwnerSystem?.forEach(
+    (system) => systemOwnerSystem.push(new UntypedFormControl(system))
+  );
+
+  const technicalDataStewardCollection = relationshipAttributes.get(
+    'technicalDataStewardCollection'
+  ) as UntypedFormArray;
+
+  technicalDataStewardCollection.clear();
+  entityDetails.entity.relationshipAttributes.technicalDataStewardCollection?.forEach(
+    (collection) => technicalDataStewardCollection.push(new UntypedFormControl(collection))
+  );
+
+  const technicalDataStewardDataset = relationshipAttributes.get(
+    'technicalDataStewardDataset'
+  ) as UntypedFormArray;
+
+  technicalDataStewardDataset.clear();
+  entityDetails.entity.relationshipAttributes.technicalDataStewardDataset?.forEach(
+    (dataset) => technicalDataStewardDataset.push(new UntypedFormControl(dataset))
+  );
 }
 
 @Component({
@@ -208,6 +241,24 @@ export class PersonEditorComponent {
   get stewardEntities() {
     return this.editorFormService.form.get(
       'relationshipAttributes.stewardEntity'
+    );
+  }
+
+  get systemOwnerSystems() {
+    return this.editorFormService.form.get(
+      'relationshipAttributes.systemOwnerSystem'
+    );
+  }
+
+  get technicalDataStewardCollections() {
+    return this.editorFormService.form.get(
+      'relationshipAttributes.technicalDataStewardCollection'
+    );
+  }
+
+  get technicalDataStewardDatasets() {
+    return this.editorFormService.form.get(
+      'relationshipAttributes.technicalDataStewardDataset'
     );
   }
 

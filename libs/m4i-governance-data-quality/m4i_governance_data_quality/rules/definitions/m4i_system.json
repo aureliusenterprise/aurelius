@@ -26,5 +26,19 @@
     "active": 1,
     "type": "relationship",
     "guid": "1afbce14-aebe-4c3f-beba-562ee4aa86b1"
+  },
+  {
+    "id": 3,
+    "expressionVersion": 1,
+    "expression": "length('systemOwner', 1)",
+    "qualifiedName": "m4i_system--systemOwner",
+    "qualityDimension": "completeness",
+    "ruleTitle": "System has a system owner",
+    "ruleDescription": "A system should have at least one system owner",
+    "compliantMessage": "This system has at least one system owner",
+    "noncompliantMessage": "This system should have at least one system owner",
+    "active": 1,
+    "type": "relationship",
+    "guid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
   }
 ]

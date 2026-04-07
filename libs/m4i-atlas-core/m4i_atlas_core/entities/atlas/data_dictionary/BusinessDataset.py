@@ -46,6 +46,14 @@ atlas_dataset_attributes_def = [
         description="The functional names of the dataset that belong to the dataset",
         display_name="Child Dataset",
         cardinality=Cardinality.SET
+    ),
+    AttributeDef(
+        name="technicalDataSteward",
+        type_name="array<m4i_person>",
+        is_indexable=False,
+        description="The technical data steward of the dataset",
+        display_name="Technical Data Steward",
+        cardinality=Cardinality.SET
     )
 ]
 
@@ -99,6 +107,24 @@ m4i_dataset_collection_rel_def = RelationshipDef(
     description="The relationship between the collection and the dataset"
 )
 
+end_1_tech_steward_dataset = RelationshipEndDef(
+    type="m4i_person",
+    name="technicalDataStewardDataset"
+)
+end_2_tech_steward_dataset = RelationshipEndDef(
+    type="m4i_dataset",
+    name="technicalDataSteward"
+)
+
+m4i_tech_steward_dataset_rel_def = RelationshipDef(
+    end_def1=end_1_tech_steward_dataset,
+    end_def2=end_2_tech_steward_dataset,
+    name="m4i_dataset_technical_data_steward_assignment",
+    category=TypeCategory.RELATIONSHIP,
+    type_version="1.0",
+    description="The relationship between the dataset and its technical data steward"
+)
+
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
@@ -116,6 +142,7 @@ class BusinessDatasetAttributesDefaultsBase(Attributes):
     child_dataset: List[ObjectId] = field(default_factory=list)
     fields: List[ObjectId] = field(default_factory=list)
     source: List[ObjectId] = field(default_factory=list)
+    technical_data_steward: List[ObjectId] = field(default_factory=list)
 # END BusinessDatasetAttributesDefaultsBase
 
 
@@ -162,6 +189,10 @@ class BusinessDataset(BusinessDatasetDefaultsBase, BusinessDatasetBase, Entity):
         Returns the collection referenced by this dataset
         """
         references = [*self.attributes.collections]
+
+        if self.attributes.technical_data_steward is not None:
+            references = [*references, *self.attributes.technical_data_steward]
+        # END IF
 
         if self.attributes.fields is not None:
             references = [*references, *self.attributes.fields]

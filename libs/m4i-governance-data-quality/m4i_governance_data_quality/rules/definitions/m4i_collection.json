@@ -40,5 +40,19 @@
     "active": 1,
     "type": "relationship",
     "guid": "69c6a273-9255-4454-ba81-e58cf1a1d055"
+  },
+  {
+    "id": 4,
+    "expressionVersion": 1,
+    "expression": "length('technicalDataSteward', 1)",
+    "qualifiedName": "m4i_collection--technicalDataSteward",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Collection has a technical data steward",
+    "ruleDescription": "A collection should have at least one technical data steward",
+    "compliantMessage": "This collection has at least one technical data steward",
+    "noncompliantMessage": "This collection should have at least one technical data steward",
+    "active": 1,
+    "type": "relationship",
+    "guid": "b2c3d4e5-f6a7-8901-bcde-f12345678901"
   }
 ]

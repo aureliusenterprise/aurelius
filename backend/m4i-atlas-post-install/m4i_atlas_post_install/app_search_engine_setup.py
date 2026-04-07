@@ -50,6 +50,8 @@ engines = [
             'classificationstext': 'text',
             'qualityguid_uniqueness': 'text',
             'deriveddataownerguid': 'text',
+            'derivedsystemownerguid': 'text',
+            'derivedtechnicaldatastewardguid': 'text',
             'definition': 'text',
             'derivedpersonguid': 'text',
             'dqscorecnt_validity': 'number',

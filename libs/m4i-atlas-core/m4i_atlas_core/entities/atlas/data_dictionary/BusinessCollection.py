@@ -36,6 +36,14 @@ atlas_collection_attributes_def = [
         description="The functional names of the datasets that belong to the collection",
         display_name="Datasets",
         cardinality=Cardinality.SET
+    ),
+    AttributeDef(
+        name="technicalDataSteward",
+        type_name="array<m4i_person>",
+        is_indexable=False,
+        description="The technical data steward of the collection",
+        display_name="Technical Data Steward",
+        cardinality=Cardinality.SET
     )
 ]
 
@@ -70,6 +78,24 @@ m4i_collection_system_rel_def = RelationshipDef(
     description="The relationship between the system and the collection"
 )
 
+end_1_tech_steward_collection = RelationshipEndDef(
+    type="m4i_person",
+    name="technicalDataStewardCollection"
+)
+end_2_tech_steward_collection = RelationshipEndDef(
+    type="m4i_collection",
+    name="technicalDataSteward"
+)
+
+m4i_tech_steward_collection_rel_def = RelationshipDef(
+    end_def1=end_1_tech_steward_collection,
+    end_def2=end_2_tech_steward_collection,
+    name="m4i_collection_technical_data_steward_assignment",
+    category=TypeCategory.RELATIONSHIP,
+    type_version="1.0",
+    description="The relationship between the collection and its technical data steward"
+)
+
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
@@ -85,6 +111,7 @@ class BusinessCollectionAttributesDefaultsBase(Attributes):
     datasets: List[ObjectId] = field(default_factory=list)
     source: List[ObjectId] = field(default_factory=list)
     systems: List[ObjectId] = field(default_factory=list)
+    technical_data_steward: List[ObjectId] = field(default_factory=list)
 # END BusinessCollectionAttributesDefaultsBase
 
 
@@ -133,7 +160,8 @@ class BusinessCollection(BusinessCollectionDefaultsBase, BusinessCollectionBase,
         references = [
             *self.attributes.systems,
             *self.attributes.datasets,
-            *self.attributes.source
+            *self.attributes.source,
+            *self.attributes.technical_data_steward
         ]
 
         return filter(None, references)

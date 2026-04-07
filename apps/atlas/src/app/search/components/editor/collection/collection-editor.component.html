@@ -126,6 +126,26 @@
       ></ng-container>
     </div>
   </div>
+
+  <div class="field">
+    <label class="label">Technical Data Steward</label>
+    <div class="grid">
+      <div class="control">
+        <models4insight-relationships-input
+          [tags]="technicalDataSteward"
+          typeName="m4i_person"
+          [rule]="rules?.technicalDataSteward"
+        ></models4insight-relationships-input>
+      </div>
+      <ng-container *ngIf="rules.technicalDataSteward as rules">
+        <models4insight-gov-quality-display
+          [rules]="rules"
+          class="is-size-7"
+        ></models4insight-gov-quality-display
+      ></ng-container>
+    </div>
+  </div>
+
   <div class="field">
     <div class="grid">
       <ng-container *ngIf="(editorFormService.submitted | async) && editorFormService.form.invalid">

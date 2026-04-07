@@ -50,6 +50,18 @@ const tableData: TableData[] = [
       'Responsible for the implementation of data management controls and related initiatives.',
     icon: faUser,
     typeName: 'Data steward'
+  },
+  {
+    description:
+      'Accountable for the management and governance of a system, including its collections and datasets.',
+    icon: faUser,
+    typeName: 'System Owner'
+  },
+  {
+    description:
+      'Responsible for the technical data management of collections and datasets, ensuring data quality and compliance at the technical level.',
+    icon: faUser,
+    typeName: 'Technical Data Steward'
   }
 ];
 
