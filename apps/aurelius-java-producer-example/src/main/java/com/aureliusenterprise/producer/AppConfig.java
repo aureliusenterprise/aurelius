@@ -38,6 +38,7 @@ public record AppConfig(
         try {
             kafkaBootstrapServers = getRequiredString(env, "KAFKA_BOOTSTRAP_SERVERS");
         } catch (MissingKeyException e) {
+            AppConfig.logger.error("Failed to load KAFKA_BOOTSTRAP_SERVERS: " + e.getMessage());
             throw e;
         }
 
@@ -45,6 +46,7 @@ public record AppConfig(
         try {
             schemaRegistryUrl = getRequiredString(env, "SCHEMA_REGISTRY_URL");
         } catch (MissingKeyException e) {
+            AppConfig.logger.error("Failed to load SCHEMA_REGISTRY_URL: " + e.getMessage());
             throw e;
         }
 
@@ -52,6 +54,7 @@ public record AppConfig(
         try {
             kafkaTopicName = getRequiredString(env, "KAFKA_TOPIC_NAME");
         } catch (MissingKeyException e) {
+            AppConfig.logger.error("Failed to load KAFKA_TOPIC_NAME: " + e.getMessage());
             throw e;
         }
 

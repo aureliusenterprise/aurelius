@@ -56,9 +56,9 @@ public class EntityProducer {
         }
 
         String keyString = key.toString();
-        ProducerRecord<String, Entity> record = new ProducerRecord<>(this.topicName, keyString, entity);
+        ProducerRecord<String, Entity> producerRecord = new ProducerRecord<>(this.topicName, keyString, entity);
 
-        this.producer.send(record, this::handleCallback);
+        this.producer.send(producerRecord, this::handleCallback);
     }
 
     /**
