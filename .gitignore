@@ -200,3 +200,6 @@ build
 # Claude
 .claude/worktrees
 .claude/settings.local.json
+
+# Sonarqube
+.sonar/

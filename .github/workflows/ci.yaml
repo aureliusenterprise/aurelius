@@ -90,6 +90,9 @@ jobs:
             - name: Test affected projects
               run: npx nx affected -t test e2e -c ci
 
+            - name: Run SonarQube analysis
+              run: npx nx affected -t sonar
+
             - name: Run Chromatic
               uses: chromaui/action@latest
               with:
