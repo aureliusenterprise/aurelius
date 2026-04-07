@@ -96,8 +96,13 @@
             }
         },
         "test": {
-            "executor": "@nx/angular:unit-test",
-            "options": {}
+            "configurations": {
+                "ci": {
+                    "coverage": true,
+                    "coverageReporters": ["lcov"]
+                }
+            },
+            "executor": "@nx/angular:unit-test"
         },
         "test-storybook": {
             "executor": "nx:run-commands",
