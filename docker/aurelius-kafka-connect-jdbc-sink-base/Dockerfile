@@ -16,7 +16,7 @@ ADD --chown=root:root --chmod=0755 https://repo1.maven.org/maven2/io/debezium/de
 # Install Debezium
 RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked \
     microdnf install -y gzip tar && \
-    tar -xvf /usr/share/confluent-hub-components/debezium-connector-jdbc-${DEBEZIUM_CONNECTOR_JDBC_VERSION}-plugin.tar.gz \
+    tar -xvf "/usr/share/confluent-hub-components/debezium-connector-jdbc-${DEBEZIUM_CONNECTOR_JDBC_VERSION}-plugin.tar.gz" \
     -C /usr/share/confluent-hub-components/ && \
     chown -R appuser:appuser /usr/share/confluent-hub-components
 
