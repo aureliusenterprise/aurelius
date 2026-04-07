@@ -2,7 +2,7 @@
 @let _logo = logo();
 @let _name = name();
 
-<header class="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         @if (_logo) {
             <a class="navbar-item" routerLink="/">
@@ -16,7 +16,6 @@
 
         @if (navbarStart.children.length || navbarEnd.children.length) {
             <button
-                role="button"
                 class="navbar-burger"
                 aria-label="menu"
                 data-target="navbar-content"
@@ -32,7 +31,7 @@
         }
     </div>
 
-    <nav id="navbar-content" class="navbar-menu" [class.is-active]="_expanded">
+    <nav id="navbar-content" class="navbar-menu" aria-label="navigation content" [class.is-active]="_expanded">
         <div #navbarStart class="navbar-start">
             <ng-content select="[navbar-start]"></ng-content>
         </div>
@@ -41,4 +40,4 @@
             <ng-content select="[navbar-end]"></ng-content>
         </div>
     </nav>
-</header>
+</nav>

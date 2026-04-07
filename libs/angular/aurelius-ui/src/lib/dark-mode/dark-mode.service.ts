@@ -52,8 +52,7 @@ export class DarkModeService {
      * @returns The initial mode based on the current HTML document's data-theme attribute.
      */
     private initialize(): Mode {
-        let dataTheme = (this.document.documentElement.getAttribute("data-theme") ??
-            localStorage.getItem("data-theme")) as Mode;
+        let dataTheme = (this.document.documentElement.dataset["theme"] ?? localStorage.getItem("data-theme")) as Mode;
 
         if (!MODES.includes(dataTheme)) {
             dataTheme = null;
@@ -68,12 +67,7 @@ export class DarkModeService {
      */
     private updateDataThemeAttribute(mode: Mode): void {
         const htmlElement = this.document.documentElement;
-
-        if (mode === null) {
-            htmlElement.removeAttribute("data-theme");
-        } else {
-            htmlElement.setAttribute("data-theme", mode);
-        }
+        htmlElement.dataset["theme"] = mode ?? "";
     }
 
     /**
