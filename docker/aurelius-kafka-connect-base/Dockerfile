@@ -13,7 +13,7 @@ USER root
 # Install dependencies
 ARG CONNECT_AVRO_CONVERTER_VERSION=8.1.1
 
-RUN confluent-hub install confluentinc/kafka-connect-avro-converter:${CONNECT_AVRO_CONVERTER_VERSION} --no-prompt && \
+RUN confluent-hub install confluentinc/kafka-connect-avro-converter:"${CONNECT_AVRO_CONVERTER_VERSION}" --no-prompt && \
     chown -R appuser:appuser /usr/share/confluent-hub-components && \
     mkdir /tmp/aurelius && \
     touch /tmp/aurelius/env && \

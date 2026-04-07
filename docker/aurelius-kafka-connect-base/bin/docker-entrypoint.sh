@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z "${CONNECT_REST_ADVERTISED_HOST_NAME}" ]; then
+if [[ -z "${CONNECT_REST_ADVERTISED_HOST_NAME}" ]]; then
     export CONNECT_REST_ADVERTISED_HOST_NAME=$(hostname -i)
 fi
 

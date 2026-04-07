@@ -7,7 +7,7 @@ WORKER_FILE=$1
 KAFKA_CONNECT_URL=${2:-$DEFAULT_KAFKA_CONNECT_URL}
 
 # Check if the worker file is provided
-if [ -z "$WORKER_FILE" ]; then
+if [[ -z "$WORKER_FILE" ]]; then
     echo "Missing worker file path parameter at position 1"
     exit 1
 fi
