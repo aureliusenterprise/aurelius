@@ -9,6 +9,7 @@ import { CollectionDetailsComponent } from './collection-details.component';
 import { DatasetsCardsComponent } from './datasets-cards/datasets-cards.component';
 import { GovernanceQualityCardsModule } from '../components/governance-quality-cards/governance-quality-cards.module';
 import { DescriptionModule } from '../../components/description/description.module';
+import { PeopleModule } from '../../components/people/people.module';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { DescriptionModule } from '../../components/description/description.modu
     DetailsCardsListModule,
     DetailsNavigationModule,
     GovernanceQualityCardsModule,
+    PeopleModule,
     PropertiesModule,
     AccordionModule
   ],

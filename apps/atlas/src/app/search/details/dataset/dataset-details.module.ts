@@ -14,6 +14,7 @@ import { EntityCardsComponent } from './entity-cards/entity-cards.component';
 import { FieldsCardsComponent } from './fields-cards/fields-cards.component';
 import { ProducersCardsComponent } from './producers-cards/producers-cards.component';
 import { DescriptionModule } from '../../components/description/description.module';
+import { PeopleModule } from '../../components/people/people.module';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { DescriptionModule } from '../../components/description/description.modu
     DetailsNavigationModule,
     GovernanceQualityCardsModule,
     LineageModelModule,
+    PeopleModule,
     PropertiesModule,
     AccordionModule
   ],
