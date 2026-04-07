@@ -11,13 +11,13 @@ LABEL org.opencontainers.image.title="Aurelius Frontend Example"
 USER root
 
 # Copy the Nginx configuration file into the container
-COPY --chown=nginx:nginx --chmod=0755 apps/aurelius-frontend-example/docker/nginx /etc/nginx/templates
+COPY --chown=root:root --chmod=0755 apps/aurelius-frontend-example/docker/nginx /etc/nginx/templates
 
 # Copy the startup script into the container
-COPY --chown=nginx:nginx --chmod=0755 apps/aurelius-frontend-example/docker/entrypoint /docker-entrypoint.d
+COPY --chown=root:root --chmod=0755 apps/aurelius-frontend-example/docker/entrypoint /docker-entrypoint.d
 
 # Copy the built application files to the Nginx HTML directory
-COPY --chown=nginx:nginx --chmod=0755 dist/apps/aurelius-frontend-example/browser /usr/share/nginx/html
+COPY --chown=root:root --chmod=0755 dist/apps/aurelius-frontend-example/browser /usr/share/nginx/html
 
 # Create a placeholder file for the user-facing configuration
 RUN touch /usr/share/nginx/html/config.json && \
