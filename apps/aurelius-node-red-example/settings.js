@@ -76,7 +76,7 @@ module.exports = {
     //    type: "credentials",
     //    users: [{
     //        username: "admin",
-    //        password: "$2a$08$zZWtXTja0fB1pzD4sHCMyOCMYz2Z6dNbM6tl8sJogENOMcxWV9DN.",
+    //        password: "<your bcrypt hash of the password>",
     //        permissions: "*"
     //    }]
     //},
@@ -121,8 +121,8 @@ module.exports = {
      * The `pass` field is a bcrypt hash of the password.
      * See https://nodered.org/docs/security.html#generating-the-password-hash
      */
-    //httpNodeAuth: {user:"user",pass:"$2a$08$zZWtXTja0fB1pzD4sHCMyOCMYz2Z6dNbM6tl8sJogENOMcxWV9DN."},
-    //httpStaticAuth: {user:"user",pass:"$2a$08$zZWtXTja0fB1pzD4sHCMyOCMYz2Z6dNbM6tl8sJogENOMcxWV9DN."},
+    //httpNodeAuth: {user:"user",pass:"<your bcrypt hash of the password>"},
+    //httpStaticAuth: {user:"user",pass:"<your bcrypt hash of the password>"},
 
     /*******************************************************************************
      * Server Settings

@@ -22,7 +22,7 @@ COPY apps/aurelius-node-red-example/flows.json \
 
 # Install Node-RED and dependencies, using a cache mount to speed up the process
 RUN --mount=type=cache,mode=0755,target=/root/.npm \
-    npm install
+    npm install --ignore-scripts
 
 # Use the official Node.js LTS Alpine image as the runtime image
 FROM node:lts-alpine AS runtime
@@ -47,7 +47,7 @@ USER aurelius
 WORKDIR /app
 
 # Copy the built application from the builder stage
-COPY --chown=aurelius:aurelius --chmod=0755 --from=builder /build/ ./
+COPY --chown=root:root --chmod=0755 --from=builder /build/ ./
 
 # Configure a healthcheck to ensure the Node-RED flows have started
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \
