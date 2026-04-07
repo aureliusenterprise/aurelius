@@ -25,4 +25,6 @@ Ensure the path points to the correct location of the `aurelius-sdk` library.
 
 ::: aurelius_sdk.msal
 
+::: aurelius_sdk.postgresql
+
 ::: aurelius_sdk.testing
