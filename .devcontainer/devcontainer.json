@@ -15,6 +15,7 @@
                 "mtxr.sqltools-driver-pg",
                 "nrwl.angular-console",
                 "PKief.material-icon-theme",
+                "SonarSource.sonarlint-vscode",
                 "tamasfe.even-better-toml",
                 "vitest.explorer",
                 "-ms-python.autopep8"
