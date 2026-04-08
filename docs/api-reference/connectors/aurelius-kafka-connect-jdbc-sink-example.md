@@ -1,5 +1,9 @@
 # aurelius-kafka-connect-jdbc-sink-example
 
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-kafka-connect-jdbc-sink-example&metric=sqale_rating&token=32dd2e355511fbeb168fa1dabb9f566247fe548d)](https://sonarcloud.io/summary/new_code?id=aurelius-kafka-connect-jdbc-sink-example)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-kafka-connect-jdbc-sink-example&metric=reliability_rating&token=32dd2e355511fbeb168fa1dabb9f566247fe548d)](https://sonarcloud.io/summary/new_code?id=aurelius-kafka-connect-jdbc-sink-example)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-kafka-connect-jdbc-sink-example&metric=security_rating&token=32dd2e355511fbeb168fa1dabb9f566247fe548d)](https://sonarcloud.io/summary/new_code?id=aurelius-kafka-connect-jdbc-sink-example)
+
 This is an example Kafka Connect JDBC Sink application.
 
 ## Workflow

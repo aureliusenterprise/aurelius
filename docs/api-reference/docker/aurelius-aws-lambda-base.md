@@ -1,5 +1,9 @@
 # aurelius-aws-lambda-base
 
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-aws-lambda-base&metric=sqale_rating&token=f38950953ddb43deb4bcc5f14f852172931113a3)](https://sonarcloud.io/summary/new_code?id=aurelius-aws-lambda-base)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-aws-lambda-base&metric=reliability_rating&token=f38950953ddb43deb4bcc5f14f852172931113a3)](https://sonarcloud.io/summary/new_code?id=aurelius-aws-lambda-base)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-aws-lambda-base&metric=security_rating&token=f38950953ddb43deb4bcc5f14f852172931113a3)](https://sonarcloud.io/summary/new_code?id=aurelius-aws-lambda-base)
+
 This Docker image provides a base for all AWS Lambda functions. It provides all necessary dependencies to run
 Lambda functions based on Python.
 

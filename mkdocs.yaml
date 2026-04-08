@@ -87,6 +87,7 @@ nav:
                 - api-reference/apps/index.md
                 - aurelius-aws-lambda-example: api-reference/apps/aurelius-aws-lambda-example.md
                 - aurelius-fastapi-example: api-reference/apps/aurelius-fastapi-example.md
+                - aurelius-frontend-example: api-reference/apps/aurelius-frontend-example.md
                 - aurelius-java-producer-example: api-reference/apps/aurelius-java-producer-example.md
                 - aurelius-node-red-example: api-reference/apps/aurelius-node-red-example.md
           - Connectors:
@@ -99,12 +100,22 @@ nav:
                 - aurelius-kafka-connect-jdbc-sink-base: api-reference/docker/aurelius-kafka-connect-jdbc-sink-base.md
           - Libs:
                 - api-reference/libs/index.md
+                - Angular:
+                      - api-reference/libs/angular/index.md
+                      - aurelius-data-access: api-reference/libs/angular/aurelius-data-access.md
+                      - aurelius-ui: api-reference/libs/angular/aurelius-ui.md
+                - Java:
+                      - api-reference/libs/java/index.md
+                      - aurelius-java-example: api-reference/libs/java/aurelius-java-example.md
                 - Python:
                       - api-reference/libs/python/index.md
                       - aurelius-aws-lambda: api-reference/libs/python/aurelius-aws-lambda.md
                       - aurelius-example: api-reference/libs/python/aurelius-example.md
                       - aurelius-kafka: api-reference/libs/python/aurelius-kafka.md
                       - aurelius-sdk: api-reference/libs/python/aurelius-sdk.md
+                - Styles:
+                      - api-reference/libs/styles/index.md
+                      - aurelius-brand: api-reference/libs/styles/aurelius-brand.md
     - Architecture:
           - architecture/index.md
           - Vision & Strategy:

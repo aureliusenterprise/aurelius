@@ -1,5 +1,9 @@
 # aurelius-java-producer-example
 
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-java-producer-example&metric=sqale_rating&token=3623e9eb0b0b9d1db272fdf9f096748c266f70a9)](https://sonarcloud.io/summary/new_code?id=aurelius-java-producer-example)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-java-producer-example&metric=reliability_rating&token=3623e9eb0b0b9d1db272fdf9f096748c266f70a9)](https://sonarcloud.io/summary/new_code?id=aurelius-java-producer-example)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-java-producer-example&metric=security_rating&token=3623e9eb0b0b9d1db272fdf9f096748c266f70a9)](https://sonarcloud.io/summary/new_code?id=aurelius-java-producer-example)
+
 This is an example Java application that demonstrates how to set up a simple Kafka producer.
 
 The app produces a new message every 10 seconds. The content of the message is static with a randomly generated

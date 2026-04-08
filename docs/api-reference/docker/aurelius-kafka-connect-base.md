@@ -1,5 +1,9 @@
 # aurelius-kafka-connect-base
 
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-kafka-connect-base&metric=sqale_rating&token=0b414300ed5276179b807befd89cad1f27375cd2)](https://sonarcloud.io/summary/new_code?id=aurelius-kafka-connect-base)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-kafka-connect-base&metric=reliability_rating&token=0b414300ed5276179b807befd89cad1f27375cd2)](https://sonarcloud.io/summary/new_code?id=aurelius-kafka-connect-base)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-kafka-connect-base&metric=security_rating&token=0b414300ed5276179b807befd89cad1f27375cd2)](https://sonarcloud.io/summary/new_code?id=aurelius-kafka-connect-base)
+
 This Docker image provides a base for all Kafka Connectors.
 
 ## Structure

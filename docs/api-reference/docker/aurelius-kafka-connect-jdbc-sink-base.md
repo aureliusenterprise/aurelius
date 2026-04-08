@@ -1,5 +1,9 @@
 # aurelius-kafka-connect-jdbc-sink-base
 
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-kafka-connect-jdbc-sink-base&metric=sqale_rating&token=a5bcd9f548c5528522d96d7f0296b0336349e65e)](https://sonarcloud.io/summary/new_code?id=aurelius-kafka-connect-jdbc-sink-base)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-kafka-connect-jdbc-sink-base&metric=reliability_rating&token=a5bcd9f548c5528522d96d7f0296b0336349e65e)](https://sonarcloud.io/summary/new_code?id=aurelius-kafka-connect-jdbc-sink-base)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-kafka-connect-jdbc-sink-base&metric=security_rating&token=a5bcd9f548c5528522d96d7f0296b0336349e65e)](https://sonarcloud.io/summary/new_code?id=aurelius-kafka-connect-jdbc-sink-base)
+
 This Docker image provides a base for all Kafka Connectors that act as a JDBC sink.
 
 ## Structure

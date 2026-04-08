@@ -1,5 +1,9 @@
 # aurelius-aws-lambda
 
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-aws-lambda&metric=sqale_rating&token=63f9976e874366984ea6a933b5416b12e4db1158)](https://sonarcloud.io/summary/new_code?id=aurelius-aws-lambda)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-aws-lambda&metric=reliability_rating&token=63f9976e874366984ea6a933b5416b12e4db1158)](https://sonarcloud.io/summary/new_code?id=aurelius-aws-lambda)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-aws-lambda&metric=security_rating&token=63f9976e874366984ea6a933b5416b12e4db1158)](https://sonarcloud.io/summary/new_code?id=aurelius-aws-lambda)
+
 This library provides common utilities for working with AWS lambda functions.
 
 ## Installation
