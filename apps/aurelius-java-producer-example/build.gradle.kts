@@ -6,7 +6,9 @@ nx {
 
 plugins {
     application
+    id("jacoco")
 }
+
 
 repositories {
     mavenCentral()
@@ -46,7 +48,10 @@ application {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+    finalizedBy(tasks.named("jacocoTestReport"))
 }
+
+
 
 allprojects {
     apply {
@@ -76,5 +81,16 @@ tasks.register("e2e") {
             set("command", "uv run pytest e2e")
             set("cwd", "{projectRoot}")
         }
+    }
+}
+
+tasks.jacocoTestReport {
+    group = "verification"
+    description = "Run JaCoCo code coverage report for the test task"
+
+    reports {
+        xml.required.set(true)
+        html.required.set(false)
+        csv.required.set(false)
     }
 }
