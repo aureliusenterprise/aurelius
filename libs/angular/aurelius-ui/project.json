@@ -99,7 +99,8 @@
             "configurations": {
                 "ci": {
                     "coverage": true,
-                    "coverageReporters": ["lcov"]
+                    "coverageReporters": ["lcov"],
+                    "watch": false
                 }
             },
             "executor": "@nx/angular:unit-test"
