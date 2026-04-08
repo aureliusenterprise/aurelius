@@ -122,14 +122,6 @@
                 "staticFilePath": "dist/apps/aurelius-frontend-example/browser"
             }
         },
-        "sonar": {
-            "dependsOn": ["decrypt"],
-            "executor": "@nxlv/python:run-commands",
-            "options": {
-                "command": "uv run pysonar --sonar-project-base-dir {projectRoot}",
-                "cwd": "{workspaceRoot}"
-            }
-        },
         "test": {
             "configurations": {
                 "ci": {
