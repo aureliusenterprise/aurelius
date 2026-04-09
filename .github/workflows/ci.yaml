@@ -94,14 +94,13 @@ jobs:
               env:
                   SONAR_VERSION: 8.0.1.6346
                   SONAR_ROOT: ${{ runner.temp }}/sonar-scanner
-                  SONAR_DIR: ${{ runner.temp }}/sonar-scanner/sonar-scanner-$SONAR_VERSION-linux-x64
                   SONAR_ZIP: /tmp/sonar-scanner.zip
               run: |
                   curl -o "$SONAR_ZIP" -L "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_VERSION-linux-x64.zip"
                   unzip -o "$SONAR_ZIP" -d "$SONAR_ROOT"
                   rm "$SONAR_ZIP"
-                  echo "$SONAR_DIR/bin" >> "$GITHUB_PATH"
-                  "$SONAR_DIR/bin/sonar-scanner" --version
+                  echo "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin" >> "$GITHUB_PATH"
+                  "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin/sonar-scanner" --version
 
             - name: Run SonarQube analysis
               run: npx nx affected -t sonar
