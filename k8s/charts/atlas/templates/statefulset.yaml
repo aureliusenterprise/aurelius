@@ -29,6 +29,28 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      initContainers:
+        - name: {{ .Chart.Name }}-setup
+          image: "{{ .Values.repository }}:{{ .Values.global.version }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          command:
+            - sh
+            - -c
+            - mkdir -p /apache-atlas/data && chown -R 999:999 /apache-atlas/data && chmod -R 0700 /apache-atlas/data
+          resources:
+            requests:
+              cpu: "250m"
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /apache-atlas/data
+              subPath: data
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.repository }}:{{ .Values.global.version }}"
@@ -75,11 +97,9 @@ spec:
             - name: keycloak-conf--volume
               mountPath: /apache-atlas/conf/keycloak-conf.json
               subPath: keycloak-conf.json
-            {{- if .Values.persistence.enabled }}
             - name: data
               mountPath: /apache-atlas/data
               subPath: data
-            {{- end }}
       volumes:
         - name: atlas-application-properties--volume
           configMap:
@@ -93,7 +113,6 @@ spec:
         - name: keycloak-conf--volume
           configMap:
             name: keycloak-conf-configmap
-{{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -110,4 +129,3 @@ spec:
         storageClassName: "{{ .Values.persistence.storageClass }}"
         {{- end }}
       {{- end }}
-{{- end }}

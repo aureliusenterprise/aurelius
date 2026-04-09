@@ -8,6 +8,7 @@
 keycloak:
     env:
         KEYCLOAK_UR: 'admin'
+    realm: 'm4i'
     realm_file_name: 'realm_m4i.json'
     persistence:
         enabled: true
@@ -56,7 +57,7 @@ ingress:
 
 global:
     external_hostname: 'uatest.aureliusenterprise.dev'
-    version: v2.2.0-alpha.1
+    version: v2.2.0-alpha.3
 
 post_install:
     upload_data: 'true'

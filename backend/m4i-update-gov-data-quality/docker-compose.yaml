@@ -9,10 +9,11 @@ services:
               target: /opt/flink/certs
               uid: '0'
               gid: '0'
-              mode: 0640
+              mode: 640
         env_file: .env
         environment:
             FLINK_PROPERTIES: |
+                blob.server.port: ${FLINK_JOB_MANAGER_BLOB_SERVER_PORT}
                 jobmanager.rpc.address: m4i-update-gov-data-quality-jobmanager
                 jobmanager.rpc.port: ${FLINK_JOB_MANAGER_RPC_PORT}
                 rest.address: m4i-update-gov-data-quality-jobmanager
@@ -25,6 +26,7 @@ services:
         ports:
             - ${FLINK_JOB_MANAGER_REST_PORT}:${FLINK_JOB_MANAGER_REST_PORT}
             - ${FLINK_JOB_MANAGER_RPC_PORT}
+            - ${FLINK_JOB_MANAGER_BLOB_SERVER_PORT}
         volumes:
             - checkpoints:/tmp/flink-checkpoints-directory
 
@@ -36,12 +38,13 @@ services:
               target: /opt/flink/certs
               uid: '0'
               gid: '0'
-              mode: 0640
+              mode: 640
         depends_on:
             - jobmanager
         env_file: .env
         environment:
             FLINK_PROPERTIES: |
+                blob.server.port: ${FLINK_JOB_MANAGER_BLOB_SERVER_PORT}
                 jobmanager.rpc.address: m4i-update-gov-data-quality-jobmanager
                 jobmanager.rpc.port: ${FLINK_JOB_MANAGER_RPC_PORT}
                 rest.address: m4i-update-gov-data-quality-jobmanager

@@ -41,6 +41,8 @@ spec:
                 secretKeyRef:
                   name: elastic-search-es-elastic-user
                   key: elastic
+            - name: ELASTICSEARCH_CERTIFICATE_PATH
+              value: /opt/flink/certs/ca.crt
             - name: KAFKA_APP_SEARCH_TOPIC_NAME
               value: {{ .Values.kafkaAppSearchTopicName | quote }}
             - name: KAFKA_PUBLISH_STATE_TOPIC_NAME
@@ -84,6 +86,8 @@ spec:
               mountPath: /opt/flink/conf
             - name: savepoints
               mountPath: /tmp/flink-savepoints
+            - name: v-elastic-certs
+              mountPath: /opt/flink/certs
       volumes:
         - name: checkpoints
           emptyDir: {}
@@ -97,3 +101,6 @@ spec:
               path: log4j-console.properties
         - name: savepoints
           emptyDir: {}
+        - name: v-elastic-certs
+          secret:
+              secretName: elastic-search-es-http-certs-public

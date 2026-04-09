@@ -16,5 +16,11 @@ OIDCScope "openid email"
   Require claim roles~^(.*)ROLE_ADMIN(.*)$
 </Location>
 
-ProxyPass "/{{ .Release.Namespace }}/flink/" "http://flink-jobmanager.{{ .Release.Namespace }}.svc.cluster.local:8081/"
-ProxyPassReverse "/{{ .Release.Namespace }}/flink/" "http://flink-jobmanager.{{ .Release.Namespace }}.svc.cluster.local:8081/"
+ProxyPass "/{{ .Release.Namespace }}/flink-synchronize-app-search/" "http://synchronize-app-search-jobmanager.{{ .Release.Namespace }}.svc.cluster.local:8081/"
+ProxyPassReverse "/{{ .Release.Namespace }}/flink-synchronize-app-search/" "http://synchronize-app-search-jobmanager.{{ .Release.Namespace }}.svc.cluster.local:8081/"
+
+ProxyPass "/{{ .Release.Namespace }}/flink-publish-state/" "http://publish-state-jobmanager.{{ .Release.Namespace }}.svc.cluster.local:8081/"
+ProxyPassReverse "/{{ .Release.Namespace }}/flink-publish-state/" "http://publish-state-jobmanager.{{ .Release.Namespace }}.svc.cluster.local:8081/"
+
+ProxyPass "/{{ .Release.Namespace }}/flink-data-governance-quality/" "http://update-gov-data-quality-jobmanager.{{ .Release.Namespace }}.svc.cluster.local:8081/"
+ProxyPassReverse "/{{ .Release.Namespace }}/flink-data-governance-quality/" "http://update-gov-data-quality-jobmanager.{{ .Release.Namespace }}.svc.cluster.local:8081/"

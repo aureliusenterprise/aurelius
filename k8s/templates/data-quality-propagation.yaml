@@ -11,7 +11,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: data-quality-propagation
-            image: "aureliusatlas/atlas-post-install:latest"
+            image: "ghcr.io/aureliusenterprise/m4i-atlas-post-install:{{ .Values.global.version }}"
             imagePullPolicy: Always
             command:
                 - /bin/bash

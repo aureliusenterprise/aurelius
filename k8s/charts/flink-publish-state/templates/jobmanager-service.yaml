@@ -11,6 +11,9 @@ spec:
     - name: rpc
       port: {{ .Values.flinkJobManagerRpcPort }}
       targetPort: rpc
+    - name: blob-server
+      port: {{ .Values.flinkJobManagerBlobServerPort }}
+      targetPort: blob-server
     - name: webui
       port: {{ .Values.flinkJobManagerPort }}
       targetPort: webui

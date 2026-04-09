@@ -9,14 +9,17 @@ services:
               target: /opt/flink/certs
               uid: '0'
               gid: '0'
-              mode: 0640
+              mode: 640
         env_file: .env
         environment:
+            _python_worker_execution_mode: process
             FLINK_PROPERTIES: |
+                blob.server.port: ${FLINK_JOB_MANAGER_BLOB_SERVER_PORT}
                 jobmanager.rpc.address: m4i-publish-state-jobmanager
                 jobmanager.rpc.port: ${FLINK_JOB_MANAGER_RPC_PORT}
                 rest.address: m4i-publish-state-jobmanager
                 rest.port: ${FLINK_JOB_MANAGER_REST_PORT}
+                blob.server.port: ${FLINK_JOB_MANAGER_BLOB_SERVER_PORT}
         extra_hosts:
             - keycloak.localhost:host-gateway
         hostname: m4i-publish-state-jobmanager
@@ -25,6 +28,7 @@ services:
         ports:
             - ${FLINK_JOB_MANAGER_REST_PORT}:${FLINK_JOB_MANAGER_REST_PORT}
             - ${FLINK_JOB_MANAGER_RPC_PORT}
+            - ${FLINK_JOB_MANAGER_BLOB_SERVER_PORT}
         volumes:
             - checkpoints:/tmp/flink-checkpoints-directory
 
@@ -36,12 +40,14 @@ services:
               target: /opt/flink/certs
               uid: '0'
               gid: '0'
-              mode: 0640
+              mode: 640
         depends_on:
             - jobmanager
         env_file: .env
         environment:
+            _python_worker_execution_mode: process
             FLINK_PROPERTIES: |
+                blob.server.port: ${FLINK_JOB_MANAGER_BLOB_SERVER_PORT}
                 jobmanager.rpc.address: m4i-publish-state-jobmanager
                 jobmanager.rpc.port: ${FLINK_JOB_MANAGER_RPC_PORT}
                 rest.address: m4i-publish-state-jobmanager

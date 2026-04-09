@@ -109,57 +109,38 @@ spec:
               value: "{{ .Values.heapOptions }}"
             - name: CONNECT_REST_PORT
               value: "8083"
-            - name: ELASTICSEARCH_URL
-              value: https://elastic-search-es-http:9200
             - name: SECRET_FILE_PATH
-              value: {{ .Values.customEnv.SECRET_FILE_PATH | default "secret_certs/ca.crt" | quote }}
-            # CONFIG_* environment variables for FileConfigProvider support
+              value: {{ .Values.customEnv.SECRET_FILE_PATH | default "/home/appuser/secret_certs/ca.crt" | quote }}
+            - name: CONFIG_APP_SEARCH_KAFKA_TOPIC
+              value: {{ .Values.CONFIG_APP_SEARCH_KAFKA_TOPIC | quote }}
+            - name: CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC
+              value: {{ .Values.CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC | quote }}
+            - name: CONFIG_PUBLISH_STATE_KAFKA_TOPIC
+              value: {{ .Values.CONFIG_PUBLISH_STATE_KAFKA_TOPIC | quote }}
             - name: CONFIG_ELASTIC_URL
-              value: {{ .Values.customEnv.CONFIG_ELASTIC_URL | default "https://elastic-search-es-http:9200" | quote }}
+              value: https://elastic-search-es-http:9200
             - name: CONFIG_ELASTIC_USERNAME
               value: {{ .Values.customEnv.CONFIG_ELASTIC_USERNAME | default "elastic" | quote }}
-            - name: CONFIG_ELASTIC_KEYSTORE_LOCATION
-              value: {{ .Values.customEnv.CONFIG_ELASTIC_KEYSTORE_LOCATION | default "/home/appuser/elastic.jks" | quote }}
-            - name: CONFIG_ELASTIC_TRUSTSTORE_LOCATION
-              value: {{ .Values.customEnv.CONFIG_ELASTIC_TRUSTSTORE_LOCATION | default "/home/appuser/elastic.jks" | quote }}
             - name: CONFIG_ELASTIC_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: elastic-search-es-elastic-user
                   key: elastic
-            {{- if .Values.customEnv.CONFIG_ELASTIC_KEY_PASSWORD }}
             - name: CONFIG_ELASTIC_KEY_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: kafka-connect-secrets
+                  name: {{ template "kafka-connect.fullname" . }}-secrets
                   key: config-elastic-key-password
-            {{- end }}
-            {{- if .Values.customEnv.CONFIG_ELASTIC_KEYSTORE_PASSWORD }}
             - name: CONFIG_ELASTIC_KEYSTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: kafka-connect-secrets
+                  name: {{ template "kafka-connect.fullname" . }}-secrets
                   key: config-keystore-password
-            {{- end }}
-            {{- if .Values.customEnv.CONFIG_ELASTIC_TRUSTSTORE_PASSWORD }}
             - name: CONFIG_ELASTIC_TRUSTSTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: kafka-connect-secrets
-                  key: config-truststore-password
-            {{- end }}
-            {{- if .Values.customEnv.CONFIG_APP_SEARCH_KAFKA_TOPIC }}
-            - name: CONFIG_APP_SEARCH_KAFKA_TOPIC
-              value: {{ .Values.customEnv.CONFIG_APP_SEARCH_KAFKA_TOPIC | quote }}
-            {{- end }}
-            {{- if .Values.customEnv.CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC }}
-            - name: CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC
-              value: {{ .Values.customEnv.CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC | quote }}
-            {{- end }}
-            {{- if .Values.customEnv.CONFIG_PUBLISH_STATE_KAFKA_TOPIC }}
-            - name: CONFIG_PUBLISH_STATE_KAFKA_TOPIC
-              value: {{ .Values.customEnv.CONFIG_PUBLISH_STATE_KAFKA_TOPIC | quote }}
-            {{- end }}
+                  name: {{ template "kafka-connect.fullname" . }}-secrets
+                  key: config-keystore-password
             {{- range $key, $value := .Values.configurationOverrides }}
             - name: {{ printf "CONNECT_%s" $key | replace "." "_" | upper | quote }}
               value: {{ $value | quote }}

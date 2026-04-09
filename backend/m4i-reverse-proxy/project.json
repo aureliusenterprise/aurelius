@@ -1,41 +1,18 @@
 {
-  "name": "m4i-reverse-proxy",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "application",
-  "sourceRoot": "backend/m4i-reverse-proxy/m4i_reverse_proxy",
-  "targets": {
-    "docker-build": {
-      "dependsOn": [
-        {
-          "target": "build",
-          "projects": ["atlas"]
-        },
-        {
-          "target": "build",
-          "projects": ["index-page"]
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["atlas", "index-page"],
+    "name": "m4i-reverse-proxy",
+    "projectType": "application",
+    "sourceRoot": "backend/m4i-reverse-proxy/m4i_reverse_proxy",
+    "tags": [],
+    "targets": {
+        "docker-build": {
+            "dependsOn": [
+                {
+                    "dependencies": true,
+                    "target": "build"
+                }
+            ]
         }
-      ],
-      "command": "docker build -f {projectRoot}/Dockerfile . -t {args.namespace}/{args.tag}:{args.version}",
-      "options": {
-        "namespace": "aureliusenterprise",
-        "tag": "{projectName}",
-        "version": "latest"
-      }
-    },
-    "docker-publish": {
-      "dependsOn": [
-        {
-          "target": "docker-build",
-          "params": "forward"
-        }
-      ],
-      "command": "docker push {args.namespace}/{args.tag}:{args.version}",
-      "options": {
-        "namespace": "ghcr.io/aureliusenterprise",
-        "tag": "{projectName}",
-        "version": "latest"
-      }
     }
-  },
-  "tags": []
 }

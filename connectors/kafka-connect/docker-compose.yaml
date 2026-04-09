@@ -6,11 +6,11 @@ services:
               target: /home/appuser/certs
               uid: '0'
               gid: '0'
-              mode: 0640
+              mode: 640
         environment:
             CONFIG_ELASTIC_KEY_PASSWORD: ${ELASTIC_KEY_PASSWORD}
             CONFIG_ELASTIC_KEYSTORE_PASSWORD: ${ELASTIC_KEYSTORE_PASSWORD}
-            CONFIG_ELASTIC_TRUSTSTORE_PASSWORD: ${ELASTIC_TRUSTSTORE_PASSWORD}
+            CONFIG_ELASTIC_TRUSTSTORE_PASSWORD: ${ELASTIC_KEYSTORE_PASSWORD}
             CONFIG_ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
             CONFIG_ELASTIC_URL: ${ELASTIC_URL}
             CONFIG_ELASTIC_USERNAME: ${ELASTIC_USERNAME}

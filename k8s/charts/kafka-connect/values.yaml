@@ -37,11 +37,15 @@ configurationOverrides:
     'offset.storage.replication.factor': '1'
     'status.storage.replication.factor': '1'
     # File-based config provider for dynamic configuration
-    'CONNECT_CONFIG_PROVIDERS': 'file'
-    'CONNECT_CONFIG_PROVIDERS_FILE_CLASS': 'org.apache.kafka.common.config.provider.FileConfigProvider'
-    'CONNECT_CONFIG_STORAGE_CLEANUP_POLICY': 'compact'
-    'CONNECT_OFFSET_STORAGE_CLEANUP_POLICY': 'compact'
-    'CONNECT_STATUS_STORAGE_CLEANUP_POLICY': 'compact'
+    'config.providers': 'file'
+    'config.providers.file.class': 'org.apache.kafka.common.config.provider.FileConfigProvider'
+    'config.storage.cleanup.policy': 'compact'
+    'offset.storage.cleanup.policy': 'compact'
+    'status.storage.cleanup.policy': 'compact'
+
+CONFIG_APP_SEARCH_KAFKA_TOPIC: '.ent-search-engine-documents-atlas-dev'
+CONFIG_GOV_DATA_QUALITY_KAFKA_TOPIC: '.ent-search-engine-documents-atlas-dev-gov-quality'
+CONFIG_PUBLISH_STATE_KAFKA_TOPIC: 'publish-state'
 
 ## Kafka Connect JVM Heap Option
 heapOptions: '-Xms512M -Xmx512M'
@@ -152,22 +156,12 @@ livenessProbe:
 
 volumeMounts:
     - name: v-elastic-certs
-      mountPath: home/appuser/secret_certs
-    - name: kafka-connect-config-volume
-      mountPath: /etc/conf
+      mountPath: /home/appuser/secret_certs
 
 volumes:
     - name: v-elastic-certs
       secret:
           secretName: elastic-search-es-http-certs-public
-    - name: kafka-connect-config-volume
-      configMap:
-          name: kafka-connect-config
-          items:
-              - key: app_search_documents.json
-                path: app_search_documents.json
-              - key: publish_state.json
-                path: publish_state.json
 
 elastic_secret_crt_name: elastic-search-es-http-certs-public
-enterprise_search_internal_url: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/
+enterprise_search_internal_url: https://enterprise-search-ent-http:3002/
