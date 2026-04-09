@@ -47,14 +47,14 @@ describe("AuthService", () => {
         const login = vi.spyOn(keycloak, "login").mockResolvedValueOnce();
         await service.login();
 
-        expect(login).toHaveBeenCalledWith({ redirectUri: window.location.origin });
+        expect(login).toHaveBeenCalledWith({ redirectUri: globalThis.location.origin });
     });
 
     it("should call logout", async () => {
         const logout = vi.spyOn(keycloak, "logout").mockResolvedValueOnce();
         await service.logout();
 
-        expect(logout).toHaveBeenCalledWith({ redirectUri: window.location.origin });
+        expect(logout).toHaveBeenCalledWith({ redirectUri: globalThis.location.origin });
     });
 
     it(
