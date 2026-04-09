@@ -37,8 +37,8 @@ async function createNodesInternal(
                             description: "Run SonarQube analysis on the project",
                         },
                         options: {
-                            command: "uv run pysonar",
-                            cwd: projectRoot,
+                            command: `sonar-scanner -Dproject.settings=${projectRoot}/sonar-project.properties -Dsonar.working.directory=${projectRoot}/.scannerwork`,
+                            cwd: "{workspaceRoot}",
                         },
                         parallelism: false,
                     },

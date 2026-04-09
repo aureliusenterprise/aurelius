@@ -90,6 +90,11 @@ jobs:
             - name: Test affected projects
               run: npx nx affected -t test e2e -c ci
 
+            - name: Install SonarQube scanner
+              uses: nosinovacao/sonarscanner-action@v1
+              with:
+                  version: 8.0.1.6346
+
             - name: Run SonarQube analysis
               run: npx nx affected -t sonar
 

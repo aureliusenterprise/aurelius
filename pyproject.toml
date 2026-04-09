@@ -32,7 +32,6 @@ dev = [
     "pydantic-settings>=2.10.1",
     "pymdown-extensions>=10.16",
     "pyright>=1.1.403",
-    "pysonar>=1.4.0",
     "pytest>=8.4.1",
     "pytest-asyncio>=1.0.0",
     "pytest-cov>=6.2.1",
