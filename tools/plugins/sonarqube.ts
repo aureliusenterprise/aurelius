@@ -40,7 +40,6 @@ async function createNodesInternal(
                             command: `sonar-scanner -Dproject.settings=${projectRoot}/sonar-project.properties -Dsonar.working.directory=${projectRoot}/.scannerwork`,
                             cwd: "{workspaceRoot}",
                         },
-                        parallelism: false,
                     },
                 },
             },
