@@ -76,10 +76,10 @@ public class App {
 
         // Start producing messages at the specified interval
         long currentTimeMillis = System.currentTimeMillis();
-        App.logger.info("Starting message production on a " + config.messageIntervalMillis() + " ms interval");
+        App.logger.info("Starting message production on a {} ms interval", config.messageIntervalMillis());
 
         try {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 // Generate a random UUID for the message key
                 java.util.UUID key = java.util.UUID.randomUUID();
 
@@ -91,7 +91,7 @@ public class App {
                     .build();
 
                 // Produce the message to Kafka
-                App.logger.info("Producing entity: " + entity);
+                App.logger.info("Producing entity: {}", entity);
                 entityProducer.produce(key, entity);
 
                 // Wait for the specified interval before producing the next message
@@ -100,13 +100,13 @@ public class App {
                     0
                 );
 
-                App.logger.debug("Sleeping for " + sleepTimeMillis + " ms before producing the next message");
+                App.logger.debug("Sleeping for {} ms before producing the next message", sleepTimeMillis);
                 Thread.sleep(sleepTimeMillis);
 
                 currentTimeMillis = System.currentTimeMillis();
             }
         } catch (Exception e) {
-            App.logger.error("An error occurred while producing messages: " + e.getMessage());
+            App.logger.error("An error occurred while producing messages: {}", e.getMessage());
             Thread.currentThread().interrupt();
         } finally {
             kafkaProducer.flush();

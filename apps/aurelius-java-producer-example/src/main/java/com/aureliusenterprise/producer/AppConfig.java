@@ -34,29 +34,9 @@ public record AppConfig(
     public static AppConfig load() {
         Map<String, String> env = System.getenv();
 
-        String kafkaBootstrapServers;
-        try {
-            kafkaBootstrapServers = getRequiredString(env, "KAFKA_BOOTSTRAP_SERVERS");
-        } catch (MissingKeyException e) {
-            AppConfig.logger.error("Failed to load KAFKA_BOOTSTRAP_SERVERS: " + e.getMessage());
-            throw e;
-        }
-
-        String schemaRegistryUrl;
-        try {
-            schemaRegistryUrl = getRequiredString(env, "SCHEMA_REGISTRY_URL");
-        } catch (MissingKeyException e) {
-            AppConfig.logger.error("Failed to load SCHEMA_REGISTRY_URL: " + e.getMessage());
-            throw e;
-        }
-
-        String kafkaTopicName;
-        try {
-            kafkaTopicName = getRequiredString(env, "KAFKA_TOPIC_NAME");
-        } catch (MissingKeyException e) {
-            AppConfig.logger.error("Failed to load KAFKA_TOPIC_NAME: " + e.getMessage());
-            throw e;
-        }
+        String kafkaBootstrapServers = getRequiredString(env, "KAFKA_BOOTSTRAP_SERVERS");
+        String schemaRegistryUrl = getRequiredString(env, "SCHEMA_REGISTRY_URL");
+        String kafkaTopicName = getRequiredString(env, "KAFKA_TOPIC_NAME");
 
         long messageIntervalMillis = getOptionalLong(env, "MESSAGE_INTERVAL_MILLIS", 10_000);
 
@@ -75,7 +55,10 @@ public record AppConfig(
         String value = env.get(key);
         if (value == null || value.isBlank()) {
             throw new MissingKeyException(
-                "Environment variable " + key + " is required but was not set. Please check your configuration."
+                String.format(
+                    "Environment variable %s is required but was not set. Please check your configuration.",
+                    key
+                )
             );
         }
         return value;
@@ -92,18 +75,18 @@ public record AppConfig(
     private static long getOptionalLong(Map<String, String> env, String key, long defaultValue) {
         String value = env.get(key);
         if (value == null || value.isBlank()) {
-            logger.warn("Environment variable " + key + " is not set. Using default of " + defaultValue + " ms.");
+            logger.warn("Environment variable {} is not set. Using default of {} ms.", key, defaultValue);
             return defaultValue;
         }
         try {
             long parsedValue = Long.parseLong(value);
             if (parsedValue < 0) {
-                logger.warn(key + " value must be non-negative. Using default of " + defaultValue + " ms.");
+                logger.warn("{} value must be non-negative. Using default of {} ms.", key, defaultValue);
                 return defaultValue;
             }
             return parsedValue;
         } catch (NumberFormatException e) {
-            logger.warn("Invalid " + key + " value '" + value + "'. Using default of " + defaultValue + " ms.");
+            logger.warn("Invalid {} value '{}'. Using default of {} ms.", key, value, defaultValue);
             return defaultValue;
         }
     }
