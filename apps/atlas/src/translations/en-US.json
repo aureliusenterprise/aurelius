@@ -124,12 +124,12 @@
             },
             "searchPlaceholder": "Type your search",
             "technicalContext": {
-                "description": "I'm searching for technical information about a specific data field, dataset, or system",
+                "description": "I'm searching for which data is stored on a specific technical environment",
                 "exploreButton": "Start browsing systems",
-                "exploringDescription": "Click the button below to see a list of all systems.",
+                "exploringDescription": "Search for keywords related to the system, collection or dataset that you are looking for.",
                 "exploringTitle": "I'm exploring the technical environments on which data is stored",
                 "infoModal": {
-                    "description": "The technical part of the data governance model captures the technical implementation of data, such as where data is stored and the level of data quality. \n The technical data governance model consists of the following types of entities:"
+                    "description": "The technical part of the data governance model captures the technical implementation of data, such as where data is stored and the level of data quality. \n\nThe technical data governance model consists of the following types of entities:"
                 },
                 "searchInstructions": "Search for keywords related to the technical metadata that you are looking for.",
                 "searchPlaceholder": "Search for keywords",
@@ -344,6 +344,142 @@
         },
         "createEntity": {
             "newEntity": "Create new entity"
+        },
+        "details": {
+            "attribute": {
+                "dataQuality": "Data Quality",
+                "description": "Description",
+                "fields": "Fields",
+                "governanceQualityRules": "Governance Quality Rules",
+                "people": "People",
+                "properties": "Properties",
+                "unavailable": "Unavailable"
+            },
+            "collection": {
+                "dataQuality": "Data Quality",
+                "description": "Description",
+                "fields": "Fields",
+                "governanceQualityRules": "Governance Quality Rules",
+                "people": "People",
+                "properties": "Properties",
+                "unavailable": "Unavailable"
+            },
+            "components": {},
+            "dataset": {
+                "childDatasets": "Child Datasets",
+                "consumers": "Consumers",
+                "dataEntities": "Data Entities",
+                "dataQuality": "Data Quality",
+                "description": "Description",
+                "fields": "Fields",
+                "governanceQualityRules": "Governance Quality Rules",
+                "lineageModel": "Lineage Model",
+                "people": "People",
+                "producers": "Producers",
+                "properties": "Properties",
+                "unavailable": "Unavailable"
+            },
+            "default": {
+                "description": "Description",
+                "properties": "Properties"
+            },
+            "domain": {
+                "dataEntities": "Data Entities",
+                "dataQuality": "Data Quality",
+                "description": "Description",
+                "fields": "Fields",
+                "governanceQualityRules": "Governance Quality Rules",
+                "people": "People",
+                "properties": "Properties",
+                "unavailable": "Unavailable"
+            },
+            "entity": {
+                "childEntities": "Child Entities",
+                "dataAttributes": "Data Attributes",
+                "dataEntities": "Data Entities",
+                "dataQuality": "Data Quality",
+                "datasets": "Datasets",
+                "description": "Description",
+                "fields": "Fields",
+                "governanceQualityRules": "Governance Quality Rules",
+                "people": "People",
+                "properties": "Properties",
+                "unavailable": "Unavailable"
+            },
+            "field": {
+                "childEntities": "Child Entities",
+                "childFields": "Child Fields",
+                "dataAttributes": "Data Attributes",
+                "dataEntities": "Data Entities",
+                "dataQuality": "Data Quality",
+                "dataQualityRules": "Data Quality Rules",
+                "datasets": "Datasets",
+                "description": "Description",
+                "fields": "Fields",
+                "governanceQualityRules": "Governance Quality Rules",
+                "people": "People",
+                "properties": "Properties",
+                "unavailable": "Unavailable"
+            },
+            "govQuality": {
+                "childEntities": "Child Entities",
+                "childFields": "Child Fields",
+                "complianceChart": "Compliance Chart",
+                "compliant": "Compliant",
+                "dataAttributes": "Data Attributes",
+                "dataEntities": "Data Entities",
+                "dataQuality": "Data Quality",
+                "dataQualityRules": "Data Quality Rules",
+                "datasets": "Datasets",
+                "description": "Domain Lead",
+                "fields": "Fields",
+                "governanceQualityRules": "Governance Quality Rules",
+                "nonCompliant": "Non-compliant",
+                "people": "People",
+                "properties": "Properties",
+                "unavailable": "Unavailable"
+            },
+            "person": {
+                "dataAttributes": "Data Attributes",
+                "dataDomains": "Data Domains",
+                "dataEntities": "Data Entities",
+                "dataOwner": "Data Owner",
+                "dataSteward": "Data Steward",
+                "domainLead": "Domain Lead",
+                "governanceQualityRules": "Governance Quality Rules",
+                "governanceResponsibilities": "Governance Responsibilities",
+                "other": "Other"
+            },
+            "process": {
+                "available": "Available",
+                "childEntities": "Child Entities",
+                "childFields": "Child Fields",
+                "dataEntities": "Data Entities",
+                "dataQualityRules": "Data Quality Rules",
+                "datasets": "Datasets",
+                "description": "Description",
+                "governanceQualityRules": "Governance Quality Rules",
+                "inputs": "Inputs",
+                "lineageModel": "Lineage Model",
+                "outputs": "Outputs",
+                "properties": "Properties",
+                "systems": "Systems",
+                "unavailable": "Unavailable"
+            },
+            "system": {
+                "childEntities": "Child Entities",
+                "childFields": "Child Fields",
+                "collections": "Collections",
+                "dataQuality": "Data Quality",
+                "dataQualityRules": "Data Quality Rules",
+                "description": "Description",
+                "governanceQualityRules": "Governance Quality Rules",
+                "lineageModel": "Lineage Model",
+                "processes": "Processes",
+                "properties": "Properties",
+                "subSystems": "Subsystems",
+                "unavailable": "Unavailable"
+            }
         },
         "editEntity": {
             "editEntity": "Edit entity"
