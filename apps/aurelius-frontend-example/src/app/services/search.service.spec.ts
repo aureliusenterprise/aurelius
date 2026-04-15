@@ -1,15 +1,21 @@
 import { TestBed } from "@angular/core/testing";
-import { EntitiesService, Entity } from "aurelius-data-access";
-import { of, throwError } from "rxjs";
-import { SearchService, SEARCH_SERVICE_DEBOUNCE_MS } from "./search.service";
+import { EntitiesService, Entity, Envelope } from "aurelius-data-access";
+import { of, Subject, throwError } from "rxjs";
+import { SEARCH_SERVICE_DEBOUNCE_MS, SearchService } from "./search.service";
 
 describe("SearchService", () => {
     let service: SearchService;
     let entitiesService: EntitiesService;
+    let entitiesSubject: Subject<Envelope<Entity>>;
 
     beforeEach(() => {
+        entitiesSubject = new Subject<Envelope<Entity>>();
         TestBed.configureTestingModule({
-            providers: [SearchService, EntitiesService, { provide: SEARCH_SERVICE_DEBOUNCE_MS, useValue: 25 }],
+            providers: [
+                SearchService,
+                { provide: EntitiesService, useValue: { findAll: vi.fn(), entities$: entitiesSubject } },
+                { provide: SEARCH_SERVICE_DEBOUNCE_MS, useValue: 25 },
+            ],
         });
         service = TestBed.inject(SearchService);
         entitiesService = TestBed.inject(EntitiesService);
@@ -90,6 +96,23 @@ describe("SearchService", () => {
                 setTimeout(() => {
                     expect(service.error()).toBe(err);
                     expect(service.entities()).toEqual([]);
+                    done();
+                }, 50);
+            }),
+        100,
+    );
+
+    it(
+        "should trigger refresh when entities$ emits an event",
+        () =>
+            new Promise<void>((done) => {
+                const refreshSpy = vi.spyOn(service, "refresh");
+
+                // Simulate an entity update event from the server
+                entitiesSubject.next({ guid: "4", value: { guid: "4", name: "D", description: "desc4" } });
+
+                setTimeout(() => {
+                    expect(refreshSpy).toHaveBeenCalledOnce();
                     done();
                 }, 50);
             }),

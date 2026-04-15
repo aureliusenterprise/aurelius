@@ -1,9 +1,23 @@
+from uuid import UUID
+
 from aurelius_sdk.postgresql import sanitize_tsquery
 from pydantic import BaseModel, Field, HttpUrl, NonNegativeInt, PositiveInt, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 
 DEVELOPMENT = "development"
+
+
+class Envelope[T: BaseModel | None](BaseModel):
+    """A generic envelope model that wraps a value with a unique identifier."""
+
+    guid: UUID = Field(
+        description="The unique identifier for the value contained in the envelope.",
+    )
+
+    value: T = Field(
+        description="The value contained in the envelope.",
+    )
 
 
 class PaginationQueryParams(BaseModel):
@@ -63,6 +77,11 @@ class Settings(BaseSettings):
     auto_create_schema: bool = Field(
         default_factory=lambda settings: settings.get("environment") == DEVELOPMENT,
         description="Automatically create the database schema. Enabled by default in development mode.",
+    )
+
+    cdc_epoll_timeout: float = Field(
+        default=10.0,
+        description="The timeout in seconds for epoll to wait for new events in the SSE endpoint.",
     )
 
     database_driver: str = Field(

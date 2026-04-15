@@ -130,7 +130,7 @@
         },
         "4200": {
             "label": "Angular",
-            "onAutoForward": "openBrowser"
+            "onAutoForward": "openBrowserOnce"
         },
         "4400": {
             "label": "Storybook",

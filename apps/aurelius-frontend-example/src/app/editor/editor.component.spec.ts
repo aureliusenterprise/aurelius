@@ -46,15 +46,13 @@ describe("Editor", () => {
         expect(entityService.clear).toHaveBeenCalled();
     });
 
-    it("should delete entity and refresh search", async () => {
+    it("should delete entity and clear state", async () => {
         vi.spyOn(entitiesService, "delete").mockImplementationOnce(() => of(void 0));
-        vi.spyOn(searchService, "refresh").mockImplementationOnce(() => null);
         vi.spyOn(entityService, "clear").mockImplementationOnce(() => null);
 
         await component.delete("test-guid");
 
         expect(entitiesService.delete).toHaveBeenCalledWith("test-guid");
-        expect(searchService.refresh).toHaveBeenCalled();
         expect(entityService.clear).toHaveBeenCalled();
     });
 
@@ -66,15 +64,13 @@ describe("Editor", () => {
         await component.delete(null);
 
         expect(entitiesService.delete).not.toHaveBeenCalled();
-        expect(searchService.refresh).toHaveBeenCalled();
         expect(entityService.clear).toHaveBeenCalled();
     });
 
-    it("should save entity and refresh search", async () => {
+    it("should save entity and clear state", async () => {
         const entity = { description: "desc", guid: "g", name: "n" };
 
         vi.spyOn(entitiesService, "createOrUpdate").mockImplementationOnce(() => of(entity));
-        vi.spyOn(searchService, "refresh").mockImplementationOnce(() => null);
         vi.spyOn(entityService, "clear").mockImplementationOnce(() => null);
 
         entityService.edit(entity);
@@ -83,7 +79,6 @@ describe("Editor", () => {
         await component.save();
 
         expect(entitiesService.createOrUpdate).toHaveBeenCalledWith(entity);
-        expect(searchService.refresh).toHaveBeenCalled();
         expect(entityService.clear).toHaveBeenCalled();
     });
 

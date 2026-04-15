@@ -1,7 +1,6 @@
 import http.client
 from collections.abc import Generator
 from pathlib import Path
-from typing import cast
 
 import dotenv
 import pytest
@@ -73,7 +72,7 @@ def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
         username=settings.database_username,
         password=settings.database_password.get_secret_value(),
         host=hostname,
-        port=cast("int", port),
+        port=port,
         database=settings.database_name,
     )
 
@@ -96,7 +95,7 @@ def session(database: Engine) -> Generator[Session]:
 
 
 @pytest.fixture()
-def connection(compose: DockerCompose) -> http.client.HTTPConnection:
+def connection(compose: DockerCompose) -> Generator[http.client.HTTPConnection]:
     """Return an HTTP connection to the API."""
     host, port = compose.get_service_host_and_port("aurelius-fastapi-example", 8000)
 
@@ -104,7 +103,11 @@ def connection(compose: DockerCompose) -> http.client.HTTPConnection:
         message = "Service not found in Docker Compose"
         raise ValueError(message)
 
-    return http.client.HTTPConnection(host, cast("int", port))
+    connection = http.client.HTTPConnection(host, port)
+
+    yield connection
+
+    connection.close()
 
 
 @pytest.fixture(scope="session")

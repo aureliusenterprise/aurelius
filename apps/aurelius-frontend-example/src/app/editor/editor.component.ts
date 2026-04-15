@@ -65,7 +65,6 @@ export class Editor {
             await firstValueFrom(this.entitiesService.delete(guid));
         }
 
-        this.searchService.refresh();
         this.entityService.clear();
     }
 
@@ -80,7 +79,6 @@ export class Editor {
             await firstValueFrom(this.entitiesService.createOrUpdate(entity));
         }
 
-        this.searchService.refresh();
         this.entityService.clear();
     }
 

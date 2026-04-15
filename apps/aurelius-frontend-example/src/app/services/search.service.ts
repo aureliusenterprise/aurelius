@@ -1,5 +1,5 @@
 import { inject, Injectable, InjectionToken, Signal, signal } from "@angular/core";
-import { toObservable, toSignal } from "@angular/core/rxjs-interop";
+import { takeUntilDestroyed, toObservable, toSignal } from "@angular/core/rxjs-interop";
 import { EntitiesService, Entity } from "aurelius-data-access";
 import { catchError, debounceTime, EMPTY, finalize, merge, Observable, Subject, switchMap, tap } from "rxjs";
 
@@ -48,6 +48,11 @@ export class SearchService {
     private readonly refresh$ = new Subject<void>();
 
     constructor() {
+        /**
+         * Whenever the search query changes or a refresh is triggered, perform a search for entities matching the query.
+         * The search results are debounced to avoid excessive API calls.
+         * The loading state is updated accordingly to provide feedback to the user.
+         */
         const entities$ = merge(this.refresh$, toObservable(this.query)).pipe(
             debounceTime(this.debounceMillis),
             tap(() => this.startSearch()),
@@ -58,7 +63,16 @@ export class SearchService {
                 ),
             ),
         );
+
+        /**
+         * Convert the entities observable to a signal for use in the UI.
+         */
         this.entities = toSignal(entities$, { initialValue: [] });
+
+        /**
+         * Refresh the search results whenever an entity is created, updated, or deleted.
+         */
+        this.entitiesService.entities$.pipe(takeUntilDestroyed()).subscribe(() => this.refresh());
     }
 
     /**

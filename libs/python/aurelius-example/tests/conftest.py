@@ -3,9 +3,7 @@ from collections.abc import Generator
 
 import pytest
 from aurelius_example import Entity
-from aurelius_fastapi_example.models import Settings
-from pydantic import HttpUrl, SecretStr, TypeAdapter
-from sqlalchemy import Engine, create_engine
+from sqlalchemy import URL, Connection, Engine, create_engine
 from sqlmodel import Session, SQLModel, delete
 from testcontainers.postgres import PostgresContainer
 
@@ -33,25 +31,22 @@ def db_container(db_credentials: dict[str, str]) -> Generator[PostgresContainer]
 
 
 @pytest.fixture(scope="session")
-def db_settings(db_container: PostgresContainer, db_credentials: dict[str, str]) -> Settings:
-    """Return application settings pointed at the test PostgreSQL container."""
-    return Settings(
-        auth_realm_name="test-realm",
-        auth_server_url=TypeAdapter(HttpUrl).validate_python("http://localhost:8080"),
-        cdc_epoll_timeout=1.0,
-        database_host=db_container.get_container_host_ip(),
-        database_name=db_credentials["database_name"],
-        database_password=SecretStr(db_credentials["database_password"]),
-        database_port=int(db_container.get_exposed_port(5432)),
-        database_username=db_credentials["database_username"],
-        environment="development",
+def db_url(db_container: PostgresContainer) -> URL:
+    """Return a SQLAlchemy URL for connecting to the test PostgreSQL container."""
+    return URL.create(
+        drivername="postgresql",
+        username=db_container.username,
+        password=db_container.password,
+        host=db_container.get_container_host_ip(),
+        port=db_container.get_exposed_port(5432),
+        database=db_container.dbname,
     )
 
 
 @pytest.fixture(scope="session")
-def db_engine(db_settings: Settings) -> Generator[Engine]:
+def db_engine(db_url: URL) -> Generator[Engine]:
     """Create the SQLModel schema in the test PostgreSQL database."""
-    engine = create_engine(db_settings.database_url)
+    engine = create_engine(db_url)
 
     SQLModel.metadata.create_all(engine)
 
@@ -59,6 +54,13 @@ def db_engine(db_settings: Settings) -> Generator[Engine]:
 
     SQLModel.metadata.drop_all(engine)
     engine.dispose()
+
+
+@pytest.fixture()
+def db_connection(db_engine: Engine) -> Generator[Connection]:
+    """Provide a database connection for each test."""
+    with db_engine.connect() as connection:
+        yield connection
 
 
 @pytest.fixture()

@@ -40,6 +40,7 @@
         "jsdom": "~22.1.0",
         "jsonc-eslint-parser": "^2.1.0",
         "ng-packagr": "~21.2.0",
+        "ngx-sse-client": "^21.0.0",
         "nx": "22.6.1",
         "postcss": "^8.4.5",
         "postcss-url": "~10.1.3",

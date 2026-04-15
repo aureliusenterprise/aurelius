@@ -1,15 +1,26 @@
 import { TestBed } from "@angular/core/testing";
-import { Entity } from "aurelius-data-access";
+import { Entity, EntitiesService, Envelope } from "aurelius-data-access";
+import { Subject } from "rxjs";
 import { EntityService } from "./entity.service";
 
 describe("EntityService", () => {
     let service: EntityService;
+    let entitiesSubject: Subject<Envelope<Entity>>;
 
     beforeEach(() => {
+        entitiesSubject = new Subject<Envelope<Entity>>();
+
         TestBed.configureTestingModule({
-            providers: [EntityService],
+            providers: [
+                EntityService,
+                { provide: EntitiesService, useValue: { entities$: entitiesSubject.asObservable() } },
+            ],
         });
         service = TestBed.inject(EntityService);
+    });
+
+    afterEach(() => {
+        entitiesSubject.complete();
     });
 
     it("should initialize with null entity", () => {
@@ -32,4 +43,105 @@ describe("EntityService", () => {
         service.edit(entity);
         expect(service.entity()).toEqual(entity);
     });
+
+    it(
+        "should update the current entity when receiving an update for the same GUID",
+        () =>
+            new Promise<void>((done) => {
+                const initialEntity: Entity = { guid: "123", name: "Original", description: "Desc" };
+                service.edit(initialEntity);
+
+                const updatedEntity: Entity = { guid: "123", name: "Updated", description: "New Desc" };
+                const envelope: Envelope<Entity> = { guid: "123", value: updatedEntity };
+
+                entitiesSubject.next(envelope);
+
+                setTimeout(() => {
+                    expect(service.entity()).toEqual(updatedEntity);
+                    done();
+                }, 50);
+            }),
+        100,
+    );
+
+    it(
+        "should clear the entity when receiving a deletion (null value) for the current GUID",
+        () =>
+            new Promise<void>((done) => {
+                const initialEntity: Entity = { guid: "123", name: "Original", description: "Desc" };
+                service.edit(initialEntity);
+
+                // Simulate deletion by sending null value with matching GUID
+                const deleteEnvelope: Envelope<Entity> = { guid: "123", value: null };
+
+                entitiesSubject.next(deleteEnvelope);
+
+                setTimeout(() => {
+                    expect(service.entity()).toBeNull();
+                    done();
+                }, 50);
+            }),
+        100,
+    );
+
+    it(
+        "should NOT update the entity when receiving an update for a different GUID",
+        () =>
+            new Promise<void>((done) => {
+                const currentEntity: Entity = { guid: "123", name: "Current", description: "Desc" };
+                service.edit(currentEntity);
+
+                // Simulate update for a different entity with different GUID
+                const otherEntity: Entity = { guid: "456", name: "Other", description: "Other Desc" };
+                const envelope: Envelope<Entity> = { guid: "456", value: otherEntity };
+
+                entitiesSubject.next(envelope);
+
+                setTimeout(() => {
+                    expect(service.entity()).toEqual(currentEntity);
+                    done();
+                }, 50);
+            }),
+        100,
+    );
+
+    it(
+        "should NOT update the entity when receiving a deletion for a different GUID",
+        () =>
+            new Promise<void>((done) => {
+                const currentEntity: Entity = { guid: "123", name: "Current", description: "Desc" };
+                service.edit(currentEntity);
+
+                // Simulate deletion of a different entity
+                const deleteEnvelope: Envelope<Entity> = { guid: "456", value: null };
+
+                entitiesSubject.next(deleteEnvelope);
+
+                setTimeout(() => {
+                    expect(service.entity()).toEqual(currentEntity);
+                    done();
+                }, 50);
+            }),
+        100,
+    );
+
+    it(
+        "should NOT update the entity when current is null and receives an update for a new GUID",
+        () =>
+            new Promise<void>((done) => {
+                // Start with no current entity
+                expect(service.entity()).toBeNull();
+
+                const newEntity: Entity = { guid: "789", name: "New Entity", description: "First Desc" };
+                const envelope: Envelope<Entity> = { guid: "789", value: newEntity };
+
+                entitiesSubject.next(envelope);
+
+                setTimeout(() => {
+                    expect(service.entity()).toBeNull();
+                    done();
+                }, 50);
+            }),
+        100,
+    );
 });

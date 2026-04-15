@@ -1,15 +1,17 @@
-from collections.abc import Sequence
+from collections.abc import AsyncGenerator, Callable, Sequence
 from typing import Annotated
 from uuid import UUID
 
+import psycopg2
 from aurelius_example import Entity
 from fastapi import APIRouter, Depends, HTTPException, Security
+from fastapi.sse import EventSourceResponse, ServerSentEvent
 from sqlalchemy.dialects.postgresql.ext import plainto_tsquery
 from sqlmodel import Session, col, or_, select
 
 from aurelius_fastapi_example.globals import LOGGER
-from aurelius_fastapi_example.models import FindAllQueryParams
-from aurelius_fastapi_example.providers import session, user_info
+from aurelius_fastapi_example.models import Envelope, FindAllQueryParams
+from aurelius_fastapi_example.providers import notifications, session, user_info
 
 ENTITIES = APIRouter()
 
@@ -44,6 +46,41 @@ def find_all(
         query = query.where(or_(col(Entity.name).op("@@")(tsquery), col(Entity.description).op("@@")(tsquery)))
 
     return session.exec(query).all()
+
+
+@ENTITIES.get(
+    "/sse",
+    summary="Stream entity changes",
+    description="Real-time streaming endpoint for entity change notifications.",
+    response_class=EventSourceResponse,
+)
+async def sse(
+    notifications: Annotated[Callable[[], AsyncGenerator[psycopg2.extensions.Notify]], Depends(notifications)],
+    session: Annotated[Session, Depends(session)],
+    user_info: Annotated[dict, Depends(user_info)],
+) -> AsyncGenerator[ServerSentEvent]:
+    """
+    Stream server-sent events for entity changes.
+
+    This endpoint streams real-time updates whenever entities are modified in the database.
+    """
+    LOGGER.info("User %s connected to SSE endpoint", user_info.get("sub"))
+
+    try:
+        async for notification in notifications():
+            guid = UUID(notification.payload)
+
+            envelope = Envelope(
+                guid=guid,
+                value=session.get(Entity, guid),
+            )
+
+            yield ServerSentEvent(
+                event=notification.channel,
+                data=envelope,
+            )
+    finally:
+        LOGGER.info("User %s disconnected from SSE endpoint", user_info.get("sub"))
 
 
 @ENTITIES.get(

@@ -1,0 +1,131 @@
+from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity
+from sqlalchemy import Connection, text
+from sqlmodel import Session
+from tenacity import Retrying, stop_after_attempt, wait_fixed
+
+
+def test__example_creates_database_schema(db_connection: Connection) -> None:
+    """Test that the database schema is created successfully."""
+    result = db_connection.execute(text("SELECT tablename FROM pg_tables WHERE schemaname='public';"))
+    tables = {row[0] for row in result}
+    assert "entity" in tables
+
+
+def test__example_entity_trigger_exists(db_connection: Connection) -> None:
+    """Test that the PostgreSQL trigger for the Entity table exists."""
+    result = db_connection.execute(
+        text(
+            """
+                SELECT tgname
+                FROM pg_trigger
+                WHERE tgname = 'entity_table_change';
+                """,
+        ),
+    )
+    triggers = {row[0] for row in result}
+    assert "entity_table_change" in triggers
+
+
+def test__example_notify_function_exists(db_connection: Connection) -> None:
+    """Test that the PostgreSQL trigger function for the Entity table exists."""
+    result = db_connection.execute(
+        text(
+            """
+                SELECT proname
+                FROM pg_proc
+                WHERE proname = 'entity_notify_change';
+                """,
+        ),
+    )
+    functions = {row[0] for row in result}
+    assert "entity_notify_change" in functions
+
+
+def test__example_entity_trigger_fires_on_insert(db_connection: Connection, db_session: Session) -> None:
+    """Test that the PostgreSQL trigger for the Entity table fires on insert operations."""
+    # Insert a new entity to trigger the notification
+    entity = Entity(
+        name="Test Entity",
+        description="This is a test entity.",
+    )
+
+    # Listen for notifications on the entity channel
+    with db_connection.connection.connection.cursor() as cursor:
+        cursor.execute(f"LISTEN {PG_NOTIFY_ENTITY_CHANNEL};")
+        db_connection.connection.connection.commit()
+
+        db_session.add(entity)
+        db_session.commit()
+
+        # Wait for the notification to be received
+        for attempt in Retrying(stop=stop_after_attempt(5), wait=wait_fixed(1)):
+            with attempt:
+                db_connection.connection.connection.poll()
+                notifications = db_connection.connection.connection.notifies
+                assert any(
+                    notification.payload == str(entity.guid) and notification.channel == PG_NOTIFY_ENTITY_CHANNEL
+                    for notification in notifications
+                )
+
+
+def test__example_entity_trigger_fires_on_update(db_connection: Connection, db_session: Session) -> None:
+    """Test that the PostgreSQL trigger for the Entity table fires on update operations."""
+    # Insert a new entity so we can update it later
+    entity = Entity(
+        name="Test Entity",
+        description="This is a test entity.",
+    )
+
+    db_session.add(entity)
+    db_session.commit()
+
+    # Listen for notifications on the entity channel
+    with db_connection.connection.connection.cursor() as cursor:
+        cursor.execute(f"LISTEN {PG_NOTIFY_ENTITY_CHANNEL};")
+        db_connection.connection.connection.commit()
+
+        # Update the entity to trigger the notification
+        entity.name = "Updated Test Entity"
+        entity.description = "This is an updated test entity."
+        db_session.commit()
+
+        # Wait for the notification to be received
+        for attempt in Retrying(stop=stop_after_attempt(5), wait=wait_fixed(1)):
+            with attempt:
+                db_connection.connection.connection.poll()
+                notifications = db_connection.connection.connection.notifies
+                assert any(
+                    notification.payload == str(entity.guid) and notification.channel == PG_NOTIFY_ENTITY_CHANNEL
+                    for notification in notifications
+                )
+
+
+def test__example_entity_trigger_fires_on_delete(db_connection: Connection, db_session: Session) -> None:
+    """Test that the PostgreSQL trigger for the Entity table fires on delete operations."""
+    # Insert a new entity so we can delete it later
+    entity = Entity(
+        name="Test Entity",
+        description="This is a test entity.",
+    )
+
+    db_session.add(entity)
+    db_session.commit()
+
+    # Listen for notifications on the entity channel
+    with db_connection.connection.connection.cursor() as cursor:
+        cursor.execute(f"LISTEN {PG_NOTIFY_ENTITY_CHANNEL};")
+        db_connection.connection.connection.commit()
+
+        # Delete the entity to trigger the notification
+        db_session.delete(entity)
+        db_session.commit()
+
+        # Wait for the notification to be received
+        for attempt in Retrying(stop=stop_after_attempt(5), wait=wait_fixed(1)):
+            with attempt:
+                db_connection.connection.connection.poll()
+                notifications = db_connection.connection.connection.notifies
+                assert any(
+                    notification.payload == str(entity.guid) and notification.channel == PG_NOTIFY_ENTITY_CHANNEL
+                    for notification in notifications
+                )

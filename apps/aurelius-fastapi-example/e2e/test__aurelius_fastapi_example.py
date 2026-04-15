@@ -4,8 +4,9 @@ from collections.abc import Generator
 
 import pytest
 from aurelius_example import Entity
+from aurelius_fastapi_example.models import Envelope
 from sqlmodel import Session
-from tenacity import Retrying, stop_after_attempt, wait_fixed
+from tenacity import Retrying, stop_after_attempt, stop_after_delay, wait_fixed
 
 
 def test__aurelius_fastapi_example_has_swagger_docs(connection: http.client.HTTPConnection) -> None:
@@ -381,3 +382,102 @@ def test__aurelius_fastapi_example_delete_not_exists(
     response = connection.getresponse()
 
     assert response.status == 410, "Expected 410 Gone status for non-existing entity"
+
+
+def test__aurelius_fastapi_example_sse_requires_auth(
+    connection: http.client.HTTPConnection,
+) -> None:
+    """
+    Test that the SSE endpoint requires authentication.
+
+    Asserts:
+        - The API returns a 401 Unauthorized status code when no token is provided.
+    """
+    connection.request(
+        "GET",
+        "/entities/sse",
+    )
+
+    response = connection.getresponse()
+
+    assert response.status == 401, "Expected 401 Unauthorized status for unauthenticated request"
+
+
+def read_notification(response: http.client.HTTPResponse) -> list[str]:
+    """
+    Helper function to read lines from an SSE stream.
+
+    Yields:
+        Lines of text from the SSE stream.
+    """
+    notification = []
+
+    while (line := response.readline().decode().strip()) != "":
+        notification.append(line)
+
+    return notification
+
+
+def parse_notification(notification: list[str]) -> dict[str, str]:
+    """
+    Helper function to parse an SSE notification into a dictionary.
+
+    Args:
+        notification: A list of lines from an SSE notification.
+
+    Returns:
+        A dictionary containing the event type and data from the notification.
+    """
+    event = {}
+
+    for line in notification:
+        if line.startswith("event:"):
+            event["event"] = line[len("event:") :].strip()
+        elif line.startswith("data:"):
+            event["data"] = json.loads(line[len("data:") :].strip())
+
+    return event
+
+
+def test__aurelius_fastapi_example_sse_streams_changes(
+    connection: http.client.HTTPConnection,
+    session: Session,
+    token: str,
+) -> None:
+    """
+    Test that the SSE endpoint streams changes to entities.
+
+    Asserts:
+        - The API returns a 200 OK status code when the SSE endpoint is requested.
+        - Changes to entities are streamed to the client.
+    """
+    connection.request(
+        "GET",
+        "/entities/sse",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    response = connection.getresponse()
+
+    assert response.status == 200
+
+    # Insert a new entity to trigger the notification
+    entity = Entity(
+        name="SSE Test",
+        description="This is a test entity for SSE streaming",
+    )
+
+    session.add(entity)
+    session.commit()
+    session.refresh(entity)
+
+    expected = Envelope[Entity](guid=entity.guid, value=entity)
+
+    # Wait for the notification to be received
+    for attempt in Retrying(stop=stop_after_delay(90), wait=wait_fixed(1)):
+        with attempt:
+            notification = read_notification(response)
+            event = parse_notification(notification)
+
+            assert event.get("event") == "entity"
+            assert event.get("data") == expected.model_dump(mode="json")
