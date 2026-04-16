@@ -6,11 +6,11 @@ export const environment = {
     name: 'm4i_atlas',
     googleAnalyticsMeasurementID: 'UA-138345924-1',
     atlas: {
-        appSearchToken: 'search-xsvpa4oqsmgcwaz99zhd9j81',
+        appSearchToken: 'search-urqd7uritmui1aaffi777vx9',
     },
     i18n: {
         defaultLanguage: 'en-US',
-        languages: {},
+        languages: { 'nl-NL': {}, 'en-US': {} },
     },
     keycloak: {
         url: 'http://keycloak.localhost:8180',
