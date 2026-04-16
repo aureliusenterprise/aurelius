@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from uuid import UUID
 
 from aurelius_sdk.postgresql import sanitize_tsquery
@@ -17,6 +18,18 @@ class Envelope[T: BaseModel | None](BaseModel):
 
     value: T = Field(
         description="The value contained in the envelope.",
+    )
+
+
+class PaginatedResponse[T: BaseModel](BaseModel):
+    """A generic paginated response model that wraps paginated data with total count."""
+
+    data: Sequence[T] = Field(
+        description="The paginated results.",
+    )
+
+    total: int = Field(
+        description="The total number of items matching the query filter, ignoring pagination.",
     )
 
 

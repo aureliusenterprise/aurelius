@@ -4,6 +4,7 @@ from pathlib import Path
 
 import dotenv
 import pytest
+from aurelius_example import Entity
 from aurelius_sdk.testing import capture_docker_compose_logs
 from keycloak import KeycloakOpenID
 from pydantic import SecretStr
@@ -92,6 +93,28 @@ def session(database: Engine) -> Generator[Session]:
     """Return a SQLModel session."""
     with Session(database, expire_on_commit=False) as session:
         yield session
+
+
+@pytest.fixture()
+def entities(session: Session) -> Generator[list[Entity]]:
+    """Create and return a list of test entities."""
+    test_entities = [
+        Entity(name="alpha widget", description="first result"),
+        Entity(name="beta widget", description="contains alpha term"),
+        Entity(name="gamma widget", description="irrelevant"),
+    ]
+    session.add_all(test_entities)
+    session.commit()
+
+    for entity in test_entities:
+        session.refresh(entity)
+
+    yield test_entities
+
+    for entity in test_entities:
+        session.delete(entity)
+
+    session.commit()
 
 
 @pytest.fixture()

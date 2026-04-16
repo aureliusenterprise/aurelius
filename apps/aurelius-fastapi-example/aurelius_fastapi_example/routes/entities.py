@@ -1,4 +1,4 @@
-from collections.abc import AsyncGenerator, Callable, Sequence
+from collections.abc import AsyncGenerator, Callable
 from typing import Annotated
 from uuid import UUID
 
@@ -6,11 +6,12 @@ import psycopg2
 from aurelius_example import Entity
 from fastapi import APIRouter, Depends, HTTPException, Security
 from fastapi.sse import EventSourceResponse, ServerSentEvent
+from sqlalchemy import func
 from sqlalchemy.dialects.postgresql.ext import plainto_tsquery
 from sqlmodel import Session, col, or_, select
 
 from aurelius_fastapi_example.globals import LOGGER
-from aurelius_fastapi_example.models import Envelope, FindAllQueryParams
+from aurelius_fastapi_example.models import Envelope, FindAllQueryParams, PaginatedResponse
 from aurelius_fastapi_example.providers import notifications, session, user_info
 
 ENTITIES = APIRouter()
@@ -25,9 +26,9 @@ def find_all(
     params: Annotated[FindAllQueryParams, Depends()],
     session: Annotated[Session, Depends(session)],
     user_info: Annotated[dict, Security(user_info)],
-) -> Sequence[Entity]:
+) -> PaginatedResponse[Entity]:
     """
-    Retrieve all entities from the database.
+    Retrieve all entities from the database with pagination support.
 
     Args:
         params (FindAllQueryParams): Query parameters for the find all endpoint.
@@ -35,17 +36,24 @@ def find_all(
         user_info (dict): Decoded user information from the authentication token.
 
     Returns:
-        Sequence[Entity]: All entities in the database.
+        PaginatedResponse[Entity]: Paginated entities with total count.
     """
     LOGGER.info("User %s is retrieving entities", user_info.get("sub"))
 
-    query = select(Entity).offset(params.skip).limit(params.limit)
+    base_query = select(Entity)
 
     if params.search:
         tsquery = plainto_tsquery("english", params.search)
-        query = query.where(or_(col(Entity.name).op("@@")(tsquery), col(Entity.description).op("@@")(tsquery)))
+        search_filter = or_(col(Entity.name).op("@@")(tsquery), col(Entity.description).op("@@")(tsquery))
+        base_query = base_query.where(search_filter)
 
-    return session.exec(query).all()
+    count_query = select(func.count()).select_from(base_query.subquery())
+    total = session.exec(count_query).one()
+
+    data_query = base_query.offset(params.skip).limit(params.limit)
+    data = session.exec(data_query).all()
+
+    return PaginatedResponse(data=data, total=total)
 
 
 @ENTITIES.get(

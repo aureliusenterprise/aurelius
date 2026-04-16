@@ -1,10 +1,8 @@
 import http.client
 import json
-from collections.abc import Generator
 
-import pytest
 from aurelius_example import Entity
-from aurelius_fastapi_example.models import Envelope
+from aurelius_fastapi_example.models import Envelope, PaginatedResponse
 from sqlmodel import Session
 from tenacity import Retrying, stop_after_attempt, stop_after_delay, wait_fixed
 
@@ -57,26 +55,6 @@ def test__aurelius_fastapi_example_has_healthcheck(connection: http.client.HTTPC
     assert response.status == 200
 
 
-@pytest.fixture()
-def entities(session: Session) -> Generator[list[Entity]]:
-    """
-    Fixture to create and return a list of entities for testing.
-
-    Yields:
-        A list of Entity instances.
-    """
-    entities = [Entity() for _ in range(3)]
-    session.add_all(entities)
-    session.commit()
-
-    yield entities
-
-    for entity in entities:
-        session.delete(entity)
-
-    session.commit()
-
-
 def test__aurelius_fastapi_example_find_many(
     connection: http.client.HTTPConnection,
     entities: list[Entity],
@@ -88,6 +66,7 @@ def test__aurelius_fastapi_example_find_many(
     Asserts:
         - The API returns a 200 OK status code.
         - All expected entities are returned in the response.
+        - The response contains data and total fields.
     """
     connection.request(
         "GET",
@@ -98,9 +77,58 @@ def test__aurelius_fastapi_example_find_many(
 
     assert response.status == 200
 
-    data = [Entity.model_validate(item) for item in json.loads(response.read())]
+    page = PaginatedResponse[Entity].model_validate(json.loads(response.read()))
+    actual = [entity.model_dump(mode="json") for entity in page.data]
+    expected = [entity.model_dump(mode="json") for entity in entities]
 
-    assert all(entity in data for entity in entities), "Not all entities were returned in the response"
+    assert actual == expected, "Not all entities were returned in the response"
+    assert page.total == len(entities), "Total count does not match number of entities"
+
+
+def test__aurelius_fastapi_example_find_many_search_query(
+    connection: http.client.HTTPConnection,
+    entities: list[Entity],
+    token: str,
+) -> None:
+    """The list endpoint should filter results by search query."""
+    connection.request(
+        "GET",
+        "/entities/?search=alpha",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    response = connection.getresponse()
+
+    assert response.status == 200
+
+    page = PaginatedResponse[Entity].model_validate(json.loads(response.read()))
+    actual = [entity.model_dump(mode="json") for entity in page.data]
+    expected = [entities[0].model_dump(mode="json"), entities[1].model_dump(mode="json")]
+
+    assert actual == expected, "The search query did not return the expected entities"
+    assert page.total == 2, "Total count does not match number of expected entities"
+
+
+def test__aurelius_fastapi_example_find_many_search_with_pagination(
+    connection: http.client.HTTPConnection,
+    entities: list[Entity],
+    token: str,
+) -> None:
+    """Filtered total count should remain correct when pagination is applied."""
+    connection.request(
+        "GET",
+        "/entities/?search=alpha&skip=1&limit=1",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    response = connection.getresponse()
+
+    assert response.status == 200
+
+    page = PaginatedResponse[Entity].model_validate(json.loads(response.read()))
+    actual = [entity.model_dump(mode="json") for entity in page.data]
+    expected = [entities[1].model_dump(mode="json")]
+
+    assert actual == expected, "The search query did not return the expected entities"
+    assert page.total == 2, "Total count does not match number of expected entities"
 
 
 def test__aurelius_fastapi_example_find_many_requires_auth(

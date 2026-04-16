@@ -32,7 +32,7 @@ describe("SearchResults", () => {
             { guid: "2", name: "Entity Two" },
         ] as Entity[];
 
-        vi.spyOn(searchService, "entities").mockImplementationOnce(() => entities);
+        vi.spyOn(searchService, "entities").mockImplementationOnce(() => ({ data: entities, total: entities.length }));
 
         await fixture.whenStable();
 
@@ -44,7 +44,7 @@ describe("SearchResults", () => {
     });
 
     it("should not render the results section if there are no entities", async () => {
-        vi.spyOn(searchService, "entities").mockImplementationOnce(() => []);
+        vi.spyOn(searchService, "entities").mockImplementationOnce(() => ({ data: [], total: 0 }));
 
         await fixture.whenStable();
 
@@ -57,7 +57,7 @@ describe("SearchResults", () => {
     it("should call entityService.edit when edit button is clicked", async () => {
         const entity = { guid: "1", name: "Entity One" } as Entity;
 
-        vi.spyOn(searchService, "entities").mockImplementationOnce(() => [entity]);
+        vi.spyOn(searchService, "entities").mockImplementationOnce(() => ({ data: [entity], total: 1 }));
 
         const editSpy = vi.spyOn(entityService, "edit").mockImplementationOnce(() => null);
 

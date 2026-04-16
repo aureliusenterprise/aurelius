@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { EntitiesService, Entity, Envelope } from "aurelius-data-access";
+import { EntitiesService, Entity, Envelope, PaginatedResponse } from "aurelius-data-access";
 import { of, Subject, throwError } from "rxjs";
 import { SEARCH_SERVICE_DEBOUNCE_MS, SearchService } from "./search.service";
 
@@ -29,46 +29,116 @@ describe("SearchService", () => {
         "should trigger refresh and call findAll",
         () =>
             new Promise<void>((done) => {
-                const entities: Entity[] = [{ guid: "1", name: "A", description: "desc" }];
+                const response: PaginatedResponse<Entity> = {
+                    data: [{ guid: "1", name: "A", description: "desc" }],
+                    total: 1,
+                };
 
-                vi.spyOn(entitiesService, "findAll").mockReturnValueOnce(of(entities));
+                vi.spyOn(entitiesService, "findAll").mockReturnValueOnce(of(response));
 
                 service.refresh();
 
                 setTimeout(() => {
-                    expect(service.entities()).toEqual(entities);
+                    expect(entitiesService.findAll).toHaveBeenCalledWith({
+                        search: service.query(),
+                        limit: service.pageSize(),
+                        skip: service.pageIndex() * service.pageSize(),
+                    });
+                    expect(service.entities()).toEqual(response);
                     done();
-                }, 50);
+                }, 100);
             }),
-        100,
+        200,
     );
 
     it(
         "should update query and trigger search",
         () =>
             new Promise<void>((done) => {
-                const entities: Entity[] = [{ guid: "2", name: "B", description: "desc2" }];
+                const response: PaginatedResponse<Entity> = {
+                    data: [{ guid: "2", name: "B", description: "desc2" }],
+                    total: 1,
+                };
 
-                vi.spyOn(entitiesService, "findAll").mockReturnValueOnce(of(entities));
+                vi.spyOn(entitiesService, "findAll").mockReturnValueOnce(of(response));
 
                 service.query.set("B");
 
                 setTimeout(() => {
-                    expect(entitiesService.findAll).toHaveBeenCalledWith({ search: "B" });
-                    expect(service.entities()).toEqual(entities);
+                    expect(entitiesService.findAll).toHaveBeenCalledWith({
+                        search: service.query(),
+                        limit: service.pageSize(),
+                        skip: service.pageIndex() * service.pageSize(),
+                    });
+                    expect(service.entities()).toEqual(response);
                     done();
-                }, 50);
+                }, 100);
             }),
-        100,
+        200,
+    );
+
+    it(
+        "should update pageIndex and trigger search",
+        () =>
+            new Promise<void>((done) => {
+                const response: PaginatedResponse<Entity> = {
+                    data: [{ guid: "2", name: "B", description: "desc2" }],
+                    total: 1,
+                };
+
+                vi.spyOn(entitiesService, "findAll").mockReturnValueOnce(of(response));
+
+                service.pageIndex.set(1);
+
+                setTimeout(() => {
+                    expect(entitiesService.findAll).toHaveBeenCalledWith({
+                        search: service.query(),
+                        limit: service.pageSize(),
+                        skip: service.pageIndex() * service.pageSize(),
+                    });
+                    expect(service.entities()).toEqual(response);
+                    done();
+                }, 100);
+            }),
+        200,
+    );
+
+    it(
+        "should update pageSize and trigger search",
+        () =>
+            new Promise<void>((done) => {
+                const response: PaginatedResponse<Entity> = {
+                    data: [{ guid: "2", name: "B", description: "desc2" }],
+                    total: 1,
+                };
+
+                vi.spyOn(entitiesService, "findAll").mockReturnValueOnce(of(response));
+
+                service.pageSize.set(10);
+
+                setTimeout(() => {
+                    expect(entitiesService.findAll).toHaveBeenCalledWith({
+                        search: service.query(),
+                        limit: service.pageSize(),
+                        skip: service.pageIndex() * service.pageSize(),
+                    });
+                    expect(service.entities()).toEqual(response);
+                    done();
+                }, 100);
+            }),
+        200,
     );
 
     it(
         "should debounce rapid queries",
         () =>
             new Promise<void>((done) => {
-                const entities: Entity[] = [{ guid: "3", name: "C", description: "desc3" }];
+                const response: PaginatedResponse<Entity> = {
+                    data: [{ guid: "3", name: "C", description: "desc3" }],
+                    total: 1,
+                };
 
-                vi.spyOn(entitiesService, "findAll").mockReturnValue(of(entities));
+                vi.spyOn(entitiesService, "findAll").mockReturnValue(of(response));
 
                 service.query.set("C1");
                 service.query.set("C2");
@@ -76,11 +146,11 @@ describe("SearchService", () => {
 
                 setTimeout(() => {
                     expect(entitiesService.findAll).toHaveBeenCalledTimes(1);
-                    expect(service.entities()).toEqual(entities);
+                    expect(service.entities()).toEqual(response);
                     done();
-                }, 50);
+                }, 100);
             }),
-        100,
+        200,
     );
 
     it(
@@ -95,11 +165,11 @@ describe("SearchService", () => {
 
                 setTimeout(() => {
                     expect(service.error()).toBe(err);
-                    expect(service.entities()).toEqual([]);
+                    expect(service.entities()).toEqual({ data: [], total: 0 });
                     done();
-                }, 50);
+                }, 100);
             }),
-        100,
+        200,
     );
 
     it(
@@ -114,8 +184,8 @@ describe("SearchService", () => {
                 setTimeout(() => {
                     expect(refreshSpy).toHaveBeenCalledOnce();
                     done();
-                }, 50);
+                }, 100);
             }),
-        100,
+        200,
     );
 });

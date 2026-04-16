@@ -84,9 +84,9 @@ def authenticated_client(
 def entities(db_session: Session) -> Generator[list[Entity]]:
     """Create and return a list of test entities."""
     test_entities = [
-        Entity(name="Test Entity 1", description="First test entity"),
-        Entity(name="Test Entity 2", description="Second test entity"),
-        Entity(name="Test Entity 3", description="Third test entity"),
+        Entity(name="alpha device", description="first result"),
+        Entity(name="beta device", description="contains alpha keyword"),
+        Entity(name="gamma device", description="unrelated"),
     ]
 
     db_session.add_all(test_entities)

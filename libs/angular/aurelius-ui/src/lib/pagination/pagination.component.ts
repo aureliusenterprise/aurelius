@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, computed, ContentChild, input, model, TemplateRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, input, model } from "@angular/core";
 
 @Component({
     selector: "aurelius-ui-pagination",
@@ -8,17 +8,11 @@ import { ChangeDetectionStrategy, Component, computed, ContentChild, input, mode
     styleUrls: ["./pagination.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Pagination<T extends object> {
+export class Pagination {
     /**
-     * The template used to render the items on the current page.
-     * The context of the template will have an `$implicit` property which contains the items for the current page.
+     * The index of the current page (0-based).
      */
-    @ContentChild(TemplateRef) readonly itemsTemplate?: TemplateRef<{ $implicit: T[] }>;
-
-    /**
-     * The list of items to paginate.
-     */
-    readonly items = input([] as T[]);
+    readonly pageIndex = model(0);
 
     /**
      * The number of items to display per page.
@@ -26,24 +20,15 @@ export class Pagination<T extends object> {
     readonly pageSize = input(10);
 
     /**
-     * The index of the current page (0-based).
+     * The total number of items across all pages.
      */
-    readonly pageIndex = model(0);
-
-    /**
-     * The items to display on the current page.
-     */
-    readonly page = computed(() => {
-        const start = this.pageIndex() * this.pageSize();
-        const end = start + this.pageSize();
-        return this.items().slice(start, end);
-    });
+    readonly totalItems = input(0);
 
     /**
      * The total number of pages based on the length of the items and the page size.
      */
     readonly totalPages = computed(() => {
-        return Math.ceil(this.items().length / this.pageSize());
+        return Math.ceil(this.totalItems() / this.pageSize());
     });
 
     /**

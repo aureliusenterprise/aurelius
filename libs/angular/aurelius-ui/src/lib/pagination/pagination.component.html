@@ -1,7 +1,6 @@
 @let _currentPageDisplay = currentPageDisplay();
 @let _hasPreviousPage = hasPreviousPage();
 @let _hasNextPage = hasNextPage();
-@let _page = page();
 @let _pageTokens = pageTokens();
 
 <nav class="pagination" role="navigation" aria-label="pagination">
@@ -45,7 +44,3 @@
         }
     </ul>
 </nav>
-
-<div class="content">
-    <ng-container *ngTemplateOutlet="itemsTemplate ?? null; context: { $implicit: _page }" />
-</div>

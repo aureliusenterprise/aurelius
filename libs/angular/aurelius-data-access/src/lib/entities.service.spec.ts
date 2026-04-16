@@ -1,6 +1,6 @@
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { EntitiesService, Entity, FindAllQueryParams } from "./entities.service";
+import { EntitiesService, Entity, FindAllQueryParams, PaginatedResponse } from "./entities.service";
 
 describe("EntitiesService", () => {
     let service: EntitiesService;
@@ -61,14 +61,17 @@ describe("EntitiesService", () => {
     it("should fetch all entities", () =>
         new Promise<void>((done, fail) => {
             const params: FindAllQueryParams = { limit: 10, search: "foo", skip: 2 };
+
             const entities: Entity[] = [
                 { guid: "1", name: "A", description: "desc A" },
                 { guid: "2", name: "B", description: "desc B" },
             ];
 
+            const paginatedResponse: PaginatedResponse<Entity> = { total: entities.length, data: entities };
+
             service.findAll(params).subscribe({
                 next: (result) => {
-                    expect(result).toEqual(entities);
+                    expect(result).toEqual(paginatedResponse);
                     done();
                 },
                 error: fail,
@@ -81,7 +84,7 @@ describe("EntitiesService", () => {
             expect(req.request.params.get("search")).toBe("foo");
             expect(req.request.params.get("skip")).toBe("2");
 
-            req.flush(entities);
+            req.flush(paginatedResponse);
         }));
 
     it("should fetch a specific entity by guid", () =>

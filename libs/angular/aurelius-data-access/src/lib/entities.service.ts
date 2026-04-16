@@ -50,6 +50,18 @@ export type FindAllQueryParams = {
     skip?: number;
 };
 
+export type PaginatedResponse<T> = {
+    /**
+     * The total number of entities that match the query, regardless of pagination.
+     */
+    total: number;
+
+    /**
+     * The list of entities returned for the current page.
+     */
+    data: T[];
+};
+
 function isEntityEvent(event: Event): event is MessageEvent<string | null> {
     return event.type === "entity";
 }
@@ -128,8 +140,8 @@ export class EntitiesService implements OnDestroy {
      * @param params Optional query parameters for filtering and pagination.
      * @returns An observable that emits the list of entities.
      */
-    findAll(params: FindAllQueryParams = {}): Observable<Entity[]> {
-        return this.httpClient.get<Entity[]>("/api/entities/", { params });
+    findAll(params: FindAllQueryParams = {}): Observable<PaginatedResponse<Entity>> {
+        return this.httpClient.get<PaginatedResponse<Entity>>("/api/entities/", { params });
     }
 
     /**

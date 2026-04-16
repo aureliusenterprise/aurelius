@@ -1,6 +1,6 @@
-import { inject, Injectable, InjectionToken, Signal, signal } from "@angular/core";
+import { computed, inject, Injectable, InjectionToken, Signal, signal } from "@angular/core";
 import { takeUntilDestroyed, toObservable, toSignal } from "@angular/core/rxjs-interop";
-import { EntitiesService, Entity } from "aurelius-data-access";
+import { EntitiesService, Entity, FindAllQueryParams, PaginatedResponse } from "aurelius-data-access";
 import { catchError, debounceTime, EMPTY, finalize, merge, Observable, Subject, switchMap, tap } from "rxjs";
 
 export const SEARCH_SERVICE_DEBOUNCE_MS = new InjectionToken<number>("SEARCH_SERVICE_DEBOUNCE_MS", {
@@ -15,7 +15,7 @@ export class SearchService {
     /**
      * The current list of entities based on the search query.
      */
-    readonly entities: Signal<Entity[]>;
+    readonly entities: Signal<PaginatedResponse<Entity>>;
 
     /**
      * The latest error encountered during the search operation.
@@ -26,6 +26,16 @@ export class SearchService {
      * The loading state of the search service.
      */
     readonly loading = signal<boolean>(false);
+
+    /**
+     * The current page index for pagination.
+     */
+    readonly pageIndex = signal<number>(0);
+
+    /**
+     * The number of entities to display per page.
+     */
+    readonly pageSize = signal<number>(6);
 
     /**
      * The current search query.
@@ -47,17 +57,22 @@ export class SearchService {
      */
     private readonly refresh$ = new Subject<void>();
 
+    /**
+     * The search parameters computed from the current query, page index, and page size.
+     */
+    private readonly searchParams = computed(() => this.buildSearchParams());
+
     constructor() {
         /**
-         * Whenever the search query changes or a refresh is triggered, perform a search for entities matching the query.
+         * Whenever the search parameters change or a refresh is triggered, perform a search for entities.
          * The search results are debounced to avoid excessive API calls.
          * The loading state is updated accordingly to provide feedback to the user.
          */
-        const entities$ = merge(this.refresh$, toObservable(this.query)).pipe(
+        const entities$ = merge(this.refresh$, toObservable(this.searchParams)).pipe(
             debounceTime(this.debounceMillis),
             tap(() => this.startSearch()),
             switchMap(() =>
-                this.entitiesService.findAll({ search: this.query() }).pipe(
+                this.entitiesService.findAll(this.searchParams()).pipe(
                     catchError((err) => this.handleError(err)),
                     finalize(() => this.loading.set(false)),
                 ),
@@ -67,7 +82,7 @@ export class SearchService {
         /**
          * Convert the entities observable to a signal for use in the UI.
          */
-        this.entities = toSignal(entities$, { initialValue: [] });
+        this.entities = toSignal(entities$, { initialValue: { total: 0, data: [] } });
 
         /**
          * Refresh the search results whenever an entity is created, updated, or deleted.
@@ -80,6 +95,18 @@ export class SearchService {
      */
     refresh(): void {
         this.refresh$.next();
+    }
+
+    /**
+     * Build the search parameters for the API request based on the current query, page index, and page size.
+     * @returns The search parameters.
+     */
+    private buildSearchParams(): FindAllQueryParams {
+        return {
+            search: this.query(),
+            skip: this.pageIndex() * this.pageSize(),
+            limit: this.pageSize(),
+        };
     }
 
     /**
