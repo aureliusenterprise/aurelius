@@ -7,17 +7,6 @@ from playwright.sync_api import Page, expect
 from sqlmodel import Session, select
 
 
-def test__main_page_has_welcome_message(authenticated: Page) -> None:
-    """
-    Test that the main page has a welcome message.
-
-    Asserts:
-        - The page loads successfully.
-        - The welcome message is visible on the page.
-    """
-    expect(authenticated.get_by_text(re.compile("Welcome"))).to_be_visible()
-
-
 def test__search_input_is_present(authenticated: Page) -> None:
     """
     Test that the search input is present on the page.

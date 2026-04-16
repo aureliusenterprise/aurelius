@@ -1,0 +1,51 @@
+@let _currentPageDisplay = currentPageDisplay();
+@let _hasPreviousPage = hasPreviousPage();
+@let _hasNextPage = hasNextPage();
+@let _page = page();
+@let _pageTokens = pageTokens();
+
+<nav class="pagination" role="navigation" aria-label="pagination">
+    <button
+        type="button"
+        class="pagination-previous"
+        [disabled]="!_hasPreviousPage"
+        (click)="previousPage()"
+        aria-label="Go to previous page"
+    >
+        Previous
+    </button>
+    <button
+        type="button"
+        class="pagination-next"
+        [disabled]="!_hasNextPage"
+        (click)="nextPage()"
+        aria-label="Go to next page"
+    >
+        Next page
+    </button>
+
+    <ul class="pagination-list">
+        @for (token of _pageTokens; track $index) {
+            <li>
+                @if (token === "ellipsis") {
+                    <span class="pagination-ellipsis">&hellip;</span>
+                } @else {
+                    <button
+                        type="button"
+                        class="pagination-link"
+                        [class.is-current]="token === _currentPageDisplay"
+                        [attr.aria-label]="token === _currentPageDisplay ? 'Page ' + token : 'Go to page ' + token"
+                        [attr.aria-current]="token === _currentPageDisplay ? 'page' : null"
+                        (click)="goToPage(token - 1)"
+                    >
+                        {{ token }}
+                    </button>
+                }
+            </li>
+        }
+    </ul>
+</nav>
+
+<div class="content">
+    <ng-container *ngTemplateOutlet="itemsTemplate ?? null; context: { $implicit: _page }" />
+</div>
