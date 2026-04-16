@@ -350,6 +350,9 @@
                 "dataQuality": "Data Quality",
                 "description": "Description",
                 "fields": "Fields",
+                "fieldsCards": {
+                    "title": "Fields"
+                },
                 "governanceQualityRules": "Governance Quality Rules",
                 "people": "People",
                 "properties": "Properties",
@@ -357,6 +360,9 @@
             },
             "collection": {
                 "dataQuality": "Data Quality",
+                "datasetsCards": {
+                    "title": "Datasets"
+                },
                 "description": "Description",
                 "fields": "Fields",
                 "governanceQualityRules": "Governance Quality Rules",
@@ -364,18 +370,52 @@
                 "properties": "Properties",
                 "unavailable": "Unavailable"
             },
-            "components": {},
+            "components": {
+                "detailsCardsList": {
+                    "filter": "Filter",
+                    "results": "result(s)",
+                    "showAllDescendants": "Show all descendants"
+                },
+                "governanceQualityCards": {
+                    "title": "Governance Quality Rules"
+                },
+                "lineageModel": {
+                    "loading": "Loading the lineage model...",
+                    "modelExplorerDataGovernance": {
+                        "noDataGovernanceDetails": "No data governance details available"
+                    },
+                    "noLineageModelAvailable": "No lineage model available"
+                },
+                "navigation": {
+                    "details": "Details"
+                }
+            },
             "dataset": {
                 "childDatasets": "Child Datasets",
                 "consumers": "Consumers",
+                "consumersCards": {
+                    "title": "Consumers"
+                },
                 "dataEntities": "Data Entities",
                 "dataQuality": "Data Quality",
+                "datasetsCards": {
+                    "title": "Child Datasets"
+                },
                 "description": "Description",
+                "entityCards": {
+                    "title": "Data Entities"
+                },
                 "fields": "Fields",
+                "fieldsCards": {
+                    "title": "Fields"
+                },
                 "governanceQualityRules": "Governance Quality Rules",
                 "lineageModel": "Lineage Model",
                 "people": "People",
                 "producers": "Producers",
+                "producersCards": {
+                    "title": "Producers"
+                },
                 "properties": "Properties",
                 "unavailable": "Unavailable"
             },
@@ -387,6 +427,9 @@
                 "dataEntities": "Data Entities",
                 "dataQuality": "Data Quality",
                 "description": "Description",
+                "entityCards": {
+                    "title": "Data Entities"
+                },
                 "fields": "Fields",
                 "governanceQualityRules": "Governance Quality Rules",
                 "people": "People",
@@ -394,12 +437,21 @@
                 "unavailable": "Unavailable"
             },
             "entity": {
+                "attributesCards": {
+                    "title": "Data Attributes"
+                },
                 "childEntities": "Child Entities",
                 "dataAttributes": "Data Attributes",
                 "dataEntities": "Data Entities",
                 "dataQuality": "Data Quality",
                 "datasets": "Datasets",
+                "datasetsCards": {
+                    "title": "Datasets"
+                },
                 "description": "Description",
+                "entitiesCards": {
+                    "title": "Data Entities"
+                },
                 "fields": "Fields",
                 "governanceQualityRules": "Governance Quality Rules",
                 "people": "People",
@@ -407,15 +459,24 @@
                 "unavailable": "Unavailable"
             },
             "field": {
+                "attributesCards": {
+                    "title": "Data Attributes"
+                },
                 "childEntities": "Child Entities",
                 "childFields": "Child Fields",
                 "dataAttributes": "Data Attributes",
                 "dataEntities": "Data Entities",
                 "dataQuality": "Data Quality",
+                "dataQualityCards": {
+                    "title": "Data Quality Rules"
+                },
                 "dataQualityRules": "Data Quality Rules",
                 "datasets": "Datasets",
                 "description": "Description",
                 "fields": "Fields",
+                "fieldsCards": {
+                    "title": "Child Fields"
+                },
                 "governanceQualityRules": "Governance Quality Rules",
                 "people": "People",
                 "properties": "Properties",
@@ -426,6 +487,9 @@
                 "childFields": "Child Fields",
                 "complianceChart": "Compliance Chart",
                 "compliant": "Compliant",
+                "compliantCards": {
+                    "title": "Compliant"
+                },
                 "dataAttributes": "Data Attributes",
                 "dataEntities": "Data Entities",
                 "dataQuality": "Data Quality",
@@ -435,6 +499,9 @@
                 "fields": "Fields",
                 "governanceQualityRules": "Governance Quality Rules",
                 "nonCompliant": "Non-compliant",
+                "nonCompliantCards": {
+                    "title": "Non-compliant"
+                },
                 "people": "People",
                 "properties": "Properties",
                 "unavailable": "Unavailable"
@@ -448,6 +515,9 @@
                 "domainLead": "Domain Lead",
                 "governanceQualityRules": "Governance Quality Rules",
                 "governanceResponsibilities": "Governance Responsibilities",
+                "governanceRolesCards": {
+                    "title": "Governance Responsibilities"
+                },
                 "other": "Other"
             },
             "process": {
@@ -459,25 +529,43 @@
                 "datasets": "Datasets",
                 "description": "Description",
                 "governanceQualityRules": "Governance Quality Rules",
+                "inputCards": {
+                    "title": "Inputs"
+                },
                 "inputs": "Inputs",
                 "lineageModel": "Lineage Model",
+                "outputCards": {
+                    "title": "Outputs"
+                },
                 "outputs": "Outputs",
                 "properties": "Properties",
                 "systems": "Systems",
+                "systemsCards": {
+                    "title": "Systems"
+                },
                 "unavailable": "Unavailable"
             },
             "system": {
                 "childEntities": "Child Entities",
                 "childFields": "Child Fields",
                 "collections": "Collections",
+                "collectionsCards": {
+                    "title": "Collections"
+                },
                 "dataQuality": "Data Quality",
                 "dataQualityRules": "Data Quality Rules",
                 "description": "Description",
                 "governanceQualityRules": "Governance Quality Rules",
                 "lineageModel": "Lineage Model",
                 "processes": "Processes",
+                "processesCards": {
+                    "title": "Processes"
+                },
                 "properties": "Properties",
                 "subSystems": "Subsystems",
+                "systemsCards": {
+                    "title": "Subsystems"
+                },
                 "unavailable": "Unavailable"
             }
         },
