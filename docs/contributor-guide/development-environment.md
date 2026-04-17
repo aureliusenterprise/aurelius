@@ -155,7 +155,7 @@ nx run aurelius-dev:init-atlas-types
 
 This will register the custom types with the Atlas instance running in the development environment.
 
-### Generate Elasticsearch Certificates
+#### Generate Elasticsearch Certificates
 
 To enable secure communication to the Elasticsearch instance, you need to generate SSL certificates. Run the following
 command to generate the certificates:
