@@ -155,6 +155,23 @@ nx run aurelius-dev:init-atlas-types
 
 This will register the custom types with the Atlas instance running in the development environment.
 
+### Generate Elasticsearch Certificates
+
+To enable secure communication to the Elasticsearch instance, you need to generate SSL certificates. Run the following
+command to generate the certificates:
+
+```bash
+nx run aurelius-dev:generate-certs
+```
+
+This will generate the necessary SSL certificates and store them in the `dev/certs` directory. This directory
+is mounted as a volume in the Elasticsearch container, allowing it to use the certificates for secure communication.
+
+!!! TIP "Automatic Certificate Generation"
+
+    The `generate-certs` target is automatically run when you start the development infrastructure with `nx serve aurelius-dev`,
+    so you don't need to run it manually unless you want to regenerate the certificates.
+
 #### Initialize App Search Engines
 
 Aurelius Atlas uses Enterprise Search to provide search capabilities. To initialize the search engines, run the
