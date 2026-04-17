@@ -27,6 +27,31 @@ The development container will attempt to pick up your SSH key from your `ssh-ag
 guide on [sharing git credentials with the development container](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)
 to ensure your SSH key is available inside the container.
 
+!!! TIP "Restart WSL after configuring the SSH agent"
+
+    If you are using WSL on Windows, make sure to restart your WSL instance after configuring the SSH agent to ensure the changes take effect.
+
+## Log into GitHub Container Registry
+
+Aurelius Atlas publishes its Docker images to the GitHub Container Registry. To be able to pull and also publish
+images, you need to log into the registry. Run the following command to log in:
+
+```bash
+echo $GITHUB_TOKEN | docker login ghcr.io -u <your-github-username> --password-stdin
+```
+
+Replace `<your-github-username>` with your GitHub username. The `GITHUB_TOKEN` environment variable should contain
+a personal access token with the `read:packages` and `write:packages` scopes.
+
+!!! TIP "Log in once"
+
+    You only need to log in to the container registry once. The credentials will be stored in your Docker configuration and will be available for the development container when it starts.
+
+??? QUESTION "How do I create a personal access token?"
+
+    You can create a personal access token in your GitHub account settings under "Developer settings" > "Personal
+    access tokens".
+
 ## Clone the Repository
 
 To clone the repository, run the following command:
