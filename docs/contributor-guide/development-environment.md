@@ -3,7 +3,7 @@
 Follow the steps below to set up your development environment.
 
 This project includes a [development container](https://containers.dev) to automatically set up your development
-environment, including the all tools and dependencies required for local development.
+environment, including all tools and dependencies required for local development.
 
 !!! NOTE "Prerequisites"
 
@@ -159,7 +159,7 @@ This will start the infrastructure services with `docker-compose`.
 
 !!! TIP "Starting individual services"
 
-    You may not always need to start the entire infrastructure. You can start individiual services via `docker-compose` as well. For example, to start only the Kafka cluster, run the following command from the root of the repository:
+    You may not always need to start the entire infrastructure. You can start individual services via `docker-compose` as well. For example, to start only the Kafka cluster, run the following command from the root of the repository:
 
     ```bash
     docker-compose -f dev/docker-compose.yaml up broker schema-registry kafka-ui
