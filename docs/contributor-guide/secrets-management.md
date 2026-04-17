@@ -60,10 +60,9 @@ using your private key.
 Once the encryption on the files you need to access has been rotated, you can decrypt them using your private
 key.
 
-!!! TIP "Automatic Decryption with Nx"
+!!! TIP "Automatic Decryption with `nx`"
 
-    Every project that uses encrypted settings has an `Nx` target to decrypt the settings. Decryption is run automatically
-    when you run the `serve`, `test`, or `e2e` targets.
+    Tasks that require access to secrets will automatically decrypt the necessary files when you run them with `nx`.
 
 If you need to decrypt the settings manually, you can run the following command:
 
