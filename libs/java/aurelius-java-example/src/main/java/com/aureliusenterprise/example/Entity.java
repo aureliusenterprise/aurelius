@@ -18,10 +18,10 @@ public class Entity
     implements org.apache.avro.specific.SpecificRecord
 {
 
-    private static final long serialVersionUID = -7259090971703949072L;
+    private static final long serialVersionUID = 1164637377708274102L;
 
     public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse(
-        "{\"type\":\"record\",\"name\":\"Entity\",\"namespace\":\"com.aureliusenterprise.example\",\"fields\":[{\"name\":\"description\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"doc\":\"A description of the entity\",\"default\":null},{\"name\":\"guid\",\"type\":[\"null\",{\"type\":\"string\",\"logicalType\":\"uuid\"}],\"doc\":\"The unique identifier for the entity\",\"default\":null},{\"name\":\"name\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"doc\":\"The name of the entity\",\"default\":null}]}"
+        "{\"type\":\"record\",\"name\":\"Entity\",\"namespace\":\"com.aureliusenterprise.example\",\"fields\":[{\"name\":\"description\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"doc\":\"A description of the entity\",\"default\":null},{\"name\":\"guid\",\"type\":[\"null\",{\"type\":\"string\",\"logicalType\":\"uuid\"}],\"doc\":\"The unique identifier for the entity\",\"default\":null},{\"name\":\"name\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"doc\":\"The name of the entity\",\"default\":null},{\"name\":\"time_created\",\"type\":[\"null\",{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"}],\"doc\":\"The timestamp when the entity was created\",\"default\":null},{\"name\":\"time_modified\",\"type\":[\"null\",{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"}],\"doc\":\"The timestamp when the entity was last modified\",\"default\":null}]}"
     );
 
     public static org.apache.avro.Schema getClassSchema() {
@@ -32,6 +32,7 @@ public class Entity
 
     static {
         MODEL$.addLogicalTypeConversion(new org.apache.avro.Conversions.UUIDConversion());
+        MODEL$.addLogicalTypeConversion(new org.apache.avro.data.TimeConversions.TimestampMicrosConversion());
     }
 
     private static final BinaryMessageEncoder<Entity> ENCODER = new BinaryMessageEncoder<>(MODEL$, SCHEMA$);
@@ -88,6 +89,10 @@ public class Entity
     private java.util.UUID guid;
     /** The name of the entity */
     private java.lang.String name;
+    /** The timestamp when the entity was created */
+    private java.time.Instant time_created;
+    /** The timestamp when the entity was last modified */
+    private java.time.Instant time_modified;
 
     /**
      * Default constructor.  Note that this does not initialize fields
@@ -101,11 +106,21 @@ public class Entity
      * @param description A description of the entity
      * @param guid The unique identifier for the entity
      * @param name The name of the entity
+     * @param time_created The timestamp when the entity was created
+     * @param time_modified The timestamp when the entity was last modified
      */
-    public Entity(java.lang.String description, java.util.UUID guid, java.lang.String name) {
+    public Entity(
+        java.lang.String description,
+        java.util.UUID guid,
+        java.lang.String name,
+        java.time.Instant time_created,
+        java.time.Instant time_modified
+    ) {
         this.description = description;
         this.guid = guid;
         this.name = name;
+        this.time_created = time_created;
+        this.time_modified = time_modified;
     }
 
     @Override
@@ -128,6 +143,10 @@ public class Entity
                 return guid;
             case 2:
                 return name;
+            case 3:
+                return time_created;
+            case 4:
+                return time_modified;
             default:
                 throw new IndexOutOfBoundsException("Invalid index: " + field$);
         }
@@ -146,6 +165,12 @@ public class Entity
                 break;
             case 2:
                 name = value$ != null ? value$.toString() : null;
+                break;
+            case 3:
+                time_created = (java.time.Instant) value$;
+                break;
+            case 4:
+                time_modified = (java.time.Instant) value$;
                 break;
             default:
                 throw new IndexOutOfBoundsException("Invalid index: " + field$);
@@ -204,6 +229,40 @@ public class Entity
     }
 
     /**
+     * Gets the value of the 'time_created' field.
+     * @return The timestamp when the entity was created
+     */
+    public java.time.Instant getTimeCreated() {
+        return time_created;
+    }
+
+    /**
+     * Sets the value of the 'time_created' field.
+     * The timestamp when the entity was created
+     * @param value the value to set.
+     */
+    public void setTimeCreated(java.time.Instant value) {
+        this.time_created = value;
+    }
+
+    /**
+     * Gets the value of the 'time_modified' field.
+     * @return The timestamp when the entity was last modified
+     */
+    public java.time.Instant getTimeModified() {
+        return time_modified;
+    }
+
+    /**
+     * Sets the value of the 'time_modified' field.
+     * The timestamp when the entity was last modified
+     * @param value the value to set.
+     */
+    public void setTimeModified(java.time.Instant value) {
+        this.time_modified = value;
+    }
+
+    /**
      * Creates a new Entity RecordBuilder.
      * @return A new Entity RecordBuilder
      */
@@ -256,6 +315,10 @@ public class Entity
         private java.util.UUID guid;
         /** The name of the entity */
         private java.lang.String name;
+        /** The timestamp when the entity was created */
+        private java.time.Instant time_created;
+        /** The timestamp when the entity was last modified */
+        private java.time.Instant time_modified;
 
         /** Creates a new Builder */
         private Builder() {
@@ -280,6 +343,14 @@ public class Entity
                 this.name = data().deepCopy(fields()[2].schema(), other.name);
                 fieldSetFlags()[2] = other.fieldSetFlags()[2];
             }
+            if (isValidValue(fields()[3], other.time_created)) {
+                this.time_created = data().deepCopy(fields()[3].schema(), other.time_created);
+                fieldSetFlags()[3] = other.fieldSetFlags()[3];
+            }
+            if (isValidValue(fields()[4], other.time_modified)) {
+                this.time_modified = data().deepCopy(fields()[4].schema(), other.time_modified);
+                fieldSetFlags()[4] = other.fieldSetFlags()[4];
+            }
         }
 
         /**
@@ -299,6 +370,14 @@ public class Entity
             if (isValidValue(fields()[2], other.name)) {
                 this.name = data().deepCopy(fields()[2].schema(), other.name);
                 fieldSetFlags()[2] = true;
+            }
+            if (isValidValue(fields()[3], other.time_created)) {
+                this.time_created = data().deepCopy(fields()[3].schema(), other.time_created);
+                fieldSetFlags()[3] = true;
+            }
+            if (isValidValue(fields()[4], other.time_modified)) {
+                this.time_modified = data().deepCopy(fields()[4].schema(), other.time_modified);
+                fieldSetFlags()[4] = true;
             }
         }
 
@@ -428,6 +507,90 @@ public class Entity
             return this;
         }
 
+        /**
+         * Gets the value of the 'time_created' field.
+         * The timestamp when the entity was created
+         * @return The value.
+         */
+        public java.time.Instant getTimeCreated() {
+            return time_created;
+        }
+
+        /**
+         * Sets the value of the 'time_created' field.
+         * The timestamp when the entity was created
+         * @param value The value of 'time_created'.
+         * @return This builder.
+         */
+        public com.aureliusenterprise.example.Entity.Builder setTimeCreated(java.time.Instant value) {
+            validate(fields()[3], value);
+            this.time_created = value;
+            fieldSetFlags()[3] = true;
+            return this;
+        }
+
+        /**
+         * Checks whether the 'time_created' field has been set.
+         * The timestamp when the entity was created
+         * @return True if the 'time_created' field has been set, false otherwise.
+         */
+        public boolean hasTimeCreated() {
+            return fieldSetFlags()[3];
+        }
+
+        /**
+         * Clears the value of the 'time_created' field.
+         * The timestamp when the entity was created
+         * @return This builder.
+         */
+        public com.aureliusenterprise.example.Entity.Builder clearTimeCreated() {
+            time_created = null;
+            fieldSetFlags()[3] = false;
+            return this;
+        }
+
+        /**
+         * Gets the value of the 'time_modified' field.
+         * The timestamp when the entity was last modified
+         * @return The value.
+         */
+        public java.time.Instant getTimeModified() {
+            return time_modified;
+        }
+
+        /**
+         * Sets the value of the 'time_modified' field.
+         * The timestamp when the entity was last modified
+         * @param value The value of 'time_modified'.
+         * @return This builder.
+         */
+        public com.aureliusenterprise.example.Entity.Builder setTimeModified(java.time.Instant value) {
+            validate(fields()[4], value);
+            this.time_modified = value;
+            fieldSetFlags()[4] = true;
+            return this;
+        }
+
+        /**
+         * Checks whether the 'time_modified' field has been set.
+         * The timestamp when the entity was last modified
+         * @return True if the 'time_modified' field has been set, false otherwise.
+         */
+        public boolean hasTimeModified() {
+            return fieldSetFlags()[4];
+        }
+
+        /**
+         * Clears the value of the 'time_modified' field.
+         * The timestamp when the entity was last modified
+         * @return This builder.
+         */
+        public com.aureliusenterprise.example.Entity.Builder clearTimeModified() {
+            time_modified = null;
+            fieldSetFlags()[4] = false;
+            return this;
+        }
+
         @Override
         @SuppressWarnings("unchecked")
         public Entity build() {
@@ -438,6 +601,12 @@ public class Entity
                     : (java.lang.String) defaultValue(fields()[0]);
                 record.guid = fieldSetFlags()[1] ? this.guid : (java.util.UUID) defaultValue(fields()[1]);
                 record.name = fieldSetFlags()[2] ? this.name : (java.lang.String) defaultValue(fields()[2]);
+                record.time_created = fieldSetFlags()[3]
+                    ? this.time_created
+                    : (java.time.Instant) defaultValue(fields()[3]);
+                record.time_modified = fieldSetFlags()[4]
+                    ? this.time_modified
+                    : (java.time.Instant) defaultValue(fields()[4]);
                 return record;
             } catch (org.apache.avro.AvroMissingFieldException e) {
                 throw e;

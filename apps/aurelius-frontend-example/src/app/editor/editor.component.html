@@ -24,6 +24,32 @@
                             </div>
                         </div>
                         <div class="field">
+                            <label class="label" for="time_created">Time Created</label>
+                            <div class="control">
+                                <input
+                                    id="time_created"
+                                    class="input is-static"
+                                    type="text"
+                                    placeholder="Entity has not been created yet"
+                                    formControlName="time_created"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="time_modified">Time Modified</label>
+                            <div class="control">
+                                <input
+                                    id="time_modified"
+                                    class="input is-static"
+                                    type="text"
+                                    placeholder="Entity has not been modified yet"
+                                    formControlName="time_modified"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="field">
                             @let invalidName = entityForm.get("name")?.dirty && entityForm.get("name")?.invalid;
                             <label class="label" for="name">Name</label>
                             <div class="control">

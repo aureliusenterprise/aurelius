@@ -1,3 +1,6 @@
+from datetime import UTC, datetime
+
+import pytest
 from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity
 from sqlalchemy import Connection, text
 from sqlmodel import Session
@@ -68,17 +71,12 @@ def test__example_entity_trigger_fires_on_insert(db_connection: Connection, db_s
                 )
 
 
-def test__example_entity_trigger_fires_on_update(db_connection: Connection, db_session: Session) -> None:
+def test__example_entity_trigger_fires_on_update(
+    db_connection: Connection,
+    db_session: Session,
+    entity: Entity,
+) -> None:
     """Test that the PostgreSQL trigger for the Entity table fires on update operations."""
-    # Insert a new entity so we can update it later
-    entity = Entity(
-        name="Test Entity",
-        description="This is a test entity.",
-    )
-
-    db_session.add(entity)
-    db_session.commit()
-
     # Listen for notifications on the entity channel
     with db_connection.connection.connection.cursor() as cursor:
         cursor.execute(f"LISTEN {PG_NOTIFY_ENTITY_CHANNEL};")
@@ -100,17 +98,12 @@ def test__example_entity_trigger_fires_on_update(db_connection: Connection, db_s
                 )
 
 
-def test__example_entity_trigger_fires_on_delete(db_connection: Connection, db_session: Session) -> None:
+def test__example_entity_trigger_fires_on_delete(
+    db_connection: Connection,
+    db_session: Session,
+    entity: Entity,
+) -> None:
     """Test that the PostgreSQL trigger for the Entity table fires on delete operations."""
-    # Insert a new entity so we can delete it later
-    entity = Entity(
-        name="Test Entity",
-        description="This is a test entity.",
-    )
-
-    db_session.add(entity)
-    db_session.commit()
-
     # Listen for notifications on the entity channel
     with db_connection.connection.connection.cursor() as cursor:
         cursor.execute(f"LISTEN {PG_NOTIFY_ENTITY_CHANNEL};")
@@ -129,3 +122,124 @@ def test__example_entity_trigger_fires_on_delete(db_connection: Connection, db_s
                     notification.payload == str(entity.guid) and notification.channel == PG_NOTIFY_ENTITY_CHANNEL
                     for notification in notifications
                 )
+
+
+def test__example_entity_time_created_is_set(entity: Entity) -> None:
+    """Test that the time_created field is automatically set when an entity is created."""
+    assert entity.time_created is not None, "time_created should be set automatically"
+    assert entity.time_modified is None, "time_modified should be None when the entity is first created"
+
+
+def test__example_entity_time_modified_updates_on_change(
+    db_session: Session,
+    entity: Entity,
+) -> None:
+    """Test that the time_modified field is updated when an entity is modified."""
+    entity.name = "Updated Test Entity"
+
+    db_session.commit()
+    db_session.refresh(entity)
+
+    assert entity.time_modified is not None, "time_modified should be updated when the entity is modified"
+
+
+@pytest.mark.parametrize(
+    ("a", "b", "expected"),
+    [
+        (
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC)),
+            Entity(time_created=datetime(2024, 1, 2, tzinfo=UTC)),
+            True,
+        ),
+        (
+            Entity(time_created=datetime(2024, 1, 2, tzinfo=UTC)),
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC)),
+            False,
+        ),
+        (
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC)),
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC)),
+            False,
+        ),
+        (
+            Entity(time_modified=datetime(2024, 1, 1, tzinfo=UTC)),
+            Entity(time_modified=datetime(2024, 1, 2, tzinfo=UTC)),
+            True,
+        ),
+        (
+            Entity(time_modified=datetime(2024, 1, 2, tzinfo=UTC)),
+            Entity(time_modified=datetime(2024, 1, 1, tzinfo=UTC)),
+            False,
+        ),
+        (
+            Entity(time_modified=datetime(2024, 1, 1, tzinfo=UTC)),
+            Entity(time_modified=datetime(2024, 1, 1, tzinfo=UTC)),
+            False,
+        ),
+        (
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC), time_modified=datetime(2024, 1, 1, tzinfo=UTC)),
+            Entity(time_created=datetime(2024, 1, 2, tzinfo=UTC), time_modified=datetime(2024, 1, 2, tzinfo=UTC)),
+            True,
+        ),
+        (
+            Entity(time_created=datetime(2024, 1, 2, tzinfo=UTC), time_modified=datetime(2024, 1, 2, tzinfo=UTC)),
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC), time_modified=datetime(2024, 1, 1, tzinfo=UTC)),
+            False,
+        ),
+        (
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC), time_modified=datetime(2024, 1, 1, tzinfo=UTC)),
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC), time_modified=datetime(2024, 1, 1, tzinfo=UTC)),
+            False,
+        ),
+        (
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC)),
+            Entity(time_modified=datetime(2024, 1, 2, tzinfo=UTC)),
+            True,
+        ),
+        (
+            Entity(time_created=datetime(2024, 1, 2, tzinfo=UTC)),
+            Entity(time_modified=datetime(2024, 1, 1, tzinfo=UTC)),
+            False,
+        ),
+        (
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC)),
+            Entity(time_modified=datetime(2024, 1, 1, tzinfo=UTC)),
+            False,
+        ),
+        (
+            Entity(),
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC)),
+            True,
+        ),
+        (
+            Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC)),
+            Entity(),
+            False,
+        ),
+        (
+            Entity(),
+            Entity(),
+            False,
+        ),
+    ],
+    ids=[
+        "created_1_before_2",
+        "created_2_before_1",
+        "created_1_equals_2",
+        "modified_1_before_2",
+        "modified_2_before_1",
+        "modified_1_equals_2",
+        "created_and_modified_1_before_2",
+        "created_and_modified_2_before_1",
+        "created_and_modified_1_equals_2",
+        "created_1_before_modified_2",
+        "created_2_before_modified_1",
+        "created_1_equals_modified_1",
+        "created_none_before_created_1",
+        "created_1_before_created_none",
+        "created_none_equals_created_none",
+    ],
+)
+def test__example_entity_comparator(a: Entity, b: Entity, *, expected: bool) -> None:
+    """Test the comparison operator for the Entity class."""
+    assert (a < b) == expected

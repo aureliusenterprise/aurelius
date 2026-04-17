@@ -44,13 +44,23 @@ def find_all(
 
     if params.search:
         tsquery = plainto_tsquery("english", params.search)
-        search_filter = or_(col(Entity.name).op("@@")(tsquery), col(Entity.description).op("@@")(tsquery))
+        search_filter = or_(
+            col(Entity.name).op("@@")(tsquery),
+            col(Entity.description).op("@@")(tsquery),
+        )
         base_query = base_query.where(search_filter)
 
     count_query = select(func.count()).select_from(base_query.subquery())
     total = session.exec(count_query).one()
 
-    data_query = base_query.offset(params.skip).limit(params.limit)
+    data_query = (
+        base_query.order_by(
+            col(Entity.time_modified),
+            col(Entity.time_created),
+        )
+        .offset(params.skip)
+        .limit(params.limit)
+    )
     data = session.exec(data_query).all()
 
     return PaginatedResponse(data=data, total=total)

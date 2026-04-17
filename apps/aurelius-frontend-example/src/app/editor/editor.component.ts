@@ -5,7 +5,6 @@ import { EntitiesService, Entity } from "aurelius-data-access";
 import { Modal } from "aurelius-ui";
 import { firstValueFrom } from "rxjs";
 import { EntityService } from "../services/entity.service";
-import { SearchService } from "../services/search.service";
 
 @Component({
     imports: [CommonModule, Modal, ReactiveFormsModule],
@@ -27,17 +26,14 @@ export class Editor {
         description: new FormControl<string | null>(null, [Validators.maxLength(255)]),
         guid: new FormControl<string | null>(null),
         name: new FormControl<string | null>(null, [Validators.maxLength(100)]),
+        time_created: new FormControl<Date | null>(null),
+        time_modified: new FormControl<Date | null>(null),
     });
 
     /**
      * The entities service is used to perform CRUD operations on entities.
      */
     private readonly entitiesService = inject(EntitiesService);
-
-    /**
-     * The search service is used to access the current search results.
-     */
-    private readonly searchService = inject(SearchService);
 
     /**
      * Initializes the editor component and sets up an effect to update the entity form
@@ -76,7 +72,13 @@ export class Editor {
         const entity = this.entityForm.getRawValue();
 
         if (this.entityForm.value) {
-            await firstValueFrom(this.entitiesService.createOrUpdate(entity));
+            await firstValueFrom(
+                this.entitiesService.createOrUpdate({
+                    ...entity,
+                    time_created: entity.time_created ? entity.time_created.toISOString() : null,
+                    time_modified: entity.time_modified ? entity.time_modified.toISOString() : null,
+                }),
+            );
         }
 
         this.entityService.clear();
@@ -92,6 +94,8 @@ export class Editor {
                 description: entity.description,
                 guid: entity.guid,
                 name: entity.name,
+                time_created: entity.time_created ? new Date(entity.time_created) : null,
+                time_modified: entity.time_modified ? new Date(entity.time_modified) : null,
             });
         } else {
             this.entityForm.reset();

@@ -72,3 +72,19 @@ def db_session(db_engine: Engine) -> Generator[Session]:
     with Session(db_engine) as cleanup_session:
         cleanup_session.exec(delete(Entity))
         cleanup_session.commit()
+
+
+@pytest.fixture()
+def entity(db_session: Session) -> Generator[Entity]:
+    """Create and return a single test entity."""
+    entity = Entity(name="Test Entity", description="A test entity")
+
+    db_session.add(entity)
+    db_session.commit()
+
+    db_session.refresh(entity)
+
+    yield entity
+
+    db_session.delete(entity)
+    db_session.commit()

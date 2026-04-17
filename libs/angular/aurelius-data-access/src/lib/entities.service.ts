@@ -23,6 +23,16 @@ export type Entity = {
     readonly guid?: string | null;
 
     /**
+     * The timestamp when the entity was created, in ISO 8601 format. This field is read-only and set by the server when the entity is created. It may be empty if the entity has not been persisted yet.
+     */
+    readonly time_created?: string | null;
+
+    /**
+     * The timestamp when the entity was last modified, in ISO 8601 format. This field is read-only and updated by the server whenever the entity is updated. It may be empty if the entity has not been modified yet.
+     */
+    readonly time_modified?: string | null;
+
+    /**
      * The name of the entity.
      */
     name?: string | null;

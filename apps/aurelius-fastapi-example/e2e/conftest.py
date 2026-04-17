@@ -109,11 +109,26 @@ def entities(session: Session) -> Generator[list[Entity]]:
     for entity in test_entities:
         session.refresh(entity)
 
-    yield test_entities
+    yield sorted(test_entities)
 
     for entity in test_entities:
         session.delete(entity)
 
+    session.commit()
+
+
+@pytest.fixture()
+def entity(session: Session) -> Generator[Entity]:
+    """Create and return a single test entity."""
+    entity = Entity(name="Test Widget", description="A test widget")
+    session.add(entity)
+    session.commit()
+
+    session.refresh(entity)
+
+    yield entity
+
+    session.delete(entity)
     session.commit()
 
 

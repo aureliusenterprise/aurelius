@@ -1,13 +1,53 @@
 {
     "fields": [
-        { "default": null, "doc": "A description of the entity", "name": "description", "type": ["null", "string"] },
+        {
+            "default": null,
+            "doc": "A description of the entity",
+            "name": "description",
+            "type": ["null", "string"]
+        },
         {
             "default": null,
             "doc": "The unique identifier for the entity",
             "name": "guid",
-            "type": ["null", { "logicalType": "uuid", "type": "string" }]
+            "type": [
+                "null",
+                {
+                    "logicalType": "uuid",
+                    "type": "string"
+                }
+            ]
         },
-        { "default": null, "doc": "The name of the entity", "name": "name", "type": ["null", "string"] }
+        {
+            "default": null,
+            "doc": "The name of the entity",
+            "name": "name",
+            "type": ["null", "string"]
+        },
+        {
+            "default": null,
+            "doc": "The timestamp when the entity was created",
+            "name": "time_created",
+            "type": [
+                "null",
+                {
+                    "logicalType": "timestamp-micros",
+                    "type": "long"
+                }
+            ]
+        },
+        {
+            "default": null,
+            "doc": "The timestamp when the entity was last modified",
+            "name": "time_modified",
+            "type": [
+                "null",
+                {
+                    "logicalType": "timestamp-micros",
+                    "type": "long"
+                }
+            ]
+        }
     ],
     "name": "Entity",
     "namespace": "com.aureliusenterprise.example",

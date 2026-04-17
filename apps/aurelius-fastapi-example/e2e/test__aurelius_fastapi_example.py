@@ -1,5 +1,6 @@
 import http.client
 import json
+from unittest.mock import ANY
 
 from aurelius_example import Entity
 from aurelius_fastapi_example.models import Envelope, PaginatedResponse
@@ -254,16 +255,19 @@ def test__aurelius_fastapi_example_create(
     assert response.status == 200
 
     data = Entity.model_validate(json.loads(response.read()))
-
-    assert data == entity, "The created entity does not match the expected entity"
+    expected = entity.model_copy(update={"time_created": data.time_created})
+    assert data == expected, "The created entity does not match the expected entity"
 
     for attempt in Retrying(wait=wait_fixed(1), stop=stop_after_attempt(5)):
         with attempt:
-            assert session.get(Entity, entity.guid) == entity, "The entity was not found in the database after creation"
+            assert session.get(Entity, entity.guid) == expected, (
+                "The entity was not found in the database after creation"
+            )
 
 
 def test__aurelius_fastapi_example_update(
     connection: http.client.HTTPConnection,
+    entity: Entity,
     session: Session,
     token: str,
 ) -> None:
@@ -275,12 +279,6 @@ def test__aurelius_fastapi_example_update(
         - The updated entity is returned in the response.
         - The entity is updated in the database.
     """
-    entity = Entity(name="Update Test", description="This is a test entity")
-
-    session.add(entity)
-    session.commit()
-    session.expunge(entity)
-
     entity.description = "This is an updated description"
 
     connection.request(
@@ -295,14 +293,15 @@ def test__aurelius_fastapi_example_update(
     assert response.status == 200
 
     data = Entity.model_validate(json.loads(response.read()))
+    expected = entity.model_copy(update={"time_modified": ANY})
 
-    assert data == entity, "The updated entity does not match the expected entity"
+    assert data == expected, "The updated entity does not match the expected entity"
 
     for attempt in Retrying(wait=wait_fixed(1), stop=stop_after_attempt(5)):
         with attempt:
             actual = session.get(Entity, entity.guid)
             try:
-                assert actual == entity, "The entity was not found in the database after update"
+                assert actual == expected, "The entity was not found in the database after update"
             except AssertionError:
                 session.expunge(actual)
                 raise
@@ -332,6 +331,7 @@ def test__aurelius_fastapi_example_put_requires_auth(
 
 def test__aurelius_fastapi_example_delete(
     connection: http.client.HTTPConnection,
+    entity: Entity,
     session: Session,
     token: str,
 ) -> None:
@@ -342,12 +342,6 @@ def test__aurelius_fastapi_example_delete(
         - The API returns a 200 OK status code.
         - The entity is deleted from the database.
     """
-    entity = Entity(name="Delete Test", description="This is a test entity")
-
-    session.add(entity)
-    session.commit()
-    session.expunge(entity)
-
     connection.request(
         "DELETE",
         f"/entities/{entity.guid}",

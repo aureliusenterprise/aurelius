@@ -95,7 +95,7 @@ def entities(db_session: Session) -> Generator[list[Entity]]:
     for entity in test_entities:
         db_session.refresh(entity)
 
-    yield test_entities
+    yield sorted(test_entities)
 
     for entity in test_entities:
         db_session.delete(entity)

@@ -1,3 +1,5 @@
+from unittest.mock import ANY
+
 from aurelius_example import Entity
 from aurelius_fastapi_example.models import PaginatedResponse
 from fastapi.testclient import TestClient
@@ -139,12 +141,13 @@ def test__create_entity(authenticated_client: TestClient, db_session: Session) -
     assert response.status_code == 200
 
     actual = Entity.model_validate(response.json())
+    expected = entity.model_copy(update={"time_created": ANY})
 
-    assert entity == actual
+    assert actual == expected
 
     stored = db_session.get(Entity, actual.guid)
 
-    assert stored == actual
+    assert stored == expected
 
 
 def test__update_entity(authenticated_client: TestClient, db_session: Session, entity: Entity) -> None:
@@ -159,12 +162,13 @@ def test__update_entity(authenticated_client: TestClient, db_session: Session, e
     assert response.status_code == 200
 
     actual = Entity.model_validate(response.json())
+    expected = updated.model_copy(update={"time_modified": ANY})
 
-    assert updated == actual
+    assert actual == expected
 
     stored = db_session.get(Entity, entity.guid)
 
-    assert stored == actual
+    assert stored == expected
 
 
 def test__find_many_requires_authentication(unauthenticated_client: TestClient) -> None:
@@ -172,6 +176,22 @@ def test__find_many_requires_authentication(unauthenticated_client: TestClient) 
     response = unauthenticated_client.get("/entities/")
 
     assert response.status_code == 401
+
+
+def test__find_many_returns_entities_ordered_by_timestamp(
+    authenticated_client: TestClient,
+    entities: list[Entity],
+) -> None:
+    """Entities should be returned in deterministic order."""
+    response = authenticated_client.get("/entities/")
+
+    assert response.status_code == 200
+
+    page = PaginatedResponse[Entity].model_validate(response.json())
+    actual = [entity.model_dump(mode="json") for entity in page.data]
+    expected = [entity.model_dump(mode="json") for entity in entities]
+
+    assert actual == expected, "Entities are not returned in the expected order"
 
 
 def test__create_requires_authentication(unauthenticated_client: TestClient) -> None:

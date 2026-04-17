@@ -1,9 +1,10 @@
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from pydantic_avro.to_avro.base import AvroBase
-from sqlalchemy import DDL, Connection, event
+from sqlalchemy import DDL, Connection, event, types
 from sqlalchemy.schema import MetaData
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, func
 
 
 class Entity(AvroBase, SQLModel, table=True):
@@ -27,6 +28,30 @@ class Entity(AvroBase, SQLModel, table=True):
         max_length=100,
     )
 
+    time_created: datetime | None = Field(
+        default=None,
+        description="The timestamp when the entity was created with timezone info",
+        sa_type=types.TIMESTAMP(timezone=True),
+        sa_column_kwargs={"server_default": func.now()},
+    )
+
+    time_modified: datetime | None = Field(
+        default=None,
+        description="The timestamp when the entity was last modified with timezone info",
+        sa_type=types.TIMESTAMP(timezone=True),
+        sa_column_kwargs={"onupdate": func.now()},
+    )
+
+    def __lt__(self, other: Entity) -> bool:
+        """Define a less-than operator for sorting entities by time_modified and then time_created."""
+        self_mod = self.time_modified or datetime.min.replace(tzinfo=UTC)
+        other_mod = other.time_modified or datetime.min.replace(tzinfo=UTC)
+
+        self_cre = self.time_created or datetime.min.replace(tzinfo=UTC)
+        other_cre = other.time_created or datetime.min.replace(tzinfo=UTC)
+
+        return max(self_cre, self_mod) < max(other_cre, other_mod)
+
 
 # The name of the PostgreSQL channel that will be used for notifications about changes to the Entity table.
 PG_NOTIFY_ENTITY_CHANNEL = "entity"
@@ -38,21 +63,21 @@ PG_NOTIFY_ENTITY_CHANNEL = "entity"
 # used. The trigger is set to execute after each row is modified in the Entity table.
 PG_NOTIFY_ENTITY_TRIGGER_SQL = f"""
 CREATE OR REPLACE FUNCTION entity_notify_change() RETURNS TRIGGER AS $$
-  BEGIN
-    -- For DELETE operations, use the OLD row's guid; for other operations, use the NEW row's guid
-    PERFORM pg_notify(
-      '{PG_NOTIFY_ENTITY_CHANNEL}'::text,
-      CASE WHEN (TG_OP = 'DELETE') THEN OLD.guid::text ELSE NEW.guid::text END
-    );
+    BEGIN
+        -- For DELETE operations, use the OLD row's guid; for other operations, use the NEW row's guid
+        PERFORM pg_notify(
+            '{PG_NOTIFY_ENTITY_CHANNEL}'::text,
+            CASE WHEN (TG_OP = 'DELETE') THEN OLD.guid::text ELSE NEW.guid::text END
+        );
 
-    -- For DELETE operations, return the old row to allow trigger access
-    RETURN CASE WHEN (TG_OP = 'DELETE') THEN OLD ELSE NEW END;
-  END;
+        -- For DELETE operations, return the old row to allow trigger access
+        RETURN CASE WHEN (TG_OP = 'DELETE') THEN OLD ELSE NEW END;
+    END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER entity_table_change
-  AFTER INSERT OR UPDATE OR DELETE ON {Entity.__tablename__}
-  FOR EACH ROW EXECUTE PROCEDURE entity_notify_change();
+    AFTER INSERT OR UPDATE OR DELETE ON {Entity.__tablename__}
+    FOR EACH ROW EXECUTE PROCEDURE entity_notify_change();
 """
 
 PG_NOTIFY_ENTITY_TRIGGER = DDL(PG_NOTIFY_ENTITY_TRIGGER_SQL)

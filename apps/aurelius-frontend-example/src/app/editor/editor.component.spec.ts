@@ -68,7 +68,7 @@ describe("Editor", () => {
     });
 
     it("should save entity and clear state", async () => {
-        const entity = { description: "desc", guid: "g", name: "n" };
+        const entity = { description: "desc", guid: "g", name: "n", time_created: null, time_modified: null };
 
         vi.spyOn(entitiesService, "createOrUpdate").mockImplementationOnce(() => of(entity));
         vi.spyOn(entityService, "clear").mockImplementationOnce(() => null);
@@ -85,7 +85,7 @@ describe("Editor", () => {
     it("should patch form when updateEntityForm called with entity", async () => {
         const compiled = fixture.nativeElement as HTMLElement;
 
-        const entity = { description: "d", guid: "g", name: "n" };
+        const entity = { description: "d", guid: "g", name: "n", time_created: null, time_modified: null };
         entityService.edit(entity);
         await fixture.whenStable();
 
@@ -97,7 +97,7 @@ describe("Editor", () => {
     it("should reset form when updateEntityForm called with null", async () => {
         const compiled = fixture.nativeElement as HTMLElement;
 
-        const entity = { description: "d", guid: "g", name: "n" };
+        const entity = { description: "d", guid: "g", name: "n", time_created: null, time_modified: null };
         entityService.edit(entity);
         await fixture.whenStable();
 
@@ -111,5 +111,24 @@ describe("Editor", () => {
         expect(compiled.querySelector<HTMLInputElement>("input#guid")?.value).toBeUndefined();
         expect(compiled.querySelector<HTMLInputElement>("input#name")?.value).toBeUndefined();
         expect(compiled.querySelector<HTMLInputElement>("input#description")?.value).toBeUndefined();
+    });
+
+    it("should preserve timestamp fields when saving", async () => {
+        const entity = {
+            description: "desc",
+            guid: "g",
+            name: "n",
+            time_created: "2024-01-01T00:00:00.000Z",
+            time_modified: "2024-01-02T00:00:00.000Z",
+        };
+
+        vi.spyOn(entitiesService, "createOrUpdate").mockImplementationOnce(() => of(entity));
+        vi.spyOn(entityService, "clear").mockImplementationOnce(() => null);
+
+        entityService.edit(entity);
+        await fixture.whenStable();
+        await component.save();
+
+        expect(entitiesService.createOrUpdate).toHaveBeenCalledWith(entity);
     });
 });
