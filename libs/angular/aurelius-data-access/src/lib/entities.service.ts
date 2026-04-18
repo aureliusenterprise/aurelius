@@ -72,10 +72,30 @@ export type PaginatedResponse<T> = {
     data: T[];
 };
 
+/**
+ * Filters out any query parameters that have falsy values (except for boolean false) to ensure that only valid parameters are sent to the API.
+ * @param params The query parameters to filter.
+ * @returns A new object containing only the valid query parameters.
+ */
+function filterParams(params: FindAllQueryParams): FindAllQueryParams {
+    return Object.fromEntries(Object.entries(params).filter(([, value]) => typeof value == "boolean" || !!value));
+}
+
+/**
+ * Type guard to check if an event is a MessageEvent containing entity data. This is used to ensure that we only process relevant events from the SSE stream.
+ * @param event The event to check.
+ * @returns True if the event is a MessageEvent with string or null data, false otherwise.
+ */
 function isEntityEvent(event: Event): event is MessageEvent<string | null> {
     return event.type === "entity";
 }
 
+/**
+ * Parses a MessageEvent containing entity data into an Envelope<Entity> object. This function assumes that the event data is a JSON string that can be deserialized into the expected format. If the event data is null or cannot be parsed, an error is thrown.
+ * @param event The MessageEvent to parse.
+ * @returns An Envelope<Entity> object containing the parsed entity data.
+ * @throws An error if the event data is null or cannot be parsed as JSON.
+ */
 function parseEntityEvent(event: MessageEvent<string | null>): Envelope<Entity> {
     if (!event.data) {
         throw new Error("Received null data for entity event");
@@ -151,7 +171,9 @@ export class EntitiesService implements OnDestroy {
      * @returns An observable that emits the list of entities.
      */
     findAll(params: FindAllQueryParams = {}): Observable<PaginatedResponse<Entity>> {
-        return this.httpClient.get<PaginatedResponse<Entity>>("/api/entities/", { params });
+        return this.httpClient.get<PaginatedResponse<Entity>>("/api/entities/", {
+            params: filterParams(params),
+        });
     }
 
     /**

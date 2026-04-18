@@ -54,10 +54,7 @@ def find_all(
     total = session.exec(count_query).one()
 
     data_query = (
-        base_query.order_by(
-            col(Entity.time_modified),
-            col(Entity.time_created),
-        )
+        base_query.order_by(func.coalesce(col(Entity.time_modified), col(Entity.time_created)).desc())
         .offset(params.skip)
         .limit(params.limit)
     )

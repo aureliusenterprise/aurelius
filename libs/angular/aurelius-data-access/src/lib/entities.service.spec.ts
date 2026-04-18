@@ -87,6 +87,155 @@ describe("EntitiesService", () => {
             req.flush(paginatedResponse);
         }));
 
+    it("should filter out undefined values from params", () =>
+        new Promise<void>((done, fail) => {
+            const params: FindAllQueryParams = { limit: 10, search: undefined, skip: 2 };
+
+            const entities: Entity[] = [{ guid: "1", name: "A", description: "desc A" }];
+            const paginatedResponse: PaginatedResponse<Entity> = { total: entities.length, data: entities };
+
+            service.findAll(params).subscribe({
+                next: (result) => {
+                    expect(result).toEqual(paginatedResponse);
+                    done();
+                },
+                error: fail,
+            });
+
+            const req = httpMock.expectOne((r) => r.url === "/api/entities/");
+
+            expect(req.request.method).toBe("GET");
+            expect(req.request.params.get("limit")).toBe("10");
+            expect(req.request.params.has("search")).toBeFalsy();
+            expect(req.request.params.get("skip")).toBe("2");
+
+            req.flush(paginatedResponse);
+        }));
+
+    it("should filter out empty string values from params", () =>
+        new Promise<void>((done, fail) => {
+            const params: FindAllQueryParams = { limit: 10, search: "", skip: 2 };
+
+            const entities: Entity[] = [{ guid: "1", name: "A", description: "desc A" }];
+            const paginatedResponse: PaginatedResponse<Entity> = { total: entities.length, data: entities };
+
+            service.findAll(params).subscribe({
+                next: (result) => {
+                    expect(result).toEqual(paginatedResponse);
+                    done();
+                },
+                error: fail,
+            });
+
+            const req = httpMock.expectOne((r) => r.url === "/api/entities/");
+
+            expect(req.request.method).toBe("GET");
+            expect(req.request.params.get("limit")).toBe("10");
+            expect(req.request.params.has("search")).toBeFalsy();
+            expect(req.request.params.get("skip")).toBe("2");
+
+            req.flush(paginatedResponse);
+        }));
+
+    it("should filter out 0 values from params", () =>
+        new Promise<void>((done, fail) => {
+            const params: FindAllQueryParams = { limit: 0, search: "foo", skip: 0 };
+
+            const entities: Entity[] = [{ guid: "1", name: "A", description: "desc A" }];
+            const paginatedResponse: PaginatedResponse<Entity> = { total: entities.length, data: entities };
+
+            service.findAll(params).subscribe({
+                next: (result) => {
+                    expect(result).toEqual(paginatedResponse);
+                    done();
+                },
+                error: fail,
+            });
+
+            const req = httpMock.expectOne((r) => r.url === "/api/entities/");
+
+            expect(req.request.method).toBe("GET");
+            expect(req.request.params.has("limit")).toBeFalsy();
+            expect(req.request.params.get("search")).toBe("foo");
+            expect(req.request.params.has("skip")).toBeFalsy();
+
+            req.flush(paginatedResponse);
+        }));
+
+    it("should preserve non-zero positive numbers in params", () =>
+        new Promise<void>((done, fail) => {
+            const params: FindAllQueryParams = { limit: 10, search: "foo", skip: 2 };
+
+            const entities: Entity[] = [{ guid: "1", name: "A", description: "desc A" }];
+            const paginatedResponse: PaginatedResponse<Entity> = { total: entities.length, data: entities };
+
+            service.findAll(params).subscribe({
+                next: (result) => {
+                    expect(result).toEqual(paginatedResponse);
+                    done();
+                },
+                error: fail,
+            });
+
+            const req = httpMock.expectOne((r) => r.url === "/api/entities/");
+
+            expect(req.request.method).toBe("GET");
+            expect(req.request.params.get("limit")).toBe("10");
+            expect(req.request.params.get("search")).toBe("foo");
+            expect(req.request.params.get("skip")).toBe("2");
+
+            req.flush(paginatedResponse);
+        }));
+
+    it("should preserve non-zero negative numbers in params", () =>
+        new Promise<void>((done, fail) => {
+            const params: FindAllQueryParams & { offset: number } = { limit: 10, offset: -5 };
+
+            const entities: Entity[] = [{ guid: "1", name: "A", description: "desc A" }];
+            const paginatedResponse: PaginatedResponse<Entity> = { total: entities.length, data: entities };
+
+            service.findAll(params as FindAllQueryParams).subscribe({
+                next: (result) => {
+                    expect(result).toEqual(paginatedResponse);
+                    done();
+                },
+                error: fail,
+            });
+
+            const req = httpMock.expectOne((r) => r.url === "/api/entities/");
+
+            expect(req.request.method).toBe("GET");
+            expect(req.request.params.get("limit")).toBe("10");
+            expect(req.request.params.get("offset")).toBe("-5");
+
+            req.flush(paginatedResponse);
+        }));
+
+    it("should preserve non-empty strings in params", () =>
+        new Promise<void>((done, fail) => {
+            const params: FindAllQueryParams = { limit: 10, search: "test query", skip: 0 };
+
+            const entities: Entity[] = [{ guid: "1", name: "A", description: "desc A" }];
+            const paginatedResponse: PaginatedResponse<Entity> = { total: entities.length, data: entities };
+
+            service.findAll(params).subscribe({
+                next: (result) => {
+                    expect(result).toEqual(paginatedResponse);
+                    done();
+                },
+                error: fail,
+            });
+
+            const req = httpMock.expectOne((r) => r.url === "/api/entities/");
+
+            expect(req.request.method).toBe("GET");
+            expect(req.request.params.get("limit")).toBe("10");
+            expect(req.request.params.get("search")).toBe("test query");
+            expect(req.request.params.has("skip")).toBeFalsy();
+
+            req.flush(paginatedResponse);
+        }));
+
     it("should fetch a specific entity by guid", () =>
         new Promise<void>((done, fail) => {
             const guid = "xyz-789";
