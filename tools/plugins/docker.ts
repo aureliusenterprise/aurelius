@@ -63,7 +63,7 @@ async function createNodesInternal(
                         },
                     },
                     [sbomTargetName]: {
-                        command: `docker buildx imagetools inspect {args.namespace}/{projectName}:{args.version} --format "{{json .SBOM}}" > ${projectRoot}/dist/sbom.json`,
+                        command: `mkdir -p ${projectRoot}/dist && docker buildx imagetools inspect {args.namespace}/{projectName}:{args.version} --format "{{json .SBOM}}" > ${projectRoot}/dist/sbom.json`,
                         metadata: {
                             description: "Generate the SBOM for a Docker image from the registry",
                         },
