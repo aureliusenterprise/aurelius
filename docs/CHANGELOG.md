@@ -1,3 +1,37 @@
+## 0.3.0 (2026-04-18)
+
+### 🚀 Features
+
+- use schema id in kafka header ([#21](https://github.com/aureliusenterprise/project-template/pull/21))
+- support schema id in header for aws lambda ([cfd5aef](https://github.com/aureliusenterprise/project-template/commit/cfd5aef))
+- add shared assets to brand library ([6b1f651](https://github.com/aureliusenterprise/project-template/commit/6b1f651))
+- add sse example with fastapi ([#24](https://github.com/aureliusenterprise/project-template/pull/24))
+- add pagination ui component ([#25](https://github.com/aureliusenterprise/project-template/pull/25))
+- improve paginated response from api ([#26](https://github.com/aureliusenterprise/project-template/pull/26))
+- add created and modified timestamps ([#27](https://github.com/aureliusenterprise/project-template/pull/27))
+
+### 🩹 Fixes
+
+- add image metadata ([6a39514](https://github.com/aureliusenterprise/project-template/commit/6a39514))
+- use correct subject name strategy ([d8aed6e](https://github.com/aureliusenterprise/project-template/commit/d8aed6e))
+- add producer callback function ([cd7c556](https://github.com/aureliusenterprise/project-template/commit/cd7c556))
+- ensure readiness check has no payload ([233969e](https://github.com/aureliusenterprise/project-template/commit/233969e))
+- use runtime safe type ([5347d81](https://github.com/aureliusenterprise/project-template/commit/5347d81))
+- improve exception handling and reduce unneeded commits ([8ded5fe](https://github.com/aureliusenterprise/project-template/commit/8ded5fe))
+- apply ai review feedback ([ffc24ab](https://github.com/aureliusenterprise/project-template/commit/ffc24ab))
+- avoid logging stack traces in production ([52264cb](https://github.com/aureliusenterprise/project-template/commit/52264cb))
+- use correct logger name ([ff4e183](https://github.com/aureliusenterprise/project-template/commit/ff4e183))
+- flush producer on loop exit ([558e6f9](https://github.com/aureliusenterprise/project-template/commit/558e6f9))
+- address sonarqube issues ([5d30453](https://github.com/aureliusenterprise/project-template/commit/5d30453))
+- add title header ([f9807d7](https://github.com/aureliusenterprise/project-template/commit/f9807d7))
+- reduce permissions on copied files ([5d726da](https://github.com/aureliusenterprise/project-template/commit/5d726da))
+- address linter issues ([0cf394b](https://github.com/aureliusenterprise/project-template/commit/0cf394b))
+- address linter issues ([947015d](https://github.com/aureliusenterprise/project-template/commit/947015d))
+- address linter issues ([92e4345](https://github.com/aureliusenterprise/project-template/commit/92e4345))
+- address linter issues ([2cb7214](https://github.com/aureliusenterprise/project-template/commit/2cb7214))
+- address linter issues ([2aa5a0d](https://github.com/aureliusenterprise/project-template/commit/2aa5a0d))
+- address linter issues ([ee0ee90](https://github.com/aureliusenterprise/project-template/commit/ee0ee90))
+
 ## 0.2.0 (2026-02-12)
 
 ### 🚀 Features
