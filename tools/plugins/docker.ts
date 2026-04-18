@@ -32,7 +32,7 @@ async function createNodesInternal(
                 tags: ["docker"],
                 targets: {
                     [buildTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {projectName}:local`,
+                        command: `docker buildx build . -f ${configFilePath} -t {projectName}:local --provenance=true --sbom=true`,
                         dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
                         metadata: {
                             description: "Build the Docker image for the application",
@@ -44,7 +44,7 @@ async function createNodesInternal(
                         },
                     },
                     [publishTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --push`,
+                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --provenance=true --sbom=true --push`,
                         dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
                         metadata: {
                             description: "Publish the Docker image for the application",
