@@ -4,6 +4,7 @@ import { dirname } from "path";
 export interface DockerPluginOptions {
     readonly buildTargetName?: string;
     readonly publishTargetName?: string;
+    readonly sbomTargetName?: string;
 }
 
 const glob = "**/Dockerfile";
@@ -22,7 +23,11 @@ export const createNodesV2: CreateNodesV2<DockerPluginOptions> = [
 
 async function createNodesInternal(
     configFilePath: string,
-    { buildTargetName = "docker-build", publishTargetName = "docker-publish" }: DockerPluginOptions = {},
+    {
+        buildTargetName = "docker-build",
+        publishTargetName = "docker-publish",
+        sbomTargetName = "docker-sbom",
+    }: DockerPluginOptions = {},
 ): Promise<CreateNodesResult> {
     const projectRoot = dirname(configFilePath);
 
@@ -48,6 +53,19 @@ async function createNodesInternal(
                         dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
                         metadata: {
                             description: "Publish the Docker image for the application",
+                        },
+                        options: {
+                            env: {
+                                DOCKER_BUILDKIT: "1",
+                            },
+                            namespace: "ghcr.io/aureliusenterprise",
+                            version: "latest",
+                        },
+                    },
+                    [sbomTargetName]: {
+                        command: `docker buildx imagetools inspect {args.namespace}/{projectName}:{args.version} --format "{{json .SBOM}}" > ${projectRoot}/dist/sbom.json`,
+                        metadata: {
+                            description: "Generate the SBOM for a Docker image from the registry",
                         },
                         options: {
                             env: {
