@@ -38,7 +38,8 @@ def test__sse_streams_existing_entity(app: FastAPI, authenticated_client: TestCl
     assert event_lines == [PG_NOTIFY_ENTITY_CHANNEL]
     assert len(data_lines) == 1
     assert data_lines[0]["guid"] == str(entity.guid)
-    assert data_lines[0]["value"]["name"] == entity.name
+    assert datetime.fromisoformat(data_lines[0]["timestamp"]) == notifications[0].timestamp
+    assert data_lines[0]["value"] == entity.model_dump(mode="json")
 
 
 def test__sse_streams_deleted_entity(app: FastAPI, authenticated_client: TestClient) -> None:
@@ -71,6 +72,7 @@ def test__sse_streams_deleted_entity(app: FastAPI, authenticated_client: TestCli
 
     assert len(data_lines) == 1
     assert data_lines[0]["guid"] == str(missing_guid)
+    assert datetime.fromisoformat(data_lines[0]["timestamp"]) == notifications[0].timestamp
     assert data_lines[0]["value"] is None
 
 

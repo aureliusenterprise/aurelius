@@ -84,6 +84,7 @@ async def sse(
         async for notification in notifications():
             envelope = Envelope(
                 guid=notification.guid,
+                timestamp=notification.timestamp,
                 value=session.get(Entity, notification.guid),
             )
 

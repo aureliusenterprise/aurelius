@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { Entity, EntitiesService, Envelope } from "aurelius-data-access";
+import { EntitiesService, Entity, Envelope } from "aurelius-data-access";
 import { Subject } from "rxjs";
 import { EntityService } from "./entity.service";
 
@@ -52,7 +52,12 @@ describe("EntityService", () => {
                 service.edit(initialEntity);
 
                 const updatedEntity: Entity = { guid: "123", name: "Updated", description: "New Desc" };
-                const envelope: Envelope<Entity> = { guid: "123", value: updatedEntity };
+
+                const envelope: Envelope<Entity> = {
+                    guid: "123",
+                    timestamp: new Date().toISOString(),
+                    value: updatedEntity,
+                };
 
                 entitiesSubject.next(envelope);
 
@@ -71,8 +76,11 @@ describe("EntityService", () => {
                 const initialEntity: Entity = { guid: "123", name: "Original", description: "Desc" };
                 service.edit(initialEntity);
 
-                // Simulate deletion by sending null value with matching GUID
-                const deleteEnvelope: Envelope<Entity> = { guid: "123", value: null };
+                const deleteEnvelope: Envelope<Entity> = {
+                    guid: "123",
+                    timestamp: new Date().toISOString(),
+                    value: null,
+                };
 
                 entitiesSubject.next(deleteEnvelope);
 
@@ -93,7 +101,12 @@ describe("EntityService", () => {
 
                 // Simulate update for a different entity with different GUID
                 const otherEntity: Entity = { guid: "456", name: "Other", description: "Other Desc" };
-                const envelope: Envelope<Entity> = { guid: "456", value: otherEntity };
+
+                const envelope: Envelope<Entity> = {
+                    guid: "456",
+                    timestamp: new Date().toISOString(),
+                    value: otherEntity,
+                };
 
                 entitiesSubject.next(envelope);
 
@@ -113,7 +126,11 @@ describe("EntityService", () => {
                 service.edit(currentEntity);
 
                 // Simulate deletion of a different entity
-                const deleteEnvelope: Envelope<Entity> = { guid: "456", value: null };
+                const deleteEnvelope: Envelope<Entity> = {
+                    guid: "456",
+                    timestamp: new Date().toISOString(),
+                    value: null,
+                };
 
                 entitiesSubject.next(deleteEnvelope);
 
@@ -133,7 +150,12 @@ describe("EntityService", () => {
                 expect(service.entity()).toBeNull();
 
                 const newEntity: Entity = { guid: "789", name: "New Entity", description: "First Desc" };
-                const envelope: Envelope<Entity> = { guid: "789", value: newEntity };
+
+                const envelope: Envelope<Entity> = {
+                    guid: "789",
+                    timestamp: new Date().toISOString(),
+                    value: newEntity,
+                };
 
                 entitiesSubject.next(envelope);
 

@@ -179,7 +179,11 @@ describe("SearchService", () => {
                 const refreshSpy = vi.spyOn(service, "refresh");
 
                 // Simulate an entity update event from the server
-                entitiesSubject.next({ guid: "4", value: { guid: "4", name: "D", description: "desc4" } });
+                entitiesSubject.next({
+                    guid: "4",
+                    timestamp: new Date().toISOString(),
+                    value: { guid: "4", name: "D", description: "desc4" },
+                });
 
                 setTimeout(() => {
                     expect(refreshSpy).toHaveBeenCalledOnce();

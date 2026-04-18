@@ -493,13 +493,19 @@ def test__aurelius_fastapi_example_sse_streams_changes(
     session.commit()
     session.refresh(entity)
 
-    expected = Envelope[Entity](guid=entity.guid, value=entity)
+    expected = Envelope[Entity](guid=entity.guid, value=entity).model_copy(update={"timestamp": ANY})
 
     # Wait for the notification to be received
     for attempt in Retrying(stop=stop_after_delay(90), wait=wait_fixed(1)):
         with attempt:
             notification = read_notification(response)
+
             event = parse_notification(notification)
 
-            assert event.get("event") == "entity"
-            assert event.get("data") == expected.model_dump(mode="json")
+            if not event:
+                continue  # Ignore heartbeat lines
+
+            assert event["event"] == "entity"
+
+            actual = Envelope[Entity].model_validate_json(event["data"])
+            assert actual == expected

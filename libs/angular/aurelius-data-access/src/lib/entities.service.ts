@@ -11,6 +11,11 @@ export type Envelope<T> = {
     readonly guid: string;
 
     /**
+     * The timestamp when the envelope was created, in ISO 8601 format.
+     */
+    readonly timestamp: string;
+
+    /**
      * The actual data of the entity, which can be null if the entity has been deleted.
      */
     readonly value: T | null;
