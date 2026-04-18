@@ -110,8 +110,8 @@ async def test__notifications_yields_insert_trigger_payload(
 
         notification = await anext(listener())
 
-        assert notification.channel == PG_NOTIFY_ENTITY_CHANNEL
-        assert notification.payload == str(entity.guid)
+        assert notification.guid == entity.guid
+        assert notification.op == "INSERT"
     finally:
         epoll_generator.close()
         cursor_generator.close()
@@ -126,8 +126,6 @@ async def test__notifications_yields_delete_trigger_payload(
     entity = Entity(name="Deleted Entity", description="Delete notification")
     db_session.add(entity)
     db_session.commit()
-
-    deleted_guid = str(entity.guid)
 
     connection_generator = cdc.connection(db_settings)
     db_connection = next(connection_generator)
@@ -145,8 +143,8 @@ async def test__notifications_yields_delete_trigger_payload(
 
         notification = await anext(listener())
 
-        assert notification.channel == PG_NOTIFY_ENTITY_CHANNEL
-        assert notification.payload == deleted_guid
+        assert notification.guid == entity.guid
+        assert notification.op == "DELETE"
     finally:
         epoll_generator.close()
         cursor_generator.close()
@@ -161,8 +159,6 @@ async def test__notifications_yields_update_trigger_payload(
     entity = Entity(name="Updated Entity", description="Before update")
     db_session.add(entity)
     db_session.commit()
-
-    updated_guid = str(entity.guid)
 
     connection_generator = cdc.connection(db_settings)
     db_connection = next(connection_generator)
@@ -182,8 +178,8 @@ async def test__notifications_yields_update_trigger_payload(
 
         notification = await anext(listener())
 
-        assert notification.channel == PG_NOTIFY_ENTITY_CHANNEL
-        assert notification.payload == updated_guid
+        assert notification.guid == entity.guid
+        assert notification.op == "UPDATE"
     finally:
         epoll_generator.close()
         cursor_generator.close()

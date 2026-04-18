@@ -4,7 +4,7 @@ from collections.abc import AsyncGenerator, Callable, Generator
 from typing import Annotated
 
 import psycopg2
-from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL
+from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, EntityNotification
 from fastapi import Depends, Request
 
 from aurelius_fastapi_example.globals import LOGGER
@@ -71,7 +71,7 @@ def notifications(
     epoll: Annotated[select.epoll, Depends(epoll)],
     request: Request,
     settings: Settings,
-) -> Callable[[], AsyncGenerator[psycopg2.extensions.Notify]]:
+) -> Callable[[], AsyncGenerator[EntityNotification]]:
     """Create a stream of PostgreSQL notifications for entity changes."""
 
     def poll() -> list[psycopg2.extensions.Notify]:
@@ -88,10 +88,10 @@ def notifications(
 
         return result
 
-    async def listener() -> AsyncGenerator[psycopg2.extensions.Notify]:
+    async def listener() -> AsyncGenerator[EntityNotification]:
         """Poll for new notifications until the client disconnects."""
         while not (await request.is_disconnected()):
             for notification in await asyncio.to_thread(poll):
-                yield notification
+                yield EntityNotification.model_validate_json(notification.payload)
 
     return listener

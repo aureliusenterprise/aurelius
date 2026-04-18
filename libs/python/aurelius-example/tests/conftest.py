@@ -43,7 +43,7 @@ def db_url(db_container: PostgresContainer) -> URL:
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def db_engine(db_url: URL) -> Generator[Engine]:
     """Create the SQLModel schema in the test PostgreSQL database."""
     engine = create_engine(db_url)

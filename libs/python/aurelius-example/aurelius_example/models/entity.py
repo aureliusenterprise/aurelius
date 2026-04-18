@@ -1,6 +1,8 @@
 from datetime import UTC, datetime
+from typing import Literal
 from uuid import UUID, uuid4
 
+from pydantic import BaseModel
 from pydantic_avro.to_avro.base import AvroBase
 from sqlalchemy import DDL, Connection, event, types
 from sqlalchemy.schema import MetaData
@@ -43,49 +45,113 @@ class Entity(AvroBase, SQLModel, table=True):
     )
 
     def __lt__(self, other: Entity) -> bool:
-        """Define a less-than operator for sorting entities by time_modified and then time_created."""
-        self_mod = self.time_modified or datetime.min.replace(tzinfo=UTC)
-        other_mod = other.time_modified or datetime.min.replace(tzinfo=UTC)
+        """Compare entities based on their latest change timestamp."""
+        latest_change_self = self.time_modified or self.time_created or datetime.min.replace(tzinfo=UTC)
+        latest_change_other = other.time_modified or other.time_created or datetime.min.replace(tzinfo=UTC)
+        return latest_change_self < latest_change_other
 
-        self_cre = self.time_created or datetime.min.replace(tzinfo=UTC)
-        other_cre = other.time_created or datetime.min.replace(tzinfo=UTC)
 
-        return max(self_cre, self_mod) < max(other_cre, other_mod)
+class EntityNotification(BaseModel):
+    """A model that represents the payload of a notification about changes to the Entity table."""
+
+    guid: UUID = Field(
+        description="The primary key of the affected row",
+    )
+
+    op: Literal["INSERT", "UPDATE", "DELETE"] = Field(
+        description="The type of operation that triggered the notification",
+    )
+
+    schema_name: str = Field(
+        description="The database schema where the change occurred",
+    )
+
+    table_name: str = Field(
+        description="The database table where the change occurred",
+    )
+
+    timestamp: datetime = Field(
+        description="The timestamp when the change occurred with timezone info",
+    )
 
 
 # The name of the PostgreSQL channel that will be used for notifications about changes to the Entity table.
 PG_NOTIFY_ENTITY_CHANNEL = "entity"
 
-
 # SQL statement to create a trigger that notifies a PostgreSQL channel on any insert, update, or delete operation on the
-# Entity table. The trigger function uses the pg_notify function to send a notification with the guid of the affected
-# row. For delete operations, the OLD row's guid is used, while for insert and update operations, the NEW row's guid is
-# used. The trigger is set to execute after each row is modified in the Entity table.
-PG_NOTIFY_ENTITY_TRIGGER_SQL = f"""
+# Entity table. The trigger function uses the pg_notify function to send a notification with metadata for the affected
+# row, including its guid. For delete operations, the OLD row's guid is used, while for insert and update operations,
+# the NEW row's guid is used. The trigger is set to execute after each row is modified in the Entity table.
+PG_NOTIFY_ENTITY_TRIGGER_SQL = """
 CREATE OR REPLACE FUNCTION entity_notify_change() RETURNS TRIGGER AS $$
-    BEGIN
-        -- For DELETE operations, use the OLD row's guid; for other operations, use the NEW row's guid
-        PERFORM pg_notify(
-            '{PG_NOTIFY_ENTITY_CHANNEL}'::text,
-            CASE WHEN (TG_OP = 'DELETE') THEN OLD.guid::text ELSE NEW.guid::text END
-        );
+DECLARE
+    -- Build a JSON payload with CDC metadata for the notification.
+    -- This makes the notification self-describing and eliminates the need
+    -- for consumers to perform a separate SELECT query.
+    _payload text;
+BEGIN
+    -- Construct the notification payload as a JSON string.
+    _payload := jsonb_build_object(
+        'guid', CASE WHEN (TG_OP = 'DELETE') THEN OLD.guid::text ELSE NEW.guid::text END,
+        'op', TG_OP,
+        'schema_name', TG_TABLE_SCHEMA,
+        'table_name', TG_TABLE_NAME,
+        'timestamp', to_jsonb(now())
+    )::text;
 
-        -- For DELETE operations, return the old row to allow trigger access
-        RETURN CASE WHEN (TG_OP = 'DELETE') THEN OLD ELSE NEW END;
+    -- Send pg_notify with the enriched payload, wrapped in EXCEPTION handling
+    -- to prevent notification failures from rolling back the original DML operation.
+    BEGIN
+        PERFORM pg_notify('%(channel)s'::text, _payload);
+    EXCEPTION
+        WHEN OTHERS THEN
+            -- Log the error but do not fail the original INSERT/UPDATE/DELETE operation.
+            RAISE LOG
+                'Failed to send pg_notify for %% on table %%.%%: SQLSTATE %%, message %%',
+                TG_OP, TG_TABLE_SCHEMA, TG_TABLE_NAME, SQLSTATE, SQLERRM;
     END;
+
+    -- For DELETE operations, return the old row to allow trigger access; for INSERT/UPDATE, return the new row.
+    RETURN CASE WHEN (TG_OP = 'DELETE') THEN OLD ELSE NEW END;
+END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER entity_table_change
-    AFTER INSERT OR UPDATE OR DELETE ON {Entity.__tablename__}
+    AFTER INSERT OR UPDATE OR DELETE ON %(schema)s.%(tablename)s
     FOR EACH ROW EXECUTE PROCEDURE entity_notify_change();
 """
 
-PG_NOTIFY_ENTITY_TRIGGER = DDL(PG_NOTIFY_ENTITY_TRIGGER_SQL)
-
 
 @event.listens_for(Entity.metadata, "after_create")
-def after_create_entity(_: MetaData, connection: Connection, **__: dict) -> None:
+def after_create_entity_table(metadata: MetaData, connection: Connection, **_: dict) -> None:
     """Create the entity trigger after the Entity table is created."""
-    # Only apply PostgreSQL-specific triggers on PostgreSQL databases
-    if connection.dialect.name == "postgresql":
-        connection.execute(PG_NOTIFY_ENTITY_TRIGGER)
+    if connection.dialect.name != "postgresql":
+        return
+
+    context = {
+        "channel": PG_NOTIFY_ENTITY_CHANNEL,
+        "schema": metadata.schema or "public",
+        "tablename": Entity.__tablename__,
+    }
+
+    connection.execute(DDL(PG_NOTIFY_ENTITY_TRIGGER_SQL, context))
+
+
+PG_NOTIFY_ENTITY_TRIGGER_CLEANUP_SQL = """
+DROP TRIGGER IF EXISTS entity_table_change ON %(schema)s.%(tablename)s;
+DROP FUNCTION IF EXISTS entity_notify_change() CASCADE;
+"""
+
+
+@event.listens_for(Entity.metadata, "before_drop")
+def before_drop_entity_table(metadata: MetaData, connection: Connection, **_: dict) -> None:
+    """Clean up the entity trigger before the Entity table is dropped."""
+    if connection.dialect.name != "postgresql":
+        return
+
+    context = {
+        "schema": metadata.schema or "public",
+        "tablename": Entity.__tablename__,
+    }
+
+    connection.execute(DDL(PG_NOTIFY_ENTITY_TRIGGER_CLEANUP_SQL, context))

@@ -1,8 +1,8 @@
 from datetime import UTC, datetime
 
 import pytest
-from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity
-from sqlalchemy import Connection, text
+from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity, EntityNotification
+from sqlalchemy import Connection, Engine, text
 from sqlmodel import Session
 from tenacity import Retrying, stop_after_attempt, wait_fixed
 
@@ -11,7 +11,7 @@ def test__example_creates_database_schema(db_connection: Connection) -> None:
     """Test that the database schema is created successfully."""
     result = db_connection.execute(text("SELECT tablename FROM pg_tables WHERE schemaname='public';"))
     tables = {row[0] for row in result}
-    assert "entity" in tables
+    assert Entity.__tablename__ in tables
 
 
 def test__example_entity_trigger_exists(db_connection: Connection) -> None:
@@ -64,10 +64,14 @@ def test__example_entity_trigger_fires_on_insert(db_connection: Connection, db_s
         for attempt in Retrying(stop=stop_after_attempt(5), wait=wait_fixed(1)):
             with attempt:
                 db_connection.connection.connection.poll()
-                notifications = db_connection.connection.connection.notifies
+
+                notifications = [
+                    EntityNotification.model_validate_json(notification.payload)
+                    for notification in db_connection.connection.connection.notifies
+                ]
+
                 assert any(
-                    notification.payload == str(entity.guid) and notification.channel == PG_NOTIFY_ENTITY_CHANNEL
-                    for notification in notifications
+                    notification.guid == entity.guid and notification.op == "INSERT" for notification in notifications
                 )
 
 
@@ -91,10 +95,14 @@ def test__example_entity_trigger_fires_on_update(
         for attempt in Retrying(stop=stop_after_attempt(5), wait=wait_fixed(1)):
             with attempt:
                 db_connection.connection.connection.poll()
-                notifications = db_connection.connection.connection.notifies
+
+                notifications = [
+                    EntityNotification.model_validate_json(notification.payload)
+                    for notification in db_connection.connection.connection.notifies
+                ]
+
                 assert any(
-                    notification.payload == str(entity.guid) and notification.channel == PG_NOTIFY_ENTITY_CHANNEL
-                    for notification in notifications
+                    notification.guid == entity.guid and notification.op == "UPDATE" for notification in notifications
                 )
 
 
@@ -117,10 +125,14 @@ def test__example_entity_trigger_fires_on_delete(
         for attempt in Retrying(stop=stop_after_attempt(5), wait=wait_fixed(1)):
             with attempt:
                 db_connection.connection.connection.poll()
-                notifications = db_connection.connection.connection.notifies
+
+                notifications = [
+                    EntityNotification.model_validate_json(notification.payload)
+                    for notification in db_connection.connection.connection.notifies
+                ]
+
                 assert any(
-                    notification.payload == str(entity.guid) and notification.channel == PG_NOTIFY_ENTITY_CHANNEL
-                    for notification in notifications
+                    notification.guid == entity.guid and notification.op == "DELETE" for notification in notifications
                 )
 
 
@@ -243,3 +255,60 @@ def test__example_entity_time_modified_updates_on_change(
 def test__example_entity_comparator(a: Entity, b: Entity, *, expected: bool) -> None:
     """Test the comparison operator for the Entity class."""
     assert (a < b) == expected
+
+
+def test__example_entity_trigger_cleanup_on_drop(db_engine: Engine, db_connection: Connection) -> None:
+    """Test that the PostgreSQL trigger and function are cleaned up when the Entity table is dropped."""
+    # Verify the trigger and function exist
+    result = db_connection.execute(
+        text(
+            """
+                SELECT tgname
+                FROM pg_trigger
+                WHERE tgname = 'entity_table_change';
+                """,
+        ),
+    )
+    triggers = {row[0] for row in result}
+    assert "entity_table_change" in triggers, "Trigger should exist before drop"
+
+    result = db_connection.execute(
+        text(
+            """
+                SELECT proname
+                FROM pg_proc
+                WHERE proname = 'entity_notify_change';
+                """,
+        ),
+    )
+    functions = {row[0] for row in result}
+    assert "entity_notify_change" in functions, "Trigger function should exist before drop"
+
+    # Drop the Entity table
+    Entity.metadata.drop_all(db_engine)
+
+    # Verify the trigger no longer exists
+    result = db_connection.execute(
+        text(
+            """
+                SELECT tgname
+                FROM pg_trigger
+                WHERE tgname = 'entity_table_change';
+                """,
+        ),
+    )
+    triggers = {row[0] for row in result}
+    assert "entity_table_change" not in triggers, "Trigger should be removed after table drop"
+
+    # Verify the function no longer exists
+    result = db_connection.execute(
+        text(
+            """
+                SELECT proname
+                FROM pg_proc
+                WHERE proname = 'entity_notify_change';
+                """,
+        ),
+    )
+    functions = {row[0] for row in result}
+    assert "entity_notify_change" not in functions, "Trigger function should be removed after table drop"

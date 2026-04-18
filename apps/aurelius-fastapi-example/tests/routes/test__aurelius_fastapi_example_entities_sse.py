@@ -1,10 +1,9 @@
 import json
-import types
 from collections.abc import AsyncGenerator
+from datetime import UTC, datetime
 from uuid import uuid4
 
-from aurelius_example import Entity
-from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL
+from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity, EntityNotification
 from aurelius_fastapi_example.providers import notifications as cdc_notifications
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -12,7 +11,15 @@ from fastapi.testclient import TestClient
 
 def test__sse_streams_existing_entity(app: FastAPI, authenticated_client: TestClient, entity: Entity) -> None:
     """SSE endpoint should stream a ServerSentEvent containing the entity when notified."""
-    notifications = [types.SimpleNamespace(channel=PG_NOTIFY_ENTITY_CHANNEL, payload=str(entity.guid))]
+    notifications = [
+        EntityNotification(
+            guid=entity.guid,
+            op="INSERT",
+            schema_name="public",
+            table_name="entity",
+            timestamp=datetime.now(tz=UTC),
+        ),
+    ]
 
     async def listener() -> AsyncGenerator:
         for notification in notifications:
@@ -36,8 +43,17 @@ def test__sse_streams_existing_entity(app: FastAPI, authenticated_client: TestCl
 
 def test__sse_streams_deleted_entity(app: FastAPI, authenticated_client: TestClient) -> None:
     """SSE endpoint should stream an Envelope with a null value when the notified entity does not exist."""
-    missing_guid = str(uuid4())
-    notifications = [types.SimpleNamespace(channel=PG_NOTIFY_ENTITY_CHANNEL, payload=missing_guid)]
+    missing_guid = uuid4()
+
+    notifications = [
+        EntityNotification(
+            guid=missing_guid,
+            op="DELETE",
+            schema_name="public",
+            table_name="entity",
+            timestamp=datetime.now(tz=UTC),
+        ),
+    ]
 
     async def listener() -> AsyncGenerator:
         for notification in notifications:
@@ -54,7 +70,7 @@ def test__sse_streams_deleted_entity(app: FastAPI, authenticated_client: TestCli
     ]
 
     assert len(data_lines) == 1
-    assert data_lines[0]["guid"] == missing_guid
+    assert data_lines[0]["guid"] == str(missing_guid)
     assert data_lines[0]["value"] is None
 
 

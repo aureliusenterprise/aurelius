@@ -2,8 +2,7 @@ from collections.abc import AsyncGenerator, Callable
 from typing import Annotated
 from uuid import UUID
 
-import psycopg2
-from aurelius_example import Entity
+from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity, EntityNotification
 from fastapi import APIRouter, Depends, HTTPException, Security
 from fastapi.sse import EventSourceResponse, ServerSentEvent
 from sqlalchemy import func
@@ -70,7 +69,7 @@ def find_all(
     response_class=EventSourceResponse,
 )
 async def sse(
-    notifications: Annotated[Callable[[], AsyncGenerator[psycopg2.extensions.Notify]], Depends(notifications)],
+    notifications: Annotated[Callable[[], AsyncGenerator[EntityNotification]], Depends(notifications)],
     session: Annotated[Session, Depends(session)],
     user_info: Annotated[dict, Depends(user_info)],
 ) -> AsyncGenerator[ServerSentEvent]:
@@ -83,17 +82,12 @@ async def sse(
 
     try:
         async for notification in notifications():
-            guid = UUID(notification.payload)
-
             envelope = Envelope(
-                guid=guid,
-                value=session.get(Entity, guid),
+                guid=notification.guid,
+                value=session.get(Entity, notification.guid),
             )
 
-            yield ServerSentEvent(
-                event=notification.channel,
-                data=envelope,
-            )
+            yield ServerSentEvent(event=PG_NOTIFY_ENTITY_CHANNEL, data=envelope)
     finally:
         LOGGER.info("User %s disconnected from SSE endpoint", user_info.get("sub"))
 
