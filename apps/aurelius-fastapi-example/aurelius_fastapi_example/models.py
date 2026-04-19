@@ -1,5 +1,6 @@
 from collections.abc import Sequence
 from datetime import UTC, datetime
+from typing import Literal
 from uuid import UUID
 
 from aurelius_sdk.postgresql import sanitize_tsquery
@@ -17,12 +18,16 @@ class Envelope[T: BaseModel | None](BaseModel):
         description="The unique identifier for the value contained in the envelope.",
     )
 
+    op: Literal["INSERT", "UPDATE", "DELETE"] = Field(
+        description="The operation type for the envelope.",
+    )
+
     timestamp: datetime = Field(
         description="The timestamp when the envelope was created with timezone information.",
         default_factory=lambda: datetime.now(tz=UTC),
     )
 
-    value: T = Field(
+    value: T | None = Field(
         description="The value contained in the envelope.",
     )
 

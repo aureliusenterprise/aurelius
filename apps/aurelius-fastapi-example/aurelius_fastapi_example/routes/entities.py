@@ -84,8 +84,9 @@ async def sse(
         async for notification in notifications():
             envelope = Envelope(
                 guid=notification.guid,
+                op=notification.op,
                 timestamp=notification.timestamp,
-                value=session.get(Entity, notification.guid),
+                value=session.get(Entity, notification.guid) if notification.op != "DELETE" else None,
             )
 
             yield ServerSentEvent(event=PG_NOTIFY_ENTITY_CHANNEL, data=envelope)

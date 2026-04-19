@@ -1,6 +1,6 @@
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { EntitiesService, Entity, FindAllQueryParams, PaginatedResponse } from "./entities.service";
+import { EntitiesService, Entity, Envelope, FindAllQueryParams, PaginatedResponse } from "./entities.service";
 
 describe("EntitiesService", () => {
     let service: EntitiesService;
@@ -258,7 +258,18 @@ describe("EntitiesService", () => {
 
     it("should receive entity updates", () =>
         new Promise<void>((done, fail) => {
-            const envelope = { guid: "123", value: { guid: "123", name: "Updated", description: "Updated desc" } };
+            const envelope: Envelope<Entity> = {
+                guid: "123",
+                op: "INSERT",
+                timestamp: new Date().toISOString(),
+                value: {
+                    guid: "123",
+                    name: "Updated",
+                    description: "Updated desc",
+                    time_created: new Date().toISOString(),
+                    time_modified: new Date().toISOString(),
+                },
+            };
 
             service.entities$.subscribe({
                 next: (notification) => {
@@ -279,8 +290,6 @@ describe("EntitiesService", () => {
 
     it("should filter notifications not related to entities", () =>
         new Promise<void>((done, fail) => {
-            const envelope = { guid: "123", value: { guid: "123", name: "Updated", description: "Updated desc" } };
-
             service.entities$.subscribe({
                 next: fail,
                 error: fail,
@@ -290,7 +299,7 @@ describe("EntitiesService", () => {
 
             expect(req.request.method).toBe("GET");
 
-            req.flush(`data: ${JSON.stringify(envelope)}\nevent: test\n\n`, {
+            req.flush(`data: \nevent: test\n\n`, {
                 headers: { "Content-Type": "text/event-stream" },
             });
 

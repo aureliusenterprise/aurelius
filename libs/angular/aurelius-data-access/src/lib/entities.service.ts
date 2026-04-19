@@ -11,6 +11,11 @@ export type Envelope<T> = {
     readonly guid: string;
 
     /**
+     * The operation type for the envelope.
+     */
+    readonly op: "INSERT" | "UPDATE" | "DELETE";
+
+    /**
      * The timestamp when the envelope was created, in ISO 8601 format.
      */
     readonly timestamp: string;

@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 from uuid import uuid4
 
 from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity, EntityNotification
+from aurelius_fastapi_example.models import Envelope
 from aurelius_fastapi_example.providers import notifications as cdc_notifications
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -11,15 +12,15 @@ from fastapi.testclient import TestClient
 
 def test__sse_streams_existing_entity(app: FastAPI, authenticated_client: TestClient, entity: Entity) -> None:
     """SSE endpoint should stream a ServerSentEvent containing the entity when notified."""
-    notifications = [
-        EntityNotification(
-            guid=entity.guid,
-            op="INSERT",
-            schema_name="public",
-            table_name="entity",
-            timestamp=datetime.now(tz=UTC),
-        ),
-    ]
+    inserted = EntityNotification(
+        guid=entity.guid,
+        op="INSERT",
+        schema_name="public",
+        table_name="entity",
+        timestamp=datetime.now(tz=UTC),
+    )
+
+    notifications = [inserted]
 
     async def listener() -> AsyncGenerator:
         for notification in notifications:
@@ -33,28 +34,36 @@ def test__sse_streams_existing_entity(app: FastAPI, authenticated_client: TestCl
 
     lines = response.text.splitlines()
     event_lines = [line.removeprefix("event: ") for line in lines if line.startswith("event: ")]
-    data_lines = [json.loads(line.removeprefix("data: ")) for line in lines if line.startswith("data: ")]
+    data_lines = [line.removeprefix("data: ") for line in lines if line.startswith("data: ")]
 
     assert event_lines == [PG_NOTIFY_ENTITY_CHANNEL]
     assert len(data_lines) == 1
-    assert data_lines[0]["guid"] == str(entity.guid)
-    assert datetime.fromisoformat(data_lines[0]["timestamp"]) == notifications[0].timestamp
-    assert data_lines[0]["value"] == entity.model_dump(mode="json")
+
+    expected = Envelope[Entity](
+        guid=entity.guid,
+        op="INSERT",
+        timestamp=inserted.timestamp,
+        value=entity,
+    ).model_dump(mode="json")
+
+    actual = json.loads(data_lines[0])
+
+    assert expected == actual
 
 
 def test__sse_streams_deleted_entity(app: FastAPI, authenticated_client: TestClient) -> None:
     """SSE endpoint should stream an Envelope with a null value when the notified entity does not exist."""
     missing_guid = uuid4()
 
-    notifications = [
-        EntityNotification(
-            guid=missing_guid,
-            op="DELETE",
-            schema_name="public",
-            table_name="entity",
-            timestamp=datetime.now(tz=UTC),
-        ),
-    ]
+    deleted = EntityNotification(
+        guid=missing_guid,
+        op="DELETE",
+        schema_name="public",
+        table_name="entity",
+        timestamp=datetime.now(tz=UTC),
+    )
+
+    notifications = [deleted]
 
     async def listener() -> AsyncGenerator:
         for notification in notifications:
@@ -66,14 +75,23 @@ def test__sse_streams_deleted_entity(app: FastAPI, authenticated_client: TestCli
 
     assert response.status_code == 200
 
-    data_lines = [
-        json.loads(line.removeprefix("data: ")) for line in response.text.splitlines() if line.startswith("data: ")
-    ]
+    lines = response.text.splitlines()
+    event_lines = [line.removeprefix("event: ") for line in lines if line.startswith("event: ")]
+    data_lines = [line.removeprefix("data: ") for line in lines if line.startswith("data: ")]
 
+    assert event_lines == [PG_NOTIFY_ENTITY_CHANNEL]
     assert len(data_lines) == 1
-    assert data_lines[0]["guid"] == str(missing_guid)
-    assert datetime.fromisoformat(data_lines[0]["timestamp"]) == notifications[0].timestamp
-    assert data_lines[0]["value"] is None
+
+    expected = Envelope[Entity](
+        guid=missing_guid,
+        op="DELETE",
+        timestamp=deleted.timestamp,
+        value=None,
+    ).model_dump(mode="json")
+
+    actual = json.loads(data_lines[0])
+
+    assert expected == actual
 
 
 def test__sse_yields_no_events_for_empty_stream(app: FastAPI, authenticated_client: TestClient) -> None:

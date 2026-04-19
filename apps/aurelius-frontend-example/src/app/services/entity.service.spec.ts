@@ -55,6 +55,7 @@ describe("EntityService", () => {
 
                 const envelope: Envelope<Entity> = {
                     guid: "123",
+                    op: "UPDATE",
                     timestamp: new Date().toISOString(),
                     value: updatedEntity,
                 };
@@ -78,6 +79,7 @@ describe("EntityService", () => {
 
                 const deleteEnvelope: Envelope<Entity> = {
                     guid: "123",
+                    op: "DELETE",
                     timestamp: new Date().toISOString(),
                     value: null,
                 };
@@ -104,6 +106,7 @@ describe("EntityService", () => {
 
                 const envelope: Envelope<Entity> = {
                     guid: "456",
+                    op: "UPDATE",
                     timestamp: new Date().toISOString(),
                     value: otherEntity,
                 };
@@ -128,6 +131,7 @@ describe("EntityService", () => {
                 // Simulate deletion of a different entity
                 const deleteEnvelope: Envelope<Entity> = {
                     guid: "456",
+                    op: "DELETE",
                     timestamp: new Date().toISOString(),
                     value: null,
                 };
@@ -149,10 +153,17 @@ describe("EntityService", () => {
                 // Start with no current entity
                 expect(service.entity()).toBeNull();
 
-                const newEntity: Entity = { guid: "789", name: "New Entity", description: "First Desc" };
+                const newEntity: Entity = {
+                    guid: "789",
+                    name: "New Entity",
+                    description: "First Desc",
+                    time_created: new Date().toISOString(),
+                    time_modified: new Date().toISOString(),
+                };
 
                 const envelope: Envelope<Entity> = {
                     guid: "789",
+                    op: "INSERT",
                     timestamp: new Date().toISOString(),
                     value: newEntity,
                 };

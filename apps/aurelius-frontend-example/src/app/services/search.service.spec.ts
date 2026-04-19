@@ -181,8 +181,15 @@ describe("SearchService", () => {
                 // Simulate an entity update event from the server
                 entitiesSubject.next({
                     guid: "4",
+                    op: "INSERT",
                     timestamp: new Date().toISOString(),
-                    value: { guid: "4", name: "D", description: "desc4" },
+                    value: {
+                        guid: "4",
+                        name: "D",
+                        description: "desc4",
+                        time_created: new Date().toISOString(),
+                        time_modified: new Date().toISOString(),
+                    },
                 });
 
                 setTimeout(() => {
