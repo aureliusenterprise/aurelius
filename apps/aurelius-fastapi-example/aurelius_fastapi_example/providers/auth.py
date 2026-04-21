@@ -29,13 +29,13 @@ class OpenIdConfig(BaseModel):
 
 
 @cache
-def auth_base_url(settings: Settings) -> str:
+def auth_base_url(*, settings: Settings) -> str:
     """Return the base URL for the authentication server."""
     return f"{settings.auth_server_url}realms/{settings.auth_realm_name}"
 
 
 @cache
-def auth_provider(auth_base_url: Annotated[str, Depends(auth_base_url)]) -> OAuth2PasswordBearer:
+def auth_provider(*, auth_base_url: Annotated[str, Depends(auth_base_url)]) -> OAuth2PasswordBearer:
     """Return the OAuth2PasswordBearer instance for the authentication configuration."""
     return OAuth2PasswordBearer(
         tokenUrl=f"{auth_base_url}/protocol/openid-connect/token",
@@ -126,7 +126,7 @@ def user_info(
 ) -> dict:
     """Decode the authentication token to verify the user's identity and return their information."""
     try:
-        headers = jwt.get_unverified_header(auth_token)
+        headers = jwt.get_unverified_header(auth_token)  # NOSONAR(S5659) token is verified a few lines down
         alg = headers.get("alg", "RS256")
 
         if alg != "RS256":

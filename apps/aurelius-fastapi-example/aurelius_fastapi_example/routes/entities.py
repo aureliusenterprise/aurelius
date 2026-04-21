@@ -88,7 +88,6 @@ async def sse(
                 timestamp=notification.timestamp,
                 value=session.get(Entity, notification.guid) if notification.op != "DELETE" else None,
             )
-
             yield ServerSentEvent(event=PG_NOTIFY_ENTITY_CHANNEL, data=envelope)
     finally:
         LOGGER.info("User %s disconnected from SSE endpoint", user_info.get("sub"))

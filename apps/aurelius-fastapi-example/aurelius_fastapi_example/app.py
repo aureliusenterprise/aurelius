@@ -1,35 +1,42 @@
-from collections.abc import AsyncGenerator
-from contextlib import asynccontextmanager
+from collections.abc import AsyncGenerator, Callable
+from contextlib import AbstractAsyncContextManager, asynccontextmanager
 
 from aurelius_sdk.logger import setup_logger
 from fastapi import FastAPI
 
 from aurelius_fastapi_example.globals import LOGGER, METADATA, NAME
 from aurelius_fastapi_example.models import Settings
+from aurelius_fastapi_example.providers import get_broadcaster
 from aurelius_fastapi_example.routes import ENTITIES, HEALTH
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
-    """
-    Manages the startup and shutdown of the FastAPI application.
+def make_lifespan(settings: Settings) -> Callable[[FastAPI], AbstractAsyncContextManager[None]]:
+    """Return a lifespan context manager configured with the given settings."""
 
-    Logs the start and stop of the application.
+    @asynccontextmanager
+    async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
+        """
+        Manages the startup and shutdown of the FastAPI application.
 
-    Args:
-        app: The FastAPI application instance.
+        Starts the shared CDC broadcaster on startup and shuts it down on exit.
 
-    Yields:
-        None: When the application is running.
-    """
-    LOGGER.info("Starting %s (%s) 🚀", app.title, app.version)
+        Args:
+            app: The FastAPI application instance.
 
-    if app.debug:
-        LOGGER.warning("🚨 Running in development mode. Not for production use! 🚨")
+        Yields:
+            None: When the application is running.
+        """
+        LOGGER.info("Starting %s (%s) 🚀", app.title, app.version)
 
-    yield
+        if app.debug:
+            LOGGER.warning("🚨 Running in development mode. Not for production use! 🚨")
 
-    LOGGER.info("Stopping %s. Goodbye 👋", app.title)
+        with get_broadcaster(settings=settings):
+            yield
+
+        LOGGER.info("Stopping %s. Goodbye 👋", app.title)
+
+    return lifespan
 
 
 def setup_routes(app: FastAPI) -> None:
@@ -50,7 +57,7 @@ def setup_routes(app: FastAPI) -> None:
 
 def create_app(settings: Settings) -> FastAPI:
     """Create and configure the FastAPI application."""
-    app = FastAPI(lifespan=lifespan)
+    app = FastAPI(lifespan=make_lifespan(settings))
 
     app.debug = settings.is_development
     app.description = METADATA.get("Summary", "")

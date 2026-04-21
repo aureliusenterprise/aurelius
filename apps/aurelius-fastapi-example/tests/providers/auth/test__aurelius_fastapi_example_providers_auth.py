@@ -1,6 +1,3 @@
-from collections.abc import Hashable
-from typing import cast
-
 import httpx
 import jwt
 import pytest
@@ -30,7 +27,7 @@ def build_request_with_bearer(token: str) -> Request:
 
 def test__auth_base_url_builds_realm_url(auth_base_url: str, auth_settings: Settings) -> None:
     """Auth base URL provider should compose the expected realm URL."""
-    assert auth.auth_base_url(cast("Hashable", auth_settings)) == auth_base_url
+    assert auth.auth_base_url(settings=auth_settings) == auth_base_url
 
 
 def test__openid_configuration_loads_from_keycloak(auth_base_url: str, http_client: httpx.Client) -> None:
@@ -53,7 +50,7 @@ def test__jwks_loads_keys_from_keycloak(auth_base_url: str, http_client: httpx.C
 
 async def test__auth_token_extracts_bearer_token(keycloak_access_token: str) -> None:
     """Auth token provider should return the bearer token from request headers."""
-    oauth2 = auth.auth_provider("http://issuer.example/realms/test")
+    oauth2 = auth.auth_provider(auth_base_url="http://issuer.example/realms/test")
     request = build_request_with_bearer(keycloak_access_token)
 
     token = await auth.auth_token(oauth2, request)

@@ -38,7 +38,7 @@ def keycloak_container(keycloak_admin_credentials: dict[str, str]) -> Generator[
 
 
 @pytest.fixture(scope="session")
-def auth_settings(keycloak_container: DockerContainer) -> Settings:
+def auth_settings(keycloak_container: DockerContainer) -> Mock:
     """Return settings pointing auth_* fields at the Keycloak testcontainer."""
     host = keycloak_container.get_container_host_ip()
     port = keycloak_container.get_exposed_port(8080)

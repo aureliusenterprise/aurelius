@@ -1,4 +1,4 @@
-from collections.abc import Sequence
+from collections.abc import Hashable, Sequence
 from datetime import UTC, datetime
 from typing import Literal
 from uuid import UUID
@@ -82,7 +82,7 @@ class FindAllQueryParams(PaginationQueryParams):
         return sanitize_tsquery(value)
 
 
-class Settings(BaseSettings):
+class Settings(BaseSettings, Hashable):
     """Application configuration settings."""
 
     environment: str = Field(
@@ -103,9 +103,27 @@ class Settings(BaseSettings):
         description="Automatically create the database schema. Enabled by default in development mode.",
     )
 
+    cdc_disconnect_poll_timeout: float = Field(
+        default=5.0,
+        description=(
+            "The timeout in seconds to wait for SSE notifications before "
+            "re-checking whether the client has disconnected."
+        ),
+    )
+
     cdc_epoll_timeout: float = Field(
         default=10.0,
         description="The timeout in seconds for epoll to wait for new events in the SSE endpoint.",
+    )
+
+    cdc_shutdown_join_timeout: float = Field(
+        default=2.0,
+        description="The timeout in seconds to wait for the CDC polling thread to stop during shutdown.",
+    )
+
+    cdc_subscriber_queue_maxsize: int = Field(
+        default=1000,
+        description="The maximum number of buffered CDC notifications per SSE subscriber queue.",
     )
 
     database_driver: str = Field(

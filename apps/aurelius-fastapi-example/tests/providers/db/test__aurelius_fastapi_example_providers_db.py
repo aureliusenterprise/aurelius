@@ -1,6 +1,3 @@
-from collections.abc import Hashable
-from typing import cast
-
 import pytest
 from aurelius_example import Entity
 from aurelius_fastapi_example.models import Settings
@@ -10,8 +7,8 @@ from sqlmodel import Session, SQLModel, select
 
 
 def get_engine(settings: Settings) -> Engine:
-    """Call the cached database provider with explicit hashable typing for static checkers."""
-    return db.database(cast("Hashable", settings))
+    """Return the database engine for the given settings."""
+    return db.database(settings=settings)
 
 
 def test__database_returns_working_engine(db_settings: Settings) -> None:

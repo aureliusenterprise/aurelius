@@ -12,7 +12,7 @@ from .settings import Settings
 
 
 @cache
-def database(settings: Settings) -> Engine:
+def database(*, settings: Settings) -> Engine:
     """Return a database engine instance."""
     database_url = settings.database_url
 
