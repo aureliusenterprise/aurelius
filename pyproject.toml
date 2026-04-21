@@ -14,7 +14,7 @@ dev = [
     "aurelius-example",
     "aurelius-fastapi-example",
     "aurelius-kafka",
-    "aurelius-sdk",
+    "aurelius-sdk[full]",
     "alembic>=1.16.4",
     "boto3>=1.39.6",
     "confluent-kafka[avro,schema-registry]>=2.13.2",

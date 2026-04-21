@@ -1,3 +1,10 @@
+"""
+This module provides utilities for working with AWS services.
+
+Note:
+    Please install the `aws` extra to use this module.
+"""
+
 from types_boto3_secretsmanager import SecretsManagerClient
 
 

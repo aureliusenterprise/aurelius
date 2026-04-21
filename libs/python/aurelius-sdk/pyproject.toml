@@ -1,16 +1,16 @@
 [project]
-dependencies = [
-    "boto3>=1.39.6",
-    "coloredlogs>=15.0.1",
-    "httpx>=0.28.1",
-    "msal>=1.32.3",
-    "testcontainers>=4.10.0",
-    "types-boto3[full]>=1.39.6",
-]
+dependencies = ["httpx>=0.28.1"]
 description = "This library provides common utilities for Aurelius projects."
 name = "aurelius-sdk"
 requires-python = ">=3.14"
 version = "0.3.0"
+
+[project.optional-dependencies]
+aws = ["boto3>=1.39.6", "types-boto3[full]>=1.39.6"]
+azure = ["msal>=1.32.3"]
+full = ["boto3>=1.39.6", "coloredlogs>=15.0.1", "msal>=1.32.3", "testcontainers>=4.10.0", "types-boto3[full]>=1.39.6"]
+logging = ["coloredlogs>=15.0.1"]
+testing = ["testcontainers>=4.10.0"]
 
 [[project.authors]]
 name = "Aurelius Enterprise"

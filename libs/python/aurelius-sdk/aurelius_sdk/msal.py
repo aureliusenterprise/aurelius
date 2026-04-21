@@ -1,3 +1,10 @@
+"""
+This module provides authentication utilities for the Microsoft Identity Platform.
+
+Note:
+    Please install the `azure` extra to use this module.
+"""
+
 import httpx
 import msal
 

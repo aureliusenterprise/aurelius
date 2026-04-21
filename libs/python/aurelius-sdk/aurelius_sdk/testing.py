@@ -1,3 +1,10 @@
+"""
+This module provides testing utilities for Aurelius applications.
+
+Note:
+    Please install the `testing` extra to use this module.
+"""
+
 import logging
 
 from testcontainers.compose import DockerCompose
