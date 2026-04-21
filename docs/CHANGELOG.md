@@ -1,3 +1,17 @@
+## 0.4.0 (2026-04-21)
+
+### 🚀 Features
+
+- extend notification metadata ([#29](https://github.com/aureliusenterprise/project-template/pull/29))
+- add timestamp to sse messages ([#30](https://github.com/aureliusenterprise/project-template/pull/30))
+- add op field to sse envelope ([#31](https://github.com/aureliusenterprise/project-template/pull/31))
+- set up broadcasting for sse messages ([#32](https://github.com/aureliusenterprise/project-template/pull/32))
+- register optional sdk dependencies ([#33](https://github.com/aureliusenterprise/project-template/pull/33))
+
+### 🩹 Fixes
+
+- ensure pagination is ordered newest to oldest ([#28](https://github.com/aureliusenterprise/project-template/pull/28))
+
 ## 0.3.0 (2026-04-18)
 
 ### 🚀 Features
