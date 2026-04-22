@@ -1,4 +1,7 @@
-FROM aurelius-kafka-connect-jdbc-sink-base:local
+ARG VERSION=local
+FROM ghcr.io/aureliusenterprise/aurelius-kafka-connect-jdbc-sink-base:${VERSION}
+
+ARG VERSION=local
 
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"
@@ -6,6 +9,7 @@ LABEL org.opencontainers.image.description="This is an example Kafka Connect JDB
 LABEL org.opencontainers.image.licenses=UNLICENSED
 LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/project-template
 LABEL org.opencontainers.image.title="Aurelius Kafka Connect JDBC Sink Example"
+LABEL org.opencontainers.image.version="${VERSION}"
 
 # Copy the connector configuration
 COPY --chown=root:root --chmod=0755 connectors/aurelius-kafka-connect-jdbc-sink-example/workers/*.json /tmp/aurelius/workers/

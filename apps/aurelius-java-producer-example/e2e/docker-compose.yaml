@@ -1,7 +1,7 @@
 name: aurelius-java-producer-example-e2e
 services:
     aurelius-java-producer-example:
-        image: aurelius-java-producer-example:local
+        image: ghcr.io/aureliusenterprise/aurelius-java-producer-example:local
         depends_on:
             schema-registry:
                 condition: service_healthy

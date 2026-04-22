@@ -27,12 +27,15 @@ RUN --mount=type=cache,mode=0755,target=/root/.npm \
 # Use the official Node.js LTS Alpine image as the runtime image
 FROM node:lts-alpine AS runtime
 
+ARG VERSION=local
+
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"
 LABEL org.opencontainers.image.description="This is an example Node-RED application."
 LABEL org.opencontainers.image.licenses=UNLICENSED
 LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/project-template
 LABEL org.opencontainers.image.title="Aurelius Node-RED Example"
+LABEL org.opencontainers.image.version="${VERSION}"
 
 # Expose the default Node-RED port
 EXPOSE 1880

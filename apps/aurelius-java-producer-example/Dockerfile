@@ -13,12 +13,15 @@ RUN tar -xvf aurelius-java-producer-example.tar --strip-components=1 && rm aurel
 # Use the Eclipse Temurin JRE base image for Java 21 as the runtime stage
 FROM eclipse-temurin:21.0.9_10-jre-alpine-3.23 AS runtime
 
+ARG VERSION=local
+
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"
 LABEL org.opencontainers.image.description="This is an example Kafka producer written in Java."
 LABEL org.opencontainers.image.licenses=UNLICENSED
 LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/project-template
 LABEL org.opencontainers.image.title="Aurelius Java Producer Example"
+LABEL org.opencontainers.image.version="${VERSION}"
 
 # Add a non-root user to run the application
 RUN adduser -S aurelius

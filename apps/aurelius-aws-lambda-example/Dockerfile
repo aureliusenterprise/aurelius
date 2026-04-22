@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1
+ARG VERSION=local
 
 # Use the official Python image as a base image for building the application
 FROM python:3.14 AS build-image
@@ -15,7 +16,9 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
     rm ./*.whl
 
 # Use the AWS Lambda base image for the final image
-FROM aurelius-aws-lambda-base:local
+FROM ghcr.io/aureliusenterprise/aurelius-aws-lambda-base:${VERSION}
+
+ARG VERSION=local
 
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"
@@ -23,6 +26,7 @@ LABEL org.opencontainers.image.description="This is an example AWS lambda functi
 LABEL org.opencontainers.image.licenses=UNLICENSED
 LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/project-template
 LABEL org.opencontainers.image.title="Aurelius AWS Lambda Example"
+LABEL org.opencontainers.image.version="${VERSION}"
 
 # Copy in the built dependencies
 COPY --chown=root:root --chmod=0755 --from=build-image /build ./

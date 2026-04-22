@@ -1,7 +1,7 @@
 name: aurelius-node-red-example-e2e
 services:
     aurelius-node-red-example:
-        image: aurelius-node-red-example:local
+        image: ghcr.io/aureliusenterprise/aurelius-node-red-example:local
         depends_on:
             schema-registry:
                 condition: service_healthy

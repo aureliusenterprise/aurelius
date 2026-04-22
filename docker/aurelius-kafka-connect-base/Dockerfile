@@ -1,12 +1,15 @@
 ARG CONNECT_VERSION=8.1.1
 FROM confluentinc/cp-kafka-connect:${CONNECT_VERSION}
 
+ARG VERSION=local
+
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"
 LABEL org.opencontainers.image.description="This is a base image for Kafka Connect with common plugins and healthchecks."
 LABEL org.opencontainers.image.licenses=UNLICENSED
 LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/project-template
 LABEL org.opencontainers.image.title="Aurelius Kafka Connect Base"
+LABEL org.opencontainers.image.version="${VERSION}"
 
 USER root
 

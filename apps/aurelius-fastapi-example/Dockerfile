@@ -17,12 +17,15 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
 # Use a slim version of the base Python image to reduce the final image size
 FROM python:3.14-slim
 
+ARG VERSION=local
+
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"
 LABEL org.opencontainers.image.description="This is an example FastAPI application."
 LABEL org.opencontainers.image.licenses=UNLICENSED
 LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/project-template
 LABEL org.opencontainers.image.title="Aurelius FastAPI Example"
+LABEL org.opencontainers.image.version="${VERSION}"
 
 # Set default values for the environment variables
 ENV HOST=0.0.0.0

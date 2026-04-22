@@ -4,7 +4,7 @@ import { dirname } from "path";
 export interface DockerPluginOptions {
     readonly buildTargetName?: string;
     readonly publishTargetName?: string;
-    readonly sbomTargetName?: string;
+    readonly setupDockerBuilderTargetName?: string;
 }
 
 const glob = "**/Dockerfile";
@@ -26,18 +26,35 @@ async function createNodesInternal(
     {
         buildTargetName = "docker-build",
         publishTargetName = "docker-publish",
-        sbomTargetName = "docker-sbom",
+        setupDockerBuilderTargetName = "docker-setup-builder",
     }: DockerPluginOptions = {},
 ): Promise<CreateNodesResult> {
     const projectRoot = dirname(configFilePath);
 
     return {
         projects: {
+            ["."]: {
+                targets: {
+                    [setupDockerBuilderTargetName]: {
+                        command:
+                            "docker buildx create --name {args.builder} --node {args.builder} --driver docker-container",
+                        metadata: {
+                            description: "Set up the Docker Buildx builder instance",
+                        },
+                        options: {
+                            builder: "container",
+                            env: {
+                                DOCKER_BUILDKIT: "1",
+                            },
+                        },
+                    },
+                },
+            },
             [projectRoot]: {
                 tags: ["docker"],
                 targets: {
                     [buildTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {projectName}:local`,
+                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version}`,
                         dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
                         metadata: {
                             description: "Build the Docker image for the application",
@@ -46,49 +63,27 @@ async function createNodesInternal(
                             env: {
                                 DOCKER_BUILDKIT: "1",
                             },
+                            namespace: "ghcr.io/aureliusenterprise",
+                            version: "local",
                         },
                     },
                     [publishTargetName]: {
-                        configurations: {
-                            ci: {
-                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --builder={args.builder} --provenance=true --sbom=true --push`,
-                                options: {
-                                    env: {
-                                        DOCKER_BUILDKIT: "1",
-                                    },
-                                    builder: "default",
-                                    namespace: "ghcr.io/aureliusenterprise",
-                                    version: "latest",
-                                },
-                            },
-                            local: {
-                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --provenance=true --sbom=true --push`,
-                                options: {
-                                    env: {
-                                        DOCKER_BUILDKIT: "1",
-                                    },
-                                    namespace: "ghcr.io/aureliusenterprise",
-                                    version: "latest",
-                                },
-                            },
-                        },
-                        defaultConfiguration: "local",
-                        dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
-                        metadata: {
-                            description: "Publish the Docker image for the application",
-                        },
-                    },
-                    [sbomTargetName]: {
-                        command: `mkdir -p ${projectRoot}/dist && docker buildx imagetools inspect {args.namespace}/{projectName}:{args.version} --format "{{json .SBOM}}" > ${projectRoot}/dist/sbom.json`,
-                        metadata: {
-                            description: "Generate the SBOM for a Docker image from the registry",
-                        },
+                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --sbom=true --push`,
                         options: {
                             env: {
                                 DOCKER_BUILDKIT: "1",
                             },
+                            builder: "container",
                             namespace: "ghcr.io/aureliusenterprise",
                             version: "latest",
+                        },
+                        dependsOn: [
+                            { target: "build" },
+                            { target: setupDockerBuilderTargetName, projects: ["."], params: "forward" },
+                            { target: publishTargetName, dependencies: true, params: "forward" },
+                        ],
+                        metadata: {
+                            description: "Publish the Docker image for the application",
                         },
                     },
                 },

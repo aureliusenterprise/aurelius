@@ -1,4 +1,7 @@
-FROM aurelius-kafka-connect-base:local
+ARG VERSION=local
+FROM ghcr.io/aureliusenterprise/aurelius-kafka-connect-base:${VERSION}
+
+ARG VERSION=local
 
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"
@@ -6,6 +9,7 @@ LABEL org.opencontainers.image.description="This is a base image for Kafka Conne
 LABEL org.opencontainers.image.licenses=UNLICENSED
 LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/project-template
 LABEL org.opencontainers.image.title="Aurelius Kafka Connect JDBC Sink Base"
+LABEL org.opencontainers.image.version="${VERSION}"
 
 USER root
 
