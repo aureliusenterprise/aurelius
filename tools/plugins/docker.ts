@@ -49,17 +49,33 @@ async function createNodesInternal(
                         },
                     },
                     [publishTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --provenance=true --sbom=true --push`,
+                        configurations: {
+                            ci: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --builder={args.builder} --provenance=true --sbom=true --push`,
+                                options: {
+                                    env: {
+                                        DOCKER_BUILDKIT: "1",
+                                    },
+                                    builder: "default",
+                                    namespace: "ghcr.io/aureliusenterprise",
+                                    version: "latest",
+                                },
+                            },
+                            local: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --provenance=true --sbom=true --push`,
+                                options: {
+                                    env: {
+                                        DOCKER_BUILDKIT: "1",
+                                    },
+                                    namespace: "ghcr.io/aureliusenterprise",
+                                    version: "latest",
+                                },
+                            },
+                        },
+                        defaultConfiguration: "local",
                         dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
                         metadata: {
                             description: "Publish the Docker image for the application",
-                        },
-                        options: {
-                            env: {
-                                DOCKER_BUILDKIT: "1",
-                            },
-                            namespace: "ghcr.io/aureliusenterprise",
-                            version: "latest",
                         },
                     },
                     [sbomTargetName]: {
