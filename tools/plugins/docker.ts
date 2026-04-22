@@ -4,7 +4,8 @@ import { dirname } from "path";
 export interface DockerPluginOptions {
     readonly buildTargetName?: string;
     readonly publishTargetName?: string;
-    readonly setupDockerBuilderTargetName?: string;
+    readonly sbomTargetName?: string;
+    readonly setupBuilderTargetName?: string;
 }
 
 const glob = "**/Dockerfile";
@@ -26,7 +27,8 @@ async function createNodesInternal(
     {
         buildTargetName = "docker-build",
         publishTargetName = "docker-publish",
-        setupDockerBuilderTargetName = "docker-setup-builder",
+        sbomTargetName = "docker-sbom",
+        setupBuilderTargetName = "docker-setup-builder",
     }: DockerPluginOptions = {},
 ): Promise<CreateNodesResult> {
     const projectRoot = dirname(configFilePath);
@@ -35,7 +37,7 @@ async function createNodesInternal(
         projects: {
             ["."]: {
                 targets: {
-                    [setupDockerBuilderTargetName]: {
+                    [setupBuilderTargetName]: {
                         command:
                             "docker buildx create --name {args.builder} --node {args.builder} --driver docker-container",
                         metadata: {
@@ -79,11 +81,22 @@ async function createNodesInternal(
                         },
                         dependsOn: [
                             { target: "build" },
-                            { target: setupDockerBuilderTargetName, projects: ["."], params: "forward" },
+                            { target: setupBuilderTargetName, projects: ["."], params: "forward" },
                             { target: publishTargetName, dependencies: true, params: "forward" },
                         ],
                         metadata: {
                             description: "Publish the Docker image for the application",
+                        },
+                    },
+                    [sbomTargetName]: {
+                        command: `syft {args.namespace}/{projectName}:{args.version} -o spdx-json=${projectRoot}/sbom.json --enrich=all`,
+                        options: {
+                            namespace: "ghcr.io/aureliusenterprise",
+                            version: "local",
+                        },
+                        dependsOn: [{ target: buildTargetName, dependencies: true, params: "forward" }],
+                        metadata: {
+                            description: "Generate a Software Bill of Materials (SBOM) for the Docker image",
                         },
                     },
                 },

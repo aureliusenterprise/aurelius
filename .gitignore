@@ -207,3 +207,6 @@ build
 
 # Vitest coverage
 coverage/
+
+# SBOM
+sbom.json
