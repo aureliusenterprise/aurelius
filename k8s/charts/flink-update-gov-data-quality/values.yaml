@@ -15,7 +15,7 @@ atlasServerUrl: 'http://atlas:21000/api/atlas'
 # Elasticsearch configuration
 elasticsearchAppSearchIndexName: .ent-search-engine-documents-atlas-dev
 elasticsearchStateIndexName: publish-state
-elasticsearchEndpoint: http://elastic-search-es-http:9200
+elasticsearchEndpoint: https://elastic-search-es-http:9200
 elasticsearchUsername: elastic
 elasticsearchCertificatePath: /opt/flink/certs/ca.crt
 
