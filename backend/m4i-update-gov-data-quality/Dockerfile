@@ -35,4 +35,4 @@ COPY --chown=flink:flink --chmod=0400 backend/m4i-update-gov-data-quality/dist/*
 
 # Install package dependencies, then clean up. Use a cache mount to speed up the process.
 RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
-  pip install ./*.whl
+  python -m pip install --upgrade --force-reinstall --ignore-installed ./*.whl

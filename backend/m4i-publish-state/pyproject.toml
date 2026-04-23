@@ -1,24 +1,25 @@
 [tool.poetry]
-name = "m4i-publish-state"
-version = "1.0.0"
-description = "Publish State job for Aurelius Atlas"
 authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+description = "Publish State job for Aurelius Atlas"
 license = 'UNLICENSED'
+name = "m4i-publish-state"
 readme = 'README.md'
+version = "1.0.0"
 
 [[tool.poetry.packages]]
 include = "m4i_publish_state"
 
 [tool.poetry.dependencies]
-python = "~3.8"
 apache-flink = "~1.17"
+cryptography = "<43"
+python = "~3.8"
 python-keycloak = "0.18.0"
-urllib3="1.26.2"
+urllib3 = "1.26.2"
 
 [tool.poetry.dependencies.m4i-flink-tasks]
-path = "../../libs/m4i-flink-tasks"
 develop = true
+path = "../../libs/m4i-flink-tasks"
 
 [build-system]
-requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
