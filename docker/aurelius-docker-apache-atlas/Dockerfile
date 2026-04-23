@@ -34,7 +34,8 @@ WORKDIR /build/apache-atlas-sources
 
 ENV MAVEN_OPTS="-Xms2g -Xmx2g"
 
-RUN mvn clean install -DskipTests && \
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn clean install -DskipTests && \
     mvn clean -DskipTests package -Pdist,embedded-hbase-solr
 
 # Extract the built Apache Atlas components
