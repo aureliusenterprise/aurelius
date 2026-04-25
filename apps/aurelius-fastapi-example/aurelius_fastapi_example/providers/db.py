@@ -4,7 +4,7 @@ from typing import Annotated
 
 from fastapi import Depends
 from sqlalchemy import Engine, create_engine
-from sqlmodel import Session, SQLModel
+from sqlmodel import Session
 
 from aurelius_fastapi_example.globals import LOGGER
 
@@ -18,10 +18,6 @@ def database(*, settings: Settings) -> Engine:
 
     engine = create_engine(database_url)
     LOGGER.info("Connected to database %s", str(database_url).split("@")[-1])
-
-    if settings.auto_create_schema:
-        SQLModel.metadata.create_all(engine)
-        LOGGER.info("Database schema created successfully")
 
     return engine
 

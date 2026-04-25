@@ -1,10 +1,22 @@
 from datetime import UTC, datetime
+from unittest.mock import ANY
 
 import pytest
 from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity, EntityNotification
 from sqlalchemy import Connection, Engine, text
 from sqlmodel import Session
 from tenacity import Retrying, stop_after_attempt, wait_fixed
+
+
+def parse_entity_notification_payload(payload: str) -> EntityNotification:
+    """Helper function to parse a JSON payload into an EntityNotification."""
+    notification = EntityNotification.model_validate_json(payload)
+
+    if notification.value is not None:
+        # Re-parse the value field to ensure it's fully typed as an Entity model.
+        notification.value = Entity.model_validate(notification.value.model_dump())
+
+    return notification
 
 
 def test__example_creates_database_schema(db_connection: Connection) -> None:
@@ -59,6 +71,7 @@ def test__example_entity_trigger_fires_on_insert(db_connection: Connection, db_s
 
         db_session.add(entity)
         db_session.commit()
+        db_session.refresh(entity)
 
         # Wait for the notification to be received
         for attempt in Retrying(stop=stop_after_attempt(5), wait=wait_fixed(1)):
@@ -66,13 +79,19 @@ def test__example_entity_trigger_fires_on_insert(db_connection: Connection, db_s
                 db_connection.connection.connection.poll()
 
                 notifications = [
-                    EntityNotification.model_validate_json(notification.payload)
+                    parse_entity_notification_payload(notification.payload)
                     for notification in db_connection.connection.connection.notifies
                 ]
 
-                assert any(
-                    notification.guid == entity.guid and notification.op == "INSERT" for notification in notifications
-                )
+                expected = EntityNotification(
+                    guid=entity.guid,
+                    op="INSERT",
+                    schema_name="public",
+                    table_name=str(Entity.__tablename__),
+                    value=entity,
+                ).model_copy(update={"timestamp": ANY})
+
+                assert any(notification == expected for notification in notifications)
 
 
 def test__example_entity_trigger_fires_on_update(
@@ -90,6 +109,7 @@ def test__example_entity_trigger_fires_on_update(
         entity.name = "Updated Test Entity"
         entity.description = "This is an updated test entity."
         db_session.commit()
+        db_session.refresh(entity)
 
         # Wait for the notification to be received
         for attempt in Retrying(stop=stop_after_attempt(5), wait=wait_fixed(1)):
@@ -97,13 +117,19 @@ def test__example_entity_trigger_fires_on_update(
                 db_connection.connection.connection.poll()
 
                 notifications = [
-                    EntityNotification.model_validate_json(notification.payload)
+                    parse_entity_notification_payload(notification.payload)
                     for notification in db_connection.connection.connection.notifies
                 ]
 
-                assert any(
-                    notification.guid == entity.guid and notification.op == "UPDATE" for notification in notifications
-                )
+                expected = EntityNotification(
+                    guid=entity.guid,
+                    op="UPDATE",
+                    schema_name="public",
+                    table_name=str(Entity.__tablename__),
+                    value=entity,
+                ).model_copy(update={"timestamp": ANY})
+
+                assert any(notification == expected for notification in notifications)
 
 
 def test__example_entity_trigger_fires_on_delete(
@@ -127,13 +153,19 @@ def test__example_entity_trigger_fires_on_delete(
                 db_connection.connection.connection.poll()
 
                 notifications = [
-                    EntityNotification.model_validate_json(notification.payload)
+                    parse_entity_notification_payload(notification.payload)
                     for notification in db_connection.connection.connection.notifies
                 ]
 
-                assert any(
-                    notification.guid == entity.guid and notification.op == "DELETE" for notification in notifications
-                )
+                expected = EntityNotification(
+                    guid=entity.guid,
+                    op="DELETE",
+                    schema_name="public",
+                    table_name=str(Entity.__tablename__),
+                    value=None,
+                ).model_copy(update={"timestamp": ANY})
+
+                assert any(notification == expected for notification in notifications)
 
 
 def test__example_entity_time_created_is_set(entity: Entity) -> None:

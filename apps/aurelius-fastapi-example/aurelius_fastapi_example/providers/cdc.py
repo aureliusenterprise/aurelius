@@ -12,24 +12,20 @@ from aurelius_sdk.events import Broadcaster
 from aurelius_sdk.postgresql import PostgresListener
 from fastapi import Depends, Request
 from pydantic import ValidationError
-from sqlalchemy import Engine
 from sqlalchemy.exc import SQLAlchemyError
-from sqlmodel import Session
 
 from aurelius_fastapi_example.globals import LOGGER
 from aurelius_fastapi_example.models import Envelope
 
-from .db import database
 from .settings import Settings
 
 
 class EntityNotificationBroadcaster(Broadcaster[Envelope[Entity]]):
     """Broadcaster that enriches entity notifications once before broadcasting them to subscribers."""
 
-    def __init__(self, db_engine: Engine, settings: Settings) -> None:
+    def __init__(self, settings: Settings) -> None:
         super().__init__(settings=settings)
         self._settings = settings
-        self._db_engine = db_engine
         self._connection: psycopg2.extensions.connection | None = None
         self._postgres_listener: PostgresListener | None = None
 
@@ -83,46 +79,29 @@ class EntityNotificationBroadcaster(Broadcaster[Envelope[Entity]]):
         return self._connection is not None and self._connection.closed == 0 and self._postgres_listener is not None
 
     def _process_notification(self, notify: psycopg2.extensions.Notify) -> None:
-        try:
-            notification = EntityNotification.model_validate_json(notify.payload)
-        except ValidationError:
-            LOGGER.exception("Failed to parse notification payload: %s", notify.payload)
-            return
-
         if self.subscriber_count == 0:
             LOGGER.debug(
                 "Skipping enrichment for notification %s because there are no subscribers",
-                notification,
+                notify,
             )
             return
-
         try:
-            envelope = self._build_envelope(notification)
+            notification = EntityNotification.model_validate_json(notify.payload)
+
+            if notification.value is not None:
+                # Re-parse the value field to ensure it's fully typed as an Entity model.
+                notification.value = Entity.model_validate(notification.value.model_dump())
+
+            envelope = Envelope(
+                guid=notification.guid,
+                op=notification.op,
+                timestamp=notification.timestamp,
+                value=notification.value,
+            )
+
             self.broadcast(envelope)
         except (SQLAlchemyError, ValidationError):
-            LOGGER.exception("Error broadcasting envelope for notification: %s", notification)
-
-    def _build_envelope(self, notification: EntityNotification) -> Envelope[Entity]:
-        """Resolve the entity once and wrap it in the SSE envelope shared by all subscribers."""
-        value = None
-
-        if notification.op != "DELETE":
-            with Session(self._db_engine) as session:
-                value = session.get(Entity, notification.guid)
-
-            if value is None:
-                LOGGER.debug(
-                    "Entity %s was not found while enriching %s notification",
-                    notification.guid,
-                    notification.op,
-                )
-
-        return Envelope(
-            guid=notification.guid,
-            op=notification.op,
-            timestamp=notification.timestamp,
-            value=value,
-        )
+            LOGGER.exception("Error broadcasting envelope for notification: %s", notify)
 
     def __enter__(self) -> Self:
         self.start()
@@ -138,13 +117,9 @@ class EntityNotificationBroadcaster(Broadcaster[Envelope[Entity]]):
 
 
 @cache
-def get_broadcaster(
-    *,
-    db_engine: Annotated[Engine, Depends(database)],
-    settings: Settings,
-) -> EntityNotificationBroadcaster:
+def get_broadcaster(*, settings: Settings) -> EntityNotificationBroadcaster:
     """Return a singleton Broadcaster instance for the application."""
-    return EntityNotificationBroadcaster(db_engine=db_engine, settings=settings)
+    return EntityNotificationBroadcaster(settings=settings)
 
 
 def notifications(

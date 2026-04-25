@@ -72,16 +72,21 @@ class EntityNotification(BaseModel):
 
     timestamp: datetime = Field(
         description="The timestamp when the change occurred with timezone info",
+        default_factory=lambda: datetime.now(tz=UTC),
+    )
+
+    value: Entity | None = Field(
+        default=None,
+        description="The current state of the affected row; null for DELETE operations",
     )
 
 
 # The name of the PostgreSQL channel that will be used for notifications about changes to the Entity table.
 PG_NOTIFY_ENTITY_CHANNEL = "entity"
 
-# SQL statement to create a trigger that notifies a PostgreSQL channel on any insert, update, or delete operation on the
-# Entity table. The trigger function uses the pg_notify function to send a notification with metadata for the affected
-# row, including its guid. For delete operations, the OLD row's guid is used, while for insert and update operations,
-# the NEW row's guid is used. The trigger is set to execute after each row is modified in the Entity table.
+# PostgreSQL trigger that notifies on Entity table changes (INSERT, UPDATE, DELETE).
+# Sends pg_notify with the affected row's guid and state as JSON metadata.
+# For DELETE operations, uses the OLD row's guid with NULL state; for others, uses NEW row with full state.
 PG_NOTIFY_ENTITY_TRIGGER_SQL = """
 CREATE OR REPLACE FUNCTION entity_notify_change() RETURNS TRIGGER AS $$
 DECLARE
@@ -96,7 +101,11 @@ BEGIN
         'op', TG_OP,
         'schema_name', TG_TABLE_SCHEMA,
         'table_name', TG_TABLE_NAME,
-        'timestamp', to_jsonb(now())
+        'timestamp', to_jsonb(now()),
+        'value', CASE
+            WHEN (TG_OP = 'DELETE') THEN NULL
+            ELSE to_jsonb(NEW)
+        END
     )::text;
 
     -- Send pg_notify with the enriched payload, wrapped in EXCEPTION handling

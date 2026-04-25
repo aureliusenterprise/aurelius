@@ -17,10 +17,7 @@ def broadcaster(db_settings: db.Settings) -> Generator[EntityNotificationBroadca
     """Provide a started Broadcaster instance for tests that need it."""
     get_broadcaster.cache_clear()
 
-    broadcaster = get_broadcaster(
-        db_engine=db.database(settings=db_settings),
-        settings=db_settings,
-    )
+    broadcaster = get_broadcaster(settings=db_settings)
 
     with broadcaster:
         yield broadcaster

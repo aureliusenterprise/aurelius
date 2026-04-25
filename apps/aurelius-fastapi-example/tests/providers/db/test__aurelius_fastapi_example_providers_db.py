@@ -2,8 +2,8 @@ import pytest
 from aurelius_example import Entity
 from aurelius_fastapi_example.models import Settings
 from aurelius_fastapi_example.providers import db
-from sqlalchemy import Engine, inspect, text
-from sqlmodel import Session, SQLModel, select
+from sqlalchemy import Engine, text
+from sqlmodel import Session, select
 
 
 def get_engine(settings: Settings) -> Engine:
@@ -21,41 +21,6 @@ def test__database_returns_working_engine(db_settings: Settings) -> None:
     assert result == 1
 
     engine.dispose()
-
-
-def test__database_creates_schema_when_enabled(db_settings: Settings) -> None:
-    """Database provider should create the SQLModel schema when auto_create_schema is enabled."""
-    pre_engine = get_engine(db_settings.model_copy(update={"auto_create_schema": False}))
-
-    SQLModel.metadata.drop_all(pre_engine)
-    pre_engine.dispose()
-
-    db.database.cache_clear()
-
-    engine = get_engine(db_settings.model_copy(update={"auto_create_schema": True}))
-
-    assert inspect(engine).has_table(str(Entity.__tablename__))
-
-    engine.dispose()
-
-
-def test__database_skips_schema_creation_when_disabled(db_settings: Settings) -> None:
-    """Database provider should not create the SQLModel schema when auto_create_schema is disabled."""
-    pre_engine = get_engine(db_settings.model_copy(update={"auto_create_schema": True}))
-
-    SQLModel.metadata.drop_all(pre_engine)
-    pre_engine.dispose()
-
-    db.database.cache_clear()
-
-    settings = db_settings.model_copy(update={"auto_create_schema": False})
-    engine = get_engine(settings)
-
-    try:
-        assert not inspect(engine).has_table(str(Entity.__tablename__))
-    finally:
-        SQLModel.metadata.create_all(engine)
-        engine.dispose()
 
 
 def test__database_returns_cached_engine_for_same_settings(db_settings: Settings) -> None:

@@ -3,6 +3,7 @@ from contextlib import AbstractAsyncContextManager, asynccontextmanager
 
 from aurelius_sdk.logger import setup_logger
 from fastapi import FastAPI
+from sqlmodel import SQLModel
 
 from aurelius_fastapi_example.globals import LOGGER, METADATA, NAME
 from aurelius_fastapi_example.models import Settings
@@ -31,7 +32,13 @@ def make_lifespan(settings: Settings) -> Callable[[FastAPI], AbstractAsyncContex
         if app.debug:
             LOGGER.warning("🚨 Running in development mode. Not for production use! 🚨")
 
-        with get_broadcaster(db_engine=database(settings=settings), settings=settings):
+        if settings.auto_create_schema:
+            LOGGER.info("Auto-creating database schema...")
+            db_engine = database(settings=settings)
+            SQLModel.metadata.create_all(db_engine)
+            LOGGER.info("Database schema created successfully")
+
+        with get_broadcaster(settings=settings):
             yield
 
         LOGGER.info("Stopping %s. Goodbye 👋", app.title)

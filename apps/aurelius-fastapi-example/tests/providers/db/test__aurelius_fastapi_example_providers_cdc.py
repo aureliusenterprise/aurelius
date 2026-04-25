@@ -4,19 +4,14 @@ from datetime import UTC, datetime
 from functools import partial
 from types import SimpleNamespace
 from typing import cast
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import ANY, AsyncMock, MagicMock
 from uuid import UUID
 
 import psycopg2
 import pytest
 from aurelius_example import Entity
 from aurelius_fastapi_example.models import Envelope, Settings
-from aurelius_fastapi_example.providers import (
-    EntityNotificationBroadcaster,
-    database,
-    get_broadcaster,
-    notifications,
-)
+from aurelius_fastapi_example.providers import EntityNotificationBroadcaster, get_broadcaster, notifications
 from sqlmodel import Session
 
 
@@ -24,7 +19,7 @@ def test__entity_notification_broadcaster_starts_and_stops(db_settings: Settings
     """EntityNotificationBroadcaster should start the PostgresListener on start and stop it on stop."""
     get_broadcaster.cache_clear()
 
-    broadcaster = get_broadcaster(db_engine=database(settings=db_settings), settings=db_settings)
+    broadcaster = get_broadcaster(settings=db_settings)
     broadcaster.start()
 
     assert broadcaster._connection is not None  # noqa: SLF001
@@ -51,9 +46,7 @@ async def test__entity_notification_broadcaster_single_connection_serves_multipl
     notify_a = await asyncio.to_thread(partial(queue_a.get, timeout=10.0))
     notify_b = await asyncio.to_thread(partial(queue_b.get, timeout=10.0))
 
-    assert notify_a.guid == notify_b.guid
-    assert notify_a.op == notify_b.op
-    assert notify_a.value == notify_b.value == entity
+    assert notify_a == notify_b
 
 
 async def test__entity_notification_broadcaster_unsubscribe_removes_queue(
@@ -103,12 +96,17 @@ async def test__notifications_yields_insert_trigger_payload(
     entity = Entity(name="Entity", description="Trigger INSERT")
     db_session.add(entity)
     db_session.commit()
+    db_session.refresh(entity)
 
     notification = await next_insert_notification
 
-    assert notification.guid == entity.guid
-    assert notification.op == "INSERT"
-    assert notification.value == entity
+    expected = Envelope[Entity](
+        guid=entity.guid,
+        op="INSERT",
+        value=entity,
+    ).model_copy(update={"timestamp": ANY})
+
+    assert notification == expected
 
 
 async def test__notifications_yields_update_trigger_payload(
@@ -128,26 +126,34 @@ async def test__notifications_yields_update_trigger_payload(
 
     db_session.add(entity)
     db_session.commit()
+    db_session.refresh(entity)
 
     insert_notification = await next_insert_notification
-    assert insert_notification.guid == entity.guid
-    assert insert_notification.op == "INSERT"
-    assert insert_notification.value == entity
+
+    expected_insert = Envelope[Entity](
+        guid=entity.guid,
+        op="INSERT",
+        value=entity,
+    ).model_copy(update={"timestamp": ANY})
+
+    assert insert_notification == expected_insert
 
     next_update_notification = asyncio.create_task(anext(stream))
 
     entity.name = "Entity Updated"
     db_session.add(entity)
     db_session.commit()
+    db_session.refresh(entity)
 
-    notification = await next_update_notification
+    update_notification = await next_update_notification
 
-    assert notification.guid == entity.guid
-    assert notification.op == "UPDATE"
-    assert notification.value is not None
-    assert notification.value.guid == entity.guid
-    assert notification.value.name == entity.name
-    assert notification.value.description == entity.description
+    expected_update = Envelope[Entity](
+        guid=entity.guid,
+        op="UPDATE",
+        value=entity,
+    ).model_copy(update={"timestamp": ANY})
+
+    assert update_notification == expected_update
 
 
 async def test__notifications_yields_delete_trigger_payload(
@@ -167,22 +173,32 @@ async def test__notifications_yields_delete_trigger_payload(
 
     db_session.add(entity)
     db_session.commit()
+    db_session.refresh(entity)
 
     insert_notification = await next_insert_notification
-    assert insert_notification.guid == entity.guid
-    assert insert_notification.op == "INSERT"
-    assert insert_notification.value == entity
+
+    expected_insert = Envelope[Entity](
+        guid=entity.guid,
+        op="INSERT",
+        value=entity,
+    ).model_copy(update={"timestamp": ANY})
+
+    assert insert_notification == expected_insert
 
     next_delete_notification = asyncio.create_task(anext(stream))
 
     db_session.delete(entity)
     db_session.commit()
 
-    notification = await next_delete_notification
+    delete_notification = await next_delete_notification
 
-    assert notification.guid == entity.guid
-    assert notification.op == "DELETE"
-    assert notification.value is None
+    expected_delete = Envelope[Entity](
+        guid=entity.guid,
+        op="DELETE",
+        value=None,
+    ).model_copy(update={"timestamp": ANY})
+
+    assert delete_notification == expected_delete
 
 
 async def test__notifications_unsubscribes_on_disconnect(
