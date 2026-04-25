@@ -1,4 +1,4 @@
-from aurelius_sdk import zigzag_encode
+from aurelius_sdk.encoding import zigzag_encode
 
 MAGIC_BYTE = b"\x00"
 

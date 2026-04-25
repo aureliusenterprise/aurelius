@@ -54,6 +54,7 @@ exclude = [".venv"]
 pythonVersion = "3.14"
 reportUnnecessaryTypeIgnoreComment = "error"
 typeCheckingMode = "standard"
+venv = ".venv"
 venvPath = "."
 
 [tool.pytest.ini_options]

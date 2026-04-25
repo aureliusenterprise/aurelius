@@ -1,7 +1,7 @@
 from collections.abc import Generator
 
 import pytest
-from aurelius_fastapi_example.providers import Broadcaster, db, get_broadcaster
+from aurelius_fastapi_example.providers import EntityNotificationBroadcaster, db, get_broadcaster
 
 
 @pytest.fixture(autouse=True)
@@ -13,7 +13,7 @@ def clear_database_cache() -> Generator[None]:
 
 
 @pytest.fixture()
-def broadcaster(db_settings: db.Settings) -> Generator[Broadcaster]:
+def broadcaster(db_settings: db.Settings) -> Generator[EntityNotificationBroadcaster]:
     """Provide a started Broadcaster instance for tests that need it."""
     get_broadcaster.cache_clear()
 

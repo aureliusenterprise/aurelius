@@ -1,5 +1,5 @@
 import pytest
-from aurelius_sdk import zigzag_decode, zigzag_encode
+from aurelius_sdk.encoding import zigzag_decode, zigzag_encode
 
 
 @pytest.mark.parametrize(

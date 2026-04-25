@@ -18,7 +18,7 @@ def make_lifespan(settings: Settings) -> Callable[[FastAPI], AbstractAsyncContex
         """
         Manages the startup and shutdown of the FastAPI application.
 
-        Starts the shared CDC broadcaster on startup and shuts it down on exit.
+        Starts the shared PostgreSQL listener on startup and shuts it down on exit.
 
         Args:
             app: The FastAPI application instance.

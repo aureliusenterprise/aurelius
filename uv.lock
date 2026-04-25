@@ -157,7 +157,7 @@ version = "0.4.0"
 source = { editable = "apps/aurelius-fastapi-example" }
 dependencies = [
     { name = "aurelius-example" },
-    { name = "aurelius-sdk", extra = ["logging"] },
+    { name = "aurelius-sdk", extra = ["logging", "postgresql"] },
     { name = "cachetools" },
     { name = "cryptography" },
     { name = "fastapi" },
@@ -172,7 +172,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "aurelius-example", editable = "libs/python/aurelius-example" },
-    { name = "aurelius-sdk", extras = ["logging"], editable = "libs/python/aurelius-sdk" },
+    { name = "aurelius-sdk", extras = ["logging", "postgresql"], editable = "libs/python/aurelius-sdk" },
     { name = "cachetools", specifier = ">=6.2.2" },
     { name = "cryptography", specifier = ">=46.0.7" },
     { name = "fastapi", specifier = ">=0.135.3" },
@@ -327,11 +327,15 @@ full = [
     { name = "boto3" },
     { name = "coloredlogs" },
     { name = "msal" },
+    { name = "psycopg2" },
     { name = "testcontainers" },
     { name = "types-boto3", extra = ["full"] },
 ]
 logging = [
     { name = "coloredlogs" },
+]
+postgresql = [
+    { name = "psycopg2" },
 ]
 testing = [
     { name = "testcontainers" },
@@ -346,12 +350,14 @@ requires-dist = [
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "msal", marker = "extra == 'azure'", specifier = ">=1.32.3" },
     { name = "msal", marker = "extra == 'full'", specifier = ">=1.32.3" },
+    { name = "psycopg2", marker = "extra == 'full'", specifier = ">=2.9.10" },
+    { name = "psycopg2", marker = "extra == 'postgresql'", specifier = ">=2.9.10" },
     { name = "testcontainers", marker = "extra == 'full'", specifier = ">=4.10.0" },
     { name = "testcontainers", marker = "extra == 'testing'", specifier = ">=4.10.0" },
     { name = "types-boto3", extras = ["full"], marker = "extra == 'aws'", specifier = ">=1.39.6" },
     { name = "types-boto3", extras = ["full"], marker = "extra == 'full'", specifier = ">=1.39.6" },
 ]
-provides-extras = ["aws", "azure", "full", "logging", "testing"]
+provides-extras = ["aws", "azure", "full", "logging", "postgresql", "testing"]
 
 [[package]]
 name = "authlib"

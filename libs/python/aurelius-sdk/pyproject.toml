@@ -8,8 +8,16 @@ version = "0.4.0"
 [project.optional-dependencies]
 aws = ["boto3>=1.39.6", "types-boto3[full]>=1.39.6"]
 azure = ["msal>=1.32.3"]
-full = ["boto3>=1.39.6", "coloredlogs>=15.0.1", "msal>=1.32.3", "testcontainers>=4.10.0", "types-boto3[full]>=1.39.6"]
+full = [
+    "boto3>=1.39.6",
+    "coloredlogs>=15.0.1",
+    "msal>=1.32.3",
+    "psycopg2>=2.9.10",
+    "testcontainers>=4.10.0",
+    "types-boto3[full]>=1.39.6",
+]
 logging = ["coloredlogs>=15.0.1"]
+postgresql = ["psycopg2>=2.9.10"]
 testing = ["testcontainers>=4.10.0"]
 
 [[project.authors]]

@@ -44,7 +44,6 @@ def test__removes_control_characters(input_str: str, expected: str) -> None:
     assert sanitize_tsquery(input_str) == expected
 
 
-# Tests for normal strings
 @pytest.mark.parametrize(
     "input_str",
     [

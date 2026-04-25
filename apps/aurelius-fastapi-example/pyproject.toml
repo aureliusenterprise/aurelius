@@ -1,7 +1,7 @@
 [project]
 dependencies = [
     "aurelius-example",
-    "aurelius-sdk[logging]",
+    "aurelius-sdk[logging,postgresql]",
     "cachetools>=6.2.2",
     "cryptography>=46.0.7",
     "fastapi>=0.135.3",
