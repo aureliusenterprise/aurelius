@@ -7,23 +7,29 @@ from types import TracebackType
 from typing import Annotated, Self
 
 import psycopg2
-from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, EntityNotification
+from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity, EntityNotification
 from aurelius_sdk.events import Broadcaster
 from aurelius_sdk.postgresql import PostgresListener
 from fastapi import Depends, Request
 from pydantic import ValidationError
+from sqlalchemy import Engine
+from sqlalchemy.exc import SQLAlchemyError
+from sqlmodel import Session
 
 from aurelius_fastapi_example.globals import LOGGER
+from aurelius_fastapi_example.models import Envelope
 
+from .db import database
 from .settings import Settings
 
 
-class EntityNotificationBroadcaster(Broadcaster[EntityNotification]):
-    """Broadcaster that listens to PostgreSQL notifications and broadcasts them as EntityNotification objects."""
+class EntityNotificationBroadcaster(Broadcaster[Envelope[Entity]]):
+    """Broadcaster that enriches entity notifications once before broadcasting them to subscribers."""
 
-    def __init__(self, settings: Settings) -> None:
+    def __init__(self, db_engine: Engine, settings: Settings) -> None:
         super().__init__(settings=settings)
         self._settings = settings
+        self._db_engine = db_engine
         self._connection: psycopg2.extensions.connection | None = None
         self._postgres_listener: PostgresListener | None = None
 
@@ -83,7 +89,40 @@ class EntityNotificationBroadcaster(Broadcaster[EntityNotification]):
             LOGGER.exception("Failed to parse notification payload: %s", notify.payload)
             return
 
-        self.broadcast(notification)
+        if self.subscriber_count == 0:
+            LOGGER.debug(
+                "Skipping enrichment for notification %s because there are no subscribers",
+                notification,
+            )
+            return
+
+        try:
+            envelope = self._build_envelope(notification)
+            self.broadcast(envelope)
+        except (SQLAlchemyError, ValidationError):
+            LOGGER.exception("Error broadcasting envelope for notification: %s", notification)
+
+    def _build_envelope(self, notification: EntityNotification) -> Envelope[Entity]:
+        """Resolve the entity once and wrap it in the SSE envelope shared by all subscribers."""
+        value = None
+
+        if notification.op != "DELETE":
+            with Session(self._db_engine) as session:
+                value = session.get(Entity, notification.guid)
+
+            if value is None:
+                LOGGER.debug(
+                    "Entity %s was not found while enriching %s notification",
+                    notification.guid,
+                    notification.op,
+                )
+
+        return Envelope(
+            guid=notification.guid,
+            op=notification.op,
+            timestamp=notification.timestamp,
+            value=value,
+        )
 
     def __enter__(self) -> Self:
         self.start()
@@ -101,20 +140,21 @@ class EntityNotificationBroadcaster(Broadcaster[EntityNotification]):
 @cache
 def get_broadcaster(
     *,
+    db_engine: Annotated[Engine, Depends(database)],
     settings: Settings,
 ) -> EntityNotificationBroadcaster:
     """Return a singleton Broadcaster instance for the application."""
-    return EntityNotificationBroadcaster(settings=settings)
+    return EntityNotificationBroadcaster(db_engine=db_engine, settings=settings)
 
 
 def notifications(
     broadcaster: Annotated[EntityNotificationBroadcaster, Depends(get_broadcaster)],
     request: Request,
     settings: Settings,
-) -> Callable[[], AsyncGenerator[EntityNotification]]:
+) -> Callable[[], AsyncGenerator[Envelope[Entity]]]:
     """Return a factory that streams PostgreSQL notifications via the shared broadcaster."""
 
-    async def listener() -> AsyncGenerator[EntityNotification]:
+    async def listener() -> AsyncGenerator[Envelope[Entity]]:
         """Subscribe to the broadcaster and yield notifications until the client disconnects."""
         subscriber_queue = broadcaster.subscribe()
 

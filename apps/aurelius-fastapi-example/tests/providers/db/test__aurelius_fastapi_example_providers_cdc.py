@@ -10,10 +10,10 @@ from uuid import UUID
 import psycopg2
 import pytest
 from aurelius_example import Entity
-from aurelius_example.models import EntityNotification
-from aurelius_fastapi_example.models import Settings
+from aurelius_fastapi_example.models import Envelope, Settings
 from aurelius_fastapi_example.providers import (
     EntityNotificationBroadcaster,
+    database,
     get_broadcaster,
     notifications,
 )
@@ -24,7 +24,7 @@ def test__entity_notification_broadcaster_starts_and_stops(db_settings: Settings
     """EntityNotificationBroadcaster should start the PostgresListener on start and stop it on stop."""
     get_broadcaster.cache_clear()
 
-    broadcaster = get_broadcaster(settings=db_settings)
+    broadcaster = get_broadcaster(db_engine=database(settings=db_settings), settings=db_settings)
     broadcaster.start()
 
     assert broadcaster._connection is not None  # noqa: SLF001
@@ -53,6 +53,7 @@ async def test__entity_notification_broadcaster_single_connection_serves_multipl
 
     assert notify_a.guid == notify_b.guid
     assert notify_a.op == notify_b.op
+    assert notify_a.value == notify_b.value == entity
 
 
 async def test__entity_notification_broadcaster_unsubscribe_removes_queue(
@@ -107,6 +108,7 @@ async def test__notifications_yields_insert_trigger_payload(
 
     assert notification.guid == entity.guid
     assert notification.op == "INSERT"
+    assert notification.value == entity
 
 
 async def test__notifications_yields_update_trigger_payload(
@@ -130,6 +132,7 @@ async def test__notifications_yields_update_trigger_payload(
     insert_notification = await next_insert_notification
     assert insert_notification.guid == entity.guid
     assert insert_notification.op == "INSERT"
+    assert insert_notification.value == entity
 
     next_update_notification = asyncio.create_task(anext(stream))
 
@@ -141,6 +144,10 @@ async def test__notifications_yields_update_trigger_payload(
 
     assert notification.guid == entity.guid
     assert notification.op == "UPDATE"
+    assert notification.value is not None
+    assert notification.value.guid == entity.guid
+    assert notification.value.name == entity.name
+    assert notification.value.description == entity.description
 
 
 async def test__notifications_yields_delete_trigger_payload(
@@ -164,6 +171,7 @@ async def test__notifications_yields_delete_trigger_payload(
     insert_notification = await next_insert_notification
     assert insert_notification.guid == entity.guid
     assert insert_notification.op == "INSERT"
+    assert insert_notification.value == entity
 
     next_delete_notification = asyncio.create_task(anext(stream))
 
@@ -174,6 +182,7 @@ async def test__notifications_yields_delete_trigger_payload(
 
     assert notification.guid == entity.guid
     assert notification.op == "DELETE"
+    assert notification.value is None
 
 
 async def test__notifications_unsubscribes_on_disconnect(
@@ -226,7 +235,10 @@ def test__entity_notification_broadcaster_process_notification_ignores_invalid_p
     exception_spy = MagicMock()
     monkeypatch.setattr("aurelius_fastapi_example.providers.cdc.LOGGER.exception", exception_spy)
 
-    invalid_notify = cast("psycopg2.extensions.Notify", SimpleNamespace(payload="{not-json"))
+    invalid_notify: psycopg2.extensions.Notify = cast(
+        "psycopg2.extensions.Notify",
+        SimpleNamespace(payload="{not-json"),
+    )
     broadcaster._process_notification(invalid_notify)  # noqa: SLF001
 
     with pytest.raises(queue.Empty):
@@ -241,16 +253,19 @@ async def test__notifications_continues_after_queue_empty(
 ) -> None:
     """notifications() should continue listening after queue.Empty and still yield later events."""
     request = _request_with_disconnect_checks(max_connected_checks=2)
-    expected_notification = EntityNotification(
+    expected_notification = Envelope[Entity](
         guid=UUID("00000000-0000-0000-0000-000000000001"),
         op="INSERT",
-        schema_name="public",
-        table_name="entity",
         timestamp=datetime.now(tz=UTC),
+        value=Entity(
+            guid=UUID("00000000-0000-0000-0000-000000000001"),
+            name="Recovered entity",
+            description="queue.Empty recovery",
+        ),
     )
     call_count = 0
 
-    async def queue_empty_once_then_return(_: object) -> EntityNotification:  # NOSONAR(S7503)
+    async def queue_empty_once_then_return(_: object) -> Envelope[Entity]:  # NOSONAR(S7503)
         nonlocal call_count
         call_count += 1
         if call_count == 1:

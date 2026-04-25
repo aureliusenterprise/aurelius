@@ -3,7 +3,7 @@ from collections.abc import AsyncGenerator
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity, EntityNotification
+from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity
 from aurelius_fastapi_example.models import Envelope
 from aurelius_fastapi_example.providers import notifications as cdc_notifications
 from fastapi import FastAPI
@@ -12,12 +12,11 @@ from fastapi.testclient import TestClient
 
 def test__sse_streams_existing_entity(app: FastAPI, authenticated_client: TestClient, entity: Entity) -> None:
     """SSE endpoint should stream a ServerSentEvent containing the entity when notified."""
-    inserted = EntityNotification(
+    inserted = Envelope[Entity](
         guid=entity.guid,
         op="INSERT",
-        schema_name="public",
-        table_name="entity",
         timestamp=datetime.now(tz=UTC),
+        value=entity,
     )
 
     notifications = [inserted]
@@ -39,12 +38,7 @@ def test__sse_streams_existing_entity(app: FastAPI, authenticated_client: TestCl
     assert event_lines == [PG_NOTIFY_ENTITY_CHANNEL]
     assert len(data_lines) == 1
 
-    expected = Envelope[Entity](
-        guid=entity.guid,
-        op="INSERT",
-        timestamp=inserted.timestamp,
-        value=entity,
-    ).model_dump(mode="json")
+    expected = inserted.model_dump(mode="json")
 
     actual = json.loads(data_lines[0])
 
@@ -55,12 +49,11 @@ def test__sse_streams_deleted_entity(app: FastAPI, authenticated_client: TestCli
     """SSE endpoint should stream an Envelope with a null value when the notified entity does not exist."""
     missing_guid = uuid4()
 
-    deleted = EntityNotification(
+    deleted = Envelope[Entity](
         guid=missing_guid,
         op="DELETE",
-        schema_name="public",
-        table_name="entity",
         timestamp=datetime.now(tz=UTC),
+        value=None,
     )
 
     notifications = [deleted]
@@ -82,12 +75,7 @@ def test__sse_streams_deleted_entity(app: FastAPI, authenticated_client: TestCli
     assert event_lines == [PG_NOTIFY_ENTITY_CHANNEL]
     assert len(data_lines) == 1
 
-    expected = Envelope[Entity](
-        guid=missing_guid,
-        op="DELETE",
-        timestamp=deleted.timestamp,
-        value=None,
-    ).model_dump(mode="json")
+    expected = deleted.model_dump(mode="json")
 
     actual = json.loads(data_lines[0])
 

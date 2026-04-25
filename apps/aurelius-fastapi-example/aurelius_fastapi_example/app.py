@@ -6,7 +6,7 @@ from fastapi import FastAPI
 
 from aurelius_fastapi_example.globals import LOGGER, METADATA, NAME
 from aurelius_fastapi_example.models import Settings
-from aurelius_fastapi_example.providers import get_broadcaster
+from aurelius_fastapi_example.providers import database, get_broadcaster
 from aurelius_fastapi_example.routes import ENTITIES, HEALTH
 
 
@@ -31,7 +31,7 @@ def make_lifespan(settings: Settings) -> Callable[[FastAPI], AbstractAsyncContex
         if app.debug:
             LOGGER.warning("🚨 Running in development mode. Not for production use! 🚨")
 
-        with get_broadcaster(settings=settings):
+        with get_broadcaster(db_engine=database(settings=settings), settings=settings):
             yield
 
         LOGGER.info("Stopping %s. Goodbye 👋", app.title)
