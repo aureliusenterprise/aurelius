@@ -4,10 +4,10 @@ import { dirname } from "node:path";
 export interface DockerPluginOptions {
     readonly buildTargetName?: string;
     readonly publishTargetName?: string;
-    readonly signTargetName?: string;
-    readonly verifyTargetName?: string;
     readonly sbomTargetName?: string;
     readonly setupBuilderTargetName?: string;
+    readonly signTargetName?: string;
+    readonly verifyTargetName?: string;
 }
 
 const glob = "**/Dockerfile";
@@ -29,10 +29,10 @@ async function createNodesInternal(
     {
         buildTargetName = "docker-build",
         publishTargetName = "docker-publish",
-        signTargetName = "docker-sign",
-        verifyTargetName = "docker-verify",
         sbomTargetName = "docker-sbom",
         setupBuilderTargetName = "docker-setup-builder",
+        signTargetName = "docker-sign",
+        verifyTargetName = "docker-verify",
     }: DockerPluginOptions = {},
 ): Promise<CreateNodesResult> {
     const projectRoot = dirname(configFilePath);
@@ -97,8 +97,20 @@ async function createNodesInternal(
                             description: "Publish the Docker image for the application",
                         },
                     },
+                    [sbomTargetName]: {
+                        command: `syft {args.namespace}/{projectName}:{args.version} -o spdx-json=${projectRoot}/sbom.json --enrich=all`,
+                        options: {
+                            namespace: "ghcr.io/aureliusenterprise",
+                            version: "local",
+                        },
+                        dependsOn: [{ target: buildTargetName, dependencies: true, params: "forward" }],
+                        metadata: {
+                            description: "Generate a Software Bill of Materials (SBOM) for the Docker image",
+                        },
+                    },
                     [signTargetName]: {
-                        command: "cosign sign --yes {args.namespace}/{projectName}:{args.version}",
+                        command:
+                            "DIGEST=$(docker buildx imagetools inspect {args.namespace}/{projectName}:{args.version} --format '{{.Manifest.Digest}}') && cosign sign --yes {args.namespace}/{projectName}@${DIGEST}",
                         options: {
                             namespace: "ghcr.io/aureliusenterprise",
                             version: "local",
@@ -109,7 +121,7 @@ async function createNodesInternal(
                     },
                     [verifyTargetName]: {
                         command:
-                            "cosign verify {args.namespace}/{projectName}:{args.version} --certificate-identity-regexp '{args.identity}' --certificate-oidc-issuer-regexp '{args.issuer}'",
+                            "DIGEST=$(docker buildx imagetools inspect {args.namespace}/{projectName}:{args.version} --format '{{.Manifest.Digest}}') && cosign verify {args.namespace}/{projectName}@${DIGEST} --certificate-identity-regexp '{args.identity}' --certificate-oidc-issuer-regexp '{args.issuer}'",
                         options: {
                             identity: ".*",
                             issuer: ".*",
@@ -118,17 +130,6 @@ async function createNodesInternal(
                         },
                         metadata: {
                             description: "Verify Cosign signatures for the Docker image",
-                        },
-                    },
-                    [sbomTargetName]: {
-                        command: `syft {args.namespace}/{projectName}:{args.version} -o spdx-json=${projectRoot}/sbom.json --enrich=all`,
-                        options: {
-                            namespace: "ghcr.io/aureliusenterprise",
-                            version: "local",
-                        },
-                        dependsOn: [{ target: buildTargetName, dependencies: true, params: "forward" }],
-                        metadata: {
-                            description: "Generate a Software Bill of Materials (SBOM) for the Docker image",
                         },
                     },
                 },
