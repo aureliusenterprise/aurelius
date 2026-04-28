@@ -7,6 +7,7 @@ on:
 
 permissions:
     contents: read
+    id-token: write
     packages: write
 
 jobs:
@@ -63,5 +64,17 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
+            - name: Install Cosign
+              uses: sigstore/cosign-installer@v4
+
             - name: Publish containers
               run: npx nx run-many -t docker-publish -- --version ${{ github.ref_name }}
+
+            - name: Sign containers
+              run: npx nx run-many -t docker-sign -- --version ${{ github.ref_name }}
+
+            - name: Verify container signatures
+              run: >
+                  npx nx run-many -t docker-verify -- --version ${{ github.ref_name }}
+                  --identity "^https://github\.com/${{ github.repository_owner }}/project-template/\.github/workflows/publish\.yaml@${{ github.ref }}$"
+                  --issuer "^https://token\.actions\.githubusercontent\.com$"

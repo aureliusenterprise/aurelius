@@ -1,5 +1,5 @@
 import { createNodesFromFiles, CreateNodesResult, CreateNodesV2 } from "@nx/devkit";
-import { dirname } from "path";
+import { dirname } from "node:path";
 
 export interface AlembicPluginOptions {
     readonly generateMigrationsTargetName?: string;

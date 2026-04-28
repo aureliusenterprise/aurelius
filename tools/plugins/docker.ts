@@ -1,9 +1,11 @@
 import { createNodesFromFiles, CreateNodesResult, CreateNodesV2 } from "@nx/devkit";
-import { dirname } from "path";
+import { dirname } from "node:path";
 
 export interface DockerPluginOptions {
     readonly buildTargetName?: string;
     readonly publishTargetName?: string;
+    readonly signTargetName?: string;
+    readonly verifyTargetName?: string;
     readonly sbomTargetName?: string;
     readonly setupBuilderTargetName?: string;
 }
@@ -27,6 +29,8 @@ async function createNodesInternal(
     {
         buildTargetName = "docker-build",
         publishTargetName = "docker-publish",
+        signTargetName = "docker-sign",
+        verifyTargetName = "docker-verify",
         sbomTargetName = "docker-sbom",
         setupBuilderTargetName = "docker-setup-builder",
     }: DockerPluginOptions = {},
@@ -56,8 +60,12 @@ async function createNodesInternal(
                 tags: ["docker"],
                 targets: {
                     [buildTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version}`,
-                        dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
+                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --sbom=true --load`,
+                        dependsOn: [
+                            { target: "build" },
+                            { target: setupBuilderTargetName, projects: ["."], params: "forward" },
+                            { target: buildTargetName, dependencies: true },
+                        ],
                         metadata: {
                             description: "Build the Docker image for the application",
                         },
@@ -65,6 +73,7 @@ async function createNodesInternal(
                             env: {
                                 DOCKER_BUILDKIT: "1",
                             },
+                            builder: "container",
                             namespace: "ghcr.io/aureliusenterprise",
                             version: "local",
                         },
@@ -86,6 +95,29 @@ async function createNodesInternal(
                         ],
                         metadata: {
                             description: "Publish the Docker image for the application",
+                        },
+                    },
+                    [signTargetName]: {
+                        command: "cosign sign --yes {args.namespace}/{projectName}:{args.version}",
+                        options: {
+                            namespace: "ghcr.io/aureliusenterprise",
+                            version: "local",
+                        },
+                        metadata: {
+                            description: "Sign the Docker image with Cosign",
+                        },
+                    },
+                    [verifyTargetName]: {
+                        command:
+                            "cosign verify {args.namespace}/{projectName}:{args.version} --certificate-identity-regexp '{args.identity}' --certificate-oidc-issuer-regexp '{args.issuer}'",
+                        options: {
+                            identity: ".*",
+                            issuer: ".*",
+                            namespace: "ghcr.io/aureliusenterprise",
+                            version: "local",
+                        },
+                        metadata: {
+                            description: "Verify Cosign signatures for the Docker image",
                         },
                     },
                     [sbomTargetName]: {

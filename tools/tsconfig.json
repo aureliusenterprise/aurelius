@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "ignoreDeprecations": "6.0",
+        "module": "node16",
+        "moduleResolution": "node16",
+        "types": ["node"]
+    },
+    "extends": "../tsconfig.base.json",
+    "include": ["**/*.ts"]
+}
