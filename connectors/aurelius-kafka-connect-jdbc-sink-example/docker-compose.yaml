@@ -2,7 +2,7 @@ name: aurelius-kafka-connect-jdbc-sink-example
 
 services:
     kafka-connect:
-        image: aurelius-kafka-connect-jdbc-sink-example:local
+        image: ghcr.io/aureliusenterprise/aurelius-kafka-connect-jdbc-sink-example:local
         environment:
             CONFIG_CONSUMER_GROUP_NAME: ${CONNECT_CONSUMER_GROUP_NAME}
             CONFIG_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
