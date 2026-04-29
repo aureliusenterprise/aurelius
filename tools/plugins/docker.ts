@@ -64,7 +64,7 @@ async function createNodesInternal(
                 tags: ["docker"],
                 targets: {
                     [buildTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --sbom=true --load`,
+                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version}`,
                         dependsOn: [
                             { target: "build" },
                             { target: setupBuilderTargetName, projects: ["."], params: "forward" },
@@ -77,7 +77,6 @@ async function createNodesInternal(
                             env: {
                                 DOCKER_BUILDKIT: "1",
                             },
-                            builder: "container",
                             namespace: "ghcr.io/aureliusenterprise",
                             version: "local",
                         },
@@ -143,10 +142,10 @@ async function createNodesInternal(
                             namespace: "ghcr.io/aureliusenterprise",
                             version: "local",
                         },
-                        dependsOn: [{ target: buildTargetName, params: "forward" }],
                         metadata: {
                             description: "Scan the Docker image for license compliance using Trivy",
                         },
+                        parallelism: false,
                     },
                     [vulnScanTargetName]: {
                         command: `trivy image {args.namespace}/{projectName}:{args.version} --scanners vuln --format json --output {projectRoot}/vulnerabilities.json --exit-code {args.exitCode}`,
@@ -155,10 +154,10 @@ async function createNodesInternal(
                             namespace: "ghcr.io/aureliusenterprise",
                             version: "local",
                         },
-                        dependsOn: [{ target: buildTargetName, params: "forward" }],
                         metadata: {
                             description: "Scan the Docker image for vulnerabilities using Trivy",
                         },
+                        parallelism: false,
                     },
                 },
             },
