@@ -1,11 +1,7 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "name": "aurelius-kafka-connect-base",
+    "name": "aurelius-docker-kafka-connect-base",
     "projectType": "application",
     "tags": [],
-    "targets": {
-        "docker-publish": {
-            "executor": "nx:noop"
-        }
-    }
+    "targets": {}
 }
