@@ -11,23 +11,20 @@ import { AttributesCardsComponent } from './attributes-cards/attributes-cards.co
 import { DataQualityCardsComponent } from './data-quality-cards/data-quality-cards.component';
 import { FieldDetailsComponent } from './field-details.component';
 import { FieldsCardsComponent } from './fields-cards/fields-cards.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    DataQualityListModule,
-    DescriptionModule,
-    DetailsCardsListModule,
-    DetailsNavigationModule,
-    GovernanceQualityCardsModule,
-    PropertiesModule,
-    AccordionModule
-  ],
-  declarations: [
-    AttributesCardsComponent,
-    DataQualityCardsComponent,
-    FieldDetailsComponent,
-    FieldsCardsComponent
-  ]
+    imports: [
+        CommonModule,
+        DataQualityListModule,
+        DescriptionModule,
+        DetailsCardsListModule,
+        DetailsNavigationModule,
+        GovernanceQualityCardsModule,
+        PropertiesModule,
+        AccordionModule,
+        TranslateModule,
+    ],
+    declarations: [AttributesCardsComponent, DataQualityCardsComponent, FieldDetailsComponent, FieldsCardsComponent],
 })
 export class FieldDetailsModule {}
