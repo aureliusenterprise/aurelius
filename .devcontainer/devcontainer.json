@@ -110,13 +110,14 @@
             "installGradle": true,
             "version": "21.0.9-tem"
         },
-        "ghcr.io/devcontainers/features/node:1": {
+        "ghcr.io/devcontainers/features/node:2": {
             "version": "lts"
         },
         "ghcr.io/devcontainers/features/python:1": {
             "toolsToInstall": ["uv"],
             "version": "3.14"
-        }
+        },
+        "ghcr.io/dhoeric/features/trivy:1": {}
     },
     "forwardPorts": [1880, 4200, 4400, 8000, 8080, 8081, 8082, 9092],
     "image": "mcr.microsoft.com/devcontainers/base:noble",

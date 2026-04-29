@@ -3,11 +3,13 @@ import { dirname } from "node:path";
 
 export interface DockerPluginOptions {
     readonly buildTargetName?: string;
+    readonly licenseScanTargetName?: string;
     readonly publishTargetName?: string;
     readonly sbomTargetName?: string;
     readonly setupBuilderTargetName?: string;
     readonly signTargetName?: string;
     readonly verifyTargetName?: string;
+    readonly vulnScanTargetName?: string;
 }
 
 const glob = "**/Dockerfile";
@@ -28,11 +30,13 @@ async function createNodesInternal(
     configFilePath: string,
     {
         buildTargetName = "docker-build",
+        licenseScanTargetName = "docker-license-scan",
         publishTargetName = "docker-publish",
         sbomTargetName = "docker-sbom",
         setupBuilderTargetName = "docker-setup-builder",
         signTargetName = "docker-sign",
         verifyTargetName = "docker-verify",
+        vulnScanTargetName = "docker-vuln-scan",
     }: DockerPluginOptions = {},
 ): Promise<CreateNodesResult> {
     const projectRoot = dirname(configFilePath);
@@ -130,6 +134,30 @@ async function createNodesInternal(
                         },
                         metadata: {
                             description: "Verify Cosign signatures for the Docker image",
+                        },
+                    },
+                    [licenseScanTargetName]: {
+                        command: `trivy image {args.namespace}/{projectName}:{args.version} --scanners license --format json --output {projectRoot}/licenses.json --exit-code {args.exitCode}`,
+                        options: {
+                            exitCode: 0,
+                            namespace: "ghcr.io/aureliusenterprise",
+                            version: "local",
+                        },
+                        dependsOn: [{ target: buildTargetName, params: "forward" }],
+                        metadata: {
+                            description: "Scan the Docker image for license compliance using Trivy",
+                        },
+                    },
+                    [vulnScanTargetName]: {
+                        command: `trivy image {args.namespace}/{projectName}:{args.version} --scanners vuln --format json --output {projectRoot}/vulnerabilities.json --exit-code {args.exitCode}`,
+                        options: {
+                            exitCode: 0,
+                            namespace: "ghcr.io/aureliusenterprise",
+                            version: "local",
+                        },
+                        dependsOn: [{ target: buildTargetName, params: "forward" }],
+                        metadata: {
+                            description: "Scan the Docker image for vulnerabilities using Trivy",
                         },
                     },
                 },

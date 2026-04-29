@@ -208,5 +208,7 @@ build
 # Vitest coverage
 coverage/
 
-# SBOM
+# Docker Scanning
+licenses.json
 sbom.json
+vulnerabilities.json
