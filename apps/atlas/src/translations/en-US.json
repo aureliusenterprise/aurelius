@@ -140,6 +140,7 @@
         "components": {
             "classification": {
                 "originates": "originates from the following sources:",
+                "retrieve": "Retrieving the classification type definition",
                 "source": {
                     "loading": "Loading..."
                 }
@@ -182,7 +183,6 @@
                     "typeAlias": "Type alias",
                     "typeAliasPlaceholder": "Type alias"
                 },
-                "components": {},
                 "dataset": {
                     "childDataset": "Child datasets",
                     "consumers": "Consumers",
@@ -307,11 +307,18 @@
                     "outputs": "Outputs",
                     "system": "System"
                 },
+                "services": {
+                    "entityValidate": {
+                        "validate": "Validating the data governance quality"
+                    },
+                    "submit": "Submitting the form"
+                },
                 "system": {
                     "collections": "Collections",
                     "definition": "Definition",
                     "definitionPlaceholder": "Definition",
                     "definitionWarning": "Importing the character ’ (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.\n Please replace it with a standard apostrophe (') before importing your text.",
+                    "description": "Description",
                     "name": "Name*",
                     "namePlaceholder": "Name",
                     "nameRequired": "Name is required.",
@@ -339,6 +346,7 @@
                 "relevance": "Relevance"
             },
             "term": {
+                "retrieve": "Retrieving the term definition",
                 "term": "Term"
             }
         },
@@ -360,6 +368,7 @@
             },
             "collection": {
                 "dataQuality": "Data Quality",
+                "datasets": "Datasets",
                 "datasetsCards": {
                     "title": "Datasets"
                 },
@@ -391,6 +400,7 @@
                 }
             },
             "dataset": {
+                "available": "Available",
                 "childDatasets": "Child Datasets",
                 "consumers": "Consumers",
                 "consumersCards": {
@@ -411,7 +421,6 @@
                 },
                 "governanceQualityRules": "Governance Quality Rules",
                 "lineageModel": "Lineage Model",
-                "people": "People",
                 "producers": "Producers",
                 "producersCards": {
                     "title": "Producers"
@@ -430,7 +439,6 @@
                 "entityCards": {
                     "title": "Data Entities"
                 },
-                "fields": "Fields",
                 "governanceQualityRules": "Governance Quality Rules",
                 "people": "People",
                 "properties": "Properties",
@@ -452,7 +460,6 @@
                 "entitiesCards": {
                     "title": "Data Entities"
                 },
-                "fields": "Fields",
                 "governanceQualityRules": "Governance Quality Rules",
                 "people": "People",
                 "properties": "Properties",
@@ -462,49 +469,33 @@
                 "attributesCards": {
                     "title": "Data Attributes"
                 },
-                "childEntities": "Child Entities",
                 "childFields": "Child Fields",
                 "dataAttributes": "Data Attributes",
-                "dataEntities": "Data Entities",
                 "dataQuality": "Data Quality",
                 "dataQualityCards": {
                     "title": "Data Quality Rules"
                 },
                 "dataQualityRules": "Data Quality Rules",
-                "datasets": "Datasets",
                 "description": "Description",
-                "fields": "Fields",
                 "fieldsCards": {
                     "title": "Child Fields"
                 },
                 "governanceQualityRules": "Governance Quality Rules",
-                "people": "People",
                 "properties": "Properties",
                 "unavailable": "Unavailable"
             },
             "govQuality": {
-                "childEntities": "Child Entities",
-                "childFields": "Child Fields",
                 "complianceChart": "Compliance Chart",
                 "compliant": "Compliant",
                 "compliantCards": {
                     "title": "Compliant"
                 },
-                "dataAttributes": "Data Attributes",
-                "dataEntities": "Data Entities",
-                "dataQuality": "Data Quality",
-                "dataQualityRules": "Data Quality Rules",
-                "datasets": "Datasets",
-                "description": "Domain Lead",
-                "fields": "Fields",
-                "governanceQualityRules": "Governance Quality Rules",
+                "description": "Description",
                 "nonCompliant": "Non-compliant",
                 "nonCompliantCards": {
                     "title": "Non-compliant"
                 },
-                "people": "People",
-                "properties": "Properties",
-                "unavailable": "Unavailable"
+                "properties": "Properties"
             },
             "person": {
                 "dataAttributes": "Data Attributes",
@@ -522,10 +513,6 @@
             },
             "process": {
                 "available": "Available",
-                "childEntities": "Child Entities",
-                "childFields": "Child Fields",
-                "dataEntities": "Data Entities",
-                "dataQualityRules": "Data Quality Rules",
                 "datasets": "Datasets",
                 "description": "Description",
                 "governanceQualityRules": "Governance Quality Rules",
@@ -546,8 +533,6 @@
                 "unavailable": "Unavailable"
             },
             "system": {
-                "childEntities": "Child Entities",
-                "childFields": "Child Fields",
                 "collections": "Collections",
                 "collectionsCards": {
                     "title": "Collections"
@@ -576,6 +561,29 @@
             "anotherQuery": "Please, try to make another query.",
             "noResults": "No results found",
             "results": "results"
+        },
+        "services": {
+            "appSearchResults": {
+                "loading": "Loading a page of search results"
+            },
+            "entityAudit": {
+                "retrieve": "Retrieving the audit log"
+            },
+            "entityDelete": {
+                "delete": "Deleting the entity"
+            },
+            "entityDetails": {
+                "retrieve": "Retrieving the entity details"
+            },
+            "entityUpdate": {
+                "save": "Saving the entity"
+            },
+            "searchResult": {
+                "retrieve": "Retrieving the search result"
+            },
+            "typeDefs": {
+                "retrieve": "Retrieving the type definitions"
+            }
         }
     },
     "sourcetype": "Source",

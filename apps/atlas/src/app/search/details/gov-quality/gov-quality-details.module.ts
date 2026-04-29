@@ -9,21 +9,19 @@ import { CompliantCardsComponent } from './compliant-cards/compliant-cards.compo
 import { GovQualityDetailsComponent } from './gov-quality-details.component';
 import { NonCompliantCardsComponent } from './non-compliant-cards/non-compliant-cards.component';
 import { DescriptionModule } from '../../components/description/description.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    DetailsNavigationModule,
-    PropertiesModule,
-    DescriptionModule,
-    DataQualityPieModule,
-    DetailsCardsListModule,
-    AccordionModule
-  ],
-  declarations: [
-    GovQualityDetailsComponent,
-    CompliantCardsComponent,
-    NonCompliantCardsComponent,
-  ],
+    imports: [
+        CommonModule,
+        DetailsNavigationModule,
+        PropertiesModule,
+        DescriptionModule,
+        DataQualityPieModule,
+        DetailsCardsListModule,
+        AccordionModule,
+        TranslateModule,
+    ],
+    declarations: [GovQualityDetailsComponent, CompliantCardsComponent, NonCompliantCardsComponent],
 })
 export class GovQualityDetailsModule {}

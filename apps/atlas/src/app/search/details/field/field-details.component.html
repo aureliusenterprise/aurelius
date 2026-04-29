@@ -1,140 +1,126 @@
 <div id="description-details" class="box">
-  <h3 class="title is-3">
-    Description
-  </h3>
-  <models4insight-description> </models4insight-description>
+    <h3 class="title is-3" translate>search.details.field.description</h3>
+    <models4insight-description> </models4insight-description>
 </div>
 
 <div class="box">
-  <nav class="level">
-    <div class="level-item has-text-centered">
-      <div>
-        <p class="heading">
-          <a models4insightDetailsNavigationItem="#related-attributes">
-            Data Attributes
-          </a>
-        </p>
-        <p class="title">{{ attributeCount$ | async }}</p>
-      </div>
-    </div>
-    <div class="level-item has-text-centered">
-      <div>
-        <p class="heading">
-          <a models4insightDetailsNavigationItem="#related-fields">
-            Child Fields
-          </a>
-        </p>
-        <p class="title">{{ childFieldCount$ | async }}</p>
-      </div>
-    </div>
-    <div class="level-item has-text-centered">
-      <div>
-        <p class="heading">
-          <a models4insightDetailsNavigationItem="#data-quality">
-            Data Quality
-          </a>
-        </p>
-        <div class="title">
-          <span *ngIf="dataQualityCount$ | async; else noDataQuality">
-            {{ dataQualityScore$ | async | percent: '1.0-1' }}
-          </span>
+    <nav class="level">
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">
+                    <a models4insightDetailsNavigationItem="#related-attributes" translate>
+                        search.details.field.dataAttributes
+                    </a>
+                </p>
+                <p class="title">{{ attributeCount$ | async }}</p>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="level-item has-text-centered">
-      <div>
-        <p class="heading">
-          <a models4insightDetailsNavigationItem="#related-rules">
-            Data Quality Rules
-          </a>
-        </p>
-        <p class="title">{{ dataQualityCount$ | async }}</p>
-      </div>
-    </div>
-    <div class="level-item has-text-centered">
-      <div>
-        <p class="heading">
-          <a models4insightDetailsNavigationItem="#properties-details">
-            Properties
-          </a>
-        </p>
-        <p class="title">{{ propertyCount$ | async }}</p>
-      </div>
-    </div>
-  </nav>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">
+                    <a models4insightDetailsNavigationItem="#related-fields" translate>
+                        search.details.field.childFields
+                    </a>
+                </p>
+                <p class="title">{{ childFieldCount$ | async }}</p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">
+                    <a models4insightDetailsNavigationItem="#data-quality" translate>
+                        search.details.field.dataQuality
+                    </a>
+                </p>
+                <div class="title">
+                    <span *ngIf="dataQualityCount$ | async; else noDataQuality">
+                        {{ dataQualityScore$ | async | percent: '1.0-1' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">
+                    <a models4insightDetailsNavigationItem="#related-rules" translate>
+                        search.details.field.dataQualityRules
+                    </a>
+                </p>
+                <p class="title">{{ dataQualityCount$ | async }}</p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">
+                    <a models4insightDetailsNavigationItem="#properties-details" translate>
+                        search.details.field.properties
+                    </a>
+                </p>
+                <p class="title">{{ propertyCount$ | async }}</p>
+            </div>
+        </div>
+    </nav>
 </div>
 
 <div id="related-attributes" class="box">
-  <models4insight-attributes-cards></models4insight-attributes-cards>
+    <models4insight-attributes-cards></models4insight-attributes-cards>
 </div>
 
 <div id="related-fields" class="box">
-  <models4insight-fields-cards></models4insight-fields-cards>
+    <models4insight-fields-cards></models4insight-fields-cards>
 </div>
 
 <div id="data-quality" class="box">
-  <h3 class="title is-3">Data Quality</h3>
-  <models4insight-data-quality-list></models4insight-data-quality-list>
+    <h3 class="title is-3" translate>search.details.field.dataQuality</h3>
+    <models4insight-data-quality-list></models4insight-data-quality-list>
 </div>
 
 <div id="related-rules" class="box">
-  <models4insight-data-quality-cards></models4insight-data-quality-cards>
+    <models4insight-data-quality-cards></models4insight-data-quality-cards>
 </div>
 
 <div id="gov-quality" class="box">
-  <models4insight-governance-quality-cards></models4insight-governance-quality-cards>
+    <models4insight-governance-quality-cards></models4insight-governance-quality-cards>
 </div>
 
 <div id="properties-details">
-  <models4insight-accordion>
-    <ng-container header>
-      <h3 class="title is-3">Properties</h3>
-    </ng-container>
-    <ng-container content>
-      <models4insight-properties></models4insight-properties>
-    </ng-container>
-  </models4insight-accordion>
+    <models4insight-accordion>
+        <ng-container header>
+            <h3 class="title is-3" translate>search.details.field.properties</h3>
+        </ng-container>
+        <ng-container content>
+            <models4insight-properties></models4insight-properties>
+        </ng-container>
+    </models4insight-accordion>
 </div>
 
 <models4insight-details-navigation>
-  <li>
-    <a models4insightDetailsNavigationItem="#description-details">
-      Description
-    </a>
-  </li>
-  <li>
-    <a models4insightDetailsNavigationItem="#related-attributes">
-      Data Attributes
-    </a>
-  </li>
-  <li>
-    <a models4insightDetailsNavigationItem="#related-fields">
-      Child Fields
-    </a>
-  </li>
-  <li>
-    <a models4insightDetailsNavigationItem="#data-quality">
-      Data Quality
-    </a>
-  </li>
-  <li>
-    <a models4insightDetailsNavigationItem="#gov-quality">
-      Governance Quality Rules
-    </a>
-  </li>
-  <li>
-    <a models4insightDetailsNavigationItem="#related-rules">
-      Data Quality Rules
-    </a>
-  </li>
-  <li>
-    <a models4insightDetailsNavigationItem="#properties-details">
-      Properties
-    </a>
-  </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#description-details" translate> search.details.field.description </a>
+    </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#related-attributes" translate> search.details.field.dataAttributes </a>
+    </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#related-fields" translate> search.details.field.childFields </a>
+    </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#data-quality" translate> search.details.field.dataQuality </a>
+    </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#gov-quality" translate>
+            search.details.field.governanceQualityRules
+        </a>
+    </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#related-rules" translate> search.details.field.dataQualityRules </a>
+    </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#properties-details" translate> search.details.field.properties </a>
+    </li>
 </models4insight-details-navigation>
 <ng-template #noDataQuality>
-  <div>
-    <p class="title">Unavailable</p>
-  </div>
+    <div>
+        <p class="title" translate>search.details.field.unavailable</p>
+    </div>
 </ng-template>
