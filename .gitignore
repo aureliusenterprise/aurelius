@@ -225,3 +225,8 @@ consistency_metrics.sqlite
 
 # Certificates
 certs/
+
+# Docker Scanning
+licenses.json
+sbom.json
+vulnerabilities.json
