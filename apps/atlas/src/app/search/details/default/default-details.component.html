@@ -1,44 +1,40 @@
 <div class="columns">
-  <div class="column">
-    <div id="description-details" class="box">
-      <h3 class="title is-3">
-        Description
-      </h3>
-      <models4insight-description> </models4insight-description>
+    <div class="column">
+        <div id="description-details" class="box">
+            <h3 class="title is-3" translate>search.details.default.description</h3>
+            <models4insight-description> </models4insight-description>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="box">
-  <nav class="level">
-    <div class="level-item has-text-centered">
-      <div>
-        <p class="heading">
-          <a models4insightDetailsNavigationItem="#properties-details">
-            Properties
-          </a>
-        </p>
-        <p class="title">{{ propertyCount$ | async }}</p>
-      </div>
-    </div>
-  </nav>
+    <nav class="level">
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">
+                    <a models4insightDetailsNavigationItem="#properties-details" translate>
+                        search.details.default.properties
+                    </a>
+                </p>
+                <p class="title">{{ propertyCount$ | async }}</p>
+            </div>
+        </div>
+    </nav>
 </div>
 
 <div id="properties-details">
-  <models4insight-accordion>
-    <ng-container header>
-      <h3 class="title is-3">Properties</h3>
-    </ng-container>
-    <ng-container content>
-      <models4insight-properties></models4insight-properties>
-    </ng-container>
-  </models4insight-accordion>
+    <models4insight-accordion>
+        <ng-container header>
+            <h3 class="title is-3" translate>search.details.default.properties</h3>
+        </ng-container>
+        <ng-container content>
+            <models4insight-properties></models4insight-properties>
+        </ng-container>
+    </models4insight-accordion>
 </div>
 
 <models4insight-details-navigation>
-  <li>
-    <a models4insightDetailsNavigationItem="#properties-details">
-      Properties
-    </a>
-  </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#properties-details" translate> search.details.default.properties </a>
+    </li>
 </models4insight-details-navigation>
