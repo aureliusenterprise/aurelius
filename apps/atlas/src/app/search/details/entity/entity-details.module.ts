@@ -12,24 +12,21 @@ import { AttributesCardsComponent } from './attributes-cards/attributes-cards.co
 import { DatasetsCardsComponent } from './datasets-cards/datasets-cards.component';
 import { EntitiesCardsComponent } from './entities-cards/entities-cards.component';
 import { EntityDetailsComponent } from './entity-details.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    DataQualityListModule,
-    DescriptionModule,
-    DetailsCardsListModule,
-    DetailsNavigationModule,
-    GovernanceQualityCardsModule,
-    PeopleModule,
-    PropertiesModule,
-    AccordionModule
-  ],
-  declarations: [
-    AttributesCardsComponent,
-    DatasetsCardsComponent,
-    EntitiesCardsComponent,
-    EntityDetailsComponent
-  ]
+    imports: [
+        CommonModule,
+        DataQualityListModule,
+        DescriptionModule,
+        DetailsCardsListModule,
+        DetailsNavigationModule,
+        GovernanceQualityCardsModule,
+        PeopleModule,
+        PropertiesModule,
+        AccordionModule,
+        TranslateModule,
+    ],
+    declarations: [AttributesCardsComponent, DatasetsCardsComponent, EntitiesCardsComponent, EntityDetailsComponent],
 })
 export class EntityDetailsModule {}
