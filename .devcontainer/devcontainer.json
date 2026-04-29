@@ -45,6 +45,7 @@
                 "files.exclude": {
                     "**/.pytest_cache": true,
                     "**/.ruff_cache": true,
+                    "**/.trivy-cache": true,
                     "**/__pycache__": true,
                     ".angular": true,
                     ".gradle": true,
@@ -60,6 +61,7 @@
                 "files.watcherExclude": {
                     "**/.pytest_cache": true,
                     "**/.ruff_cache": true,
+                    "**/.trivy-cache": true,
                     "**/__pycache__": true,
                     "**/dist": true,
                     ".angular": true,

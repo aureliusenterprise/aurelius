@@ -212,3 +212,4 @@ coverage/
 licenses.json
 sbom.json
 vulnerabilities.json
+.trivy-cache/
