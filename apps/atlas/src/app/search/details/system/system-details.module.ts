@@ -11,24 +11,21 @@ import { CollectionsCardsComponent } from './collections-cards/collections-cards
 import { ProcessesCardsComponent } from './processes-cards/processes-cards.component';
 import { SystemDetailsComponent } from './system-details.component';
 import { SystemsCardsComponent } from './systems-cards/systems-cards.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    AccordionModule,
-    CommonModule,
-    DataQualityListModule,
-    DescriptionModule,
-    DetailsCardsListModule,
-    DetailsNavigationModule,
-    GovernanceQualityCardsModule,
-    PropertiesModule,
-  ],
-  declarations: [
-    CollectionsCardsComponent,
-    ProcessesCardsComponent,
-    SystemsCardsComponent,
-    SystemDetailsComponent
-  ],
-  exports: [SystemDetailsComponent]
+    imports: [
+        AccordionModule,
+        CommonModule,
+        DataQualityListModule,
+        DescriptionModule,
+        DetailsCardsListModule,
+        DetailsNavigationModule,
+        GovernanceQualityCardsModule,
+        PropertiesModule,
+        TranslateModule,
+    ],
+    declarations: [CollectionsCardsComponent, ProcessesCardsComponent, SystemsCardsComponent, SystemDetailsComponent],
+    exports: [SystemDetailsComponent],
 })
-export class SystemDetailsModule { }
+export class SystemDetailsModule {}
