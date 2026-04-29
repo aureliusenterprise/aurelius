@@ -138,7 +138,7 @@ async function createNodesInternal(
                         },
                     },
                     [licenseScanTargetName]: {
-                        command: `trivy image {args.namespace}/{projectName}:{args.version} --scanners license --format json --output {projectRoot}/licenses.json --exit-code {args.exitCode}`,
+                        command: `trivy image {args.namespace}/{projectName}:{args.version} --scanners license --format json --output {projectRoot}/licenses.json --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache`,
                         options: {
                             exitCode: 0,
                             namespace: 'ghcr.io/aureliusenterprise',
@@ -147,10 +147,9 @@ async function createNodesInternal(
                         metadata: {
                             description: 'Scan the Docker image for license compliance using Trivy',
                         },
-                        parallelism: false,
                     },
                     [vulnScanTargetName]: {
-                        command: `trivy image {args.namespace}/{projectName}:{args.version} --scanners vuln --format json --output {projectRoot}/vulnerabilities.json --exit-code {args.exitCode}`,
+                        command: `trivy image {args.namespace}/{projectName}:{args.version} --scanners vuln --format json --output {projectRoot}/vulnerabilities.json --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache`,
                         options: {
                             exitCode: 0,
                             namespace: 'ghcr.io/aureliusenterprise',
@@ -159,7 +158,6 @@ async function createNodesInternal(
                         metadata: {
                             description: 'Scan the Docker image for vulnerabilities using Trivy',
                         },
-                        parallelism: false,
                     },
                 },
             },
