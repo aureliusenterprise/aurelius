@@ -1,11 +1,12 @@
 from datetime import UTC, datetime
 from unittest.mock import ANY
 
+import psycopg
 import pytest
 from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity, EntityNotification
+from psycopg.sql import SQL, Identifier
 from sqlalchemy import Connection, Engine, text
 from sqlmodel import Session
-from tenacity import Retrying, stop_after_attempt, wait_fixed
 
 
 def parse_entity_notification_payload(payload: str) -> EntityNotification:
@@ -56,116 +57,110 @@ def test__example_notify_function_exists(db_connection: Connection) -> None:
     assert "entity_notify_change" in functions
 
 
-def test__example_entity_trigger_fires_on_insert(db_connection: Connection, db_session: Session) -> None:
+def test__example_entity_trigger_fires_on_insert(db_connection_cdc: psycopg.Connection, db_session: Session) -> None:
     """Test that the PostgreSQL trigger for the Entity table fires on insert operations."""
+    # Listen for notifications on the entity channel
+    db_connection_cdc.execute(SQL("LISTEN {};").format(Identifier(PG_NOTIFY_ENTITY_CHANNEL)))
+    db_connection_cdc.commit()
+
     # Insert a new entity to trigger the notification
     entity = Entity(
         name="Test Entity",
         description="This is a test entity.",
     )
 
-    # Listen for notifications on the entity channel
-    with db_connection.connection.connection.cursor() as cursor:
-        cursor.execute(f"LISTEN {PG_NOTIFY_ENTITY_CHANNEL};")
-        db_connection.connection.connection.commit()
+    db_session.add(entity)
+    db_session.commit()
+    db_session.refresh(entity)
 
-        db_session.add(entity)
-        db_session.commit()
-        db_session.refresh(entity)
+    notifications = [
+        parse_entity_notification_payload(notification.payload)
+        for notification in db_connection_cdc.notifies(
+            stop_after=1,
+        )
+    ]
 
-        # Wait for the notification to be received
-        for attempt in Retrying(stop=stop_after_attempt(5), wait=wait_fixed(1)):
-            with attempt:
-                db_connection.connection.connection.poll()
+    assert len(notifications) == 1, "Expected a notification for the insert operation"
 
-                notifications = [
-                    parse_entity_notification_payload(notification.payload)
-                    for notification in db_connection.connection.connection.notifies
-                ]
+    expected = EntityNotification(
+        guid=entity.guid,
+        op="INSERT",
+        schema_name="public",
+        table_name=str(Entity.__tablename__),
+        value=entity,
+    ).model_copy(update={"timestamp": ANY})
 
-                expected = EntityNotification(
-                    guid=entity.guid,
-                    op="INSERT",
-                    schema_name="public",
-                    table_name=str(Entity.__tablename__),
-                    value=entity,
-                ).model_copy(update={"timestamp": ANY})
-
-                assert any(notification == expected for notification in notifications)
+    assert notifications[0] == expected, "Received notification does not match expected values"
 
 
 def test__example_entity_trigger_fires_on_update(
-    db_connection: Connection,
+    db_connection_cdc: psycopg.Connection,
     db_session: Session,
     entity: Entity,
 ) -> None:
     """Test that the PostgreSQL trigger for the Entity table fires on update operations."""
     # Listen for notifications on the entity channel
-    with db_connection.connection.connection.cursor() as cursor:
-        cursor.execute(f"LISTEN {PG_NOTIFY_ENTITY_CHANNEL};")
-        db_connection.connection.connection.commit()
+    db_connection_cdc.execute(SQL("LISTEN {};").format(Identifier(PG_NOTIFY_ENTITY_CHANNEL)))
+    db_connection_cdc.commit()
 
-        # Update the entity to trigger the notification
-        entity.name = "Updated Test Entity"
-        entity.description = "This is an updated test entity."
-        db_session.commit()
-        db_session.refresh(entity)
+    # Update the entity to trigger the notification
+    entity.name = "Updated Test Entity"
+    entity.description = "This is an updated test entity."
+    db_session.commit()
+    db_session.refresh(entity)
 
-        # Wait for the notification to be received
-        for attempt in Retrying(stop=stop_after_attempt(5), wait=wait_fixed(1)):
-            with attempt:
-                db_connection.connection.connection.poll()
+    notifications = [
+        parse_entity_notification_payload(notification.payload)
+        for notification in db_connection_cdc.notifies(
+            stop_after=1,
+        )
+    ]
 
-                notifications = [
-                    parse_entity_notification_payload(notification.payload)
-                    for notification in db_connection.connection.connection.notifies
-                ]
+    assert len(notifications) == 1, "Expected a notification for the update operation"
 
-                expected = EntityNotification(
-                    guid=entity.guid,
-                    op="UPDATE",
-                    schema_name="public",
-                    table_name=str(Entity.__tablename__),
-                    value=entity,
-                ).model_copy(update={"timestamp": ANY})
+    expected = EntityNotification(
+        guid=entity.guid,
+        op="UPDATE",
+        schema_name="public",
+        table_name=str(Entity.__tablename__),
+        value=entity,
+    ).model_copy(update={"timestamp": ANY})
 
-                assert any(notification == expected for notification in notifications)
+    assert notifications[0] == expected, "Received notification does not match expected values"
 
 
 def test__example_entity_trigger_fires_on_delete(
-    db_connection: Connection,
+    db_connection_cdc: psycopg.Connection,
     db_session: Session,
     entity: Entity,
 ) -> None:
     """Test that the PostgreSQL trigger for the Entity table fires on delete operations."""
     # Listen for notifications on the entity channel
-    with db_connection.connection.connection.cursor() as cursor:
-        cursor.execute(f"LISTEN {PG_NOTIFY_ENTITY_CHANNEL};")
-        db_connection.connection.connection.commit()
+    db_connection_cdc.execute(SQL("LISTEN {};").format(Identifier(PG_NOTIFY_ENTITY_CHANNEL)))
+    db_connection_cdc.commit()
 
-        # Delete the entity to trigger the notification
-        db_session.delete(entity)
-        db_session.commit()
+    # Delete the entity to trigger the notification
+    db_session.delete(entity)
+    db_session.commit()
 
-        # Wait for the notification to be received
-        for attempt in Retrying(stop=stop_after_attempt(5), wait=wait_fixed(1)):
-            with attempt:
-                db_connection.connection.connection.poll()
+    notifications = [
+        parse_entity_notification_payload(notification.payload)
+        for notification in db_connection_cdc.notifies(
+            stop_after=1,
+        )
+    ]
 
-                notifications = [
-                    parse_entity_notification_payload(notification.payload)
-                    for notification in db_connection.connection.connection.notifies
-                ]
+    assert len(notifications) == 1, "Expected a notification for the delete operation"
 
-                expected = EntityNotification(
-                    guid=entity.guid,
-                    op="DELETE",
-                    schema_name="public",
-                    table_name=str(Entity.__tablename__),
-                    value=None,
-                ).model_copy(update={"timestamp": ANY})
+    expected = EntityNotification(
+        guid=entity.guid,
+        op="DELETE",
+        schema_name="public",
+        table_name=str(Entity.__tablename__),
+        value=None,
+    ).model_copy(update={"timestamp": ANY})
 
-                assert any(notification == expected for notification in notifications)
+    assert notifications[0] == expected, "Received notification does not match expected values"
 
 
 def test__example_entity_time_created_is_set(entity: Entity) -> None:

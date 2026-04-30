@@ -111,11 +111,6 @@ class Settings(BaseSettings, Hashable):
         ),
     )
 
-    cdc_epoll_timeout: float = Field(
-        default=10.0,
-        description="The timeout in seconds for epoll to wait for new events in the SSE endpoint.",
-    )
-
     cdc_shutdown_join_timeout: float = Field(
         default=2.0,
         description="The timeout in seconds to wait for the CDC polling thread to stop during shutdown.",
@@ -127,7 +122,7 @@ class Settings(BaseSettings, Hashable):
     )
 
     database_driver: str = Field(
-        default="postgresql",
+        default="postgresql+psycopg",
         description="The driver for the database.",
     )
 

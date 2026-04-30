@@ -1,9 +1,8 @@
-from .listener import ConsumerCallback, PostgresListener, PostgresListenerSettings
+from .listener import ConsumerCallback, PostgresListener
 from .sanitize_tsquery import sanitize_tsquery
 
 __all__ = [
     "ConsumerCallback",
     "PostgresListener",
-    "PostgresListenerSettings",
     "sanitize_tsquery",
 ]

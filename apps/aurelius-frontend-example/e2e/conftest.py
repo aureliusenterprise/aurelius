@@ -90,7 +90,7 @@ def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
         raise ValueError(message)
 
     url = URL.create(
-        drivername="postgresql",
+        drivername="postgresql+psycopg",
         username=settings.database_username,
         password=settings.database_password.get_secret_value(),
         host=hostname,

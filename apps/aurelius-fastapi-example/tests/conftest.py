@@ -38,7 +38,6 @@ def db_settings(db_container: PostgresContainer, db_credentials: dict[str, str])
     return Settings(
         auth_realm_name="test-realm",
         auth_server_url=TypeAdapter(HttpUrl).validate_python("http://localhost:8080"),
-        cdc_epoll_timeout=1.0,
         database_host=db_container.get_container_host_ip(),
         database_name=db_credentials["database_name"],
         database_password=SecretStr(db_credentials["database_password"]),

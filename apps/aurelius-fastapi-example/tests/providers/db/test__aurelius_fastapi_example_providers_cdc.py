@@ -7,7 +7,7 @@ from typing import cast
 from unittest.mock import ANY, AsyncMock, MagicMock
 from uuid import UUID
 
-import psycopg2
+import psycopg
 import pytest
 from aurelius_example import Entity
 from aurelius_fastapi_example.models import Envelope, Settings
@@ -251,8 +251,8 @@ def test__entity_notification_broadcaster_process_notification_ignores_invalid_p
     exception_spy = MagicMock()
     monkeypatch.setattr("aurelius_fastapi_example.providers.cdc.LOGGER.exception", exception_spy)
 
-    invalid_notify: psycopg2.extensions.Notify = cast(
-        "psycopg2.extensions.Notify",
+    invalid_notify: psycopg.Notify = cast(
+        "psycopg.Notify",
         SimpleNamespace(payload="{not-json"),
     )
     broadcaster._process_notification(invalid_notify)  # noqa: SLF001

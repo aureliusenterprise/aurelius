@@ -1,25 +1,17 @@
 import queue
 import secrets
+import threading
 from collections.abc import Generator
-from dataclasses import dataclass
 from typing import TypedDict
 
-import psycopg2
+import psycopg
 import pytest
 from aurelius_sdk.postgresql import PostgresListener
 from testcontainers.postgres import PostgresContainer
 
 
-@dataclass
-class ListenerTestSettings:
-    """Settings consumed by PostgresListener in integration tests."""
-
-    cdc_epoll_timeout: float = 0.1
-    cdc_shutdown_join_timeout: float = 1.0
-
-
 class PostgresConnectKwargs(TypedDict):
-    """Typed connection kwargs for psycopg2.connect in integration tests."""
+    """Typed connection kwargs for psycopg.connect in integration tests."""
 
     host: str
     port: int
@@ -55,7 +47,7 @@ def postgres_connect_kwargs(
     db_container: PostgresContainer,
     db_credentials: dict[str, str],
 ) -> PostgresConnectKwargs:
-    """Return psycopg2 connect kwargs for the running test container."""
+    """Return psycopg connect kwargs for the running test container."""
     return {
         "host": db_container.get_container_host_ip(),
         "port": int(db_container.get_exposed_port(5432)),
@@ -65,9 +57,10 @@ def postgres_connect_kwargs(
     }
 
 
-def _connect(connect_kwargs: PostgresConnectKwargs) -> psycopg2.extensions.connection:
-    """Create a psycopg2 connection from typed kwargs."""
-    return psycopg2.connect(
+def _connect(connect_kwargs: PostgresConnectKwargs) -> psycopg.Connection:
+    """Create a psycopg connection from typed kwargs."""
+    return psycopg.connect(
+        autocommit=True,
         host=connect_kwargs["host"],
         port=connect_kwargs["port"],
         dbname=connect_kwargs["dbname"],
@@ -82,31 +75,33 @@ def test__postgres_listener_receives_notify(
     """PostgresListener should receive notifications published on its configured channel."""
     channel = "sdk_listener_integration"
     payload = "hello-from-integration"
-    settings = ListenerTestSettings()
 
     listener_connection = _connect(postgres_connect_kwargs)
-    listener_connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
     listener = PostgresListener(
         connection=listener_connection,
         channel=channel,
-        settings=settings,
     )
 
-    notifications: queue.Queue[psycopg2.extensions.Notify] = queue.Queue(maxsize=1)
-
-    def on_notify(notification: psycopg2.extensions.Notify) -> None:
-        notifications.put_nowait(notification)
-
-    listener.subscribe(on_notify)
     listener.start()
+
+    notifications: queue.Queue[psycopg.Notify] = queue.Queue(maxsize=1)
+    stop_event = threading.Event()
+
+    def consume_one() -> None:
+        for notification in listener:
+            notifications.put_nowait(notification)
+            break
+
+        stop_event.set()
+
+    consumer = threading.Thread(target=consume_one, daemon=True)
+    consumer.start()
 
     try:
         sender_connection = _connect(postgres_connect_kwargs)
-        sender_connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         try:
-            with sender_connection.cursor() as cursor:
-                cursor.execute("SELECT pg_notify(%s, %s);", (channel, payload))
+            sender_connection.execute("SELECT pg_notify(%s, %s);", (channel, payload))
         finally:
             sender_connection.close()
 
@@ -114,47 +109,31 @@ def test__postgres_listener_receives_notify(
         assert notification.channel == channel
         assert notification.payload == payload
     finally:
+        stop_event.set()
+        consumer.join(timeout=1.0)
         listener.stop()
         listener_connection.close()
 
 
-def test__postgres_listener_does_not_emit_after_unsubscribe(
+def test__postgres_listener_stops_emitting_after_stop(
     postgres_connect_kwargs: PostgresConnectKwargs,
 ) -> None:
-    """PostgresListener should not call a consumer after it has been unsubscribed."""
+    """PostgresListener iterator should stop when the listener is stopped."""
     channel = "sdk_listener_unsubscribe"
-    payload = "should-not-arrive"
-    settings = ListenerTestSettings()
 
     listener_connection = _connect(postgres_connect_kwargs)
-    listener_connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
     listener = PostgresListener(
         connection=listener_connection,
         channel=channel,
-        settings=settings,
     )
 
-    notifications: queue.Queue[psycopg2.extensions.Notify] = queue.Queue(maxsize=1)
-
-    def on_notify(notification: psycopg2.extensions.Notify) -> None:
-        notifications.put_nowait(notification)
-
-    listener.subscribe(on_notify)
     listener.start()
-    listener.unsubscribe(on_notify)
+    listener.stop()
 
     try:
-        sender_connection = _connect(postgres_connect_kwargs)
-        sender_connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
-        try:
-            with sender_connection.cursor() as cursor:
-                cursor.execute("SELECT pg_notify(%s, %s);", (channel, payload))
-        finally:
-            sender_connection.close()
-
-        with pytest.raises(queue.Empty):
-            notifications.get(timeout=1.0)
+        with pytest.raises(RuntimeError, match="not running"):
+            next(iter(listener))
     finally:
         listener.stop()
         listener_connection.close()
