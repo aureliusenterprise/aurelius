@@ -152,7 +152,7 @@ This workspace includes all the necessary services to run the Aurelius Atlas loc
 To start the local development infrastructure, run the following command in the terminal:
 
 ```bash
-nx serve aurelius-dev
+nx serve aurelius-atlas-dev
 ```
 
 This will start the infrastructure services with `docker-compose`.
@@ -175,7 +175,7 @@ Aurelius Atlas uses custom types to represent the metadata in the system. To ini
 following command:
 
 ```bash
-nx run aurelius-dev:init-atlas-types
+nx run aurelius-atlas-dev:init-atlas-types
 ```
 
 This will register the custom types with the Atlas instance running in the development environment.
@@ -186,7 +186,7 @@ To enable secure communication to the Elasticsearch instance, you need to genera
 command to generate the certificates:
 
 ```bash
-nx run aurelius-dev:generate-certs
+nx run aurelius-atlas-dev:generate-certs
 ```
 
 This will generate the necessary SSL certificates and store them in the `dev/certs` directory. This directory
@@ -194,7 +194,7 @@ is mounted as a volume in the Elasticsearch container, allowing it to use the ce
 
 !!! TIP "Automatic Certificate Generation"
 
-    The `generate-certs` target is automatically run when you start the development infrastructure with `nx serve aurelius-dev`,
+    The `generate-certs` target is automatically run when you start the development infrastructure with `nx serve aurelius-atlas-dev`,
     so you don't need to run it manually unless you want to regenerate the certificates.
 
 #### Initialize App Search Engines
@@ -203,7 +203,7 @@ Aurelius Atlas uses Enterprise Search to provide search capabilities. To initial
 following command:
 
 ```bash
-nx run aurelius-dev:init-app-search-engines
+nx run aurelius-atlas-dev:init-app-search-engines
 ```
 
 This will create the necessary search engines in Enterprise Search for the Aurelius Atlas application.
@@ -213,7 +213,7 @@ This will create the necessary search engines in Enterprise Search for the Aurel
 To upload sample data to the Atlas instance, run the following command:
 
 ```bash
-nx run aurelius-dev:upload-sample-data
+nx run aurelius-atlas-dev:upload-sample-data
 ```
 
 This will upload a set of sample metadata to the Atlas instance, which you can use for testing and development.
@@ -242,7 +242,7 @@ The frontend requires an API token to connect to the Enterprise Search instance.
 following command:
 
 ```bash
-nx run aurelius-dev:update-app-search-token
+nx run aurelius-atlas-dev:update-app-search-token
 ```
 
 This will generate a new API token and update the `environment.ts` file in the frontend project with the new token.
