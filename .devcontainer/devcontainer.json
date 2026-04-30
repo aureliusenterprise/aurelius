@@ -43,6 +43,7 @@
                 "files.exclude": {
                     "**/.pytest_cache": true,
                     "**/.ruff_cache": true,
+                    "**/.trivy-cache": true,
                     "**/__pycache__": true,
                     ".angular": true,
                     ".nx": true,
@@ -55,6 +56,7 @@
                 "files.watcherExclude": {
                     "**/.pytest_cache": true,
                     "**/.ruff_cache": true,
+                    "**/.trivy-cache": true,
                     "**/__pycache__": true,
                     "**/dist": true,
                     ".angular": true,
@@ -87,46 +89,29 @@
     },
     "features": {
         "ghcr.io/devcontainers-extra/features/apt-packages:1": {
-            "packages": [
-                "age",
-                "gdb",
-                "graphviz",
-                "gnupg2",
-                "libpq-dev",
-                "librdkafka-dev",
-                "openssh-client"
-            ]
+            "packages": ["age", "gdb", "graphviz", "gnupg2", "libpq-dev", "librdkafka-dev", "openssh-client"]
         },
+        "ghcr.io/devcontainers-extra/features/cosign:1.0.10": {},
         "ghcr.io/devcontainers-extra/features/nx-npm:1": {
             "version": "19.0.4"
         },
         "ghcr.io/devcontainers-extra/features/sops:1": {
             "version": "latest"
         },
+        "ghcr.io/devcontainers-extra/features/syft:1.0.10": {},
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts"
         },
         "ghcr.io/devcontainers/features/python:1": {
-            "toolsToInstall": [
-                "poetry"
-            ],
+            "toolsToInstall": ["poetry"],
             "version": "3.8"
         },
-        "ghcr.io/dhoeric/features/google-cloud-cli:1": {}
+        "ghcr.io/dhoeric/features/google-cloud-cli:1": {},
+        "ghcr.io/dhoeric/features/trivy:1": {}
     },
-    "forwardPorts": [
-        5601,
-        8081,
-        8082,
-        9200,
-        8180,
-        18081,
-        18082,
-        18083,
-        21000
-    ],
+    "forwardPorts": [5601, 8081, 8082, 9200, 8180, 18081, 18082, 18083, 21000],
     "image": "mcr.microsoft.com/devcontainers/base:noble",
     "name": "Aurelius",
     "onCreateCommand": {
@@ -180,7 +165,5 @@
         "pre-commit": "bash .devcontainer/pre-commit.sh",
         "sops": "bash .devcontainer/sops.sh"
     },
-    "runArgs": [
-        "--add-host=keycloak.localhost:127.0.0.1"
-    ]
+    "runArgs": ["--add-host=keycloak.localhost:127.0.0.1"]
 }

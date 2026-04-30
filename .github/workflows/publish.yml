@@ -47,6 +47,21 @@ jobs:
               run: npx nx run-many -t docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
               shell: bash
 
+            - name: Install Cosign
+              uses: sigstore/cosign-installer@v4.1.1
+
+            - name: Publish containers
+              run: npx nx run-many -t docker-publish -- --version ${{ github.ref_name }}
+
+            - name: Sign containers
+              run: npx nx run-many -t docker-sign -- --version ${{ github.ref_name }}
+
+            - name: Verify container signatures
+              run: >
+                  npx nx run-many -t docker-verify -- --version ${{ github.ref_name }}
+                  --identity "^https://github\.com/${{ github.repository_owner }}/aurelius/\.github/workflows/publish\.yml@${{ github.ref }}$"
+                  --issuer "^https://token\.actions\.githubusercontent\.com$"
+
             - name: Publish helm chart
               run: npx nx run-many -t helm-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
               shell: bash
