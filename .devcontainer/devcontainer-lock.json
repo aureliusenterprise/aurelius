@@ -1,0 +1,54 @@
+{
+    "features": {
+        "ghcr.io/devcontainers-extra/features/apt-packages:1": {
+            "integrity": "sha256:55c54412112da81b9381e470cdbbe55278564950d1ff536ce925b1e8e096babd",
+            "resolved": "ghcr.io/devcontainers-extra/features/apt-packages@sha256:55c54412112da81b9381e470cdbbe55278564950d1ff536ce925b1e8e096babd",
+            "version": "1.0.6"
+        },
+        "ghcr.io/devcontainers-extra/features/cosign:1.0.10": {
+            "integrity": "sha256:f101399b455a37d28e9524b1ce338e5a6101859ade6c00cf2a9f9c51c3447dea",
+            "resolved": "ghcr.io/devcontainers-extra/features/cosign@sha256:f101399b455a37d28e9524b1ce338e5a6101859ade6c00cf2a9f9c51c3447dea",
+            "version": "1.0.10"
+        },
+        "ghcr.io/devcontainers-extra/features/nx-npm:1": {
+            "integrity": "sha256:a8850e9992c06b12209b9be9c5880e2fe3f2746735ca7634abb499b9d84bd6a8",
+            "resolved": "ghcr.io/devcontainers-extra/features/nx-npm@sha256:a8850e9992c06b12209b9be9c5880e2fe3f2746735ca7634abb499b9d84bd6a8",
+            "version": "1.0.11"
+        },
+        "ghcr.io/devcontainers-extra/features/sops:1": {
+            "integrity": "sha256:4cf07db9322cbe261fd103de5ba390907df63cd48d9e0d68517656fc35a27e6e",
+            "resolved": "ghcr.io/devcontainers-extra/features/sops@sha256:4cf07db9322cbe261fd103de5ba390907df63cd48d9e0d68517656fc35a27e6e",
+            "version": "1.0.15"
+        },
+        "ghcr.io/devcontainers-extra/features/syft:1.0.10": {
+            "integrity": "sha256:1cfd858d0fc6eb4bd49b335cf94af734d6e6bd617a4a5265f54f07dbc72771e9",
+            "resolved": "ghcr.io/devcontainers-extra/features/syft@sha256:1cfd858d0fc6eb4bd49b335cf94af734d6e6bd617a4a5265f54f07dbc72771e9",
+            "version": "1.0.10"
+        },
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "integrity": "sha256:ce078b7bf7d9ef3bcb9813b32103795d8d72172446890b64772cbe1dec6baafd",
+            "resolved": "ghcr.io/devcontainers/features/docker-in-docker@sha256:ce078b7bf7d9ef3bcb9813b32103795d8d72172446890b64772cbe1dec6baafd",
+            "version": "2.16.1"
+        },
+        "ghcr.io/devcontainers/features/java:1": {
+            "integrity": "sha256:9663ce0219ff85786e87901ce5f0a59f488edd5f99b46015192cda48468b233a",
+            "resolved": "ghcr.io/devcontainers/features/java@sha256:9663ce0219ff85786e87901ce5f0a59f488edd5f99b46015192cda48468b233a",
+            "version": "1.8.0"
+        },
+        "ghcr.io/devcontainers/features/node:2": {
+            "integrity": "sha256:fedd4c11f7adfb64283b578dddc7da906728daa25fa293351c9d913231acf12f",
+            "resolved": "ghcr.io/devcontainers/features/node@sha256:fedd4c11f7adfb64283b578dddc7da906728daa25fa293351c9d913231acf12f",
+            "version": "2.0.0"
+        },
+        "ghcr.io/devcontainers/features/python:1": {
+            "integrity": "sha256:fbcad6955caeecc5ad3f7886baf652e25cba5225a6c4c2287c536de2e5607511",
+            "resolved": "ghcr.io/devcontainers/features/python@sha256:fbcad6955caeecc5ad3f7886baf652e25cba5225a6c4c2287c536de2e5607511",
+            "version": "1.8.0"
+        },
+        "ghcr.io/dhoeric/features/trivy:1": {
+            "integrity": "sha256:c291ec03dd2938d1c4bc6cf87e6afab8067514fb000c9165bcc66a6f65092783",
+            "resolved": "ghcr.io/dhoeric/features/trivy@sha256:c291ec03dd2938d1c4bc6cf87e6afab8067514fb000c9165bcc66a6f65092783",
+            "version": "1.0.0"
+        }
+    }
+}
