@@ -104,7 +104,7 @@ function buildTargets(
         },
         options: {
             bundleLocalDependencies: true,
-            lockedVersions: false,
+            lockedVersions: true,
             outputPath: `${projectRoot}/dist/`,
             publish: false,
         },

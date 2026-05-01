@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
-# Use the official Python image as a base image for building the application
-FROM python:3.14 AS build-image
+# Use a hardened Python image with dev tools for the build stage.
+FROM dhi.io/python:3.14-alpine3.22-dev AS build-image
 
 # Set the working directory
 WORKDIR /build
@@ -11,11 +11,12 @@ COPY --chown=root:root --chmod=0755 apps/aurelius-fastapi-example/dist/*.whl .
 
 # Install package dependencies, then clean up. Use a cache mount to speed up the process.
 RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
-    pip install --target=./ ./*.whl && \
+    pip install --only-binary :all: --target=./ ./*.whl && \
     rm ./*.whl
 
-# Use a slim version of the base Python image to reduce the final image size
-FROM python:3.14-slim
+# Use a hardened Python image for the final application image.
+# Note: the hardened image does not include a shell or package manager.
+FROM dhi.io/python:3.14-alpine3.22
 
 ARG VERSION=local
 
@@ -31,28 +32,18 @@ LABEL org.opencontainers.image.version="${VERSION}"
 ENV HOST=0.0.0.0
 ENV PORT=8000
 
-# Add a non-root user and group
-RUN addgroup --system aurelius-fastapi-example && \
-    adduser --system --ingroup aurelius-fastapi-example aurelius-fastapi-example
-
-# Install required system dependencies
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && \
-    apt-get install --no-install-recommends --no-install-suggests -y curl libpq-dev
-
 # Set the working directory
 WORKDIR /application
 
 # Copy in the built dependencies
 COPY --chown=root:root --chmod=0755 --from=build-image /build ./
 
-# Switch to the non-root user
-USER aurelius-fastapi-example
+# Switch to the non-root user (built into the base image)
+USER nonroot
 
 # Configure a healthcheck to ensure the application is running
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD ["sh", "-c", "curl --fail \"http://localhost:${PORT}/health/ready\" || exit 1"]
+    CMD ["python", "-c", "import os,urllib.request; p=os.getenv('PORT','8000'); urllib.request.urlopen('http://127.0.0.1:'+p+'/health/ready', timeout=5).close()"]
 
 # Start the application
 ENTRYPOINT [ "python", "-m", "aurelius_fastapi_example" ]
