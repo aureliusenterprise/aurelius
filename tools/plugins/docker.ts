@@ -65,11 +65,7 @@ async function createNodesInternal(
                 targets: {
                     [buildTargetName]: {
                         command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version}`,
-                        dependsOn: [
-                            { target: "build" },
-                            { target: setupBuilderTargetName, projects: ["."], params: "forward" },
-                            { target: buildTargetName, dependencies: true },
-                        ],
+                        dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
                         metadata: {
                             description: "Build the Docker image for the application",
                         },

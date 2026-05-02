@@ -52,10 +52,22 @@
                 "browser": "apps/aurelius-frontend-example/src/main.ts",
                 "inlineStyleLanguage": "scss",
                 "outputPath": "dist/apps/aurelius-frontend-example",
+                "statsJson": true,
                 "styles": ["apps/aurelius-frontend-example/src/styles.scss"],
                 "tsConfig": "apps/aurelius-frontend-example/tsconfig.app.json"
             },
             "outputs": ["{options.outputPath}"]
+        },
+        "docker-attest": {
+            "command": "DIGEST=$(docker buildx imagetools inspect {args.namespace}/{projectName}:{args.version} --format '{{.Manifest.Digest}}') && cosign attest --yes --predicate dist/{projectRoot}/sbom.json --type cyclonedx {args.namespace}/{projectName}@${DIGEST}",
+            "dependsOn": ["sbom"],
+            "metadata": {
+                "description": "Attest the Docker image with the CycloneDX SBOM using Cosign"
+            },
+            "options": {
+                "namespace": "ghcr.io/aureliusenterprise",
+                "version": "local"
+            }
         },
         "e2e": {
             "dependsOn": [
@@ -80,6 +92,10 @@
         },
         "lint": {
             "executor": "@nx/eslint:lint"
+        },
+        "sbom": {
+            "command": "cyclonedx-esbuild --gather-license-texts --output-reproducible -o ./dist/apps/aurelius-frontend-example/sbom.json ./dist/apps/aurelius-frontend-example/stats.json",
+            "dependsOn": ["build"]
         },
         "serve": {
             "configurations": {
