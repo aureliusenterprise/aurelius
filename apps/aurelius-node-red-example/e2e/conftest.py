@@ -18,7 +18,7 @@ from confluent_kafka.schema_registry.avro import AvroDeserializer
 from confluent_kafka.serialization import StringDeserializer
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from testcontainers.compose import DockerCompose
-from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
+from testcontainers.core.wait_strategies import HttpWaitStrategy
 
 
 class Settings(BaseSettings):
@@ -52,9 +52,17 @@ def compose() -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
     context = Path(__file__).parent.absolute()
     with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
+        port = compose.get_service_port("aurelius-node-red-example", 1880)
+
+        if not port:
+            message = "Failed to get the Node-RED service port from Docker Compose"
+            raise RuntimeError(message)
+
         yield compose.waiting_for(
             {
-                "aurelius-node-red-example": HealthcheckWaitStrategy(),
+                "aurelius-node-red-example": HttpWaitStrategy(port=port, path="/flows/state")
+                .for_status_code(200)
+                .with_body('{"state":"start"}'),
             },
         )
 
