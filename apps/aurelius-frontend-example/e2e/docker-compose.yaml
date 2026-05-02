@@ -8,11 +8,11 @@ services:
                 condition: service_healthy
             keycloak:
                 condition: service_healthy
-        environment:
-            AURELIUS_BACKEND_URL: http://aurelius-fastapi-example:8000
-            KEYCLOAK_CLIENT_ID: ${AUTH_CLIENT_ID}
-            KEYCLOAK_REALM: ${AUTH_REALM_NAME}
-            KEYCLOAK_URL: http://keycloak.localhost:${KEYCLOAK_PORT}
+        configs:
+            - source: frontend_config
+              target: /usr/share/nginx/html/config.json
+            - source: frontend_nginx_config
+              target: /etc/nginx/conf.d/default.conf
         extra_hosts:
             - keycloak.localhost:host-gateway
         ports:
@@ -98,3 +98,9 @@ services:
             retries: 5
         ports:
             - 5432
+
+configs:
+    frontend_config:
+        file: ./config/config.json
+    frontend_nginx_config:
+        file: ./config/nginx.conf

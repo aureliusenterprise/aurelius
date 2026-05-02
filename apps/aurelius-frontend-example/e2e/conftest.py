@@ -12,7 +12,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL, Engine
 from sqlmodel import Session, SQLModel, create_engine
 from testcontainers.compose import DockerCompose
-from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
+from testcontainers.core.wait_strategies import HttpWaitStrategy
 
 
 class Settings(BaseSettings):
@@ -49,9 +49,15 @@ def compose() -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
     context = Path(__file__).parent.absolute()
     with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
+        port = compose.get_service_port("aurelius-frontend-example", 8080)
+
+        if not port:
+            message = "aurelius-frontend-example service not found in Docker Compose"
+            raise ValueError(message)
+
         yield compose.waiting_for(
             {
-                "aurelius-frontend-example": HealthcheckWaitStrategy(),
+                "aurelius-frontend-example": HttpWaitStrategy(port=port, path="/").for_status_code(200),
             },
         )
         capture_docker_compose_logs(compose)
