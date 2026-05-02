@@ -2,7 +2,7 @@
     "name": "aurelius-node-red-example",
     "description": "This is an example Node-RED application.",
     "private": true,
-    "version": "0.4.0",
+    "version": "0.5.0",
     "dependencies": {
         "@oriolrius/node-red-contrib-kafka": "^6.1.1",
         "node-red": "^4.1.3",

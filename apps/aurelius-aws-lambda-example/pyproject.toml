@@ -11,7 +11,7 @@ dependencies = [
 description = "This is an example AWS lambda function."
 name = "aurelius-aws-lambda-example"
 requires-python = ">=3.14"
-version = "0.4.0"
+version = "0.5.0"
 
 [[project.authors]]
 name = "Aurelius Enterprise "

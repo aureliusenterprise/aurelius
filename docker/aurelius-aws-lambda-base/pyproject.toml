@@ -1,3 +1,3 @@
 [project]
 name = "aurelius-aws-lambda-base"
-version = "0.4.0"
+version = "0.5.0"

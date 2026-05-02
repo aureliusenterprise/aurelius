@@ -1,3 +1,19 @@
+## 0.5.0 (2026-05-02)
+
+### 🚀 Features
+
+- split broadcaster into reusable listener and generic boadcaster ([#35](https://github.com/aureliusenterprise/project-template/pull/35))
+- migrate to psycopg v3 ([73a3a08](https://github.com/aureliusenterprise/project-template/commit/73a3a08))
+- setup distroless images ([#38](https://github.com/aureliusenterprise/project-template/pull/38))
+- setup distroless image for frontend app ([#39](https://github.com/aureliusenterprise/project-template/pull/39))
+- use hardened java image ([#40](https://github.com/aureliusenterprise/project-template/pull/40))
+- use hardened image for node-red app ([#41](https://github.com/aureliusenterprise/project-template/pull/41))
+
+### 🩹 Fixes
+
+- enrich notifcations only once rather than for each sse connection ([#36](https://github.com/aureliusenterprise/project-template/pull/36))
+- remove additional db lookup ([#37](https://github.com/aureliusenterprise/project-template/pull/37))
+
 ## 0.4.0 (2026-04-21)
 
 ### 🚀 Features
