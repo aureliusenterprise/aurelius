@@ -1,5 +1,5 @@
-# Use the Eclipse Temurin JRE base image for Java 21 as the builder stage
-FROM eclipse-temurin:21.0.9_10-jre-alpine-3.23 AS builder
+# Use a hardened base image with Java 21 and Alpine Linux for the build stage
+FROM dhi.io/eclipse-temurin:21-alpine3.22-dev AS builder
 
 # Set the working directory
 WORKDIR /build
@@ -10,8 +10,9 @@ COPY --chown=root:root --chmod=0755 apps/aurelius-java-producer-example/build/di
 # Extract the application files from the tarball and remove the tarball
 RUN tar -xvf aurelius-java-producer-example.tar --strip-components=1 && rm aurelius-java-producer-example.tar
 
-# Use the Eclipse Temurin JRE base image for Java 21 as the runtime stage
-FROM eclipse-temurin:21.0.9_10-jre-alpine-3.23 AS runtime
+# Use a hardened base image with Java 21 and Alpine Linux for the runtime stage
+# Note: the hardened image does not have a shell or package manager
+FROM dhi.io/eclipse-temurin:21-alpine3.22 AS runtime
 
 ARG VERSION=local
 
@@ -23,17 +24,14 @@ LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/proj
 LABEL org.opencontainers.image.title="Aurelius Java Producer Example"
 LABEL org.opencontainers.image.version="${VERSION}"
 
-# Add a non-root user to run the application
-RUN adduser -S aurelius
-
-# Switch to the non-root user
-USER aurelius
-
 # Set the working directory
 WORKDIR /app
 
 # Copy the application files from the builder stage to the runtime stage
 COPY --chown=root:root --chmod=0755 --from=builder /build/ ./
 
+# Switch to the non-root user
+USER nonroot
+
 # Run the application
-CMD ["./bin/aurelius-java-producer-example"]
+CMD ["java", "-cp", "lib/*", "com.aureliusenterprise.producer.App"]
