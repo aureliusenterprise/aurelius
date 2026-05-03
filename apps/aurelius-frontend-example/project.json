@@ -71,12 +71,13 @@
                 "appSbomPath": "{projectRoot}/app-sbom.json",
                 "commands": [
                     "trivy image --format cyclonedx --output {args.dockerSbomPath} {args.namespace}/{projectName}:{args.version}",
-                    "cyclonedx merge --name {args.namespace}/{projectName}:{args.version} --input-files {args.appSbomPath} {args.dockerSbomPath} --input-format json --output-file {projectRoot}/sbom.json --output-format json"
+                    "cyclonedx merge --name {args.namespace}/{projectName}:{args.version} --input-files {args.appSbomPath} {args.dockerSbomPath} --input-format json --output-file {projectRoot}/sbom.json --output-format json --output-version v1_6"
                 ],
                 "dockerSbomPath": "{projectRoot}/docker-sbom.json",
                 "namespace": "ghcr.io/aureliusenterprise",
                 "version": "local"
-            }
+            },
+            "parallelism": false
         },
         "e2e": {
             "dependsOn": [

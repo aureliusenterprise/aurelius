@@ -111,14 +111,17 @@ async function createNodesInternal(
                         },
                     },
                     [sbomTargetName]: {
-                        command: `trivy image --format cyclonedx --output {projectRoot}/sbom.json {args.namespace}/{projectName}:{args.version} --cache-dir {projectRoot}/.trivy-cache`,
+                        command:
+                            "trivy image --format cyclonedx --output {args.sbomPath} {args.namespace}/{projectName}:{args.version}",
                         options: {
                             namespace: "ghcr.io/aureliusenterprise",
+                            sbomPath: "{projectRoot}/sbom.json",
                             version: "local",
                         },
                         metadata: {
                             description: "Generate a Software Bill of Materials (SBOM) for the Docker image",
                         },
+                        parallelism: false,
                     },
                     [signTargetName]: {
                         command:
@@ -146,27 +149,31 @@ async function createNodesInternal(
                     },
                     [licenseScanTargetName]: {
                         command:
-                            "trivy image {args.namespace}/{projectName}:{args.version} --sbom-sources oci --scanners license --format json --output {projectRoot}/licenses.json --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache",
+                            "trivy sbom {args.sbomPath} --scanners license --format json --output {args.reportPath} --exit-code {args.exitCode}",
+                        dependsOn: [{ target: sbomTargetName, params: "forward" }],
                         options: {
                             exitCode: 0,
-                            namespace: "ghcr.io/aureliusenterprise",
-                            version: "local",
+                            reportPath: "{projectRoot}/licenses.json",
+                            sbomPath: "{projectRoot}/sbom.json",
                         },
                         metadata: {
                             description: "Scan the Docker image for license compliance using Trivy",
                         },
+                        parallelism: false,
                     },
                     [vulnScanTargetName]: {
                         command:
-                            "trivy image {args.namespace}/{projectName}:{args.version} --sbom-sources oci --scanners vuln --format json --output {projectRoot}/vulnerabilities.json --exit-code {args.exitCode}  --cache-dir {projectRoot}/.trivy-cache",
+                            "trivy sbom {args.sbomPath} --scanners vuln --format json --output {args.reportPath} --exit-code {args.exitCode}",
+                        dependsOn: [{ target: sbomTargetName, params: "forward" }],
                         options: {
                             exitCode: 0,
-                            namespace: "ghcr.io/aureliusenterprise",
-                            version: "local",
+                            reportPath: "{projectRoot}/vulnerabilities.json",
+                            sbomPath: "{projectRoot}/sbom.json",
                         },
                         metadata: {
                             description: "Scan the Docker image for vulnerabilities using Trivy",
                         },
+                        parallelism: false,
                     },
                 },
             },
