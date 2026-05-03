@@ -1,4 +1,5 @@
 import dev.nx.gradle.nx
+import java.io.File
 
 nx {
     set("name", "aurelius-java-producer-example")
@@ -51,7 +52,36 @@ tasks.named<Test>("test") {
     finalizedBy(tasks.named("jacocoTestReport"))
 }
 
+/**
+ * Loads a .env file and returns key-value pairs as a map.
+ * Skips blank lines, comments, and handles surrounding quotes.
+ */
+fun loadEnv(file: File): Map<String, String> {
+    val env = mutableMapOf<String, String>()
+    if (!file.exists()) return env
+    file.forEachLine { line ->
+        val trimmed = line.trim()
+        if (trimmed.isEmpty() || trimmed.startsWith("#")) return@forEachLine
+        val parts = trimmed.split("=", limit = 2)
+        if (parts.size < 2) return@forEachLine
+        val key = parts[0].trim()
+        var value = parts[1].trim()
+        if (value.length >= 2) {
+            if ((value.startsWith("\"") && value.endsWith("\"")) ||
+                (value.startsWith("'") && value.endsWith("'"))) {
+                value = value.substring(1, value.length - 1)
+            }
+        }
+        env[key] = value
+    }
+    return env
+}
 
+// Inject .env values into the 'run' task's process environment
+tasks.named("run", JavaExec::class).configure {
+    val envFile = project.file("${projectDir}/.env")
+    environment(loadEnv(envFile))
+}
 
 allprojects {
     apply {
