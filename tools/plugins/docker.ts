@@ -111,7 +111,7 @@ async function createNodesInternal(
                         },
                     },
                     [sbomTargetName]: {
-                        command: `trivy image --format cyclonedx --output {projectRoot}/sbom.json {args.namespace}/{projectName}:{args.version}`,
+                        command: `trivy image --format cyclonedx --output {projectRoot}/sbom.json {args.namespace}/{projectName}:{args.version} --cache-dir {projectRoot}/.trivy-cache`,
                         options: {
                             namespace: "ghcr.io/aureliusenterprise",
                             version: "local",
