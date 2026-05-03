@@ -79,6 +79,9 @@ jobs:
                   curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/latest/download/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
                   chmod +x /usr/local/bin/cyclonedx
 
+            - name: Install Trivy
+              uses: aquasecurity/setup-trivy@v0.2.6
+
             - name: Publish containers
               run: npx nx run-many -t docker-publish -- --version ${{ github.ref_name }}
 
