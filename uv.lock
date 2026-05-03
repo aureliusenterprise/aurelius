@@ -91,7 +91,7 @@ wheels = [
 
 [[package]]
 name = "aurelius-aws-lambda"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "libs/python/aurelius-aws-lambda" }
 dependencies = [
     { name = "aws-lambda-powertools" },
@@ -106,12 +106,12 @@ requires-dist = [
 
 [[package]]
 name = "aurelius-aws-lambda-base"
-version = "0.5.0"
+version = "0.6.0"
 source = { virtual = "docker/aurelius-aws-lambda-base" }
 
 [[package]]
 name = "aurelius-aws-lambda-example"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "apps/aurelius-aws-lambda-example" }
 dependencies = [
     { name = "aurelius-aws-lambda" },
@@ -136,7 +136,7 @@ requires-dist = [
 
 [[package]]
 name = "aurelius-example"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "libs/python/aurelius-example" }
 dependencies = [
     { name = "pydantic" },
@@ -153,7 +153,7 @@ requires-dist = [
 
 [[package]]
 name = "aurelius-fastapi-example"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "apps/aurelius-fastapi-example" }
 dependencies = [
     { name = "aurelius-example" },
@@ -186,7 +186,7 @@ requires-dist = [
 
 [[package]]
 name = "aurelius-kafka"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "libs/python/aurelius-kafka" }
 dependencies = [
     { name = "aurelius-sdk" },
@@ -203,22 +203,22 @@ requires-dist = [
 
 [[package]]
 name = "aurelius-kafka-connect-base"
-version = "0.5.0"
+version = "0.6.0"
 source = { virtual = "docker/aurelius-kafka-connect-base" }
 
 [[package]]
 name = "aurelius-kafka-connect-jdbc-sink-base"
-version = "0.5.0"
+version = "0.6.0"
 source = { virtual = "docker/aurelius-kafka-connect-jdbc-sink-base" }
 
 [[package]]
 name = "aurelius-kafka-connect-jdbc-sink-example"
-version = "0.5.0"
+version = "0.6.0"
 source = { virtual = "connectors/aurelius-kafka-connect-jdbc-sink-example" }
 
 [[package]]
 name = "aurelius-project-template"
-version = "0.5.0"
+version = "0.6.0"
 source = { virtual = "." }
 
 [package.dev-dependencies]
@@ -309,7 +309,7 @@ dev = [
 
 [[package]]
 name = "aurelius-sdk"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "libs/python/aurelius-sdk" }
 dependencies = [
     { name = "httpx" },

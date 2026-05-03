@@ -1,3 +1,14 @@
+## 0.6.0 (2026-05-03)
+
+### 🚀 Features
+
+- enhance Docker setup with CycloneDX CLI and SBOM generation ([ae1d847](https://github.com/aureliusenterprise/project-template/commit/ae1d847))
+- update SBOM generation commands and add parallelism option ([b41729d](https://github.com/aureliusenterprise/project-template/commit/b41729d))
+
+### 🩹 Fixes
+
+- attest frontend container with angular sbom ([f2ecd26](https://github.com/aureliusenterprise/project-template/commit/f2ecd26))
+
 ## 0.5.0 (2026-05-02)
 
 ### 🚀 Features
