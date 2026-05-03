@@ -31,7 +31,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 # Install AWS Lambda dependencies for Python. Use a cache mount to speed up the process
 RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
-    pip install awslambdaric
+    pip install --only-binary=:all: awslambdaric==4.0.0
 
 # Set the working directory
 WORKDIR /var/task

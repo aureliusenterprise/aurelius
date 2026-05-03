@@ -12,7 +12,7 @@ COPY --chown=root:root --chmod=0755 apps/aurelius-aws-lambda-example/dist/*.whl 
 
 # Install package dependencies, then clean up. Use a cache mount to speed up the process.
 RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
-    pip install --target=./ ./*.whl && \
+    pip install --only-binary=:all: --target=./ ./*.whl && \
     rm ./*.whl
 
 # Use the AWS Lambda base image for the final image
