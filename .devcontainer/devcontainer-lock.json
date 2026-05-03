@@ -10,6 +10,11 @@
             "resolved": "ghcr.io/devcontainers-extra/features/cosign@sha256:f101399b455a37d28e9524b1ce338e5a6101859ade6c00cf2a9f9c51c3447dea",
             "version": "1.0.10"
         },
+        "ghcr.io/devcontainers-extra/features/cyclonedx-cli:1.0.10": {
+            "integrity": "sha256:829f03cbbbe329ded8ce66408dc00435b55117a60271c1861a9738a0d05f729d",
+            "resolved": "ghcr.io/devcontainers-extra/features/cyclonedx-cli@sha256:829f03cbbbe329ded8ce66408dc00435b55117a60271c1861a9738a0d05f729d",
+            "version": "1.0.10"
+        },
         "ghcr.io/devcontainers-extra/features/nx-npm:1": {
             "integrity": "sha256:a8850e9992c06b12209b9be9c5880e2fe3f2746735ca7634abb499b9d84bd6a8",
             "resolved": "ghcr.io/devcontainers-extra/features/nx-npm@sha256:a8850e9992c06b12209b9be9c5880e2fe3f2746735ca7634abb499b9d84bd6a8",
@@ -19,11 +24,6 @@
             "integrity": "sha256:4cf07db9322cbe261fd103de5ba390907df63cd48d9e0d68517656fc35a27e6e",
             "resolved": "ghcr.io/devcontainers-extra/features/sops@sha256:4cf07db9322cbe261fd103de5ba390907df63cd48d9e0d68517656fc35a27e6e",
             "version": "1.0.15"
-        },
-        "ghcr.io/devcontainers-extra/features/syft:1.0.10": {
-            "integrity": "sha256:1cfd858d0fc6eb4bd49b335cf94af734d6e6bd617a4a5265f54f07dbc72771e9",
-            "resolved": "ghcr.io/devcontainers-extra/features/syft@sha256:1cfd858d0fc6eb4bd49b335cf94af734d6e6bd617a4a5265f54f07dbc72771e9",
-            "version": "1.0.10"
         },
         "ghcr.io/devcontainers/features/docker-in-docker:2": {
             "integrity": "sha256:ce078b7bf7d9ef3bcb9813b32103795d8d72172446890b64772cbe1dec6baafd",

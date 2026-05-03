@@ -58,13 +58,22 @@
             },
             "outputs": ["{options.outputPath}"]
         },
-        "docker-attest": {
-            "command": "DIGEST=$(docker buildx imagetools inspect {args.namespace}/{projectName}:{args.version} --format '{{.Manifest.Digest}}') && cosign attest --yes --predicate dist/{projectRoot}/sbom.json --type cyclonedx {args.namespace}/{projectName}@${DIGEST}",
-            "dependsOn": ["sbom"],
+        "docker-sbom": {
+            "dependsOn": [
+                { "params": "forward", "target": "sbom" },
+                { "params": "forward", "target": "docker-build" }
+            ],
+            "executor": "nx:run-commands",
             "metadata": {
-                "description": "Attest the Docker image with the CycloneDX SBOM using Cosign"
+                "description": "Generate a Software Bill of Materials (SBOM) for the Docker image using Trivy and merge it with the SBOM generated from the application dependencies"
             },
             "options": {
+                "appSbomPath": "{projectRoot}/app-sbom.json",
+                "commands": [
+                    "trivy image --format cyclonedx --output {args.dockerSbomPath} {args.namespace}/{projectName}:{args.version}",
+                    "cyclonedx merge --name {args.namespace}/{projectName}:{args.version} --input-files {args.appSbomPath} {args.dockerSbomPath} --input-format json --output-file {projectRoot}/sbom.json --output-format json"
+                ],
+                "dockerSbomPath": "{projectRoot}/docker-sbom.json",
                 "namespace": "ghcr.io/aureliusenterprise",
                 "version": "local"
             }
@@ -94,8 +103,11 @@
             "executor": "@nx/eslint:lint"
         },
         "sbom": {
-            "command": "cyclonedx-esbuild --gather-license-texts --output-reproducible -o ./dist/apps/aurelius-frontend-example/sbom.json ./dist/apps/aurelius-frontend-example/stats.json",
-            "dependsOn": ["build"]
+            "command": "cyclonedx-esbuild --gather-license-texts --output-reproducible -o {args.appSbomPath} dist/apps/aurelius-frontend-example/stats.json",
+            "dependsOn": ["build"],
+            "options": {
+                "appSbomPath": "{projectRoot}/app-sbom.json"
+            }
         },
         "serve": {
             "configurations": {

@@ -210,6 +210,6 @@ coverage/
 
 # Docker Scanning
 licenses.json
-sbom.json
+*sbom.json
 vulnerabilities.json
 .trivy-cache/

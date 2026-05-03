@@ -100,13 +100,13 @@
             "packages": ["age", "gnupg2", "libpq-dev", "librdkafka-dev"]
         },
         "ghcr.io/devcontainers-extra/features/cosign:1.0.10": {},
+        "ghcr.io/devcontainers-extra/features/cyclonedx-cli:1.0.10": {},
         "ghcr.io/devcontainers-extra/features/nx-npm:1": {
             "version": "22.6.1"
         },
         "ghcr.io/devcontainers-extra/features/sops:1": {
             "version": "latest"
         },
-        "ghcr.io/devcontainers-extra/features/syft:1.0.10": {},
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/java:1": {
             "installGradle": true,
