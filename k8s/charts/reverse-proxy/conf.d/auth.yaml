@@ -10,7 +10,6 @@ ProxyPass "http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/{{ .R
 ProxyPassReverse "http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/{{ .Release.Namespace }}/auth/admin/"
 </Location>
 
-<Location /{{ .Release.Namespace }}/atlas/auth/>
-ProxyPass "http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/{{ .Release.Namespace }}/auth/"
-ProxyPassReverse "http://keycloak.{{ .Release.Namespace }}.svc.cluster.local:8080/{{ .Release.Namespace }}/auth/"
-</Location>
+# NOTE: /atlas/auth/ alias removed — it conflicted with the Alias directive in atlas.yaml
+# (Apache Alias covers /atlas/* at the filesystem level; ProxyPass on a sub-path within
+# an Alias-mapped space causes 503). The Atlas frontend must use /<namespace>/auth/ directly.

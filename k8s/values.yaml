@@ -16,7 +16,7 @@ keycloak:
         size: 1Gi
     external_ip: 51.138.48.239
 
-    keycloakFrontendURL: 'https://uatest.aureliusenterprise.dev/' # Replace with your URL here
+    keycloakFrontendURL: 'https://uatest.aureliusenterprise.dev' # Replace with your URL here
 
 atlas:
     persistence:
