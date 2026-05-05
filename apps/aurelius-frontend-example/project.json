@@ -43,7 +43,8 @@
                             "type": "anyComponentStyle"
                         }
                     ],
-                    "outputHashing": "all"
+                    "outputHashing": "all",
+                    "statsJson": true
                 }
             },
             "defaultConfiguration": "production",
@@ -52,7 +53,6 @@
                 "browser": "apps/aurelius-frontend-example/src/main.ts",
                 "inlineStyleLanguage": "scss",
                 "outputPath": "dist/apps/aurelius-frontend-example",
-                "statsJson": true,
                 "styles": ["apps/aurelius-frontend-example/src/styles.scss"],
                 "tsConfig": "apps/aurelius-frontend-example/tsconfig.app.json"
             },
@@ -97,7 +97,7 @@
             "executor": "@nx/eslint:lint"
         },
         "sbom": {
-            "command": "cyclonedx-esbuild --gather-license-texts --output-reproducible -o {args.appSbomPath} dist/apps/aurelius-frontend-example/stats.json",
+            "command": "cyclonedx-esbuild --gather-license-texts --output-reproducible -o {args.appSbomPath} dist/{projectRoot}/stats.json",
             "dependsOn": ["build"],
             "options": {
                 "appSbomPath": "{projectRoot}/app-sbom.json"
