@@ -14,6 +14,15 @@
                 }
             ]
         },
+        "docker-publish": {
+            "dependsOn": [
+                {
+                    "dependencies": true,
+                    "target": "build"
+                },
+                { "params": "forward", "projects": ["."], "target": "docker-setup-builder" }
+            ]
+        },
         "docker-sbom": {
             "command": "trivy image --format cyclonedx --output {args.dockerSbomPath} {args.namespace}/{projectName}:{args.version} && cyclonedx merge --name {args.namespace}/{projectName}:{args.version} --input-files {args.appSbomPath} {args.dockerSbomPath} --input-format json --output-file {projectRoot}/sbom.json --output-format json --output-version v1_6",
             "dependsOn": [{ "params": "forward", "projects": ["atlas"], "target": "sbom" }],
