@@ -11,7 +11,7 @@ permissions:
     packages: write
 
 jobs:
-    test:
+    publish:
         runs-on: ubuntu-latest
         permissions: write-all
         steps:
