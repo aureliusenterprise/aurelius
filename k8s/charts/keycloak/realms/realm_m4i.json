@@ -1062,7 +1062,8 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
         "http://127.0.0.1:9100/atlas/api/*",
-        "https://{{ .Values.global.external_hostname }}/*"
+        "https://{{ .Values.global.external_hostname }}/*",
+        "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/atlas/"
       ],
       "webOrigins": [
         "*"
@@ -1099,7 +1100,8 @@
         "tls.client.certificate.bound.access.tokens": "false",
         "saml.authnstatement": "false",
         "display.on.consent.screen": "false",
-        "saml.onetimeuse.condition": "false"
+        "saml.onetimeuse.condition": "false",
+        "post.logout.redirect.uris": "+"
       },
       "authenticationFlowBindingOverrides": {
         "browser": "ebda94b9-cfac-46f4-92ec-50178ff91425"
@@ -1258,7 +1260,8 @@
         "tls.client.certificate.bound.access.tokens": "false",
         "saml.authnstatement": "false",
         "display.on.consent.screen": "false",
-        "saml.onetimeuse.condition": "false"
+        "saml.onetimeuse.condition": "false",
+        "post.logout.redirect.uris": "+"
       },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
@@ -1667,7 +1670,8 @@
         "tls.client.certificate.bound.access.tokens": "false",
         "saml.authnstatement": "false",
         "display.on.consent.screen": "false",
-        "saml.onetimeuse.condition": "false"
+        "saml.onetimeuse.condition": "false",
+        "post.logout.redirect.uris": "+"
       },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
@@ -1748,7 +1752,8 @@
         "tls.client.certificate.bound.access.tokens": "false",
         "saml.authnstatement": "false",
         "display.on.consent.screen": "false",
-        "saml.onetimeuse.condition": "false"
+        "saml.onetimeuse.condition": "false",
+        "post.logout.redirect.uris": "+"
       },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
@@ -1975,7 +1980,8 @@
         "tls.client.certificate.bound.access.tokens": "false",
         "saml.authnstatement": "false",
         "display.on.consent.screen": "false",
-        "saml.onetimeuse.condition": "false"
+        "saml.onetimeuse.condition": "false",
+        "post.logout.redirect.uris": "+"
       },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
@@ -3274,7 +3280,7 @@
     "user": "office@aureliusenterprise.com"
   },
   "loginTheme": "m4i",
-  "accountTheme": "m4i",
+  "accountTheme": "keycloak",
   "adminTheme": "m4i",
   "emailTheme": "m4i",
   "eventsEnabled": true,
@@ -4271,7 +4277,8 @@
     "parRequestUriLifespan": "60",
     "clientSessionMaxLifespan": "0",
     "clientOfflineSessionIdleTimeout": "0",
-    "cibaInterval": "5"
+    "cibaInterval": "5",
+    "legacy-logout-redirect-uri": "true"
   },
   "keycloakVersion": "16.1.0",
   "userManagedAccessAllowed": false,

@@ -70,11 +70,23 @@ export class KeycloakService {
   }
 
   async logout(): Promise<void> {
-    const { success, error } = this.keycloakAuth.logout();
-    return new Promise<void>((resolve, reject) => {
-      success(resolve);
-      error(reject);
-    });
+    // KC 22+ dropped redirect_uri on the logout endpoint; use post_logout_redirect_uri + id_token_hint.
+    // keycloak-js v6 still builds the old URL, so we construct the redirect manually.
+    const kc = this.keycloakAuth as any;
+    const logoutBase: string = kc.createLogoutUrl({});
+    const url = new URL(logoutBase, window.location.href);
+
+    // Redirect to the app root (/<namespace>/atlas/) after logout.
+    // Extract namespace from the logout URL path (more reliable than parsing window.location).
+    // Logout path is /<namespace>/auth/realms/..., so segment [1] is the namespace.
+    const namespace = url.pathname.split('/')[1];
+    const appRoot = `${url.origin}/${namespace}/atlas/`;
+    url.searchParams.set('post_logout_redirect_uri', appRoot);
+    if (kc.idToken) {
+      url.searchParams.set('id_token_hint', kc.idToken);
+    }
+
+    window.location.href = url.toString();
   }
 
   async accountManagement(): Promise<void> {
