@@ -92,13 +92,13 @@
             "packages": ["age", "gdb", "graphviz", "gnupg2", "libpq-dev", "librdkafka-dev", "openssh-client"]
         },
         "ghcr.io/devcontainers-extra/features/cosign:1.0.10": {},
+        "ghcr.io/devcontainers-extra/features/cyclonedx-cli:1.0.10": {},
         "ghcr.io/devcontainers-extra/features/nx-npm:1": {
             "version": "19.0.4"
         },
         "ghcr.io/devcontainers-extra/features/sops:1": {
             "version": "latest"
         },
-        "ghcr.io/devcontainers-extra/features/syft:1.0.10": {},
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
         "ghcr.io/devcontainers/features/node:1": {

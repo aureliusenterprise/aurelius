@@ -3,6 +3,7 @@ import { execSync } from 'child_process';
 import { dirname } from 'path';
 
 export interface DockerPluginOptions {
+    readonly attestTargetName?: string;
     readonly buildTargetName?: string;
     readonly licenseScanTargetName?: string;
     readonly publishTargetName?: string;
@@ -30,6 +31,7 @@ function getBranchName(): string {
 async function createNodesInternal(
     configFilePath: string,
     {
+        attestTargetName = 'docker-attest',
         buildTargetName = 'docker-build',
         licenseScanTargetName = 'docker-license-scan',
         publishTargetName = 'docker-publish',
@@ -65,6 +67,18 @@ async function createNodesInternal(
             [projectRoot]: {
                 tags: ['docker'],
                 targets: {
+                    [attestTargetName]: {
+                        command:
+                            "DIGEST=$(docker buildx imagetools inspect {args.namespace}/{projectName}:{args.version} --format '{{.Manifest.Digest}}') && cosign attest --predicate {projectRoot}/sbom.json --type cyclonedx {args.namespace}/{projectName}@${DIGEST}",
+                        dependsOn: [{ target: 'docker-sbom', params: 'forward' }],
+                        options: {
+                            namespace: 'ghcr.io/aureliusenterprise',
+                            version: 'local',
+                        },
+                        metadata: {
+                            description: 'Attest the Docker image using Cosign and the generated SBOM',
+                        },
+                    },
                     [buildTargetName]: {
                         command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
                         dependsOn: [
@@ -84,7 +98,7 @@ async function createNodesInternal(
                         },
                     },
                     [publishTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --sbom=true --push --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
+                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --push --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
                         options: {
                             env: {
                                 DOCKER_BUILDKIT: '1',
@@ -103,12 +117,14 @@ async function createNodesInternal(
                         },
                     },
                     [sbomTargetName]: {
-                        command: `syft {args.namespace}/{projectName}:{args.version} -o spdx-json=${projectRoot}/sbom.json --enrich=all`,
+                        executor: 'nx:run-commands',
                         options: {
+                            command:
+                                'trivy image --format cyclonedx --output {args.sbomPath} {args.namespace}/{projectName}:{args.version} --cache-dir {projectRoot}/.trivy-cache',
                             namespace: 'ghcr.io/aureliusenterprise',
+                            sbomPath: '{projectRoot}/sbom.json',
                             version: 'local',
                         },
-                        dependsOn: [{ target: buildTargetName, dependencies: true, params: 'forward' }],
                         metadata: {
                             description: 'Generate a Software Bill of Materials (SBOM) for the Docker image',
                         },
@@ -138,22 +154,26 @@ async function createNodesInternal(
                         },
                     },
                     [licenseScanTargetName]: {
-                        command: `trivy image {args.namespace}/{projectName}:{args.version} --scanners license --format json --output {projectRoot}/licenses.json --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache`,
+                        command:
+                            'trivy sbom {args.sbomPath} --scanners license --format json --output {args.reportPath} --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache',
+                        dependsOn: [{ target: sbomTargetName, params: 'forward' }],
                         options: {
                             exitCode: 0,
-                            namespace: 'ghcr.io/aureliusenterprise',
-                            version: 'local',
+                            reportPath: '{projectRoot}/licenses.json',
+                            sbomPath: '{projectRoot}/sbom.json',
                         },
                         metadata: {
                             description: 'Scan the Docker image for license compliance using Trivy',
                         },
                     },
                     [vulnScanTargetName]: {
-                        command: `trivy image {args.namespace}/{projectName}:{args.version} --scanners vuln --format json --output {projectRoot}/vulnerabilities.json --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache`,
+                        command:
+                            'trivy sbom {args.sbomPath} --scanners vuln --format json --output {args.reportPath} --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache',
+                        dependsOn: [{ target: sbomTargetName, params: 'forward' }],
                         options: {
                             exitCode: 0,
-                            namespace: 'ghcr.io/aureliusenterprise',
-                            version: 'local',
+                            reportPath: '{projectRoot}/vulnerabilities.json',
+                            sbomPath: '{projectRoot}/sbom.json',
                         },
                         metadata: {
                             description: 'Scan the Docker image for vulnerabilities using Trivy',

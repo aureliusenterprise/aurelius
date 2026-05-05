@@ -228,6 +228,6 @@ certs/
 
 # Docker Scanning
 licenses.json
-sbom.json
 vulnerabilities.json
+*sbom.json
 .trivy-cache/

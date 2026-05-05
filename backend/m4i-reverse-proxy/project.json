@@ -13,6 +13,20 @@
                     "target": "build"
                 }
             ]
+        },
+        "docker-sbom": {
+            "command": "trivy image --format cyclonedx --output {args.dockerSbomPath} {args.namespace}/{projectName}:{args.version} && cyclonedx merge --name {args.namespace}/{projectName}:{args.version} --input-files {args.appSbomPath} {args.dockerSbomPath} --input-format json --output-file {projectRoot}/sbom.json --output-format json --output-version v1_6",
+            "dependsOn": [{ "params": "forward", "projects": ["atlas"], "target": "sbom" }],
+            "metadata": {
+                "description": "Generate a Software Bill of Materials (SBOM) for the Docker image using Trivy and merge it with the SBOM generated from the application dependencies"
+            },
+            "options": {
+                "appSbomPath": "apps/atlas/app-sbom.json",
+                "dockerSbomPath": "{projectRoot}/docker-sbom.json",
+                "namespace": "ghcr.io/aureliusenterprise",
+                "version": "local"
+            },
+            "parallelism": false
         }
     }
 }

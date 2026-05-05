@@ -33,7 +33,8 @@
                         }
                     ],
                     "outputHashing": "all",
-                    "serviceWorker": "apps/atlas/ngsw-config.json"
+                    "serviceWorker": "apps/atlas/ngsw-config.json",
+                    "statsJson": true
                 },
                 "standalone": {
                     "budgets": [
@@ -50,7 +51,8 @@
                         }
                     ],
                     "outputHashing": "all",
-                    "serviceWorker": "apps/atlas/ngsw-config.json"
+                    "serviceWorker": "apps/atlas/ngsw-config.json",
+                    "statsJson": true
                 }
             },
             "defaultConfiguration": "standalone",
@@ -102,6 +104,13 @@
             "executor": "@nx/linter:eslint",
             "options": {
                 "lintFilePatterns": ["apps/atlas/**/*.ts", "apps/atlas/**/*.html"]
+            }
+        },
+        "sbom": {
+            "command": "cyclonedx-esbuild --gather-license-texts --output-reproducible -o {args.appSbomPath} dist/{projectRoot}/stats.json",
+            "dependsOn": ["build"],
+            "options": {
+                "appSbomPath": "{projectRoot}/app-sbom.json"
             }
         },
         "serve": {

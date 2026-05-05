@@ -1,0 +1,59 @@
+{
+    "features": {
+        "ghcr.io/devcontainers-extra/features/apt-packages:1": {
+            "integrity": "sha256:55c54412112da81b9381e470cdbbe55278564950d1ff536ce925b1e8e096babd",
+            "resolved": "ghcr.io/devcontainers-extra/features/apt-packages@sha256:55c54412112da81b9381e470cdbbe55278564950d1ff536ce925b1e8e096babd",
+            "version": "1.0.6"
+        },
+        "ghcr.io/devcontainers-extra/features/cosign:1.0.10": {
+            "integrity": "sha256:f101399b455a37d28e9524b1ce338e5a6101859ade6c00cf2a9f9c51c3447dea",
+            "resolved": "ghcr.io/devcontainers-extra/features/cosign@sha256:f101399b455a37d28e9524b1ce338e5a6101859ade6c00cf2a9f9c51c3447dea",
+            "version": "1.0.10"
+        },
+        "ghcr.io/devcontainers-extra/features/cyclonedx-cli:1.0.10": {
+            "integrity": "sha256:829f03cbbbe329ded8ce66408dc00435b55117a60271c1861a9738a0d05f729d",
+            "resolved": "ghcr.io/devcontainers-extra/features/cyclonedx-cli@sha256:829f03cbbbe329ded8ce66408dc00435b55117a60271c1861a9738a0d05f729d",
+            "version": "1.0.10"
+        },
+        "ghcr.io/devcontainers-extra/features/nx-npm:1": {
+            "integrity": "sha256:a8850e9992c06b12209b9be9c5880e2fe3f2746735ca7634abb499b9d84bd6a8",
+            "resolved": "ghcr.io/devcontainers-extra/features/nx-npm@sha256:a8850e9992c06b12209b9be9c5880e2fe3f2746735ca7634abb499b9d84bd6a8",
+            "version": "1.0.11"
+        },
+        "ghcr.io/devcontainers-extra/features/sops:1": {
+            "integrity": "sha256:4cf07db9322cbe261fd103de5ba390907df63cd48d9e0d68517656fc35a27e6e",
+            "resolved": "ghcr.io/devcontainers-extra/features/sops@sha256:4cf07db9322cbe261fd103de5ba390907df63cd48d9e0d68517656fc35a27e6e",
+            "version": "1.0.15"
+        },
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "integrity": "sha256:ce078b7bf7d9ef3bcb9813b32103795d8d72172446890b64772cbe1dec6baafd",
+            "resolved": "ghcr.io/devcontainers/features/docker-in-docker@sha256:ce078b7bf7d9ef3bcb9813b32103795d8d72172446890b64772cbe1dec6baafd",
+            "version": "2.16.1"
+        },
+        "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+            "integrity": "sha256:bbe8adf6b37fff8c67412ab0a4579f4c2f30bbaba1d9a5cebd9e38bade54025b",
+            "resolved": "ghcr.io/devcontainers/features/kubectl-helm-minikube@sha256:bbe8adf6b37fff8c67412ab0a4579f4c2f30bbaba1d9a5cebd9e38bade54025b",
+            "version": "1.3.1"
+        },
+        "ghcr.io/devcontainers/features/node:1": {
+            "integrity": "sha256:8c0de46939b61958041700ee89e3493f3b2e4131a06dc46b4d9423427d06e5f6",
+            "resolved": "ghcr.io/devcontainers/features/node@sha256:8c0de46939b61958041700ee89e3493f3b2e4131a06dc46b4d9423427d06e5f6",
+            "version": "1.7.1"
+        },
+        "ghcr.io/devcontainers/features/python:1": {
+            "integrity": "sha256:fbcad6955caeecc5ad3f7886baf652e25cba5225a6c4c2287c536de2e5607511",
+            "resolved": "ghcr.io/devcontainers/features/python@sha256:fbcad6955caeecc5ad3f7886baf652e25cba5225a6c4c2287c536de2e5607511",
+            "version": "1.8.0"
+        },
+        "ghcr.io/dhoeric/features/google-cloud-cli:1": {
+            "integrity": "sha256:fa5d894718825c5ad8009ac8f2c9f0cea3d1661eb108a9d465cba9f3fc48965f",
+            "resolved": "ghcr.io/dhoeric/features/google-cloud-cli@sha256:fa5d894718825c5ad8009ac8f2c9f0cea3d1661eb108a9d465cba9f3fc48965f",
+            "version": "1.0.1"
+        },
+        "ghcr.io/dhoeric/features/trivy:1": {
+            "integrity": "sha256:c291ec03dd2938d1c4bc6cf87e6afab8067514fb000c9165bcc66a6f65092783",
+            "resolved": "ghcr.io/dhoeric/features/trivy@sha256:c291ec03dd2938d1c4bc6cf87e6afab8067514fb000c9165bcc66a6f65092783",
+            "version": "1.0.0"
+        }
+    }
+}
