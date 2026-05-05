@@ -47,10 +47,6 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Publish containers
-              run: npx nx run-many -t docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
-              shell: bash
-
             - name: Install Cosign
               uses: sigstore/cosign-installer@v4.1.1
 
