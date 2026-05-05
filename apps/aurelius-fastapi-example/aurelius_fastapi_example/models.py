@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 from typing import Literal
 from uuid import UUID
 
+import logfire
 from aurelius_sdk.postgresql import sanitize_tsquery
 from pydantic import BaseModel, Field, HttpUrl, NonNegativeInt, PositiveInt, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -155,8 +156,8 @@ class Settings(BaseSettings, Hashable):
         description="The host to bind the server to.",
     )
 
-    log_level: str = Field(
-        default="INFO",
+    log_level: logfire.LevelName = Field(
+        default="info",
         description="The logging level for the application.",
     )
 

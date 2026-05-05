@@ -1,7 +1,7 @@
 from collections.abc import AsyncGenerator, Callable
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
 
-from aurelius_sdk.logger import setup_logger
+import logfire
 from fastapi import FastAPI
 from sqlmodel import SQLModel
 
@@ -28,6 +28,7 @@ def make_lifespan(settings: Settings) -> Callable[[FastAPI], AbstractAsyncContex
             None: When the application is running.
         """
         LOGGER.info("Starting %s (%s) 🚀", app.title, app.version)
+        LOGGER.debug("Application settings: %s", settings)
 
         if app.debug:
             LOGGER.warning("🚨 Running in development mode. Not for production use! 🚨")
@@ -73,7 +74,18 @@ def create_app(settings: Settings) -> FastAPI:
 
     setup_routes(app)
 
-    LOGGER.debug("Application setup complete. Settings: %s", settings)
+    logfire.configure(
+        send_to_logfire=False,
+        min_level=settings.log_level,
+        console=logfire.ConsoleOptions(min_log_level=settings.log_level),
+    )
+
+    logfire.instrument_fastapi(app)
+    logfire.instrument_httpx()
+    logfire.instrument_psycopg()
+
+    LOGGER.addHandler(logfire.LogfireLoggingHandler())
+    LOGGER.setLevel(settings.log_level.upper())
 
     return app
 
@@ -82,11 +94,7 @@ def main(settings: Settings) -> FastAPI:
     """
     Main entry point for the FastAPI application.
 
-    Sets up logging for the app and overrides the default log format for all log handlers.
-
     Returns:
         FastAPI: The FastAPI application instance.
     """
-    setup_logger(level=settings.log_level)
-
     return create_app(settings)
