@@ -1,6 +1,12 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "implicitDependencies": ["aurelius-dev-keycloak", "aurelius-dev-postgres", "aurelius-example", "aurelius-sdk"],
+    "implicitDependencies": [
+        "aurelius-dev-keycloak",
+        "aurelius-dev-observability",
+        "aurelius-dev-postgres",
+        "aurelius-example",
+        "aurelius-sdk"
+    ],
     "name": "aurelius-fastapi-example",
     "projectType": "application",
     "sourceRoot": "{projectRoot}/aurelius_fastapi_example",
@@ -10,7 +16,10 @@
             "continuous": true,
             "dependsOn": [
                 { "target": "decrypt" },
-                { "projects": ["aurelius-dev-keycloak", "aurelius-dev-postgres"], "target": "serve" }
+                {
+                    "projects": ["aurelius-dev-keycloak", "aurelius-dev-postgres", "aurelius-dev-observability"],
+                    "target": "serve"
+                }
             ],
             "executor": "@nxlv/python:run-commands",
             "metadata": {

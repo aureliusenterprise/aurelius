@@ -5,5 +5,12 @@
         },
         "secure": false,
         "target": "http://127.0.0.1:8000"
+    },
+    "/otel": {
+        "pathRewrite": {
+            "^/otel": ""
+        },
+        "secure": false,
+        "target": "http://localhost:4318"
     }
 }

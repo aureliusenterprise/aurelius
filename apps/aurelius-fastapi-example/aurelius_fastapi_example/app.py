@@ -1,14 +1,34 @@
+import logging
 from collections.abc import AsyncGenerator, Callable
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
 
 import logfire
 from fastapi import FastAPI
+from opentelemetry.sdk._logs import LoggingHandler
 from sqlmodel import SQLModel
 
 from aurelius_fastapi_example.globals import LOGGER, METADATA, NAME
 from aurelius_fastapi_example.models import Settings
 from aurelius_fastapi_example.providers import database, get_broadcaster
 from aurelius_fastapi_example.routes import ENTITIES, HEALTH
+
+
+def _ensure_logfire_handler(logger: logging.Logger) -> None:
+    """Ensure a logger has exactly one OTEL logging handler attached."""
+    logger_provider = logfire.DEFAULT_LOGFIRE_INSTANCE.config.get_logger_provider()
+    logger.handlers = [handler for handler in logger.handlers if not isinstance(handler, LoggingHandler)]
+    logger.addHandler(LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider))
+
+
+def setup_logging(level: str) -> None:
+    """Configure application and uvicorn loggers for OTEL log export."""
+    log_level = level.upper()
+
+    for logger_name in (NAME, "uvicorn.error", "uvicorn.access"):
+        logger = logging.getLogger(logger_name)
+        _ensure_logfire_handler(logger)
+        logger.setLevel(log_level)
+        logger.propagate = False
 
 
 def make_lifespan(settings: Settings) -> Callable[[FastAPI], AbstractAsyncContextManager[None]]:
@@ -65,17 +85,20 @@ def setup_routes(app: FastAPI) -> None:
 
 def create_app(settings: Settings) -> FastAPI:
     """Create and configure the FastAPI application."""
-    app = FastAPI(lifespan=make_lifespan(settings))
-
-    app.debug = settings.is_development
-    app.description = METADATA.get("Summary", "")
-    app.title = NAME
-    app.version = f"v{METADATA.get('Version', '')}"
+    app = FastAPI(
+        lifespan=make_lifespan(settings),
+        debug=settings.is_development,
+        description=METADATA.get("Summary", ""),
+        title=NAME,
+        version=f"v{METADATA.get('Version', '')}",
+    )
 
     setup_routes(app)
 
     logfire.configure(
         send_to_logfire=False,
+        service_name=app.title,
+        service_version=app.version,
         min_level=settings.log_level,
         console=logfire.ConsoleOptions(min_log_level=settings.log_level),
     )
@@ -84,8 +107,7 @@ def create_app(settings: Settings) -> FastAPI:
     logfire.instrument_httpx()
     logfire.instrument_psycopg()
 
-    LOGGER.addHandler(logfire.LogfireLoggingHandler())
-    LOGGER.setLevel(settings.log_level.upper())
+    setup_logging(settings.log_level)
 
     return app
 

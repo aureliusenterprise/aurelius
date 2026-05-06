@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+    - name: Aurelius Observability
+      orgId: 1
+      folder: Aurelius
+      type: file
+      disableDeletion: false
+      editable: true
+      options:
+          path: /var/lib/grafana/dashboards

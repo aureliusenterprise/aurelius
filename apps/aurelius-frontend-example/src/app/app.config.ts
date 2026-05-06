@@ -1,6 +1,8 @@
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from "@angular/core";
 import { provideRouter } from "@angular/router";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { aureliusOpenTelemetryHttpInterceptor, provideAureliusOpenTelemetry } from "aurelius-observability";
 import {
     INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
     includeBearerTokenInterceptor,
@@ -18,6 +20,12 @@ export async function initialize(): Promise<ApplicationConfig> {
     return {
         providers: [
             provideBrowserGlobalErrorListeners(),
+            provideAureliusOpenTelemetry({
+                exporter: new OTLPTraceExporter({
+                    url: "/otel/v1/traces",
+                }),
+                name: "aurelius-frontend-example",
+            }),
             provideKeycloak({
                 config: keycloak,
                 initOptions: {
@@ -30,7 +38,7 @@ export async function initialize(): Promise<ApplicationConfig> {
                 useValue: [{ urlPattern: /^.*\/api\/.*$/ }],
             },
             provideRouter(routes),
-            provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
+            provideHttpClient(withInterceptors([aureliusOpenTelemetryHttpInterceptor, includeBearerTokenInterceptor])),
             provideZonelessChangeDetection(),
         ],
     };

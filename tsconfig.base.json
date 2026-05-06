@@ -5,7 +5,6 @@
     },
     "compileOnSave": false,
     "compilerOptions": {
-        "baseUrl": ".",
         "declaration": false,
         "experimentalDecorators": true,
         "importHelpers": true,
@@ -13,8 +12,9 @@
         "module": "esnext",
         "moduleResolution": "node10",
         "paths": {
-            "aurelius-data-access": ["libs/angular/aurelius-data-access/src/index.ts"],
-            "aurelius-ui": ["libs/angular/aurelius-ui/src/index.ts"]
+            "aurelius-data-access": ["./libs/angular/aurelius-data-access/src/index.ts"],
+            "aurelius-observability": ["./libs/angular/aurelius-observability/src/index.ts"],
+            "aurelius-ui": ["./libs/angular/aurelius-ui/src/index.ts"]
         },
         "rootDir": ".",
         "skipDefaultLibCheck": true,

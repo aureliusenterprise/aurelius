@@ -1,0 +1,130 @@
+{
+    "id": null,
+    "panels": [
+        {
+            "datasource": {
+                "type": "loki",
+                "uid": "loki"
+            },
+            "gridPos": {
+                "h": 12,
+                "w": 24,
+                "x": 0,
+                "y": 0
+            },
+            "id": 1,
+            "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": true,
+                "showTime": true,
+                "wrapLogMessage": true
+            },
+            "targets": [
+                {
+                    "direction": "backward",
+                    "expr": "{service_name=\"aurelius-fastapi-example\"}",
+                    "queryType": "range",
+                    "refId": "A"
+                }
+            ],
+            "title": "FastAPI Logs",
+            "type": "logs"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "reqps"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 12
+            },
+            "id": 2,
+            "targets": [
+                {
+                    "expr": "sum(rate(http_server_duration_milliseconds_count{exported_job=\"aurelius-fastapi-example\"}[5m]))",
+                    "legendFormat": "requests/s",
+                    "refId": "A"
+                }
+            ],
+            "title": "Request Rate (req/s)",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "reqps"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 12
+            },
+            "id": 3,
+            "targets": [
+                {
+                    "expr": "sum(rate(http_server_duration_milliseconds_count{exported_job=\"aurelius-fastapi-example\",http_status_code=~\"5..\"}[5m]))",
+                    "legendFormat": "5xx/s",
+                    "refId": "A"
+                }
+            ],
+            "title": "Error Rate (5xx req/s)",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "tempo",
+                "uid": "tempo"
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 24,
+                "x": 0,
+                "y": 20
+            },
+            "id": 4,
+            "options": {
+                "showHeader": true
+            },
+            "targets": [
+                {
+                    "limit": 20,
+                    "query": "{resource.service.name = \"aurelius-fastapi-example\"}",
+                    "queryType": "traceqlSearch",
+                    "refId": "A"
+                }
+            ],
+            "title": "Trace Search (Tempo)",
+            "type": "table"
+        }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 40,
+    "tags": ["aurelius", "fastapi", "observability"],
+    "time": {
+        "from": "now-6h",
+        "to": "now"
+    },
+    "timezone": "browser",
+    "title": "Aurelius FastAPI Observability",
+    "uid": "aurelius-fastapi-obsv",
+    "version": 2
+}
