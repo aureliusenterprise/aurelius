@@ -75,6 +75,7 @@ export class KeycloakService {
     const kc = this.keycloakAuth as any;
     const logoutBase: string = kc.createLogoutUrl({});
     const url = new URL(logoutBase, window.location.href);
+    url.searchParams.delete('redirect_uri'); // keycloak-js v6 always appends this; KC 22 rejects it
 
     // Redirect to the app root (/<namespace>/atlas/) after logout.
     // Extract namespace from the logout URL path (more reliable than parsing window.location).
