@@ -8,6 +8,10 @@ package-mode = false
 avro-python3 = "==1.10.2"
 python = "~3.8"
 
+[tool.poetry.dependencies.aurelius-license-report]
+develop = true
+path = "reports/aurelius-license-report"
+
 [tool.poetry.dependencies.aurelius-vulnerability-report]
 develop = true
 path = "reports/aurelius-vulnerability-report"

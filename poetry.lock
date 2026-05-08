@@ -308,6 +308,24 @@ tests = ["cloudpickle", "hypothesis", "mypy (>=1.11.1)", "pympler", "pytest (>=4
 tests-mypy = ["mypy (>=1.11.1)", "pytest-mypy-plugins"]
 
 [[package]]
+name = "aurelius-license-report"
+version = "0.0.0"
+description = "This report provides license analysis information for Aurelius projects."
+optional = false
+python-versions = "~3.8"
+files = []
+develop = true
+
+[package.dependencies]
+jinja2 = ">=3.1.6"
+pydantic = ">=2.8.0"
+pydantic-settings = ">=2.6.0"
+
+[package.source]
+type = "directory"
+url = "reports/aurelius-license-report"
+
+[[package]]
 name = "aurelius-vulnerability-report"
 version = "0.0.0"
 description = "This report provides vulnerability information for Aurelius projects."
@@ -4915,4 +4933,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.8"
-content-hash = "aa0fad3539619601267d7c8f189964d9294185c6a0c03eb5ba959eb8094ac48d"
+content-hash = "0f28bca4d9163851340eb03745c9eb8c95e6136e62392e654d42440811de1b97"

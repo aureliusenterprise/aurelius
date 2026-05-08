@@ -1,0 +1,36 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "name": "aurelius-license-report",
+    "projectType": "application",
+    "sourceRoot": "{projectRoot}/aurelius_license_report",
+    "tags": [],
+    "targets": {
+        "build": {
+            "dependsOn": [
+                "decrypt",
+                {
+                    "projects": "tag:docker",
+                    "target": "docker-license-scan"
+                }
+            ],
+            "executor": "@nxlv/python:run-commands",
+            "metadata": {
+                "description": "Generate a workspace HTML summary for license scan reports"
+            },
+            "options": {
+                "command": "poetry run python -m aurelius_license_report"
+            }
+        },
+        "package": {
+            "dependsOn": ["build"],
+            "executor": "nx:run-commands",
+            "metadata": {
+                "description": "Package all license reports into a zip file"
+            },
+            "options": {
+                "command": "zip -r license-reports.zip .",
+                "cwd": "{projectRoot}/dist"
+            }
+        }
+    }
+}
