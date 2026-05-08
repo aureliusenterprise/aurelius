@@ -102,7 +102,7 @@
         "ghcr.io/devcontainers-extra/features/cosign:1.0.10": {},
         "ghcr.io/devcontainers-extra/features/cyclonedx-cli:1.0.10": {},
         "ghcr.io/devcontainers-extra/features/nx-npm:1": {
-            "version": "22.6.1"
+            "version": "22.7.1"
         },
         "ghcr.io/devcontainers-extra/features/sops:1": {
             "version": "latest"
