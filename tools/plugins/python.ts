@@ -46,7 +46,7 @@ function buildTargets(
             description: 'Run type checking on the Python code',
         },
         options: {
-            command: `uv run pyright ${projectRoot}`,
+            command: `poetry run pyright ${projectRoot}`,
         },
     };
 
@@ -66,7 +66,7 @@ function buildTargets(
                 description: 'Run the end-to-end tests for this application',
             },
             options: {
-                command: `uv run pytest ${e2ePath}`,
+                command: `poetry run pytest ${e2ePath}`,
                 cwd: projectRoot,
             },
         };
@@ -129,7 +129,7 @@ function buildTargets(
                 description: 'Run the unit tests for this application',
             },
             options: {
-                command: `uv run pytest ${testPath}`,
+                command: `poetry run pytest ${testPath}`,
                 cwd: projectRoot,
             },
         };
