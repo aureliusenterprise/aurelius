@@ -33,14 +33,14 @@ class Entity(AvroBase, SQLModel, table=True):
     time_created: datetime | None = Field(
         default=None,
         description="The timestamp when the entity was created with timezone info",
-        sa_type=types.TIMESTAMP(timezone=True),
+        sa_type=types.TIMESTAMP(timezone=True),  # type: ignore[timestamp with timezone is allowed]
         sa_column_kwargs={"server_default": func.now()},
     )
 
     time_modified: datetime | None = Field(
         default=None,
         description="The timestamp when the entity was last modified with timezone info",
-        sa_type=types.TIMESTAMP(timezone=True),
+        sa_type=types.TIMESTAMP(timezone=True),  # type: ignore[timestamp with timezone is allowed]
         sa_column_kwargs={"onupdate": func.now()},
     )
 
