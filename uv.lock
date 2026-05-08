@@ -13,8 +13,10 @@ members = [
     "aurelius-kafka-connect-base",
     "aurelius-kafka-connect-jdbc-sink-base",
     "aurelius-kafka-connect-jdbc-sink-example",
+    "aurelius-license-report",
     "aurelius-project-template",
     "aurelius-sdk",
+    "aurelius-vulnerability-report",
 ]
 
 [[package]]
@@ -228,6 +230,23 @@ version = "0.6.0"
 source = { virtual = "connectors/aurelius-kafka-connect-jdbc-sink-example" }
 
 [[package]]
+name = "aurelius-license-report"
+version = "0.0.0"
+source = { editable = "reports/aurelius-license-report" }
+dependencies = [
+    { name = "jinja2" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "jinja2", specifier = ">=3.1.6" },
+    { name = "pydantic", specifier = ">=2.11.7" },
+    { name = "pydantic-settings", specifier = ">=2.10.1" },
+]
+
+[[package]]
 name = "aurelius-project-template"
 version = "0.6.0"
 source = { virtual = "." }
@@ -240,7 +259,9 @@ dev = [
     { name = "aurelius-example" },
     { name = "aurelius-fastapi-example" },
     { name = "aurelius-kafka" },
+    { name = "aurelius-license-report" },
     { name = "aurelius-sdk", extra = ["full"] },
+    { name = "aurelius-vulnerability-report" },
     { name = "boto3" },
     { name = "confluent-kafka", extra = ["avro", "schema-registry"] },
     { name = "mike" },
@@ -284,7 +305,9 @@ dev = [
     { name = "aurelius-example", editable = "libs/python/aurelius-example" },
     { name = "aurelius-fastapi-example", editable = "apps/aurelius-fastapi-example" },
     { name = "aurelius-kafka", editable = "libs/python/aurelius-kafka" },
+    { name = "aurelius-license-report", editable = "reports/aurelius-license-report" },
     { name = "aurelius-sdk", extras = ["full"], editable = "libs/python/aurelius-sdk" },
+    { name = "aurelius-vulnerability-report", editable = "reports/aurelius-vulnerability-report" },
     { name = "boto3", specifier = ">=1.39.6" },
     { name = "confluent-kafka", extras = ["avro", "schema-registry"], specifier = ">=2.13.2" },
     { name = "mike", specifier = ">=2.1.3" },
@@ -369,6 +392,23 @@ requires-dist = [
     { name = "types-boto3", extras = ["full"], marker = "extra == 'full'", specifier = ">=1.39.6" },
 ]
 provides-extras = ["aws", "azure", "full", "logging", "postgresql", "testing"]
+
+[[package]]
+name = "aurelius-vulnerability-report"
+version = "0.0.0"
+source = { editable = "reports/aurelius-vulnerability-report" }
+dependencies = [
+    { name = "jinja2" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "jinja2", specifier = ">=3.1.6" },
+    { name = "pydantic", specifier = ">=2.11.7" },
+    { name = "pydantic-settings", specifier = ">=2.10.1" },
+]
 
 [[package]]
 name = "authlib"

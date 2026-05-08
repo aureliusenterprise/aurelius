@@ -204,12 +204,14 @@ build
 # Sonarqube
 .sonar/
 .scannerwork/
+*.sarif
 
 # Vitest coverage
 coverage/
 
 # Docker Scanning
-licenses.json
 *sbom.json
+licenses.json
 vulnerabilities.json
+vulnerabilities.html
 .trivy-cache/

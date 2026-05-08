@@ -148,28 +148,43 @@ async function createNodesInternal(
                         },
                     },
                     [licenseScanTargetName]: {
-                        command:
-                            "trivy sbom {args.sbomPath} --scanners license --format json --output {args.reportPath} --exit-code {args.exitCode}",
-                        dependsOn: [{ target: sbomTargetName, params: "forward" }],
-                        options: {
-                            exitCode: 0,
-                            reportPath: "{projectRoot}/licenses.json",
-                            sbomPath: "{projectRoot}/sbom.json",
+                        configurations: {
+                            json: {
+                                command:
+                                    "trivy sbom {args.sbomPath} --scanners license --format json --output {args.reportPath} --exit-code {args.exitCode}",
+                                exitCode: 0,
+                                reportPath: "{projectRoot}/licenses.json",
+                                sbomPath: "{projectRoot}/sbom.json",
+                            },
                         },
+                        defaultConfiguration: "json",
+                        dependsOn: [{ target: sbomTargetName, params: "forward" }],
+                        executor: "nx:run-commands",
                         metadata: {
                             description: "Scan the Docker image for license compliance using Trivy",
                         },
                         parallelism: false,
                     },
                     [vulnScanTargetName]: {
-                        command:
-                            "trivy sbom {args.sbomPath} --scanners vuln --format json --output {args.reportPath} --exit-code {args.exitCode}",
-                        dependsOn: [{ target: sbomTargetName, params: "forward" }],
-                        options: {
-                            exitCode: 0,
-                            reportPath: "{projectRoot}/vulnerabilities.json",
-                            sbomPath: "{projectRoot}/sbom.json",
+                        configurations: {
+                            json: {
+                                command:
+                                    "trivy sbom {args.sbomPath} --scanners vuln --format json --output {args.reportPath} --exit-code {args.exitCode}",
+                                exitCode: 0,
+                                reportPath: "{projectRoot}/vulnerabilities.json",
+                                sbomPath: "{projectRoot}/sbom.json",
+                            },
+                            sarif: {
+                                command:
+                                    "trivy sbom {args.sbomPath} --scanners vuln --format sarif --output {args.reportPath} --exit-code {args.exitCode}",
+                                exitCode: 0,
+                                reportPath: "{projectRoot}/vulnerabilities.sarif",
+                                sbomPath: "{projectRoot}/sbom.json",
+                            },
                         },
+                        defaultConfiguration: "json",
+                        dependsOn: [{ target: sbomTargetName, params: "forward" }],
+                        executor: "nx:run-commands",
                         metadata: {
                             description: "Scan the Docker image for vulnerabilities using Trivy",
                         },

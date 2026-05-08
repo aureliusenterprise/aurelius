@@ -1,13 +1,8 @@
-name: CI
+name: Scan
 
 on:
-    push:
-        branches:
-            - main
-
-    pull_request:
-        branches:
-            - main
+    schedule:
+        - cron: "0 2 * * *"
 
 permissions:
     actions: read
@@ -18,7 +13,7 @@ env:
     SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
 
 jobs:
-    ci:
+    scan:
         runs-on: ubuntu-latest
 
         steps:
@@ -73,36 +68,9 @@ jobs:
               with:
                   node-version: 20
                   cache: npm
-                  registry-url: "https://npm.pkg.github.com"
 
             - name: Install Node.js dependencies
               run: npm install
-
-            - name: Run pre-commit hooks
-              uses: pre-commit/action@v3.0.1
-
-            - name: Install Playwright
-              run: uv run playwright install --with-deps
-
-            - name: Log in to Docker Hub
-              uses: docker/login-action@v3
-              with:
-                  registry: docker.io
-                  username: ${{ secrets.DOCKERHUB_USERNAME }}
-                  password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-            - name: Log in to the GitHub Container registry
-              uses: docker/login-action@v3
-              with:
-                  registry: ghcr.io
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Set SHA for affected commands
-              uses: nrwl/nx-set-shas@v4
-
-            - name: Test affected projects
-              run: npx nx affected -t test e2e -c ci
 
             - name: Install SonarQube scanner
               env:
@@ -127,18 +95,25 @@ jobs:
             - name: Install Trivy
               uses: aquasecurity/setup-trivy@v0.2.6
 
-            - name: Build docker images for affected projects
-              run: npx nx affected -t docker-build
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                  registry: docker.io
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-            - name: Generate vulnerability reports for affected projects
-              run: npx nx affected -t docker-vuln-scan -c sarif
+            - name: Log in to the GitHub Container registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Build all docker images
+              run: npx nx run-many -t docker-build
+
+            - name: Generate vulnerability reports
+              run: npx nx run-many -t docker-vuln-scan -c sarif
 
             - name: Run SonarQube analysis
-              run: npx nx affected -t sonar
-
-            - name: Run Chromatic
-              uses: chromaui/action@latest
-              with:
-                  buildCommand: "npx nx build-storybook aurelius-ui"
-                  outputDir: "dist/storybook/aurelius-ui"
-                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+              run: npx nx run-many -t sonar

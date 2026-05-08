@@ -14,7 +14,9 @@ dev = [
     "aurelius-example",
     "aurelius-fastapi-example",
     "aurelius-kafka",
+    "aurelius-license-report",
     "aurelius-sdk[full]",
+    "aurelius-vulnerability-report",
     "alembic>=1.16.4",
     "boto3>=1.39.6",
     "confluent-kafka[avro,schema-registry]>=2.13.2",
@@ -98,7 +100,13 @@ workspace = true
 [tool.uv.sources.aurelius-kafka]
 workspace = true
 
+[tool.uv.sources.aurelius-license-report]
+workspace = true
+
 [tool.uv.sources.aurelius-sdk]
+workspace = true
+
+[tool.uv.sources.aurelius-vulnerability-report]
 workspace = true
 
 [tool.uv.workspace]
@@ -113,4 +121,6 @@ members = [
     "libs/python/aurelius-example",
     "libs/python/aurelius-kafka",
     "libs/python/aurelius-sdk",
+    "reports/aurelius-license-report",
+    "reports/aurelius-vulnerability-report",
 ]
