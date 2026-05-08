@@ -4,7 +4,7 @@ dependencies = [
     "aurelius-example",
     "aurelius-kafka",
     "aws-lambda-powertools>=3.17.0",
-    "confluent-kafka[avro,schema-registry]>=2.13.2",
+    "confluent-kafka[avro,schema-registry]>=2.14",
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
 ]
