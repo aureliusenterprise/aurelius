@@ -9,6 +9,9 @@ on:
         branches:
             - main
 
+    schedule:
+        - cron: "0 2 * * *"
+
 permissions:
     actions: read
     contents: read
