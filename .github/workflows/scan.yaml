@@ -1,42 +1,15 @@
-name: CI
+name: Scan
 
 on:
-    push:
-        branches:
-            - main
-
-    pull_request:
-        branches:
-            - main
+    schedule:
+        - cron: "0 2 * * *"
 
 env:
     SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
 
 jobs:
-    validate:
-        runs-on: ubuntu-latest
-
-        permissions:
-            contents: read
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
-              with:
-                  fetch-depth: 0
-
-            - name: Setup toolchain
-              uses: ./.github/actions/setup-toolchain
-              with:
-                  python: "true"
-                  node: "true"
-
-            - name: Run pre-commit hooks
-              uses: pre-commit/action@v3.0.1
-
     test:
         runs-on: ubuntu-latest
-        needs: validate
 
         permissions:
             contents: read
@@ -62,11 +35,8 @@ jobs:
             - name: Install Playwright
               run: uv run playwright install --with-deps
 
-            - name: Set SHA for affected commands
-              uses: nrwl/nx-set-shas@v5
-
             - name: Test affected projects
-              run: npx nx affected -t test e2e -c ci
+              run: npx nx run-many -t test e2e -c ci
 
             - name: Upload coverage reports
               uses: actions/upload-artifact@v7
@@ -76,11 +46,9 @@ jobs:
                       **/coverage.xml
                       **/jacocoTestReport.xml
                       **/lcov.info
-                  if-no-files-found: ignore
 
     build-and-scan:
         runs-on: ubuntu-latest
-        needs: validate
 
         permissions:
             contents: read
@@ -103,9 +71,6 @@ jobs:
                   dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
                   github-token: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Set SHA for affected commands
-              uses: nrwl/nx-set-shas@v5
-
             - name: Install Cosign
               uses: sigstore/cosign-installer@v4.1.1
 
@@ -118,17 +83,16 @@ jobs:
               uses: aquasecurity/setup-trivy@v0.2.6
 
             - name: Build docker images for affected projects
-              run: npx nx affected -t docker-build
+              run: npx nx run-many -t docker-build
 
             - name: Generate vulnerability reports for affected projects
-              run: npx nx affected -t docker-vuln-scan -c sarif
+              run: npx nx run-many -t docker-vuln-scan -c sarif
 
             - name: Upload vulnerability reports
               uses: actions/upload-artifact@v7
               with:
                   name: vuln-reports
                   path: "**/vulnerabilities.sarif"
-                  if-no-files-found: ignore
 
     sonar:
         runs-on: ubuntu-latest
@@ -150,19 +114,14 @@ jobs:
                   node: "true"
 
             - name: Download coverage reports
-              continue-on-error: true
               uses: actions/download-artifact@v8
               with:
                   name: coverage-reports
 
             - name: Download vulnerability reports
-              continue-on-error: true
               uses: actions/download-artifact@v8
               with:
                   name: vuln-reports
-
-            - name: Set SHA for affected commands
-              uses: nrwl/nx-set-shas@v5
 
             - name: Install SonarQube scanner
               env:
@@ -177,31 +136,4 @@ jobs:
                   "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin/sonar-scanner" --version
 
             - name: Run SonarQube analysis
-              run: npx nx affected -t sonar
-
-    chromatic:
-        runs-on: ubuntu-latest
-        needs: validate
-
-        permissions:
-            contents: read
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
-              with:
-                  fetch-depth: 0
-
-            - name: Setup toolchain
-              uses: ./.github/actions/setup-toolchain
-              with:
-                  sops: "true"
-                  java: "true"
-                  node: "true"
-
-            - name: Run Chromatic
-              uses: chromaui/action@v1
-              with:
-                  buildCommand: "npx nx build-storybook aurelius-ui"
-                  outputDir: "dist/storybook/aurelius-ui"
-                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+              run: npx nx run-many -t sonar
