@@ -31,8 +31,8 @@ async function createNodesInternal(
                 targets: {
                     [sonarTargetName]: {
                         cache: true,
-                        dependsOn: ["build", "decrypt"],
-                        executor: "@nxlv/python:run-commands",
+                        dependsOn: ["decrypt"],
+                        executor: "nx:run-commands",
                         metadata: {
                             description: "Run SonarQube analysis on the project",
                         },
@@ -40,6 +40,7 @@ async function createNodesInternal(
                             command: `sonar-scanner -Dproject.settings=${projectRoot}/sonar-project.properties -Dsonar.working.directory=${projectRoot}/.scannerwork`,
                             cwd: "{workspaceRoot}",
                         },
+                        parallelism: false,
                     },
                 },
             },
