@@ -135,5 +135,8 @@ jobs:
                   echo "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin" >> "$GITHUB_PATH"
                   "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin/sonar-scanner" --version
 
+            - name: Decrypt secrets for SonarQube
+              run: npx nx run-many -t decrypt
+
             - name: Run SonarQube analysis
               run: npx nx run-many -t sonar
