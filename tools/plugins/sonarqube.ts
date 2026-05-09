@@ -30,7 +30,6 @@ async function createNodesInternal(
             [projectRoot]: {
                 targets: {
                     [sonarTargetName]: {
-                        cache: true,
                         dependsOn: ["decrypt"],
                         executor: "nx:run-commands",
                         metadata: {
@@ -38,9 +37,7 @@ async function createNodesInternal(
                         },
                         options: {
                             command: `sonar-scanner -Dproject.settings=${projectRoot}/sonar-project.properties -Dsonar.working.directory=${projectRoot}/.scannerwork`,
-                            cwd: "{workspaceRoot}",
                         },
-                        parallelism: false,
                     },
                 },
             },

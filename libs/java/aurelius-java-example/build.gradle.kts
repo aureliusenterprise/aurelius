@@ -51,14 +51,9 @@ tasks.register("projectReportAll") {
 tasks.register("sonar") {
     nx {
         array("dependsOn", "decrypt", "build")
-        set("executor", "nx:run-commands")
+        set("command", "sonar-scanner -Dproject.settings={projectRoot}/sonar-project.properties -Dsonar.working.directory={projectRoot}/.scannerwork")
         set("metadata") {
             set("description", "Run SonarQube analysis on the project")
         }
-        set("options") {
-            set("command", "sonar-scanner -Dproject.settings={projectRoot}/sonar-project.properties -Dsonar.working.directory={projectRoot}/.scannerwork")
-            set("cwd", "{workspaceRoot}")
-        }
-        set("parallelism", false)
     }
 }
