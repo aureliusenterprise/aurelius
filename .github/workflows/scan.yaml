@@ -35,7 +35,7 @@ jobs:
             - name: Install Playwright
               run: uv run playwright install --with-deps
 
-            - name: Test affected projects
+            - name: Test all projects
               run: npx nx run-many -t test e2e -c ci
 
             - name: Upload coverage reports
@@ -82,10 +82,10 @@ jobs:
             - name: Install Trivy
               uses: aquasecurity/setup-trivy@v0.2.6
 
-            - name: Build docker images for affected projects
+            - name: Build all docker images
               run: npx nx run-many -t docker-build
 
-            - name: Generate vulnerability reports for affected projects
+            - name: Generate vulnerability reports
               run: npx nx run-many -t docker-vuln-scan -c sarif
 
             - name: Upload vulnerability reports
