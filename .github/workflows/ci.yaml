@@ -39,6 +39,7 @@ jobs:
         needs: validate
 
         permissions:
+            actions: read
             contents: read
             packages: read
 
@@ -83,6 +84,7 @@ jobs:
         needs: validate
 
         permissions:
+            actions: read
             contents: read
             packages: write
 
@@ -135,6 +137,7 @@ jobs:
         needs: [test, build-and-scan]
 
         permissions:
+            actions: read
             contents: read
 
         steps:
