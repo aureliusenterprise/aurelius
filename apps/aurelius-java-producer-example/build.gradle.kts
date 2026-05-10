@@ -35,6 +35,9 @@ dependencies {
     // Logging dependencies
     implementation(libs.slf4j.api)
     runtimeOnly(libs.slf4j.simple)
+
+    // Other dependencies
+    implementation(libs.jackson.core)
 }
 
 java {
