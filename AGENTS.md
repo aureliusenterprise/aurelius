@@ -99,7 +99,18 @@ docker compose -f dev/docker-compose.yml up -d
 
 ### Test Conventions
 
-- Always run tests with `--no-watch` flag to disable watch mode.
+- **Always use `--no-watch` flag** when running Nx test tasks to avoid watch mode. Watch mode keeps the process
+  running indefinitely and blocks the terminal.
+    - Correct: `nx run <project>:test --no-watch`
+    - Correct: `npx nx test <project> --no-watch`
+    - **Never** run `nx run <project>:test` without `--no-watch` — it will hang in watch mode.
+- For Python tests, use `pytest` directly.
+- For Java tests, use `./gradlew test`.
+- Add tests for new logic — do not leave untested code paths.
+- For Python async tests, use `pytest-asyncio` with `@pytest.mark.asyncio`.
+- For backend E2E, prefer `testcontainers` over mocking infrastructure.
+- For frontend E2E, use Playwright's page object model and fixtures.
+- Test files should be co-located with source files (analog pattern) where possible.
 - Add tests for new logic — do not leave untested code paths.
 - For Python async tests, use `pytest-asyncio` with `@pytest.mark.asyncio`.
 - For backend E2E, prefer `testcontainers` over mocking infrastructure.
