@@ -30,4 +30,12 @@ export default [
         // Override or add rules here
         rules: {},
     },
+    {
+        files: ["**/*.json"],
+        // Override or add rules here
+        rules: {},
+        languageOptions: {
+            parser: await import("jsonc-eslint-parser"),
+        },
+    },
 ];

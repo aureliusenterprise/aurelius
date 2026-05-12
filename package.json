@@ -39,7 +39,7 @@
         "eslint-plugin-storybook": "10.2.17",
         "jiti": "2.4.2",
         "jsdom": "~22.1.0",
-        "jsonc-eslint-parser": "^2.1.0",
+        "jsonc-eslint-parser": "^2.4.2",
         "ng-packagr": "~21.2.0",
         "ngx-sse-client": "^21.0.0",
         "nx": "22.7.1",

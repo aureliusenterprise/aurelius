@@ -28,6 +28,19 @@ repos:
                 - prettier-plugin-sort-json@4.1.1
                 - prettier-plugin-toml@2.0.6
 
+    - repo: https://github.com/pre-commit/mirrors-eslint
+      rev: v10.3.0
+      hooks:
+          - id: eslint
+            name: Check for ESLint errors
+            args: [--fix]
+            files: '\.[jt]sx?$|\.json$'
+            additional_dependencies:
+                - eslint@^9.8.0
+                - "@nx/eslint-plugin@22.7.1"
+                - "@typescript-eslint/utils@8.43.0"
+                - jsonc-eslint-parser@^2.1.0
+
     - repo: https://github.com/astral-sh/ruff-pre-commit
       rev: v0.12.3
       hooks:
