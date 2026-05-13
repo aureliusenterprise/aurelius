@@ -99,11 +99,11 @@ docker compose -f dev/docker-compose.yml up -d
 
 ### Test Conventions
 
-- **Always use `--no-watch` flag** when running Nx test tasks to avoid watch mode. Watch mode keeps the process
-  running indefinitely and blocks the terminal.
-    - Correct: `nx run <project>:test --no-watch`
-    - Correct: `npx nx test <project> --no-watch`
-    - **Never** run `nx run <project>:test` without `--no-watch` — it will hang in watch mode.
+- **Always use the `ci` configuration** when running Nx test tasks to avoid watch mode and generate coverage reports.
+  Watch mode keeps the process running indefinitely and blocks the terminal.
+    - Correct: `nx run <project>:test -c ci`
+    - Correct: `npx nx test <project> -c ci`
+    - **Never** run `nx run <project>:test` without the `ci` configuration — it will hang in watch mode.
 - For Python tests, use `pytest` directly.
 - For Java tests, use `./gradlew test`.
 - Add tests for new logic — do not leave untested code paths.
