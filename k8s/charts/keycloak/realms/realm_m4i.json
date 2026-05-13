@@ -3280,7 +3280,7 @@
     "user": "office@aureliusenterprise.com"
   },
   "loginTheme": "m4i",
-  "accountTheme": "keycloak",
+  "accountTheme": "m4i",
   "adminTheme": "m4i",
   "emailTheme": "m4i",
   "eventsEnabled": true,

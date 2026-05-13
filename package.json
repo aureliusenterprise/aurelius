@@ -47,7 +47,7 @@
         "innersvg-polyfill": "0.0.2",
         "jsdom": "^15.2.1",
         "jszip": "^3.5.0",
-        "keycloak-js": "^6.0.1",
+        "keycloak-js": "^22.0.5",
         "lodash": "^4.17.14",
         "lodash-es": "^4.17.11",
         "mnemonist": "^0.30.0",
