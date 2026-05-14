@@ -31,6 +31,7 @@ runs:
     using: composite
     steps:
         - name: Clean up pre-installed toolchains
+          shell: bash
           run: |
               # Remove Java (JDKs)
               sudo rm -rf /usr/lib/jvm
