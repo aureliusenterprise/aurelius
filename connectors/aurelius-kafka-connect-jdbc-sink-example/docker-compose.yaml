@@ -3,40 +3,36 @@ name: aurelius-kafka-connect-jdbc-sink-example
 services:
     kafka-connect:
         image: ghcr.io/aureliusenterprise/aurelius-kafka-connect-jdbc-sink-example:local
+        entrypoint: ["/opt/kafka/bin/connect-standalone.sh"]
+        command: ["/connect-worker", "/connect-connector"]
+        configs:
+            - connect-worker
+            - connect-connector
         environment:
-            CONFIG_CONSUMER_GROUP_NAME: ${CONNECT_CONSUMER_GROUP_NAME}
-            CONFIG_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
-            CONFIG_DATABASE_URL: jdbc:postgresql://postgres:5432/aurelius
-            CONFIG_DATABASE_USERNAME: ${POSTGRES_USER}
-            CONFIG_DLQ_TOPIC_NAME: ${CONNECT_DLQ_TOPIC_NAME}
-            CONFIG_KAFKA_TOPIC_NAME: ${CONNECT_TOPIC_NAME}
-            CONFIG_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-            CONFIG_TABLE_NAME: ${CONNECT_TABLE_NAME}
-            CONNECT_BOOTSTRAP_SERVERS: broker:9094
-            CONNECT_CONFIG_PROVIDERS: file
-            CONNECT_CONFIG_PROVIDERS_FILE_CLASS: org.apache.kafka.common.config.provider.FileConfigProvider
-            CONNECT_CONFIG_STORAGE_CLEANUP_POLICY: compact
-            CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
-            CONNECT_CONFIG_STORAGE_TOPIC: aurelius-kafka-connect-jdbc-sink-example.connect-configs
-            CONNECT_GROUP_ID: aurelius-kafka-connect-jdbc-sink-example.connect-group
-            CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-            CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: false
-            CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
-            CONNECT_OFFSET_STORAGE_CLEANUP_POLICY: compact
-            CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
-            CONNECT_OFFSET_STORAGE_TOPIC: aurelius-kafka-connect-jdbc-sink-example.connect-offsets
-            CONNECT_REST_ADVERTISED_HOST_NAME: localhost
-            CONNECT_REST_PORT: 8083
-            CONNECT_STATUS_STORAGE_CLEANUP_POLICY: compact
-            CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-            CONNECT_STATUS_STORAGE_TOPIC: aurelius-kafka-connect-jdbc-sink-example.connect-status
-            CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-            CONNECT_VALUE_CONVERTER_VALUE_SUBJECT_NAME_STRATEGY: io.confluent.kafka.serializers.subject.RecordNameStrategy
-            CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: true
-            CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+            CONSUMER_GROUP_NAME: ${CONSUMER_GROUP_NAME}
+            DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+            DATABASE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+            DATABASE_USERNAME: ${POSTGRES_USER}
+            DLQ_TOPIC_NAME: ${DLQ_TOPIC_NAME}
+            KAFKA_TOPIC_NAME: ${KAFKA_TOPIC_NAME}
+            SCHEMA_REGISTRY_URL: http://schema-registry:8081
+            TABLE_NAME: ${TABLE_NAME}
+            KAFKA_BOOTSTRAP_SERVERS: broker:9094
+            CONFIG_STORAGE_TOPIC: aurelius-kafka-connect-jdbc-sink-example.connect-configs
+            GROUP_ID: aurelius-kafka-connect-jdbc-sink-example.connect-group
+            OFFSET_STORAGE_TOPIC: aurelius-kafka-connect-jdbc-sink-example.connect-offsets
+            REST_ADVERTISED_HOST_NAME: localhost
+            REST_PORT: 8083
+            STATUS_STORAGE_TOPIC: aurelius-kafka-connect-jdbc-sink-example.connect-status
         networks:
             - aurelius-dev-kafka-network
             - aurelius-dev-postgres-network
+
+configs:
+    connect-worker:
+        file: ./workers/worker.properties
+    connect-connector:
+        file: ./workers/connector.properties
 
 networks:
     aurelius-dev-kafka-network:

@@ -24,13 +24,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL, Engine, create_engine
 from sqlmodel import Session, SQLModel
 from testcontainers.compose import DockerCompose
-from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
+from testcontainers.core.wait_strategies import HttpWaitStrategy
 
 
 class Settings(BaseSettings):
     """Test configuration."""
 
-    connect_topic_name: str
+    kafka_topic_name: str
     kafka_port: int
     postgres_db: str
     postgres_password: SecretStr
@@ -59,11 +59,18 @@ def compose() -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
     context = Path(__file__).parent.absolute()
     with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
+        port = compose.get_service_port("kafka-connect", 8083)
+
+        if not port:
+            message = "Kafka Connect service not found in Docker Compose"
+            raise ValueError(message)
+
         yield compose.waiting_for(
             {
-                "kafka-connect": HealthcheckWaitStrategy(),
+                "kafka-connect": HttpWaitStrategy(port=port, path="/connectors").for_status_code(200),
             },
         )
+
         capture_docker_compose_logs(compose)
 
 
@@ -125,7 +132,7 @@ def kafka_admin_client(kafka_bootstrap_servers: str) -> KafkaAdminClient:
 @pytest.fixture(scope="session")
 def kafka_topic(kafka_admin_client: KafkaAdminClient, settings: Settings) -> str:
     """Create a Kafka topic and return its name."""
-    kafka_topic_name = settings.connect_topic_name
+    kafka_topic_name = settings.kafka_topic_name
 
     kafka_topic = NewTopic(
         kafka_topic_name,

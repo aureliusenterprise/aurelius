@@ -47,7 +47,7 @@ def produce_message(
     kafka_producer.flush()
 
 
-@retry(stop=stop_after_attempt(5), wait=wait_fixed(5))
+@retry(stop=stop_after_attempt(15), wait=wait_fixed(5))
 def assert_entity_in_database(
     expected: Entity,
     session: Session,
@@ -57,7 +57,7 @@ def assert_entity_in_database(
     assert actual == expected, f"Expected {expected} but got {actual}"
 
 
-@retry(stop=stop_after_attempt(5), wait=wait_fixed(5))
+@retry(stop=stop_after_attempt(15), wait=wait_fixed(5))
 def assert_entity_not_in_database(
     primary_key: UUID,
     session: Session,

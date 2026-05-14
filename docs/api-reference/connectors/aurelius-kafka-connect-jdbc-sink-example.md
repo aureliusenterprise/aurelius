@@ -66,21 +66,58 @@ value that is `null`.
 
 ## Configuration
 
-The connector can be configured using the following environment variables:
+This example runs Kafka Connect in standalone mode and uses two properties files:
 
-| Name                                          | Description                                                        |
-| --------------------------------------------- | ------------------------------------------------------------------ |
-| `CONFIG_CONSUMER_GROUP`                       | The consumer group ID for the connector.                           |
-| `CONFIG_DATABASE_PASSWORD`                    | The password for the database.                                     |
-| `CONFIG_DATABASE_URL`                         | The URL of the database.                                           |
-| `CONFIG_DATABASE_USERNAME`                    | The username for the database.                                     |
-| `CONFIG_DLQ_TOPIC_NAME`                       | The name of the dead-letter queue topic.                           |
-| `CONFIG_KAFKA_TOPIC_NAME`                     | The name of the input Kafka topic.                                 |
-| `CONFIG_SCHEMA_REGISTRY_URL`                  | The URL of the schema registry.                                    |
-| `CONFIG_TABLE_NAME`                           | The name of the table where data should be stored.                 |
-| `CONNECT_BOOTSTRAP_SERVERS`                   | The Kafka bootstrap servers to connect to.                         |
-| `CONNECT_CONFIG_STORAGE_TOPIC`                | The name of the topic where the connector configuration is stored. |
-| `CONNECT_GROUP_ID`                            | The unique consumer group ID for the connector.                    |
-| `CONNECT_OFFSET_STORAGE_TOPIC`                | The name of the topic where the offsets are stored.                |
-| `CONNECT_STATUS_STORAGE_TOPIC`                | The name of the topic where the connector status is stored.        |
-| `CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL` | The URL of the schema registry for the value converter.            |
+- `workers/worker.properties` for worker runtime settings
+- `workers/connector.properties` for this JDBC sink connector instance
+
+### Standalone startup in Docker Compose
+
+Set the service entrypoint to `connect-standalone.sh` and pass the worker file first, then the connector file:
+
+```yaml
+services:
+    kafka-connect:
+        image: ghcr.io/aureliusenterprise/aurelius-kafka-connect-jdbc-sink-example:local
+        entrypoint: ["/opt/kafka/bin/connect-standalone.sh"]
+        command: ["/connect-worker", "/connect-connector"]
+        configs:
+            - connect-worker
+            - connect-connector
+
+configs:
+    connect-worker:
+        file: ./workers/worker.properties
+    connect-connector:
+        file: ./workers/connector.properties
+```
+
+### Worker configuration environment variables
+
+These environment variables are referenced by `workers/worker.properties`:
+
+| Name                        | Description                                           |
+| --------------------------- | ----------------------------------------------------- |
+| `KAFKA_BOOTSTRAP_SERVERS`   | Kafka bootstrap servers.                              |
+| `CONFIG_STORAGE_TOPIC`      | Connect config storage topic name.                    |
+| `GROUP_ID`                  | Connect worker group ID.                              |
+| `OFFSET_STORAGE_TOPIC`      | Connect offset storage topic name.                    |
+| `STATUS_STORAGE_TOPIC`      | Connect status storage topic name.                    |
+| `REST_ADVERTISED_HOST_NAME` | Hostname advertised by the Connect REST API.          |
+| `REST_PORT`                 | Connect REST API port.                                |
+| `SCHEMA_REGISTRY_URL`       | Schema Registry URL used by the Avro value converter. |
+
+`worker.properties` also sets `offset.storage.file.filename`, which is required for standalone mode.
+
+### Connector configuration environment variables
+
+These environment variables are referenced by `workers/connector.properties`:
+
+| Name                | Description                                               |
+| ------------------- | --------------------------------------------------------- |
+| `DATABASE_URL`      | JDBC URL for the target Postgres database.                |
+| `DATABASE_USERNAME` | Database username.                                        |
+| `DATABASE_PASSWORD` | Database password.                                        |
+| `KAFKA_TOPIC_NAME`  | Source topic consumed by the sink connector.              |
+| `DLQ_TOPIC_NAME`    | Dead-letter queue topic for records that fail processing. |
+| `TABLE_NAME`        | Destination table name used by the JDBC sink connector.   |

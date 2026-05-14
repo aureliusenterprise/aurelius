@@ -96,8 +96,6 @@ nav:
           - Docker:
                 - api-reference/docker/index.md
                 - aurelius-aws-lambda-base: api-reference/docker/aurelius-aws-lambda-base.md
-                - aurelius-kafka-connect-base: api-reference/docker/aurelius-kafka-connect-base.md
-                - aurelius-kafka-connect-jdbc-sink-base: api-reference/docker/aurelius-kafka-connect-jdbc-sink-base.md
           - Libs:
                 - api-reference/libs/index.md
                 - Angular:

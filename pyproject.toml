@@ -115,8 +115,6 @@ members = [
     "apps/aurelius-fastapi-example",
     "connectors/aurelius-kafka-connect-jdbc-sink-example",
     "docker/aurelius-aws-lambda-base",
-    "docker/aurelius-kafka-connect-base",
-    "docker/aurelius-kafka-connect-jdbc-sink-base",
     "libs/python/aurelius-aws-lambda",
     "libs/python/aurelius-example",
     "libs/python/aurelius-kafka",

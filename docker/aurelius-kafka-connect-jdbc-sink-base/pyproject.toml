@@ -1,3 +1,0 @@
-[project]
-name = "aurelius-kafka-connect-jdbc-sink-base"
-version = "0.6.0"
