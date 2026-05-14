@@ -1,5 +1,5 @@
 plugins {
-    id("dev.nx.gradle.project-graph").version("0.1.20")
+    id("dev.nx.gradle.project-graph").version("0.1.21")
 }
 
 allprojects {
