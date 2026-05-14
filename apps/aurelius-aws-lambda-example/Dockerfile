@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1
+ARG BUILDER_IMAGE_VERSION=3.14-debian13-dev
 ARG VERSION=local
 
-# Use the official Python image as a base image for building the application
-FROM python:3.14 AS build-image
+# Use a hardened Python image with dev tools for the build stage.
+FROM dhi.io/python:${BUILDER_IMAGE_VERSION} AS builder
 
 # Set the working directory
 WORKDIR /build
@@ -15,7 +16,8 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
     pip install --only-binary=:all: --target=./ ./*.whl && \
     rm ./*.whl
 
-# Use the AWS Lambda base image for the final image
+# Use a hardened Python image for the final application image.
+# Note: the hardened image does not include a shell or package manager.
 FROM ghcr.io/aureliusenterprise/aurelius-aws-lambda-base:${VERSION}
 
 ARG VERSION=local
@@ -29,7 +31,7 @@ LABEL org.opencontainers.image.title="Aurelius AWS Lambda Example"
 LABEL org.opencontainers.image.version="${VERSION}"
 
 # Copy in the built dependencies
-COPY --chown=root:root --chmod=0755 --from=build-image /build ./
+COPY --chown=root:root --chmod=0755 --from=builder /build ./
 
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
 CMD [ "aurelius_aws_lambda_example.main" ]
