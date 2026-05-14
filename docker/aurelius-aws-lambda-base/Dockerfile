@@ -29,7 +29,7 @@ RUN mkdir -p /tmp/insights && \
 ARG AWS_LAMBDA_RIC_VERSION=4.0.0
 
 RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
-    pip install --only-binary=:all: --target=./ awslambdaric==${AWS_LAMBDA_RIC_VERSION}
+    pip install --only-binary=":all:" --target="./" awslambdaric=="${AWS_LAMBDA_RIC_VERSION}"
 
 # Use a hardened Python image for the final application image.
 FROM dhi.io/python:${RUNTIME_IMAGE_VERSION} AS runtime
