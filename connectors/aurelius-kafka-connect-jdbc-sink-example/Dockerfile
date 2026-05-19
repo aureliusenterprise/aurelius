@@ -16,7 +16,7 @@ ARG CONNECT_AVRO_CONVERTER_VERSION=8.2.0
 RUN confluent-hub install "confluentinc/kafka-connect-avro-converter:${CONNECT_AVRO_CONVERTER_VERSION}" --no-prompt
 
 # Download Debezium
-ARG DEBEZIUM_CONNECTOR_JDBC_VERSION=3.5.0.Final
+ARG DEBEZIUM_CONNECTOR_JDBC_VERSION=3.5.1.Final
 ADD "https://repo1.maven.org/maven2/io/debezium/debezium-connector-jdbc/${DEBEZIUM_CONNECTOR_JDBC_VERSION}/debezium-connector-jdbc-${DEBEZIUM_CONNECTOR_JDBC_VERSION}-plugin.tar.gz" "/usr/share/confluent-hub-components/"
 
 # Install Debezium
