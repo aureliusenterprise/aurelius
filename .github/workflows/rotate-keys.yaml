@@ -1,0 +1,63 @@
+name: Update SOPS keys
+
+on:
+    pull_request:
+        branches:
+            - main
+        paths:
+            - '.sops.yaml'
+
+jobs:
+    update-keys:
+        name: Update SOPS Keys
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Install SOPS
+              env:
+                  SOPS_VERSION: v3.11.0
+              run: |
+                  curl -LO https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64
+                  sudo mv sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
+                  sudo chmod +x /usr/local/bin/sops
+
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup Node.js and dependencies
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+
+            - run: npm install
+              name: Install dependencies
+              env:
+                  NODE_AUTH_TOKEN: ${{ github.token }}
+
+            - name: Update keys for all projects
+              env:
+                  SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
+              run: npx nx run-many -t update-keys
+
+            - run: git config --global user.email "info@aureliusenterprise.com"
+            - run: git config --global user.name "Aurelius Enterprise"
+
+            - name: Commit and push changes
+              run: |
+                  git add -A
+                  git commit -m "chore: update SOPS keys"
+                  git push --set-upstream origin HEAD:"${{ github.head_ref }}"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Add PR comment
+              uses: hasura/comment-progress@v2.3.0
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  repository: ${{ github.repository }}
+                  number: ${{ github.event.number }}
+                  id: secret-update-note
+                  message: 'Updated SOPS keys due to changes in .sops.yaml. Please review the changes.'

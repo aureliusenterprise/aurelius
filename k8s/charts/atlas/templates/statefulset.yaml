@@ -20,13 +20,40 @@ spec:
         {{- include "atlas.selectorLabels" . | nindent 8 }}
     spec:
       hostname: atlas
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        fsGroupChangePolicy: "Always"
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      initContainers:
+        - name: {{ .Chart.Name }}-setup
+          image: "{{ .Values.repository }}:{{ .Values.global.version }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          command:
+            - sh
+            - -c
+            - mkdir -p /apache-atlas/data && chown -R 999:999 /apache-atlas/data && chmod -R 0700 /apache-atlas/data
+          resources:
+            requests:
+              cpu: "250m"
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /apache-atlas/data
+              subPath: data
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.repository }}:{{ .Values.tag }}"
+          image: "{{ .Values.repository }}:{{ .Values.global.version }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: {{ .Values.service.internalPort }}
@@ -41,7 +68,7 @@ spec:
             {{- if .Values.env }}
             {{- range $key, $value := .Values.env }}
             - name: {{ $key }}
-              value: {{ $value }} 
+              value: {{ $value }}
             {{- end }}
             {{- end }}
             - name: KEYCLOAK_ATLAS_ADMIN_PASSWORD
@@ -57,29 +84,22 @@ spec:
             initialDelaySeconds: 120
             periodSeconds: 60
             timeoutSeconds: 10
-          command: [
-              "/bin/bash",
-              "-c",
-              "apt update && apt install lsof -y && /opt/apache-atlas-2.2.0/bin/startup.sh"
-          ]
           volumeMounts:
             - name: atlas-application-properties--volume
-              mountPath: /opt/apache-atlas-2.2.0/conf/atlas-application.properties
+              mountPath: /apache-atlas/conf/atlas-application.properties
               subPath: atlas-application.properties
             - name: users-credentials-properties--volume
-              mountPath: /opt/apache-atlas-2.2.0/conf/users-credentials.properties
+              mountPath: /apache-atlas/conf/users-credentials.properties
               subPath: users-credentials.properties
             - name: atlas-simple-authz-policy--volume
-              mountPath: /opt/apache-atlas-2.2.0/conf/atlas-simple-authz-policy.json
+              mountPath: /apache-atlas/conf/atlas-simple-authz-policy.json
               subPath: atlas-simple-authz-policy.json
             - name: keycloak-conf--volume
-              mountPath: /opt/apache-atlas-2.2.0/conf/keycloak-conf.json
+              mountPath: /apache-atlas/conf/keycloak-conf.json
               subPath: keycloak-conf.json
-            {{- if .Values.persistence.enabled }}
             - name: data
-              mountPath: /opt/apache-atlas-2.2.0/data
+              mountPath: /apache-atlas/data
               subPath: data
-            {{- end }}
       volumes:
         - name: atlas-application-properties--volume
           configMap:
@@ -93,7 +113,6 @@ spec:
         - name: keycloak-conf--volume
           configMap:
             name: keycloak-conf-configmap
-{{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -110,4 +129,3 @@ spec:
         storageClassName: "{{ .Values.persistence.storageClass }}"
         {{- end }}
       {{- end }}
-{{- end }}

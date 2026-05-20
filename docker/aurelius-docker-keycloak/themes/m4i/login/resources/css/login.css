@@ -1,0 +1,89 @@
+.identity-provider {
+    display: flex;
+    justify-content: space-between !important;
+}
+
+/* Fix input padding when using left icons to prevent text overlap */
+.control.has-icons-left .input {
+    padding-left: 2.5em;
+}
+
+.control.has-icons-left .textarea {
+    padding-left: 2.5em;
+}
+
+.control.has-icons-left .select select {
+    padding-left: 2.5em;
+}
+
+/* Ensure icons are properly positioned */
+.control.has-icons-left .icon.is-left {
+    left: 0;
+    pointer-events: none;
+}
+
+/* Define colors for each social provider */
+#social-google {
+  color: #4285f4;
+  border-color: #4285f4;
+}
+
+.social-google {
+    color: #4285f4;
+    border-color: #4285f4;
+  }
+
+#social-facebook {
+  color: #3b5998;
+  border-color: #3b5998;
+}
+
+#social-twitter {
+  color: #1da1f2;
+  border-color: #1da1f2;
+}
+
+#social-github {
+  color: #333;
+  border-color: #333;
+}
+
+#social-linkedin {
+  color: #0077b5;
+  border-color: #0077b5;
+}
+
+#social-microsoft {
+  color: #f65314;
+  border-color: #f65314;
+}
+
+#social-stackoverflow {
+  color: #f48024;
+  border-color: #f48024;
+}
+
+#social-bitbucket {
+  color: #205081;
+  border-color: #205081;
+}
+
+#social-openshift-v4 {
+  color: #326ce5;
+  border-color: #326ce5;
+}
+
+#social-openshift-v5 {
+  color: #f2a900;
+  border-color: #f2a900;
+}
+
+#social-gitlab {
+  color: #fc6d26;
+  border-color: #fc6d26;
+}
+
+#social-paypal {
+  color: #003087;
+  border-color: #003087;
+}

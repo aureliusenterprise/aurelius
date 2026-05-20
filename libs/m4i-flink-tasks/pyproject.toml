@@ -1,29 +1,29 @@
 [tool.poetry]
-name = "m4i-flink-tasks"
-version = "1.0.0"
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
 description = "Library of Flink tasks for Aurelius Atlas"
-authors = [ "Aurelius Enterprise <info@aureliusenterprise.com>" ]
 license = "UNLICENSED"
+name = "m4i-flink-tasks"
 readme = "README.md"
+version = "1.0.0"
 
 [[tool.poetry.packages]]
 include = "m4i_flink_tasks"
 
-  [tool.poetry.dependencies]
-  python = "~3.8"
-  apache-flink = "~1.17"
-  dataclasses-json = "~0.6"
-  kafka-python = "~2.0"
-  elasticsearch = "~8.9"
+[tool.poetry.dependencies]
+apache-flink = "~1.17"
+dataclasses-json = "~0.6"
+elasticsearch = "~8.9"
+kafka-python = "~2.0"
+python = "~3.8"
 
-    [tool.poetry.dependencies.m4i-atlas-core]
-    path = "../m4i-atlas-core"
-    develop = true
+[tool.poetry.dependencies.m4i-atlas-core]
+develop = true
+path = "../../libs/m4i-atlas-core"
 
-    [tool.poetry.dependencies.m4i-governance-data-quality]
-    path = "../m4i-governance-data-quality"
-    develop = true
+[tool.poetry.dependencies.m4i-governance-data-quality]
+develop = true
+path = "../../libs/m4i-governance-data-quality"
 
 [build-system]
-requires = [ "poetry-core" ]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
