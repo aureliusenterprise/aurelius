@@ -1,0 +1,10 @@
+{
+    "auth-server-url": "http://keycloak.localhost:8180/",
+    "autodetect-bearer-only": true,
+    "confidential-port": 0,
+    "principal-attribute": "preferred_username",
+    "public-client": true,
+    "realm": "atlas-dev",
+    "resource": "m4i_atlas",
+    "ssl-required": "none"
+}

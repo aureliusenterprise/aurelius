@@ -10,16 +10,18 @@ EXPOSE ${WSGI_PORT}
 # Set the working directory
 WORKDIR /app
 
-# Copy the wheel file into the container
-COPY ../../dist/backend/m4i-validate-entity/*.whl .
-
-# Install the wheel file and remove it afterwards
-RUN pip install --no-cache-dir *.whl && \
-  rm *.whl
-
 # Create a non-root user
 RUN addgroup --system m4i-validate-entity && \
   adduser --system --ingroup m4i-validate-entity m4i-validate-entity
+
+# Copy the wheel file into the container
+COPY --chown=m4i-validate-entity:m4i-validate-entity --chmod=0755 \
+  backend/m4i-validate-entity/dist/*.whl \
+  ./
+
+# Install the wheel file
+RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
+  pip install *.whl
 
 # Switch to the non-root user
 USER m4i-validate-entity

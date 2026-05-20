@@ -1,53 +1,78 @@
 name: Publish Containers
 
 on:
-  push:
-    tags:
-      - v*.*.*
+    push:
+        tags:
+            - v*.*.*
+
+permissions:
+    contents: read
+    id-token: write
+    packages: write
 
 jobs:
-  test:
-    name: Publish
-    runs-on: ubuntu-latest
-    permissions: write-all
-    timeout-minutes: 15
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    publish:
+        runs-on: ubuntu-latest
+        permissions: write-all
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
+            - name: Install Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
-        shell: bash
+            - name: Install dependencies
+              run: npm install
+              shell: bash
 
-      - name: Print Environment Info
-        run: npx nx report
-        shell: bash
+            - name: Print Environment Info
+              run: npx nx report
+              shell: bash
 
-      - name: Setup Python, Poetry and Dependencies
-        uses: packetcoders/action-setup-cache-python-poetry@main
-        with:
-          python-version: 3.8
-          poetry-version: 1.8.4
+            - name: Setup Python, Poetry and Dependencies
+              uses: packetcoders/action-setup-cache-python-poetry@main
+              with:
+                  python-version: 3.8
+                  poetry-version: 1.8.4
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+            - name: Log in to the Container registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish containers
-        run: npx nx run-many -t docker-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
-        shell: bash
+            - name: Install Cosign
+              uses: sigstore/cosign-installer@v4.1.1
 
-      - name: Publish helm chart
-        run: npx nx run-many -t helm-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
-        shell: bash
+            - name: Install CycloneDX CLI
+              run: |
+                  curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/latest/download/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
+                  chmod +x /usr/local/bin/cyclonedx
+
+            - name: Install Trivy
+              uses: aquasecurity/setup-trivy@v0.2.6
+
+            - name: Publish containers
+              run: npx nx run-many -t docker-publish -- --version ${{ github.ref_name }}
+
+            - name: Attest containers
+              run: npx nx run-many -t docker-attest -- --version ${{ github.ref_name }}
+
+            - name: Sign containers
+              run: npx nx run-many -t docker-sign -- --version ${{ github.ref_name }}
+
+            - name: Verify container signatures
+              run: >
+                  npx nx run-many -t docker-verify -- --version ${{ github.ref_name }}
+                  --identity "^https://github\.com/${{ github.repository_owner }}/aurelius/\.github/workflows/publish\.yml@${{ github.ref }}$"
+                  --issuer "^https://token\.actions\.githubusercontent\.com$"
+
+            - name: Publish helm chart
+              run: npx nx run-many -t helm-publish -- --namespace ghcr.io/aureliusenterprise --version ${{ github.ref_name }}
+              shell: bash

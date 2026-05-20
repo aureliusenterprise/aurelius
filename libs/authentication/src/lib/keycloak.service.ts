@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Logger } from '@models4insight/logger';
-import Keycloak from 'keycloak-js';
+import Keycloak, { KeycloakProfile, KeycloakTokenParsed } from 'keycloak-js';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import {
@@ -23,26 +23,22 @@ export interface LoginOptions {
   providedIn: AuthenticationModule,
 })
 export class KeycloakService {
-  private readonly keycloakAuth: Keycloak.KeycloakInstance;
+  private readonly keycloakAuth: Keycloak;
   private readonly authState: Subject<boolean> = new ReplaySubject<boolean>();
 
   constructor(
     @Inject(AuthenticationConfigService) config: AuthenticationConfig
   ) {
-    this.keycloakAuth = Keycloak(config);
+    this.keycloakAuth = new Keycloak(config);
 
     this.authState.subscribe((auth: boolean) =>
       log.debug(`Auth state updated: ${auth}`)
     );
 
-    this.keycloakAuth.onReady = (auth) => this.authState.next(auth);
+    this.keycloakAuth.onReady = (auth) => this.authState.next(auth ?? false);
     this.keycloakAuth.onAuthSuccess = () => this.authState.next(true);
     this.keycloakAuth.onAuthLogout = () => this.authState.next(false);
 
-    /**
-     * Whenever the token expires and a refresh token is available, try to refresh the access token.
-     * Otherwise, redirect to login.
-     */
     this.keycloakAuth.onTokenExpired = () => {
       if (this.keycloakAuth.refreshToken) {
         this.updateToken();
@@ -51,9 +47,7 @@ export class KeycloakService {
         this.login();
       }
     };
-    /**
-     * When failing to refresh the token, redirect to login.
-     */
+
     this.keycloakAuth.onAuthRefreshError = () => {
       log.debug('Failed to refresh the access token. Redirecting to login...');
       this.authState.next(false);
@@ -61,75 +55,49 @@ export class KeycloakService {
     };
   }
 
-  async login(options: LoginOptions = {}): Promise<void> {
-    const { success, error } = this.keycloakAuth.login(options);
-    return new Promise<void>((resolve, reject) => {
-      success(resolve);
-      error(reject);
-    });
+  login(options: LoginOptions = {}): Promise<void> {
+    return this.keycloakAuth.login(options);
   }
 
-  async logout(): Promise<void> {
-    const { success, error } = this.keycloakAuth.logout();
-    return new Promise<void>((resolve, reject) => {
-      success(resolve);
-      error(reject);
-    });
+  logout(): Promise<void> {
+    // keycloak-js v22 maps redirectUri → post_logout_redirect_uri and adds id_token_hint automatically.
+    // Derive app root from current path: /<namespace>/atlas/...
+    const namespace = window.location.pathname.split('/').filter(Boolean)[0];
+    const redirectUri = `${window.location.origin}/${namespace}/atlas/`;
+    return this.keycloakAuth.logout({ redirectUri });
   }
 
-  async accountManagement(): Promise<void> {
-    const { success, error } = this.keycloakAuth.accountManagement();
-    return new Promise<void>((resolve, reject) => {
-      success(resolve);
-      error(reject);
-    });
+  accountManagement(): Promise<void> {
+    return this.keycloakAuth.accountManagement();
   }
 
   updateToken(): Promise<string> {
-    const { success, error } = this.keycloakAuth.updateToken(5);
-    return new Promise<string>((resolve, reject) => {
-      success(() => resolve(this.keycloakAuth.token));
-      error(reject);
-    });
+    return this.keycloakAuth.updateToken(5).then(() => this.keycloakAuth.token ?? '');
   }
 
   get isAuthenticated(): Promise<boolean> {
     const { authenticated } = this.keycloakAuth;
-    return authenticated
-      ? Promise.resolve(authenticated)
-      : this.isSSOAuthenticated();
+    return authenticated ? Promise.resolve(true) : this.isSSOAuthenticated();
   }
 
   get token(): string {
-    return this.keycloakAuth.token;
+    return this.keycloakAuth.token ?? '';
   }
 
-  get tokenParsed(): Keycloak.KeycloakTokenParsed {
-    return this.keycloakAuth.tokenParsed;
+  get tokenParsed(): KeycloakTokenParsed {
+    return this.keycloakAuth.tokenParsed!;
   }
 
-  get userProfile(): Promise<Keycloak.KeycloakProfile> {
+  get userProfile(): Promise<KeycloakProfile> {
     const { profile } = this.keycloakAuth;
-    return profile ? Promise.resolve(profile) : this.loadUserProfile();
+    return profile ? Promise.resolve(profile) : this.keycloakAuth.loadUserProfile();
   }
 
   get onAuthStateChanged(): Observable<boolean> {
     return this.authState.pipe(distinctUntilChanged());
   }
 
-  private async isSSOAuthenticated(): Promise<boolean> {
-    const { success, error } = this.keycloakAuth.init({ onLoad: 'check-sso' });
-    return new Promise<boolean>((resolve, reject) => {
-      success(resolve);
-      error(reject);
-    });
-  }
-
-  private async loadUserProfile(): Promise<Keycloak.KeycloakProfile> {
-    const { success, error } = this.keycloakAuth.loadUserProfile();
-    return new Promise<Keycloak.KeycloakProfile>((resolve, reject) => {
-      success(resolve);
-      error(reject);
-    });
+  private isSSOAuthenticated(): Promise<boolean> {
+    return this.keycloakAuth.init({ onLoad: 'check-sso' });
   }
 }

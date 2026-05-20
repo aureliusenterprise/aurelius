@@ -1,41 +1,41 @@
 {
-  "name": "m4i-reverse-proxy",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "application",
-  "sourceRoot": "backend/m4i-reverse-proxy/m4i_reverse_proxy",
-  "targets": {
-    "docker-build": {
-      "dependsOn": [
-        {
-          "target": "build",
-          "projects": ["atlas"]
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["atlas", "index-page"],
+    "name": "m4i-reverse-proxy",
+    "projectType": "application",
+    "sourceRoot": "backend/m4i-reverse-proxy/m4i_reverse_proxy",
+    "tags": [],
+    "targets": {
+        "docker-build": {
+            "dependsOn": [
+                {
+                    "dependencies": true,
+                    "target": "build"
+                }
+            ]
         },
-        {
-          "target": "build",
-          "projects": ["index-page"]
+        "docker-publish": {
+            "dependsOn": [
+                {
+                    "dependencies": true,
+                    "target": "build"
+                },
+                { "params": "forward", "projects": ["."], "target": "docker-setup-builder" }
+            ]
+        },
+        "docker-sbom": {
+            "command": "trivy image --format cyclonedx --output {args.dockerSbomPath} {args.namespace}/{projectName}:{args.version} && cyclonedx merge --name {args.namespace}/{projectName}:{args.version} --input-files {args.appSbomPath} {args.dockerSbomPath} --input-format json --output-file {projectRoot}/sbom.json --output-format json --output-version v1_6",
+            "dependsOn": [{ "params": "forward", "projects": ["atlas"], "target": "sbom" }],
+            "metadata": {
+                "description": "Generate a Software Bill of Materials (SBOM) for the Docker image using Trivy and merge it with the SBOM generated from the application dependencies"
+            },
+            "options": {
+                "appSbomPath": "apps/atlas/app-sbom.json",
+                "dockerSbomPath": "{projectRoot}/docker-sbom.json",
+                "namespace": "ghcr.io/aureliusenterprise",
+                "version": "local"
+            },
+            "parallelism": false
         }
-      ],
-      "command": "docker build -f {projectRoot}/Dockerfile . -t {args.namespace}/{args.tag}:{args.version}",
-      "options": {
-        "namespace": "aureliusenterprise",
-        "tag": "{projectName}",
-        "version": "latest"
-      }
-    },
-    "docker-publish": {
-      "dependsOn": [
-        {
-          "target": "docker-build",
-          "params": "forward"
-        }
-      ],
-      "command": "docker push {args.namespace}/{args.tag}:{args.version}",
-      "options": {
-        "namespace": "ghcr.io/aureliusenterprise",
-        "tag": "{projectName}",
-        "version": "latest"
-      }
     }
-  },
-  "tags": []
 }

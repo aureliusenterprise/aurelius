@@ -11,7 +11,7 @@ metadata:
     # This is what defines this resource as a hook. Without this line, the
     # job is considered part of the release.
     "helm.sh/hook": post-install
-    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-weight": "1"
     "helm.sh/hook-delete-policy": keep
 spec:
   template:
@@ -40,14 +40,10 @@ spec:
               secretKeyRef:
                 name: elastic-search-es-elastic-user
                 key: elastic
-
-          - name: KEYCLOAK_ATLAS_ADMIN_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: keycloak-secret-user-admin
-                key: password
           - name: KEYCLOAK_SERVER_URL
             value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/"
+          - name: KEYCLOAK_REALM_NAME
+            value: "{{ .Values.keycloak.realm }}"
           - name: ATLAS_SERVER_URL
             value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/atlas2/api/atlas"
           - name: ELASTIC_URL
@@ -64,26 +60,19 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: keycloak-secret
-                key: password
-          - name: KEYCLOAK_PASSWORD
+                key: admin-password
+          - name: KEYCLOAK_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-secret-user-admin
+                key: username
+          - name: KEYCLOAK_ATLAS_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: keycloak-secret-user-admin
                 key: password
-          - name: KEYCLOAK_ATLAS_STEWARD_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: keycloak-secret-user-steward
-                key: password
-          - name: KEYCLOAK_ATLAS_USER_USERNAME
-            value: atlas
-          - name: KEYCLOAK_ATLAS_USER_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: keycloak-secret-user-data
-                key: password
-          - name: KAFKA_BOOTSTRAP_SERVER_HOSTNAME
-            value: "kafka.{{ .Release.Namespace }}.svc.cluster.local"
+          - name: KEYCLOAK_CLIENT_ID
+            value: "m4i_atlas"
           - name: ENTERPRISE_SEARCH_EXTERNAL_URL
             value: "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/app-search/"
           - name: ATLAS_EXTERNAL_URL
