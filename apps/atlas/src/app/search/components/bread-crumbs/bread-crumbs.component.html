@@ -1,4 +1,10 @@
 <ng-container *ngIf="breadcrumbs$ | async as breadcrumbs">
+  <span *ngIf="breadcrumbWarning$ | async as warning" class="tag is-warning is-light is-small">
+    <span class="icon is-small mr-1">
+      <fa-icon [icon]="warningIcon"></fa-icon>
+    </span>
+    {{ warning }}
+  </span>
   <ng-container *ngIf="breadcrumbs.length">
     <nav
       class="breadcrumb is-small has-arrow-separator"

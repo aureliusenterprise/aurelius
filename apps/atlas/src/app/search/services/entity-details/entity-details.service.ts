@@ -39,7 +39,10 @@ export class EntityDetailsService extends BasicStore<EntityDetailsStoreContext> 
   set entityId(entityId: string) {
     this.update({
       description: 'New entity id available',
-      payload: { entityId },
+      payload: {
+        entityId,
+        entityDetails: undefined,
+      },
     });
   }
 
