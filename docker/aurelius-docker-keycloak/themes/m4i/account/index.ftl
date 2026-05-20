@@ -122,6 +122,9 @@
                 realm: realm,
                 clientId: 'account-console'
             });
+            var _kcLogout = keycloak.logout.bind(keycloak);
+            var logoutRedirectUri = authUrl + 'realms/' + realm + '/account/';
+            keycloak.logout = (opts) => _kcLogout(Object.assign({ redirectUri: logoutRedirectUri }, opts || {}));
             keycloak.init({onLoad: 'check-sso', pkceMethod: 'S256', promiseType: 'native'}).then((authenticated) => {
                 isReactLoading = true;
                 toggleReact();
@@ -182,7 +185,7 @@
 
             <div class="pf-c-page__header-tools-group pf-m-icons pf-u-display-none pf-u-display-flex-on-md pf-u-mr-md">
               <button id="landingSignInButton" tabindex="0" style="display:none" onclick="keycloak.login();" class="pf-c-button pf-m-primary" type="button">${msg("doSignIn")}</button>
-              <button id="landingSignOutButton" tabindex="0" style="display:none" onclick="keycloak.logout();" class="pf-c-button pf-m-primary" type="button">${msg("doSignOut")}</button>
+              <button id="landingSignOutButton" tabindex="0" style="display:none" onclick="keycloak.logout({ redirectUri: logoutRedirectUri });" class="pf-c-button pf-m-primary" type="button">${msg("doSignOut")}</button>
             </div>
 
             <div class="pf-c-page__header-tools-group pf-u-display-none-on-md">
@@ -201,7 +204,7 @@
                             <a onclick="keycloak.login();" role="menuitem" tabindex="0" aria-disabled="false" class="pf-c-dropdown__menu-item">${msg("doLogIn")}</a>
                         </li>
                         <li id="landingSignOutLink" role="none" style="display:none">
-                            <a onclick="keycloak.logout();" role="menuitem" tabindex="0" aria-disabled="false" class="pf-c-dropdown__menu-item">${msg("doSignOut")}</a>
+                            <a onclick="keycloak.logout({ redirectUri: logoutRedirectUri });" role="menuitem" tabindex="0" aria-disabled="false" class="pf-c-dropdown__menu-item">${msg("doSignOut")}</a>
                         </li>
                     </ul>
                 </div>
