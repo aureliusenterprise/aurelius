@@ -254,142 +254,6 @@
     "deriveddataset": "Dataset",
     "derivedperson": "People",
     "derivedsystem": "System",
-    "details": {
-        "attribute": {
-            "dataQuality": "Data Quality",
-            "description": "Description",
-            "fields": "Fields",
-            "governanceQualityRules": "Governance Quality Rules",
-            "people": "People",
-            "properties": "Properties",
-            "unavailable": "Unavailable"
-        },
-        "collection": {
-            "dataQuality": "Data Quality",
-            "description": "Description",
-            "fields": "Fields",
-            "governanceQualityRules": "Governance Quality Rules",
-            "people": "People",
-            "properties": "Properties",
-            "unavailable": "Unavailable"
-        },
-        "components": {},
-        "dataset": {
-            "childDatasets": "Child Datasets",
-            "consumers": "Consumers",
-            "dataEntities": "Data Entities",
-            "dataQuality": "Data Quality",
-            "description": "Description",
-            "fields": "Fields",
-            "governanceQualityRules": "Governance Quality Rules",
-            "lineageModel": "Lineage Model",
-            "people": "People",
-            "producers": "Producers",
-            "properties": "Properties",
-            "unavailable": "Unavailable"
-        },
-        "default": {
-            "description": "Description",
-            "properties": "Properties"
-        },
-        "domain": {
-            "dataEntities": "Data Entities",
-            "dataQuality": "Data Quality",
-            "description": "Description",
-            "fields": "Fields",
-            "governanceQualityRules": "Governance Quality Rules",
-            "people": "People",
-            "properties": "Properties",
-            "unavailable": "Unavailable"
-        },
-        "entity": {
-            "childEntities": "Child Entities",
-            "dataAttributes": "Data Attributes",
-            "dataEntities": "Data Entities",
-            "dataQuality": "Data Quality",
-            "datasets": "Datasets",
-            "description": "Description",
-            "fields": "Fields",
-            "governanceQualityRules": "Governance Quality Rules",
-            "people": "People",
-            "properties": "Properties",
-            "unavailable": "Unavailable"
-        },
-        "field": {
-            "childEntities": "Child Entities",
-            "childFields": "Child Fields",
-            "dataAttributes": "Data Attributes",
-            "dataEntities": "Data Entities",
-            "dataQuality": "Data Quality",
-            "dataQualityRules": "Data Quality Rules",
-            "datasets": "Datasets",
-            "description": "Description",
-            "fields": "Fields",
-            "governanceQualityRules": "Governance Quality Rules",
-            "people": "People",
-            "properties": "Properties",
-            "unavailable": "Unavailable"
-        },
-        "govQuality": {
-            "childEntities": "Child Entities",
-            "childFields": "Child Fields",
-            "complianceChart": "Compliance Chart",
-            "compliant": "Compliant",
-            "dataAttributes": "Data Attributes",
-            "dataEntities": "Data Entities",
-            "dataQuality": "Data Quality",
-            "dataQualityRules": "Data Quality Rules",
-            "datasets": "Datasets",
-            "description": "Domain Lead",
-            "fields": "Fields",
-            "governanceQualityRules": "Governance Quality Rules",
-            "nonCompliant": "Non-compliant",
-            "people": "People",
-            "properties": "Properties",
-            "unavailable": "Unavailable"
-        },
-        "person": {
-            "dataAttributes": "Data Attributes",
-            "dataDomains": "Data Domains",
-            "dataEntities": "Data Entities",
-            "dataOwner": "Data Owner",
-            "dataSteward": "Data Steward",
-            "domainLead": "Domain Lead",
-            "governanceQualityRules": "Governance Quality Rules",
-            "governanceResponsibilities": "Governance Responsibilities",
-            "other": "Other"
-        },
-        "process": {
-            "available": "Available",
-            "childEntities": "Child Entities",
-            "childFields": "Child Fields",
-            "dataEntities": "Data Entities",
-            "dataQualityRules": "Data Quality Rules",
-            "datasets": "Datasets",
-            "description": "Description",
-            "governanceQualityRules": "Governance Quality Rules",
-            "inputs": "Inputs",
-            "lineageModel": "Lineage Model",
-            "outputs": "Outputs",
-            "properties": "Properties",
-            "systems": "Systems",
-            "unavailable": "Unavailable"
-        },
-        "system": {
-            "childEntities": "Child Entities",
-            "childFields": "Child Fields",
-            "collections": "Collections",
-            "dataQuality": "Data Quality",
-            "dataQualityRules": "Data Quality Rules",
-            "description": "Description",
-            "governanceQualityRules": "Governance Quality Rules",
-            "lineageModel": "Lineage Model",
-            "processes": "Processes",
-            "properties": "Properties",
-            "subSystems": "Subsystems",
-            "unavailable": "Unavailable"
-        }
-    },
     "displayName": "Display Name",
     "domainLead": "Domain lead",
     "dqscore": "Quality Score",
@@ -476,14 +340,14 @@
             },
             "searchPlaceholder": "Typ uw zoekopdracht",
             "technicalContext": {
-                "description": "I'm searching for technical information about a specific data field, dataset, or system",
+                "description": "Ik zoek naar data die is opgeslagen binnen een specifieke technische omgeving",
                 "exploreButton": "Systemen bekijken",
                 "exploringDescription": "Klik op de knop voor een overzicht van alle systemen.",
                 "exploringTitle": "Ik verken de technische omgevingen waarin data is opgeslagen",
                 "infoModal": {
                     "description": "Het technische deel van het data‑governancemodel legt de technische implementatie van data vast, zoals waar data is opgeslagen en het niveau van datakwaliteit. \n Het technische data‑governancemodel bestaat uit de volgende typen entiteiten:"
                 },
-                "searchInstructions": "Search for keywords related to the technical metadata that you are looking for.",
+                "searchInstructions": "Zoek op trefwoorden die gerelateerd zijn aan het systeem, de collectie of de dataset die u zoekt.",
                 "searchPlaceholder": "Zoek op trefwoorde",
                 "title": "Technische context"
             },
@@ -491,6 +355,206 @@
         },
         "createEntity": {
             "newEntity": "Nieuwe entiteit aanmaken"
+        },
+        "details": {
+            "attribute": {
+                "dataQuality": "Datakwaliteit",
+                "description": "Beschrijving",
+                "fields": "Datavelden",
+                "fieldsCards": {
+                    "title": "Datavelden"
+                },
+                "governanceQualityRules": "Governance Kwaliteitsregels",
+                "people": "Personen",
+                "properties": "Eigenschappen",
+                "unavailable": "Niet beschikbaar"
+            },
+            "collection": {
+                "dataQuality": "Datakwaliteit",
+                "datasetsCards": {
+                    "title": "Datasets"
+                },
+                "description": "Beschrijving",
+                "fields": "Datavelden",
+                "governanceQualityRules": "Governance Kwaliteitsregels",
+                "people": "Personen",
+                "properties": "Eigenschappen",
+                "unavailable": "Niet beschikbaar"
+            },
+            "components": {
+                "detailsCardsList": {
+                    "filter": "Filter",
+                    "results": "resultaten",
+                    "showAllDescendants": "Onderliggende objecten tonen"
+                },
+                "governanceQualityCards": {
+                    "title": "Governance Kwaliteitsregels"
+                },
+                "lineageModel": {
+                    "loading": "Linemodel laden…",
+                    "modelExplorerDataGovernance": {
+                        "noDataGovernanceDetails": "Geen data‑governancedetails beschikbaar"
+                    },
+                    "noLineageModelAvailable": "Geen linemodel beschikbaar",
+                    "retrieve": "Linemodel ophalen"
+                },
+                "navigation": {
+                    "details": "Details"
+                }
+            },
+            "dataset": {
+                "childDatasets": "Onderliggende Datasets",
+                "consumers": "Afnemers",
+                "consumersCards": {
+                    "title": "Afnemers"
+                },
+                "dataEntities": "Data Entiteiten",
+                "dataQuality": "Datakwaliteit",
+                "datasetsCards": {
+                    "title": "Onderliggende Datasets"
+                },
+                "description": "Beschrijving",
+                "entityCards": {
+                    "title": "Data Entiteiten"
+                },
+                "fields": "Datavelden",
+                "fieldsCards": {
+                    "title": "Datavelden"
+                },
+                "governanceQualityRules": "Governance Kwaliteitsregels",
+                "lineageModel": "Linemodel",
+                "producers": "Producenten",
+                "producersCards": {
+                    "title": "Producenten"
+                },
+                "properties": "Eigenschappen",
+                "unavailable": "Niet beschikbaar"
+            },
+            "default": {
+                "description": "Beschrijving",
+                "properties": "Eigenschappen"
+            },
+            "domain": {
+                "dataEntities": "Data Entiteiten",
+                "dataQuality": "Datakwaliteit",
+                "description": "Beschrijving",
+                "entityCards": {
+                    "title": "Data Entiteiten"
+                },
+                "governanceQualityRules": "Governance Kwaliteitsregels",
+                "people": "Personen",
+                "properties": "Eigenschappen",
+                "unavailable": "Niet beschikbaar"
+            },
+            "entity": {
+                "attributesCards": {
+                    "title": "Data Attributen"
+                },
+                "childEntities": "Onderliggende Entiteiten",
+                "dataAttributes": "Data Attributen",
+                "dataEntities": "Data Entiteiten",
+                "dataQuality": "Datakwaliteit",
+                "datasets": "Datasets",
+                "datasetsCards": {
+                    "title": "Datasets"
+                },
+                "description": "Beschrijving",
+                "entitiesCards": {
+                    "title": "Data Entiteiten"
+                },
+                "governanceQualityRules": "Governance Kwaliteitsregels",
+                "people": "Personen",
+                "properties": "Eigenschappen",
+                "unavailable": "Niet beschikbaar"
+            },
+            "field": {
+                "attributesCards": {
+                    "title": "Data Attributen"
+                },
+                "childFields": "Onderliggende Datavelden",
+                "dataAttributes": "Data Attributen",
+                "dataQuality": "Datakwaliteit",
+                "dataQualityCards": {
+                    "title": "Datakwaliteitsregels"
+                },
+                "dataQualityRules": "Datakwaliteitsregels",
+                "description": "Beschrijving",
+                "fieldsCards": {
+                    "title": "Onderliggende Datavelden"
+                },
+                "governanceQualityRules": "Governance Kwaliteitsregels",
+                "properties": "Eigenschappen",
+                "unavailable": "Niet beschikbaar"
+            },
+            "govQuality": {
+                "complianceChart": "Compliance overzicht",
+                "compliant": "Conform",
+                "compliantCards": {
+                    "title": "Conform"
+                },
+                "description": "Beschrijving",
+                "nonCompliant": "Niet conform",
+                "nonCompliantCards": {
+                    "title": "Niet conform"
+                },
+                "properties": "Eigenschappen"
+            },
+            "person": {
+                "dataAttributes": "Data Attributen",
+                "dataDomains": "Datadomeinen",
+                "dataEntities": "Data Entiteiten",
+                "dataOwner": "Data Eigenaar",
+                "dataSteward": "Data Steward",
+                "domainLead": "Domeinverantwoordelijke",
+                "governanceQualityRules": "Governance Kwaliteitsregels",
+                "governanceResponsibilities": "Governance Verantwoordelijkheden",
+                "governanceRolesCards": {
+                    "title": "Governance Verantwoordelijkheden"
+                },
+                "other": "Ander"
+            },
+            "process": {
+                "available": "Beschikbaar",
+                "datasets": "Datasets",
+                "description": "Beschrijving",
+                "governanceQualityRules": "Governance Kwaliteitsregels",
+                "inputCards": {
+                    "title": "Invoer"
+                },
+                "inputs": "Invoer",
+                "lineageModel": "Linemodel",
+                "outputCards": {
+                    "title": "Uitvoer"
+                },
+                "outputs": "Uitvoer",
+                "properties": "Eigenschappen",
+                "systems": "Systemen",
+                "systemsCards": {
+                    "title": "Systemen"
+                },
+                "unavailable": "Niet beschikbaar"
+            },
+            "system": {
+                "collections": "Collecties",
+                "collectionsCards": {
+                    "title": "Collecties"
+                },
+                "dataQuality": "Datakwaliteit",
+                "dataQualityRules": "Datakwaliteitsregels",
+                "description": "Beschrijving",
+                "governanceQualityRules": "Governance Kwaliteitsregels",
+                "lineageModel": "Linemodel",
+                "processes": "Processen",
+                "processesCards": {
+                    "title": "Processen"
+                },
+                "properties": "Eigenschappen",
+                "subSystems": "Subsystemen",
+                "systemsCards": {
+                    "title": "Subsystemen"
+                },
+                "unavailable": "Niet beschikbaar"
+            }
         },
         "editEntity": {
             "editEntity": "Entiteit bewerken"

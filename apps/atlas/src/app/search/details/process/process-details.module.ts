@@ -11,24 +11,21 @@ import { InputsCardsComponent } from './inputs-cards/inputs-cards.component';
 import { OutputsCardsComponent } from './outputs-cards/outputs-cards.component';
 import { ProcessDetailsComponent } from './process-details.component';
 import { SystemsCardsComponent } from './systems-cards/systems-cards.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    DescriptionModule,
-    DetailsCardsListModule,
-    DetailsNavigationModule,
-    GovernanceQualityCardsModule,
-    LineageModelModule,
-    PropertiesModule,
-    AccordionModule
-  ],
-  declarations: [
-    InputsCardsComponent,
-    OutputsCardsComponent,
-    ProcessDetailsComponent,
-    SystemsCardsComponent
-  ],
-  exports: [ProcessDetailsComponent]
+    imports: [
+        CommonModule,
+        DescriptionModule,
+        DetailsCardsListModule,
+        DetailsNavigationModule,
+        GovernanceQualityCardsModule,
+        LineageModelModule,
+        PropertiesModule,
+        AccordionModule,
+        TranslateModule,
+    ],
+    declarations: [InputsCardsComponent, OutputsCardsComponent, ProcessDetailsComponent, SystemsCardsComponent],
+    exports: [ProcessDetailsComponent],
 })
 export class ProcessDetailsModule {}

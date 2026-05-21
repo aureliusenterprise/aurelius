@@ -1,162 +1,145 @@
 <div class="columns is-centered has-text-centered">
-  <div class="column is-narrow">
-    <div class="box">
-      <p class="heading">Domain lead</p>
-      <nav class="level">
-        <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">
-              <a
-                models4insightDetailsNavigationItem="#governance-roles"
-                (click)="
-                  filterResponsibilitiesByType('m4i_data_domain', 'domainlead')
-                "
-              >
-                Data Domains
-              </a>
-            </p>
-            <p class="title">{{ domainLeadCount$ | async }}</p>
-          </div>
+    <div class="column is-narrow">
+        <div class="box">
+            <p class="heading" translate>search.details.person.domainLead</p>
+            <nav class="level">
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">
+                            <a
+                                models4insightDetailsNavigationItem="#governance-roles"
+                                (click)="filterResponsibilitiesByType('m4i_data_domain', 'domainlead')"
+                                translate
+                            >
+                                search.details.person.dataDomains
+                            </a>
+                        </p>
+                        <p class="title">{{ domainLeadCount$ | async }}</p>
+                    </div>
+                </div>
+            </nav>
         </div>
-      </nav>
     </div>
-  </div>
-  <div class="column">
-    <div class="box">
-      <p class="heading">
-        Data owner
-      </p>
-      <nav class="level is-mobile">
-        <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">
-              <a
-                models4insightDetailsNavigationItem="#governance-roles"
-                (click)="
-                  filterResponsibilitiesByType('m4i_data_entity', 'dataowner')
-                "
-              >
-                Data Entities
-              </a>
-            </p>
-            <p class="title">{{ dataOwnerEntityCount$ | async }}</p>
-          </div>
+    <div class="column">
+        <div class="box">
+            <p class="heading" translate>search.details.person.dataOwner</p>
+            <nav class="level is-mobile">
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">
+                            <a
+                                models4insightDetailsNavigationItem="#governance-roles"
+                                (click)="filterResponsibilitiesByType('m4i_data_entity', 'dataowner')"
+                                translate
+                            >
+                                search.details.person.dataEntities
+                            </a>
+                        </p>
+                        <p class="title">{{ dataOwnerEntityCount$ | async }}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">
+                            <a
+                                models4insightDetailsNavigationItem="#governance-roles"
+                                (click)="filterResponsibilitiesByType('m4i_data_attribute', 'dataowner')"
+                                translate
+                            >
+                                search.details.person.dataAttributes
+                            </a>
+                        </p>
+                        <p class="title">{{ dataOwnerAttributeCount$ | async }}</p>
+                    </div>
+                </div>
+            </nav>
         </div>
-        <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">
-              <a
-                models4insightDetailsNavigationItem="#governance-roles"
-                (click)="
-                  filterResponsibilitiesByType(
-                    'm4i_data_attribute',
-                    'dataowner'
-                  )
-                "
-              >
-                Data Attributes
-              </a>
-            </p>
-            <p class="title">{{ dataOwnerAttributeCount$ | async }}</p>
-          </div>
-        </div>
-      </nav>
     </div>
-  </div>
-  <div class="column">
-    <div class="box">
-      <p class="heading">
-        Data steward
-      </p>
-      <nav class="level is-mobile">
-        <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">
-              <a
-                models4insightDetailsNavigationItem="#governance-roles"
-                (click)="
-                  filterResponsibilitiesByType('m4i_data_entity', 'datasteward')
-                "
-              >
-                Data Entities
-              </a>
-            </p>
-            <p class="title">{{ dataStewardEntityCount$ | async }}</p>
-          </div>
+    <div class="column">
+        <div class="box">
+            <p class="heading" translate>search.details.person.dataSteward</p>
+            <nav class="level is-mobile">
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">
+                            <a
+                                models4insightDetailsNavigationItem="#governance-roles"
+                                (click)="filterResponsibilitiesByType('m4i_data_entity', 'datasteward')"
+                                translate
+                            >
+                                search.details.person.dataEntities
+                            </a>
+                        </p>
+                        <p class="title">{{ dataStewardEntityCount$ | async }}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">
+                            <a
+                                models4insightDetailsNavigationItem="#governance-roles"
+                                (click)="filterResponsibilitiesByType('m4i_data_attribute', 'datasteward')"
+                                translate
+                            >
+                                search.details.person.dataAttributes
+                            </a>
+                        </p>
+                        <p class="title">{{ dataStewardAttributeCount$ | async }}</p>
+                    </div>
+                </div>
+            </nav>
         </div>
-        <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">
-              <a
-                models4insightDetailsNavigationItem="#governance-roles"
-                (click)="
-                  filterResponsibilitiesByType(
-                    'm4i_data_attribute',
-                    'datasteward'
-                  )
-                "
-              >
-                Data Attributes
-              </a>
-            </p>
-            <p class="title">{{ dataStewardAttributeCount$ | async }}</p>
-          </div>
-        </div>
-      </nav>
     </div>
-  </div>
-  <div class="column is-narrow">
-    <div class="box">
-      <p class="heading">Other</p>
-      <nav class="level">
-        <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">
-              <a models4insightDetailsNavigationItem="#properties-details">
-                Properties
-              </a>
-            </p>
-            <p class="title">{{ propertyCount$ | async }}</p>
-          </div>
+    <div class="column is-narrow">
+        <div class="box">
+            <p class="heading" translate>search.details.person.other</p>
+            <nav class="level">
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">
+                            <a models4insightDetailsNavigationItem="#properties-details" translate>
+                                search.details.person.properties
+                            </a>
+                        </p>
+                        <p class="title">{{ propertyCount$ | async }}</p>
+                    </div>
+                </div>
+            </nav>
         </div>
-      </nav>
     </div>
-  </div>
 </div>
 
 <div id="governance-roles" class="box">
-  <models4insight-governance-roles-cards></models4insight-governance-roles-cards>
+    <models4insight-governance-roles-cards></models4insight-governance-roles-cards>
 </div>
 
 <div id="gov-quality" class="box">
-  <models4insight-governance-quality-cards></models4insight-governance-quality-cards>
+    <models4insight-governance-quality-cards></models4insight-governance-quality-cards>
 </div>
 
 <div id="properties-details">
-  <models4insight-accordion>
-    <ng-container header>
-      <h3 class="title is-3">Properties</h3>
-    </ng-container>
-    <ng-container content>
-      <models4insight-properties></models4insight-properties>
-    </ng-container>
-  </models4insight-accordion>
+    <models4insight-accordion>
+        <ng-container header>
+            <h3 class="title is-3" translate>search.details.person.properties</h3>
+        </ng-container>
+        <ng-container content>
+            <models4insight-properties></models4insight-properties>
+        </ng-container>
+    </models4insight-accordion>
 </div>
 
 <models4insight-details-navigation>
-  <li>
-    <a models4insightDetailsNavigationItem="#governance-roles">
-      Governance Responsibilities
-    </a>
-  </li>
-  <li>
-    <a models4insightDetailsNavigationItem="#gov-quality">
-      Governance Quality Rules
-    </a>
-  </li>
-  <li>
-    <a models4insightDetailsNavigationItem="#properties-details">
-      Properties
-    </a>
-  </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#governance-roles" translate>
+            search.details.person.governanceResponsibilities
+        </a>
+    </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#gov-quality" translate>
+            search.details.person.governanceQualityRules
+        </a>
+    </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#properties-details" translate> search.details.person.properties </a>
+    </li>
 </models4insight-details-navigation>
