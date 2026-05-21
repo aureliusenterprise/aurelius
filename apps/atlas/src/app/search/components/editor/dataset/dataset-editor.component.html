@@ -1,212 +1,203 @@
-<ng-container
-  [formGroup]="editorFormService.form"
-  *ngIf="validationResults$ | async as rules"
->
-  <div class="field">
-    <label class="label">Name*</label>
-    <div class="grid">
-      <div class="control">
-        <input
-          id="name"
-          name="name"
-          class="input"
-          type="text"
-          placeholder="Name"
-          [formControl]="name"
-          required
-          [class.is-danger]="(editorFormService.submitted | async) && name.invalid"
-        />
-      </div>
-      <ng-container *ngIf="rules.name as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-    <ng-container *ngIf="(editorFormService.submitted | async) && name.invalid">
-      <p *ngIf="name.errors?.required" class="help is-danger">
-        Name is required.
-      </p>
-    </ng-container>
-    <ng-container *ngIf="name.value && name.value.includes('\u2019')">
-      <p class="help is-warning">
-        Importing the character ’ (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
-        Please replace it with a standard apostrophe (') before importing your text.
-      </p>
-    </ng-container>
-  </div>
-
-  <div *ngIf="false" class="field">
-    <label class="label">Type alias</label>
-    <div class="grid">
-      <div class="control">
-        <input
-          id="typeAlias"
-          name="typeAlias"
-          class="input"
-          type="text"
-          placeholder="Type alias"
-          [formControl]="typeAlias"
-          [class.is-danger]="(editorFormService.submitted | async) && typeAlias.invalid"
-        />
-      </div>
-      <ng-container *ngIf="rules.typeAlias as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Definition</label>
-    <div class="grid">
-      <div class="control">
-        <textarea
-          class="textarea"
-          placeholder="Definition"
-          [formControl]="definition"
-        ></textarea>
-      </div>
-      <ng-container *ngIf="rules.definition as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-    <ng-container *ngIf="definition.value && definition.value.includes('\u2019')">
-      <p class="help is-warning">
-        Importing the character ’ (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
-        Please replace it with a standard apostrophe (') before importing your text.
-      </p>
-    </ng-container>
-  </div>
-
-  <div class="field">
-    <label class="label">Collection</label>
-    <div class="grid">
-      <div class="control">
-        <models4insight-relationships-input
-          [tags]="collections"
-          typeName="m4i_collection"
-          [rule]="rules.collections"
-          [singleRelationship]="true"
-        ></models4insight-relationships-input>
-      </div>
-      <ng-container *ngIf="rules.collections as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Parent dataset</label>
-    <div class="grid">
-      <div class="control">
-        <models4insight-relationships-input
-          [tags]="parentDatasets"
-          typeName="m4i_dataset"
-          [rule]="rules.parentDataset"
-          [singleRelationship]="true"
-        ></models4insight-relationships-input>
-      </div>
-      <ng-container *ngIf="rules.parentDataset as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Child datasets</label>
-    <div class="grid">
-      <div class="control">
-        <models4insight-relationships-input
-          [tags]="childDatasets"
-          typeName="m4i_dataset"
-          [rule]="rules?.childDataset"
-        ></models4insight-relationships-input>
-      </div>
-      <ng-container *ngIf="rules.childDataset as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Fields</label>
-    <div class="grid">
-      <div class="control">
-        <models4insight-relationships-input
-          [tags]="fields"
-          typeName="m4i_field"
-          [rule]="rules.fields"
-        ></models4insight-relationships-input>
-      </div>
-      <ng-container *ngIf="rules.fields as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Producers</label>
-    <div class="grid">
-      <div class="control">
-        <models4insight-relationships-input
-          [tags]="outputFromProcesses"
-          typeName="m4i_generic_process"
-          [rule]="rules.outputFromProcesses"
-        ></models4insight-relationships-input>
-      </div>
-      <ng-container *ngIf="rules.outputFromProcesses as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Consumers</label>
-    <div class="grid">
-      <div class="control">
-        <models4insight-relationships-input
-          [tags]="inputToProcesses"
-          typeName="m4i_generic_process"
-          [rule]="rules.inputToProcesses"
-        ></models4insight-relationships-input>
-      </div>
-      <ng-container *ngIf="rules.inputToProcesses as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-  <div class="field">
-    <div class="grid">
-      <ng-container *ngIf="(editorFormService.submitted | async) && editorFormService.form.invalid">
-        <div class="notification is-danger is-light mb-4">
-          <p><strong>This entity can't be saved because one or more required fields are missing.</strong></p>
+<ng-container [formGroup]="editorFormService.form" *ngIf="validationResults$ | async as rules">
+    <div class="field">
+        <label class="label" translate> search.components.editor.dataset.name </label>
+        <div class="grid">
+            <div class="control">
+                <input
+                    id="name"
+                    name="name"
+                    class="input"
+                    type="text"
+                    placeholder="{{ 'search.components.editor.dataset.namePlaceholder' | translate }}"
+                    [formControl]="name"
+                    required
+                    [class.is-danger]="(editorFormService.submitted | async) && name.invalid"
+                />
+            </div>
+            <ng-container *ngIf="rules.name as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
         </div>
-      </ng-container>
+        <ng-container *ngIf="(editorFormService.submitted | async) && name.invalid">
+            <p *ngIf="name.errors?.required" class="help is-danger" translate>
+                search.components.editor.dataset.nameRequired
+            </p>
+        </ng-container>
+        <ng-container *ngIf="name.value && name.value.includes('\u2019')">
+            <p class="help is-warning" translate>search.components.editor.dataset.nameWarning</p>
+        </ng-container>
     </div>
-  </div>
+
+    <div *ngIf="false" class="field">
+        <label class="label" translate> search.components.editor.dataset.typeAlias </label>
+        <div class="grid">
+            <div class="control">
+                <input
+                    id="typeAlias"
+                    name="typeAlias"
+                    class="input"
+                    type="text"
+                    placeholder="{{ 'search.components.editor.dataset.typeAliasPlaceholder' | translate }}"
+                    [formControl]="typeAlias"
+                    [class.is-danger]="(editorFormService.submitted | async) && typeAlias.invalid"
+                />
+            </div>
+            <ng-container *ngIf="rules.typeAlias as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.dataset.definition </label>
+        <div class="grid">
+            <div class="control">
+                <textarea
+                    class="textarea"
+                    placeholder="{{ 'search.components.editor.dataset.definitionPlaceholder' | translate }}"
+                    [formControl]="definition"
+                ></textarea>
+            </div>
+            <ng-container *ngIf="rules.definition as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+        <ng-container *ngIf="definition.value && definition.value.includes('\u2019')">
+            <p class="help is-warning" translate="">search.components.editor.dataset.definitionWarning</p>
+        </ng-container>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.dataset.collection </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="collections"
+                    typeName="m4i_collection"
+                    [rule]="rules.collections"
+                    [singleRelationship]="true"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.collections as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.dataset.parentDataset </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="parentDatasets"
+                    typeName="m4i_dataset"
+                    [rule]="rules.parentDataset"
+                    [singleRelationship]="true"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.parentDataset as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.dataset.childDataset </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="childDatasets"
+                    typeName="m4i_dataset"
+                    [rule]="rules?.childDataset"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.childDataset as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.dataset.fields </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="fields"
+                    typeName="m4i_field"
+                    [rule]="rules.fields"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.fields as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.dataset.producers </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="outputFromProcesses"
+                    typeName="m4i_generic_process"
+                    [rule]="rules.outputFromProcesses"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.outputFromProcesses as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.dataset.consumers </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="inputToProcesses"
+                    typeName="m4i_generic_process"
+                    [rule]="rules.inputToProcesses"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.inputToProcesses as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+    <div class="field">
+        <div class="grid">
+            <ng-container *ngIf="(editorFormService.submitted | async) && editorFormService.form.invalid">
+                <div class="notification is-danger is-light mb-4">
+                    <p><strong translate> search.components.editor.dataset.notification </strong></p>
+                </div>
+            </ng-container>
+        </div>
+    </div>
 </ng-container>
