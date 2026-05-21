@@ -488,6 +488,17 @@
                 "title": "Technische context"
             },
             "title": "Aan de slag"
+        },
+        "createEntity": {
+            "newEntity": "Nieuwe entiteit aanmaken"
+        },
+        "editEntity": {
+            "editEntity": "Entiteit bewerken"
+        },
+        "results": {
+            "anotherQuery": "Probeer een andere zoekopdracht.",
+            "noResults": "Geen resultaten gevonden",
+            "results": "resultaten"
         }
     },
     "sourcetype": "Source",
