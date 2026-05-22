@@ -163,6 +163,7 @@
     "postCreateCommand": {
         "gke": "bash .devcontainer/gke.sh",
         "pre-commit": "bash .devcontainer/pre-commit.sh",
+        "sonarqube": "bash .devcontainer/sonarqube.sh",
         "sops": "bash .devcontainer/sops.sh"
     },
     "runArgs": ["--add-host=keycloak.localhost:127.0.0.1"]
