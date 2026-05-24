@@ -23,6 +23,7 @@ async function createNodesInternal(
     return {
         projects: {
             [projectRoot]: {
+                tags: ['sonarqube'],
                 targets: {
                     [sonarTargetName]: {
                         dependsOn: ['decrypt'],

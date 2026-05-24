@@ -7,35 +7,24 @@ on:
         paths:
             - '.sops.yaml'
 
+permissions:
+    contents: write
+    pull-requests: write
+
 jobs:
     update-keys:
         name: Update SOPS Keys
         runs-on: ubuntu-latest
 
         steps:
-            - name: Install SOPS
-              env:
-                  SOPS_VERSION: v3.11.0
-              run: |
-                  curl -LO https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64
-                  sudo mv sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
-                  sudo chmod +x /usr/local/bin/sops
-
             - name: Checkout code
               uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
 
-            - name: Setup Node.js and dependencies
-              uses: actions/setup-node@v4
+            - name: Setup toolchain
+              uses: ./.github/actions/setup-toolchain
               with:
-                  node-version: 20
-                  cache: npm
-
-            - run: npm install
-              name: Install dependencies
-              env:
-                  NODE_AUTH_TOKEN: ${{ github.token }}
+                  node: 'true'
+                  sops: 'true'
 
             - name: Update keys for all projects
               env:

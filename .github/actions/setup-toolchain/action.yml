@@ -1,0 +1,152 @@
+name: Setup Toolchain
+description: Installs the runtimes and tools needed by CI jobs. Must be called after actions/checkout.
+
+inputs:
+    cleanup:
+        description: Whether to clean up pre-installed toolchains to free up disk space.
+        default: 'false'
+    cosign:
+        description: Install Cosign
+        default: 'false'
+    cyclonedx:
+        description: Install CycloneDX CLI
+        default: 'false'
+    cyclonedx-version:
+        description: CycloneDX CLI version to install
+        default: 0.32.0
+    github-token:
+        description: GitHub token for GHCR login (leave empty to skip)
+        default: ''
+    node:
+        description: Set up Node.js and install npm dependencies
+        default: 'false'
+    poetry-version:
+        description: Poetry version to set up
+        default: 1.8.5
+    python:
+        description: Set up Python, poetry, and install dependencies
+        default: 'false'
+    python-version:
+        description: Python version to set up
+        default: 3.8
+    sonar:
+        description: Install SonarQube scanner
+        default: 'false'
+    sonar-version:
+        description: SonarQube scanner version to install
+        default: 8.0.1.6346
+    sops:
+        description: Install SOPS
+        default: 'false'
+    sops-version:
+        description: SOPS version to install
+        default: v3.11.0
+    trivy:
+        description: Install Trivy
+        default: 'false'
+
+runs:
+    using: composite
+    steps:
+        - name: Clean up pre-installed toolchains
+          if: inputs.cleanup == 'true'
+          shell: bash
+          run: |
+              # Remove Java (JDKs)
+              sudo rm -rf /usr/lib/jvm
+
+              # Remove .NET SDKs
+              sudo rm -rf /usr/share/dotnet
+
+              # Remove Swift toolchain
+              sudo rm -rf /usr/share/swift
+
+              # Remove Haskell (GHC)
+              sudo rm -rf /usr/local/.ghcup
+
+              # Remove Julia
+              sudo rm -rf /usr/local/julia*
+
+              # Remove Android SDKs
+              sudo rm -rf /usr/local/lib/android
+
+              # Remove Chromium (optional if not using for browser tests)
+              sudo rm -rf /usr/local/share/chromium
+
+              # Remove Microsoft/Edge and Google Chrome builds
+              sudo rm -rf /opt/microsoft /opt/google
+
+              # Remove Azure CLI
+              sudo rm -rf /opt/az
+
+              # Remove PowerShell
+              sudo rm -rf /usr/local/share/powershell
+
+              # Remove CodeQL and other toolcaches
+              sudo rm -rf /opt/hostedtoolcache
+
+              docker system prune -af || true
+              docker builder prune -af || true
+              df -h
+
+        - name: Install Cosign
+          if: inputs.cosign == 'true'
+          uses: sigstore/cosign-installer@v4.1.1
+
+        - name: Install CycloneDX CLI
+          if: inputs.cyclonedx == 'true'
+          run: |
+              curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/${{ inputs.cyclonedx-version }}/download/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
+              chmod +x /usr/local/bin/cyclonedx
+
+        - name: Setup Node.js and dependencies
+          if: inputs.node == 'true'
+          uses: actions/setup-node@v6
+          with:
+              node-version: 24
+              cache: npm
+
+        - name: Install Node.js dependencies
+          if: inputs.node == 'true'
+          shell: bash
+          run: npm install
+
+        - name: 'Setup Python, Poetry and Dependencies'
+          uses: packetcoders/action-setup-cache-python-poetry@1.2.0
+          with:
+              python-version: ${{ inputs.python-version }}
+              poetry-version: ${{ inputs.poetry-version }}
+
+        - name: Install SonarQube scanner
+          if: inputs.sonar == 'true'
+          env:
+              SONAR_ROOT: ${{ runner.temp }}/sonar-scanner
+              SONAR_ZIP: /tmp/sonar-scanner.zip
+          run: |
+              curl -o "$SONAR_ZIP" -L "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ inputs.sonar-version }}-linux-x64.zip"
+              unzip -o "$SONAR_ZIP" -d "$SONAR_ROOT"
+              rm "$SONAR_ZIP"
+              echo "$SONAR_ROOT/sonar-scanner-${{ inputs.sonar-version }}-linux-x64/bin" >> "$GITHUB_PATH"
+              "$SONAR_ROOT/sonar-scanner-${{ inputs.sonar-version }}-linux-x64/bin/sonar-scanner" --version
+
+        - name: Install SOPS
+          if: inputs.sops == 'true'
+          shell: bash
+          env:
+              SOPS_VERSION: ${{ inputs.sops-version }}
+          run: |
+              curl -LO https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64
+              sudo mv sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
+              sudo chmod +x /usr/local/bin/sops
+
+        - name: Install Trivy
+          if: inputs.trivy == 'true'
+          uses: aquasecurity/setup-trivy@v0.2.6
+
+        - name: Log in to the GitHub Container registry
+          if: inputs.github-token != ''
+          uses: docker/login-action@v4
+          with:
+              registry: ghcr.io
+              username: ${{ github.actor }}
+              password: ${{ inputs.github-token }}
