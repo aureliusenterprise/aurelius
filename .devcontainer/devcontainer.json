@@ -15,6 +15,7 @@
                 "nrwl.angular-console",
                 "PKief.material-icon-theme",
                 "tamasfe.even-better-toml",
+                "SonarSource.sonarlint-vscode",
                 "vitest.explorer",
                 "-ms-python.autopep8"
             ],
