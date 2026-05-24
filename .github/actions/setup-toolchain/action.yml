@@ -95,6 +95,7 @@ runs:
 
         - name: Install CycloneDX CLI
           if: inputs.cyclonedx == 'true'
+          shell: bash
           run: |
               curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/${{ inputs.cyclonedx-version }}/download/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
               chmod +x /usr/local/bin/cyclonedx
@@ -119,6 +120,7 @@ runs:
 
         - name: Install SonarQube scanner
           if: inputs.sonar == 'true'
+          shell: bash
           env:
               SONAR_ROOT: ${{ runner.temp }}/sonar-scanner
               SONAR_ZIP: /tmp/sonar-scanner.zip
