@@ -8,6 +8,9 @@ inputs:
     cosign:
         description: Install Cosign
         default: 'false'
+    cosign-version:
+        description: Cosign version to install
+        default: v4.1.1
     cyclonedx:
         description: Install CycloneDX CLI
         default: 'false'
@@ -44,6 +47,9 @@ inputs:
     trivy:
         description: Install Trivy
         default: 'false'
+    trivy-version:
+        description: Trivy version to install
+        default: v0.58.0
 
 runs:
     using: composite
@@ -89,16 +95,33 @@ runs:
               docker builder prune -af || true
               df -h
 
-        - name: Install Cosign
+        - name: Cache Cosign
           if: inputs.cosign == 'true'
+          id: cache-cosign
+          uses: actions/cache@v4
+          with:
+              path: /usr/local/bin/cosign
+              key: cosign-${{ inputs.cosign-version }}
+
+        - name: Install Cosign
+          if: inputs.cosign == 'true' && steps.cache-cosign.outputs.cache-hit != 'true'
           uses: sigstore/cosign-installer@v4.1.1
+
+        - name: Cache CycloneDX CLI
+          if: inputs.cyclonedx == 'true'
+          uses: actions/cache@v4
+          with:
+              path: /usr/local/bin/cyclonedx
+              key: cyclonedx-${{ inputs.cyclonedx-version }}
 
         - name: Install CycloneDX CLI
           if: inputs.cyclonedx == 'true'
           shell: bash
           run: |
-              curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/${{ inputs.cyclonedx-version }}/download/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
-              chmod +x /usr/local/bin/cyclonedx
+              if [ ! -f /usr/local/bin/cyclonedx ]; then
+                  curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/${{ inputs.cyclonedx-version }}/download/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
+                  chmod +x /usr/local/bin/cyclonedx
+              fi
 
         - name: Setup Node.js and dependencies
           if: inputs.node == 'true'
@@ -118,6 +141,13 @@ runs:
               python-version: ${{ inputs.python-version }}
               poetry-version: ${{ inputs.poetry-version }}
 
+        - name: Cache SonarQube scanner
+          if: inputs.sonar == 'true'
+          uses: actions/cache@v4
+          with:
+              path: ${{ runner.temp }}/sonar-scanner
+              key: sonar-scanner-${{ inputs.sonar-version }}
+
         - name: Install SonarQube scanner
           if: inputs.sonar == 'true'
           shell: bash
@@ -125,11 +155,20 @@ runs:
               SONAR_ROOT: ${{ runner.temp }}/sonar-scanner
               SONAR_ZIP: /tmp/sonar-scanner.zip
           run: |
-              curl -o "$SONAR_ZIP" -L "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ inputs.sonar-version }}-linux-x64.zip"
-              unzip -o "$SONAR_ZIP" -d "$SONAR_ROOT"
-              rm "$SONAR_ZIP"
+              if [ ! -d "$SONAR_ROOT/sonar-scanner-${{ inputs.sonar-version }}-linux-x64" ]; then
+                  curl -o "$SONAR_ZIP" -L "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ inputs.sonar-version }}-linux-x64.zip"
+                  unzip -o "$SONAR_ZIP" -d "$SONAR_ROOT"
+                  rm "$SONAR_ZIP"
+              fi
               echo "$SONAR_ROOT/sonar-scanner-${{ inputs.sonar-version }}-linux-x64/bin" >> "$GITHUB_PATH"
               "$SONAR_ROOT/sonar-scanner-${{ inputs.sonar-version }}-linux-x64/bin/sonar-scanner" --version
+
+        - name: Cache SOPS
+          if: inputs.sops == 'true'
+          uses: actions/cache@v4
+          with:
+              path: /usr/local/bin/sops
+              key: sops-${{ inputs.sops-version }}
 
         - name: Install SOPS
           if: inputs.sops == 'true'
@@ -137,9 +176,18 @@ runs:
           env:
               SOPS_VERSION: ${{ inputs.sops-version }}
           run: |
-              curl -LO https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64
-              sudo mv sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
-              sudo chmod +x /usr/local/bin/sops
+              if [ ! -f /usr/local/bin/sops ]; then
+                  curl -LO https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64
+                  sudo mv sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
+                  sudo chmod +x /usr/local/bin/sops
+              fi
+
+        - name: Cache Trivy
+          if: inputs.trivy == 'true'
+          uses: actions/cache@v4
+          with:
+              path: /usr/local/bin/trivy
+              key: trivy-${{ inputs.trivy-version }}
 
         - name: Install Trivy
           if: inputs.trivy == 'true'
