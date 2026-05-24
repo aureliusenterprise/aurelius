@@ -113,7 +113,7 @@ runs:
           run: npm install
 
         - name: 'Setup Python, Poetry and Dependencies'
-          uses: packetcoders/action-setup-cache-python-poetry@1.2.0
+          uses: packetcoders/action-setup-cache-python-poetry@v1.2.0
           with:
               python-version: ${{ inputs.python-version }}
               poetry-version: ${{ inputs.poetry-version }}
