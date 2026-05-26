@@ -1,3 +1,4 @@
+import sys
 from typing import Tuple, Union, cast
 from unittest.mock import Mock, patch
 
@@ -23,6 +24,7 @@ def environment() -> StreamExecutionEnvironment:
     with a parallelism of 1 for consistent testing.
     """
     env = StreamExecutionEnvironment.get_execution_environment()
+    env.set_python_executable(sys.executable)
     env.set_parallelism(1)
     return env
 

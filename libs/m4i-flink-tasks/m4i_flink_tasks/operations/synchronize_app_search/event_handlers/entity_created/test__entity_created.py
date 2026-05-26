@@ -166,10 +166,9 @@ def test__handle_entity_created_with_breadcrumbs() -> None:
         breadcrumbtype=["m4i_data_domain"],
     )
 
-    with (
-        patch(__package__ + ".entity_created.get_related_documents", return_value=[parent_document]),
-        patch(__package__ + ".entity_created.get_child_documents", return_value=[]),
-    ):
+    with patch(
+        __package__ + ".entity_created.get_related_documents", return_value=[parent_document]
+    ), patch(__package__ + ".entity_created.get_child_documents", return_value=[]):
         result = handle_entity_created(entity_message, Mock(), "test_index", {})
 
         assert len(result) == 2
@@ -227,10 +226,9 @@ def test__handle_entity_created_add_relations() -> None:
         parentguid="5678",
     )
 
-    with (
-        patch(__package__ + ".entity_created.get_related_documents", return_value=[related_document]),
-        patch(__package__ + ".entity_created.get_child_documents", return_value=[]),
-    ):
+    with patch(
+        __package__ + ".entity_created.get_related_documents", return_value=[related_document]
+    ), patch(__package__ + ".entity_created.get_child_documents", return_value=[]):
         result = handle_entity_created(entity_message, Mock(), "test_index", {})
 
         document = result["1111"]
@@ -309,10 +307,9 @@ def test__handle_entity_created_multiple_relations() -> None:
         ),
     ]
 
-    with (
-        patch(__package__ + ".entity_created.get_related_documents", return_value=related),
-        patch(__package__ + ".entity_created.get_child_documents", return_value=[]),
-    ):
+    with patch(
+        __package__ + ".entity_created.get_related_documents", return_value=related
+    ), patch(__package__ + ".entity_created.get_child_documents", return_value=[]):
         result = handle_entity_created(message, Mock(), "test_index", {})
 
         # Assert created entity's relations

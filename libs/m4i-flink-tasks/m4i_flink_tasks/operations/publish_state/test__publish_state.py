@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 from m4i_atlas_core import (
     AtlasChangeMessage,
@@ -23,6 +25,7 @@ def environment() -> StreamExecutionEnvironment:
         An instance of Flink's StreamExecutionEnvironment.
     """
     env = StreamExecutionEnvironment.get_execution_environment()
+    env.set_python_executable(sys.executable)
     env.set_parallelism(1)
     return env
 
