@@ -1,106 +1,98 @@
 {
-  "/auth": {
-    "pathRewrite": {
-      "^/auth": ""
+    "/api/data_governance_dashboard": {
+        "changeOrigin": false,
+        "pathRewrite": {
+            "^/api/data_governance_dashboard": ""
+        },
+        "secure": false,
+        "target": "http://127.0.0.1:5555/data_governance/dashboard"
     },
-    "target": "http://127.0.0.1:8180/auth",
-    "changeOrigin": true,
-    "secure": false
-  },
-  "/compare": {
-    "pathRewrite": {
-      "^/compare": ""
+    "/atlas": {
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/atlas": ""
+        },
+        "secure": false,
+        "target": "http://127.0.0.1:21000/api/atlas"
     },
-    "target": "http://127.0.0.1:5555/compare",
-    "changeOrigin": true,
-    "secure": false
-  },
-  "/errorlog/api": {
-    "pathRewrite": {
-      "^/errorlog/api": ""
+    "/compare": {
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/compare": ""
+        },
+        "secure": false,
+        "target": "http://127.0.0.1:5555/compare"
     },
-    "target": "http://127.0.0.1:3333/api",
-    "changeOrigin": true,
-    "secure": false
-  },
-  "/flask": {
-    "pathRewrite": {
-      "^/flask": ""
+    "/data_quality": {
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/data_quality": ""
+        },
+        "secure": true,
+        "target": "http://localhost:3002/api/as/v1/engines/atlas-dev-quality/search.json"
     },
-    "target": "http://127.0.0.1:5555",
-    "changeOrigin": true,
-    "secure": false
-  },
-  "/repository": {
-    "pathRewrite": {
-      "^/repository": ""
+    "/elastic": {
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/elastic": ""
+        },
+        "secure": true,
+        "target": "http://localhost:3002/api/as/v1/engines/atlas-dev/search.json"
     },
-    "target": "http://127.0.0.1:8989/RestApi3",
-    "changeOrigin": true,
-    "secure": false
-  },
-  "/users": {
-    "pathRewrite": {
-      "^/users": ""
+    "/errorlog/api": {
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/errorlog/api": ""
+        },
+        "secure": false,
+        "target": "http://127.0.0.1:3333/api"
     },
-    "target": "http://127.0.0.1:8989/RestUser/api/users",
-    "changeOrigin": true,
-    "secure": false
-  },
-  "/atlas": {
-    "pathRewrite": {
-      "^/atlas": ""
+    "/flask": {
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/flask": ""
+        },
+        "secure": false,
+        "target": "http://127.0.0.1:5555"
     },
-    "target": "http://127.0.0.1:21000/api/atlas",
-    "changeOrigin": true,
-    "secure": false
-  },
-  "/lineage_model": {
-    "pathRewrite": {
-      "^/lineage_model": ""
+    "/gov_quality": {
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/gov_quality": ""
+        },
+        "secure": true,
+        "target": "http://localhost:3002/api/as/v1/engines/atlas-dev-gov-quality/search.json"
     },
-    "target": "http://localhost:7100",
-    "changeOrigin": false,
-    "secure": false
-  },
-  "/elastic": {
-    "pathRewrite": {
-      "^/elastic": ""
+    "/lineage_model": {
+        "changeOrigin": false,
+        "pathRewrite": {
+            "^/lineage_model": ""
+        },
+        "secure": false,
+        "target": "http://localhost:7100"
     },
-    "target": "http://localhost:3002/api/as/v1/engines/atlas-dev/search.json",
-    "changeOrigin": true,
-    "secure": true
-  },
-  "/api/data_governance_dashboard": {
-    "pathRewrite": {
-      "^/api/data_governance_dashboard": ""
+    "/repository": {
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/repository": ""
+        },
+        "secure": false,
+        "target": "http://127.0.0.1:8989/RestApi3"
     },
-    "target": "http://127.0.0.1:5555/data_governance/dashboard",
-    "changeOrigin": false,
-    "secure": false
-  },
-  "/data_quality": {
-    "pathRewrite": {
-      "^/data_quality": ""
+    "/users": {
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/users": ""
+        },
+        "secure": false,
+        "target": "http://127.0.0.1:8989/RestUser/api/users"
     },
-    "target": "http://localhost:3002/api/as/v1/engines/atlas-dev-quality/search.json",
-    "changeOrigin": true,
-    "secure": true
-  },
-  "/gov_quality": {
-    "pathRewrite": {
-      "^/gov_quality": ""
-    },
-    "target": "http://localhost:3002/api/as/v1/engines/atlas-dev-gov-quality/search.json",
-    "changeOrigin": true,
-    "secure": true
-  },
-  "/validate_entity": {
-    "pathRewrite": {
-      "^/validate_entity": ""
-    },
-    "target": "http://localhost:7200",
-    "changeOrigin": false,
-    "secure": false
-  }
+    "/validate_entity": {
+        "changeOrigin": false,
+        "pathRewrite": {
+            "^/validate_entity": ""
+        },
+        "secure": false,
+        "target": "http://localhost:7200"
+    }
 }

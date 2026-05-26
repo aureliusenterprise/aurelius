@@ -18,7 +18,9 @@ class PrepareNotificationToIndexFunction(MapFunction):
     object suitable for indexing.
     """
 
-    def map(self, value: Union[AtlasChangeMessage, Exception]) -> Union[EntityVersion, Exception]:
+    def map(  # type: ignore[return type override is valid]
+        self, value: Union[AtlasChangeMessage, Exception]
+    ) -> Union[EntityVersion, Exception]:
         """
         Transform a ValidatedInput message into an EntityVersion object.
 

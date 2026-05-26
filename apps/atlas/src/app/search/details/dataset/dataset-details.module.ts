@@ -14,26 +14,28 @@ import { EntityCardsComponent } from './entity-cards/entity-cards.component';
 import { FieldsCardsComponent } from './fields-cards/fields-cards.component';
 import { ProducersCardsComponent } from './producers-cards/producers-cards.component';
 import { DescriptionModule } from '../../components/description/description.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    DataQualityListModule,
-    DescriptionModule,
-    DetailsCardsListModule,
-    DetailsNavigationModule,
-    GovernanceQualityCardsModule,
-    LineageModelModule,
-    PropertiesModule,
-    AccordionModule
-  ],
-  declarations: [
-    ConsumersCardsComponent,
-    DatasetDetailsComponent,
-    DatasetsCardsComponent,
-    EntityCardsComponent,
-    FieldsCardsComponent,
-    ProducersCardsComponent
-  ]
+    imports: [
+        CommonModule,
+        DataQualityListModule,
+        DescriptionModule,
+        DetailsCardsListModule,
+        DetailsNavigationModule,
+        GovernanceQualityCardsModule,
+        LineageModelModule,
+        PropertiesModule,
+        AccordionModule,
+        TranslateModule,
+    ],
+    declarations: [
+        ConsumersCardsComponent,
+        DatasetDetailsComponent,
+        DatasetsCardsComponent,
+        EntityCardsComponent,
+        FieldsCardsComponent,
+        ProducersCardsComponent,
+    ],
 })
 export class DatasetDetailsModule {}

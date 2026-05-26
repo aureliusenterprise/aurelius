@@ -15,6 +15,3 @@ else
     echo "Uploading governance quality rules to Apache Atlas..."
     bash /app/bin/upload_sample_data.sh only_gov_quality.zip
 fi
-
-cd /app/
-/opt/flink/bin/flink run -d --jobmanager "$JOBMANAGER_URL" -py main.py --jarfile /app/jars/flink-sql-connector-kafka-1.17.1.jar --jarfile /app/jars/flink-sql-connector-elasticsearch7-3.0.1-1.17.jar

@@ -10,20 +10,21 @@ import { PropertiesModule } from '../components/properties/properties.module';
 import { DomainDetailsComponent } from './domain-details.component';
 import { EntityCardsComponent } from './entity-cards/entity-cards.component';
 import { GovernanceQualityCardsModule } from '../components/governance-quality-cards/governance-quality-cards.module';
-
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    DataQualityListModule,
-    DescriptionModule,
-    DetailsCardsListModule,
-    DetailsNavigationModule,
-    GovernanceQualityCardsModule,
-    PeopleModule,
-    PropertiesModule,
-    AccordionModule
-  ],
-  declarations: [EntityCardsComponent, DomainDetailsComponent]
+    imports: [
+        CommonModule,
+        DataQualityListModule,
+        DescriptionModule,
+        DetailsCardsListModule,
+        DetailsNavigationModule,
+        GovernanceQualityCardsModule,
+        PeopleModule,
+        PropertiesModule,
+        AccordionModule,
+        TranslateModule,
+    ],
+    declarations: [EntityCardsComponent, DomainDetailsComponent],
 })
 export class DomainDetailsModule {}

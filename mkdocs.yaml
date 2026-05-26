@@ -1,0 +1,87 @@
+copyright: © 2026 Aurelius Enterprise
+repo_name: Aurelius Atlas
+repo_url: https://github.com/aureliusenterprise/aurelius
+site_name: Aurelius Atlas
+site_url: https://aureliusenterprise.github.io/aurelius
+
+theme:
+    favicon: assets/favicon.ico
+    logo: assets/favicon.ico
+    name: material
+    search: true
+
+    features:
+        - content.code.copy
+        - navigation.indexes
+        - navigation.instant
+        - navigation.instant.progress
+        - navigation.path
+        - navigation.sections
+        - navigation.tabs
+        - search.highlight
+
+    icon:
+        repo: fontawesome/brands/github
+
+    palette:
+        - media: '(prefers-color-scheme)'
+          accent: deep purple
+          toggle:
+              icon: material/brightness-auto
+              name: Switch to light mode
+        - media: '(prefers-color-scheme: light)'
+          accent: deep purple
+          scheme: default
+          toggle:
+              icon: material/brightness-7
+              name: Switch to dark mode
+        - media: '(prefers-color-scheme: dark)'
+          accent: deep purple
+          scheme: slate
+          toggle:
+              icon: material/brightness-4
+              name: Switch to system preference
+
+markdown_extensions:
+    - admonition
+    - attr_list
+    - codehilite
+    - md_in_html
+    - pymdownx.details
+    - pymdownx.snippets
+    - pymdownx.superfences:
+          custom_fences:
+              - name: mermaid
+                class: mermaid
+                format: !!python/name:pymdownx.superfences.fence_code_format
+    - pymdownx.emoji:
+          emoji_index: !!python/name:material.extensions.emoji.twemoji
+          emoji_generator: !!python/name:material.extensions.emoji.to_svg
+    - pymdownx.snippets
+    - pymdownx.tabbed:
+          alternate_style: true
+    - pymdownx.tasklist:
+          clickable_checkbox: true
+          custom_checkbox: true
+    - toc:
+          permalink: true
+
+nav:
+    - Contributor Guide:
+          - contributor-guide/index.md
+          - Development Environment: contributor-guide/development-environment.md
+          - Secrets Management: contributor-guide/secrets-management.md
+
+plugins:
+    - search
+    - tags
+    - print-site
+
+extra:
+    generator: false
+    social:
+        - icon: fontawesome/brands/github
+          link: https://github.com/aureliusenterprise/aurelius
+
+extra_css:
+    - stylesheets/table.css

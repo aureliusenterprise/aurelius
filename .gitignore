@@ -219,3 +219,15 @@ pyrightconfig.json
 
 # local cache
 consistency_metrics.sqlite
+
+# Environment files
+.env
+
+# Certificates
+certs/
+
+# Docker Scanning
+licenses.json
+vulnerabilities.json
+*sbom.json
+.trivy-cache/
