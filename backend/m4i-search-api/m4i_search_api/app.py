@@ -31,7 +31,10 @@ def get_enterprise_search_key(settings: Settings) -> str:
 
     key_response = requests.get(
         f"{clean_base}/api/as/v1/credentials/private-key",
-        auth=HTTPBasicAuth(settings.username, settings.password.get_secret_value()),
+        auth=HTTPBasicAuth(
+            username=settings.username,
+            password=settings.password.get_secret_value(),
+        ),
     )
 
     key_info = key_response.json()
@@ -62,7 +65,7 @@ def _proxy_request(settings: Settings, path: str):
     return Response(
         response=response.content,
         status=response.status_code,
-        headers=response.headers,
+        content_type=response.headers.get("Content-Type", "application/json"),
     )
 
 
@@ -75,6 +78,10 @@ def get_settings() -> Settings:
 def create_routes(app: Flask, settings: Settings) -> None:
     """Define the routes for the Flask application."""
 
+    @app.route("/health", methods=["GET"])
+    def health() -> None:
+        """Health check endpoint."""
+
     @app.route(
         "/",
         defaults={"path": ""},
@@ -85,7 +92,8 @@ def create_routes(app: Flask, settings: Settings) -> None:
         methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
     )
     @requires_auth()
-    def proxy(path: str, access_token: Optional[str] = None):
+    def proxy(path: str, access_token: Optional[str] = None) -> Response:
+        """Proxy endpoint to forward requests to the App Search instance."""
         return _proxy_request(settings, path)
 
 
