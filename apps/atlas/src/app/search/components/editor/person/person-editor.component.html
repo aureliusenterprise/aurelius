@@ -1,198 +1,192 @@
-<ng-container
-  [formGroup]="editorFormService.form"
-  *ngIf="validationResults$ | async as rules"
->
-  <div class="field">
-    <label class="label">Name*</label>
-    <div class="grid">
-      <div class="control">
-        <input
-          id="name"
-          name="name"
-          class="input"
-          type="text"
-          placeholder="Name"
-          [formControl]="name"
-          required
-          [class.is-danger]="(editorFormService.submitted | async) && name.invalid"
-        />
-      </div>
-      <ng-container *ngIf="rules.name as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-    <ng-container *ngIf="(editorFormService.submitted | async) && name.invalid">
-      <p *ngIf="name.errors?.required" class="help is-danger">
-        Name is required.
-      </p>
-    </ng-container>
-    <ng-container *ngIf="name.value && name.value.includes('\u2019')">
-      <p class="help is-warning">
-        Importing the character ' (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
-        Please replace it with a standard apostrophe (') before importing your text.
-      </p>
-    </ng-container>
-  </div>
-
-  <div *ngIf="false" class="field">
-    <label class="label">Type alias</label>
-    <div class="grid">
-      <div class="control">
-        <input
-          id="typeAlias"
-          name="typeAlias"
-          class="input"
-          type="text"
-          placeholder="Type alias"
-          [formControl]="typeAlias"
-          [class.is-danger]="(editorFormService.submitted | async) && typeAlias.invalid"
-        />
-      </div>
-      <ng-container *ngIf="rules.typeAlias as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Email*</label>
-    <div class="grid">
-      <div class="control">
-        <input
-          id="email"
-          name="email"
-          class="input"
-          type="email"
-          placeholder="Email"
-          [formControl]="email"
-          required
-          [class.is-danger]="(editorFormService.submitted | async) && email.invalid"
-        />
-      </div>
-      <ng-container *ngIf="rules.email as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-    <ng-container *ngIf="(editorFormService.submitted | async) && email.invalid">
-      <p *ngIf="email.errors?.required" class="help is-danger">
-        Email is required.
-      </p>
-      <p *ngIf="email.errors?.email" class="help is-danger">
-        This email address is wrongly formatted.
-      </p>
-    </ng-container>
-  </div>
-
-  <div class="field">
-    <label class="label">Domain lead</label>
-    <div class="grid">
-      <div class="control">
-        <models4insight-relationships-input
-          [tags]="domainLead"
-          typeName="m4i_data_domain"
-          [rule]="rules.domainLead"
-        ></models4insight-relationships-input>
-      </div>
-      <ng-container *ngIf="rules.domainLead as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Data owner entities</label>
-    <div class="grid">
-      <div class="control">
-        <models4insight-relationships-input
-          [tags]="businessOwnerEntities"
-          typeName="m4i_data_entity"
-          [rule]="rules.businessOwnerEntity"
-        ></models4insight-relationships-input>
-      </div>
-      <ng-container *ngIf="rules.businessOwnerEntity as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Data owner attributes</label>
-    <div class="grid">
-      <div class="control">
-        <models4insight-relationships-input
-          [tags]="businessOwnerAttributes"
-          typeName="m4i_data_attribute"
-          [rule]="rules.businessOwnerAttribute"
-        ></models4insight-relationships-input>
-      </div>
-      <ng-container *ngIf="rules.businessOwnerAttribute as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Data steward entities</label>
-    <div class="grid">
-      <div class="control">
-        <models4insight-relationships-input
-          [tags]="stewardEntities"
-          typeName="m4i_data_entity"
-          [rule]="rules.stewardEntity"
-        ></models4insight-relationships-input>
-      </div>
-      <ng-container *ngIf="rules.stewardEntity as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Data steward attributes</label>
-    <div class="grid">
-      <div class="control">
-        <models4insight-relationships-input
-          [tags]="stewardAttributes"
-          typeName="m4i_data_attribute"
-          [rule]="rules.stewardAttribute"
-        ></models4insight-relationships-input>
-      </div>
-      <ng-container *ngIf="rules.stewardAttribute as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-  <div class="field">
-    <div class="grid">
-      <ng-container *ngIf="(editorFormService.submitted | async) && editorFormService.form.invalid">
-        <div class="notification is-danger is-light mb-4">
-          <p><strong>This entity can't be saved because one or more required fields are missing.</strong></p>
+<ng-container [formGroup]="editorFormService.form" *ngIf="validationResults$ | async as rules">
+    <div class="field">
+        <label class="label" translate> search.components.editor.person.name </label>
+        <div class="grid">
+            <div class="control">
+                <input
+                    id="name"
+                    name="name"
+                    class="input"
+                    type="text"
+                    placeholder="{{ 'search.components.editor.person.namePlaceholder' | translate }}"
+                    [formControl]="name"
+                    required
+                    [class.is-danger]="(editorFormService.submitted | async) && name.invalid"
+                />
+            </div>
+            <ng-container *ngIf="rules.name as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
         </div>
-      </ng-container>
+        <ng-container *ngIf="(editorFormService.submitted | async) && name.invalid">
+            <p *ngIf="name.errors?.required" class="help is-danger" translate>
+                search.components.editor.person.nameRequired
+            </p>
+        </ng-container>
+        <ng-container *ngIf="name.value && name.value.includes('\u2019')">
+            <p class="help is-warning" translate>search.components.editor.person.nameWarning</p>
+        </ng-container>
     </div>
-  </div>
+
+    <div *ngIf="false" class="field">
+        <label class="label" translate> search.components.editor.person.typeAlias </label>
+        <div class="grid">
+            <div class="control">
+                <input
+                    id="typeAlias"
+                    name="typeAlias"
+                    class="input"
+                    type="text"
+                    placeholder="{{ 'search.components.editor.person.typeAliasPlaceholder' | translate }}"
+                    [formControl]="typeAlias"
+                    [class.is-danger]="(editorFormService.submitted | async) && typeAlias.invalid"
+                />
+            </div>
+            <ng-container *ngIf="rules.typeAlias as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.person.email </label>
+        <div class="grid">
+            <div class="control">
+                <input
+                    id="email"
+                    name="email"
+                    class="input"
+                    type="email"
+                    placeholder="{{ 'search.components.editor.person.emailPlaceholder' | translate }}"
+                    [formControl]="email"
+                    required
+                    [class.is-danger]="(editorFormService.submitted | async) && email.invalid"
+                />
+            </div>
+            <ng-container *ngIf="rules.email as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+        <ng-container *ngIf="(editorFormService.submitted | async) && email.invalid">
+            <p *ngIf="email.errors?.required" class="help is-danger" translate>
+                search.components.editor.person.emailRequired
+            </p>
+            <p *ngIf="email.errors?.email" class="help is-danger" translate>
+                search.components.editor.person.emailInvalid
+            </p>
+        </ng-container>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.person.domainLead </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="domainLead"
+                    typeName="m4i_data_domain"
+                    [rule]="rules.domainLead"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.domainLead as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.person.dataOwnerEntities </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="businessOwnerEntities"
+                    typeName="m4i_data_entity"
+                    [rule]="rules.businessOwnerEntity"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.businessOwnerEntity as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.person.dataOwnerAttributes </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="businessOwnerAttributes"
+                    typeName="m4i_data_attribute"
+                    [rule]="rules.businessOwnerAttribute"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.businessOwnerAttribute as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.person.stewardEntity </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="stewardEntities"
+                    typeName="m4i_data_entity"
+                    [rule]="rules.stewardEntity"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.stewardEntity as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.person.stewardAttribute </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="stewardAttributes"
+                    typeName="m4i_data_attribute"
+                    [rule]="rules.stewardAttribute"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.stewardAttribute as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+    <div class="field">
+        <div class="grid">
+            <ng-container *ngIf="(editorFormService.submitted | async) && editorFormService.form.invalid">
+                <div class="notification is-danger is-light mb-4">
+                    <p><strong translate> search.components.editor.person.notification </strong></p>
+                </div>
+            </ng-container>
+        </div>
+    </div>
 </ng-container>

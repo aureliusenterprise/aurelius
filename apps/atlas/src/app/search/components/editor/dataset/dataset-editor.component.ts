@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   UntypedFormArray,
@@ -13,7 +13,7 @@ import {
   EntityValidationResponse
 } from '@models4insight/atlas/api';
 import { merge } from 'lodash';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import {
   EditorFormService,
@@ -162,12 +162,40 @@ function updateDatasetEditorForm(
 })
 export class DatasetEditorComponent {
   readonly validationResults$: Observable<EntityValidationResponse>;
+  private readonly subscriptions: Subscription[] = [];
 
   constructor(
     readonly editorFormService: EditorFormService,
     private readonly entityValidateService: EntityValidateService
   ) {
     this.validationResults$ = this.entityValidateService.validationResults$;
+  }
+
+  ngOnInit(): void {
+    const parent = this.parentDatasets as unknown as UntypedFormArray;
+    const collections = this.collections as unknown as UntypedFormArray;
+
+    if (parent && collections) {
+      this.subscriptions.push(
+        parent.valueChanges.subscribe(() => {
+          if (parent.length > 0 && collections.length > 0) {
+            collections.clear();
+          }
+        })
+      );
+
+      this.subscriptions.push(
+        collections.valueChanges.subscribe(() => {
+          if (collections.length > 0 && parent.length > 0) {
+            parent.clear();
+          }
+        })
+      );
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
   get attributes() {

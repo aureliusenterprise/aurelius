@@ -1,26 +1,45 @@
 <div class="card">
-  <div class="card-image">
-    <a href="flink/">
-      <figure class="image">
-        <img src="assets/flink.png" alt="flink logo" />
-      </figure>
-    </a>
-  </div>
-  <div class="card-content">
-    <div class="content">
-      <p class="text">
-        Apache Flink is used for synchronizing Apache Atlas and ElasticSearch
-        with the changes made in the Aurelius Atlas user interface. All jobs
-        used in this solution are related via Kafka topics. The jobs further
-        communicate with Apache Atlas and ElasticSearch via REST APIs.
-      </p>
+    <div class="card-image">
+        <a href="flink/">
+            <figure class="image">
+                <img src="assets/flink.png" alt="flink logo" />
+            </figure>
+        </a>
     </div>
-  </div>
-  <footer class="card-footer">
-    <div class="card-footer-item">
-      <a class="button is-primary is-fullwidth" href="flink/">
-        Apache Flink management UI
-      </a>
+    <div class="card-content">
+        <div class="content">
+            <p class="text">
+                Apache Flink is used for synchronizing Apache Atlas and ElasticSearch with the changes made in the
+                Aurelius Atlas user interface. All jobs used in this solution are related via Kafka topics. The jobs
+                further communicate with Apache Atlas and ElasticSearch via REST APIs.
+            </p>
+        </div>
     </div>
-  </footer>
+    <footer class="card-footer">
+        <div class="card-footer-item">
+            <div class="dropdown is-hoverable" style="width: 100%">
+                <div class="dropdown-trigger" style="width: 100%">
+                    <button class="button is-primary is-fullwidth" aria-haspopup="true" aria-controls="dropdown-menu4">
+                        <span>Apache Flink management UI</span>
+                        <span class="icon is-small">
+                            <fa-icon [icon]="angleDown"></fa-icon>
+                        </span>
+                    </button>
+                </div>
+                <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                    <div class="dropdown-content">
+                        <div class="dropdown-item">
+                            <a href="flink-synchronize-app-search/">Synchronize App Search</a>
+                        </div>
+                        <div class="dropdown-item">
+                            <a href="flink-publish-state/">Publish State</a>
+                        </div>
+                        <div class="dropdown-item">
+                            <a href="flink-data-governance-quality/">Data Governance Quality</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 </div>

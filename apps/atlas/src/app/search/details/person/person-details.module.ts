@@ -7,16 +7,18 @@ import { DetailsNavigationModule } from '../components/navigation/details-naviga
 import { PropertiesModule } from '../components/properties/properties.module';
 import { GovernanceRolesCardsComponent } from './governance-roles-cards/governance-roles-cards.component';
 import { PersonDetailsComponent } from './person-details.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    DetailsCardsListModule,
-    DetailsNavigationModule,
-    GovernanceQualityCardsModule,
-    PropertiesModule,
-    AccordionModule
-  ],
-  declarations: [PersonDetailsComponent, GovernanceRolesCardsComponent]
+    imports: [
+        CommonModule,
+        DetailsCardsListModule,
+        DetailsNavigationModule,
+        GovernanceQualityCardsModule,
+        PropertiesModule,
+        AccordionModule,
+        TranslateModule,
+    ],
+    declarations: [PersonDetailsComponent, GovernanceRolesCardsComponent],
 })
 export class PersonDetailsModule {}

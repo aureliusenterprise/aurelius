@@ -10,20 +10,22 @@ import { InfiniteScrollContainerModule } from '../../../components/infinite-scro
 import { SortingModule } from '../../../components/sorting/sorting.module';
 import { DetailsCardsListComponent } from './details-cards-list.component';
 import { ShowDescendantsControlDirective } from './show-descendants-control.directive';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    DetailsCardModule,
-    FilterModule,
-    FontAwesomeModule,
-    InfiniteScrollContainerModule,
-    ReactiveFormsModule,
-    SortingModule,
-    SimpleSearchInputModule,
-    TooltipModule,
-  ],
-  declarations: [DetailsCardsListComponent, ShowDescendantsControlDirective],
-  exports: [DetailsCardsListComponent],
+    imports: [
+        CommonModule,
+        DetailsCardModule,
+        FilterModule,
+        FontAwesomeModule,
+        InfiniteScrollContainerModule,
+        ReactiveFormsModule,
+        SortingModule,
+        SimpleSearchInputModule,
+        TooltipModule,
+        TranslateModule,
+    ],
+    declarations: [DetailsCardsListComponent, ShowDescendantsControlDirective],
+    exports: [DetailsCardsListComponent],
 })
 export class DetailsCardsListModule {}

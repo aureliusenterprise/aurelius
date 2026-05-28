@@ -1,0 +1,11 @@
+from pydantic import ValidationError
+
+from aurelius_license_report.models import ReportGenerationSettings
+
+
+def load_settings() -> ReportGenerationSettings:
+    """Load settings from environment variables via pydantic-settings."""
+    try:
+        return ReportGenerationSettings()
+    except ValidationError as exc:
+        raise SystemExit(str(exc)) from exc

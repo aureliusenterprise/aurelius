@@ -1,49 +1,9 @@
 {
-  "name": "m4i-flink-tasks",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
-  "sourceRoot": "libs/m4i-flink-tasks/m4i_flink_tasks",
-  "targets": {
-    "add": {
-      "executor": "@nxlv/python:add",
-      "options": {}
-    },
-    "update": {
-      "executor": "@nxlv/python:update",
-      "options": {}
-    },
-    "remove": {
-      "executor": "@nxlv/python:remove",
-      "options": {}
-    },
-    "build": {
-      "executor": "@nxlv/python:build",
-      "outputs": ["{workspaceRoot}/dist/libs/m4i-flink-tasks"],
-      "options": {
-        "outputPath": "{workspaceRoot}/dist/libs/m4i-flink-tasks",
-        "publish": false,
-        "lockedVersions": true,
-        "bundleLocalDependencies": true
-      }
-    },
-    "lint": {
-      "executor": "@nxlv/python:ruff-check",
-      "outputs": [],
-      "options": {
-        "lintFilePatterns": ["m4i_flink_tasks", "tests"]
-      }
-    },
-    "test": {
-      "executor": "@nxlv/python:run-commands",
-      "outputs": [
-        "{workspaceRoot}/reports/libs/m4i-flink-tasks/unittests",
-        "{workspaceRoot}/coverage/libs/m4i-flink-tasks"
-      ],
-      "options": {
-        "command": "poetry run pytest m4i_flink_tasks",
-        "cwd": "libs/m4i-flink-tasks"
-      }
-    }
-  },
-  "tags": []
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["m4i-atlas-core", "m4i-governance-data-quality"],
+    "name": "m4i-flink-tasks",
+    "projectType": "library",
+    "sourceRoot": "libs/m4i-flink-tasks/m4i_flink_tasks",
+    "tags": [],
+    "targets": {}
 }

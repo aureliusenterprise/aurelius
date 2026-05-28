@@ -1,6 +1,7 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppSearchDocument, AppSearchResult } from '@models4insight/atlas/api';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { iconsByType } from '../../meta';
 import {
@@ -20,8 +21,10 @@ export class BreadCrumbsComponent<
 > implements OnInit
 {
   readonly iconsByType = iconsByType;
+  readonly warningIcon = faExclamationTriangle;
 
   breadcrumbs$: Observable<Breadcrumb[]>;
+  breadcrumbWarning$: Observable<string>;
   searchResult$: Observable<AppSearchResult<T>>;
 
   @Input() activeGuid: string;
@@ -38,6 +41,7 @@ export class BreadCrumbsComponent<
     this.breadcrumbs$ = this.breadCrumbsService.select('breadcrumbs', {
       includeFalsy: true,
     });
+    this.breadcrumbWarning$ = this.breadCrumbsService.select('breadcrumbWarning');
     this.searchResult$ = this.searchResultService.document$;
   }
 

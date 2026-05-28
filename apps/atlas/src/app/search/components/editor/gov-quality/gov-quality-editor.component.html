@@ -1,232 +1,202 @@
-<ng-container
-  [formGroup]="editorFormService.form"
-  *ngIf="validationResults$ | async as rules"
->
-  <div class="field">
-    <label class="label">Name*</label>
-    <div class="grid">
-      <div class="control">
-        <input
-          id="name"
-          name="name"
-          class="input"
-          type="text"
-          placeholder="Name"
-          [formControl]="name"
-          required
-          [class.is-danger]="submitted && name.invalid"
-        />
-      </div>
-      <ng-container *ngIf="rules.name as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-    <ng-container *ngIf="submitted && name.invalid">
-      <p *ngIf="name.errors?.required" class="help is-danger">
-        Name is required.
-      </p>
-    </ng-container>
-    <ng-container *ngIf="name.value && name.value.includes('\u2019')">
-      <p class="help is-warning">
-        Importing the character ' (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
-        Please replace it with a standard apostrophe (') before importing your text.
-      </p>
-    </ng-container>
-  </div>
-
-
-  <div class="field">
-    <label class="label">Rule Description</label>
-    <div class="grid">
-      <div class="control">
-        <textarea
-          id="ruleDescription"
-          name="description"
-          class="textarea"
-          placeholder="Description"
-          [formControl]="ruleDescription"
-          [class.is-warning]="rules?.ruleDescription?.isNonCompliant"
-        ></textarea>
-      </div>
-      <ng-container *ngIf="rules.ruleDescription as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-    <ng-container *ngIf="ruleDescription.value && ruleDescription.value.includes('\u2019')">
-      <p class="help is-warning">
-        Importing the character ' (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
-        Please replace it with a standard apostrophe (') before importing your text.
-      </p>
-    </ng-container>
-  </div>
-
-  <div class="field">
-    <label class="label">Dimension</label>
-    <div class="grid">
-      <div class="control">
-        <input
-          id="dimension"
-          name="dimension"
-          class="input"
-          type="text"
-          placeholder="Dimension"
-          [formControl]="qualityDimension"
-          [class.is-warning]="rules?.qualityDimension?.isNonCompliant"
-        />
-      </div>
-      <ng-container *ngIf="rules.qualityDimension as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Rule type</label>
-    <div class="grid">
-      <div class="control">
-        <input
-          id="rule-type"
-          name="rule type"
-          class="input"
-          type="text"
-          placeholder="Rule type"
-          [formControl]="ruleType"
-          [class.is-warning]="rules?.ruleType?.isNonCompliant"
-        />
-      </div>
-      <ng-container *ngIf="rules.ruleType as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Compliant message</label>
-    <div class="grid">
-      <div class="control">
-        <textarea
-          id="compliant-message"
-          name="compliant message"
-          class="textarea"
-          placeholder="Compliant message"
-          [formControl]="compliantMessage"
-          [class.is-danger]="submitted && compliantMessage.invalid"
-        ></textarea>
-      </div>
-      <ng-container *ngIf="rules.compliantMessage as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-    <ng-container
-      *ngIf="
-        submitted && compliantMessage.invalid
-      "
-    >
-      <p *ngIf="compliantMessage.errors?.required" class="help is-danger">
-        Compliant message is required.
-      </p>
-    </ng-container>
-    <ng-container *ngIf="compliantMessage.value && compliantMessage.value.includes('\u2019')">
-      <p class="help is-warning">
-        Importing the character ' (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
-        Please replace it with a standard apostrophe (') before importing your text.
-      </p>
-    </ng-container>
-  </div>
-
-  <div class="field">
-    <label class="label">Non-compliant message</label>
-    <div class="grid">
-      <div class="control">
-        <textarea
-          id="non-compliant-message"
-          name="non-compliant message"
-          class="textarea"
-          placeholder="Non-compliant message"
-          [formControl]="nonCompliantMessage"
-          [class.is-danger]="
-            submitted && nonCompliantMessage.invalid
-          "
-        ></textarea>
-      </div>
-      <ng-container *ngIf="rules.nonCompliantMessage as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-    <ng-container
-      *ngIf="
-        submitted && nonCompliantMessage.invalid
-      "
-    >
-      <p *ngIf="nonCompliantMessage.errors?.required" class="help is-danger">
-        Non-compliant message is required.
-      </p>
-    </ng-container>
-    <ng-container *ngIf="nonCompliantMessage.value && nonCompliantMessage.value.includes('\u2019')">
-      <p class="help is-warning">
-        Importing the character ' (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
-        Please replace it with a standard apostrophe (') before importing your text.
-      </p>
-    </ng-container>
-  </div>
-
-  <div class="field">
-    <label class="label">Expression*</label>
-    <div class="grid">
-      <div class="control">
-        <textarea
-          id="expression"
-          name="expression"
-          class="textarea"
-          placeholder="Expression"
-          [formControl]="expression"
-          required
-          [class.is-danger]="
-            submitted && expression.invalid
-          "
-        ></textarea>
-      </div>
-      <ng-container *ngIf="rules.expression as rules">
-        <models4insight-gov-quality-display
-          [rules]="rules"
-          class="is-size-7"
-        ></models4insight-gov-quality-display
-      ></ng-container>
-    </div>
-    <ng-container
-      *ngIf="submitted && expression.invalid"
-    >
-      <p *ngIf="expression.errors?.required" class="help is-danger">
-        Expression is required.
-      </p>
-    </ng-container>
-  </div>
-
-  <div class="field">
-    <div class="grid">
-      <ng-container *ngIf="(editorFormService.submitted | async) && editorFormService.form.invalid">
-        <div class="notification is-danger is-light mb-4">
-          <p><strong>This entity can't be saved because one or more required fields are missing.</strong></p>
+<ng-container [formGroup]="editorFormService.form" *ngIf="validationResults$ | async as rules">
+    <div class="field">
+        <label class="label" translate> search.components.editor.govQuality.name </label>
+        <div class="grid">
+            <div class="control">
+                <input
+                    id="name"
+                    name="name"
+                    class="input"
+                    type="text"
+                    placeholder="{{ 'search.components.editor.govQuality.namePlaceholder' | translate }}"
+                    [formControl]="name"
+                    required
+                    [class.is-danger]="submitted && name.invalid"
+                />
+            </div>
+            <ng-container *ngIf="rules.name as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
         </div>
-      </ng-container>
+        <ng-container *ngIf="submitted && name.invalid">
+            <p *ngIf="name.errors?.required" class="help is-danger" translate>
+                search.components.editor.govQuality.nameRequired
+            </p>
+        </ng-container>
+        <ng-container *ngIf="name.value && name.value.includes('\u2019')">
+            <p class="help is-warning" translate>search.components.editor.govQuality.nameWarning</p>
+        </ng-container>
     </div>
-  </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.govQuality.ruleDescription </label>
+        <div class="grid">
+            <div class="control">
+                <textarea
+                    id="ruleDescription"
+                    name="description"
+                    class="textarea"
+                    placeholder="{{ 'search.components.editor.govQuality.ruleDescriptionPlaceholder' | translate }}"
+                    [formControl]="ruleDescription"
+                    [class.is-warning]="rules?.ruleDescription?.isNonCompliant"
+                ></textarea>
+            </div>
+            <ng-container *ngIf="rules.ruleDescription as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+        <ng-container *ngIf="ruleDescription.value && ruleDescription.value.includes('\u2019')">
+            <p class="help is-warning" translate>search.components.editor.govQuality.ruleDescriptionWarning</p>
+        </ng-container>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.govQuality.dimension </label>
+        <div class="grid">
+            <div class="control">
+                <input
+                    id="dimension"
+                    name="dimension"
+                    class="input"
+                    type="text"
+                    placeholder="{{ 'search.components.editor.govQuality.dimensionPlaceholder' | translate }}"
+                    [formControl]="qualityDimension"
+                    [class.is-warning]="rules?.qualityDimension?.isNonCompliant"
+                />
+            </div>
+            <ng-container *ngIf="rules.qualityDimension as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.govQuality.ruleType </label>
+        <div class="grid">
+            <div class="control">
+                <input
+                    id="rule-type"
+                    name="rule type"
+                    class="input"
+                    type="text"
+                    placeholder="{{ 'search.components.editor.govQuality.ruleTypePlaceholder' | translate }}"
+                    [formControl]="ruleType"
+                    [class.is-warning]="rules?.ruleType?.isNonCompliant"
+                />
+            </div>
+            <ng-container *ngIf="rules.ruleType as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.govQuality.compliantMessage </label>
+        <div class="grid">
+            <div class="control">
+                <textarea
+                    id="compliant-message"
+                    name="compliant message"
+                    class="textarea"
+                    placeholder="{{ 'search.components.editor.govQuality.compliantMessagePlaceholder' | translate }}"
+                    [formControl]="compliantMessage"
+                    [class.is-danger]="submitted && compliantMessage.invalid"
+                ></textarea>
+            </div>
+            <ng-container *ngIf="rules.compliantMessage as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+        <ng-container *ngIf="submitted && compliantMessage.invalid">
+            <p *ngIf="compliantMessage.errors?.required" class="help is-danger" translate>
+                search.components.editor.govQuality.compliantMessageRequired
+            </p>
+        </ng-container>
+        <ng-container *ngIf="compliantMessage.value && compliantMessage.value.includes('\u2019')">
+            <p class="help is-warning" translate>search.components.editor.govQuality.compliantMessageWarning</p>
+        </ng-container>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.govQuality.nonCompliantMessage </label>
+        <div class="grid">
+            <div class="control">
+                <textarea
+                    id="non-compliant-message"
+                    name="non-compliant message"
+                    class="textarea"
+                    placeholder="{{ 'search.components.editor.govQuality.nonCompliantMessage' | translate }}"
+                    [formControl]="nonCompliantMessage"
+                    [class.is-danger]="submitted && nonCompliantMessage.invalid"
+                ></textarea>
+            </div>
+            <ng-container *ngIf="rules.nonCompliantMessage as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+        <ng-container *ngIf="submitted && nonCompliantMessage.invalid">
+            <p *ngIf="nonCompliantMessage.errors?.required" class="help is-danger" translate>
+                search.components.editor.govQuality.nonCompliantMessageRequired
+            </p>
+        </ng-container>
+        <ng-container *ngIf="nonCompliantMessage.value && nonCompliantMessage.value.includes('\u2019')">
+            <p class="help is-warning">search.components.editor.govQuality.nonCompliantMessageWarning</p>
+        </ng-container>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.govQuality.expression </label>
+        <div class="grid">
+            <div class="control">
+                <textarea
+                    id="expression"
+                    name="expression"
+                    class="textarea"
+                    placeholder="{{ 'search.components.editor.govQuality.expressionPlaceholder' | translate }}"
+                    [formControl]="expression"
+                    required
+                    [class.is-danger]="submitted && expression.invalid"
+                ></textarea>
+            </div>
+            <ng-container *ngIf="rules.expression as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+        <ng-container *ngIf="submitted && expression.invalid">
+            <p *ngIf="expression.errors?.required" class="help is-danger" translate>
+                search.components.editor.govQuality.expressionRequired
+            </p>
+        </ng-container>
+    </div>
+
+    <div class="field">
+        <div class="grid">
+            <ng-container *ngIf="(editorFormService.submitted | async) && editorFormService.form.invalid">
+                <div class="notification is-danger is-light mb-4">
+                    <p><strong translate> search.components.editor.govQuality.notification </strong></p>
+                </div>
+            </ng-container>
+        </div>
+    </div>
 </ng-container>
