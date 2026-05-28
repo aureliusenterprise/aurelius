@@ -21,9 +21,6 @@ RUN pip install --no-cache-dir *.whl && \
 RUN addgroup --system m4i-search-api && \
   adduser --system --ingroup m4i-search-api m4i-search-api
 
-# Copy the configuration file into the container
-COPY --chown=m4i-search-api:m4i-search-api backend/m4i-search-api/conf.py .
-
 # Switch to the non-root user
 USER m4i-search-api
 
