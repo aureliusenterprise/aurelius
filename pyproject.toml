@@ -80,6 +80,10 @@ path = "backend/m4i-lineage-model"
 develop = true
 path = "libs/m4i-metrics"
 
+[tool.poetry.dependencies.m4i-search-api]
+develop = true
+path = "backend/m4i-search-api"
+
 [tool.poetry.dependencies.m4i-validate-entity]
 develop = true
 path = "backend/m4i-validate-entity"

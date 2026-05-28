@@ -1,39 +1,33 @@
-import os
-from dataclasses import dataclass
-from typing import Dict
+from collections.abc import Hashable
+
+from pydantic import Field, SecretStr, HttpUrl
+from pydantic_settings import BaseSettings
 
 
-def _to_bool(value: str, default: bool = True) -> bool:
-    if value is None:
-        return default
-    return value.strip().lower() not in {"false", "0", "no", "off"}
+class Settings(BaseSettings, Hashable):
+    base_url: HttpUrl = Field(
+        description="The base URL of the App Search instance, e.g., http://localhost:3002/",
+    )
 
+    password: SecretStr = Field(
+        description="The password for authenticating with the App Search instance",
+    )
 
-@dataclass
-class AppSearchSettings:
-    base_url: str
-    token: str
-    timeout_seconds: int
-    verify_ssl: bool
+    username: str = Field(
+        description="The username for authenticating with the App Search instance",
+    )
 
-    @classmethod
-    def from_env(cls) -> "AppSearchSettings":
-        base_url = os.getenv("APP_SEARCH_BASE_URL")
-        token = os.getenv("APP_SEARCH_TOKEN")
-        timeout_seconds = int(os.getenv("APP_SEARCH_TIMEOUT_SECONDS", os.getenv("APP_SEARCH_TIMEOUT", "15")))
-        verify_ssl = _to_bool(os.getenv("APP_SEARCH_VERIFY_SSL"), True)
+    timeout_seconds: int = Field(
+        default=15,
+        description="The timeout in seconds for requests to the App Search instance",
+    )
 
-        required: Dict[str, str] = {
-            "APP_SEARCH_BASE_URL": base_url,
-            "APP_SEARCH_TOKEN": token,
-        }
-        missing = [key for key, value in required.items() if not value]
-        if missing:
-            raise ValueError(f"Missing required configuration keys: {', '.join(missing)}")
+    verify_ssl: bool = Field(
+        default=True,
+        description="Whether to verify SSL certificates when making requests",
+    )
 
-        return cls(
-            base_url=base_url.rstrip("/"),
-            token=token,
-            timeout_seconds=timeout_seconds,
-            verify_ssl=verify_ssl,
-        )
+    model_config = {
+        "env_prefix": "APP_SEARCH_",
+        "frozen": True,
+    }

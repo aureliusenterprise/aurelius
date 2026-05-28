@@ -1,26 +1,26 @@
 [tool.poetry]
-name = "m4i-search-api"
-version = "0.1.0"
-description = "API wrapper for Elastic App Search secured with Atlas user auth"
 authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+description = "API wrapper for Elastic App Search secured with Atlas user auth"
 license = "UNLICENSED"
+name = "m4i-search-api"
 readme = "README.md"
+version = "0.1.0"
 
 [[tool.poetry.packages]]
 include = "m4i_search_api"
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.11"
 flask = "2.1.2"
-werkzeug = ">=2.1,<3.0"
 gunicorn = "^22.0.0"
-requests = "^2.32.3"
-pytest = "^7.4.4"
+pytest = "^7.3.1"
+python = ">=3.8,<3.11"
+requests = "^2.26.0"
+werkzeug = ">=2.1,<3.0"
 
 [tool.poetry.dependencies.m4i-backend-core]
-path = "../../libs/m4i-backend-core"
 develop = true
+path = "../../libs/m4i-backend-core"
 
 [build-system]
-requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
