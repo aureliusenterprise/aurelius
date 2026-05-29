@@ -393,7 +393,8 @@
                     "modelExplorerDataGovernance": {
                         "noDataGovernanceDetails": "No data governance details available"
                     },
-                    "noLineageModelAvailable": "No lineage model available"
+                    "noLineageModelAvailable": "No lineage model available",
+                    "retrieve": "Retrieving the lineage model"
                 },
                 "navigation": {
                     "details": "Details"
