@@ -115,13 +115,13 @@ def create_app(
     key_provider: KeyProvider,
     settings: Settings,
 ) -> Flask:
-    """Factory function to create and configure the Flask application.
+    """
+    Factory function to create and configure the Flask application.
 
     Args:
         auth_provider: Provider for JWT validation. Defaults to KeycloakAuthProvider.
         key_provider: Provider for the App Search API key. Defaults to AppSearchKeyProvider.
         settings: Application settings. Defaults to loading from environment.
-
     """
     app = Flask(__name__)
 
