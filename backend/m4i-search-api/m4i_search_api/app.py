@@ -65,9 +65,6 @@ def _proxy_request(
     api_key = key_provider.get_key()
     url = build_target_url(settings, path)
 
-    # SSL verification: use CA cert if provided, otherwise disable verification
-    verify = settings.ca_cert_path if settings.ca_cert_path else False
-
     response = requests.request(
         method=request.method,
         url=url,
@@ -75,7 +72,7 @@ def _proxy_request(
         data=request.data,
         params=list(request.args.items(multi=True)),
         timeout=settings.timeout_seconds,
-        verify=verify,
+        verify=settings.ca_cert_path.as_posix() if settings.ca_cert_path else False,
     )
 
     return Response(

@@ -1,7 +1,8 @@
 from collections.abc import Hashable
+from pathlib import Path
 from typing import Optional
 
-from pydantic import Field, SecretStr, HttpUrl
+from pydantic import Field, HttpUrl, SecretStr
 from pydantic_settings import BaseSettings
 
 
@@ -10,7 +11,7 @@ class Settings(BaseSettings, Hashable):
         description="The base URL of the App Search instance, e.g., http://localhost:3002/",
     )
 
-    ca_cert_path: Optional[str] = Field(
+    ca_cert_path: Optional[Path] = Field(
         default=None,
         description="Path to the CA certificate file for SSL verification. If not set, SSL verification is disabled.",
     )

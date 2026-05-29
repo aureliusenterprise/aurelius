@@ -26,9 +26,6 @@ class AppSearchKeyProvider(KeyProvider):
         """Fetch the enterprise search key from the App Search instance."""
         clean_base = str(self._settings.base_url).rstrip("/")
 
-        # SSL verification: use CA cert if provided, otherwise disable verification
-        verify = self._settings.ca_cert_path if self._settings.ca_cert_path else False
-
         key_response = requests.get(
             f"{clean_base}/api/as/v1/credentials/private-key",
             auth=HTTPBasicAuth(
@@ -36,7 +33,9 @@ class AppSearchKeyProvider(KeyProvider):
                 password=self._settings.password.get_secret_value(),
             ),
             timeout=self._settings.timeout_seconds,
-            verify=verify,
+            verify=self._settings.ca_cert_path.as_posix()
+            if self._settings.ca_cert_path
+            else False,
         )
 
         key_response.raise_for_status()
