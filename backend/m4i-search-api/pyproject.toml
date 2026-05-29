@@ -22,6 +22,18 @@ werkzeug = ">=2.1,<3.0"
 develop = true
 path = "../../libs/m4i-backend-core"
 
+[tool.poetry.dev-dependencies]
+cryptography = "^41.0.0"
+pytest = "^8.0.0"
+pytest-mock = "^3.14.0"
+responses = "^0.25.0"
+
+[tool.pytest.ini_options]
+python_classes = ["Test*"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+testpaths = ["tests"]
+
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]

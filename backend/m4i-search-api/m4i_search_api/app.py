@@ -1,12 +1,16 @@
 import logging
-from functools import lru_cache
 from typing import Optional
 
 import requests
 from flask import Flask, Response, request
-from m4i_backend_core.auth import requires_auth
 from m4i_backend_core.shared import register as register_shared
-from requests.auth import HTTPBasicAuth
+
+from m4i_search_api.providers import (
+    AppSearchKeyProvider,
+    AuthProvider,
+    KeycloakAuthProvider,
+    KeyProvider,
+)
 
 from .settings import Settings
 
@@ -24,29 +28,15 @@ def build_target_url(settings: Settings, path: str) -> str:
     return f"{clean_base}/{clean_path}"
 
 
-@lru_cache()
-def get_enterprise_search_key(settings: Settings) -> str:
-    """Get the enterprise search key for the App Search instance."""
-    clean_base = str(settings.base_url).rstrip("/")
-
-    key_response = requests.get(
-        f"{clean_base}/api/as/v1/credentials/private-key",
-        auth=HTTPBasicAuth(
-            username=settings.username,
-            password=settings.password.get_secret_value(),
-        ),
-    )
-
-    key_info = key_response.json()
-
-    return key_info["key"]
-
-
-def _proxy_request(settings: Settings, path: str):
+def _proxy_request(
+    settings: Settings,
+    path: str,
+    key_provider: KeyProvider,
+) -> Response:
     """Proxy the incoming request to the App Search instance."""
     url = build_target_url(settings, path)
 
-    token = get_enterprise_search_key(settings)
+    token = key_provider.get_key()
 
     headers = {
         **request.headers,
@@ -69,18 +59,18 @@ def _proxy_request(settings: Settings, path: str):
     )
 
 
-@lru_cache()
-def get_settings() -> Settings:
-    """Get the application settings."""
-    return Settings()  # type: ignore[settings are loaded from the environment]
-
-
-def create_routes(app: Flask, settings: Settings) -> None:
+def create_routes(
+    app: Flask,
+    settings: Settings,
+    key_provider: KeyProvider,
+    auth_provider: AuthProvider,
+) -> None:
     """Define the routes for the Flask application."""
 
     @app.route("/health", methods=["GET"])
-    def health() -> None:
+    def health() -> Response:
         """Health check endpoint."""
+        return Response(None, status=200)
 
     @app.route(
         "/",
@@ -91,24 +81,42 @@ def create_routes(app: Flask, settings: Settings) -> None:
         "/<path:path>",
         methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
     )
-    @requires_auth()
+    @auth_provider.requires_auth()
     def proxy(path: str, access_token: Optional[str] = None) -> Response:
         """Proxy endpoint to forward requests to the App Search instance."""
-        return _proxy_request(settings, path)
+        return _proxy_request(settings, path, key_provider)
 
 
-def create_app(settings: Settings) -> Flask:
-    """Factory function to create and configure the Flask application."""
+def create_app(
+    auth_provider: AuthProvider,
+    key_provider: KeyProvider,
+    settings: Settings,
+) -> Flask:
+    """Factory function to create and configure the Flask application.
+
+    Args:
+        auth_provider: Provider for JWT validation. Defaults to KeycloakAuthProvider.
+        key_provider: Provider for the App Search API key. Defaults to AppSearchKeyProvider.
+        settings: Application settings. Defaults to loading from environment.
+
+    """
     app = Flask(__name__)
 
     register_shared(app)
-    create_routes(app, settings)
+    create_routes(app, settings, key_provider, auth_provider)
 
     return app
 
 
 def main() -> Flask:
     """Main entry point for the Flask application."""
-    settings = get_settings()
-    app = create_app(settings)
-    return app
+    settings = Settings()  # type: ignore[settings are loaded from the environment]
+
+    auth_provider = KeycloakAuthProvider()
+    key_provider = AppSearchKeyProvider(settings)
+
+    return create_app(
+        auth_provider=auth_provider,
+        key_provider=key_provider,
+        settings=settings,
+    )
