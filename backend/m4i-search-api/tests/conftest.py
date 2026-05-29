@@ -71,7 +71,7 @@ def settings() -> Settings:
         password=secrets.token_bytes(16),
         timeout_seconds=5,
         username="test-user",
-        verify_ssl=False,
+        ca_cert_path=None,
     )
 
 

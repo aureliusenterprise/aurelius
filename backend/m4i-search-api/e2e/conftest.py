@@ -74,7 +74,7 @@ def es_base_url(compose: DockerCompose) -> str:
     """Return the Enterprise Search base URL."""
     host = compose.get_service_host("enterprisesearch", 3002)
     port = compose.get_service_port("enterprisesearch", 3002)
-    return f"http://{host}:{port}"
+    return f"https://{host}:{port}"
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -108,6 +108,7 @@ def _setup_keycloak_user(
             params={"username": e2e_settings.keycloak_username},
             headers={"Authorization": f"Bearer {admin_token}"},
             timeout=30,
+            verify=False,
         )
         resp.raise_for_status()
         users = resp.json()
@@ -203,6 +204,7 @@ def es_private_key(
                     e2e_settings.app_search_password,
                 ),
                 timeout=30,
+                verify=False,
             )
             key_resp.raise_for_status()
             return key_resp.json()["key"]
@@ -233,5 +235,6 @@ def _setup_app_search_engine(
                 },
                 headers={"Authorization": f"Bearer {es_private_key}"},
                 timeout=30,
+                verify=False,
             )
             break

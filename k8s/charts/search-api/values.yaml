@@ -12,7 +12,6 @@ service:
 appSearch:
     baseUrl: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002
     timeoutSeconds: 15
-    verifySsl: false
     engines:
         atlas: atlas-dev
         dataQuality: atlas-dev-quality
@@ -22,6 +21,9 @@ elastic:
     username: elastic
     passwordSecret: elastic-search-es-elastic-user
     passwordKey: elastic
+    caCertSecretName: elastic-search-es-http-certs-public
+    caCertMountPath: /app/certs
+    caCertPath: /app/certs/ca.crt
 
 auth:
     issuer: 'https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/realms/m4i'

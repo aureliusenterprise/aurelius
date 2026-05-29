@@ -8,8 +8,10 @@ services:
             [
                 'bash',
                 '-c',
-                'if [ ! -f /usr/share/elasticsearch/config/certs/ca/ca.crt ]; then echo "[INFO] Creating CA..."; bin/elasticsearch-certutil ca --silent --pem -out /tmp/ca.zip; unzip -j -o /tmp/ca.zip -d /usr/share/elasticsearch/config/certs/ca; echo "[INFO] CA created"; fi; echo "[INFO] Generating instance certs..."; echo "instances:" > /tmp/instances.yml; echo "  - name: es01" >> /tmp/instances.yml; echo "    dns:" >> /tmp/instances.yml; echo "      - elasticsearch" >> /tmp/instances.yml; echo "      - localhost" >> /tmp/instances.yml; echo "    ip:" >> /tmp/instances.yml; echo "      - 127.0.0.1" >> /tmp/instances.yml; echo "      - 172.17.0.1" >> /tmp/instances.yml; echo "  - name: kibana" >> /tmp/instances.yml; echo "    dns:" >> /tmp/instances.yml; echo "      - kibana" >> /tmp/instances.yml; echo "      - localhost" >> /tmp/instances.yml; echo "    ip:" >> /tmp/instances.yml; echo "      - 127.0.0.1" >> /tmp/instances.yml; echo "      - 172.17.0.1" >> /tmp/instances.yml; elasticsearch-certutil cert --silent --pem -out /tmp/certs.zip --in /tmp/instances.yml --ca-cert /usr/share/elasticsearch/config/certs/ca/ca.crt --ca-key /usr/share/elasticsearch/config/certs/ca/ca.key; unzip -j -o /tmp/certs.zip -d /usr/share/elasticsearch/config/certs/certs; echo "[INFO] Certificates generated";',
+                'if [ ! -f /usr/share/elasticsearch/config/certs/ca/ca.crt ]; then echo "[INFO] Creating CA..."; bin/elasticsearch-certutil ca --silent --pem -out /tmp/ca.zip; unzip -j -o /tmp/ca.zip -d /usr/share/elasticsearch/config/certs/ca; echo "[INFO] CA created"; fi; echo "[INFO] Generating instance certs..."; echo "instances:" > /tmp/instances.yml; echo "  - name: es01" >> /tmp/instances.yml; echo "    dns:" >> /tmp/instances.yml; echo "      - elasticsearch" >> /tmp/instances.yml; echo "      - localhost" >> /tmp/instances.yml; echo "    ip:" >> /tmp/instances.yml; echo "      - 127.0.0.1" >> /tmp/instances.yml; echo "      - 172.17.0.1" >> /tmp/instances.yml; echo "  - name: kibana" >> /tmp/instances.yml; echo "    dns:" >> /tmp/instances.yml; echo "      - kibana" >> /tmp/instances.yml; echo "      - localhost" >> /tmp/instances.yml; echo "    ip:" >> /tmp/instances.yml; echo "      - 127.0.0.1" >> /tmp/instances.yml; echo "      - 172.17.0.1" >> /tmp/instances.yml; echo "  - name: enterprisesearch" >> /tmp/instances.yml; echo "    dns:" >> /tmp/instances.yml; echo "      - enterprisesearch" >> /tmp/instances.yml; echo "      - localhost" >> /tmp/instances.yml; echo "    ip:" >> /tmp/instances.yml; echo "      - 127.0.0.1" >> /tmp/instances.yml; echo "      - 172.17.0.1" >> /tmp/instances.yml; elasticsearch-certutil cert --silent --pem -out /tmp/certs.zip --in /tmp/instances.yml --ca-cert /usr/share/elasticsearch/config/certs/ca/ca.crt --ca-key /usr/share/elasticsearch/config/certs/ca/ca.key; unzip -j -o /tmp/certs.zip -d /usr/share/elasticsearch/config/certs/certs; echo "[INFO] Generating PKCS12 keystore for Enterprise Search..."; openssl pkcs12 -export -out /usr/share/elasticsearch/config/certs/certs/enterprisesearch.p12 -inkey /usr/share/elasticsearch/config/certs/certs/enterprisesearch.key -in /usr/share/elasticsearch/config/certs/certs/enterprisesearch.crt -certfile /usr/share/elasticsearch/config/certs/ca/ca.crt -passout pass:${ENT_SEARCH_SSL_KEYSTORE_PASSWORD:-changeit}; chmod -R a+r /usr/share/elasticsearch/config/certs && chmod -R a+x /usr/share/elasticsearch/config/certs; echo "[INFO] Certificates generated";',
             ]
+        environment:
+            - ENT_SEARCH_SSL_KEYSTORE_PASSWORD=${ENT_SEARCH_SSL_KEYSTORE_PASSWORD}
         volumes:
             - certs:/usr/share/elasticsearch/config/certs
 
@@ -124,7 +126,7 @@ services:
             - ELASTICSEARCH_USERNAME=kibana_system
             - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
             - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/config/certs/ca/ca.crt
-            - ENTERPRISESEARCH_HOST=http://enterprisesearch:${ENTERPRISE_SEARCH_PORT}
+            - ENTERPRISESEARCH_HOST=https://enterprisesearch:${ENTERPRISE_SEARCH_PORT}
             - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEYS}
             - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEYS}
             - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEYS}
@@ -156,8 +158,15 @@ services:
             - elasticsearch.ssl.certificate_authority=/usr/share/enterprise-search/config/certs/ca/ca.crt
             - kibana.host=http://kibana:${KIBANA_PORT}
             - kibana.external_url=http://localhost:${KIBANA_PORT}
+            - ent_search.ssl.enabled=true
+            - ent_search.ssl.keystore.path=/usr/share/enterprise-search/config/certs/certs/enterprisesearch.p12
+            - ent_search.ssl.keystore.password=${ENT_SEARCH_SSL_KEYSTORE_PASSWORD}
         healthcheck:
-            test: ['CMD-SHELL', "curl -s -I http://localhost:${ENTERPRISE_SEARCH_PORT} | grep -q 'HTTP/1.1 302 Found'"]
+            test:
+                [
+                    'CMD-SHELL',
+                    "curl -s -I --cacert /usr/share/enterprise-search/config/certs/ca/ca.crt https://localhost:${ENTERPRISE_SEARCH_PORT} | grep -q 'HTTP/1.1 302 Found'",
+                ]
             interval: 10s
             timeout: 10s
             retries: 120
@@ -175,13 +184,15 @@ services:
         ports:
             - ${WSGI_PORT}
         environment:
-            APP_SEARCH_BASE_URL: 'http://enterprisesearch:${ENTERPRISE_SEARCH_PORT}'
+            APP_SEARCH_BASE_URL: 'https://enterprisesearch:${ENTERPRISE_SEARCH_PORT}'
             APP_SEARCH_PASSWORD: ${APP_SEARCH_PASSWORD}
             APP_SEARCH_USERNAME: ${APP_SEARCH_USERNAME}
-            APP_SEARCH_VERIFY_SSL: 'false'
+            APP_SEARCH_CA_CERT_PATH: '/usr/share/elasticsearch/config/certs/ca/ca.crt'
             AUTH_ISSUER: 'http://keycloak:8180/realms/atlas-dev'
             WSGI_PORT: '${WSGI_PORT}'
         restart: unless-stopped
+        volumes:
+            - certs:/usr/share/elasticsearch/config/certs:ro
 
 volumes:
     certs:

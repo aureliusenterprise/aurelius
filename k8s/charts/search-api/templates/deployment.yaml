@@ -35,8 +35,8 @@ spec:
               value: {{ tpl .Values.appSearch.baseUrl . | quote }}
             - name: APP_SEARCH_TIMEOUT_SECONDS
               value: "{{ .Values.appSearch.timeoutSeconds }}"
-            - name: APP_SEARCH_VERIFY_SSL
-              value: "{{ .Values.appSearch.verifySsl }}"
+            - name: APP_SEARCH_CA_CERT_PATH
+              value: {{ .Values.elastic.caCertPath | quote }}
             - name: APP_SEARCH_USERNAME
               value: {{ .Values.elastic.username | quote }}
             - name: APP_SEARCH_PASSWORD
@@ -50,8 +50,16 @@ spec:
             - name: {{ .name }}
               value: {{ .value | quote }}
             {{- end }}
+          volumeMounts:
+            - name: v-elastic-certs
+              mountPath: {{ .Values.elastic.caCertMountPath }}
+              readOnly: true
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: v-elastic-certs
+          secret:
+            secretName: {{ .Values.elastic.caCertSecretName }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

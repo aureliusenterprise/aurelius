@@ -15,15 +15,15 @@ end-to-end headers are forwarded.
 
 ## Configuration
 
-| Variable                     | Description                                                     | Example                                 |
-| ---------------------------- | --------------------------------------------------------------- | --------------------------------------- |
-| `APP_SEARCH_BASE_URL`        | Base URL of the Enterprise Search instance (no trailing slash). | `https://elastic.example.com`           |
-| `APP_SEARCH_USERNAME`        | Username for fetching the App Search private key.               | `elastic`                               |
-| `APP_SEARCH_PASSWORD`        | Password for fetching the App Search private key.               | `***`                                   |
-| `APP_SEARCH_TIMEOUT_SECONDS` | Request timeout in seconds (default `15`).                      | `20`                                    |
-| `APP_SEARCH_VERIFY_SSL`      | Whether to verify TLS certs (default `true`).                   | `false`                                 |
-| `AUTH_ISSUER`                | Issuer URL for JWKS-based JWT validation.                       | `https://auth.example.com/realms/atlas` |
-| `WSGI_PORT`                  | Gunicorn listen port.                                           | `6970`                                  |
+| Variable                     | Description                                                                          | Example                                 |
+| ---------------------------- | ------------------------------------------------------------------------------------ | --------------------------------------- |
+| `APP_SEARCH_BASE_URL`        | Base URL of the Enterprise Search instance (no trailing slash).                      | `https://elastic.example.com`           |
+| `APP_SEARCH_USERNAME`        | Username for fetching the App Search private key.                                    | `elastic`                               |
+| `APP_SEARCH_PASSWORD`        | Password for fetching the App Search private key.                                    | `***`                                   |
+| `APP_SEARCH_TIMEOUT_SECONDS` | Request timeout in seconds (default `15`).                                           | `20`                                    |
+| `APP_SEARCH_CA_CERT_PATH`    | Path to CA certificate for SSL verification. If unset, SSL verification is disabled. | `/etc/ssl/certs/ca-cert.pem`            |
+| `AUTH_ISSUER`                | Issuer URL for JWKS-based JWT validation.                                            | `https://auth.example.com/realms/atlas` |
+| `WSGI_PORT`                  | Gunicorn listen port.                                                                | `6970`                                  |
 
 ## Development
 
