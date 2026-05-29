@@ -1,0 +1,167 @@
+name: m4i-search-api-e2e
+
+services:
+    keycloak-db:
+        image: postgres:latest
+        user: ${KEYCLOAK_DB_USERNAME}
+        environment:
+            POSTGRES_USER: ${KEYCLOAK_DB_USERNAME}
+            POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+            POSTGRES_DB: keycloak
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready', '-d', 'keycloak']
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        restart: unless-stopped
+
+    keycloak:
+        image: ghcr.io/aureliusenterprise/aurelius-docker-keycloak:local
+        command: ['start-dev', '--import-realm']
+        depends_on:
+            keycloak-db:
+                condition: service_healthy
+        ports:
+            - '${KEYCLOAK_HTTP_PORT}'
+        environment:
+            KEYCLOAK_ADMIN: ${KEYCLOAK_BOOTSTRAP_ADMIN_USERNAME}
+            KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_BOOTSTRAP_ADMIN_PASSWORD}
+            KC_DB: postgres
+            KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+            KC_DB_USERNAME: ${KEYCLOAK_DB_USERNAME}
+            KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+            KC_HTTP_PORT: ${KEYCLOAK_HTTP_PORT}
+        healthcheck:
+            test:
+                [
+                    'CMD-SHELL',
+                    "exec 3<>/dev/tcp/127.0.0.1/${KEYCLOAK_HTTP_PORT};echo -e \"GET /health/ready HTTP/1.1\r\nhost: http://localhost\r\nConnection: close\r\n\r\n\" >&3;grep \"HTTP/1.1 200 OK\" <&3",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 10
+        restart: unless-stopped
+        volumes:
+            - ./keycloak/atlas-dev.json:/opt/keycloak/data/import/atlas-dev.json
+
+    elasticsearch-setup:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
+        depends_on:
+            elasticsearch:
+                condition: service_healthy
+        user: '0'
+        entrypoint:
+            [
+                'bash',
+                '-c',
+                'echo "Waiting for Elasticsearch availability"; until curl -s --cacert config/certs/ca/ca.crt https://elasticsearch:${ELASTICSEARCH_PORT} | grep -q "missing authentication credentials"; do sleep 30; done; echo "Setting up kibana_system user"; until curl -s -X POST --cacert config/certs/ca/ca.crt -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://elasticsearch:${ELASTICSEARCH_PORT}/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done; echo "Done"',
+            ]
+        restart: on-failure
+        volumes:
+            - ../../../dev/certs:/usr/share/elasticsearch/config/certs:ro
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
+        environment:
+            - node.name=elasticsearch
+            - cluster.name=es-cluster
+            - discovery.type=single-node
+            - bootstrap.memory_lock=true
+            - xpack.security.http.ssl.enabled=true
+            - xpack.security.http.ssl.key=/usr/share/elasticsearch/config/certs/certs/es01.key
+            - xpack.security.http.ssl.certificate=/usr/share/elasticsearch/config/certs/certs/es01.crt
+            - xpack.security.http.ssl.certificate_authorities=/usr/share/elasticsearch/config/certs/ca/ca.crt
+            - xpack.security.transport.ssl.enabled=true
+            - xpack.security.transport.ssl.key=/usr/share/elasticsearch/config/certs/certs/es01.key
+            - xpack.security.transport.ssl.certificate=/usr/share/elasticsearch/config/certs/certs/es01.crt
+            - xpack.security.transport.ssl.certificate_authorities=/usr/share/elasticsearch/config/certs/ca/ca.crt
+            - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+            - ES_JAVA_OPTS=-Xms512m -Xmx512m
+        healthcheck:
+            test:
+                [
+                    'CMD-SHELL',
+                    "curl -s --cacert config/certs/ca/ca.crt https://localhost:${ELASTICSEARCH_PORT} | grep -q 'missing authentication credentials'",
+                ]
+            interval: 10s
+            timeout: 10s
+            retries: 120
+        restart: unless-stopped
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - ../../../dev/certs:/usr/share/elasticsearch/config/certs:ro
+
+    kibana:
+        depends_on:
+            elasticsearch:
+                condition: service_healthy
+            elasticsearch-setup:
+                condition: service_completed_successfully
+        image: docker.elastic.co/kibana/kibana:8.2.2
+        environment:
+            - SERVERNAME=kibana
+            - ELASTICSEARCH_HOSTS=https://elasticsearch:${ELASTICSEARCH_PORT}
+            - ELASTICSEARCH_USERNAME=kibana_system
+            - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+            - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/config/certs/ca/ca.crt
+            - ENTERPRISESEARCH_HOST=http://enterprisesearch:${ENTERPRISE_SEARCH_PORT}
+            - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEYS}
+            - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEYS}
+            - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEYS}
+        healthcheck:
+            test: ['CMD-SHELL', "curl -s -I http://localhost:${KIBANA_PORT} | grep -q 'HTTP/1.1 302 Found'"]
+            interval: 10s
+            timeout: 10s
+            retries: 120
+        restart: unless-stopped
+        volumes:
+            - ../../../dev/certs:/usr/share/kibana/config/certs:ro
+
+    enterprisesearch:
+        depends_on:
+            kibana:
+                condition: service_healthy
+        ports:
+            - ${ENTERPRISE_SEARCH_PORT}
+        image: docker.elastic.co/enterprise-search/enterprise-search:8.2.2
+        environment:
+            - SERVERNAME=enterprisesearch
+            - secret_management.encryption_keys=[${ENCRYPTION_KEYS}]
+            - allow_es_settings_modification=true
+            - app_search.engine.total_fields.limit=99
+            - elasticsearch.host=https://elasticsearch:${ELASTICSEARCH_PORT}
+            - elasticsearch.username=${ELASTIC_USERNAME}
+            - elasticsearch.password=${ELASTIC_PASSWORD}
+            - elasticsearch.ssl.enabled=true
+            - elasticsearch.ssl.certificate_authority=/usr/share/enterprise-search/config/certs/ca/ca.crt
+            - kibana.host=http://kibana:${KIBANA_PORT}
+            - kibana.external_url=http://localhost:${KIBANA_PORT}
+        healthcheck:
+            test: ['CMD-SHELL', "curl -s -I http://localhost:${ENTERPRISE_SEARCH_PORT} | grep -q 'HTTP/1.1 302 Found'"]
+            interval: 10s
+            timeout: 10s
+            retries: 120
+        restart: unless-stopped
+        volumes:
+            - ../../../dev/certs:/usr/share/enterprise-search/config/certs:ro
+
+    m4i-search-api:
+        image: ghcr.io/aureliusenterprise/m4i-search-api:local
+        depends_on:
+            keycloak:
+                condition: service_healthy
+            enterprisesearch:
+                condition: service_healthy
+        ports:
+            - ${WSGI_PORT}
+        environment:
+            APP_SEARCH_BASE_URL: 'http://enterprisesearch:${ENTERPRISE_SEARCH_PORT}'
+            APP_SEARCH_PASSWORD: ${APP_SEARCH_PASSWORD}
+            APP_SEARCH_USERNAME: ${APP_SEARCH_USERNAME}
+            APP_SEARCH_VERIFY_SSL: 'false'
+            AUTH_ISSUER: 'http://keycloak:8180/realms/atlas-dev'
+            WSGI_PORT: '${WSGI_PORT}'
+        restart: unless-stopped

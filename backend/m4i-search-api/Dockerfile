@@ -7,22 +7,22 @@ ENV WSGI_PORT=6970
 # Expose the port that the app runs on
 EXPOSE ${WSGI_PORT}
 
+# Create a non-root user
+RUN addgroup --system m4i-search-api && \
+  adduser --system --ingroup m4i-search-api m4i-search-api
+
 # Set the working directory
 WORKDIR /app
 
 # Copy the wheel file into the container
-COPY ../../dist/backend/m4i-search-api/*.whl .
+COPY --chown=m4i-search-api:m4i-search-api --chmod=0755 backend/m4i-search-api/dist/*.whl ./
 
 # Install the wheel file and remove it afterwards
 RUN pip install --no-cache-dir *.whl && \
   rm *.whl
 
-# Create a non-root user
-RUN addgroup --system m4i-search-api && \
-  adduser --system --ingroup m4i-search-api m4i-search-api
-
 # Switch to the non-root user
 USER m4i-search-api
 
 # Command to run the application
-CMD ["sh", "-c", "gunicorn 'm4i_search_api:create_app()' --bind 0.0.0.0:${WSGI_PORT}"]
+CMD ["sh", "-c", "gunicorn 'm4i_search_api:main()' --bind 0.0.0.0:${WSGI_PORT}"]

@@ -6,9 +6,17 @@
     "tags": [],
     "targets": {
         "serve": {
+            "dependsOn": ["decrypt"],
             "executor": "@nxlv/python:run-commands",
             "options": {
-                "command": "poetry run gunicorn -c {projectRoot}/conf.py -b 127.0.0.1:${WSGI_PORT} 'm4i_search_api:register_get_app()' --reload"
+                "command": "poetry run gunicorn -b 127.0.0.1:${WSGI_PORT} 'm4i_search_api:main()'"
+            },
+            "outputs": []
+        },
+        "test": {
+            "executor": "@nxlv/python:run-commands",
+            "options": {
+                "command": "poetry run pytest tests/"
             },
             "outputs": []
         }
