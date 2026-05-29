@@ -570,6 +570,29 @@
             "anotherQuery": "Probeer een andere zoekopdracht.",
             "noResults": "Geen resultaten gevonden",
             "results": "resultaten"
+        },
+        "services": {
+            "appSearchResults": {
+                "loading": "Zoekresultaten pagina wordt geladen"
+            },
+            "entityAudit": {
+                "retrieve": "Auditlog wordt opgehaald"
+            },
+            "entityDelete": {
+                "delete": "Entiteit wordt verwijderd"
+            },
+            "entityDetails": {
+                "retrieve": "Details van entiteit worden opgehaald"
+            },
+            "entityUpdate": {
+                "save": "Entiteit wordt opgeslagen"
+            },
+            "searchResult": {
+                "retrieve": "Zoekresultaat wordt opgehaald"
+            },
+            "typeDefs": {
+                "retrieve": "Typedefinities worden opgehaald"
+            }
         }
     },
     "sourcetype": "Source",
