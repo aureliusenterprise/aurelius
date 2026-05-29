@@ -32,7 +32,11 @@ class AppSearchKeyProvider(KeyProvider):
                 username=self._settings.username,
                 password=self._settings.password.get_secret_value(),
             ),
+            timeout=self._settings.timeout_seconds,
+            verify=self._settings.verify_ssl,
         )
+
+        key_response.raise_for_status()
 
         key_info = key_response.json()
 

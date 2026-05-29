@@ -17,7 +17,7 @@ def openid_configuration() -> Dict:
     """Return the OpenID configuration for the configured issuer."""
     well_known_url = f"{AUTH_ISSUER}/.well-known/openid-configuration"
 
-    response = requests.get(well_known_url)
+    response = requests.get(well_known_url, timeout=10)
     response.raise_for_status()
 
     return response.json()
@@ -28,7 +28,7 @@ def jwks() -> Dict[str, RSAPublicKey]:
     """Return the JWKS configuration for the JWT authentication."""
     openid = openid_configuration()
 
-    response = requests.get(openid["jwks_uri"])
+    response = requests.get(openid["jwks_uri"], timeout=10)
     response.raise_for_status()
 
     response_json = response.json()

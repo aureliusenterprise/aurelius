@@ -3,6 +3,7 @@ from typing import Optional
 
 import requests
 from flask import Flask, Response, request
+from werkzeug.datastructures import Headers
 from m4i_backend_core.shared import register as register_shared
 
 from m4i_search_api.providers import (
@@ -28,26 +29,48 @@ def build_target_url(settings: Settings, path: str) -> str:
     return f"{clean_base}/{clean_path}"
 
 
+def _build_proxy_headers(headers: Headers, api_key: str) -> dict:
+    """
+    Build headers for the proxied request.
+
+    Filters out hop-by-hop headers per RFC 2616 Section 13.5.1 and replaces the Authorization header with the
+    App Search API key.
+    """
+    hop_by_hop = {
+        "connection",
+        "keep-alive",
+        "proxy-authenticate",
+        "proxy-authorization",
+        "te",
+        "trailer",
+        "transfer-encoding",
+        "upgrade",
+    }
+
+    result = {
+        k: v for k, v in headers if k.lower() not in hop_by_hop and k.lower() != "host"
+    }
+
+    result["Authorization"] = f"Bearer {api_key}"
+
+    return result
+
+
 def _proxy_request(
     settings: Settings,
     path: str,
     key_provider: KeyProvider,
 ) -> Response:
     """Proxy the incoming request to the App Search instance."""
+    api_key = key_provider.get_key()
     url = build_target_url(settings, path)
-
-    token = key_provider.get_key()
-
-    headers = {
-        **request.headers,
-        "Authorization": f"Bearer {token}",
-    }
 
     response = requests.request(
         method=request.method,
         url=url,
-        headers=headers,
+        headers=_build_proxy_headers(request.headers, api_key),
         data=request.data,
+        params=list(request.args.items(multi=True)),
         timeout=settings.timeout_seconds,
         verify=settings.verify_ssl,
     )
