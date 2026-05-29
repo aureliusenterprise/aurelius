@@ -1,6 +1,18 @@
 name: m4i-search-api-e2e
 
 services:
+    cert-gen:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
+        user: '0'
+        entrypoint:
+            [
+                'bash',
+                '-c',
+                'if [ ! -f /usr/share/elasticsearch/config/certs/ca/ca.crt ]; then echo "[INFO] Creating CA..."; bin/elasticsearch-certutil ca --silent --pem -out /tmp/ca.zip; unzip -j -o /tmp/ca.zip -d /usr/share/elasticsearch/config/certs/ca; echo "[INFO] CA created"; fi; echo "[INFO] Generating instance certs..."; echo "instances:" > /tmp/instances.yml; echo "  - name: es01" >> /tmp/instances.yml; echo "    dns:" >> /tmp/instances.yml; echo "      - elasticsearch" >> /tmp/instances.yml; echo "      - localhost" >> /tmp/instances.yml; echo "    ip:" >> /tmp/instances.yml; echo "      - 127.0.0.1" >> /tmp/instances.yml; echo "      - 172.17.0.1" >> /tmp/instances.yml; echo "  - name: kibana" >> /tmp/instances.yml; echo "    dns:" >> /tmp/instances.yml; echo "      - kibana" >> /tmp/instances.yml; echo "      - localhost" >> /tmp/instances.yml; echo "    ip:" >> /tmp/instances.yml; echo "      - 127.0.0.1" >> /tmp/instances.yml; echo "      - 172.17.0.1" >> /tmp/instances.yml; elasticsearch-certutil cert --silent --pem -out /tmp/certs.zip --in /tmp/instances.yml --ca-cert /usr/share/elasticsearch/config/certs/ca/ca.crt --ca-key /usr/share/elasticsearch/config/certs/ca/ca.key; unzip -j -o /tmp/certs.zip -d /usr/share/elasticsearch/config/certs/certs; echo "[INFO] Certificates generated";',
+            ]
+        volumes:
+            - certs:/usr/share/elasticsearch/config/certs
+
     keycloak-db:
         image: postgres:latest
         user: ${KEYCLOAK_DB_USERNAME}
@@ -47,6 +59,8 @@ services:
     elasticsearch-setup:
         image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
         depends_on:
+            cert-gen:
+                condition: service_completed_successfully
             elasticsearch:
                 condition: service_healthy
         user: '0'
@@ -58,10 +72,13 @@ services:
             ]
         restart: on-failure
         volumes:
-            - ../../../dev/certs:/usr/share/elasticsearch/config/certs:ro
+            - certs:/usr/share/elasticsearch/config/certs:ro
 
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
+        depends_on:
+            cert-gen:
+                condition: service_completed_successfully
         environment:
             - node.name=elasticsearch
             - cluster.name=es-cluster
@@ -92,7 +109,7 @@ services:
                 soft: -1
                 hard: -1
         volumes:
-            - ../../../dev/certs:/usr/share/elasticsearch/config/certs:ro
+            - certs:/usr/share/elasticsearch/config/certs:ro
 
     kibana:
         depends_on:
@@ -118,7 +135,7 @@ services:
             retries: 120
         restart: unless-stopped
         volumes:
-            - ../../../dev/certs:/usr/share/kibana/config/certs:ro
+            - certs:/usr/share/kibana/config/certs:ro
 
     enterprisesearch:
         depends_on:
@@ -146,7 +163,7 @@ services:
             retries: 120
         restart: unless-stopped
         volumes:
-            - ../../../dev/certs:/usr/share/enterprise-search/config/certs:ro
+            - certs:/usr/share/enterprise-search/config/certs:ro
 
     m4i-search-api:
         image: ghcr.io/aureliusenterprise/m4i-search-api:local
@@ -165,3 +182,6 @@ services:
             AUTH_ISSUER: 'http://keycloak:8180/realms/atlas-dev'
             WSGI_PORT: '${WSGI_PORT}'
         restart: unless-stopped
+
+volumes:
+    certs:
