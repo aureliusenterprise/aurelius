@@ -318,7 +318,6 @@
                     "definition": "Definition",
                     "definitionPlaceholder": "Definition",
                     "definitionWarning": "Importing the character ’ (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.\n Please replace it with a standard apostrophe (') before importing your text.",
-                    "description": "Description",
                     "name": "Name*",
                     "namePlaceholder": "Name",
                     "nameRequired": "Name is required.",
@@ -401,7 +400,6 @@
                 }
             },
             "dataset": {
-                "available": "Available",
                 "childDatasets": "Child Datasets",
                 "consumers": "Consumers",
                 "consumersCards": {
