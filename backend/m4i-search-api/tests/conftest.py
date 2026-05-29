@@ -4,7 +4,7 @@ from typing import Any
 from unittest.mock import Mock
 
 import pytest
-from flask import abort, request
+from flask import abort, request, Flask
 from flask.testing import FlaskClient
 from m4i_search_api.app import create_app
 from m4i_search_api.providers import AuthProvider, KeyProvider
@@ -50,19 +50,19 @@ class MockKeyProvider(KeyProvider):
         return self._key
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def auth_provider() -> MockAuthProvider:
     """Return a mock auth provider (no OIDC calls)."""
     return MockAuthProvider()
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def key_provider() -> MockKeyProvider:
     """Return a mock key provider."""
     return MockKeyProvider()
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def settings() -> Settings:
     """Return test settings."""
     return Mock(
@@ -75,12 +75,12 @@ def settings() -> Settings:
     )
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def app(
     auth_provider: MockAuthProvider,
     key_provider: MockKeyProvider,
     settings: Settings,
-):
+) -> Flask:
     """Create the Flask app with test dependencies."""
     return create_app(
         auth_provider=auth_provider,
@@ -90,6 +90,6 @@ def app(
 
 
 @pytest.fixture
-def client(app) -> FlaskClient:
+def client(app: Flask) -> FlaskClient:
     """Create a Flask test client."""
     return app.test_client()
