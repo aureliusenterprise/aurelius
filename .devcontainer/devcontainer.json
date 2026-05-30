@@ -1,5 +1,6 @@
 {
     "containerEnv": {
+        "NX_DAEMON": "true",
         "SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/secrets/keys.txt"
     },
     "customizations": {
