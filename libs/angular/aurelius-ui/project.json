@@ -65,7 +65,7 @@
             "executor": "@nx/web:file-server",
             "options": {
                 "buildTarget": "aurelius-ui:build-storybook",
-                "host": "127/.0.0.1",
+                "host": "127.0.0.1",
                 "port": 4500,
                 "spa": true,
                 "staticFilePath": "dist/storybook/aurelius-ui"
