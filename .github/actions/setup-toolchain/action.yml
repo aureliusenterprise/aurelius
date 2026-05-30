@@ -26,6 +26,45 @@ inputs:
     github-token:
         description: GitHub token for GHCR login (leave empty to skip)
         default: ""
+    cosign:
+        description: Install Cosign (for container signing)
+        default: "false"
+    cosign-version:
+        description: Cosign version to install
+        default: v3.0.4
+    trivy:
+        description: Install Trivy (for vulnerability scanning)
+        default: "false"
+    trivy-version:
+        description: Trivy version to install
+        default: v0.68.0
+    cyclonedx:
+        description: Install CycloneDX CLI (for SBOM generation)
+        default: "false"
+    cyclonedx-version:
+        description: CycloneDX CLI version to install
+        default: v0.32.0
+    sonarqube:
+        description: Install SonarQube scanner
+        default: "false"
+    sonarqube-version:
+        description: SonarQube scanner version to install
+        default: 8.0.1.6346
+    playwright:
+        description: Install Playwright browsers with system dependencies
+        default: "false"
+    java-version:
+        description: Java version to set up
+        default: "21"
+    java-distribution:
+        description: Java distribution to set up
+        default: temurin
+    python-version:
+        description: Python version to set up
+        default: "3.14"
+    node-version:
+        description: Node.js version to set up
+        default: "24"
 
 runs:
     using: composite
@@ -70,8 +109,16 @@ runs:
               docker builder prune -af || true
               df -h
 
-        - name: Install SOPS
+        - name: Cache SOPS
+          id: cache-sops
           if: inputs.sops == 'true'
+          uses: actions/cache@v5
+          with:
+              path: /usr/local/bin/sops
+              key: sops-${{ inputs.sops-version }}
+
+        - name: Install SOPS
+          if: inputs.sops == 'true' && steps.cache-sops.outputs.cache-hit != 'true'
           shell: bash
           env:
               SOPS_VERSION: ${{ inputs.sops-version }}
@@ -80,12 +127,12 @@ runs:
               sudo mv sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
               sudo chmod +x /usr/local/bin/sops
 
-        - name: Set up JDK 21 for x64
+        - name: Set up JDK for x64
           if: inputs.java == 'true'
           uses: actions/setup-java@v5
           with:
-              java-version: "21"
-              distribution: "temurin"
+              java-version: ${{ inputs.java-version }}
+              distribution: ${{ inputs.java-distribution }}
               architecture: x64
 
         - name: Setup Gradle
@@ -96,7 +143,7 @@ runs:
           if: inputs.python == 'true'
           uses: actions/setup-python@v6
           with:
-              python-version: 3.14
+              python-version: ${{ inputs.python-version }}
 
         - name: Install uv
           if: inputs.python == 'true'
@@ -128,7 +175,7 @@ runs:
           if: inputs.node == 'true'
           uses: actions/setup-node@v6
           with:
-              node-version: 24
+              node-version: ${{ inputs.node-version }}
               cache: npm
 
         - name: Install Node.js dependencies
@@ -151,3 +198,71 @@ runs:
               registry: ghcr.io
               username: ${{ github.actor }}
               password: ${{ inputs.github-token }}
+
+        - name: Cache Cosign
+          id: cache-cosign
+          if: inputs.cosign == 'true'
+          uses: actions/cache@v5
+          with:
+              path: /usr/local/bin/cosign
+              key: cosign-${{ inputs.cosign-version }}
+
+        - name: Install Cosign
+          if: inputs.cosign == 'true' && steps.cache-cosign.outputs.cache-hit != 'true'
+          shell: bash
+          env:
+              COSIGN_VERSION: ${{ inputs.cosign-version }}
+          run: |
+              curl -sSfL https://github.com/sigstore/cosign/releases/download/${COSIGN_VERSION}/cosign-linux-amd64 -o /usr/local/bin/cosign
+              chmod +x /usr/local/bin/cosign
+
+        - name: Install Trivy
+          if: inputs.trivy == 'true'
+          uses: aquasecurity/setup-trivy@v0.2.6
+          with:
+              trivy-version: ${{ inputs.trivy-version }}
+
+        - name: Cache CycloneDX CLI
+          id: cache-cyclonedx
+          if: inputs.cyclonedx == 'true'
+          uses: actions/cache@v5
+          with:
+              path: /usr/local/bin/cyclonedx
+              key: cyclonedx-${{ inputs.cyclonedx-version }}
+
+        - name: Install CycloneDX CLI
+          if: inputs.cyclonedx == 'true' && steps.cache-cyclonedx.outputs.cache-hit != 'true'
+          shell: bash
+          env:
+              CYCLONEDX_VERSION: ${{ inputs.cyclonedx-version }}
+          run: |
+              curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/download/${CYCLONEDX_VERSION}/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
+              chmod +x /usr/local/bin/cyclonedx
+
+        - name: Cache SonarQube scanner
+          id: cache-sonarqube
+          if: inputs.sonarqube == 'true'
+          uses: actions/cache@v5
+          with:
+              path: ${{ runner.temp }}/sonar-scanner
+              key: sonarqube-${{ inputs.sonarqube-version }}
+
+        - name: Install SonarQube scanner
+          if: inputs.sonarqube == 'true' && steps.cache-sonarqube.outputs.cache-hit != 'true'
+          shell: bash
+          env:
+              SONAR_VERSION: ${{ inputs.sonarqube-version }}
+              SONAR_ROOT: ${{ runner.temp }}/sonar-scanner
+              SONAR_ZIP: /tmp/sonar-scanner.zip
+          run: |
+              curl -o "$SONAR_ZIP" -L "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_VERSION-linux-x64.zip"
+              unzip -o "$SONAR_ZIP" -d "$SONAR_ROOT"
+              rm "$SONAR_ZIP"
+              echo "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin" >> "$GITHUB_PATH"
+              "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin/sonar-scanner" --version
+
+        - name: Install Playwright
+          if: inputs.playwright == 'true'
+          shell: bash
+          run: |
+              uv run playwright install --with-deps

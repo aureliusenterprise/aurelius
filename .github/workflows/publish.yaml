@@ -23,23 +23,16 @@ jobs:
             - name: Setup toolchain
               uses: ./.github/actions/setup-toolchain
               with:
+                  sops: "true"
                   java: "true"
                   python: "true"
                   node: "true"
+                  cosign: "true"
+                  trivy: "true"
+                  cyclonedx: "true"
                   dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
                   dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
                   github-token: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Install Cosign
-              uses: sigstore/cosign-installer@v4.1.1
-
-            - name: Install CycloneDX CLI
-              run: |
-                  curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/latest/download/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
-                  chmod +x /usr/local/bin/cyclonedx
-
-            - name: Install Trivy
-              uses: aquasecurity/setup-trivy@v0.2.6
 
             - name: Publish containers
               run: npx nx run-many -t docker-publish -- --version ${{ github.ref_name }}

@@ -28,12 +28,10 @@ jobs:
                   java: "true"
                   python: "true"
                   node: "true"
+                  playwright: "true"
                   dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
                   dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
                   github-token: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Install Playwright
-              run: uv run playwright install --with-deps
 
             - name: Test all projects
               run: npx nx run-many -t test e2e -c ci
@@ -67,20 +65,12 @@ jobs:
                   java: "true"
                   python: "true"
                   node: "true"
+                  cosign: "true"
+                  trivy: "true"
+                  cyclonedx: "true"
                   dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
                   dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
                   github-token: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Install Cosign
-              uses: sigstore/cosign-installer@v4.1.1
-
-            - name: Install CycloneDX CLI
-              run: |
-                  curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/latest/download/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
-                  chmod +x /usr/local/bin/cyclonedx
-
-            - name: Install Trivy
-              uses: aquasecurity/setup-trivy@v0.2.6
 
             - name: Build all docker images
               run: npx nx run-many -t docker-build
@@ -113,6 +103,7 @@ jobs:
                   sops: "true"
                   java: "true"
                   node: "true"
+                  sonarqube: "true"
 
             - name: Download coverage reports
               uses: actions/download-artifact@v8
@@ -123,18 +114,6 @@ jobs:
               uses: actions/download-artifact@v8
               with:
                   name: vuln-reports
-
-            - name: Install SonarQube scanner
-              env:
-                  SONAR_VERSION: 8.0.1.6346
-                  SONAR_ROOT: ${{ runner.temp }}/sonar-scanner
-                  SONAR_ZIP: /tmp/sonar-scanner.zip
-              run: |
-                  curl -o "$SONAR_ZIP" -L "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_VERSION-linux-x64.zip"
-                  unzip -o "$SONAR_ZIP" -d "$SONAR_ROOT"
-                  rm "$SONAR_ZIP"
-                  echo "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin" >> "$GITHUB_PATH"
-                  "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin/sonar-scanner" --version
 
             - name: Decrypt secrets for SonarQube
               run: npx nx run-many -t decrypt
