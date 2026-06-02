@@ -15,7 +15,7 @@ from m4i_search_api.providers import (
 
 from .settings import Settings
 
-log = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 def build_target_url(settings: Settings, path: str) -> str:

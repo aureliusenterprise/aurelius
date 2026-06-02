@@ -1,8 +1,9 @@
-from functools import lru_cache, partial, wraps
+from functools import partial, wraps
 from typing import Dict, cast
 
 import jwt
 import requests
+from cachetools import TTLCache, cached
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from flask import _request_ctx_stack
 from jwt.algorithms import RSAAlgorithm
@@ -12,7 +13,7 @@ from .get_token_auth_header import get_token_auth_header
 from .model import AuthError
 
 
-@lru_cache()
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
 def openid_configuration() -> Dict:
     """Return the OpenID configuration for the configured issuer."""
     well_known_url = f"{AUTH_ISSUER}/.well-known/openid-configuration"
@@ -23,7 +24,7 @@ def openid_configuration() -> Dict:
     return response.json()
 
 
-@lru_cache()
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
 def jwks() -> Dict[str, RSAPublicKey]:
     """Return the JWKS configuration for the JWT authentication."""
     openid = openid_configuration()
@@ -86,7 +87,16 @@ def requires_auth(f=None, transparent: bool = False):
                     401,
                 )
 
-            keys = jwks()
+            try:
+                keys = jwks()
+            except requests.RequestException:
+                raise AuthError(
+                    {
+                        "code": "jwks_fetch_error",
+                        "description": "Unable to fetch JWKS keys for token verification.",
+                    },
+                    500,
+                )
 
             if kid not in keys:
                 raise AuthError(

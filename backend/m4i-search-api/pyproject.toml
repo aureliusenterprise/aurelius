@@ -10,6 +10,7 @@ version = "0.1.0"
 include = "m4i_search_api"
 
 [tool.poetry.dependencies]
+cachetools = "^5.5.2"
 flask = "2.1.2"
 gunicorn = "^22.0.0"
 pydantic = "^2.8.0"
