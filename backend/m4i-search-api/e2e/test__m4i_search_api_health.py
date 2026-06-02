@@ -3,7 +3,7 @@
 import requests
 
 
-def test_health_endpoint_returns_200(api_base_url: str) -> None:
+def test__health_endpoint_returns_200(api_base_url: str) -> None:
     """The /health endpoint should return 200 OK."""
     response = requests.get(f"{api_base_url}/health", timeout=10)
     assert response.status_code == 200
