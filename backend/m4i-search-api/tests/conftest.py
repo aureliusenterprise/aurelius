@@ -72,6 +72,7 @@ def settings() -> Settings:
         timeout_seconds=5,
         username="test-user",
         ca_cert_path=None,
+        log_level="INFO",
     )
 
 

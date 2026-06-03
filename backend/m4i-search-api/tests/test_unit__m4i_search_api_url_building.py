@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from m4i_search_api.app import build_target_url
+from m4i_search_api.routes.proxy import build_target_url
 from m4i_search_api.settings import Settings
 
 

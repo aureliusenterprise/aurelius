@@ -1,10 +1,11 @@
 from typing import cast
 
+import pytest
 import responses
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Headers
 
-from m4i_search_api.app import _build_proxy_headers
+from m4i_search_api.routes.proxy import FILTERED_HEADERS, _build_proxy_headers
 
 
 def test__replaces_authorization_with_api_key() -> None:
@@ -23,24 +24,14 @@ def test__filters_host_header() -> None:
     assert "Host" not in result
 
 
-def test__filters_hop_by_hop_headers() -> None:
+@pytest.mark.parametrize("header", FILTERED_HEADERS)
+def test__filters_hop_by_hop_headers(header: str) -> None:
     """Hop-by-hop headers are stripped from the outgoing request."""
-    hop_by_hop = (
-        "Connection",
-        "Keep-Alive",
-        "Proxy-Authenticate",
-        "Proxy-Authorization",
-        "TE",
-        "Trailer",
-        "Transfer-Encoding",
-        "Upgrade",
-    )
-    headers = Headers()
-    for h in hop_by_hop:
-        headers.add(h, "value")
+    headers = Headers({header.capitalize(): "value"})
+
     result = _build_proxy_headers(headers, "key")
-    for h in hop_by_hop:
-        assert h not in result, f"Hop-by-hop header {h} should be filtered"
+
+    assert header.capitalize() not in result, f"Header {header} should be filtered"
 
 
 @responses.activate

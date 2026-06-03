@@ -1,9 +1,18 @@
 from collections.abc import Hashable
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import Field, HttpUrl, SecretStr
 from pydantic_settings import BaseSettings
+
+
+LOG_LEVEL = Literal[
+    "CRITICAL",
+    "ERROR",
+    "WARNING",
+    "INFO",
+    "DEBUG",
+]
 
 
 class Settings(BaseSettings, Hashable):
@@ -14,6 +23,11 @@ class Settings(BaseSettings, Hashable):
     ca_cert_path: Optional[Path] = Field(
         default=None,
         description="Path to the CA certificate file for SSL verification. If not set, SSL verification is disabled.",
+    )
+
+    log_level: LOG_LEVEL = Field(
+        default="INFO",
+        description="Logging level for the application.",
     )
 
     password: SecretStr = Field(

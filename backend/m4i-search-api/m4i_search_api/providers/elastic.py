@@ -23,15 +23,6 @@ def fetch_app_search_key(settings: Settings) -> str:
     """Fetch the enterprise search key from the App Search instance."""
     clean_base = str(settings.base_url).rstrip("/")
 
-    LOGGER.debug("Fetching App Search key from %s", clean_base)
-
-    verify_ssl = settings.ca_cert_path.as_posix() if settings.ca_cert_path else False
-
-    if not verify_ssl:
-        LOGGER.warning(
-            "No CA certificate provided for App Search key retrieval. SSL verification is disabled."
-        )
-
     key_response = requests.get(
         f"{clean_base}/api/as/v1/credentials/private-key",
         auth=HTTPBasicAuth(
@@ -39,7 +30,7 @@ def fetch_app_search_key(settings: Settings) -> str:
             password=settings.password.get_secret_value(),
         ),
         timeout=settings.timeout_seconds,
-        verify=verify_ssl,
+        verify=settings.ca_cert_path.as_posix() if settings.ca_cert_path else False,
     )
 
     key_response.raise_for_status()

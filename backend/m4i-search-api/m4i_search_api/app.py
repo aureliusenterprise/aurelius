@@ -1,9 +1,6 @@
 import logging
-from typing import Optional
 
-import requests
-from flask import Flask, Response, request
-from werkzeug.datastructures import Headers
+from flask import Flask
 from m4i_backend_core.shared import register as register_shared
 
 from m4i_search_api.providers import (
@@ -13,101 +10,47 @@ from m4i_search_api.providers import (
     KeyProvider,
 )
 
+from .globals import LOGGER, METADATA
+from .routes import create_proxy_blueprint, health_bp
 from .settings import Settings
 
-LOGGER = logging.getLogger(__name__)
 
+def setup_logging(log_level: str) -> None:
+    """Configure logging for the application.
 
-def build_target_url(settings: Settings, path: str) -> str:
-    """Build the target URL for the App Search instance based on the incoming request path."""
-    clean_base = str(settings.base_url).rstrip("/")
-    clean_path = path.lstrip("/")
-
-    if not clean_path:
-        return clean_base
-
-    return f"{clean_base}/{clean_path}"
-
-
-def _build_proxy_headers(headers: Headers, api_key: str) -> dict:
+    When running under gunicorn, gunicorn manages the root logger, so
+    logging.basicConfig() is a no-op.  We explicitly configure our
+    application logger with its own handler so that it always emits
+    regardless of gunicorn's root logger configuration.
     """
-    Build headers for the proxied request.
+    LOGGER.setLevel(log_level.upper())
 
-    Filters out hop-by-hop headers per RFC 2616 Section 13.5.1 and replaces the Authorization header with the
-    App Search API key.
-    """
-    hop_by_hop = {
-        "connection",
-        "keep-alive",
-        "proxy-authenticate",
-        "proxy-authorization",
-        "te",
-        "trailer",
-        "transfer-encoding",
-        "upgrade",
-    }
-
-    result = {
-        k: v for k, v in headers if k.lower() not in hop_by_hop and k.lower() != "host"
-    }
-
-    result["Authorization"] = f"Bearer {api_key}"
-
-    return result
+    if not LOGGER.handlers:
+        handler = logging.StreamHandler()
+        handler.setLevel(log_level.upper())
+        formatter = logging.Formatter(
+            "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+        )
+        handler.setFormatter(formatter)
+        LOGGER.addHandler(handler)
 
 
-def _proxy_request(
-    settings: Settings,
-    path: str,
-    key_provider: KeyProvider,
-) -> Response:
-    """Proxy the incoming request to the App Search instance."""
-    api_key = key_provider.get_key()
-    url = build_target_url(settings, path)
-
-    response = requests.request(
-        method=request.method,
-        url=url,
-        headers=_build_proxy_headers(request.headers, api_key),
-        data=request.data,
-        params=list(request.args.items(multi=True)),
-        timeout=settings.timeout_seconds,
-        verify=settings.ca_cert_path.as_posix() if settings.ca_cert_path else False,
-    )
-
-    return Response(
-        response=response.content,
-        status=response.status_code,
-        content_type=response.headers.get("Content-Type", "application/json"),
-    )
-
-
-def create_routes(
+def setup_routes(
     app: Flask,
-    settings: Settings,
-    key_provider: KeyProvider,
     auth_provider: AuthProvider,
+    key_provider: KeyProvider,
+    settings: Settings,
 ) -> None:
-    """Define the routes for the Flask application."""
+    """Register routes with the Flask application."""
+    app.register_blueprint(health_bp)
 
-    @app.route("/health", methods=["GET"])
-    def health() -> Response:
-        """Health check endpoint."""
-        return Response(None, status=200)
-
-    @app.route(
-        "/",
-        defaults={"path": ""},
-        methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    app.register_blueprint(
+        create_proxy_blueprint(
+            auth_provider=auth_provider,
+            key_provider=key_provider,
+            settings=settings,
+        )
     )
-    @app.route(
-        "/<path:path>",
-        methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-    )
-    @auth_provider.requires_auth()
-    def proxy(path: str, access_token: Optional[str] = None) -> Response:
-        """Proxy endpoint to forward requests to the App Search instance."""
-        return _proxy_request(settings, path, key_provider)
 
 
 def create_app(
@@ -125,8 +68,19 @@ def create_app(
     """
     app = Flask(__name__)
 
+    setup_logging(settings.log_level)
     register_shared(app)
-    create_routes(app, settings, key_provider, auth_provider)
+    setup_routes(app, auth_provider, key_provider, settings)
+
+    version = f"v{METADATA.get('Version', 'unknown')}"
+
+    LOGGER.info("Started m4i-search-api version %s", version)
+    LOGGER.debug("Settings: %s", settings)
+
+    if not settings.ca_cert_path:
+        LOGGER.warning(
+            "No CA certificate path provided; SSL verification is disabled. This is not recommended for production environments."
+        )
 
     return app
 
