@@ -16,14 +16,6 @@ def test__replaces_authorization_with_api_key() -> None:
     assert result["Authorization"] == "Bearer my-api-key"
 
 
-def test__filters_host_header() -> None:
-    """Host header is never forwarded (it's hop-by-hop)."""
-    headers = Headers()
-    headers.add("Host", "original-host.com")
-    result = _build_proxy_headers(headers, "key")
-    assert "Host" not in result
-
-
 @pytest.mark.parametrize("header", FILTERED_HEADERS)
 def test__filters_hop_by_hop_headers(header: str) -> None:
     """Hop-by-hop headers are stripped from the outgoing request."""
