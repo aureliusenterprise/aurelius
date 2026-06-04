@@ -1,0 +1,14 @@
+:host {
+	display: block;
+}
+
+.description {
+	max-height: 8rem;
+	overflow: hidden;
+}
+
+.description ::ng-deep .content {
+	margin-bottom: 0;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
