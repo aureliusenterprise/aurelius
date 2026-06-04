@@ -43,7 +43,7 @@ services:
         restart: unless-stopped
 
     schema-registry:
-        image: confluentinc/cp-schema-registry:8.1.1
+        image: confluentinc/cp-schema-registry:8.2.1
         depends_on:
             broker:
                 condition: service_healthy
