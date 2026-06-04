@@ -182,6 +182,7 @@ jobs:
               uses: ./.github/actions/setup-toolchain
               with:
                   sops: "true"
+                  java: "true"
                   node: "true"
 
             - name: Run Chromatic
