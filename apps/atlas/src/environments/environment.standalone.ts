@@ -3,7 +3,7 @@ export const environment = {
     googleAnalyticsMeasurementID: 'UA-138345924-1',
     i18n: {
         defaultLanguage: 'en-US',
-        languages: {},
+        languages: { 'nl-NL': {}, 'en-US': {} },
     },
     keycloak: {
         url: '/auth',
