@@ -7,10 +7,34 @@ from cachetools import TTLCache, cached
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from flask import _request_ctx_stack
 from jwt.algorithms import RSAAlgorithm
+from tenacity import retry, retry_if_exception_type, stop_after_attempt
 
 from ..config import AUTH_ISSUER
 from .get_token_auth_header import get_token_auth_header
 from .model import AuthError
+
+
+class KidNotFoundError(AuthError):
+    """Raised when the 'kid' from the token header is not found in the JWKS keys."""
+
+    def __init__(self):
+        super().__init__(
+            {
+                "code": "invalid_header",
+                "description": "Authorization token 'kid' header does not match any known keys.",
+            },
+            401,
+        )
+
+
+class JwksFetchError(requests.RequestException):
+    """Raised when there is an error fetching the JWKS keys"""
+
+    def __init__(self, original_exception: Exception):
+        super().__init__(
+            f"Unable to fetch JWKS keys for token verification: {str(original_exception)}"
+        )
+        self.original_exception = original_exception
 
 
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
@@ -25,12 +49,24 @@ def openid_configuration() -> Dict:
 
 
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
+@retry(
+    stop=stop_after_attempt(2),
+    retry=retry_if_exception_type(JwksFetchError),
+    reraise=True,
+)
 def jwks() -> Dict[str, RSAPublicKey]:
     """Return the JWKS configuration for the JWT authentication."""
     openid = openid_configuration()
 
-    response = requests.get(openid["jwks_uri"], timeout=10)
-    response.raise_for_status()
+    try:
+        response = requests.get(openid["jwks_uri"], timeout=10)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        if e.response and e.response.status_code == 404:
+            openid_configuration.cache_clear()  # type: ignore
+            raise JwksFetchError(e)
+        else:
+            raise
 
     response_json = response.json()
 
@@ -57,6 +93,11 @@ def requires_auth(f=None, transparent: bool = False):
         return partial(requires_auth, transparent=transparent)
 
     @wraps(f)
+    @retry(
+        stop=stop_after_attempt(2),
+        retry=retry_if_exception_type(KidNotFoundError),
+        reraise=True,
+    )
     def decorated(*args, **kwargs):
         token = get_token_auth_header()
 
@@ -99,13 +140,9 @@ def requires_auth(f=None, transparent: bool = False):
                 )
 
             if kid not in keys:
-                raise AuthError(
-                    {
-                        "code": "invalid_header",
-                        "description": "Authorization token 'kid' header does not match any known keys.",
-                    },
-                    401,
-                )
+                openid_configuration.cache_clear()  # type: ignore
+                jwks.cache_clear()  # type: ignore
+                raise KidNotFoundError()
 
             payload = jwt.decode(
                 token,
