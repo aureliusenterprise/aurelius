@@ -6,7 +6,7 @@ kafka-avro-serializer = "8.2.0"
 kafka-clients = "4.3.0"
 mockito-core = "5.23.0"
 mockito-junit-jupiter = "5.23.0"
-slf4j-api = "2.0.17"
+slf4j-api = "2.0.18"
 slf4j-simple = "2.0.17"
 
 [libraries]
