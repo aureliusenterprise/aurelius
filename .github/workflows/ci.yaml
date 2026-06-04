@@ -186,7 +186,7 @@ jobs:
                   node: "true"
 
             - name: Run Chromatic
-              uses: chromaui/action@v1
+              uses: chromaui/action@v17
               with:
                   buildCommand: "npx nx build-storybook aurelius-ui"
                   outputDir: "dist/storybook/aurelius-ui"
