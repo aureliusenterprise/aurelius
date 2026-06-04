@@ -8,6 +8,10 @@ from werkzeug.datastructures import Headers
 from m4i_search_api.routes.proxy import FILTERED_HEADERS, _build_proxy_headers
 
 
+ALLOWED_SEARCH_PATH = "/api/as/v1/engines/test-engine/search"
+ALLOWED_SEARCH_URL = "http://app-search.test/api/as/v1/engines/test-engine/search"
+
+
 def test__replaces_authorization_with_api_key() -> None:
     """Authorization header is set to Bearer <api_key>."""
     headers = Headers()
@@ -30,15 +34,16 @@ def test__filters_hop_by_hop_headers(header: str) -> None:
 def test__proxy_replaces_authorization_header(client: FlaskClient) -> None:
     """The incoming Bearer token is replaced with the App Search API key."""
     responses.add(
-        responses.GET,
-        "http://app-search.test/api/as/v1/search/test-engine",
+        responses.POST,
+        ALLOWED_SEARCH_URL,
         status=200,
         json={"results": []},
     )
 
-    client.get(
-        "/api/as/v1/search/test-engine",
+    client.post(
+        ALLOWED_SEARCH_PATH,
         headers={"Authorization": "Bearer user-token"},
+        json={"query": "test"},
     )
 
     # Verify the outgoing request used the App Search key, not the user token
@@ -54,19 +59,20 @@ def test__proxy_replaces_authorization_header(client: FlaskClient) -> None:
 def test__proxy_preserves_other_headers(client: FlaskClient) -> None:
     """Non-auth headers pass through to the backend."""
     responses.add(
-        responses.GET,
-        "http://app-search.test/api/as/v1/search/test-engine",
+        responses.POST,
+        ALLOWED_SEARCH_URL,
         status=200,
         json={"results": []},
     )
 
-    client.get(
-        "/api/as/v1/search/test-engine",
+    client.post(
+        ALLOWED_SEARCH_PATH,
         headers={
             "Authorization": "Bearer user-token",
             "Content-Type": "application/json",
             "X-Custom-Header": "custom-value",
         },
+        json={"query": "test"},
     )
 
     assert len(responses.calls) == 1
@@ -86,20 +92,21 @@ def test__integration_hop_by_hop_headers_not_forwarded(client: FlaskClient) -> N
     header is completely absent.
     """
     responses.add(
-        responses.GET,
-        "http://app-search.test/api/as/v1/search/test-engine",
+        responses.POST,
+        ALLOWED_SEARCH_URL,
         status=200,
         json={"ok": True},
     )
 
-    client.get(
-        "/api/as/v1/search/test-engine",
+    client.post(
+        ALLOWED_SEARCH_PATH,
         headers={
             "Authorization": "Bearer user-token",
             "Keep-Alive": "timeout=5",
             "TE": "trailers",
             "Proxy-Authorization": "Basic proxy-creds",
         },
+        json={"query": "test"},
     )
 
     call = cast("responses.Call", responses.calls[0])
@@ -114,13 +121,13 @@ def test__integration_preserves_content_type(client: FlaskClient) -> None:
     """Content-Type header is preserved on the outgoing request."""
     responses.add(
         responses.POST,
-        "http://app-search.test/api/as/v1/search/test-engine",
+        ALLOWED_SEARCH_URL,
         status=200,
         json={"ok": True},
     )
 
     client.post(
-        "/api/as/v1/search/test-engine",
+        ALLOWED_SEARCH_PATH,
         headers={
             "Authorization": "Bearer user-token",
             "Content-Type": "application/json",
@@ -136,19 +143,20 @@ def test__integration_preserves_content_type(client: FlaskClient) -> None:
 def test__integration_preserves_custom_headers(client: FlaskClient) -> None:
     """Custom headers are forwarded to the backend."""
     responses.add(
-        responses.GET,
-        "http://app-search.test/api/as/v1/search/test-engine",
+        responses.POST,
+        ALLOWED_SEARCH_URL,
         status=200,
         json={"ok": True},
     )
 
-    client.get(
-        "/api/as/v1/search/test-engine",
+    client.post(
+        ALLOWED_SEARCH_PATH,
         headers={
             "Authorization": "Bearer user-token",
             "X-Custom-Header": "custom-value",
             "X-Another-Header": "another-value",
         },
+        json={"query": "test"},
     )
 
     call = cast("responses.Call", responses.calls[0])

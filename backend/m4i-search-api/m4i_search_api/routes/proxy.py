@@ -1,3 +1,4 @@
+import re
 from typing import Optional
 
 import requests
@@ -20,6 +21,10 @@ def build_target_url(settings: Settings, path: str) -> str:
 
     return f"{clean_base}/{clean_path}"
 
+
+ALLOWED_ROUTES = [
+    ("POST", r"^api/as/v1/engines/[^/]+/search(?:\.json)?$"),
+]
 
 FILTERED_HEADERS = {
     "connection",
@@ -57,6 +62,22 @@ def _proxy_request(
     api_key = key_provider.get_key()
     url = build_target_url(settings, path)
 
+    clean_path = path.lstrip("/")
+    is_allowed_route = any(
+        request.method == method and re.match(pattern, clean_path)
+        for method, pattern in ALLOWED_ROUTES
+    )
+
+    if not is_allowed_route:
+        LOGGER.warning(
+            "Attempt to access disallowed route: %s %s", request.method, clean_path
+        )
+        return Response(
+            response='{"error": "Route not allowed"}',
+            status=403,
+            content_type="application/json",
+        )
+
     response = requests.request(
         method=request.method,
         url=url,
@@ -82,15 +103,8 @@ def create_proxy_blueprint(
     """Factory that returns a Blueprint wired with the current providers."""
     proxy_bp = Blueprint("proxy", __name__)
 
-    @proxy_bp.route(
-        "/",
-        defaults={"path": ""},
-        methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-    )
-    @proxy_bp.route(
-        "/<path:path>",
-        methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-    )
+    @proxy_bp.route("/", defaults={"path": ""}, methods=["GET", "POST"])
+    @proxy_bp.route("/<path:path>", methods=["GET", "POST"])
     @auth_provider.requires_auth()
     def proxy(path: str, access_token: Optional[str] = None) -> Response:  # noqa: F811
         """Proxy endpoint to forward requests to the App Search instance."""

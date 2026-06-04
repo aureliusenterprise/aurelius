@@ -6,12 +6,14 @@ to fetch an App Search private key, so the frontend never needs to know it.
 
 ## Endpoints
 
-- `/*` – any path is forwarded verbatim to `APP_SEARCH_BASE_URL + /<path>` using the same HTTP method.
+- `POST /api/as/v1/engines/<engine>/search`
+- `POST /api/as/v1/engines/<engine>/search.json`
+- Any other App Search route or method is denied with `403`.
 - `GET /health` – health check.
 
 Requests are authenticated with an Atlas JWT. The service fetches an App Search private key using
 `APP_SEARCH_USERNAME`/`APP_SEARCH_PASSWORD` and forwards requests with that key. Payload, query parameters, and
-end-to-end headers are forwarded.
+end-to-end headers are forwarded for allowlisted routes only.
 
 ## Configuration
 
