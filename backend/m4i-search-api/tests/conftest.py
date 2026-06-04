@@ -68,11 +68,12 @@ def settings() -> Settings:
     return Mock(
         spec=Settings,
         base_url="http://app-search.test",
+        ca_cert_path=None,
+        key_name="private-key",
+        log_level="INFO",
         password=secrets.token_bytes(16),
         timeout_seconds=5,
         username="test-user",
-        ca_cert_path=None,
-        log_level="INFO",
     )
 
 

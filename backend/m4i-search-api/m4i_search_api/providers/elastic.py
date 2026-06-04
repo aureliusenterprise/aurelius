@@ -24,7 +24,7 @@ def fetch_app_search_key(settings: Settings) -> str:
     clean_base = str(settings.base_url).rstrip("/")
 
     key_response = requests.get(
-        f"{clean_base}/api/as/v1/credentials/private-key",
+        f"{clean_base}/api/as/v1/credentials/{settings.key_name}",
         auth=HTTPBasicAuth(
             username=settings.username,
             password=settings.password.get_secret_value(),

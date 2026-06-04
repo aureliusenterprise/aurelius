@@ -25,6 +25,11 @@ class Settings(BaseSettings, Hashable):
         description="Path to the CA certificate file for SSL verification. If not set, SSL verification is disabled.",
     )
 
+    key_name: str = Field(
+        default="private-key",
+        description="The name of the API key to create and use for authenticating with the App Search instance.",
+    )
+
     log_level: LOG_LEVEL = Field(
         default="INFO",
         description="Logging level for the application.",
