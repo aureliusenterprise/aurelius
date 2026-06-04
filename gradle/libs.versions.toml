@@ -1,7 +1,7 @@
 [versions]
 avro = "1.12.1"
 jackson-core = "2.21.3"
-junit-jupiter = "6.0.3"
+junit-jupiter = "6.1.0"
 kafka-avro-serializer = "8.2.0"
 kafka-clients = "4.2.0"
 mockito-core = "5.23.0"
