@@ -258,8 +258,16 @@ runs:
               curl -o "$SONAR_ZIP" -L "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_VERSION-linux-x64.zip"
               unzip -o "$SONAR_ZIP" -d "$SONAR_ROOT"
               rm "$SONAR_ZIP"
-              echo "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin" >> "$GITHUB_PATH"
               "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin/sonar-scanner" --version
+
+        - name: Add SonarQube scanner to PATH
+          if: inputs.sonarqube == 'true'
+          shell: bash
+          env:
+              SONAR_VERSION: ${{ inputs.sonarqube-version }}
+              SONAR_ROOT: ${{ runner.temp }}/sonar-scanner
+          run: |
+              echo "$SONAR_ROOT/sonar-scanner-$SONAR_VERSION-linux-x64/bin" >> "$GITHUB_PATH"
 
         - name: Install Playwright
           if: inputs.playwright == 'true'
