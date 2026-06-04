@@ -46,6 +46,10 @@ updates:
           - "/libs/styles/*"
       schedule:
           interval: weekly
+      ignore:
+          - dependency-name: "nx"
+          - dependency-name: "@nx/*"
+          - dependency-name: "@angular/*"
 
     - package-ecosystem: "pre-commit"
       directory: "/"
