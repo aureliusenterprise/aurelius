@@ -45,6 +45,7 @@ def create_mock_change_message(entity: Dict[str, Any]) -> AtlasChangeMessageWith
         },
         "version": {"version": "1.0", "version_parts": [1, 0]},
         "msg_source_ip": "192.168.1.1",
+        "source": {},
         "previous_version": entity,
         "spooled": False,
     }

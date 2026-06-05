@@ -1,3 +1,4 @@
+import importlib
 from unittest.mock import Mock, patch
 
 from m4i_atlas_core import (
@@ -12,8 +13,14 @@ from m4i_atlas_core import (
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
-from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit import (
+# Deeply nested module path exceeds line limit - unavoidable without restructuring
+from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit import (  # noqa: E501
     handle_relationship_audit,
+)
+
+# Module reference for patch.object() - avoids long string-based path resolution
+relationship_audit_module = importlib.import_module(
+    "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit"
 )
 
 
@@ -87,18 +94,9 @@ def test__handle_relationship_audit_inserted_relationship() -> None:
         )
     ]
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_document",
-        return_value=current_document,
-    ):  # type: ignore[reportGeneralTypeIssues]
-        with patch(
-            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_related_documents",
-            return_value=related_documents,
-        ):
-            with patch(
-                "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_child_documents",
-                return_value=child_documents,
-            ):
+    with patch.object(relationship_audit_module, "get_document", return_value=current_document):
+        with patch.object(relationship_audit_module, "get_related_documents", return_value=related_documents):
+            with patch.object(relationship_audit_module, "get_child_documents", return_value=child_documents):
                 updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
                 assert len(updated_documents) == 2
@@ -201,18 +199,9 @@ def test__handle_relationship_audit_deleted_relationship() -> None:
         )
     ]
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_document",
-        return_value=current_document,
-    ):  # type: ignore[reportGeneralTypeIssues]
-        with patch(
-            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_related_documents",
-            return_value=related_documents,
-        ):
-            with patch(
-                "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_child_documents",
-                return_value=child_documents,
-            ):
+    with patch.object(relationship_audit_module, "get_document", return_value=current_document):
+        with patch.object(relationship_audit_module, "get_related_documents", return_value=related_documents):
+            with patch.object(relationship_audit_module, "get_child_documents", return_value=child_documents):
                 updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
                 assert len(updated_documents) == 2
@@ -292,18 +281,11 @@ def test__handle_relationship_audit_replaced_parent_relationship() -> None:
         referenceablequalifiedname="new_domain",
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_document",
-        return_value=current_document,
-    ):  # type: ignore[reportGeneralTypeIssues]
-        with patch(
-            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_related_documents",
-            return_value=[new_domain_document],
+    with patch.object(relationship_audit_module, "get_document", return_value=current_document):
+        with patch.object(
+            relationship_audit_module, "get_related_documents", return_value=[new_domain_document]
         ):
-            with patch(
-                "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_child_documents",
-                return_value=[],
-            ):
+            with patch.object(relationship_audit_module, "get_child_documents", return_value=[]):
                 updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
                 assert "entity-1" in updated_documents
@@ -389,18 +371,17 @@ def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
         parentguid="domain-old",
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_document",
+    with patch.object(
+        relationship_audit_module,
+        "get_document",
         side_effect=[current_domain_document, current_entity_document],
-    ):  # type: ignore[reportGeneralTypeIssues]
-        with patch(
-            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_related_documents",
-            return_value=[],
+    ):
+        # The entity is fetched as a related document (child of the domain)
+        with patch.object(
+            relationship_audit_module, "get_related_documents", return_value=[current_entity_document]
         ):
-            with patch(
-                "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_child_documents",
-                return_value=[current_entity_document],
-            ):
+            # No grandchildren to fetch for this scenario
+            with patch.object(relationship_audit_module, "get_child_documents", return_value=[]):
                 updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
                 assert "entity-1" in updated_documents

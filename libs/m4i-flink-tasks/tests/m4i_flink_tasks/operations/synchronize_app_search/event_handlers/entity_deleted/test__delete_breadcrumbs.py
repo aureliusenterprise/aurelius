@@ -1,3 +1,4 @@
+import importlib
 from unittest.mock import Mock, patch
 
 import pytest
@@ -5,9 +6,15 @@ from m4i_atlas_core import Attributes, Entity, EntityAuditAction
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
-from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs import (
+# Deeply nested module path exceeds line limit - unavoidable without restructuring
+from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs import (  # noqa: E501
     EntityDataNotProvidedError,
     handle_delete_breadcrumbs,
+)
+
+# Module reference for patch.object() - avoids long string-based path resolution
+delete_breadcrumbs_module = importlib.import_module(
+    "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs"
 )
 
 
@@ -46,10 +53,7 @@ def test__handle_update_breadcrumb_on_entity_delete() -> None:
         breadcrumbtype=["m4i_data_domain", "m4i_data_entity"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs.get_documents",
-        return_value=[document_to_update],
-    ):
+    with patch.object(delete_breadcrumbs_module, "get_documents", return_value=[document_to_update]):
         updated_documents = handle_delete_breadcrumbs(message, Mock(), "test_index", {})
 
         assert len(updated_documents) == 1
@@ -96,10 +100,7 @@ def test__handle_update_breadcrumb_removes_parents() -> None:
         breadcrumbtype=["m4i_data_domain", "m4i_data_entity"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs.get_documents",
-        return_value=[document_to_update],
-    ):
+    with patch.object(delete_breadcrumbs_module, "get_documents", return_value=[document_to_update]):
         updated_documents = handle_delete_breadcrumbs(message, Mock(), "test_index", {})
 
         assert len(updated_documents) == 1
@@ -172,18 +173,13 @@ def test__handle_update_breadcrumbs_malformed_breadcrumb() -> None:
         breadcrumbname=["Old Data Domain Name", "Old Data Domain Name"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs.get_documents",
-        return_value=[document_to_update],
-    ):  # type: ignore[reportGeneralTypeIssues]
-        with patch(
-            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs.logging.error"
-        ) as mock_logger:
+    with patch.object(delete_breadcrumbs_module, "get_documents", return_value=[document_to_update]):  # type: ignore[reportGeneralTypeIssues]
+        with patch.object(delete_breadcrumbs_module, "logging") as mock_logging:
             updated_documents = handle_delete_breadcrumbs(message, Mock(), "test_index", {})
 
             assert len(updated_documents) == 0
 
-            mock_logger.assert_called_once_with(
+            mock_logging.error.assert_called_once_with(
                 "Breadcrumb for document %s is malformed. Skipping document update.", document_to_update.guid
             )
 
@@ -224,10 +220,7 @@ def test__handle_update_breadcrumbs_guid_not_present() -> None:
         breadcrumbname=["Old Data Domain Name"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs.get_documents",
-        return_value=[document_to_update],
-    ):
+    with patch.object(delete_breadcrumbs_module, "get_documents", return_value=[document_to_update]):
         updated_documents = handle_delete_breadcrumbs(message, Mock(), "test_index", {})
 
         assert len(updated_documents) == 0

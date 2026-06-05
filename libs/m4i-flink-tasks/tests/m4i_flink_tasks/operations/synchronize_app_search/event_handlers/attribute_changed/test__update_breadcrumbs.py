@@ -1,3 +1,4 @@
+import importlib
 from unittest.mock import Mock, patch
 
 import pytest
@@ -11,10 +12,20 @@ from m4i_atlas_core import (
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
-from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs import (
+# Deeply nested module path exceeds line limit - unavoidable without restructuring
+from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs import (  # noqa: E501
     EntityDataNotProvidedError,
     EntityNameNotFoundError,
     handle_update_breadcrumbs,
+)
+
+# Module reference for patch.object() - avoids long string-based path resolution
+update_breadcrumbs_module = importlib.import_module(
+    "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs"
+)
+
+update_breadcrumbs_module = importlib.import_module(
+    "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs"
 )
 
 
@@ -59,10 +70,7 @@ def test__handle_update_derived_entities_update_document() -> None:
         breadcrumbname=["Old Data Domain Name"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.get_documents",
-        return_value=[document_to_update],
-    ):
+    with patch.object(update_breadcrumbs_module, "get_documents", return_value=[document_to_update]):
         updated_documents = handle_update_breadcrumbs(message, Mock(), "test_index", {})
 
         assert len(updated_documents) == 1
@@ -106,10 +114,7 @@ def test__handle_update_derived_entities_no_derived_entities() -> None:
         changed_attributes=["name"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.get_documents",
-        return_value=[],
-    ):
+    with patch.object(update_breadcrumbs_module, "get_documents", return_value=[]):
         updated_documents = handle_update_breadcrumbs(message, Mock(), "test_index", {})
 
         assert len(updated_documents) == 0
@@ -201,13 +206,8 @@ def test__handle_update_breadcrumbs_malformed_breadcrumb() -> None:
         breadcrumbname=["Old Data Domain Name", "Old Data Domain Name"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.get_documents",
-        return_value=[document_to_update],
-    ):  # type: ignore[reportGeneralTypeIssues]
-        with patch(
-            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.logging.error"
-        ) as mock_logger:
+    with patch.object(update_breadcrumbs_module, "get_documents", return_value=[document_to_update]):  # type: ignore[reportGeneralTypeIssues]
+        with patch("logging.error") as mock_logger:
             updated_documents = handle_update_breadcrumbs(message, Mock(), "test_index", {})
 
             assert len(updated_documents) == 0
@@ -256,10 +256,7 @@ def test__handle_update_breadcrumbs_guid_not_present() -> None:
         breadcrumbname=["Old Data Domain Name"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.get_documents",
-        return_value=[document_to_update],
-    ):
+    with patch.object(update_breadcrumbs_module, "get_documents", return_value=[document_to_update]):
         updated_documents = handle_update_breadcrumbs(message, Mock(), "test_index", {})
 
         assert len(updated_documents) == 0
@@ -304,10 +301,7 @@ def test__handle_update_breadcrumbs_name_already_correct() -> None:
         breadcrumbname=["Data Domain Name"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.get_documents",
-        return_value=[document_to_update],
-    ):
+    with patch.object(update_breadcrumbs_module, "get_documents", return_value=[document_to_update]):
         updated_documents = handle_update_breadcrumbs(message, Mock(), "test_index", {})
 
         assert len(updated_documents) == 0

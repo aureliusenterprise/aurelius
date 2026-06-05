@@ -1,3 +1,4 @@
+import importlib
 from unittest.mock import Mock, patch
 
 import pytest
@@ -13,9 +14,15 @@ from m4i_atlas_core import (
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
-from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_derived_entities import (
+# Deeply nested module path exceeds line limit - unavoidable without restructuring
+from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_derived_entities import (  # noqa: E501
     EntityDataNotProvidedError,
     handle_update_derived_entities,
+)
+
+# Module reference for patch.object() - avoids long string-based path resolution
+update_derived_entities_module = importlib.import_module(
+    "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_derived_entities"
 )
 
 
@@ -60,10 +67,7 @@ def test__handle_update_derived_entities_update_document() -> None:
         deriveddataentity=["Old Data Entity Name"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_derived_entities.get_documents",
-        return_value=[document_to_update],
-    ):
+    with patch.object(update_derived_entities_module, "get_documents", return_value=[document_to_update]):
         updated_documents = handle_update_derived_entities(message, Mock(), "test_index", {})
 
         assert len(updated_documents) == 1
@@ -107,10 +111,7 @@ def test__handle_update_derived_entities_no_derived_entities() -> None:
         changed_attributes=["name"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_derived_entities.get_documents",
-        return_value=[],
-    ):
+    with patch.object(update_derived_entities_module, "get_documents", return_value=[]):
         updated_documents = handle_update_derived_entities(message, Mock(), "test_index", {})
 
         assert len(updated_documents) == 0

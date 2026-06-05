@@ -1,3 +1,4 @@
+import importlib
 from unittest.mock import Mock, patch
 
 import pytest
@@ -16,6 +17,11 @@ from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created import (
     EntityDataNotProvidedError,
     handle_entity_created,
+)
+
+# Import module object for patch.object() - avoids string-based path resolution issues
+entity_created_module = importlib.import_module(
+    "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created"
 )
 
 
@@ -41,10 +47,7 @@ def test__default_create_handler_with_complete_details() -> None:
         ),
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_related_documents",
-        return_value=[],
-    ):
+    with patch.object(entity_created_module, "get_related_documents", return_value=[]):
         result = handle_entity_created(entity_message, Mock(), "test_index", {})
 
         assert len(result) == 1
@@ -80,10 +83,7 @@ def test__create_person_handler_with_email() -> None:
         ),
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_related_documents",
-        return_value=[],
-    ):
+    with patch.object(entity_created_module, "get_related_documents", return_value=[]):
         result = handle_entity_created(entity_message, Mock(), "test_index", {})
 
         assert len(result) == 1
@@ -163,14 +163,8 @@ def test__handle_entity_created_with_breadcrumbs() -> None:
         breadcrumbtype=["m4i_data_domain"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_related_documents",
-        return_value=[parent_document],
-    ):  # type: ignore[reportGeneralTypeIssues]
-        with patch(
-            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_child_documents",
-            return_value=[],
-        ):
+    with patch.object(entity_created_module, "get_related_documents", return_value=[parent_document]):  # type: ignore[reportGeneralTypeIssues]
+        with patch.object(entity_created_module, "get_child_documents", return_value=[]):
             result = handle_entity_created(entity_message, Mock(), "test_index", {})
 
             assert len(result) == 2
@@ -221,14 +215,8 @@ def test__handle_entity_created_add_relations() -> None:
         parentguid="5678",
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_related_documents",
-        return_value=[related_document],
-    ):  # type: ignore[reportGeneralTypeIssues]
-        with patch(
-            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_child_documents",
-            return_value=[],
-        ):
+    with patch.object(entity_created_module, "get_related_documents", return_value=[related_document]):  # type: ignore[reportGeneralTypeIssues]
+        with patch.object(entity_created_module, "get_child_documents", return_value=[]):
             result = handle_entity_created(entity_message, Mock(), "test_index", {})
 
             document = result["1111"]
@@ -304,14 +292,10 @@ def test__handle_entity_created_multiple_relations() -> None:
         referenceablequalifiedname="3333-attribute",
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_related_documents",
-        return_value=[domain_document, attribute_document],
+    with patch.object(
+        entity_created_module, "get_related_documents", return_value=[domain_document, attribute_document]
     ):  # type: ignore[reportGeneralTypeIssues]
-        with patch(
-            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_child_documents",
-            return_value=[],
-        ):
+        with patch.object(entity_created_module, "get_child_documents", return_value=[]):
             result = handle_entity_created(entity_message, Mock(), "test_index", {})
 
             assert len(result) == 3

@@ -1,42 +1,20 @@
+"""Tests for the SynchronizeAppSearchFunction class."""
+
+import importlib
 from typing import Tuple, Union, cast
 from unittest.mock import Mock, patch
 
-import pytest
 from m4i_atlas_core import Attributes, Entity, EntityAuditAction
-from pyflink.datastream import StreamExecutionEnvironment
 
-from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType, SynchronizeAppSearchError
 
-from m4i_flink_tasks.operations.synchronize_app_search.synchronize_app_search import SynchronizeAppSearch
-
-
-@pytest.fixture()
-def environment() -> StreamExecutionEnvironment:
-    """
-    Provide a StreamExecutionEnvironment for testing.
-
-    This fixture initializes a Flink StreamExecutionEnvironment
-    with a parallelism of 1 for consistent testing.
-    """
-    env = StreamExecutionEnvironment.get_execution_environment()
-    env.set_parallelism(1)
-    return env
+from m4i_flink_tasks.operations.synchronize_app_search.synchronize_app_search import (
+    SynchronizeAppSearchFunction,
+)
 
 
-def test__synchronize_app_search_valid_input_event(environment: StreamExecutionEnvironment) -> None:
-    """
-    Test if `SynchronizeAppSearch` correctly processes a valid entity create event.
-
-    Mocks
-    -----
-    - Mocks the `EVENT_HANDLERS` dictionary to return an empty list for the `ENTITY_CREATED` event.
-
-    Asserts
-    -------
-    - The output should have a length of 1.
-    - The output should be a tuple containing the GUID and an `AppSearchDocument` instance.
-    - The `AppSearchDocument` should have the same GUID as the input message.
-    """
+def test__synchronize_app_search_valid_input_event() -> None:
+    """Test valid ENTITY_CREATED event produces AppSearchDocument tuple."""
     entity_message = EntityMessage(
         type_name="m4i_data_domain",
         guid="1234",
@@ -49,18 +27,23 @@ def test__synchronize_app_search_valid_input_event(environment: StreamExecutionE
         ),
     )
 
-    data_stream = environment.from_collection([entity_message])
-
     expected_document = AppSearchDocument(
         guid="1234", name="test", referenceablequalifiedname="1234-test", typename="m4i_data_domain"
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.synchronize_app_search.EVENT_HANDLERS",
+    func = SynchronizeAppSearchFunction(elastic_factory=Mock(), index_name="test-index")
+    func.open(Mock())
+
+    sync_module = importlib.import_module(
+        "m4i_flink_tasks.operations.synchronize_app_search.synchronize_app_search"
+    )
+
+    with patch.object(
+        sync_module,
+        "EVENT_HANDLERS",
         new={EntityMessageType.ENTITY_CREATED: [Mock(return_value={"1234": expected_document})]},
     ):
-        synchronize_app_search = SynchronizeAppSearch(data_stream, Mock, "test-index")
-        output = list(synchronize_app_search.main.execute_and_collect())
+        output = func.map(entity_message)
 
     assert len(output) == 1
 
@@ -75,19 +58,8 @@ def test__synchronize_app_search_valid_input_event(environment: StreamExecutionE
     assert document.guid == "1234"
 
 
-def test__synchronize_app_search_emit_tombstone_message(environment: StreamExecutionEnvironment) -> None:
-    """
-    Test if `SynchronizeAppSearch` emits a tombstone message for an `ENTITY_DELETED` event.
-
-    Mocks
-    -----
-    - Mocks the `EVENT_HANDLERS` dictionary to exclude all `ENTITY_DELETED` event handlers.
-
-    Asserts
-    -------
-    - The output should have a length of 1.
-    - The output should be a tuple containing the GUID and `None`.
-    """
+def test__synchronize_app_search_emit_tombstone_message() -> None:
+    """Test ENTITY_DELETED event emits tombstone message (guid, None)."""
     entity_message = EntityMessage(
         type_name="m4i_data_domain",
         guid="1234",
@@ -100,14 +72,15 @@ def test__synchronize_app_search_emit_tombstone_message(environment: StreamExecu
         ),
     )
 
-    data_stream = environment.from_collection([entity_message])
+    func = SynchronizeAppSearchFunction(elastic_factory=Mock(), index_name="test-index")
+    func.open(Mock())
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.synchronize_app_search.EVENT_HANDLERS",
-        new={EntityMessageType.ENTITY_DELETED: []},
-    ):
-        synchronize_app_search = SynchronizeAppSearch(data_stream, Mock, "test-index")
-        output = list(synchronize_app_search.main.execute_and_collect())
+    sync_module = importlib.import_module(
+        "m4i_flink_tasks.operations.synchronize_app_search.synchronize_app_search"
+    )
+
+    with patch.object(sync_module, "EVENT_HANDLERS", new={EntityMessageType.ENTITY_DELETED: []}):
+        output = func.map(entity_message)
 
     assert len(output) == 1
 
@@ -121,15 +94,8 @@ def test__synchronize_app_search_emit_tombstone_message(environment: StreamExecu
     assert document is None
 
 
-def test__synchronize_app_search_handle_processing_error(environment: StreamExecutionEnvironment) -> None:
-    """
-    Test if `SynchronizeAppSearch` correctly handles a processing error.
-
-    Asserts
-    -------
-    - The output should have a length of 1.
-    - The error should be a `SynchronizeAppSearchError` instance.
-    """
+def test__synchronize_app_search_handle_processing_error() -> None:
+    """Test processing error returns a list containing the SynchronizeAppSearchError."""
     entity_message = EntityMessage(
         type_name="m4i_data_domain",
         guid="1234",
@@ -137,9 +103,10 @@ def test__synchronize_app_search_handle_processing_error(environment: StreamExec
         event_type=EntityMessageType.ENTITY_CREATED,
     )  # Entity details are missing
 
-    data_stream = environment.from_collection([entity_message])
+    func = SynchronizeAppSearchFunction(elastic_factory=Mock(), index_name="test-index")
+    func.open(Mock())
 
-    synchronize_app_search = SynchronizeAppSearch(data_stream, Mock, "test-index")
-    output = list(synchronize_app_search.main.execute_and_collect())
+    output = func.map(entity_message)
 
-    assert len(output) == 0
+    assert len(output) == 1
+    assert isinstance(output[0], SynchronizeAppSearchError)

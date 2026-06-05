@@ -1,8 +1,9 @@
-from m4i_flink_tasks.model.gov_data_quality_document import GovDataQualityDocument
-from m4i_flink_tasks.operations.get_rules.get_rules import GetRules
-import pytest
-from pyflink.datastream import StreamExecutionEnvironment
+"""Tests for the GetRulesFunction class."""
+
 import json
+
+from m4i_flink_tasks.model.gov_data_quality_document import GovDataQualityDocument
+from m4i_flink_tasks.operations.get_rules.get_rules import GetRulesFunction
 
 
 def delete_message() -> str:
@@ -63,28 +64,13 @@ def entity_with_domain_message() -> str:
     return json.dumps(message)
 
 
-@pytest.fixture()
-def environment() -> StreamExecutionEnvironment:
-    """
-    Provide a StreamExecutionEnvironment for testing.
-
-    This fixture initializes a Flink StreamExecutionEnvironment
-    with a parallelism of 1 for consistent testing.
-    """
-    env = StreamExecutionEnvironment.get_execution_environment()
-    env.set_parallelism(1)
-    return env
-
-
-def test__delete_entity(environment: StreamExecutionEnvironment):
+def test__delete_entity():
     """Test Governance Data Quality rules when deleting a data domain."""
+    func = GetRulesFunction()
 
-    data_stream = environment.from_collection([delete_message()])
+    output = func.map(delete_message())
 
-    get_rules = GetRules(data_stream)
-
-    output = list(get_rules.main.execute_and_collect())
-
+    assert isinstance(output, list)
     assert len(output) == 4
 
     for rule in output:
@@ -93,17 +79,15 @@ def test__delete_entity(environment: StreamExecutionEnvironment):
         assert rule[1] is None
 
 
-def test__domain_with_dataentity(environment: StreamExecutionEnvironment) -> None:
+def test__domain_with_dataentity() -> None:
     """Test Governance Data Quality compliance when updating a data entity."""
+    func = GetRulesFunction()
 
-    data_stream = environment.from_collection([entity_with_domain_message()])
-
-    get_rules = GetRules(data_stream)
-
-    output = list(get_rules.main.execute_and_collect())
+    output = func.map(entity_with_domain_message())
 
     compliant_list = [1, 0, 0, 0, 1, 0]
 
+    assert isinstance(output, list)
     assert len(output) == len(compliant_list)
 
     for rule, correct in zip(output, compliant_list):

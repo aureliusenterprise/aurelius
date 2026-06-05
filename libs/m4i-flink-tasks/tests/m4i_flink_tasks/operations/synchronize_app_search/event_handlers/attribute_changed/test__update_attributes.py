@@ -1,3 +1,4 @@
+import importlib
 from unittest.mock import Mock
 
 import pytest
@@ -11,10 +12,16 @@ from m4i_atlas_core import (
 
 from m4i_flink_tasks import EntityMessage, EntityMessageType
 
-from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_attributes import (
+# Deeply nested module path exceeds line limit - unavoidable without restructuring
+from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_attributes import (  # noqa: E501
     AppSearchDocumentNotFoundError,
     EntityDataNotProvidedError,
     handle_update_attributes,
+)
+
+# Module reference for patch.object() - avoids long string-based path resolution
+update_attributes_module = importlib.import_module(
+    "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_attributes"
 )
 
 

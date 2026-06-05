@@ -1,3 +1,4 @@
+import importlib
 from unittest.mock import Mock, patch
 
 import pytest
@@ -5,9 +6,15 @@ from m4i_atlas_core import Attributes, Entity, EntityAuditAction
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
-from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_derived_entities import (
+# Deeply nested module path exceeds line limit - unavoidable without restructuring
+from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_derived_entities import (  # noqa: E501
     EntityDataNotProvidedError,
     handle_delete_derived_entities,
+)
+
+# Module reference for patch.object() - avoids long string-based path resolution
+delete_derived_entities_module = importlib.import_module(
+    "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_derived_entities"
 )
 
 
@@ -48,10 +55,7 @@ def test__handle_delete_derived_entities_update_document() -> None:
         deriveddataentity=["Data Entity Name", "Other Data Entity Name"],
     )
 
-    with patch(
-        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_derived_entities.get_documents",
-        return_value=[document_to_update],
-    ):
+    with patch.object(delete_derived_entities_module, "get_documents", return_value=[document_to_update]):
         updated_documents = handle_delete_derived_entities(message, Mock(), "test_index", {})
 
         assert len(updated_documents) == 1

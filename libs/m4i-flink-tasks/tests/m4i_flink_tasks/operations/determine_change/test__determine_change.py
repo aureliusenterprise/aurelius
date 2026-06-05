@@ -1,44 +1,16 @@
-from typing import Any, Dict, Union
+"""Tests for the DetermineChangeFunction class."""
 
-import pytest
-from pyflink.datastream import StreamExecutionEnvironment
+from typing import Any, Dict, Union
 
 from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion, EntityMessage
 
-from m4i_flink_tasks.operations.determine_change.determine_change import DetermineChange
+from m4i_flink_tasks.operations.determine_change.determine_change import DetermineChangeFunction
 
 
 def create_mock_change_message(
     operation_type: str, previous: Union[Dict[str, Any], None], current: Union[Dict[str, Any], None]
 ) -> AtlasChangeMessageWithPreviousVersion:
-    """
-    Create a mock change message for testing purposes.
-
-    This function constructs a mock `AtlasChangeMessageWithPreviousVersion` object from a provided
-    dictionary, simulating the kind of message that would be received in an actual operation.
-
-    Parameters
-    ----------
-    operation_type : str
-        The operation type of the change message.
-
-    previous : dict | None
-        A dictionary representing the previous entity that will be included in the change message.
-
-    current : dict | None
-        A dictionary representing the current entity that will be included in the change message.
-
-    Returns
-    -------
-    AtlasChangeMessageWithPreviousVersion
-        A mock `AtlasChangeMessageWithPreviousVersion` object populated with the provided entities
-        and operation type.
-
-    Examples
-    --------
-    >>> entity_dict = {"type_name": "SampleEntity", "attributes": {}}
-    >>> mock_message = create_mock_change_message(entity_dict)
-    """
+    """Create a mock change message for testing purposes."""
     change_message = {
         "msg_compression_kind": "none",
         "msg_split_idx": 0,
@@ -55,33 +27,14 @@ def create_mock_change_message(
         "msg_source_ip": "192.168.1.1",
         "previous_version": previous,
         "spooled": False,
+        "source": {},
     }
 
     return AtlasChangeMessageWithPreviousVersion.from_dict(change_message)
 
 
-@pytest.fixture()
-def environment() -> StreamExecutionEnvironment:
-    """
-    Provide a StreamExecutionEnvironment for testing.
-
-    This fixture initializes a Flink StreamExecutionEnvironment
-    with a parallelism of 1 for consistent testing.
-    """
-    env = StreamExecutionEnvironment.get_execution_environment()
-    env.set_parallelism(1)
-    return env
-
-
-def test__determine_change_handle_valid_input_event(environment: StreamExecutionEnvironment) -> None:
-    """
-    Test if `DetermineChange` correctly processes a valid entity update event.
-
-    Asserts
-    -------
-    - The output should have a length of 2.
-    - Each message in the output is an instance of `EntityMessage`.
-    """
+def test__determine_change_handle_valid_input_event() -> None:
+    """Test valid ENTITY_UPDATE event produces two EntityMessage objects."""
     previous = {
         "type_name": "SampleEntity",
         "attributes": {"attr1": "test"},
@@ -100,33 +53,19 @@ def test__determine_change_handle_valid_input_event(environment: StreamExecution
 
     change_message = create_mock_change_message("ENTITY_UPDATE", previous, current)
 
-    data_stream = environment.from_collection([change_message])
-
-    determine_change = DetermineChange(data_stream=data_stream)
-
-    output = list(determine_change.main.execute_and_collect())
+    func = DetermineChangeFunction()
+    output = func.map(change_message)
 
     assert len(output) == 2
     assert all(isinstance(message, EntityMessage) for message in output)
 
 
-def test__determine_change_handle_unsupported_operation_type(environment: StreamExecutionEnvironment) -> None:
-    """
-    Verify `DetermineChange`'s behavior when encountering an unsupported operation type.
-
-    Asserts
-    -------
-    - The output should have a length of 1.
-    - The single output item is an instance of `NotImplementedError`.
-    - The exception message matches "Unknown event type: EntityAuditAction.CLASSIFICATION_ADD".
-    """
+def test__determine_change_handle_unsupported_operation_type() -> None:
+    """Test unsupported operation type returns NotImplementedError."""
     change_message = create_mock_change_message("CLASSIFICATION_ADD", {"guid": "12345"}, {"guid": "23456"})
 
-    data_stream = environment.from_collection([change_message])
-
-    determine_change = DetermineChange(data_stream=data_stream)
-
-    output = list(determine_change.main.execute_and_collect())
+    func = DetermineChangeFunction()
+    output = func.map(change_message)
 
     assert len(output) == 1
 
@@ -136,22 +75,12 @@ def test__determine_change_handle_unsupported_operation_type(environment: Stream
     assert str(error) == "Unknown event type: EntityAuditAction.CLASSIFICATION_ADD"
 
 
-def test__determine_change_handle_processing_error(environment: StreamExecutionEnvironment) -> None:
-    """
-    Test error handling in `DetermineChange` when a processing error occurs.
-
-    Asserts
-    -------
-    - The output should have a length of 1.
-    - The single output item is an instance of `ValueError`.
-    """
+def test__determine_change_handle_processing_error() -> None:
+    """Test processing error (missing current entity) returns ValueError."""
     change_message = create_mock_change_message("ENTITY_UPDATE", {"guid": "12345"}, None)
 
-    data_stream = environment.from_collection([change_message])
-
-    determine_change = DetermineChange(data_stream=data_stream)
-
-    output = list(determine_change.main.execute_and_collect())
+    func = DetermineChangeFunction()
+    output = func.map(change_message)
 
     assert len(output) == 1
 
