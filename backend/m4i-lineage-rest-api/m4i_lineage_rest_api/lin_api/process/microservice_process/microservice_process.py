@@ -11,7 +11,7 @@ from .microservice_process_serializers import (
 )
 from ...atlas_get_response_seralizer import m4i_output_get_model
 from ...atlas_put_response_seralizer import m4i_output_model
-from ...output_filter_functions import output_filter_functions
+from ...output_filter_functions import transform_get_response, transform_post_response
 from ...restplus import api
 
 """
@@ -35,7 +35,7 @@ class microservice_process_Class(Resource):
         search_result = asyncio.run(
             get_entities_by_type_name("m4i_microservice_process", access_token=access_token)
         )
-        transformed_response = output_filter_functions.transform_get_response(search_result)
+        transformed_response = transform_get_response(search_result)
         return transformed_response, 200
 
     @api.response(200, "Microservice Process Entity successfully created.")
@@ -51,5 +51,5 @@ class microservice_process_Class(Resource):
         obj = MicroserviceProcess.from_dict(request.json)
         entity = obj.convert_to_atlas()
         data_read_response = asyncio.run(create_entities(entity, access_token=access_token))
-        transformed_response = output_filter_functions.transform_post_response(data_read_response)
+        transformed_response = transform_post_response(data_read_response)
         return transformed_response, 200

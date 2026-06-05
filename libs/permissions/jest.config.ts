@@ -3,7 +3,8 @@ export default {
     preset: '../../jest.preset.js',
     coverageDirectory: '../../coverage/libs/permissions',
     snapshotSerializers: [
-        'jest-preset-angular/AngularSnapshotSerializer.js',
-        'jest-preset-angular/HTMLCommentSerializer.js',
+        'jest-preset-angular/build/serializers/no-ng-attributes',
+        'jest-preset-angular/build/serializers/ng-snapshot',
+        'jest-preset-angular/build/serializers/html-comment',
     ],
 };
