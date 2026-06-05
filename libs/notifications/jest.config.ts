@@ -1,6 +1,6 @@
 export default {
     displayName: 'notifications',
-    preset: '../../jest.preset.js',
+    preset: '../../jest.config.ts',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/libs/notifications',
     transform: {

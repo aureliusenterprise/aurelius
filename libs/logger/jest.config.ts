@@ -1,6 +1,6 @@
 export default {
     displayName: 'logger',
-    preset: '../../jest.preset.js',
+    preset: '../../jest.config.ts',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/libs/logger',
     transform: {

@@ -1,6 +1,6 @@
 export default {
     displayName: 'atlas',
-    preset: '../../jest.preset.js',
+    preset: '../../jest.config.ts',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/apps/atlas',
     transform: {

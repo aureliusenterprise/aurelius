@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
     displayName: 'index-page',
-    preset: '../../jest.preset.js',
+    preset: '../../jest.config.ts',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     globals: {
         'ts-jest': {

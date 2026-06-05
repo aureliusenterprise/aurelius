@@ -1,6 +1,6 @@
 export default {
     displayName: 'authentication',
-    preset: '../../jest.preset.js',
+    preset: '../../jest.config.ts',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/libs/authentication',
     transform: {

@@ -1,6 +1,6 @@
 export default {
     displayName: 'directives',
-    preset: '../../jest.preset.js',
+    preset: '../../jest.config.ts',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/libs/directives',
     transform: {

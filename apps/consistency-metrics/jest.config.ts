@@ -1,6 +1,6 @@
 export default {
     displayName: 'consistency-metrics',
-    preset: '../../jest.preset.js',
+    preset: '../../jest.config.ts',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/apps/consistency-metrics',
     transform: {

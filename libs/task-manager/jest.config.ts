@@ -1,6 +1,6 @@
 export default {
     displayName: 'task-manager',
-    preset: '../../jest.preset.js',
+    preset: '../../jest.config.ts',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/libs/task-manager',
     transform: {

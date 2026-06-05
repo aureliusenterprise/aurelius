@@ -110,7 +110,7 @@
         "test": {
             "builder": "@nx/jest:jest",
             "options": {
-                "jestConfig": "apps/consistency-metrics/jest.config.js",
+                "jestConfig": "apps/consistency-metrics/jest.config.ts",
                 "passWithNoTests": true,
                 "setupFile": "apps/consistency-metrics/src/test-setup.ts",
                 "tsConfig": "apps/consistency-metrics/tsconfig.spec.json"

@@ -110,7 +110,7 @@
         "test": {
             "builder": "@nx/jest:jest",
             "options": {
-                "jestConfig": "apps/platform/jest.config.js",
+                "jestConfig": "apps/platform/jest.config.ts",
                 "passWithNoTests": true,
                 "setupFile": "apps/platform/src/test-setup.ts",
                 "tsConfig": "apps/platform/tsconfig.spec.json"

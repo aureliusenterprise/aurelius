@@ -110,7 +110,7 @@
         "test": {
             "builder": "@nx/jest:jest",
             "options": {
-                "jestConfig": "apps/data2model/jest.config.js",
+                "jestConfig": "apps/data2model/jest.config.ts",
                 "passWithNoTests": true,
                 "setupFile": "apps/data2model/src/test-setup.ts",
                 "tsConfig": "apps/data2model/tsconfig.spec.json"

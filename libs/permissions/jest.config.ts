@@ -1,6 +1,6 @@
 export default {
     displayName: 'permissions',
-    preset: '../../jest.preset.js',
+    preset: '../../jest.config.ts',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/libs/permissions',
     transform: {
