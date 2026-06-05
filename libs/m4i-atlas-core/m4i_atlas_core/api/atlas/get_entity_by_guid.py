@@ -36,7 +36,10 @@ async def get_entity_by_guid(
 
     path = f"{BASE_PATH}/{guid}"
 
-    params = {"ignoreRelationships": ignore_relationships, "minExtInfo": min_ext_info}
+    params = {
+        "ignoreRelationships": str(ignore_relationships).lower(),
+        "minExtInfo": str(min_ext_info).lower(),
+    }
 
     response: dict = await atlas_get(
         path=path, params=params, parser=ClientResponse.json, access_token=access_token
