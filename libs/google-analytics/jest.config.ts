@@ -1,6 +1,6 @@
 export default {
     displayName: 'google-analytics',
-    preset: '../../jest.config.ts',
+    preset: '../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/libs/google-analytics',
     transform: {

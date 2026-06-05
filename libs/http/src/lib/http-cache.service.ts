@@ -64,13 +64,13 @@ export class HttpCacheService {
     }
 
     /**
-     * Clears the cached entry (if exists) for the specified request.
+     * Clears the cached entry (if exists) for the request.
      * @param url The request URL.
      * @param matchAll Whether or not the url of the request should match completely. Defaults to `true`.
      */
     clearCache(url: string, matchAll = true): void {
         this.cachedData = Object.entries(this.cachedData)
-            .filter(([cachedUrl]) => (matchAll ? url === cachedUrl : cachedUrl.includes(url)))
+            .filter(([cachedUrl]) => (matchAll ? url !== cachedUrl : !cachedUrl.includes(url)))
             .reduce(
                 (cache, [cachedUrl, cachedData]) => ({
                     ...cache,

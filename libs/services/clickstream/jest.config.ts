@@ -1,6 +1,6 @@
 export default {
     displayName: 'services-clickstream',
-    preset: '../../../jest.config.ts',
+    preset: '../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../../coverage/libs/services/clickstream',
     transform: {

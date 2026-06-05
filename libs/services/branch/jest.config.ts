@@ -1,6 +1,6 @@
 export default {
     displayName: 'services-branch',
-    preset: '../../../jest.config.ts',
+    preset: '../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../../coverage/libs/services/branch',
     transform: {

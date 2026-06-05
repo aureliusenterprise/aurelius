@@ -1,6 +1,6 @@
 export default {
     displayName: 'i18n',
-    preset: '../../jest.config.ts',
+    preset: '../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/libs/i18n',
     transform: {

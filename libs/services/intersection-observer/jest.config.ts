@@ -1,6 +1,7 @@
 export default {
     displayName: 'services-intersection-observer',
-    preset: '../../../jest.config.ts',
+    preset: '../../../jest.preset.js',
+    setupFiles: ['<rootDir>/src/setup-mocks.ts'],
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../../coverage/libs/services/intersection-observer',
     transform: {

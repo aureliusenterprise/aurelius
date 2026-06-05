@@ -108,7 +108,7 @@
             }
         },
         "test": {
-            "builder": "@nx/jest:jest",
+            "executor": "@nx/jest:jest",
             "options": {
                 "jestConfig": "apps/data2model/jest.config.ts",
                 "passWithNoTests": true,

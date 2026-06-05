@@ -1,6 +1,6 @@
 export default {
     displayName: 'utils',
-    preset: '../../jest.config.ts',
+    preset: '../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/libs/utils',
     transform: {

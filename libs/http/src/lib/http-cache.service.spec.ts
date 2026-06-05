@@ -166,7 +166,7 @@ describe('HttpCacheService', () => {
     describe('setPersistence', () => {
         beforeEach(() => {
             httpCacheService.setPersistence();
-            httpCacheService.cleanCache = jasmine.createSpy('cleanCache');
+            httpCacheService.cleanCache = jest.fn();
         });
 
         it('should clear previous cache data when persistence value change', () => {

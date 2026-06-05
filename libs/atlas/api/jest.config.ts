@@ -1,6 +1,6 @@
 export default {
     displayName: 'atlas-api',
-    preset: '../../../jest.config.ts',
+    preset: '../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../../coverage/libs/atlas/api',
     transform: {

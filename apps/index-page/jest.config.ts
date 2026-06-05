@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
     displayName: 'index-page',
-    preset: '../../jest.config.ts',
+    preset: '../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     globals: {
         'ts-jest': {
@@ -11,7 +11,7 @@ export default {
     },
     coverageDirectory: '../../coverage/apps/index-page',
     transform: {
-        '^.+.(ts|mjs|js|html)$': 'jest-preset-angular',
+        '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
     },
     transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
     snapshotSerializers: [
