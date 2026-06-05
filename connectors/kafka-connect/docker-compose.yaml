@@ -1,6 +1,6 @@
 services:
     kafka-connect:
-        image: aurelius-kafka-connect:local
+        image: ghcr.io/aureliusenterprise/aurelius-kafka-connect:local
         configs:
             - source: certs
               target: /home/appuser/certs
