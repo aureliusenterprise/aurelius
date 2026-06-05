@@ -116,8 +116,7 @@ class ApiUtils:
         if not use_default_proxies:
             s.trust_env = False
         params_encoded = urllib.parse.urlencode(
-            {key: value for key, value in params.items() if value is not None},
-            quote_via=urllib.parse.quote,
+            {key: value for key, value in params.items() if value is not None}, quote_via=urllib.parse.quote
         )
         return ApiUtils._handle_response(s.get(url, params=params_encoded), content_type)
 
@@ -422,8 +421,7 @@ class ApiUtils:
         if not use_default_proxies:
             s.trust_env = False
         params_encoded = urllib.parse.urlencode(
-            {key: value for key, value in params.items() if value is not None},
-            quote_via=urllib.parse.quote,
+            {key: value for key, value in params.items() if value is not None}, quote_via=urllib.parse.quote
         )
         return ApiUtils._handle_response(s.delete(url, params=params_encoded), content_type)
 

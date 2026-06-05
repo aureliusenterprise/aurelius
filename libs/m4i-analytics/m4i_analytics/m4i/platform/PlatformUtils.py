@@ -3,9 +3,7 @@ from enum import Enum
 
 from m4i_analytics.m4i.M4IUtils import M4IUtils
 from m4i_analytics.m4i.platform.model.ModelQuery import StateEnum as ModelQueryStateEnum
-from m4i_analytics.m4i.platform.model.ModelQueryDifResult import (
-    StateEnum as ModelQueryDifResultStateEnum,
-)
+from m4i_analytics.m4i.platform.model.ModelQueryDifResult import StateEnum as ModelQueryDifResultStateEnum
 from m4i_analytics.m4i.platform.PlatformApi import PlatformApi
 
 
@@ -122,11 +120,7 @@ class PlatformUtils:
             full_project_name = M4IUtils.construct_model_id(project_owner, project_name)
 
         return PlatformApi.model_provenance(
-            full_project_name,
-            username=username,
-            password=password,
-            totp=totp,
-            access_token=access_token,
+            full_project_name, username=username, password=password, totp=totp, access_token=access_token
         )
 
     # END retrieve_model_provenance
@@ -413,11 +407,7 @@ class PlatformUtils:
         resq = None
         while (
             resq is None
-            or resq["state"]
-            not in [
-                ModelQueryStateEnum.COMPLETED.value,
-                ModelQueryStateEnum.FAILURE.value,
-            ]
+            or resq["state"] not in [ModelQueryStateEnum.COMPLETED.value, ModelQueryStateEnum.FAILURE.value]
         ) and ii < 10:
             if ii > 0:
                 time.sleep(model_query_interval)
@@ -467,10 +457,7 @@ class PlatformUtils:
                 while (
                     resfq is None
                     or resfq["state"]
-                    not in [
-                        ModelQueryStateEnum.COMPLETED.value,
-                        ModelQueryStateEnum.FAILURE.value,
-                    ]
+                    not in [ModelQueryStateEnum.COMPLETED.value, ModelQueryStateEnum.FAILURE.value]
                 ) and jj < 10:
                     if jj > 0:
                         time.sleep(model_query_interval)
@@ -535,11 +522,7 @@ class PlatformUtils:
         resq = None
         while (
             resq is None
-            or resq["state"]
-            not in [
-                ModelQueryStateEnum.COMPLETED.value,
-                ModelQueryStateEnum.FAILURE.value,
-            ]
+            or resq["state"] not in [ModelQueryStateEnum.COMPLETED.value, ModelQueryStateEnum.FAILURE.value]
         ) and ii < 10:
             if ii > 0:
                 time.sleep(model_query_interval)
@@ -587,10 +570,7 @@ class PlatformUtils:
                 while (
                     resfq is None
                     or resfq["state"]
-                    not in [
-                        ModelQueryStateEnum.COMPLETED.value,
-                        ModelQueryStateEnum.FAILURE.value,
-                    ]
+                    not in [ModelQueryStateEnum.COMPLETED.value, ModelQueryStateEnum.FAILURE.value]
                 ) and jj < 10:
                     if jj > 0:
                         time.sleep(model_query_interval)

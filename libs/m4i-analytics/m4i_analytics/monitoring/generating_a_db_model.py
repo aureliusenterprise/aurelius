@@ -2,14 +2,8 @@ from pandas import DataFrame
 from sqlalchemy import MetaData, create_engine
 
 from m4i_analytics.graphs.languages.archimate.ArchimateUtils import ArchimateUtils
-from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import (
-    ElementType,
-    RelationshipType,
-)
-from m4i_analytics.graphs.languages.archimate.model.ArchimateModel import (
-    ArchimateModel,
-    ViewAttribute,
-)
+from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import ElementType, RelationshipType
+from m4i_analytics.graphs.languages.archimate.model.ArchimateModel import ArchimateModel, ViewAttribute
 from m4i_analytics.graphs.visualisations.GraphPlotter import Layout as LayoutEnum
 from m4i_analytics.model_extractor.model.Extractor import ExtractionResult, Extractor
 
@@ -59,11 +53,7 @@ class DBExtractor(Extractor):
         # Add top level elements for tables and columns
         elems = DataFrame(
             [
-                {
-                    "id": "database table",
-                    "name": "database table",
-                    "type": ElementType.DATA_OBJECT,
-                },
+                {"id": "database table", "name": "database table", "type": ElementType.DATA_OBJECT},
                 {
                     "id": "database table column",
                     "name": "database table column",
@@ -106,12 +96,7 @@ class DBExtractor(Extractor):
 
             # First, create a node representing the table
             nodes = [
-                {
-                    "id": table_name,
-                    "name": table_name,
-                    "type": ElementType.DATA_OBJECT,
-                    "label": table_name,
-                }
+                {"id": table_name, "name": table_name, "type": ElementType.DATA_OBJECT, "label": table_name}
             ]
             edges = [
                 {
@@ -176,13 +161,7 @@ class DBExtractor(Extractor):
             )
 
             concept_metadata = [
-                {
-                    "id": concept["id"],
-                    "data": {
-                        "original_id": concept["id"],
-                        "created_by": self.script_name,
-                    },
-                }
+                {"id": concept["id"], "data": {"original_id": concept["id"], "created_by": self.script_name}}
                 for concept in (nodes + edges)
             ]
 

@@ -15,14 +15,7 @@ class Status:
     WARNING = 2
     CRITICAL = 3
 
-    def __init__(
-        self,
-        source,
-        data_in=UNKNOWN,
-        service=UNKNOWN,
-        processing=UNKNOWN,
-        data_out=UNKNOWN,
-    ):
+    def __init__(self, source, data_in=UNKNOWN, service=UNKNOWN, processing=UNKNOWN, data_out=UNKNOWN):
         self.source = source
         self.data_in = data_in
         self.service = service

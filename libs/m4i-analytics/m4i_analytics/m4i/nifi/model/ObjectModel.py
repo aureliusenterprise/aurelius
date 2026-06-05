@@ -9,22 +9,14 @@ class Permissions(BaseModel):
 
 
 class Breadcrumb(BaseModel):
-    _fields = [
-        ("id", str, False),
-        ("permissions", Permissions, False),
-        ("versionedFlowState", str, False),
-    ]
+    _fields = [("id", str, False), ("permissions", Permissions, False), ("versionedFlowState", str, False)]
 
 
 # END Breadcrumb
 
 
 class Revision(BaseModel):
-    _fields = [
-        ("clientId", str, False),
-        ("version", int, False),
-        ("lastModifier", str, False),
-    ]
+    _fields = [("clientId", str, False), ("version", int, False), ("lastModifier", str, False)]
 
 
 # END Revision
@@ -138,11 +130,7 @@ class ProcessGroup(BaseModel):
 
 
 class ProcessGroupStatus(BaseModel):
-    _fields = [
-        ("id", str, False),
-        ("name", str, False),
-        ("statsLastRefreshed", str, False),
-    ]
+    _fields = [("id", str, False), ("name", str, False), ("statsLastRefreshed", str, False)]
 
 
 # END ProcessGroupStatus
@@ -194,11 +182,7 @@ class Style(BaseModel):
 
 
 class Relationship(BaseModel):
-    _fields = [
-        ("name", str, False),
-        ("description", str, False),
-        ("autoTerminate", bool, False),
-    ]
+    _fields = [("name", str, False), ("description", str, False), ("autoTerminate", bool, False)]
 
 
 # END Relationship
@@ -212,11 +196,7 @@ class Property(BaseModel):
 
 
 class AllowableValue(BaseModel):
-    _fields = [
-        ("displayName", str, False),
-        ("value", str, False),
-        ("description", str, False),
-    ]
+    _fields = [("displayName", str, False), ("value", str, False), ("description", str, False)]
 
 
 # END AllowableValue
@@ -668,10 +648,7 @@ class ProcessGroupFlow(BaseModel):
 
 
 class ProcessGroupFlowEntity(BaseModel):
-    _fields = [
-        ("permissions", Permissions, False),
-        ("processGroupFlow", ProcessGroupFlow, False),
-    ]
+    _fields = [("permissions", Permissions, False), ("processGroupFlow", ProcessGroupFlow, False)]
 
 
 # END ProcessGroupFlowEntity

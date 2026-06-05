@@ -5,9 +5,7 @@ import time
 from m4i_analytics.graphs.languages.archimate.ArchimateUtils import ArchimateUtils
 from m4i_analytics.m4i.ApiUtils import ApiUtils
 from m4i_analytics.m4i.platform.model.ModelQuery import StateEnum as ModelQueryStateEnum
-from m4i_analytics.m4i.platform.model.ModelQueryDifResult import (
-    StateEnum as ModelQueryDifResultStateEnum,
-)
+from m4i_analytics.m4i.platform.model.ModelQueryDifResult import StateEnum as ModelQueryDifResultStateEnum
 from m4i_analytics.m4i.platform.PlatformApi import PlatformApi
 from m4i_analytics.m4i.platform.PlatformUtils import PlatformUtils
 from m4i_analytics.m4i.portal.PortalApi import PortalApi
@@ -111,11 +109,7 @@ class Monitoring:
         resq = None
         while (
             resq is None
-            or resq.state
-            not in [
-                ModelQueryStateEnum.COMPLETED.value,
-                ModelQueryStateEnum.FAILURE.value,
-            ]
+            or resq.state not in [ModelQueryStateEnum.COMPLETED.value, ModelQueryStateEnum.FAILURE.value]
         ) and ii < 10:
             if ii > 0:
                 time.sleep(((self.model_query_interval + 0.5) * (ii + 1)) // 1)
@@ -150,10 +144,7 @@ class Monitoring:
                 while (
                     resfq is None
                     or resfq.state
-                    not in [
-                        ModelQueryStateEnum.COMPLETED.value,
-                        ModelQueryStateEnum.FAILURE.value,
-                    ]
+                    not in [ModelQueryStateEnum.COMPLETED.value, ModelQueryStateEnum.FAILURE.value]
                 ) and jj < 10:
                     if jj > 0:
                         time.sleep(((self.model_query_interval + 0.5) * (ii + 1)) // 1)
@@ -194,11 +185,7 @@ class Monitoring:
         resq = None
         while (
             resq is None
-            or resq.state
-            not in [
-                ModelQueryStateEnum.COMPLETED.value,
-                ModelQueryStateEnum.FAILURE.value,
-            ]
+            or resq.state not in [ModelQueryStateEnum.COMPLETED.value, ModelQueryStateEnum.FAILURE.value]
         ) and ii < 10:
             if ii > 0:
                 time.sleep(((self.model_query_interval + 0.5) * (ii + 1)) // 1)
@@ -237,10 +224,7 @@ class Monitoring:
                 while (
                     resfq is None
                     or resfq.state
-                    not in [
-                        ModelQueryStateEnum.COMPLETED.value,
-                        ModelQueryStateEnum.FAILURE.value,
-                    ]
+                    not in [ModelQueryStateEnum.COMPLETED.value, ModelQueryStateEnum.FAILURE.value]
                 ) and jj < 10:
                     if jj > 0:
                         time.sleep(((self.model_query_interval + 0.5) * (ii + 1)) // 1)
@@ -319,9 +303,7 @@ class Monitoring:
                     # commiting data
                     self.logger.info("Start uploading the {} data!".format(x["branchName"]))
                     PlatformUtils.upload_model_data(
-                        branchName=x["branchName"],
-                        conceptData=x["data"],
-                        **self.model_options,
+                        branchName=x["branchName"], conceptData=x["data"], **self.model_options
                     )
                     self.logger.info("Finished uploading the {} data!".format(x["branchName"]))
                     branches.append(x["branchName"])
@@ -364,9 +346,7 @@ class Monitoring:
                 )
                 self.logger.info("Start uploading the {} propagation data!".format(resp["branchName"]))
                 PlatformUtils.upload_model_data(
-                    branchName=resp["branchName"],
-                    conceptData=resp["propagation"],
-                    **self.model_options,
+                    branchName=resp["branchName"], conceptData=resp["propagation"], **self.model_options
                 )
                 self.logger.info("Finished uploading the {} propagation data!".format(resp["branchName"]))
 
@@ -374,8 +354,7 @@ class Monitoring:
                 self.logger.info("Start processing paths in the model!")
                 params = {
                     "project_name": "{}__{}".format(
-                        self.model_options["projectOwner"],
-                        self.model_options["projectName"],
+                        self.model_options["projectOwner"], self.model_options["projectName"]
                     ),
                     "branch_name": self.pathing_options["model_options"]["branchName"],
                     "pathing_target_table": self.pathing_options["pathing_target_table"],

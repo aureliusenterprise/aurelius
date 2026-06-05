@@ -1,8 +1,4 @@
-from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import (
-    Aspect,
-    Layer,
-    _ElementType,
-)
+from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import Aspect, Layer, _ElementType
 from m4i_analytics.shared.model.PseudoEnum import PseudoEnum
 
 

@@ -43,13 +43,7 @@ class PortalApi:
 
     @staticmethod
     def create_project(
-        taskid,
-        projectid,
-        run_by,
-        owner_username,
-        owner_email,
-        owner_firstname="John",
-        owner_lastname="Doe",
+        taskid, projectid, run_by, owner_username, owner_email, owner_firstname="John", owner_lastname="Doe"
     ):
         """
         Create a new project on the portal.
@@ -123,13 +117,7 @@ class PortalApi:
 
     @staticmethod
     def update_project(
-        taskid,
-        projectid,
-        run_by,
-        branch_name,
-        model_timestamp,
-        data_timestamp,
-        parser_name="archimate3",
+        taskid, projectid, run_by, branch_name, model_timestamp, data_timestamp, parser_name="archimate3"
     ):
         """
         Update the model and data associated with a project in a single call.

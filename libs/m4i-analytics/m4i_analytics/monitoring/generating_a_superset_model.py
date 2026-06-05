@@ -5,14 +5,8 @@ from pandas import DataFrame
 from sqlalchemy import MetaData, Table, create_engine, select
 
 from m4i_analytics.graphs.languages.archimate.ArchimateUtils import ArchimateUtils
-from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import (
-    ElementType,
-    RelationshipType,
-)
-from m4i_analytics.graphs.languages.archimate.model.ArchimateModel import (
-    ArchimateModel,
-    ViewAttribute,
-)
+from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import ElementType, RelationshipType
+from m4i_analytics.graphs.languages.archimate.model.ArchimateModel import ArchimateModel, ViewAttribute
 from m4i_analytics.graphs.model.Graph import EdgeAttribute, NodeAttribute
 from m4i_analytics.graphs.visualisations.GraphPlotter import Layout
 from m4i_analytics.m4i.portal.model.superset.slices.SliceFactory import SliceFactory
@@ -94,9 +88,7 @@ def generate_superset_model(db_url):
         if table_id is not None:
             table = [table for table in tables if table[2] == table_id][0]
             result = formatTableName(
-                getDBName([db[4] for db in databases if db[2] == table[6]][0]),
-                table[14],
-                table[3],
+                getDBName([db[4] for db in databases if db[2] == table[6]][0]), table[14], table[3]
             )
         return result
 
@@ -139,16 +131,8 @@ def generate_superset_model(db_url):
 
     # Add the nodes to the model first
     abstract_nodes = [
-        {
-            "id": "slicetype",
-            "name": "visualization type",
-            "type": ElementType.BUSINESS_INTERFACE,
-        },
-        {
-            "id": "dashboard",
-            "name": "dashboard",
-            "type": ElementType.BUSINESS_INTERFACE,
-        },
+        {"id": "slicetype", "name": "visualization type", "type": ElementType.BUSINESS_INTERFACE},
+        {"id": "dashboard", "name": "dashboard", "type": ElementType.BUSINESS_INTERFACE},
         {"id": "table", "name": "table", "type": ElementType.DATA_OBJECT},
         {"id": "metric", "name": "metric", "type": ElementType.DATA_OBJECT},
         {"id": "user", "name": "user", "type": ElementType.BUSINESS_ACTOR},
@@ -156,38 +140,22 @@ def generate_superset_model(db_url):
     ]
 
     dashboard_nodes = [
-        {
-            "id": f"dashboard-{dashboard[2]}",
-            "name": dashboard[3],
-            "type": ElementType.BUSINESS_INTERFACE,
-        }
+        {"id": f"dashboard-{dashboard[2]}", "name": dashboard[3], "type": ElementType.BUSINESS_INTERFACE}
         for dashboard in dashboards
     ]
 
     slice_nodes = [
-        {
-            "id": f"slice-{slice[2]}",
-            "name": slice[3],
-            "type": ElementType.BUSINESS_INTERFACE,
-        }
+        {"id": f"slice-{slice[2]}", "name": slice[3], "type": ElementType.BUSINESS_INTERFACE}
         for slice in slices
     ]
 
     table_nodes = [
-        {
-            "id": getTableName(table[2]),
-            "name": getTableName(table[2]),
-            "type": ElementType.DATA_OBJECT,
-        }
+        {"id": getTableName(table[2]), "name": getTableName(table[2]), "type": ElementType.DATA_OBJECT}
         for table in tables
     ]
 
     def fmt_user(a, b, c):
-        return {
-            "id": f"user-{a}",
-            "name": f"{b} {c}",
-            "type": ElementType.BUSINESS_ACTOR,
-        }
+        return {"id": f"user-{a}", "name": f"{b} {c}", "type": ElementType.BUSINESS_ACTOR}
 
     # END fmt_user
 
@@ -196,27 +164,15 @@ def generate_superset_model(db_url):
     nodes += slice_nodes
     nodes += table_nodes
     nodes += [
-        {
-            "id": f"slicetype-{index}",
-            "name": slicetype,
-            "type": ElementType.BUSINESS_INTERFACE,
-        }
+        {"id": f"slicetype-{index}", "name": slicetype, "type": ElementType.BUSINESS_INTERFACE}
         for index, slicetype in enumerate(slice_types)
     ]
     nodes += [
-        {
-            "id": f"column-{column[2]}",
-            "name": column[4],
-            "type": ElementType.DATA_OBJECT,
-        }
+        {"id": f"column-{column[2]}", "name": column[4], "type": ElementType.DATA_OBJECT}
         for column in table_columns
     ]
     nodes += [
-        {
-            "id": f"metric-{metric[2]}",
-            "name": metric[3],
-            "type": ElementType.DATA_OBJECT,
-        }
+        {"id": f"metric-{metric[2]}", "name": metric[3], "type": ElementType.DATA_OBJECT}
         for metric in metrics
     ]
     nodes += [fmt_user(user[0], user[1], user[2]) for user in users]

@@ -115,11 +115,7 @@ def retrieve_superset_status(nagios_host, credentials, host_name, service_name):
             returned with a HTTP 400/500 code variant.
         """
 
-        params = {
-            "query": "service",
-            "hostname": host,
-            "servicedescription": servicename,
-        }
+        params = {"query": "service", "hostname": host, "servicedescription": servicename}
 
         return get_objects(params)["data"]["service"]
 
@@ -137,11 +133,7 @@ def retrieve_superset_status(nagios_host, credentials, host_name, service_name):
             returned with a HTTP 400/500 code variant.
         """
 
-        params = {
-            "query": "service",
-            "hostname": host,
-            "servicedescription": servicename,
-        }
+        params = {"query": "service", "hostname": host, "servicedescription": servicename}
 
         return get_status(params)["data"]["service"]["long_plugin_output"]
 
@@ -338,14 +330,7 @@ def update_status(model=None, dataset=None, model_options=None):
             result = 2
         elif event[Status.OK]:
             result = 1
-        return {
-            "apache_vhosts": {
-                "data_in": 0,
-                "service": result,
-                "processing": 0,
-                "data_out": 0,
-            }
-        }
+        return {"apache_vhosts": {"data_in": 0, "service": result, "processing": 0, "data_out": 0}}
 
     # END fmt_event
 
@@ -353,14 +338,7 @@ def update_status(model=None, dataset=None, model_options=None):
         {
             "id": table,
             "type": "table",
-            "status": {
-                "apache_vhosts": {
-                    "data_in": 0,
-                    "service": 1,
-                    "processing": 0,
-                    "data_out": 0,
-                }
-            }
+            "status": {"apache_vhosts": {"data_in": 0, "service": 1, "processing": 0, "data_out": 0}}
             if table not in [concept["id"] for concept in concepts_with_events]
             else next(
                 fmt_event(concept["events"]) for concept in concepts_with_events if concept["id"] == table
@@ -372,14 +350,7 @@ def update_status(model=None, dataset=None, model_options=None):
         {
             "id": dashboard,
             "type": "dashboard",
-            "status": {
-                "apache_vhosts": {
-                    "data_in": 0,
-                    "service": 1,
-                    "processing": 0,
-                    "data_out": 0,
-                }
-            }
+            "status": {"apache_vhosts": {"data_in": 0, "service": 1, "processing": 0, "data_out": 0}}
             if dashboard not in [concept["id"] for concept in concepts_with_events]
             else next(
                 fmt_event(concept["events"]) for concept in concepts_with_events if concept["id"] == dashboard
@@ -391,14 +362,7 @@ def update_status(model=None, dataset=None, model_options=None):
         {
             "id": slice_id,
             "type": "slice",
-            "status": {
-                "apache_vhosts": {
-                    "data_in": 0,
-                    "service": 1,
-                    "processing": 0,
-                    "data_out": 0,
-                }
-            }
+            "status": {"apache_vhosts": {"data_in": 0, "service": 1, "processing": 0, "data_out": 0}}
             if slice_id not in [concept["id"] for concept in concepts_with_events]
             else next(
                 fmt_event(concept["events"]) for concept in concepts_with_events if concept["id"] == slice_id

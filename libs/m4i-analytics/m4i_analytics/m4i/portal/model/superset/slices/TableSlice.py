@@ -126,12 +126,7 @@ class TableSlice(AbstractSlice):
         self.having = having
         self.include_search = include_search
         self.include_time = include_time
-        self.metrics = (metrics if metrics else []) + [
-            combine_metric,
-            metric,
-            metric_2,
-            secondary_metric,
-        ]
+        self.metrics = (metrics if metrics else []) + [combine_metric, metric, metric_2, secondary_metric]
         self.order_by_cols = order_by_cols if order_by_cols else []
         self.order_desc = order_desc
         self.page_length = page_length

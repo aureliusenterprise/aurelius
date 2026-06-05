@@ -102,7 +102,10 @@ class AbstractSlice:
             )
         ]
         return [
-            group for match in re.finditer("(\w+)", sql) for group in match.groups() if group in table_columns
+            group
+            for match in re.finditer(r"(\w+)", sql)
+            for group in match.groups()
+            if group in table_columns
         ]
 
     # END columnsFromSQL

@@ -91,12 +91,7 @@ def extract_tables(sql):
                 if is_subselect(item):
                     for x in extract_from_part(item):
                         yield x
-                elif item.ttype is Keyword and item.value.upper() in [
-                    "ORDER",
-                    "GROUP",
-                    "BY",
-                    "HAVING",
-                ]:
+                elif item.ttype is Keyword and item.value.upper() in ["ORDER", "GROUP", "BY", "HAVING"]:
                     from_seen = False
                 else:
                     # print('@@@  found select name')

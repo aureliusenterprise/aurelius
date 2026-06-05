@@ -28,11 +28,7 @@ class Pathing:
     allowed_relationship_types = []
 
     def __init__(
-        self,
-        model_options,
-        pathing_target_table,
-        timeseries_target_table,
-        allowed_relationship_types=None,
+        self, model_options, pathing_target_table, timeseries_target_table, allowed_relationship_types=None
     ):
         """
         :param dict model_options: A dictionary specifying the project name,
@@ -238,11 +234,7 @@ class Pathing:
                             ),
                         }
                 except NetworkXNoPath:
-                    yield {
-                        "origin": source_id,
-                        "destination": target_id,
-                        "path": iter([]),
-                    }
+                    yield {"origin": source_id, "destination": target_id, "path": iter([])}
 
             # END get_routes
 
@@ -277,8 +269,7 @@ class Pathing:
                 node_name_key = model.getNodeAttributeMapping(NodeAttribute.NAME)
 
                 name = next(
-                    iter(model.nodes[model.nodes[node_id_key] == id_].to_dict(orient="records")),
-                    {},
+                    iter(model.nodes[model.nodes[node_id_key] == id_].to_dict(orient="records")), {}
                 ).get(node_name_key, "")
 
                 if name in node_name_index.values():
@@ -347,12 +338,7 @@ class Pathing:
 
             def fmt_timeseries(t):
                 status = node_combined_status(data, t["id"])
-                return {
-                    "id": t["id"],
-                    "name": t["name"],
-                    "status": status,
-                    "timestamp": time.time(),
-                }
+                return {"id": t["id"], "name": t["name"], "status": status, "timestamp": time.time()}
 
             # END fmt_timeseries
 
@@ -360,14 +346,10 @@ class Pathing:
             timeseries_fmt = [fmt_timeseries(t) for t in timeseries.to_dict(orient="records")]
             print("insert dataset")
             DBUtils.insert_dataset(
-                DataFrame(paths_fmt),
-                self.pathing_target_table,
-                if_exists=InsertBehavior.REPLACE,
+                DataFrame(paths_fmt), self.pathing_target_table, if_exists=InsertBehavior.REPLACE
             )
             DBUtils.insert_dataset(
-                DataFrame(timeseries_fmt),
-                self.timeseries_target_table,
-                if_exists=InsertBehavior.APPEND,
+                DataFrame(timeseries_fmt), self.timeseries_target_table, if_exists=InsertBehavior.APPEND
             )
 
         # END update_paths
@@ -419,11 +401,7 @@ class Pathing:
                 )
 
                 # Insert the paths into the database
-                DBUtils.insert_dataset(
-                    paths_grp,
-                    self.pathing_target_table,
-                    if_exists=InsertBehavior.REPLACE,
-                )
+                DBUtils.insert_dataset(paths_grp, self.pathing_target_table, if_exists=InsertBehavior.REPLACE)
 
                 # Also store the node statuses as time series data
                 timeseries_data = DataFrame(
@@ -439,9 +417,7 @@ class Pathing:
                 )
 
                 DBUtils.insert_dataset(
-                    timeseries_data,
-                    self.timeseries_target_table,
-                    if_exists=InsertBehavior.APPEND,
+                    timeseries_data, self.timeseries_target_table, if_exists=InsertBehavior.APPEND
                 )
             # END IF
         else:

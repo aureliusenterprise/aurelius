@@ -32,13 +32,7 @@ class ArchimateModel(Graph):
     """
 
     def __init__(
-        self,
-        name=None,
-        nodes=None,
-        edges=None,
-        views=None,
-        organizations=None,
-        defaultAttributeMapping=False,
+        self, name=None, nodes=None, edges=None, views=None, organizations=None, defaultAttributeMapping=False
     ):
         """
         Create a new ArchimateModel instance.
@@ -153,12 +147,7 @@ class ArchimateModel(Graph):
         return (
             isinstance(self.views, DataFrame)
             and not any(filter(lambda a: a not in mapping_keys, attrs))
-            and not any(
-                filter(
-                    lambda n: n not in df_cols,
-                    list(self._viewAttributeMapping.values()),
-                )
-            )
+            and not any(filter(lambda n: n not in df_cols, list(self._viewAttributeMapping.values())))
         )
 
     # END hasValidViewAttributeMapping

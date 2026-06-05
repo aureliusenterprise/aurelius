@@ -6,21 +6,13 @@ import numpy as np
 # import sqlparse
 import pandas as pd
 
-from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import (
-    ElementType,
-    RelationshipType,
-)
+from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import ElementType, RelationshipType
 from m4i_analytics.graphs.languages.archimate.model.ArchimateModel import ArchimateModel
 from m4i_analytics.graphs.visualisations.GraphPlotter import Layout
-from m4i_analytics.model_extractor.extract_tables import (
-    extract_statement_type,
-    extract_tables,
-)
+from m4i_analytics.model_extractor.extract_tables import extract_statement_type, extract_tables
 
 # from datetime import datetime
-from m4i_analytics.model_extractor.ExtractorLanguagePrimitives import (
-    ExtractorLanguagePrimitives,
-)
+from m4i_analytics.model_extractor.ExtractorLanguagePrimitives import ExtractorLanguagePrimitives
 
 # import numbers
 
@@ -440,14 +432,7 @@ class NifiExtractor:
 
         # %%
         # prepare the data
-        data_col = [
-            process_group_df,
-            controller_service_df,
-            label_df,
-            port_df,
-            connection_df,
-            processor_df,
-        ]
+        data_col = [process_group_df, controller_service_df, label_df, port_df, connection_df, processor_df]
 
         # find URLs
         # data = controller_service_df
@@ -782,12 +767,7 @@ class NifiExtractor:
                 ["id", "_query_", "_query_type_", "_table_"]
             ]
             query_helper = [
-                {
-                    "id": row["id"],
-                    "_query_": row["_query_"],
-                    "_query_type_": qt,
-                    "_table_": tt,
-                }
+                {"id": row["id"], "_query_": row["_query_"], "_query_type_": qt, "_table_": tt}
                 for index, row in query_df.iterrows()
                 for qt in row["_query_type_"]
                 for tt in row["_table_"]
@@ -1080,12 +1060,7 @@ class NifiExtractor:
             }
         )
         nodes.append(
-            {
-                "id": "generic_table",
-                "type": ElementType.DATA_OBJECT,
-                "name": "table",
-                "label": "table",
-            }
+            {"id": "generic_table", "type": ElementType.DATA_OBJECT, "name": "table", "label": "table"}
         )
         edges.append(
             {
@@ -1240,13 +1215,7 @@ class NifiExtractor:
             edges.extend(res["edges"])
 
         # edges representing hierarchical relations of process groups
-        data = pd.concat(
-            [
-                nodes_df[["id", "parent"]],
-                controller_service_df[["id", "parent"]],
-                port_df,
-            ]
-        )
+        data = pd.concat([nodes_df[["id", "parent"]], controller_service_df[["id", "parent"]], port_df])
         data = data[["id", "parent"]]
         data = data.reset_index()
         data = data.loc[data.parent.nonzero()]
@@ -1521,19 +1490,9 @@ class NifiExtractor:
         data["name"] = None
         data = data.rename(index=str, columns={"id": "con_id"})
         # data.columns=['con_id','groupId','parent','parentGroupId','path','x','y','width','height','name']
-        data = pd.concat(
-            [
-                data,
-                nodes_df[["id", "groupId", "parent", "parentGroupId", "path", "x", "y"]],
-            ]
-        )
+        data = pd.concat([data, nodes_df[["id", "groupId", "parent", "parentGroupId", "path", "x", "y"]]])
         if "port_df" in locals() and len(port_df) > 0:
-            data = pd.concat(
-                [
-                    data,
-                    port_df[["id", "groupId", "parent", "parentGroupId", "path", "x", "y"]],
-                ]
-            )
+            data = pd.concat([data, port_df[["id", "groupId", "parent", "parentGroupId", "path", "x", "y"]]])
         data = data.rename(index=str, columns={"id": "node_id"})
         # data.columns = ['con_id', 'groupId','node_id', 'parent',
         #    'parentGroupId', 'path', 'x', 'y','width','height','name']
@@ -1578,18 +1537,8 @@ class NifiExtractor:
                     {"type": "dynamic", "prefix": "", "value": "path2"},
                 ],
                 "view_nodes": [
-                    {
-                        "id_prefix": "nifi_",
-                        "id_key": "node_id",
-                        "x_key": "x",
-                        "y_key": "y",
-                    },
-                    {
-                        "id_prefix": "nifi_queue_",
-                        "id_key": "con_id",
-                        "x_key": "x",
-                        "y_key": "y",
-                    },
+                    {"id_prefix": "nifi_", "id_key": "node_id", "x_key": "x", "y_key": "y"},
+                    {"id_prefix": "nifi_queue_", "id_key": "con_id", "x_key": "x", "y_key": "y"},
                 ],
                 "view_edges": [
                     {"id_prefix": "nifi_nifi_", "id_key": "con_id"},
@@ -1657,10 +1606,7 @@ class NifiExtractor:
                 lambda x: "{} {}".format(x["_table_"], x["_query_type_"][0]), axis=1
             )
             data = data.merge(
-                data2[["id", "_query_", "_table_", "view_name"]],
-                how="left",
-                left_on="group",
-                right_on="id",
+                data2[["id", "_query_", "_table_", "view_name"]], how="left", left_on="group", right_on="id"
             )
             data["table_key"] = data.apply(lambda x: "{}_{}".format(x["_jdbc_key_"], x["_table_"]), axis=1)
             # ll = list(data.target.unique())
@@ -1729,10 +1675,7 @@ class NifiExtractor:
                     "view_name_type": "dynamic",
                     "view_name_prefix": "URL ",
                     "view_name_key": "name",
-                    "view_path": [
-                        {"type": "static", "value": "nifi"},
-                        {"type": "static", "value": "URLs"},
-                    ],
+                    "view_path": [{"type": "static", "value": "nifi"}, {"type": "static", "value": "URLs"}],
                     "view_nodes": [
                         {"id_prefix": "nifi_", "id_key": "id"},
                         {"id_prefix": "url_", "id_key": "key"},

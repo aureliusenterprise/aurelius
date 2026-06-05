@@ -72,10 +72,7 @@ class GraphPlotter:
 
         elif Layout.FRUCHTERMAN_REINGOLD.value == layout:
             result = nx.fruchterman_reingold_layout(
-                GraphUtils.toNXGraph(graph),
-                center=[center_x, center_y],
-                scale=scale,
-                k=node_distance,
+                GraphUtils.toNXGraph(graph), center=[center_x, center_y], scale=scale, k=node_distance
             )
 
         elif Layout.KAMADA_KAWAI.value == layout:
@@ -92,18 +89,12 @@ class GraphPlotter:
 
         elif Layout.SHELL.value == layout:
             result = nx.shell_layout(
-                GraphUtils.toNXGraph(graph),
-                center=[center_x, center_y],
-                nlist=shell_list,
-                scale=scale,
+                GraphUtils.toNXGraph(graph), center=[center_x, center_y], nlist=shell_list, scale=scale
             )
 
         elif Layout.SPECTRAL.value == layout:
             result = nx.spectral_layout(
-                GraphUtils.toNXGraph(graph),
-                center=[center_x, center_y],
-                weight=weight_attr,
-                scale=scale,
+                GraphUtils.toNXGraph(graph), center=[center_x, center_y], weight=weight_attr, scale=scale
             )
 
         elif Layout.HIERARCHICAL.value == layout:
@@ -319,16 +310,7 @@ class GraphPlotter:
         }
 
         edge_labels = dict(
-            [
-                (
-                    (
-                        u,
-                        v,
-                    ),
-                    d["attr_dict"][edge_label_key],
-                )
-                for (u, v, d) in nxgraph.edges(data=True)
-            ]
+            [((u, v), d["attr_dict"][edge_label_key]) for (u, v, d) in nxgraph.edges(data=True)]
         )
 
         nx.draw_networkx_labels(nxgraph, coords, node_labels, font_size=font_size, font_family=font_family)

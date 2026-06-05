@@ -19,10 +19,7 @@ class _Auth:
     # END __init__
 
     def get_access_token(
-        self,
-        username: Optional[str],
-        password: Optional[str],
-        totp: Optional[Any] = None,
+        self, username: Optional[str], password: Optional[str], totp: Optional[Any] = None
     ) -> Optional[str]:
         if username is None or password is None:
             raise ValueError("Username and password are required")

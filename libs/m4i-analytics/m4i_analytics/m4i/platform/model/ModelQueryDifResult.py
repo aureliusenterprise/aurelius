@@ -1,8 +1,6 @@
 from enum import Enum
 
-from m4i_analytics.m4i.platform.model.ModelQueryDifResultConflictList import (
-    ModelQueryDifResultConflictList,
-)
+from m4i_analytics.m4i.platform.model.ModelQueryDifResultConflictList import ModelQueryDifResultConflictList
 from m4i_analytics.shared.model.BaseModel import BaseModel
 
 

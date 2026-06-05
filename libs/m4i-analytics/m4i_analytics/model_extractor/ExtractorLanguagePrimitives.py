@@ -10,10 +10,7 @@ from abc import ABCMeta
 from itertools import chain
 
 from m4i_analytics.graphs.languages.archimate.ArchimateUtils import ArchimateUtils
-from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import (
-    ElementType,
-    RelationshipType,
-)
+from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import ElementType, RelationshipType
 
 
 class AttributeMapping(dict):
@@ -314,10 +311,7 @@ class ExtractorLanguagePrimitives:
                 content[map_["key"]] = row[map_["value"]]
         # END LOOP
 
-        return {
-            "id": "{}{}".format(definition["id_prefix"], row[definition["id_key"]]),
-            "data": content,
-        }
+        return {"id": "{}{}".format(definition["id_prefix"], row[definition["id_key"]]), "data": content}
 
     # END _parse_concept_data
 
@@ -414,10 +408,7 @@ class ExtractorLanguagePrimitives:
                 content[map_["key"]] = row[map_["value"]]
         # END LOOP
 
-        return {
-            "id": "{}{}".format(definition["id_prefix"], row[definition["id_key"]]),
-            "data": content,
-        }
+        return {"id": "{}{}".format(definition["id_prefix"], row[definition["id_key"]]), "data": content}
 
     # END _parse_relationship_data
 
@@ -429,14 +420,12 @@ class ExtractorLanguagePrimitives:
             "source": "{}{}".format(definition["source_prefix"], row[definition["source_id_key"]]),
             "target": "{}{}".format(definition["target_prefix"], row[definition["target_id_key"]]),
             "name": "{}{}".format(
-                definition["relationship_name_prefix"],
-                row[definition["relationship_name_key"]],
+                definition["relationship_name_prefix"], row[definition["relationship_name_key"]]
             )
             if definition["relationship_name_key"] in row
             else "",
             "label": "{}{}".format(
-                definition["relationship_label_prefix"],
-                row[definition["relationship_label_key"]],
+                definition["relationship_label_prefix"], row[definition["relationship_label_key"]]
             )
             if definition["relationship_label_key"] in row
             else "",
@@ -561,19 +550,13 @@ class ExtractorLanguagePrimitives:
                     gr_data = gr["data"]
                     if len(gr_data) > 0:
                         view = {"type": "ar3_Diagram"}
-                        content = {
-                            "created_by": script_name,
-                            "m4i_id_type": id_["id_type"],
-                        }
+                        content = {"created_by": script_name, "m4i_id_type": id_["id_type"]}
                         if id_["id_type"] == "static":
                             view["id"] = id_["id_value"]
                             content["m4i_id_prefix"] = ""
                             content["m4i_original_id"] = str(id_["id_value"])
                         else:
-                            view["id"] = "{}{}".format(
-                                id_["id_prefix"],
-                                gr_data.iloc[0][id_["id_key"]],
-                            )
+                            view["id"] = "{}{}".format(id_["id_prefix"], gr_data.iloc[0][id_["id_key"]])
                             content["m4i_original_id"] = str(gr_data.iloc[0][id_["id_key"]])
                             content["m4i_id_prefix"] = id_["id_prefix"]
                         metadata = {"id": view["id"], "data": content}
@@ -582,8 +565,7 @@ class ExtractorLanguagePrimitives:
                             view["name"] = id_["view_name_value"]
                         else:
                             view["name"] = "{}{}".format(
-                                id_["view_name_prefix"],
-                                gr_data.iloc[0][id_["view_name_key"]],
+                                id_["view_name_prefix"], gr_data.iloc[0][id_["view_name_key"]]
                             )
                         view_nodes = []
                         view_coordinates = {}
@@ -593,19 +575,16 @@ class ExtractorLanguagePrimitives:
                                     deduplicated_data = gr_data.drop_duplicates(subset=nn_["id_key"])
                                     for _index, row in deduplicated_data.iterrows():
                                         if row[nn_["id_key"]] == row[nn_["id_key"]]:
-                                            nnn_ = "{}{}".format(
-                                                nn_["id_prefix"],
-                                                row[nn_["id_key"]],
-                                            )
+                                            nnn_ = "{}{}".format(nn_["id_prefix"], row[nn_["id_key"]])
                                             if nnn_ not in view_nodes:
                                                 view_nodes.append(nnn_)
                                                 # handle coordinates
                                                 if "x" in nn_ and "y" in nn_:
                                                     nn_dict = {
-                                                        "{}{}".format(
-                                                            nn_["id_prefix"],
-                                                            row[nn_["id_key"]],
-                                                        ): [nn_["x"], nn_["y"]]
+                                                        "{}{}".format(nn_["id_prefix"], row[nn_["id_key"]]): [
+                                                            nn_["x"],
+                                                            nn_["y"],
+                                                        ]
                                                     }
                                                     view_coordinates.update(nn_dict)
                                                 elif (
@@ -613,22 +592,13 @@ class ExtractorLanguagePrimitives:
                                                     and "y_key" in nn_
                                                     and nn_["x_key"] in row
                                                     and nn_["y_key"] in row
-                                                    and isinstance(
-                                                        row[nn_["x_key"]],
-                                                        numbers.Number,
-                                                    )
-                                                    and isinstance(
-                                                        row[nn_["y_key"]],
-                                                        numbers.Number,
-                                                    )
+                                                    and isinstance(row[nn_["x_key"]], numbers.Number)
+                                                    and isinstance(row[nn_["y_key"]], numbers.Number)
                                                     and not math.isnan(row[nn_["x_key"]])
                                                     and not math.isnan(row[nn_["y_key"]])
                                                 ):
                                                     nn_dict = {
-                                                        "{}{}".format(
-                                                            nn_["id_prefix"],
-                                                            row[nn_["id_key"]],
-                                                        ): [
+                                                        "{}{}".format(nn_["id_prefix"], row[nn_["id_key"]]): [
                                                             row[nn_["x_key"]],
                                                             row[nn_["y_key"]],
                                                         ]
@@ -673,10 +643,7 @@ class ExtractorLanguagePrimitives:
                                     ]
                                     deduplicated_data = rr_.drop_duplicates(subset=nn_["id_key"])
                                     for _index, row in deduplicated_data.iterrows():
-                                        label_id = "{}{}".format(
-                                            nn_["id_prefix"],
-                                            row[nn_["id_key"]],
-                                        )
+                                        label_id = "{}{}".format(nn_["id_prefix"], row[nn_["id_key"]])
                                         label_ = {
                                             "id": label_id,
                                             "x": 0,
@@ -723,10 +690,7 @@ class ExtractorLanguagePrimitives:
                                             )
                                         else:
                                             view_path.append(
-                                                "{}{}".format(
-                                                    vv_["prefix"],
-                                                    gr_data.iloc[0][vv_["value"]],
-                                                )
+                                                "{}{}".format(vv_["prefix"], gr_data.iloc[0][vv_["value"]])
                                             )
                             content["m4i_path"] = "/".join(view_path)
                         views.append(

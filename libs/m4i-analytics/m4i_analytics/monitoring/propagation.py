@@ -1,10 +1,7 @@
 import numpy as np
 
 from m4i_analytics.graphs.languages.archimate.ArchimateUtils import ArchimateUtils
-from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import (
-    ElementType,
-    RelationshipType,
-)
+from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import ElementType, RelationshipType
 from m4i_analytics.m4i.platform.PlatformUtils import PlatformUtils
 
 
@@ -600,10 +597,7 @@ def propagate(model_options, propagation_table=PropagationTable.DEFAULT):
             return model.edges[
                 np.logical_and(
                     model.edges.type.isin(propagation_table[node["type"]]),
-                    np.logical_or(
-                        model.edges.source == node["id"],
-                        model.edges.target == node["id"],
-                    ),
+                    np.logical_or(model.edges.source == node["id"], model.edges.target == node["id"]),
                 )
             ].to_dict(orient="records")
 
@@ -623,8 +617,7 @@ def propagate(model_options, propagation_table=PropagationTable.DEFAULT):
                     )
                     if node_status_prop_agg.get(node_id):
                         node_status_prop[path["target"]] = append(
-                            node_status_prop.get(path["target"]),
-                            node_status_prop_agg[node_id],
+                            node_status_prop.get(path["target"]), node_status_prop_agg[node_id]
                         )
 
                 # Access, Aggregation and Composition relations propagate both ways
@@ -641,8 +634,7 @@ def propagate(model_options, propagation_table=PropagationTable.DEFAULT):
 
                     if node_status_prop_agg.get(node_id):
                         node_status_prop[path["source"]] = append(
-                            node_status_prop.get(path["source"]),
-                            node_status_prop_agg[node_id],
+                            node_status_prop.get(path["source"]), node_status_prop_agg[node_id]
                         )
             # END LOOP
         # END LOOP
@@ -755,8 +747,7 @@ def propagate(model_options, propagation_table=PropagationTable.DEFAULT):
 
     def combine_status(node_id):
         own_status = next(
-            (node["data"].get("agg_status", {}) for node in node_data_status_agg if node["id"] == node_id),
-            {},
+            (node["data"].get("agg_status", {}) for node in node_data_status_agg if node["id"] == node_id), {}
         )
         prop_status = next(
             (

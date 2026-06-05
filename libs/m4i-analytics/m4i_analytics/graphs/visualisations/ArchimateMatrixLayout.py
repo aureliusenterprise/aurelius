@@ -80,13 +80,7 @@ class ArchimateMatrixLayout(Layout):
 
     @staticmethod
     def get_coordinates(
-        graph,
-        width=120,
-        height=80,
-        max_per_row=8,
-        concept_distance=180,
-        level_distance=160,
-        **kwargs,
+        graph, width=120, height=80, max_per_row=8, concept_distance=180, level_distance=160, **kwargs
     ):
         working_copy = ArchimateMatrixLayout._prepare_model(graph)
         edges = working_copy.edges

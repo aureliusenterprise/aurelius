@@ -42,12 +42,7 @@ class DBUtils:
 
     @staticmethod
     def insert_dataset(
-        dataframe,
-        tablename,
-        schema=None,
-        session=None,
-        commit=True,
-        if_exists=InsertBehavior.APPEND,
+        dataframe, tablename, schema=None, session=None, commit=True, if_exists=InsertBehavior.APPEND
     ):
         """
         Insert a dataframe into the given table in the M4I database.

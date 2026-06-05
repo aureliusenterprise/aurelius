@@ -5,14 +5,8 @@ from datetime import datetime
 import sqlparse
 
 from m4i_analytics.graphs.languages.archimate.ArchimateUtils import ArchimateUtils
-from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import (
-    ElementType,
-    RelationshipType,
-)
-from m4i_analytics.graphs.languages.archimate.model.ArchimateModel import (
-    ArchimateModel,
-    ViewAttribute,
-)
+from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import ElementType, RelationshipType
+from m4i_analytics.graphs.languages.archimate.model.ArchimateModel import ArchimateModel, ViewAttribute
 from m4i_analytics.graphs.visualisations.GraphPlotter import Layout
 
 
@@ -531,11 +525,7 @@ def generate_nifi_model(xml_paths):
 
                     if view_nodes:
                         data_views.append(
-                            {
-                                "process_group": process_group,
-                                "processor": processor,
-                                "view_nodes": view_nodes,
-                            }
+                            {"process_group": process_group, "processor": processor, "view_nodes": view_nodes}
                         )
 
                 # END LOOP

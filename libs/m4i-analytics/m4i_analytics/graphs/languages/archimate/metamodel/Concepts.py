@@ -124,71 +124,41 @@ class ElementType(PseudoEnum):
 
     AND_JUNCTION = _ElementType("And Junction", "ar3_AndJunction", Layer.OTHER, Aspect.OTHER, parent=JUNCTION)
     APPLICATION_COLLABORATION = _ElementType(
-        "Application Collaboration",
-        "ar3_ApplicationCollaboration",
-        Layer.APPLICATION,
-        Aspect.ACTIVE,
+        "Application Collaboration", "ar3_ApplicationCollaboration", Layer.APPLICATION, Aspect.ACTIVE
     )
     APPLICATION_COMPONENT = _ElementType(
-        "Application Component",
-        "ar3_ApplicationComponent",
-        Layer.APPLICATION,
-        Aspect.ACTIVE,
+        "Application Component", "ar3_ApplicationComponent", Layer.APPLICATION, Aspect.ACTIVE
     )
     APPLICATION_EVENT = _ElementType(
-        "Application Event",
-        "ar3_ApplicationEvent",
-        Layer.APPLICATION,
-        Aspect.BEHAVIORAL,
+        "Application Event", "ar3_ApplicationEvent", Layer.APPLICATION, Aspect.BEHAVIORAL
     )
     APPLICATION_FUNCTION = _ElementType(
-        "Application Function",
-        "ar3_ApplicationFunction",
-        Layer.APPLICATION,
-        Aspect.BEHAVIORAL,
+        "Application Function", "ar3_ApplicationFunction", Layer.APPLICATION, Aspect.BEHAVIORAL
     )
     APPLICATION_INTERACTION = _ElementType(
-        "Application Interaction",
-        "ar3_ApplicationInteraction",
-        Layer.APPLICATION,
-        Aspect.BEHAVIORAL,
+        "Application Interaction", "ar3_ApplicationInteraction", Layer.APPLICATION, Aspect.BEHAVIORAL
     )
     APPLICATION_INTERFACE = _ElementType(
-        "Application Interface",
-        "ar3_ApplicationInterface",
-        Layer.APPLICATION,
-        Aspect.ACTIVE,
+        "Application Interface", "ar3_ApplicationInterface", Layer.APPLICATION, Aspect.ACTIVE
     )
     APPLICATION_PROCESS = _ElementType(
-        "Application Process",
-        "ar3_ApplicationProcess",
-        Layer.APPLICATION,
-        Aspect.BEHAVIORAL,
+        "Application Process", "ar3_ApplicationProcess", Layer.APPLICATION, Aspect.BEHAVIORAL
     )
     APPLICATION_SERVICE = _ElementType(
-        "Application Service",
-        "ar3_ApplicationService",
-        Layer.APPLICATION,
-        Aspect.BEHAVIORAL,
+        "Application Service", "ar3_ApplicationService", Layer.APPLICATION, Aspect.BEHAVIORAL
     )
     ARTIFACT = _ElementType("Artifact", "ar3_Artifact", Layer.TECHNOLOGY, Aspect.PASSIVE)
     ASSESSMENT = _ElementType("Assessment", "ar3_Assessment", Layer.MOTIVATION, Aspect.MOTIVATION)
     BUSINESS_ACTOR = _ElementType("Business Actor", "ar3_BusinessActor", Layer.BUSINESS, Aspect.ACTIVE)
     BUSINESS_COLLABORATION = _ElementType(
-        "Business Collaboration",
-        "ar3_BusinessCollaboration",
-        Layer.BUSINESS,
-        Aspect.ACTIVE,
+        "Business Collaboration", "ar3_BusinessCollaboration", Layer.BUSINESS, Aspect.ACTIVE
     )
     BUSINESS_EVENT = _ElementType("Business Event", "ar3_BusinessEvent", Layer.BUSINESS, Aspect.BEHAVIORAL)
     BUSINESS_FUNCTION = _ElementType(
         "Business Function", "ar3_BusinessFunction", Layer.BUSINESS, Aspect.BEHAVIORAL
     )
     BUSINESS_INTERACTION = _ElementType(
-        "Business Interaction",
-        "ar3_BusinessInteraction",
-        Layer.BUSINESS,
-        Aspect.BEHAVIORAL,
+        "Business Interaction", "ar3_BusinessInteraction", Layer.BUSINESS, Aspect.BEHAVIORAL
     )
     BUSINESS_INTERFACE = _ElementType(
         "Business Interface", "ar3_BusinessInterface", Layer.BUSINESS, Aspect.ACTIVE
@@ -203,10 +173,7 @@ class ElementType(PseudoEnum):
     )
     CAPABILITY = _ElementType("Capability", "ar3_Capability", Layer.STRATEGY, Aspect.BEHAVIORAL)
     COMMUNICATION_NETWORK = _ElementType(
-        "Communication Network",
-        "ar3_CommunicationNetwork",
-        Layer.TECHNOLOGY,
-        Aspect.PASSIVE,
+        "Communication Network", "ar3_CommunicationNetwork", Layer.TECHNOLOGY, Aspect.PASSIVE
     )
     CONSTRAINT = _ElementType("Constraint", "ar3_Constraint", Layer.MOTIVATION, Aspect.MOTIVATION)
     CONTRACT = _ElementType("Contract", "ar3_Contract", Layer.BUSINESS, Aspect.PASSIVE)
@@ -219,10 +186,7 @@ class ElementType(PseudoEnum):
     )
     DEVICE = _ElementType("Device", "ar3_Device", Layer.TECHNOLOGY, Aspect.ACTIVE)
     DISTRIBUTION_NETWORK = _ElementType(
-        "Distribution Network",
-        "ar3_DistributionNetwork",
-        Layer.PHYSICAL,
-        Aspect.PASSIVE,
+        "Distribution Network", "ar3_DistributionNetwork", Layer.PHYSICAL, Aspect.PASSIVE
     )
     DRIVER = _ElementType("Driver", "ar3_Driver", Layer.MOTIVATION, Aspect.MOTIVATION)
     EQUIPMENT = _ElementType("Equipment", "ar3_Equipment", Layer.PHYSICAL, Aspect.ACTIVE)
@@ -231,10 +195,7 @@ class ElementType(PseudoEnum):
     GOAL = _ElementType("Goal", "ar3_Goal", Layer.MOTIVATION, Aspect.MOTIVATION)
     GROUPING = _ElementType("Grouping", "ar3_Grouping", Layer.COMPOSITE, Aspect.COMPOSITE)
     IMPLEMENTATION_EVENT = _ElementType(
-        "Implementation Event",
-        "ar3_ImplementationEvent",
-        Layer.IMPLEMENTATION_MIGRATION,
-        Aspect.BEHAVIORAL,
+        "Implementation Event", "ar3_ImplementationEvent", Layer.IMPLEMENTATION_MIGRATION, Aspect.BEHAVIORAL
     )
     LINEAGE_DATASET = _ElementType("Lineage Dataset", "lineage_dataset", Layer.OTHER, Aspect.OTHER)
     LINEAGE_PROCESS = _ElementType("Lineage Process", "lineage_process", Layer.OTHER, Aspect.OTHER)
@@ -254,52 +215,31 @@ class ElementType(PseudoEnum):
     STAKEHOLDER = _ElementType("Stakeholder", "ar3_Stakeholder", Layer.MOTIVATION, Aspect.ACTIVE)
     SYSTEM_SOFTWARE = _ElementType("System Software", "ar3_SystemSoftware", Layer.TECHNOLOGY, Aspect.ACTIVE)
     TECHNOLOGY_COLLABORATION = _ElementType(
-        "Technology Collaboration",
-        "ar3_TechnologyCollaboration",
-        Layer.TECHNOLOGY,
-        Aspect.ACTIVE,
+        "Technology Collaboration", "ar3_TechnologyCollaboration", Layer.TECHNOLOGY, Aspect.ACTIVE
     )
     TECHNOLOGY_EVENT = _ElementType(
         "Technology Event", "ar3_TechnologyEvent", Layer.TECHNOLOGY, Aspect.BEHAVIORAL
     )
     TECHNOLOGY_FUNCTION = _ElementType(
-        "Technology Function",
-        "ar3_TechnologyFunction",
-        Layer.TECHNOLOGY,
-        Aspect.BEHAVIORAL,
+        "Technology Function", "ar3_TechnologyFunction", Layer.TECHNOLOGY, Aspect.BEHAVIORAL
     )
     TECHNOLOGY_INTERACTION = _ElementType(
-        "Technology Interaction",
-        "ar3_TechnologyInteraction",
-        Layer.TECHNOLOGY,
-        Aspect.BEHAVIORAL,
+        "Technology Interaction", "ar3_TechnologyInteraction", Layer.TECHNOLOGY, Aspect.BEHAVIORAL
     )
     TECHNOLOGY_INTERFACE = _ElementType(
-        "Technology Interface",
-        "ar3_TechnologyInterface",
-        Layer.TECHNOLOGY,
-        Aspect.ACTIVE,
+        "Technology Interface", "ar3_TechnologyInterface", Layer.TECHNOLOGY, Aspect.ACTIVE
     )
     TECHNOLOGY_PROCESS = _ElementType(
-        "Technology Process",
-        "ar3_TechnologyProcess",
-        Layer.TECHNOLOGY,
-        Aspect.BEHAVIORAL,
+        "Technology Process", "ar3_TechnologyProcess", Layer.TECHNOLOGY, Aspect.BEHAVIORAL
     )
     TECHNOLOGY_SERVICE = _ElementType(
-        "Technology Service",
-        "ar3_TechnologyService",
-        Layer.TECHNOLOGY,
-        Aspect.BEHAVIORAL,
+        "Technology Service", "ar3_TechnologyService", Layer.TECHNOLOGY, Aspect.BEHAVIORAL
     )
     UNKNOWN = _ElementType("Unknown", "ar3_Unknown", Layer.OTHER, Aspect.OTHER)
     VALUE = _ElementType("Value", "ar3_Value", Layer.MOTIVATION, Aspect.MOTIVATION)
     VALUE_STREAM = _ElementType("Value Stream", "ar3_ValueStream", Layer.STRATEGY, Aspect.BEHAVIORAL)
     WORK_PACKAGE = _ElementType(
-        "Work Package",
-        "ar3_WorkPackage",
-        Layer.IMPLEMENTATION_MIGRATION,
-        Aspect.BEHAVIORAL,
+        "Work Package", "ar3_WorkPackage", Layer.IMPLEMENTATION_MIGRATION, Aspect.BEHAVIORAL
     )
 
     @classmethod

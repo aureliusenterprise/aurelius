@@ -1,8 +1,6 @@
 import m4i_analytics.m4i.nifi.config as config
 from m4i_analytics.m4i.ApiUtils import ApiUtils, ContentType
-from m4i_analytics.m4i.nifi.model.ObjectModel import (
-    ProcessGroupFlowEntity,
-)
+from m4i_analytics.m4i.nifi.model.ObjectModel import ProcessGroupFlowEntity
 
 
 class NifiApi:

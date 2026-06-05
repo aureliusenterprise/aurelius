@@ -8,15 +8,11 @@ from m4i_analytics.m4i.platform.model.ModelCommit import ModelCommit
 from m4i_analytics.m4i.platform.model.ModelProvenance import ModelProvenance
 from m4i_analytics.m4i.platform.model.ModelQuery import ModelQuery
 from m4i_analytics.m4i.platform.model.ModelQueryDifResult import ModelQueryDifResult
-from m4i_analytics.m4i.platform.model.ModelQueryDifResultConflictList import (
-    ModelQueryDifResultConflictList,
-)
+from m4i_analytics.m4i.platform.model.ModelQueryDifResultConflictList import ModelQueryDifResultConflictList
 from m4i_analytics.m4i.platform.model.Permission import Permission
 from m4i_analytics.m4i.platform.model.PortalDashboards import PortalDashboards
 from m4i_analytics.m4i.platform.model.Project import Project
-from m4i_analytics.m4i.platform.model.ProjectBranchesMember import (
-    ProjectBranchesMember,
-)
+from m4i_analytics.m4i.platform.model.ProjectBranchesMember import ProjectBranchesMember
 from m4i_analytics.m4i.platform.model.ProjectDetails import ProjectDetails
 from m4i_analytics.m4i.platform.model.ProjectGroupsMember import ProjectGroupsMember
 from m4i_analytics.m4i.platform.model.ProjectMember import ProjectMember
