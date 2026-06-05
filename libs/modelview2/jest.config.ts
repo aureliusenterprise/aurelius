@@ -1,7 +1,12 @@
 export default {
     displayName: 'modelview2',
     preset: '../../jest.preset.js',
+    setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../coverage/libs/modelview2',
+    transform: {
+        '^.+.(ts|mjs|js|html)$': 'jest-preset-angular',
+    },
+    transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
     snapshotSerializers: [
         'jest-preset-angular/build/serializers/no-ng-attributes',
         'jest-preset-angular/build/serializers/ng-snapshot',
