@@ -29,7 +29,7 @@ class ObjectIdBase(DataClassJsonMixin):
 @dataclass
 class ObjectIdDefaultsBase(DataClassJsonMixin):
     guid: Optional[str] = field(default=None, metadata=config(exclude=lambda guid: guid is None))
-    unique_attributes: Optional[Attributes] = field(default_factory=dict)  # type: ignore[reportGeneralTypeIssues]
+    unique_attributes: Optional[Attributes] = field(default_factory=Attributes)  # type: ignore[reportGeneralTypeIssues]
 
 
 # END ObjectIdDefaultsBase
