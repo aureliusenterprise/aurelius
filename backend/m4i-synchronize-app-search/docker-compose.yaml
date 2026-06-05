@@ -2,7 +2,7 @@ name: m4i-synchronize-app-search
 
 services:
     jobmanager:
-        image: m4i-synchronize-app-search:local
+        image: ghcr.io/aureliusenterprise/m4i-synchronize-app-search:local
         command: standalone-job -pym m4i_synchronize_app_search
         configs:
             - source: certs
@@ -31,7 +31,7 @@ services:
             - checkpoints:/tmp/flink-checkpoints-directory
 
     taskmanager:
-        image: m4i-synchronize-app-search:local
+        image: ghcr.io/aureliusenterprise/m4i-synchronize-app-search:local
         command: taskmanager
         configs:
             - source: certs

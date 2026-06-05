@@ -3,8 +3,15 @@ from typing import Iterable, List
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from .. import RelationshipEndDef, Cardinality, RelationshipDef
-from ..core import AttributeDef, EntityDef, ObjectId, TypeCategory
+from ..core import (
+    AttributeDef,
+    Cardinality,
+    EntityDef,
+    ObjectId,
+    RelationshipDef,
+    RelationshipEndDef,
+    TypeCategory,
+)
 from .GenericProcess import (
     GenericProcess,
     GenericProcessAttributes,

@@ -3,8 +3,7 @@ from typing import Iterable, Optional, List
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from .. import Cardinality
-from ..core import AttributeDef, EntityDef, ObjectId, TypeCategory
+from ..core import AttributeDef, Cardinality, EntityDef, ObjectId, TypeCategory
 from ..data_dictionary import (
     BusinessSystem,
     BusinessSystemAttributes,
