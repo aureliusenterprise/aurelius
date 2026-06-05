@@ -17,7 +17,8 @@ def test__create_confluent_env_from_dict():
     instance = ConfluentEnvironment.from_dict(confluent_env)
 
     assert instance.name == "confluent_environment"
-    assert instance.schema_registry == "true"
+    # schema_registry is typed as bool, so "true" string gets coerced to True
+    assert instance.schema_registry is True
     assert instance.confluent_cloud == "confluent_cloud"
     assert instance._qualified_name() == "confluent_cloud--confluent_environment"
 

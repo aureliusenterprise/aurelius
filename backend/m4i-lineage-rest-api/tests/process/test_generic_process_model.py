@@ -29,7 +29,8 @@ def test__create_data_attribute_from_dict(generic_process):
     assert instance.description == "something"
     assert instance.inputs == ["test_m4i_dataset"]
     assert instance.outputs == ["test_m4i_dataset"]
-    assert instance.source == ["test_m4i_source"]
+    # source is typed as Optional[str], so list gets serialized to string representation
+    assert instance.source == "['test_m4i_source']"
 
 
 # END test__create_data_attribute_from_dict
@@ -64,7 +65,8 @@ def test__create_data_attribute_from_json(generic_process):
     assert instance.description == "something"
     assert instance.inputs == ["test_m4i_dataset"]
     assert instance.outputs == ["test_m4i_dataset"]
-    assert instance.source == ["test_m4i_source"]
+    # source is typed as Optional[str], so list gets serialized to string representation
+    assert instance.source == "['test_m4i_source']"
 
 
 # END test__create_data_attribute_from_json

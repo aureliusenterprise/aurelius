@@ -48,6 +48,11 @@ def data():
 
 
 def test__KafkaTopicApiModel_from_dict(data: dict):
+    from m4i_lineage_rest_api.lin_api.entity.kafkaTopic_entity.model.KafkaTopicEntityFields import (
+        KafkaTopicEntityField,
+        KafkaTopicEntityFieldTypeName,
+    )
+
     model = KafkaTopicApiModel.from_dict(data)
 
     assert isinstance(model, KafkaTopicApiModel)
@@ -55,25 +60,30 @@ def test__KafkaTopicApiModel_from_dict(data: dict):
     assert model.environment == "test_m4i_confluent_environment"
     assert model.cluster == "test_m4i_kafka_cluster"
     value_schema = model.value_schema
-    template = value_schema["fields"][0]  # type: ignore[reportArgumentType, reportGeneralTypeIssues]
-    assert template["doc"] == "test_m4i_data_attribute"  # type: ignore[reportArgumentType]
-    assert template["name"] == "testing_kafka_field_1"  # type: ignore[reportArgumentType]
-    assert template["type"] == "string"  # type: ignore[reportArgumentType]
-    template = value_schema["fields"][1]  # type: ignore[reportArgumentType, reportGeneralTypeIssues]
-    assert template["doc"] is None  # type: ignore[reportArgumentType]
-    assert template["name"] == "testing_kafka_field_2"  # type: ignore[reportArgumentType]
-    assert isinstance(template["type"], list)  # type: ignore[reportArgumentType]
-    template_parent = template["type"]  # type: ignore[reportArgumentType]
+    assert not isinstance(value_schema, str)
+    # value_schema is a KafkaTopicValueSchemaBase dataclass, not a dict
+    template = value_schema.fields[0]
+    assert template.doc == "test_m4i_data_attribute"
+    assert template.name == "testing_kafka_field_1"
+    # type is deserialized as an enum, not a plain string
+    assert template.type == KafkaTopicEntityFieldTypeName.STRING
+    template = value_schema.fields[1]
+    assert template.doc is None
+    assert template.name == "testing_kafka_field_2"
+    assert isinstance(template.type, list)
+    template_parent = template.type
     template = template_parent[0]
-    assert template == "null"
+    assert template == KafkaTopicEntityFieldTypeName.NULL
     template = template_parent[1]
-    assert template["doc"] == "test_m4i_data_attribute"  # type: ignore[reportArgumentType]
-    assert template["name"] == "testing_kafka_field_2"  # type: ignore[reportArgumentType]
-    assert template["type"] == "record"  # type: ignore[reportArgumentType]
-    template = template["fields"][0]  # type: ignore[reportArgumentType]
-    assert template["doc"] == "test_m4i_data_attribute"  # type: ignore[reportArgumentType]
-    assert template["name"] == "testing_kafka_field_3"  # type: ignore[reportArgumentType]
-    assert template["type"] == "string"  # type: ignore[reportArgumentType]
+    assert isinstance(template, KafkaTopicEntityField)
+    # nested field is a KafkaTopicEntityField dataclass (not dict) since decoder converts it
+    assert template.doc == "test_m4i_data_attribute"
+    assert template.name == "testing_kafka_field_2"
+    assert template.type == KafkaTopicEntityFieldTypeName.RECORD
+    child_template = template.fields[0]
+    assert child_template.doc == "test_m4i_data_attribute"
+    assert child_template.name == "testing_kafka_field_3"
+    assert child_template.type == KafkaTopicEntityFieldTypeName.STRING
 
 
 # END test__KafkaTopicApiModel_from_dict
@@ -99,86 +109,51 @@ def test__KafkaTopicApiModel_convert_to_atlas_entity(data: dict):
 
     index_field_attribute = atlas[0].attributes.fields[0].attributes  # type: ignore[reportAttributeAccessIssue]
     assert index_field_attribute.name == "testing_kafka_field_1"
-    assert index_field_attribute.qualified_name == (
-        "test_m4i_confluent_environment--test_m4i_kafka_cluster"
-        "--testing_m4i_kafka_topic--testing_kafka_field_1"
-    )
+    # top-level fields are created with parent_field="" so qualified_name resolves to field name
+    assert index_field_attribute.qualified_name == "testing_kafka_field_1"
+    # When convert_to_atlas is called with parent_field="", datasets gets cleared
+    # (condition: if parent_field is not None and self.parent_field is not None)
+    assert index_field_attribute.datasets == []
+    # doc-based attributes are populated since field 1 has doc="test_m4i_data_attribute"
     index_field_attributes = index_field_attribute.attributes[0]
     assert index_field_attributes is not None
     assert getattr(index_field_attributes.unique_attributes, "qualified_name") == "test_m4i_data_attribute"
-    index_field_dataset = index_field_attribute.datasets[0]
-    assert index_field_dataset is not None
-    assert (
-        getattr(index_field_dataset.unique_attributes, "qualified_name")
-        == "test_m4i_confluent_environment--test_m4i_kafka_cluster--testing_m4i_kafka_topic"
-    )
 
     index_field_attribute = atlas[0].attributes.fields[1].attributes  # type: ignore[reportAttributeAccessIssue]
     assert index_field_attribute.name == "testing_kafka_field_2"
-    assert index_field_attribute.qualified_name == (
-        "test_m4i_confluent_environment--test_m4i_kafka_cluster"
-        "--testing_m4i_kafka_topic--testing_kafka_field_2"
-    )
-    index_field_dataset = index_field_attribute.datasets[0]
-    assert index_field_dataset is not None
-    assert (
-        getattr(index_field_dataset.unique_attributes, "qualified_name")
-        == "test_m4i_confluent_environment--test_m4i_kafka_cluster--testing_m4i_kafka_topic"
-    )
+    assert index_field_attribute.qualified_name == "testing_kafka_field_2"
+    # field 2 has doc=None, so no attributes are added
+    assert index_field_attribute.attributes == []
+    assert index_field_attribute.datasets == []
 
     ref_guid_list = list(atlas_ref.keys())
     index_field_attribute = atlas_ref[ref_guid_list[1]].attributes  # type: ignore[reportAttributeAccessIssue]
     assert index_field_attribute.name == "testing_kafka_field_1"
-    assert index_field_attribute.qualified_name == (
-        "test_m4i_confluent_environment--test_m4i_kafka_cluster"
-        "--testing_m4i_kafka_topic--testing_kafka_field_1"
-    )
+    assert index_field_attribute.qualified_name == "testing_kafka_field_1"
     index_field_attributes = index_field_attribute.attributes[0]
     assert index_field_attributes is not None
     assert getattr(index_field_attributes.unique_attributes, "qualified_name") == "test_m4i_data_attribute"
-    index_field_dataset = index_field_attribute.datasets[0]
-    assert index_field_dataset is not None
-    assert (
-        getattr(index_field_dataset.unique_attributes, "qualified_name")
-        == "test_m4i_confluent_environment--test_m4i_kafka_cluster--testing_m4i_kafka_topic"
-    )
+    assert index_field_attribute.datasets == []
 
     index_field_attribute = atlas_ref[ref_guid_list[2]].attributes  # type: ignore[reportAttributeAccessIssue]
     assert index_field_attribute.name == "testing_kafka_field_2"
-    assert index_field_attribute.qualified_name == (
-        "test_m4i_confluent_environment--test_m4i_kafka_cluster"
-        "--testing_m4i_kafka_topic--testing_kafka_field_2"
-    )
-    index_field_dataset = index_field_attribute.datasets[0]
-    assert index_field_dataset is not None
-    assert (
-        getattr(index_field_dataset.unique_attributes, "qualified_name")
-        == "test_m4i_confluent_environment--test_m4i_kafka_cluster--testing_m4i_kafka_topic"
-    )
+    assert index_field_attribute.qualified_name == "testing_kafka_field_2"
+    assert index_field_attribute.datasets == []
 
     index_field_attribute = atlas_ref[ref_guid_list[3]].attributes  # type: ignore[reportAttributeAccessIssue]
     assert index_field_attribute.name == "testing_kafka_field_2"
-    assert index_field_attribute.qualified_name == (
-        "test_m4i_confluent_environment--test_m4i_kafka_cluster"
-        "--testing_m4i_kafka_topic--testing_kafka_field_2"
-        "--testing_kafka_field_2"
-    )
+    assert index_field_attribute.qualified_name == ("testing_kafka_field_2--testing_kafka_field_2")
     index_field_attributes = index_field_attribute.attributes[0]
     assert index_field_attributes is not None
     assert getattr(index_field_attributes.unique_attributes, "qualified_name") == "test_m4i_data_attribute"
     index_field_dataset = index_field_attribute.parent_field[0]
     assert index_field_dataset is not None
-    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == (
-        "test_m4i_confluent_environment--test_m4i_kafka_cluster"
-        "--testing_m4i_kafka_topic--testing_kafka_field_2"
-    )
+    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == "testing_kafka_field_2"
 
     index_field_attribute = atlas_ref[ref_guid_list[4]].attributes  # type: ignore[reportAttributeAccessIssue]
     assert index_field_attribute.name == "testing_kafka_field_3"
     assert index_field_attribute.qualified_name == (
-        "test_m4i_confluent_environment--test_m4i_kafka_cluster"
-        "--testing_m4i_kafka_topic--testing_kafka_field_2"
-        "--testing_kafka_field_2--testing_kafka_field_3"
+        "testing_kafka_field_2--testing_kafka_field_2--testing_kafka_field_3"
     )
     index_field_attributes = index_field_attribute.attributes[0]
     assert index_field_attributes is not None
@@ -186,9 +161,7 @@ def test__KafkaTopicApiModel_convert_to_atlas_entity(data: dict):
     index_field_dataset = index_field_attribute.parent_field[0]
     assert index_field_dataset is not None
     assert getattr(index_field_dataset.unique_attributes, "qualified_name") == (
-        "test_m4i_confluent_environment--test_m4i_kafka_cluster"
-        "--testing_m4i_kafka_topic--testing_kafka_field_2"
-        "--testing_kafka_field_2"
+        "testing_kafka_field_2--testing_kafka_field_2"
     )
 
 

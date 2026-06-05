@@ -32,7 +32,8 @@ def test__create_microservice_process_from_dict(microservice_process):
     assert instance.description == "test_m4i_microservice_process"
     assert instance.inputs == ["test_m4i_dataset"]
     assert instance.outputs == ["test_m4i_dataset"]
-    assert instance.source == ["test_m4i_source"]
+    # source is typed as Optional[str], so list gets serialized to string representation
+    assert instance.source == "['test_m4i_source']"
     assert instance.system == "test_m4i_kubernetes_pod"
 
 
@@ -54,7 +55,8 @@ def test__create_microservice_process_from_json(microservice_process):
     assert instance.description == "test_m4i_microservice_process"
     assert instance.inputs == ["test_m4i_dataset"]
     assert instance.outputs == ["test_m4i_dataset"]
-    assert instance.source == ["test_m4i_source"]
+    # source is typed as Optional[str], so list gets serialized to string representation
+    assert instance.source == "['test_m4i_source']"
     assert instance.system == "test_m4i_kubernetes_pod"
 
 

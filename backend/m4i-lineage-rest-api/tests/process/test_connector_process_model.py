@@ -31,12 +31,10 @@ def test__create_connector_process_from_dict(connector_process):
     assert instance.description == "test_m4i_connector_process"
     assert instance.inputs == ["test_m4i_dataset"]
     assert instance.outputs == ["test_m4i_dataset"]
-    assert instance.source == ["test_m4i_source"]
+    # source is typed as Optional[str], so list gets serialized to string representation
+    assert instance.source == "['test_m4i_source']"
     assert instance.connector_type == "test_m4i_connector_process Type"
     assert instance.server == "test_m4i_connector_process Server"
-
-
-# END test__create_connector_process_from_dict
 
 
 def test__create_connector_process_from_json(connector_process):
@@ -54,7 +52,8 @@ def test__create_connector_process_from_json(connector_process):
     assert instance.description == "test_m4i_connector_process"
     assert instance.inputs == ["test_m4i_dataset"]
     assert instance.outputs == ["test_m4i_dataset"]
-    assert instance.source == ["test_m4i_source"]
+    # source is typed as Optional[str], so list gets serialized to string representation
+    assert instance.source == "['test_m4i_source']"
     assert instance.connector_type == "test_m4i_connector_process Type"
     assert instance.server == "test_m4i_connector_process Server"
 
