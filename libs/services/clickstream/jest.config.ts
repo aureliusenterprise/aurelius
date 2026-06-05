@@ -1,6 +1,6 @@
-module.exports = {
-    name: 'services-clickstream',
-    preset: '../../../jest.config.js',
+export default {
+    displayName: 'services-clickstream',
+    preset: '../../../jest.preset.js',
     coverageDirectory: '../../../coverage/libs/services/clickstream',
     snapshotSerializers: [
         'jest-preset-angular/AngularSnapshotSerializer.js',

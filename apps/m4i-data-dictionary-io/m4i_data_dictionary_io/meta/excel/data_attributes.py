@@ -2,7 +2,7 @@ from pandas import DataFrame
 
 from ...entities import DataAttribute
 from .ExcelParserConfig import ExcelParserConfig
-from ..excel import get_file_details
+from .source import get_file_details
 
 data_attributes_column_mapping = {
     "Attribute Name": "name",

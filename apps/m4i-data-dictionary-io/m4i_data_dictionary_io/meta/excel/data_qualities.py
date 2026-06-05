@@ -1,7 +1,7 @@
 from ...entities import DataQuality
 from .ExcelParserConfig import ExcelParserConfig
 from pandas import DataFrame
-from ..excel import get_file_details
+from .source import get_file_details
 
 data_qualities_column_mapping = {
     "ID": "id",

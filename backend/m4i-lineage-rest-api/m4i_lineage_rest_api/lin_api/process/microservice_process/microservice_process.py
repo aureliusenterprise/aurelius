@@ -9,7 +9,10 @@ from .microservice_process_model import MicroserviceProcess
 from .microservice_process_serializers import (
     m4i_microservice_process_model as microservice_process_serializer,
 )
-from ... import output_filter_functions, m4i_output_model, m4i_output_get_model, api
+from ...atlas_get_response_seralizer import m4i_output_get_model
+from ...atlas_put_response_seralizer import m4i_output_model
+from ...output_filter_functions import output_filter_functions
+from ...restplus import api
 
 """
 Defining microservice_process, (Kafka to Elastic) NameSpace

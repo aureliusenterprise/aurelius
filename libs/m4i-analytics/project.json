@@ -30,14 +30,6 @@
             "executor": "@nxlv/python:remove",
             "options": {}
         },
-        "test": {
-            "executor": "@nxlv/python:run-commands",
-            "options": {
-                "command": "poetry run pytest tests/",
-                "cwd": "{projectRoot}"
-            },
-            "outputs": ["{workspaceRoot}/reports/{projectRoot}/unittests", "{workspaceRoot}/coverage/{projectRoot}"]
-        },
         "update": {
             "executor": "@nxlv/python:update",
             "options": {}

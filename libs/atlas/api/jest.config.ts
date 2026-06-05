@@ -1,7 +1,7 @@
-module.exports = {
-    name: 'data2model',
-    preset: '../../jest.config.js',
-    coverageDirectory: '../../coverage/apps/data2model',
+export default {
+    displayName: 'atlas-api',
+    preset: '../../../jest.preset.js',
+    coverageDirectory: '../../../coverage/libs/atlas/api',
     snapshotSerializers: [
         'jest-preset-angular/AngularSnapshotSerializer.js',
         'jest-preset-angular/HTMLCommentSerializer.js',

@@ -2,7 +2,7 @@ from pandas import DataFrame
 
 from ...entities import Dataset
 from .ExcelParserConfig import ExcelParserConfig
-from ..excel import get_file_details
+from .source import get_file_details
 
 datasets_column_mapping = {
     "Dataset Name": "name",

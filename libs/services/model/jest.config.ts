@@ -1,6 +1,6 @@
-module.exports = {
-    name: 'services-model',
-    preset: '../../../jest.config.js',
+export default {
+    displayName: 'services-model',
+    preset: '../../../jest.preset.js',
     coverageDirectory: '../../../coverage/libs/services/model',
     snapshotSerializers: [
         'jest-preset-angular/AngularSnapshotSerializer.js',

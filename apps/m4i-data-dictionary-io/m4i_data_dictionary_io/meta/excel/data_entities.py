@@ -2,7 +2,7 @@ from pandas import DataFrame
 
 from ...entities import DataEntity
 from .ExcelParserConfig import ExcelParserConfig
-from ..excel import get_file_details
+from .source import get_file_details
 
 data_entities_column_mapping = {
     "Entity name": "name",

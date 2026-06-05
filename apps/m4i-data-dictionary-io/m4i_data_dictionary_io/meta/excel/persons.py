@@ -2,7 +2,7 @@ from pandas import DataFrame
 
 from ...entities import Person
 from .ExcelParserConfig import ExcelParserConfig
-from ..excel import get_file_details
+from .source import get_file_details
 
 persons_column_mapping = {"Person Name": "name", "Email address": "email"}
 

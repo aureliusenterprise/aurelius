@@ -2,7 +2,7 @@ from pandas import DataFrame
 
 from ...entities import System
 from .ExcelParserConfig import ExcelParserConfig
-from ..excel import get_file_details
+from .source import get_file_details
 
 systems_column_mapping = {"System Name": "name", "Intermediate Qualified System Name": "qualifiedName"}
 

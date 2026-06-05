@@ -1,7 +1,7 @@
-module.exports = {
-    name: 'version',
-    preset: '../../jest.config.js',
-    coverageDirectory: '../../coverage/libs/version',
+export default {
+    displayName: 'core',
+    preset: '../../jest.preset.js',
+    coverageDirectory: '../../coverage/libs/core',
     snapshotSerializers: [
         'jest-preset-angular/AngularSnapshotSerializer.js',
         'jest-preset-angular/HTMLCommentSerializer.js',

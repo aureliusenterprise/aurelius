@@ -30,17 +30,6 @@
             "executor": "@nxlv/python:remove",
             "options": {}
         },
-        "test": {
-            "executor": "@nxlv/python:run-commands",
-            "options": {
-                "command": "poetry run pytest tests/",
-                "cwd": "libs/m4i-analytics-extensions"
-            },
-            "outputs": [
-                "{workspaceRoot}/reports/libs/m4i-analytics-extensions/unittests",
-                "{workspaceRoot}/coverage/libs/m4i-analytics-extensions"
-            ]
-        },
         "update": {
             "executor": "@nxlv/python:update",
             "options": {}

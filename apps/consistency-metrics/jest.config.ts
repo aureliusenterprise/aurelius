@@ -1,6 +1,6 @@
-module.exports = {
-    name: 'consistency-metrics',
-    preset: '../../jest.config.js',
+export default {
+    displayName: 'consistency-metrics',
+    preset: '../../jest.preset.js',
     coverageDirectory: '../../coverage/apps/consistency-metrics',
     snapshotSerializers: [
         'jest-preset-angular/AngularSnapshotSerializer.js',

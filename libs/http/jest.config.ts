@@ -1,7 +1,7 @@
-module.exports = {
-    name: 'task-manager',
-    preset: '../../jest.config.js',
-    coverageDirectory: '../../coverage/libs/task-manager',
+export default {
+    displayName: 'http',
+    preset: '../../jest.preset.js',
+    coverageDirectory: '../../coverage/libs/http',
     snapshotSerializers: [
         'jest-preset-angular/AngularSnapshotSerializer.js',
         'jest-preset-angular/HTMLCommentSerializer.js',

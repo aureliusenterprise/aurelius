@@ -7,7 +7,11 @@ from m4i_backend_core.auth import requires_auth
 
 from .generic_process_model import GenericProcess
 from .generic_process_serializers import m4i_generic_process_model as generic_process_serializer
-from ... import output_filter_functions, m4i_output_model, m4i_output_get_model, api, authorizations
+from ...atlas_get_response_seralizer import m4i_output_get_model
+from ...atlas_put_response_seralizer import m4i_output_model
+from ...authorization_definition import authorizations
+from ...output_filter_functions import output_filter_functions
+from ...restplus import api
 
 """
 Defining generic_process, (Python Script) NameSpace

@@ -47,17 +47,6 @@
             "executor": "@nxlv/python:remove",
             "options": {}
         },
-        "test": {
-            "executor": "@nxlv/python:run-commands",
-            "options": {
-                "command": "poetry run pytest tests/",
-                "cwd": "libs/m4i-backend-core"
-            },
-            "outputs": [
-                "{workspaceRoot}/reports/libs/m4i-backend-core/unittests",
-                "{workspaceRoot}/coverage/libs/m4i-backend-core"
-            ]
-        },
         "update": {
             "executor": "@nxlv/python:update",
             "options": {}

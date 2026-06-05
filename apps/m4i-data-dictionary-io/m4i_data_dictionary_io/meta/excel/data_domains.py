@@ -2,7 +2,7 @@ from pandas import DataFrame
 
 from ...entities import DataDomain
 from .ExcelParserConfig import ExcelParserConfig
-from ..excel import get_file_details
+from .source import get_file_details
 
 data_domains_column_mapping = {
     "Domain name": "name",

@@ -2,7 +2,7 @@ from pandas import DataFrame
 
 from ...entities import DataField
 from .ExcelParserConfig import ExcelParserConfig
-from ..excel import get_file_details
+from .source import get_file_details
 
 data_fields_column_mapping = {
     "Field Name": "name",

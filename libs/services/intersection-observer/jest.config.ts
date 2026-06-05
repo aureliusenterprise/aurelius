@@ -1,6 +1,6 @@
-module.exports = {
-    name: 'services-intersection-observer',
-    preset: '../../../jest.config.js',
+export default {
+    displayName: 'services-intersection-observer',
+    preset: '../../../jest.preset.js',
     coverageDirectory: '../../../coverage/libs/services/intersection-observer',
     snapshotSerializers: [
         'jest-preset-angular/AngularSnapshotSerializer.js',
