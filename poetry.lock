@@ -1833,11 +1833,10 @@ matplotlib = "3.1.3"
 networkx = "2.4"
 pandas = "1.3.0"
 pydotplus = "2.0.2"
+pymysql = "^1.0"
 python-keycloak = "0.18.0"
 requests = "2.26.0"
 requests-toolbelt = "0.9.1"
-resin = "0.1.2"
-rx = "3.2.0"
 sqlalchemy = "1.3.13"
 sqlparse = "0.3.0"
 uuid = "1.30"
@@ -1899,6 +1898,7 @@ develop = true
 
 [package.dependencies]
 flask = "2.1.2"
+pyopenssl = "25.1.0"
 python-jose = {version = "3.1.0", extras = ["pycryptodome"]}
 
 [package.source]
@@ -3579,6 +3579,40 @@ test = ["pytest (>=8.2)", "pytest-asyncio (>=0.24.0)"]
 zstd = ["zstandard"]
 
 [[package]]
+name = "pymysql"
+version = "1.1.2"
+description = "Pure Python MySQL Driver"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pymysql-1.1.2-py3-none-any.whl", hash = "sha256:e6b1d89711dd51f8f74b1631fe08f039e7d76cf67a42a323d3178f0f25762ed9"},
+    {file = "pymysql-1.1.2.tar.gz", hash = "sha256:4961d3e165614ae65014e361811a724e2044ad3ea3739de9903ae7c21f539f03"},
+]
+
+[package.extras]
+ed25519 = ["PyNaCl (>=1.4.0)"]
+rsa = ["cryptography"]
+
+[[package]]
+name = "pyopenssl"
+version = "25.1.0"
+description = "Python wrapper module around the OpenSSL library"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pyopenssl-25.1.0-py3-none-any.whl", hash = "sha256:2b11f239acc47ac2e5aca04fd7fa829800aeee22a2eb30d744572a157bd8a1ab"},
+    {file = "pyopenssl-25.1.0.tar.gz", hash = "sha256:8d031884482e0c67ee92bf9a4d8cceb08d92aba7136432ffb0703c5280fc205b"},
+]
+
+[package.dependencies]
+cryptography = ">=41.0.5,<46"
+typing-extensions = {version = ">=4.9", markers = "python_version < \"3.13\" and python_version >= \"3.8\""}
+
+[package.extras]
+docs = ["sphinx (!=5.2.0,!=5.2.0.post0,!=7.2.5)", "sphinx_rtd_theme"]
+test = ["pretend", "pytest (>=3.0.1)", "pytest-rerunfailures"]
+
+[[package]]
 name = "pyparsing"
 version = "3.1.4"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
@@ -4077,19 +4111,6 @@ files = [
 requests = ">=2.0.1,<3.0.0"
 
 [[package]]
-name = "resin"
-version = "0.1.2"
-description = "Thin wrapper for resin api[work in progress]"
-optional = false
-python-versions = "*"
-files = [
-    {file = "resin-0.1.2.tar.gz", hash = "sha256:b92cfb80312416254c12ce27224dcca09823963cebb980f83bfcb32f3a2ad93c"},
-]
-
-[package.dependencies]
-requests = "*"
-
-[[package]]
 name = "rpds-py"
 version = "0.20.1"
 description = "Python bindings to Rust's persistent data structures (rpds)"
@@ -4239,17 +4260,6 @@ files = [
     {file = "ruff-0.1.5-py3-none-win_amd64.whl", hash = "sha256:c21fe20ee7d76206d290a76271c1af7a5096bc4c73ab9383ed2ad35f852a0087"},
     {file = "ruff-0.1.5-py3-none-win_arm64.whl", hash = "sha256:82bfcb9927e88c1ed50f49ac6c9728dab3ea451212693fe40d08d314663e412f"},
     {file = "ruff-0.1.5.tar.gz", hash = "sha256:5cbec0ef2ae1748fb194f420fb03fb2c25c3258c86129af7172ff8f198f125ab"},
-]
-
-[[package]]
-name = "rx"
-version = "3.2.0"
-description = "Reactive Extensions (Rx) for Python"
-optional = false
-python-versions = ">=3.6.0"
-files = [
-    {file = "Rx-3.2.0-py3-none-any.whl", hash = "sha256:922c5f4edb3aa1beaa47bf61d65d5380011ff6adcd527f26377d05cb73ed8ec8"},
-    {file = "Rx-3.2.0.tar.gz", hash = "sha256:b657ca2b45aa485da2f7dcfd09fac2e554f7ac51ff3c2f8f2ff962ecd963d91c"},
 ]
 
 [[package]]

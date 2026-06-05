@@ -11,6 +11,7 @@ include = "m4i_backend_core"
 
 [tool.poetry.dependencies]
 flask = "2.1.2"
+pyopenssl = "25.1.0"
 python = "~3.8"
 python-jose = { version = "3.1.0", extras = ["pycryptodome"] }
 

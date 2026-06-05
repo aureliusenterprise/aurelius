@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import numbers
 from collections.abc import Sequence
 from typing import IO, Any, Optional
@@ -801,12 +803,7 @@ class PlatformApi:
         result = ApiUtils.post_json(
             config.DATA_UPLOAD_ENDPOINT,
             content_type=ContentType.TEXT,
-            data={
-                "project": projectName,
-                "branch": branchName,
-                "model_id": modelId,
-                "content": content,
-            },
+            data={"project": projectName, "branch": branchName, "model_id": modelId, "content": content},
             proxies=config.PROXIES,
             use_default_proxies=config.USE_DEFAULT_PROXIES,
             username=username,

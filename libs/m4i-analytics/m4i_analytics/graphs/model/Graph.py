@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -171,12 +173,7 @@ class Graph:
         return (
             isinstance(self.nodes, DataFrame)
             and not any(filter(lambda a: a not in mapping_keys, attrs))
-            and not any(
-                filter(
-                    lambda n: n not in df_cols,
-                    list(self._nodeAttributeMapping.values()),
-                )
-            )
+            and not any(filter(lambda n: n not in df_cols, list(self._nodeAttributeMapping.values())))
         )
 
     # END hasValidNodeAttributeMapping
@@ -243,12 +240,7 @@ class Graph:
         return (
             isinstance(self.edges, DataFrame)
             and not any(filter(lambda a: a not in mapping_keys, attrs))
-            and not any(
-                filter(
-                    lambda e: e not in df_cols,
-                    list(self._edgeAttributeMapping.values()),
-                )
-            )
+            and not any(filter(lambda e: e not in df_cols, list(self._edgeAttributeMapping.values())))
         )
 
     # END hasValidEdgeAttributeMapping

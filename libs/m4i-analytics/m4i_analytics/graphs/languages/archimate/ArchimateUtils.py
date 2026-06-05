@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import contextlib
 import copy
 import json
@@ -14,14 +16,8 @@ from pandas import DataFrame
 
 from m4i_analytics.graphs.GraphUtils import GraphUtils
 from m4i_analytics.graphs.languages.archimate.metamodel.Archi import ArchiElement
-from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import (
-    ElementType,
-    RelationshipType,
-)
-from m4i_analytics.graphs.languages.archimate.model.ArchimateModel import (
-    ArchimateModel,
-    ViewAttribute,
-)
+from m4i_analytics.graphs.languages.archimate.metamodel.Concepts import ElementType, RelationshipType
+from m4i_analytics.graphs.languages.archimate.model.ArchimateModel import ArchimateModel, ViewAttribute
 from m4i_analytics.graphs.model.Graph import EdgeAttribute, NodeAttribute
 from m4i_analytics.graphs.visualisations.GraphPlotter import Layout as LayoutEnum
 from m4i_analytics.graphs.visualisations.model.Layout import Layout
@@ -205,8 +201,7 @@ class ArchimateUtils(GraphUtils):
             result = {}
             if relationship["@xsi_type"] == RelationshipType.ACCESS["tag"]:
                 result["accessType"] = relationship.get(
-                    "@accessType",
-                    RelationshipType.ACCESS_ACCESS["attributes"]["accessType"],
+                    "@accessType", RelationshipType.ACCESS_ACCESS["attributes"]["accessType"]
                 )
             elif (
                 relationship["@xsi_type"] == RelationshipType.ASSOCIATION["tag"]
@@ -339,8 +334,7 @@ class ArchimateUtils(GraphUtils):
                     result += [
                         item
                         for list in map(
-                            lambda o: organization_mapper(o, levels, depth + 1),
-                            organization["ar3_item"],
+                            lambda o: organization_mapper(o, levels, depth + 1), organization["ar3_item"]
                         )
                         for item in list
                     ]
@@ -573,10 +567,7 @@ class ArchimateUtils(GraphUtils):
             # END find_item
 
             def format_label(name):
-                return {
-                    "ar3_label": [{"@xml_lang": "en", "value": str(name)}],
-                    "ar3_item": [],
-                }
+                return {"ar3_label": [{"@xml_lang": "en", "value": str(name)}], "ar3_item": []}
 
             # END format_label
 
@@ -666,8 +657,8 @@ class ArchimateUtils(GraphUtils):
         viewpoint: Optional[str] = None,
         layout: Optional[Union[Layout, LayoutEnum]] = None,
         name: str = "Generated view",
-        coords: Optional[dict] = None,
-        labels: Optional[list] = None,
+        coords: Optional[dict[str, dict[str, int]]] = None,
+        labels: Optional[list[str]] = None,
         node_width: int = 120,
         node_height: int = 55,
         path: Optional[list[str]] = None,
@@ -787,10 +778,7 @@ class ArchimateUtils(GraphUtils):
             from m4i_analytics.graphs.visualisations.GraphPlotter import GraphPlotter
 
             coords = GraphPlotter.get_coordinates(
-                viewmodel,
-                layout=layout,
-                node_width=node_width,
-                node_height=node_height,
+                viewmodel, layout=layout, node_width=node_width, node_height=node_height
             )
         else:
             coords = layout.get_coordinates(
@@ -813,12 +801,7 @@ class ArchimateUtils(GraphUtils):
             node_type = node_ref.get(model.getNodeAttributeMapping(NodeAttribute.TYPE))
             # Make an exception for junctions..
             is_junction = (
-                node_type
-                in [
-                    ElementType.JUNCTION,
-                    ElementType.AND_JUNCTION,
-                    ElementType.OR_JUNCTION,
-                ]
+                node_type in [ElementType.JUNCTION, ElementType.AND_JUNCTION, ElementType.OR_JUNCTION]
                 if node_type
                 else False
             )
@@ -841,12 +824,10 @@ class ArchimateUtils(GraphUtils):
         for viewedge in viewmodel.edges.to_dict(orient="records"):
             edgeid = viewedge[viewmodel.getEdgeAttributeMapping(EdgeAttribute.ID)]
             sources = find_viewnodes(
-                viewnodes,
-                viewedge[viewmodel.getEdgeAttributeMapping(EdgeAttribute.SOURCE)],
+                viewnodes, viewedge[viewmodel.getEdgeAttributeMapping(EdgeAttribute.SOURCE)]
             )
             targets = find_viewnodes(
-                viewnodes,
-                viewedge[viewmodel.getEdgeAttributeMapping(EdgeAttribute.TARGET)],
+                viewnodes, viewedge[viewmodel.getEdgeAttributeMapping(EdgeAttribute.TARGET)]
             )
 
             for source in sources:
@@ -1064,12 +1045,7 @@ class ArchimateUtils(GraphUtils):
     # END commit_model_to_repository
 
     @staticmethod
-    def color_view_node(
-        view_node: dict,
-        fill_color_red: int,
-        fill_color_green: int,
-        fill_color_blue: int,
-    ):
+    def color_view_node(view_node: dict, fill_color_red: int, fill_color_green: int, fill_color_blue: int):
         """
         Adds the given fill color to the given view node. The fill color is specified in RGB format.
 
@@ -1098,23 +1074,14 @@ class ArchimateUtils(GraphUtils):
             **view_node,
             "ar3_style": {
                 **view_node.get("ar3_style", {}),
-                "ar3_fillColor": {
-                    "@r": fill_color_red,
-                    "@g": fill_color_green,
-                    "@b": fill_color_blue,
-                },
+                "ar3_fillColor": {"@r": fill_color_red, "@g": fill_color_green, "@b": fill_color_blue},
             },
         }
 
     # END color_view_node
 
     @staticmethod
-    def color_view_edge(
-        view_edge: dict,
-        line_color_red: int,
-        line_color_green: int,
-        line_color_blue: int,
-    ):
+    def color_view_edge(view_edge: dict, line_color_red: int, line_color_green: int, line_color_blue: int):
         """
         Adds the given line color to the given view edge. The line color is specified in RGB format.
 
@@ -1143,11 +1110,7 @@ class ArchimateUtils(GraphUtils):
             **view_edge,
             "ar3_style": {
                 **view_edge.get("ar3_style", {}),
-                "ar3_lineColor": {
-                    "@r": line_color_red,
-                    "@g": line_color_green,
-                    "@b": line_color_blue,
-                },
+                "ar3_lineColor": {"@r": line_color_red, "@g": line_color_green, "@b": line_color_blue},
             },
         }
 
@@ -1159,7 +1122,7 @@ class ArchimateUtils(GraphUtils):
         Returns a flat sequence of all given nodes and their children.
 
         :returns: A flat sequence of all given nodes and their children
-        :rtype: Generator of dict
+        :rtype: Generator of Dict
 
         :param Iterable view_nodes: The top level set of nodes in the view
         """
@@ -1209,10 +1172,10 @@ class ArchimateUtils(GraphUtils):
         Finds the view object (node, edge or other) with the given ID. Also checks nested objects.
 
         :return: The view object with the given id
-        :rtype: dict
+        :rtype: Dict
 
         :param view: The view to search in
-        :type view: dict
+        :type view: Dict
         :param object_id: The id of the element to search for
         :type object_id: str
         """
@@ -1242,7 +1205,7 @@ class ArchimateUtils(GraphUtils):
         Also checks nested elements.
 
         :return: The view nodes referencing the model node with the given id.
-        :rtype: Iterable[dict]
+        :rtype: Iterable[Dict]
 
         :param view_nodes: The set of view nodes to search in.
         :type view_nodes: Iterable
@@ -1268,7 +1231,7 @@ class ArchimateUtils(GraphUtils):
         Finds the view edges that reference the model relationship with the given relationship ID.
 
         :return: The view edges that reference the model relationship with the given id
-        :rtype: Iterable[dict]
+        :rtype: Iterable[Dict]
 
         :param view_edges: The set of edges to search in
         :type view_nodes: Iterable

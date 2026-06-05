@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Optional
 
 from m4i_analytics.m4i.platform.model.DataContent import DataContent

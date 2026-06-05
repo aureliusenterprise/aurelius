@@ -11,7 +11,8 @@ from m4i_analytics.model_extractor.ExtractorLanguagePrimitives import (
     ViewDefinition,
 )
 from m4i_backend_core.shared import register as register_shared
-from m4i_graphviz_layouts import ArchimateHierarchicalLayout, ArchimateProcessLayout
+from m4i_graphviz_layouts.ArchimateHierarchicalLayout import ArchimateHierarchicalLayout
+from m4i_graphviz_layouts.ArchimateProcessLayout import ArchimateProcessLayout
 from pandas import DataFrame, read_csv, read_excel, read_json
 from werkzeug.utils import secure_filename
 
