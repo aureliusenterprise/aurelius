@@ -18,7 +18,7 @@ def test__create_object_id_from_dict():
 
     assert instance.guid == "guid"
     assert instance.type_name == "type name"
-    assert instance.unique_attributes.attributes["qualifiedName"] == "qualified name"  # type: ignore[reportAttributeAccessIssue, reportOptionalSubscript, reportOptionalMemberAccess]
+    assert instance.unique_attributes.unmapped_attributes["qualifiedName"] == "qualified name"  # type: ignore[reportAttributeAccessIssue, reportOptionalSubscript, reportOptionalMemberAccess]
 
 
 # END test__create_data_domain_from_dict
@@ -43,7 +43,7 @@ def test__create_object_id_from_json():
 
     assert instance.guid == "guid"
     assert instance.type_name == "type name"
-    assert instance.unique_attributes.attributes["qualifiedName"] == "qualified name"  # type: ignore[reportAttributeAccessIssue, reportOptionalSubscript, reportOptionalMemberAccess]
+    assert instance.unique_attributes.unmapped_attributes["qualifiedName"] == "qualified name"  # type: ignore[reportAttributeAccessIssue, reportOptionalSubscript, reportOptionalMemberAccess]
 
 
 # END test__create_object_id_from_json
@@ -94,10 +94,10 @@ def test__create_data_attribute_with_missing_reference():
 def test__create_object_id_with_empty_unique_attribute():
     """
     Tests whether or not an exception is raised when creating
-    an `ObjectId` while only an empty unique attribute is given.
+    an `ObjectId` while only an empty unique attribute dict is given.
     """
 
-    object_id = {"typeName": "type name", "uniqueAttributes": {"qualifiedName": None}}
+    object_id = {"typeName": "type name", "uniqueAttributes": {}}
 
     with pytest.raises(ObjectIdHasNoReferenceException):
         ObjectId.from_dict(object_id)

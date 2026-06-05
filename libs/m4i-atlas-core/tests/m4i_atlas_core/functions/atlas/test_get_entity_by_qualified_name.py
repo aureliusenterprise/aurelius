@@ -1,3 +1,4 @@
+import importlib
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -10,6 +11,9 @@ from m4i_atlas_core.entities import (
     SearchResult,
 )
 from m4i_atlas_core.functions.atlas.get_entity_by_qualified_name import get_entity_by_qualified_name
+
+# Load the actual module file for patching (it's a .py file, not a package)
+func_module = importlib.import_module("m4i_atlas_core.functions.atlas.get_entity_by_qualified_name")
 
 
 @pytest.mark.asyncio
@@ -27,16 +31,14 @@ async def test__get_entity_by_qualified_name_single_search_result():
         attributes=BusinessDataDomainAttributes(name="test", qualified_name=qualified_name)
     )
 
-    with patch(
-        "m4i_atlas_core.functions.atlas.get_entity_by_qualified_name.get_entities_by_attribute",
-        new_callable=AsyncMock,
+    with patch.object(
+        func_module, "get_entities_by_attribute", new_callable=AsyncMock
     ) as mock_get_entities_by_attribute:
-        with patch(
-            "m4i_atlas_core.functions.atlas.get_entity_by_qualified_name.resolve_entity_header",
-            new_callable=AsyncMock,
-        ) as mock_get_entity_by_guid:
+        with patch.object(
+            func_module, "resolve_entity_header", new_callable=AsyncMock
+        ) as mock_resolve_entity_header:
             mock_get_entities_by_attribute.return_value = search_result
-            mock_get_entity_by_guid.return_value = entity_details
+            mock_resolve_entity_header.return_value = entity_details
 
             entity = await get_entity_by_qualified_name(qualified_name=qualified_name, type_name=type_name)
 
@@ -60,13 +62,11 @@ async def test__get_entity_by_qualified_name_no_search_results():
         attributes=BusinessDataDomainAttributes(name="test", qualified_name=qualified_name)
     )
 
-    with patch(
-        "m4i_atlas_core.functions.atlas.get_entity_by_qualified_name.get_entities_by_attribute",
-        new_callable=AsyncMock,
+    with patch.object(
+        func_module, "get_entities_by_attribute", new_callable=AsyncMock
     ) as mock_get_entities_by_attribute:
-        with patch(
-            "m4i_atlas_core.functions.atlas.get_entity_by_qualified_name.resolve_entity_header",
-            new_callable=AsyncMock,
+        with patch.object(
+            func_module, "resolve_entity_header", new_callable=AsyncMock
         ) as mock_resolve_entity_header:
             mock_get_entities_by_attribute.return_value = search_result
             mock_resolve_entity_header.return_value = entity_details
@@ -98,13 +98,11 @@ async def test__get_entity_by_qualified_name_multiple_search_results():
         attributes=BusinessDataDomainAttributes(name="test", qualified_name=qualified_name)
     )
 
-    with patch(
-        "m4i_atlas_core.functions.atlas.get_entity_by_qualified_name.get_entities_by_attribute",
-        new_callable=AsyncMock,
+    with patch.object(
+        func_module, "get_entities_by_attribute", new_callable=AsyncMock
     ) as mock_get_entities_by_attribute:
-        with patch(
-            "m4i_atlas_core.functions.atlas.get_entity_by_qualified_name.resolve_entity_header",
-            new_callable=AsyncMock,
+        with patch.object(
+            func_module, "resolve_entity_header", new_callable=AsyncMock
         ) as mock_resolve_entity_header:
             mock_get_entities_by_attribute.return_value = search_result
             mock_resolve_entity_header.return_value = entity_details
