@@ -1,1 +1,1 @@
-from .conditional_value import *
+from .conditional_value import conditional_value as conditional_value

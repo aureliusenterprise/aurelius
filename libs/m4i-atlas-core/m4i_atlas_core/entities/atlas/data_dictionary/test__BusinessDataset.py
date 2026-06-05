@@ -8,45 +8,15 @@ from .BusinessDataset import BusinessDataset, BusinessDatasetAttributes
 def dataset():
     return BusinessDataset(
         attributes=BusinessDatasetAttributes(
-            qualified_name='Test Dataset',
-            name='Test Dataset',
-            definition='A test dataset',
-            collections=[
-                ObjectId(
-                    type_name='m4i_collection',
-                    guid="test1",
-                    unique_attributes=Attributes()
-                )
-            ],
-            parent_dataset=[
-                ObjectId(
-                    type_name='m4i_dataset',
-                    guid="test2",
-                    unique_attributes=Attributes()
-                )
-            ],
-            child_dataset=[
-                ObjectId(
-                    type_name='m4i_dataset',
-                    guid="test3",
-                    unique_attributes=Attributes()
-                )
-            ],
-            fields=[
-                ObjectId(
-                    type_name='m4i_field',
-                    guid="test4",
-                    unique_attributes=Attributes()
-                )
-            ],
-            source=[
-                ObjectId(
-                    type_name='m4i_source',
-                    guid="test5",
-                    unique_attributes=Attributes()
-                )
-            ]
-        ),
+            qualified_name="Test Dataset",
+            name="Test Dataset",
+            definition="A test dataset",
+            collections=[ObjectId(type_name="m4i_collection", guid="test1", unique_attributes=Attributes())],
+            parent_dataset=[ObjectId(type_name="m4i_dataset", guid="test2", unique_attributes=Attributes())],
+            child_dataset=[ObjectId(type_name="m4i_dataset", guid="test3", unique_attributes=Attributes())],
+            fields=[ObjectId(type_name="m4i_field", guid="test4", unique_attributes=Attributes())],
+            source=[ObjectId(type_name="m4i_source", guid="test5", unique_attributes=Attributes())],
+        )
     )
 
 

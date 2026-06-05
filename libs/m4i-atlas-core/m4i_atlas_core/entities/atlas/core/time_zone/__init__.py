@@ -1,1 +1,3 @@
-from .TimeZone import *
+from .TimeZone import TimeZone
+
+__all__ = ["TimeZone"]

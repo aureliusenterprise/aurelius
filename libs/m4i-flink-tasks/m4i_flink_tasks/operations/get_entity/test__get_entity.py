@@ -39,10 +39,7 @@ def entity() -> Entity:
 
     Returns a simple Entity object with a given guid and attributes.
     """
-    return Entity(
-        guid="1234",
-        attributes=Attributes(unmapped_attributes={"hello": "world"}),
-    )
+    return Entity(guid="1234", attributes=Attributes(unmapped_attributes={"hello": "world"}))
 
 
 @pytest.fixture()
@@ -54,10 +51,7 @@ def event() -> AtlasChangeMessage:
     to simulate a typical change message event.
     """
     return AtlasChangeMessage(
-        version=AtlasChangeMessageVersion(
-            version="1",
-            version_parts=[],
-        ),
+        version=AtlasChangeMessageVersion(version="1", version_parts=[]),
         msg_compression_kind="",
         msg_split_idx=1,
         msg_split_count=1,
@@ -65,6 +59,7 @@ def event() -> AtlasChangeMessage:
         msg_created_by="test",
         msg_creation_time=1,
         spooled=False,
+        source={},
         message=AtlasChangeMessageBody(
             event_time=1,
             operation_type=EntityAuditAction.ENTITY_CREATE,
@@ -110,7 +105,7 @@ def test_get_entity_process_valid_input_event(
     """
     data_stream = environment.from_collection([event.to_json()])
 
-    with patch(__package__ + ".get_entity.get_entity_by_guid", return_value=entity):
+    with patch("m4i_flink_tasks.operations.get_entity.get_entity.get_entity_by_guid", return_value=entity):
         get_entity = GetEntity(
             data_stream=data_stream,
             atlas_url="test",  # atlas_url is not used in the test
@@ -120,10 +115,7 @@ def test_get_entity_process_valid_input_event(
 
         expected = [
             AtlasChangeMessage(
-                version=AtlasChangeMessageVersion(
-                    version="1",
-                    version_parts=[],
-                ),
+                version=AtlasChangeMessageVersion(version="1", version_parts=[]),
                 msg_compression_kind="",
                 msg_split_idx=1,
                 msg_split_count=1,
@@ -131,6 +123,7 @@ def test_get_entity_process_valid_input_event(
                 msg_created_by="test",
                 msg_creation_time=1,
                 spooled=False,
+                source={},
                 message=AtlasChangeMessageBody(
                     event_time=1,
                     operation_type=EntityAuditAction.ENTITY_CREATE,
@@ -138,7 +131,7 @@ def test_get_entity_process_valid_input_event(
                     entity=entity,
                     relationship=None,
                 ),
-            ),
+            )
         ]
 
         output = list(get_entity.main.execute_and_collect())
@@ -147,8 +140,7 @@ def test_get_entity_process_valid_input_event(
 
 
 def test_get_entity_handle_invalid_input_event(
-    environment: StreamExecutionEnvironment,
-    keycloak_factory: KeycloakFactory,
+    environment: StreamExecutionEnvironment, keycloak_factory: KeycloakFactory
 ) -> None:
     """
     Test the GetEntity class's handling of an invalid event input.
@@ -177,8 +169,7 @@ def test_get_entity_handle_invalid_input_event(
 
 
 def test_get_entity_handle_event_without_entity(
-    environment: StreamExecutionEnvironment,
-    keycloak_factory: KeycloakFactory,
+    environment: StreamExecutionEnvironment, keycloak_factory: KeycloakFactory
 ) -> None:
     """
     Test the GetEntity class's handling of an event without an entity.
@@ -189,10 +180,7 @@ def test_get_entity_handle_event_without_entity(
     - The no_entity_errors stream is checked to ensure it reports the error.
     """
     event = AtlasChangeMessage(
-        version=AtlasChangeMessageVersion(
-            version="1",
-            version_parts=[],
-        ),
+        version=AtlasChangeMessageVersion(version="1", version_parts=[]),
         msg_compression_kind="",
         msg_split_idx=1,
         msg_split_count=1,
@@ -200,6 +188,7 @@ def test_get_entity_handle_event_without_entity(
         msg_created_by="test",
         msg_creation_time=1,
         spooled=False,
+        source={},
         message=AtlasChangeMessageBody(
             event_time=1,
             operation_type=EntityAuditAction.ENTITY_CREATE,
@@ -228,9 +217,7 @@ def test_get_entity_handle_event_without_entity(
 
 
 def test_get_entity_handle_http_error_during_entity_lookup(
-    environment: StreamExecutionEnvironment,
-    event: AtlasChangeMessage,
-    keycloak_factory: KeycloakFactory,
+    environment: StreamExecutionEnvironment, event: AtlasChangeMessage, keycloak_factory: KeycloakFactory
 ) -> None:
     """
     Test the GetEntity class's handling of HTTP errors during entity lookup.
@@ -244,7 +231,7 @@ def test_get_entity_handle_http_error_during_entity_lookup(
     data_stream = environment.from_collection([event.to_json()])
 
     with patch(
-        __package__ + ".get_entity.get_entity_by_guid",
+        "m4i_flink_tasks.operations.get_entity.get_entity.get_entity_by_guid",
         new=Mock(side_effect=HTTPError()),
     ):
         get_entity = GetEntity(
@@ -264,9 +251,7 @@ def test_get_entity_handle_http_error_during_entity_lookup(
 
 
 def test_get_entity_handle_keycloak_error_during_entity_lookup(
-    environment: StreamExecutionEnvironment,
-    event: AtlasChangeMessage,
-    keycloak_factory: KeycloakFactory,
+    environment: StreamExecutionEnvironment, event: AtlasChangeMessage, keycloak_factory: KeycloakFactory
 ) -> None:
     """
     Test the GetEntity class's handling of Keycloak errors during entity lookup.
@@ -280,7 +265,7 @@ def test_get_entity_handle_keycloak_error_during_entity_lookup(
     data_stream = environment.from_collection([event.to_json()])
 
     with patch(
-        __package__ + ".get_entity.GetEntityFunction.access_token",
+        "m4i_flink_tasks.operations.get_entity.get_entity.GetEntityFunction.access_token",
         new=PropertyMock(side_effect=KeycloakError("Mock Error", 404, b"")),
     ):
         get_entity = GetEntity(

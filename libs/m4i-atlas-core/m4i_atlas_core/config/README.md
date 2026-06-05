@@ -1,15 +1,16 @@
 # ConfigStore
 
-`ConfigStore` is a powerful, singleton-based configuration store providing an easy-to-use interface to store, retrieve, and manage configuration settings.
+`ConfigStore` is a powerful, singleton-based configuration store providing an easy-to-use interface to store,
+retrieve, and manage configuration settings.
 
 - [ConfigStore](#configstore)
-  - [Features](#features)
-  - [How to use](#how-to-use)
-    - [Initializing the ConfigStore](#initializing-the-configstore)
-    - [Storing Configuration Settings](#storing-configuration-settings)
-    - [Retrieving Configuration Settings](#retrieving-configuration-settings)
-    - [Resetting the ConfigStore](#resetting-the-configstore)
-    - [Error Handling](#error-handling)
+    - [Features](#features)
+    - [How to use](#how-to-use)
+        - [Initializing the ConfigStore](#initializing-the-configstore)
+        - [Storing Configuration Settings](#storing-configuration-settings)
+        - [Retrieving Configuration Settings](#retrieving-configuration-settings)
+        - [Resetting the ConfigStore](#resetting-the-configstore)
+        - [Error Handling](#error-handling)
 
 ## Features
 
@@ -40,7 +41,10 @@ store.load({
 })
 ```
 
-In this example, the `config.py` and `credentials.py` files are imported to obtain the necessary configuration parameters and credentials. The `ConfigStore` is then initialized using the `get_instance()` method, and the configuration and credential dictionaries are merged and loaded into the `ConfigStore` using the `load()` method.
+In this example, the `config.py` and `credentials.py` files are imported to obtain the necessary configuration
+parameters and credentials. The `ConfigStore` is then initialized using the `get_instance()` method, and the
+configuration and credential dictionaries are merged and loaded into the `ConfigStore` using the `load()`
+method.
 
 > **Note**: It is recommended to initialize the ConfigStore once when the application starts.
 
@@ -60,7 +64,8 @@ store.set_many(key1="value1", key2="value2", key3="value3")
 
 ### Retrieving Configuration Settings
 
-To retrieve a configuration setting, use the `get` method. If the key is not present in the `ConfigStore`, it returns `None` by default.
+To retrieve a configuration setting, use the `get` method. If the key is not present in the `ConfigStore`, it
+returns `None` by default.
 
 ```python
 value = store.get("key")
@@ -72,7 +77,8 @@ You can also provide a default value if the key is not found:
 value = store.get("key", default="default_value")
 ```
 
-If a key is required and not found in the `ConfigStore`, you can raise a `MissingRequiredConfigException` by setting the required parameter to `True`:
+If a key is required and not found in the `ConfigStore`, you can raise a `MissingRequiredConfigException` by
+setting the required parameter to `True`:
 
 ```python
 value = store.get("key", required=True)
@@ -111,7 +117,8 @@ This will clear the `ConfigStore` and reset it to an empty state.
 
 ### Error Handling
 
-The `ConfigStore` raises a `MissingRequiredConfigException` when a required key is not found and no default value has been provided. This exception can be caught and handled as needed in your application:
+The `ConfigStore` raises a `MissingRequiredConfigException` when a required key is not found and no default
+value has been provided. This exception can be caught and handled as needed in your application:
 
 ```python
 from m4i_atlas_core import MissingRequiredConfigException

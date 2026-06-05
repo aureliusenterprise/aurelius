@@ -8,17 +8,17 @@ import { GenerateReportComponent } from './generate-report.component';
 import { GenerateReportService } from './generate-report.service';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    ReactiveFormsModule,
-    GenerateReportRoutingModule,
-    ProjectSelectModule,
-    BranchSelectModule,
-    ProvenanceSelectModule
-  ],
-  declarations: [GenerateReportComponent],
-  providers: [GenerateReportService]
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        FormsModule,
+        ReactiveFormsModule,
+        GenerateReportRoutingModule,
+        ProjectSelectModule,
+        BranchSelectModule,
+        ProvenanceSelectModule,
+    ],
+    declarations: [GenerateReportComponent],
+    providers: [GenerateReportService],
 })
 export class GenerateReportModule {}

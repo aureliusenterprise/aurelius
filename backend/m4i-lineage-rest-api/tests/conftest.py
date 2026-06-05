@@ -4,6 +4,7 @@ from m4i_atlas_core.api.atlas import get_entities_by_attribute
 
 from m4i_lineage_rest_api.app import flask_app, init_config
 
+
 @pytest.fixture(scope="session", autouse=True)
 def _init_config() -> None:
     init_config()
@@ -13,7 +14,7 @@ def _init_config() -> None:
 def client():
     app_flask = flask_app()
     app_flask.initialize_app()
-    app_flask.app.config['TESTING'] = True
+    app_flask.app.config["TESTING"] = True
     with app_flask.app.test_client() as client:
         yield client
     # END client
@@ -23,18 +24,21 @@ def client():
 def check_made():
     async def _check_made(entity_qn: str, entity_type: str):
         entity = await get_entity_by_qualified_name(qualified_name=entity_qn, type_name=entity_type)
-        assert entity.type_name == entity_type
+        assert entity.type_name == entity_type  # type: ignore[reportGeneralTypeIssues]
         # assert entity.attributes.qualified_name == entity_qn
-        assert entity.attributes.unmapped_attributes['qualifiedName'] == entity_qn
-        guid = entity.guid
+        assert entity.attributes.unmapped_attributes["qualifiedName"] == entity_qn  # type: ignore[reportGeneralTypeIssues]
+        guid = entity.guid  # type: ignore[reportGeneralTypeIssues]
         assert guid is not None
 
-        await get_entities_by_attribute.cache.clear()
+        await get_entities_by_attribute.cache.clear()  # type: ignore[reportGeneralTypeIssues]
         return guid
+
     # END ASYNC check_made
     return _check_made
 
+
 # END check_made
+
 
 @pytest.fixture
 def cleanup():
@@ -45,8 +49,10 @@ def cleanup():
 
         object = await get_entity_by_qualified_name(qualified_name=entity_qn, type_name=entity_type)
         assert object is None
-        await get_entities_by_attribute.cache.clear()
+        await get_entities_by_attribute.cache.clear()  # type: ignore[reportGeneralTypeIssues]
 
     # END ASYNC cleanup
     return _cleanup
+
+
 # END cleanup

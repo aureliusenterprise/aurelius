@@ -42,10 +42,7 @@ def event() -> KafkaNotification:
         event_time=1,
         atlas_entity_audit={},
         kafka_notification=AtlasChangeMessage(
-            version=AtlasChangeMessageVersion(
-                version="1",
-                version_parts=[],
-            ),
+            version=AtlasChangeMessageVersion(version="1", version_parts=[]),
             msg_compression_kind="",
             msg_split_idx=1,
             msg_split_count=1,

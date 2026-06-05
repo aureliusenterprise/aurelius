@@ -1,1 +1,1 @@
-from .make_confluent_consumer import *
+from .make_confluent_consumer import make_confluent_consumer as make_confluent_consumer

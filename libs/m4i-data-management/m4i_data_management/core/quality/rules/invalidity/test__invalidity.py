@@ -4,14 +4,9 @@ from .invalidity import invalidity
 
 
 def test_invalidity_with_one_existing_value():
+    exampleValues = ["x", "X", "TBD", "Name"]
 
-    exampleValues = ['x', 'X', 'TBD', 'Name']
-
-    data = DataFrame([
-        {
-            "value": "X"
-        }
-    ])
+    data = DataFrame([{"value": "X"}])
 
     result = invalidity(data, "value", exampleValues)
 
@@ -19,14 +14,9 @@ def test_invalidity_with_one_existing_value():
 
 
 def test_invalidity_without_existing_value():
+    exampleValues = ["x", "X", "TBD", "Name"]
 
-    exampleValues = ['x', 'X', 'TBD', 'Name']
-
-    data = DataFrame([
-        {
-            "value": "Something Else"
-        }
-    ])
+    data = DataFrame([{"value": "Something Else"}])
 
     result = invalidity(data, "value", exampleValues)
 
@@ -34,14 +24,9 @@ def test_invalidity_without_existing_value():
 
 
 def test_invalidity_with_non_existing_column():
+    exampleValues = ["x", "X", "TBD", "Name"]
 
-    exampleValues = ['x', 'X', 'TBD', 'Name']
-
-    data = DataFrame([
-        {
-            "value": "Something Else"
-        }
-    ])
+    data = DataFrame([{"value": "Something Else"}])
 
     result = invalidity(data, "non_existing_column", exampleValues)
 

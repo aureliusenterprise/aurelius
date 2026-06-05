@@ -10,7 +10,6 @@ log = logging.getLogger(__name__)
 
 
 class Producer:
-
     get_new: Callable[[], DataFrame]
     get_old: Callable[[], DataFrame]
     name: str
@@ -25,7 +24,7 @@ class Producer:
         propagate: Callable[[DataFrame], None],
         name: str = "Producer",
         dataset_comparator: Callable[[DataFrame, DataFrame], DataFrame] = compare_datasets,
-        transform: Callable[[DataFrame], DataFrame] = identity
+        transform: Callable[[DataFrame], DataFrame] = identity,
     ):
         self.get_new = get_new
         self.get_old = get_old
@@ -33,6 +32,7 @@ class Producer:
         self.propagate = propagate
         self.dataset_comparator = dataset_comparator
         self.transform = transform
+
     # END __init__
 
     def run(self):
@@ -50,16 +50,13 @@ class Producer:
 
         new_data = self.get_new()
 
-        log.info(f"Retrieved {len(new_data.index)} new data records")
+        log.info(f"Retrieved {len(new_data.index)} new data records")  # type: ignore[arg-type]
 
         old_data = self.get_old()
 
-        log.info(f"Retrieved {len(old_data.index)} old data records")
+        log.info(f"Retrieved {len(old_data.index)} old data records")  # type: ignore[arg-type]
 
-        changes = self.dataset_comparator(
-            old=old_data,
-            new=new_data,
-        )
+        changes = self.dataset_comparator(old_data, new_data)
 
         log.info(f"Found {len(changes.index)} changes")
 
@@ -74,5 +71,8 @@ class Producer:
         # END IF
 
         log.info(f"Finished running producer {self.name}")
+
     # END run
+
+
 # END Producer

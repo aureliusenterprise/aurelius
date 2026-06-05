@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Any, Dict, Union
 
 import pytest
 from pyflink.datastream import StreamExecutionEnvironment
@@ -9,9 +9,7 @@ from .determine_change import DetermineChange
 
 
 def create_mock_change_message(
-    operation_type: str,
-    previous: Union[dict, None],
-    current: Union[dict, None],
+    operation_type: str, previous: Union[Dict[str, Any], None], current: Union[Dict[str, Any], None]
 ) -> AtlasChangeMessageWithPreviousVersion:
     """
     Create a mock change message for testing purposes.
@@ -53,10 +51,7 @@ def create_mock_change_message(
             "type": "ENTITY_NOTIFICATION_V2",
             "entity": current,
         },
-        "version": {
-            "version": "1.0",
-            "version_parts": [1, 0],
-        },
+        "version": {"version": "1.0", "version_parts": [1, 0]},
         "msg_source_ip": "192.168.1.1",
         "previous_version": previous,
         "spooled": False,
@@ -78,9 +73,7 @@ def environment() -> StreamExecutionEnvironment:
     return env
 
 
-def test__determine_change_handle_valid_input_event(
-    environment: StreamExecutionEnvironment,
-) -> None:
+def test__determine_change_handle_valid_input_event(environment: StreamExecutionEnvironment) -> None:
     """
     Test if `DetermineChange` correctly processes a valid entity update event.
 
@@ -93,13 +86,7 @@ def test__determine_change_handle_valid_input_event(
         "type_name": "SampleEntity",
         "attributes": {"attr1": "test"},
         "relationship_attributes": {
-            "relation1": [
-                {
-                    "guid": "12345",
-                    "relationship_guid": "12345",
-                    "type_name": "RelatedEntity",
-                },
-            ],
+            "relation1": [{"guid": "12345", "relationship_guid": "12345", "type_name": "RelatedEntity"}]
         },
     }
 
@@ -107,13 +94,7 @@ def test__determine_change_handle_valid_input_event(
         "type_name": "SampleEntity",
         "attributes": {"attr1": "new_value", "attr2": "value"},
         "relationship_attributes": {
-            "relation1": [
-                {
-                    "guid": "23456",
-                    "relationship_guid": "23456",
-                    "type_name": "RelatedEntity",
-                },
-            ],
+            "relation1": [{"guid": "23456", "relationship_guid": "23456", "type_name": "RelatedEntity"}]
         },
     }
 
@@ -121,9 +102,7 @@ def test__determine_change_handle_valid_input_event(
 
     data_stream = environment.from_collection([change_message])
 
-    determine_change = DetermineChange(
-        data_stream=data_stream,
-    )
+    determine_change = DetermineChange(data_stream=data_stream)
 
     output = list(determine_change.main.execute_and_collect())
 
@@ -131,9 +110,7 @@ def test__determine_change_handle_valid_input_event(
     assert all(isinstance(message, EntityMessage) for message in output)
 
 
-def test__determine_change_handle_unsupported_operation_type(
-    environment: StreamExecutionEnvironment,
-) -> None:
+def test__determine_change_handle_unsupported_operation_type(environment: StreamExecutionEnvironment) -> None:
     """
     Verify `DetermineChange`'s behavior when encountering an unsupported operation type.
 
@@ -143,17 +120,11 @@ def test__determine_change_handle_unsupported_operation_type(
     - The single output item is an instance of `NotImplementedError`.
     - The exception message matches "Unknown event type: EntityAuditAction.CLASSIFICATION_ADD".
     """
-    change_message = create_mock_change_message(
-        "CLASSIFICATION_ADD",
-        {"guid": "12345"},
-        {"guid": "23456"},
-    )
+    change_message = create_mock_change_message("CLASSIFICATION_ADD", {"guid": "12345"}, {"guid": "23456"})
 
     data_stream = environment.from_collection([change_message])
 
-    determine_change = DetermineChange(
-        data_stream=data_stream,
-    )
+    determine_change = DetermineChange(data_stream=data_stream)
 
     output = list(determine_change.main.execute_and_collect())
 
@@ -165,9 +136,7 @@ def test__determine_change_handle_unsupported_operation_type(
     assert str(error) == "Unknown event type: EntityAuditAction.CLASSIFICATION_ADD"
 
 
-def test__determine_change_handle_processing_error(
-    environment: StreamExecutionEnvironment,
-) -> None:
+def test__determine_change_handle_processing_error(environment: StreamExecutionEnvironment) -> None:
     """
     Test error handling in `DetermineChange` when a processing error occurs.
 
@@ -176,17 +145,11 @@ def test__determine_change_handle_processing_error(
     - The output should have a length of 1.
     - The single output item is an instance of `ValueError`.
     """
-    change_message = create_mock_change_message(
-        "ENTITY_UPDATE",
-        {"guid": "12345"},
-        None,
-    )
+    change_message = create_mock_change_message("ENTITY_UPDATE", {"guid": "12345"}, None)
 
     data_stream = environment.from_collection([change_message])
 
-    determine_change = DetermineChange(
-        data_stream=data_stream,
-    )
+    determine_change = DetermineChange(data_stream=data_stream)
 
     output = list(determine_change.main.execute_and_collect())
 

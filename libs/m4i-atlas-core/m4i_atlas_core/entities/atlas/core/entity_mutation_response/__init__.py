@@ -1,1 +1,3 @@
-from .EntityMutationResponse import *
+from .EntityMutationResponse import EntityMutationResponse
+
+__all__ = ["EntityMutationResponse"]

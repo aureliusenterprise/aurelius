@@ -1,5 +1,3 @@
-import pytest
-
 from .indexPattern_Model import IndexPattern
 
 
@@ -15,12 +13,8 @@ def test__create_index_pattern_from_dict():
         "indexPattern": "pattern",
         "updatedAt": "updated at",
         "version": "VERSION",
-        "creator": [
-            "test_m4i_person"
-        ],
-        "parentDataset": [
-            "tester_m4i_visualization"
-        ]
+        "creator": ["test_m4i_person"],
+        "parentDataset": ["tester_m4i_visualization"],
     }
 
     instance = IndexPattern.from_dict(index_pattern)
@@ -37,8 +31,7 @@ def test__create_index_pattern_from_json():
     Tests whether or not a `IndexPattern` can be created from a json string with its attributes
     """
 
-    index_pattern = (
-        """
+    index_pattern = """
         {
             "qualifiedName": "test_m4i_indexPattern",
             "name": "test_m4i_indexPattern",
@@ -54,7 +47,6 @@ def test__create_index_pattern_from_json():
             ]
         }
         """
-    )
 
     instance = IndexPattern.from_json(index_pattern)
 
@@ -79,12 +71,8 @@ def test__index_pattern_calculates_correct_qualified_name():
         "indexPattern": "pattern",
         "updatedAt": "updated at",
         "version": "VERSION",
-        "creator": [
-            "test_m4i_person"
-        ],
-        "parentDataset": [
-            "tester_m4i_visualization"
-        ]
+        "creator": ["test_m4i_person"],
+        "parentDataset": ["tester_m4i_visualization"],
     }
 
     instance = IndexPattern.from_dict(index_pattern)
@@ -107,12 +95,8 @@ def test__index_pattern_convert_to_atlas_entity():
         "indexPattern": "pattern",
         "updatedAt": "updated at",
         "version": "VERSION",
-        "creator": [
-            "test_m4i_person"
-        ],
-        "parentDataset": [
-            "tester_m4i_visualization"
-        ]
+        "creator": ["test_m4i_person"],
+        "parentDataset": ["tester_m4i_visualization"],
     }
 
     instance = IndexPattern.from_dict(index_pattern)
@@ -132,7 +116,9 @@ def test__index_pattern_convert_to_atlas_entity():
     for person in atlas_person:
         assert person is not None
         assert person.type_name == "m4i_person"
-        assert getattr(person.unique_attributes,
-                       "qualified_name") == instance.creator[0]
+        assert (
+            getattr(person.unique_attributes, "qualified_name") == instance.creator[0]  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
+        )
+
 
 # END test__index_pattern_convert_to_atlas_entity

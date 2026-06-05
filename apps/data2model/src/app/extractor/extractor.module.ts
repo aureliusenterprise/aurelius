@@ -11,17 +11,17 @@ import { ExtractorService } from './extractor.service';
 import { RuleEditorModule } from './rule-editor/rule-editor.module';
 
 @NgModule({
-  imports: [
-    ApiModule,
-    CommonModule,
-    HeroModule,
-    HoldableModule,
-    TranslateModule,
-    ExtractorRoutingModule,
-    RepositoryModule,
-    RuleEditorModule
-  ],
-  declarations: [ExtractorComponent],
-  providers: [ExtractorService]
+    imports: [
+        ApiModule,
+        CommonModule,
+        HeroModule,
+        HoldableModule,
+        TranslateModule,
+        ExtractorRoutingModule,
+        RepositoryModule,
+        RuleEditorModule,
+    ],
+    declarations: [ExtractorComponent],
+    providers: [ExtractorService],
 })
 export class ExtractorModule {}

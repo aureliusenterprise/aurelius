@@ -11,16 +11,10 @@ def ingress_controller_process():
         "name": "testing_m4i_ingress_controller_process",
         "description": "test_m4i_ingress_controller_process",
         "processOwner": "test_m4i_person",
-        "inputs": [
-            "test_m4i_dataset"
-        ],
-        "outputs": [
-            "test_m4i_dataset"
-        ],
-        "ingressObject": [
-            "test_m4i_ingress_object_process"
-        ],
-        "cluster": "test_m4i_kubernetes_cluster"
+        "inputs": ["test_m4i_dataset"],
+        "outputs": ["test_m4i_dataset"],
+        "ingressObject": ["test_m4i_ingress_object_process"],
+        "cluster": "test_m4i_kubernetes_cluster",
     }
 
 
@@ -95,8 +89,9 @@ def test__ingress_controller_process_convert_to_atlas_entity(ingress_controller_
     assert atlas_ingress_object is not None
     assert getattr(atlas_ingress_object.unique_attributes, "qualified_name") == instance.ingress_object[0]
 
-    atlas_cluster = atlas_instance.relationship_attributes.cluster[0]
+    atlas_cluster = atlas_instance.relationship_attributes.cluster[0]  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
     assert atlas_cluster is not None
     assert getattr(atlas_cluster.unique_attributes, "qualified_name") == instance.cluster
+
 
 # END test__ingress_controller_process_convert_to_atlas_entity

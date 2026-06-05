@@ -19,7 +19,7 @@ def test__create_data_attribute_from_dict():
         "source": "source",
         "has_pii": "Yes",
         "is_key_data": "Yes",
-        "risk_classification": "Low"
+        "risk_classification": "Low",
     }
 
     instance = DataAttribute.from_dict(data_attribute)
@@ -44,8 +44,7 @@ def test__create_data_attribute_from_json():
     Tests whether or not a `DataAttribute` can be created from a json string with its attributes
     """
 
-    data_attribute = (
-        """
+    data_attribute = """
         {
             "dataEntity": "data-domain--data-entity",
             "name": "data attribute",
@@ -59,7 +58,6 @@ def test__create_data_attribute_from_json():
         "risk_classification": "Low"
         }
         """
-    )
 
     instance = DataAttribute.from_json(data_attribute)
 
@@ -92,6 +90,8 @@ def test__data_attribute_calculates_correct_qualified_name():
     instance = DataAttribute.from_dict(data_attribute)
 
     assert instance._qualified_name() == "data-domain--data-entity--data-attribute"
+
+
 # END test__data_attribute_calculates_correct_qualified_name
 
 
@@ -109,6 +109,8 @@ def test__create_data_attribute_with_wrong_qualified_name():
     with pytest.raises(QualifiedNameNotValidException):
         DataAttribute.from_dict(data_attribute)
     # END WITH
+
+
 # END test__create_data_attribute_with_wrong_qualified_name
 
 
@@ -125,7 +127,7 @@ def test__data_attribute_convert_to_atlas_entity():
         "source": "source",
         "has_pii": "Yes",
         "is_key_data": "Yes",
-        "risk_classification": "Low"
+        "risk_classification": "Low",
     }
 
     instance = DataAttribute.from_dict(data_attribute)
@@ -142,14 +144,14 @@ def test__data_attribute_convert_to_atlas_entity():
 
     assert atlas_source is not None
     assert atlas_source.type_name == "m4i_source"
-    assert getattr(atlas_source.unique_attributes,
-                   "qualified_name") == instance.source
+    assert getattr(atlas_source.unique_attributes, "qualified_name") == instance.source
 
     atlas_classifications = atlas_instance.classifications
-    assert len(atlas_classifications)==3
-    assert atlas_classifications[0].type_name == 'PII'
-    assert atlas_classifications[1].type_name == 'key_data'
-    assert atlas_classifications[2].type_name == 'low_risk'
+    assert len(atlas_classifications) == 3
+    assert atlas_classifications[0].type_name == "PII"
+    assert atlas_classifications[1].type_name == "key_data"
+    assert atlas_classifications[2].type_name == "low_risk"
+
 
 # END test__data_attribute_convert_to_atlas_entity
 
@@ -163,7 +165,7 @@ def test__data_attribute_convert_to_atlas_entity_with_business_owner():
         "dataEntity": "data-domain--data-entity",
         "name": "data attribute",
         "qualifiedName": "data-domain--data-entity--data-attribute",
-        "businessOwner": "owner"
+        "businessOwner": "owner",
     }
 
     instance = DataAttribute.from_dict(data_attribute)
@@ -175,8 +177,9 @@ def test__data_attribute_convert_to_atlas_entity_with_business_owner():
 
     assert atlas_business_owner is not None
     assert atlas_business_owner.type_name == "m4i_person"
-    assert getattr(atlas_business_owner.unique_attributes,
-                   "qualified_name") == instance.business_owner
+    assert getattr(atlas_business_owner.unique_attributes, "qualified_name") == instance.business_owner
+
+
 # END test__data_attribute_convert_to_atlas_entity_with_business_owner
 
 
@@ -191,7 +194,6 @@ def test__data_attribute_convert_to_atlas_entity_with_data_steward():
         "qualifiedName": "data-domain--data-entity--data-attribute",
         "steward": "steward",
         "attribute_type": "attribute_type",
-
     }
 
     instance = DataAttribute.from_dict(data_attribute)
@@ -203,6 +205,7 @@ def test__data_attribute_convert_to_atlas_entity_with_data_steward():
 
     assert atlas_steward is not None
     assert atlas_steward.type_name == "m4i_person"
-    assert getattr(atlas_steward.unique_attributes,
-                   "qualified_name") == instance.steward
+    assert getattr(atlas_steward.unique_attributes, "qualified_name") == instance.steward
+
+
 # END test__data_attribute_convert_to_atlas_entity_with_data_steward

@@ -11,20 +11,26 @@ data_fields_column_mapping = {
     "Intermediate Physical Qualified Name": "simpleDataset",
     "Intermediate Qualified System Name": "simpleSystem",
     "Collection Intermediate Qualified Name": "simpleCollection",
-    "Field Type": "fieldType"
+    "Field Type": "fieldType",
 }
 
 data_fields_sheet_name = "4. L4 Fields"
 data_fields_parser_class = DataField
 
 
-def data_fields_transform(data: DataFrame):
-    data["dataset"] = data["simpleSystem"] + "--" + data["simpleCollection"] + "--" + data["simpleDataset"]
-    data = data.drop(
-        columns=["simpleSystem", "simpleCollection", "simpleDataset"]
+def data_fields_transform(data: DataFrame) -> DataFrame:
+    data["dataset"] = (
+        data["simpleSystem"]  # type: ignore
+        + "--"
+        + data["simpleCollection"]
+        + "--"
+        + data["simpleDataset"]
     )
-    data["source"] = get_file_details()['qualifiedName']
-    return data.drop_duplicates()
+    data = data.drop(columns=["simpleSystem", "simpleCollection", "simpleDataset"])  # type: ignore
+    data["source"] = get_file_details()["qualifiedName"]
+    return data.drop_duplicates()  # type: ignore
+
+
 # END data_fields_transform
 
 
@@ -32,5 +38,5 @@ data_fields_parser_config = ExcelParserConfig(
     column_mapping=data_fields_column_mapping,
     parser_class=data_fields_parser_class,
     sheet_name=data_fields_sheet_name,
-    transform=data_fields_transform
+    transform=data_fields_transform,
 )

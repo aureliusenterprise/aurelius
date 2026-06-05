@@ -5,11 +5,7 @@ import pytest
 from m4i_atlas_core import Attributes, Entity, EntityAuditAction
 from pyflink.datastream import StreamExecutionEnvironment
 
-from m4i_flink_tasks import (
-    AppSearchDocument,
-    EntityMessage,
-    EntityMessageType,
-)
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
 from .synchronize_app_search import SynchronizeAppSearch
 
@@ -56,14 +52,11 @@ def test__synchronize_app_search_valid_input_event(environment: StreamExecutionE
     data_stream = environment.from_collection([entity_message])
 
     expected_document = AppSearchDocument(
-        guid="1234",
-        name="test",
-        referenceablequalifiedname="1234-test",
-        typename="m4i_data_domain",
+        guid="1234", name="test", referenceablequalifiedname="1234-test", typename="m4i_data_domain"
     )
 
     with patch(
-        __package__ + ".synchronize_app_search.EVENT_HANDLERS",
+        "m4i_flink_tasks.operations.synchronize_app_search.synchronize_app_search.EVENT_HANDLERS",
         new={EntityMessageType.ENTITY_CREATED: [Mock(return_value={"1234": expected_document})]},
     ):
         synchronize_app_search = SynchronizeAppSearch(data_stream, Mock, "test-index")
@@ -82,9 +75,7 @@ def test__synchronize_app_search_valid_input_event(environment: StreamExecutionE
     assert document.guid == "1234"
 
 
-def test__synchronize_app_search_emit_tombstone_message(
-    environment: StreamExecutionEnvironment,
-) -> None:
+def test__synchronize_app_search_emit_tombstone_message(environment: StreamExecutionEnvironment) -> None:
     """
     Test if `SynchronizeAppSearch` emits a tombstone message for an `ENTITY_DELETED` event.
 
@@ -112,14 +103,10 @@ def test__synchronize_app_search_emit_tombstone_message(
     data_stream = environment.from_collection([entity_message])
 
     with patch(
-        __package__ + ".synchronize_app_search.EVENT_HANDLERS",
+        "m4i_flink_tasks.operations.synchronize_app_search.synchronize_app_search.EVENT_HANDLERS",
         new={EntityMessageType.ENTITY_DELETED: []},
     ):
-        synchronize_app_search = SynchronizeAppSearch(
-            data_stream,
-            Mock,
-            "test-index",
-        )
+        synchronize_app_search = SynchronizeAppSearch(data_stream, Mock, "test-index")
         output = list(synchronize_app_search.main.execute_and_collect())
 
     assert len(output) == 1
@@ -134,9 +121,7 @@ def test__synchronize_app_search_emit_tombstone_message(
     assert document is None
 
 
-def test__synchronize_app_search_handle_processing_error(
-    environment: StreamExecutionEnvironment,
-) -> None:
+def test__synchronize_app_search_handle_processing_error(environment: StreamExecutionEnvironment) -> None:
     """
     Test if `SynchronizeAppSearch` correctly handles a processing error.
 

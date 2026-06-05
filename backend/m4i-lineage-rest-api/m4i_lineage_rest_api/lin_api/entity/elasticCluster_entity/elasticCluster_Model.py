@@ -1,13 +1,15 @@
 from dataclasses import dataclass
 from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
-from m4i_atlas_core.entities.atlas.connectors import (ElasticCluster as CoreElasticCluster,
-                                                      ElasticClusterAttributes as CoreElasticClusterAttributes)
+from m4i_atlas_core.entities.atlas.connectors import (
+    ElasticCluster as CoreElasticCluster,
+    ElasticClusterAttributes as CoreElasticClusterAttributes,
+)
 from typing import Optional
 
 from ..utils import get_qualified_name
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticClusterBase(DataClassJsonMixin):
     name: str
@@ -17,16 +19,15 @@ class ElasticClusterBase(DataClassJsonMixin):
         Returns the qualified name of the ElasticCluster based on its `confluent_environment`
         """
         # ElasticClusterQualifiedName is based on confluent_environment
-        return get_qualified_name(
-            self.name
-        )
+        return get_qualified_name(self.name)
+
     # END _qualified_name
 
 
 # END ElasticClusterBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticClusterDefaultsBase(DataClassJsonMixin):
     shard_count: Optional[int] = None
@@ -36,13 +37,9 @@ class ElasticClusterDefaultsBase(DataClassJsonMixin):
 # END ElasticClusterDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class ElasticCluster(
-    ElasticClusterDefaultsBase,
-    ElasticClusterBase
-):
-
+class ElasticCluster(ElasticClusterDefaultsBase, ElasticClusterBase):
     def convert_to_atlas(self) -> CoreElasticCluster:
         """
         Returns a corresponding Atlas `ElasticCluster` instance.
@@ -52,13 +49,14 @@ class ElasticCluster(
             shard_count=self.shard_count,
             replica_count=self.replica_count,
             name=self.name,
-            qualified_name=self._qualified_name()
+            qualified_name=self._qualified_name(),
         )
 
-        entity = CoreElasticCluster(
-            attributes=attributes
-        )
+        entity = CoreElasticCluster(attributes=attributes)
 
         return entity
+
     # END convert_to_atlas
+
+
 # END ElasticCluster

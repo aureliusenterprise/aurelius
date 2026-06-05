@@ -9,7 +9,7 @@ def test__create_confluent_env_from_dict():
     confluent_env = {
         "name": "confluent_environment",
         "schema_registry": "true",
-        "confluent_cloud": "confluent_cloud"
+        "confluent_cloud": "confluent_cloud",
     }
 
     instance = ConfluentEnvironment.from_dict(confluent_env)
@@ -22,26 +22,25 @@ def test__create_confluent_env_from_dict():
 
 # END test__create_confluent_environment_from_dict
 
+
 def test__create_confluent_environment_from_json():
     """
     Tests whether or not a `ConfluentEnvironment` can be created from a json string with its attributes
     """
 
-    confluent_environment = (
-        """
+    confluent_environment = """
         {
             "name": "confluent_environment",
             "schema_registry": "true",
             "confluent_cloud": "confluent_cloud"
-         }   
+         }
         """
-    )
 
     instance = ConfluentEnvironment.from_json(confluent_environment)
 
     assert instance.name == "confluent_environment"
     assert instance._qualified_name() == "confluent_cloud--confluent_environment"
-    assert bool(instance.schema_registry) == True
+    assert bool(instance.schema_registry)
 
 
 # END test__create_confluent_environment_from_json
@@ -52,10 +51,7 @@ def test__confluent_environment_calculates_correct_qualified_name():
     Tests whether or not the generated qualified name matches the expected format
     """
 
-    confluent_environment = {
-        "name": "confluent_environment",
-        "confluent_cloud": "confluent_cloud"
-    }
+    confluent_environment = {"name": "confluent_environment", "confluent_cloud": "confluent_cloud"}
 
     instance = ConfluentEnvironment.from_dict(confluent_environment)
 
@@ -73,7 +69,7 @@ def test__confluent_environment_convert_to_atlas_entity_with_confluent_cloud():
     confluent_environment = {
         "name": "confluent_environment",
         "schema_registry": "true",
-        "confluent_cloud": "confluent_cloud"
+        "confluent_cloud": "confluent_cloud",
     }
 
     instance = ConfluentEnvironment.from_dict(confluent_environment)
@@ -85,6 +81,7 @@ def test__confluent_environment_convert_to_atlas_entity_with_confluent_cloud():
 
     assert atlas_confluent_cloud is not None
     assert atlas_confluent_cloud.type_name == "m4i_confluent_cloud"
-    assert getattr(atlas_confluent_cloud.unique_attributes,
-                   "qualified_name") == instance.confluent_cloud
+    assert getattr(atlas_confluent_cloud.unique_attributes, "qualified_name") == instance.confluent_cloud
+
+
 # END test__confluent_environment_convert_to_atlas_entity_with_confluent_cloud

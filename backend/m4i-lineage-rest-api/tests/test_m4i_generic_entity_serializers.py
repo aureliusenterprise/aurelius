@@ -5,12 +5,7 @@ from m4i_atlas_core import ConfigStore
 # from m4i_lineage_rest_api import get_atlas_connection
 from m4i_lineage_rest_api.app import flask_app
 
-atlas_sets = {
-    "server": "127.0.0.1",
-    "port": 21000,
-    "username": "admin",
-    "password": "admin",
-}
+atlas_sets = {"server": "127.0.0.1", "port": 21000, "username": "admin", "password": "admin"}
 
 
 def config():
@@ -61,9 +56,7 @@ def test_m4i_visualization_entity_model_no_name(client, request_to_make):
     request_no_name = request_to_make.copy()
     request_no_name.pop("name")
 
-    t = client.post(
-        path, headers={"Content-Type": "application/json"}, json=request_no_name
-    )
+    t = client.post(path, headers={"Content-Type": "application/json"}, json=request_no_name)
     assert t.status_code == 400
     t_json = t.get_json()
     assert t_json["message"] == "Input payload validation failed"
@@ -77,17 +70,11 @@ def test_m4i_visualization_entity_model_no_version(client, request_to_make):
     request_no_qualifiedName = request_to_make.copy()
     request_no_qualifiedName.pop("qualifiedName")
 
-    t = client.post(
-        path,
-        headers={"Content-Type": "application/json"},
-        json=request_no_qualifiedName,
-    )
+    t = client.post(path, headers={"Content-Type": "application/json"}, json=request_no_qualifiedName)
     assert t.status_code == 400
     t_json = t.get_json()
     assert t_json["message"] == "Input payload validation failed"
-    assert t_json["errors"] == {
-        "qualifiedName": "'qualifiedName' is a required property"
-    }
+    assert t_json["errors"] == {"qualifiedName": "'qualifiedName' is a required property"}
 
 
 # END test_m4i_visualization_entity_model_no_qualifiedName

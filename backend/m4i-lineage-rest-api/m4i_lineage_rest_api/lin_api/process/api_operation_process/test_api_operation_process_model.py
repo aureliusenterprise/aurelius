@@ -12,12 +12,8 @@ def api_operation_process():
         "description": "test_m4i_api_operation_process",
         "microservice": "test_m4i_microservice_process",
         "processOwner": "test_m4i_person",
-        "inputs": [
-            "test_m4i_dataset"
-        ],
-        "outputs": [
-            "test_m4i_dataset"
-        ]
+        "inputs": ["test_m4i_dataset"],
+        "outputs": ["test_m4i_dataset"],
     }
 
 
@@ -89,5 +85,6 @@ def test__api_operation_process_convert_to_atlas_entity(api_operation_process):
     atlas_microservice = atlas_attributes.microservice[0]
     assert atlas_microservice is not None
     assert getattr(atlas_microservice.unique_attributes, "qualified_name") == instance.microservice
+
 
 # END test__api_operation_process_convert_to_atlas_entity

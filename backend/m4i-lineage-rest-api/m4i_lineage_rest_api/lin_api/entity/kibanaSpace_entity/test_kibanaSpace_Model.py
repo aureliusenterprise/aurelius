@@ -11,7 +11,7 @@ def test__create_kibana_space_from_dict():
         "avatar_color": "avatar_color",
         "avatar_initials": "avatar_initials",
         "elastic_cluster": "elastic_cluster",
-        "definition": "definition"
+        "definition": "definition",
     }
 
     instance = KibanaSpace.from_dict(kibana_space)
@@ -31,8 +31,7 @@ def test__create_kibana_space_from_json():
     Tests whether or not a `kibana_space` can be created from a json string with its attributes
     """
 
-    kibana_space = (
-        """
+    kibana_space = """
         {
         "name": "name",
         "avatar_color": "avatar_color",
@@ -41,7 +40,6 @@ def test__create_kibana_space_from_json():
         "definition": "definition"
         }
         """
-    )
 
     instance = KibanaSpace.from_json(kibana_space)
 
@@ -64,7 +62,7 @@ def test__kibana_space_calculates_correct_qualified_name():
     kibana_space = {
         "name": "kibana_space",
         "elastic_cluster": "elastic_cluster",
-        "qualifiedName": "kibana_space"
+        "qualifiedName": "kibana_space",
     }
 
     instance = KibanaSpace.from_dict(kibana_space)
@@ -83,7 +81,7 @@ def test__kibana_space_convert_to_atlas_entity():
         "definition": "definition",
         "elastic_cluster": "elastic_cluster",
         "name": "kibana_space",
-        "qualifiedName": "elastic_cluster--kibana_space"
+        "qualifiedName": "elastic_cluster--kibana_space",
     }
 
     instance = KibanaSpace.from_dict(kibana_space)
@@ -99,6 +97,7 @@ def test__kibana_space_convert_to_atlas_entity():
 
 # END test__kibana_space_convert_to_atlas_entity
 
+
 def test__kibana_space_convert_to_atlas_entity_with_elastic_cluster():
     """
     Tests whether or not the `Child Dataset` field is correctly converted to the atlas format.
@@ -108,7 +107,7 @@ def test__kibana_space_convert_to_atlas_entity_with_elastic_cluster():
         "definition": "definition",
         "elastic_cluster": "elastic_cluster",
         "name": "kibana_space",
-        "qualifiedName": "elastic_cluster--kibana_space"
+        "qualifiedName": "elastic_cluster--kibana_space",
     }
 
     instance = KibanaSpace.from_dict(kibana_space)
@@ -120,6 +119,7 @@ def test__kibana_space_convert_to_atlas_entity_with_elastic_cluster():
 
     assert atlas_elastic_cluster is not None
     assert atlas_elastic_cluster.type_name == "m4i_elastic_cluster"
-    assert getattr(atlas_elastic_cluster.unique_attributes,
-                   "qualified_name") == instance.elastic_cluster
+    assert getattr(atlas_elastic_cluster.unique_attributes, "qualified_name") == instance.elastic_cluster
+
+
 # END test__kibana_space_convert_to_atlas_entity_with_elastic_cluster

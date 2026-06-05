@@ -4,8 +4,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { WelcomeWizardComponent } from './welcome-wizard.component';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule],
-  declarations: [WelcomeWizardComponent],
-  exports: [WelcomeWizardComponent],
+    imports: [CommonModule, FontAwesomeModule],
+    declarations: [WelcomeWizardComponent],
+    exports: [WelcomeWizardComponent],
 })
 export class WelcomeWizardModule {}

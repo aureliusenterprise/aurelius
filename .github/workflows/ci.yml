@@ -9,56 +9,150 @@ on:
         branches:
             - main
 
-permissions:
-    actions: read
-    contents: read
-    packages: read
-
-env:
-    PYTHON_VERSION: 3.8
-    POETRY_VERSION: 1.8.5
-    SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
-    SOPS_VERSION: v3.11.0
-
 jobs:
-    ci:
+    validate:
         runs-on: ubuntu-latest
 
-        steps:
-            - name: Install SOPS
-              run: |
-                  curl -LO https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64
-                  sudo mv sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
-                  sudo chmod +x /usr/local/bin/sops
+        permissions:
+            contents: read
 
+        steps:
             - name: Checkout code
               uses: actions/checkout@v4
+
+            - name: Setup toolchain
+              uses: ./.github/actions/setup-toolchain
               with:
-                  fetch-depth: 0
-
-            - name: 'Setup Python, Poetry and Dependencies'
-              uses: packetcoders/action-setup-cache-python-poetry@main
-              with:
-                  python-version: ${{ env.PYTHON_VERSION }}
-                  poetry-version: ${{ env.POETRY_VERSION }}
-
-            - name: Expose GitHub Runtime
-              uses: crazy-max/ghaction-github-runtime@v3
-
-            - name: Setup Node.js and dependencies
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  cache: npm
-
-            - name: Install Node.js dependencies
-              run: npm install
+                  node: 'true'
+                  python: 'true'
 
             - name: Run pre-commit hooks
               uses: pre-commit/action@v3.0.1
 
-            - name: Set SHA for affected commands
-              uses: nrwl/nx-set-shas@v4
+    test:
+        runs-on: ubuntu-latest
+        needs: validate
+
+        permissions:
+            actions: read
+            contents: read
+            packages: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - name: Setup toolchain
+              uses: ./.github/actions/setup-toolchain
+              with:
+                  cleanup: 'true'
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  node: 'true'
+                  python: 'true'
+                  sops: 'true'
+
+            - name: Set SHA for affected command
+              uses: nrwl/nx-set-shas@v5
 
             - name: Test affected projects
-              run: npx nx affected -t test e2e
+              env:
+                  SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
+              run: npx nx affected -t test e2e -c ci
+
+            - name: Upload coverage reports
+              uses: actions/upload-artifact@v7
+              with:
+                  name: coverage-reports
+                  path: |
+                      **/coverage.xml
+                      **/lcov.info
+                  if-no-files-found: ignore
+
+    build-and-scan:
+        runs-on: ubuntu-latest
+        needs: validate
+
+        permissions:
+            actions: read
+            contents: read
+            packages: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - name: Setup toolchain
+              uses: ./.github/actions/setup-toolchain
+              with:
+                  cleanup: 'true'
+                  cosign: 'true'
+                  cyclonedx: 'true'
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  node: 'true'
+                  python: 'true'
+                  trivy: 'true'
+
+            - name: Set SHA for affected commands
+              uses: nrwl/nx-set-shas@v5
+
+            - name: Build docker images for affected projects
+              run: npx nx affected -t docker-build
+
+            - name: Generate vulnerability reports for affected projects
+              run: npx nx affected -t docker-vuln-scan -c sarif
+
+            - name: Upload vulnerability reports
+              uses: actions/upload-artifact@v7
+              with:
+                  name: vuln-reports
+                  path: '**/vulnerabilities.sarif'
+                  if-no-files-found: ignore
+
+    sonar:
+        runs-on: ubuntu-latest
+        needs: [test, build-and-scan]
+
+        permissions:
+            actions: read
+            contents: read
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - name: Setup toolchain
+              uses: ./.github/actions/setup-toolchain
+              with:
+                  cleanup: 'true'
+                  node: 'true'
+                  sonar: 'true'
+                  sops: 'true'
+
+            - name: Download coverage reports
+              continue-on-error: true
+              uses: actions/download-artifact@v8
+              with:
+                  name: coverage-reports
+
+            - name: Download vulnerability reports
+              continue-on-error: true
+              uses: actions/download-artifact@v8
+              with:
+                  name: vuln-reports
+
+            - name: Set SHA for affected commands
+              uses: nrwl/nx-set-shas@v5
+
+            - name: Decrypt secrets for SonarQube
+              env:
+                  SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
+              run: npx nx affected -t decrypt
+
+            - name: Run SonarQube analysis
+              run: npx nx affected -t sonar

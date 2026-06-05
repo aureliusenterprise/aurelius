@@ -43,7 +43,7 @@ def test__handle_relationship_audit_inserted_relationship() -> None:
                         type_name="m4i_data_entity",
                         guid="1234",
                         unique_attributes=M4IAttributes.from_dict({"qualifiedName": "Entity Name"}),
-                    ),
+                    )
                 ],
             ),
         ),
@@ -53,24 +53,18 @@ def test__handle_relationship_audit_inserted_relationship() -> None:
                     type_name="m4i_data_entity",
                     guid="1234",
                     unique_attributes=M4IAttributes.from_dict({"qualifiedName": "Entity Name"}),
-                ),
-            ],
+                )
+            ]
         },
         old_value=BusinessDataDomain(
             guid="2345",
             type_name="m4i_data_domain",
-            attributes=BusinessDataDomainAttributes(
-                qualified_name="data_domain",
-                name="Data Domain",
-            ),
+            attributes=BusinessDataDomainAttributes(qualified_name="data_domain", name="Data Domain"),
         ),
     )
 
     current_document = AppSearchDocument(
-        guid="2345",
-        typename="m4i_data_domain",
-        name="Domain Name",
-        referenceablequalifiedname="domain_name",
+        guid="2345", typename="m4i_data_domain", name="Domain Name", referenceablequalifiedname="domain_name"
     )
 
     related_documents = [
@@ -79,7 +73,7 @@ def test__handle_relationship_audit_inserted_relationship() -> None:
             typename="m4i_data_entity",
             name="Data Entity",
             referenceablequalifiedname="data_entity",
-        ),
+        )
     ]
 
     child_documents = [
@@ -88,34 +82,36 @@ def test__handle_relationship_audit_inserted_relationship() -> None:
             typename="m4i_data_entity",
             name="Data Entity",
             referenceablequalifiedname="data_entity",
-        ),
+        )
     ]
 
     with patch(
-        __package__ + ".relationship_audit.get_document",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_document",
         return_value=current_document,
-    ), patch(
-        __package__ + ".relationship_audit.get_related_documents",
-        return_value=related_documents,
-    ), patch(
-        __package__ + ".relationship_audit.get_child_documents",
-        return_value=child_documents,
-    ):
-        updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
+    ):  # type: ignore[reportGeneralTypeIssues]
+        with patch(
+            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_related_documents",
+            return_value=related_documents,
+        ):
+            with patch(
+                "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_child_documents",
+                return_value=child_documents,
+            ):
+                updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
-        assert len(updated_documents) == 2
+                assert len(updated_documents) == 2
 
-        updated_domain = updated_documents["2345"]
-        assert updated_domain.deriveddataentity == ["Data Entity"]
-        assert updated_domain.deriveddataentityguid == ["1234"]
+                updated_domain = updated_documents["2345"]
+                assert updated_domain.deriveddataentity == ["Data Entity"]
+                assert updated_domain.deriveddataentityguid == ["1234"]
 
-        updated_entity = updated_documents["1234"]
-        assert updated_entity.deriveddatadomain == ["Domain Name"]
-        assert updated_entity.deriveddatadomainguid == ["2345"]
-        assert updated_entity.breadcrumbguid == ["2345"]
-        assert updated_entity.breadcrumbname == ["Domain Name"]
-        assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
-        assert updated_entity.parentguid == "2345"
+                updated_entity = updated_documents["1234"]
+                assert updated_entity.deriveddatadomain == ["Domain Name"]
+                assert updated_entity.deriveddatadomainguid == ["2345"]
+                assert updated_entity.breadcrumbguid == ["2345"]
+                assert updated_entity.breadcrumbname == ["Domain Name"]
+                assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
+                assert updated_entity.parentguid == "2345"
 
 
 def test__handle_relationship_audit_deleted_relationship() -> None:
@@ -146,7 +142,7 @@ def test__handle_relationship_audit_deleted_relationship() -> None:
                         type_name="m4i_data_entity",
                         guid="1234",
                         unique_attributes=M4IAttributes.from_dict({"qualifiedName": "Entity Name"}),
-                    ),
+                    )
                 ],
             ),
         ),
@@ -156,16 +152,13 @@ def test__handle_relationship_audit_deleted_relationship() -> None:
                     type_name="m4i_data_entity",
                     guid="1234",
                     unique_attributes=M4IAttributes.from_dict({"qualifiedName": "Entity Name"}),
-                ),
-            ],
+                )
+            ]
         },
         new_value=BusinessDataDomain(
             guid="2345",
             type_name="m4i_data_domain",
-            attributes=BusinessDataDomainAttributes(
-                qualified_name="data_domain",
-                name="Data Domain",
-            ),
+            attributes=BusinessDataDomainAttributes(qualified_name="data_domain", name="Data Domain"),
         ),
     )
 
@@ -189,7 +182,7 @@ def test__handle_relationship_audit_deleted_relationship() -> None:
             breadcrumbguid=["2345"],
             breadcrumbname=["Domain Name"],
             breadcrumbtype=["m4i_data_domain"],
-        ),
+        )
     ]
 
     child_documents = [
@@ -203,33 +196,35 @@ def test__handle_relationship_audit_deleted_relationship() -> None:
             breadcrumbguid=["2345"],
             breadcrumbname=["Domain Name"],
             breadcrumbtype=["m4i_data_domain"],
-        ),
+        )
     ]
 
     with patch(
-        __package__ + ".relationship_audit.get_document",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_document",
         return_value=current_document,
-    ), patch(
-        __package__ + ".relationship_audit.get_related_documents",
-        return_value=related_documents,
-    ), patch(
-        __package__ + ".relationship_audit.get_child_documents",
-        return_value=child_documents,
-    ):
-        updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
+    ):  # type: ignore[reportGeneralTypeIssues]
+        with patch(
+            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_related_documents",
+            return_value=related_documents,
+        ):
+            with patch(
+                "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_child_documents",
+                return_value=child_documents,
+            ):
+                updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
-        assert len(updated_documents) == 2
+                assert len(updated_documents) == 2
 
-        updated_domain = updated_documents["2345"]
-        assert updated_domain.deriveddataentity == []
-        assert updated_domain.deriveddataentityguid == []
+                updated_domain = updated_documents["2345"]
+                assert updated_domain.deriveddataentity == []
+                assert updated_domain.deriveddataentityguid == []
 
-        updated_entity = updated_documents["1234"]
-        assert updated_entity.deriveddatadomain == []
-        assert updated_entity.deriveddatadomainguid == []
-        assert updated_entity.breadcrumbguid == []
-        assert updated_entity.breadcrumbname == []
-        assert updated_entity.breadcrumbtype == []
+                updated_entity = updated_documents["1234"]
+                assert updated_entity.deriveddatadomain == []
+                assert updated_entity.deriveddatadomainguid == []
+                assert updated_entity.breadcrumbguid == []
+                assert updated_entity.breadcrumbname == []
+                assert updated_entity.breadcrumbtype == []
 
 
 def test__handle_relationship_audit_replaced_parent_relationship() -> None:
@@ -254,18 +249,12 @@ def test__handle_relationship_audit_replaced_parent_relationship() -> None:
         old_value=BusinessDataEntity(
             guid="entity-1",
             type_name="m4i_data_entity",
-            attributes=BusinessDataEntityAttributes(
-                qualified_name="test_entity",
-                name="Test Entity",
-            ),
+            attributes=BusinessDataEntityAttributes(qualified_name="test_entity", name="Test Entity"),
         ),
         new_value=BusinessDataEntity(
             guid="entity-1",
             type_name="m4i_data_entity",
-            attributes=BusinessDataEntityAttributes(
-                qualified_name="test_entity",
-                name="Test Entity",
-            ),
+            attributes=BusinessDataEntityAttributes(qualified_name="test_entity", name="Test Entity"),
         ),
         # No relationships in the flat deleted_relationships (parent guids are filtered out)
         deleted_relationships={},
@@ -276,8 +265,8 @@ def test__handle_relationship_audit_replaced_parent_relationship() -> None:
                     type_name="m4i_data_domain",
                     guid="domain-new",
                     unique_attributes=M4IAttributes.from_dict({"qualifiedName": "New Domain"}),
-                ),
-            ],
+                )
+            ]
         },
     )
 
@@ -302,24 +291,26 @@ def test__handle_relationship_audit_replaced_parent_relationship() -> None:
     )
 
     with patch(
-        __package__ + ".relationship_audit.get_document",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_document",
         return_value=current_document,
-    ), patch(
-        __package__ + ".relationship_audit.get_related_documents",
-        return_value=[new_domain_document],
-    ), patch(
-        __package__ + ".relationship_audit.get_child_documents",
-        return_value=[],
-    ):
-        updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
+    ):  # type: ignore[reportGeneralTypeIssues]
+        with patch(
+            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_related_documents",
+            return_value=[new_domain_document],
+        ):
+            with patch(
+                "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_child_documents",
+                return_value=[],
+            ):
+                updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
-        assert "entity-1" in updated_documents
-        updated_entity = updated_documents["entity-1"]
+                assert "entity-1" in updated_documents
+                updated_entity = updated_documents["entity-1"]
 
-        # The old parent's breadcrumbs are preserved until the new parent relationship
-        # is fully established by a subsequent insertion event.
-        assert updated_entity.breadcrumbguid == ["domain-old"]
-        assert updated_entity.breadcrumbname == ["Old Domain"]
+                # The old parent's breadcrumbs are preserved until the new parent relationship
+                # is fully established by a subsequent insertion event.
+                assert updated_entity.breadcrumbguid == ["domain-old"]
+                assert updated_entity.breadcrumbname == ["Old Domain"]
         assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
         assert updated_entity.parentguid == "domain-old"
 
@@ -353,17 +344,14 @@ def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
                         type_name="m4i_data_entity",
                         guid="entity-1",
                         unique_attributes=M4IAttributes.from_dict({"qualifiedName": "test_entity"}),
-                    ),
+                    )
                 ],
             ),
         ),
         old_value=BusinessDataDomain(
             guid="domain-new",
             type_name="m4i_data_domain",
-            attributes=BusinessDataDomainAttributes(
-                qualified_name="new_domain",
-                name="New Domain",
-            ),
+            attributes=BusinessDataDomainAttributes(qualified_name="new_domain", name="New Domain"),
         ),
         inserted_relationships={
             "data_entity": [
@@ -371,8 +359,8 @@ def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
                     type_name="m4i_data_entity",
                     guid="entity-1",
                     unique_attributes=M4IAttributes.from_dict({"qualifiedName": "test_entity"}),
-                ),
-            ],
+                )
+            ]
         },
         deleted_relationships={},
     )
@@ -401,22 +389,24 @@ def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
     )
 
     with patch(
-        __package__ + ".relationship_audit.get_document",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_document",
         return_value=new_domain_document,
-    ), patch(
-        __package__ + ".relationship_audit.get_related_documents",
-        return_value=[entity_document],
-    ), patch(
-        __package__ + ".relationship_audit.get_child_documents",
-        return_value=[],
-    ):
-        updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
+    ):  # type: ignore[reportGeneralTypeIssues]
+        with patch(
+            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_related_documents",
+            return_value=[entity_document],
+        ):
+            with patch(
+                "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit.get_child_documents",
+                return_value=[],
+            ):
+                updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
-        assert "entity-1" in updated_documents
-        updated_entity = updated_documents["entity-1"]
+                assert "entity-1" in updated_documents
+                updated_entity = updated_documents["entity-1"]
 
-        # Breadcrumbs should now reflect the new domain
-        assert updated_entity.breadcrumbguid == ["domain-new"]
-        assert updated_entity.breadcrumbname == ["New Domain"]
-        assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
-        assert updated_entity.parentguid == "domain-new"
+                # Breadcrumbs should now reflect the new domain
+                assert updated_entity.breadcrumbguid == ["domain-new"]
+                assert updated_entity.breadcrumbname == ["New Domain"]
+                assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
+                assert updated_entity.parentguid == "domain-new"

@@ -10,15 +10,9 @@ def generic_process():
         "name": "test_m4i_generic_process",
         "processOwner": "test_m4i_person",
         "description": "something",
-        "inputs": [
-            "test_m4i_dataset"
-        ],
-        "outputs": [
-            "test_m4i_dataset"
-        ],
-        "source": [
-            "test_m4i_source"
-        ]
+        "inputs": ["test_m4i_dataset"],
+        "outputs": ["test_m4i_dataset"],
+        "source": ["test_m4i_source"],
     }
 
 
@@ -46,8 +40,7 @@ def test__create_data_attribute_from_json(generic_process):
     Tests whether or not a `generic process` can be created from a dict with its attributes
     """
 
-    generic_process = (
-        """{
+    generic_process = """{
         "qualifiedName": "test_m4i_generic_process",
         "name": "test_m4i_generic_process",
         "processOwner": "test_m4i_person",
@@ -62,7 +55,6 @@ def test__create_data_attribute_from_json(generic_process):
             "test_m4i_source"
         ]
     }"""
-    )
 
     instance = GenericProcess.from_json(generic_process)
 
@@ -104,8 +96,11 @@ def test__data_attribute_convert_to_atlas_entity(generic_process):
     assert atlas_outputs is not None
     assert getattr(atlas_outputs.unique_attributes, "qualified_name") == instance.outputs[0]
 
-    atlas_source = atlas_attributes.source[0]
+    atlas_source = atlas_attributes.source[0]  # type: ignore[reportGeneralTypeIssues]
     assert atlas_source is not None
-    assert getattr(atlas_source.unique_attributes, "qualified_name") == instance.source[0]
+    assert (
+        getattr(atlas_source.unique_attributes, "qualified_name") == instance.source[0]  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
+    )
+
 
 # END test__data_attribute_convert_to_atlas_entity

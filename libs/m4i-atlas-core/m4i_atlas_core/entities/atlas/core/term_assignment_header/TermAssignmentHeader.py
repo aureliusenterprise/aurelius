@@ -6,20 +6,19 @@ from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
 from ..term_assignment_status import TermAssignmentStatus
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class TermAssignmentHeaderBase(DataClassJsonMixin):
-
     relation_guid: str
     term_guid: str
+
 
 # END TermAssignmentHeaderBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class TermAssignmentHeaderDefaultsBase(DataClassJsonMixin):
-
     created_by: Optional[str] = None
     confidence: Optional[int] = None
     description: Optional[str] = None
@@ -29,13 +28,14 @@ class TermAssignmentHeaderDefaultsBase(DataClassJsonMixin):
     status: Optional[TermAssignmentStatus] = None
     steward: Optional[str] = None
 
+
 # END TermAssignmentHeaderDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class TermAssignmentHeader(TermAssignmentHeaderDefaultsBase, TermAssignmentHeaderBase):
-
     pass
+
 
 # END TermAssignmentHeader

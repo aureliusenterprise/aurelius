@@ -11,29 +11,14 @@ def data():
             "null",
             {
                 "fields": [
-                    {
-                        "name": "id",
-                        "type": "string"
-                    },
-                    {
-                        "name": "date",
-                        "type": [
-                            "null",
-                            "long"
-                        ]
-                    },
-                    {
-                        "name": "name",
-                        "type": [
-                            "null",
-                            "string"
-                        ]
-                    }
+                    {"name": "id", "type": "string"},
+                    {"name": "date", "type": ["null", "long"]},
+                    {"name": "name", "type": ["null", "string"]},
                 ],
                 "name": "payload",
-                "type": "record"
-            }
-        ]
+                "type": "record",
+            },
+        ],
     }
 
 
@@ -42,7 +27,9 @@ def data():
 
 def test__create_KafkaTopicApiModel(data: dict):
     model = KafkaTopicEntityField.from_dict(data)
-    atlas_attributes = model.type[1].fields
+    atlas_attributes = model.type[1].fields  # type: ignore[reportGeneralTypeIssues]
     assert isinstance(atlas_attributes, list)
     assert model
+
+
 # END def

@@ -5,37 +5,37 @@ import { EntityDetailsService } from '../services/entity-details/entity-details.
 import { generatePlaceholderId } from '../utils';
 
 @Component({
-  selector: 'models4insight-create-entity',
-  templateUrl: './create-entity.component.html',
-  styleUrls: ['./create-entity.component.scss'],
-  providers: [EntityDetailsService],
+    selector: 'models4insight-create-entity',
+    templateUrl: './create-entity.component.html',
+    styleUrls: ['./create-entity.component.scss'],
+    providers: [EntityDetailsService],
 })
 export class CreateEntityComponent implements OnInit {
-  constructor(private readonly entityDetailsService: EntityDetailsService) {}
+    constructor(private readonly entityDetailsService: EntityDetailsService) {}
 
-  ngOnInit(): void {
-    this.resetEditor();
-  }
+    ngOnInit(): void {
+        this.resetEditor();
+    }
 
-  private resetEditor() {
-    const entityDetails: AtlasEntityWithEXTInformation = {
-      entity: {
-        guid: generatePlaceholderId(),
-        attributes: {
-          qualifiedName: uuid(),
-        },
-        relationshipAttributes: {},
-        classifications: [],
-        typeName: null,
-      },
-      referredEntities: {},
-    };
+    private resetEditor() {
+        const entityDetails: AtlasEntityWithEXTInformation = {
+            entity: {
+                guid: generatePlaceholderId(),
+                attributes: {
+                    qualifiedName: uuid(),
+                },
+                relationshipAttributes: {},
+                classifications: [],
+                typeName: null,
+            },
+            referredEntities: {},
+        };
 
-    this.entityDetailsService.set({
-      description: 'Create entity reset',
-      payload: {
-        entityDetails,
-      },
-    });
-  }
+        this.entityDetailsService.set({
+            description: 'Create entity reset',
+            payload: {
+                entityDetails,
+            },
+        });
+    }
 }

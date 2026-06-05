@@ -11,18 +11,18 @@ import { RulesService } from './rules.service';
 import { SaveRulesModalComponent } from './save-rules-modal/save-rules-modal.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    TranslateModule,
-    RulesRoutingModule,
-    FormsModule,
-    SortableTableShellModule,
-    ReactiveFormsModule,
-    FeatureModule,
-    FontAwesomeModule,
-    ModalModule
-  ],
-  declarations: [RulesComponent, SaveRulesModalComponent],
-  providers: [RulesService]
+    imports: [
+        CommonModule,
+        TranslateModule,
+        RulesRoutingModule,
+        FormsModule,
+        SortableTableShellModule,
+        ReactiveFormsModule,
+        FeatureModule,
+        FontAwesomeModule,
+        ModalModule,
+    ],
+    declarations: [RulesComponent, SaveRulesModalComponent],
+    providers: [RulesService],
 })
 export class RulesModule {}

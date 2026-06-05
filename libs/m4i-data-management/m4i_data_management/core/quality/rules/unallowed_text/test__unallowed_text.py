@@ -5,12 +5,7 @@ from .unallowed_text import unallowed_text
 
 
 def test__unallowed_text_with_unallowed_text():
-
-    data = DataFrame([
-        {
-            "Organisation": "Stratonis Group"
-        }
-    ])
+    data = DataFrame([{"Organisation": "Stratonis Group"}])
 
     result = unallowed_text(data, "Organisation", "Stratonis Group")
 
@@ -18,12 +13,7 @@ def test__unallowed_text_with_unallowed_text():
 
 
 def test__unallowed_text_without_unallowed_text():
-
-    data = DataFrame([
-        {
-            "Organisation": "Something Else"
-        }
-    ])
+    data = DataFrame([{"Organisation": "Something Else"}])
 
     result = unallowed_text(data, "Organisation", "Stratonis Group")
 
@@ -31,12 +21,7 @@ def test__unallowed_text_without_unallowed_text():
 
 
 def test__unallowed_text_with_empty_value():
-
-    data = DataFrame([
-        {
-            "Organisation": NaN
-        }
-    ])
+    data = DataFrame([{"Organisation": NaN}])
 
     result = unallowed_text(data, "Organisation", "Stratonis Group")
 
@@ -44,12 +29,7 @@ def test__unallowed_text_with_empty_value():
 
 
 def test__unallowed_text_with_non_existing_column():
-
-    data = DataFrame([
-        {
-            "Organisation": "Stratonis Group"
-        }
-    ])
+    data = DataFrame([{"Organisation": "Stratonis Group"}])
 
     result = unallowed_text(data, "non_existing_column", "Stratonis Group")
 

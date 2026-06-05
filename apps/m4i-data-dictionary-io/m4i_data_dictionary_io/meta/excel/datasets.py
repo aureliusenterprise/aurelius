@@ -15,12 +15,14 @@ datasets_sheet_name = "4. L4 Fields"
 datasets_parser_class = Dataset
 
 
-def datasets_transform(data: DataFrame):
-    data["collection"] = data["simpleSystem"] + "--" + data["simpleCollection"]
-    data["qualifiedName"] = data["collection"] + "--" + data["simpleDataset"]
-    data = data.drop(columns=["simpleSystem", "simpleCollection", "simpleDataset"])
-    data["source"] = get_file_details()['qualifiedName']
-    return data.drop_duplicates()
+def datasets_transform(data: DataFrame) -> DataFrame:
+    data["collection"] = data["simpleSystem"] + "--" + data["simpleCollection"]  # type: ignore
+    data["qualifiedName"] = data["collection"] + "--" + data["simpleDataset"]  # type: ignore
+    data = data.drop(columns=["simpleSystem", "simpleCollection", "simpleDataset"])  # type: ignore
+    data["source"] = get_file_details()["qualifiedName"]
+    return data.drop_duplicates()  # type: ignore
+
+
 # END datasets_transform
 
 
@@ -28,5 +30,5 @@ datasets_parser_config = ExcelParserConfig(
     column_mapping=datasets_column_mapping,
     parser_class=datasets_parser_class,
     sheet_name=datasets_sheet_name,
-    transform=datasets_transform
+    transform=datasets_transform,
 )

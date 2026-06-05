@@ -11,19 +11,15 @@ def request_to_make():
         "name": "testing_m4i_kubernetes_service_process",
         "description": "test_m4i_kubernetes_service_process",
         "processOwner": "test_m4i_person",
-        "inputs": [
-            "test_m4i_dataset"
-        ],
-        "outputs": [
-            "test_m4i_dataset"
-        ],
+        "inputs": ["test_m4i_dataset"],
+        "outputs": ["test_m4i_dataset"],
         "ingressObject": "test_m4i_ingress_object_process",
         "namespace": "test_m4i_kubernetes_namespace",
-        "microservice": ["test_m4i_microservice_process"]
+        "microservice": ["test_m4i_microservice_process"],
     }
 
 
-path = '/lin_api/process/kubernetes_service_process/'
+path = "/lin_api/process/kubernetes_service_process/"
 entity_qn = "testing_m4i_kubernetes_service_process"
 entity_type = "m4i_kubernetes_service_process"
 
@@ -37,7 +33,7 @@ def test_kubernetes_service_process_get(client):
 def test_kubernetes_service_process_post(client, request_to_make, check_made, cleanup):
     t = client.post(path, headers={"Content-Type": "application/json"}, json=request_to_make)
     assert t.status_code == 200
-    assert t.json == {'CREATE': 1, 'UPDATE': 5, 'DELETE': 0}
+    assert t.json == {"CREATE": 1, "UPDATE": 5, "DELETE": 0}
     guid = asyncio.run(check_made(entity_qn=entity_qn, entity_type=entity_type))
     asyncio.run(cleanup(guid=guid, entity_qn=entity_qn, entity_type=entity_type))
 
@@ -48,13 +44,13 @@ def test_kubernetes_service_process_post(client, request_to_make, check_made, cl
 def test_kubernetes_service_process_post_potency_double(client, request_to_make, check_made, cleanup):
     t = client.post(path, headers={"Content-Type": "application/json"}, json=request_to_make)
     assert t.status_code == 200
-    assert t.json == {'CREATE': 1, 'UPDATE': 5, 'DELETE': 0}
+    assert t.json == {"CREATE": 1, "UPDATE": 5, "DELETE": 0}
     guid = asyncio.run(check_made(entity_qn=entity_qn, entity_type=entity_type))
 
     # Run Same request a second time and check it is not recreated.
     t = client.post(path, headers={"Content-Type": "application/json"}, json=request_to_make)
     assert t.status_code == 200
-    assert t.json == {'CREATE': 0, 'UPDATE': 0, 'DELETE': 0}
+    assert t.json == {"CREATE": 0, "UPDATE": 0, "DELETE": 0}
     guid_2 = asyncio.run(check_made(entity_qn=entity_qn, entity_type=entity_type))
 
     ## The audits should be only 1
@@ -70,19 +66,19 @@ def test_kubernetes_service_process_post_potency_double(client, request_to_make,
 
 def test_kubernetes_service_process_post_potency_diff(client, request_to_make, check_made, cleanup):
     request_diff = request_to_make.copy()
-    request_diff['name'] = "test_m4i_kubernetes_service_process, AUDIT 2"
+    request_diff["name"] = "test_m4i_kubernetes_service_process, AUDIT 2"
     assert request_to_make != request_diff
 
     # Run first time and check it creates
     t = client.post(path, headers={"Content-Type": "application/json"}, json=request_to_make)
     assert t.status_code == 200  # Does it claim to have been made?
-    assert t.json == {'CREATE': 1, 'UPDATE': 5, 'DELETE': 0}
+    assert t.json == {"CREATE": 1, "UPDATE": 5, "DELETE": 0}
     guid = asyncio.run(check_made(entity_qn=entity_qn, entity_type=entity_type))
 
     # Run Same request a second time and check it is not recreated.
     t = client.post(path, headers={"Content-Type": "application/json"}, json=request_diff)
     assert t.status_code == 200  # Does it claim to have been made?
-    assert t.json == {'CREATE': 0, 'UPDATE': 1, 'DELETE': 0}
+    assert t.json == {"CREATE": 0, "UPDATE": 1, "DELETE": 0}
     guid_2 = asyncio.run(check_made(entity_qn=entity_qn, entity_type=entity_type))
 
     ## The audits should be 2 since something is different
@@ -91,4 +87,6 @@ def test_kubernetes_service_process_post_potency_diff(client, request_to_make, c
     assert len(audits) == 2  ## Should be new Audit
 
     asyncio.run(cleanup(guid=guid, entity_qn=entity_qn, entity_type=entity_type))
+
+
 # END test_kubernetes_service_process_post_potency_diff

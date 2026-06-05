@@ -5,10 +5,7 @@ from m4i_atlas_core import Attributes, Entity, EntityAuditAction
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
-from .delete_derived_entities import (
-    EntityDataNotProvidedError,
-    handle_delete_derived_entities,
-)
+from .delete_derived_entities import EntityDataNotProvidedError, handle_delete_derived_entities
 
 
 def test__handle_delete_derived_entities_update_document() -> None:
@@ -49,7 +46,7 @@ def test__handle_delete_derived_entities_update_document() -> None:
     )
 
     with patch(
-        __package__ + ".delete_derived_entities.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_derived_entities.get_documents",
         return_value=[document_to_update],
     ):
         updated_documents = handle_delete_derived_entities(message, Mock(), "test_index", {})

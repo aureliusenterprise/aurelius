@@ -62,8 +62,12 @@ def test__kubernetes_environment_convert_to_atlas_entity(kubernetes_environment)
     assert atlas_attributes.name == instance.name
     assert atlas_attributes.definition == instance.description
 
-    atlas_kubernetes_clusters = atlas_attributes.kubernetes_clusters[0]
+    atlas_kubernetes_clusters = atlas_attributes.kubernetes_clusters[0]  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
     assert atlas_kubernetes_clusters is not None
-    assert getattr(atlas_kubernetes_clusters.unique_attributes, "qualified_name") == instance.kubernetes_clusters[0]
+    assert (
+        getattr(atlas_kubernetes_clusters.unique_attributes, "qualified_name")
+        == instance.kubernetes_clusters[0]
+    )
+
 
 # END test__kubernetes_environment_convert_to_atlas_entity

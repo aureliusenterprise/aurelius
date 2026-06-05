@@ -7,10 +7,10 @@ replicaCount: 1
 repository: ghcr.io/aureliusenterprise/m4i-reverse-proxy
 pullPolicy: Always
 service:
-  name: reverse-proxy
-  type: ClusterIP
-  externalPort: 80
-  internalPort: 8080
+    name: reverse-proxy
+    type: ClusterIP
+    externalPort: 80
+    internalPort: 8080
 enterprise_search_internal_url: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/
 env:
-  ELASTIC_USERNAME: elastic
+    ELASTIC_USERNAME: elastic

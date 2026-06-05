@@ -11,7 +11,7 @@ def test__create_kafka_cluster_from_dict():
         "kafka_replicas": 1,
         "kafka_partitions": 2,
         "confluent_environment": "dev_env",
-        "qualifiedName": "dev_env--kafka-cluster"
+        "qualifiedName": "dev_env--kafka-cluster",
     }
 
     instance = KafkaCluster.from_dict(kafka_cluster)
@@ -24,13 +24,13 @@ def test__create_kafka_cluster_from_dict():
 
 # END test__create_kafka_cluster_from_dict
 
+
 def test__create_kafka_cluster_from_json():
     """
     Tests whether or not a `Kafka Cluster` can be created from a json string with its attributes
     """
 
-    kafka_cluster = (
-        """
+    kafka_cluster = """
         {
             "name": "Kafka Cluster",
             "kafka_replicas": 1,
@@ -39,7 +39,6 @@ def test__create_kafka_cluster_from_json():
             "qualifiedName": "dev_env--kafka-cluster"
         }
         """
-    )
 
     instance = KafkaCluster.from_json(kafka_cluster)
 
@@ -62,7 +61,7 @@ def test__kafka_cluster_calculates_correct_qualified_name():
         "kafka_replicas": 1,
         "kafka_partitions": 2,
         "confluent_environment": "dev_env",
-        "qualifiedName": "dev_env--kafka-cluster"
+        "qualifiedName": "dev_env--kafka-cluster",
     }
 
     instance = KafkaCluster.from_dict(kafka_cluster)
@@ -83,7 +82,7 @@ def test__kafka_cluster_convert_to_atlas_entity():
         "kafka_replicas": 1,
         "kafka_partitions": 2,
         "confluent_environment": "dev_env",
-        "qualifiedName": "dev_env--kafka-cluster"
+        "qualifiedName": "dev_env--kafka-cluster",
     }
 
     instance = KafkaCluster.from_dict(kafka_cluster)
@@ -100,6 +99,7 @@ def test__kafka_cluster_convert_to_atlas_entity():
 
 # END test__kafka_cluster_convert_to_atlas_entity
 
+
 def test__kafka_cluster_convert_to_atlas_entity_with_dataset():
     """
     Tests whether or not the `Child Dataset` field is correctly converted to the atlas format.
@@ -110,7 +110,7 @@ def test__kafka_cluster_convert_to_atlas_entity_with_dataset():
         "kafka_replicas": 1,
         "kafka_partitions": 2,
         "confluent_environment": "dev_env",
-        "qualifiedName": "dev_env--kafka-cluster"
+        "qualifiedName": "dev_env--kafka-cluster",
     }
 
     instance = KafkaCluster.from_dict(kafka_cluster)
@@ -122,6 +122,10 @@ def test__kafka_cluster_convert_to_atlas_entity_with_dataset():
 
     assert atlas_confluent_environment is not None
     assert atlas_confluent_environment.type_name == "m4i_confluent_environment"
-    assert getattr(atlas_confluent_environment.unique_attributes,
-                   "qualified_name") == instance.confluent_environment
+    assert (
+        getattr(atlas_confluent_environment.unique_attributes, "qualified_name")
+        == instance.confluent_environment
+    )
+
+
 # END test__kafka_cluster_convert_to_atlas_entity_with_dataset

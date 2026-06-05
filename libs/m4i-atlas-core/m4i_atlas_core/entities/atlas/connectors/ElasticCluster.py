@@ -1,32 +1,32 @@
 from dataclasses import dataclass
-from typing import Optional, Iterable, List
+from typing import Optional, Iterable
 
 from dataclasses_json import LetterCase, dataclass_json
-from ..core import (AttributeDef,
-                    EntityDef, TypeCategory,
-                    Cardinality, RelationshipDef, RelationshipEndDef, ObjectId)
+from ..core import (
+    AttributeDef,
+    EntityDef,
+    TypeCategory,
+    Cardinality,
+    RelationshipDef,
+    RelationshipEndDef,
+    ObjectId,
+)
 
-from ..data_dictionary import (BusinessSystem, BusinessSystemAttributesBase,
-                                              BusinessSystemAttributesDefaultsBase, BusinessSystemBase,
-                                              BusinessSystemAttributes, BusinessSystemDefaultsBase)
+from ..data_dictionary import (
+    BusinessSystem,
+    BusinessSystemAttributesBase,
+    BusinessSystemAttributesDefaultsBase,
+    BusinessSystemBase,
+    BusinessSystemAttributes,
+    BusinessSystemDefaultsBase,
+)
 
 elastic_cluster_super_type = ["m4i_system"]
 
 elastic_cluster_attributes_def = [
-    AttributeDef(
-        name="shardCount",
-        type_name="int"
-    ),
-    AttributeDef(
-        name="replicaCount",
-        type_name="int"
-    ),
-    AttributeDef(
-        name="kibanaSpace",
-        type_name="array<m4i_kibana_space>",
-        cardinality=Cardinality.SET
-    )
-
+    AttributeDef(name="shardCount", type_name="int"),
+    AttributeDef(name="replicaCount", type_name="int"),
+    AttributeDef(name="kibanaSpace", type_name="array<m4i_kibana_space>", cardinality=Cardinality.SET),
 ]
 
 elastic_cluster_def = EntityDef(
@@ -35,28 +35,23 @@ elastic_cluster_def = EntityDef(
     description="A type definition for a generic Elastic Cluster in the context of models4insight.com",
     type_version="1.0",
     super_types=elastic_cluster_super_type,
-    attribute_defs=elastic_cluster_attributes_def
+    attribute_defs=elastic_cluster_attributes_def,
 )
 
 end_1_elasticcluster_kibanaspace = RelationshipEndDef(
-    type="m4i_elastic_cluster",
-    name="kibanaSpace",
-    cardinality=Cardinality.SET
+    type="m4i_elastic_cluster", name="kibanaSpace", cardinality=Cardinality.SET
 )
-end_2_elasticcluster_kibanaspace = RelationshipEndDef(
-    type="m4i_kibana_space",
-    name="elasticCluster"
-)
+end_2_elasticcluster_kibanaspace = RelationshipEndDef(type="m4i_kibana_space", name="elasticCluster")
 
 m4i_elastic_cluster_kibanaspace_rel_def = RelationshipDef(
     end_def1=end_1_elasticcluster_kibanaspace,
     end_def2=end_2_elasticcluster_kibanaspace,
     name="m4i_kibana_space_assignment",
-    category=TypeCategory.RELATIONSHIP
+    category=TypeCategory.RELATIONSHIP,
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticClusterAttributesBase(BusinessSystemAttributesBase):
     pass
@@ -64,7 +59,8 @@ class ElasticClusterAttributesBase(BusinessSystemAttributesBase):
 
 # END ElasticClusterAttributesBase
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticClusterAttributesDefaultsBase(BusinessSystemAttributesDefaultsBase):
     shard_count: Optional[int] = None
@@ -74,27 +70,27 @@ class ElasticClusterAttributesDefaultsBase(BusinessSystemAttributesDefaultsBase)
 # END ElasticClusterAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class ElasticClusterAttributes(BusinessSystemAttributes,
-                               ElasticClusterAttributesDefaultsBase,
-                               ElasticClusterAttributesBase):
+class ElasticClusterAttributes(
+    BusinessSystemAttributes, ElasticClusterAttributesDefaultsBase, ElasticClusterAttributesBase
+):
     pass
 
 
 # END ElasticClusterAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticClusterBase(BusinessSystemBase):
-    attributes: ElasticClusterAttributes
+    attributes: ElasticClusterAttributes  # type: ignore[reportIncompatibleMethodOverride]
 
 
 # END ElasticClusterBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticClusterDefaultsBase(BusinessSystemDefaultsBase):
     pass
@@ -103,11 +99,9 @@ class ElasticClusterDefaultsBase(BusinessSystemDefaultsBase):
 # END ElasticClusterDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class ElasticCluster(BusinessSystem,
-                     ElasticClusterDefaultsBase,
-                     ElasticClusterBase):
+class ElasticCluster(BusinessSystem, ElasticClusterDefaultsBase, ElasticClusterBase):  # type: ignore[reportGeneralTypeIssues]
     type_name: str = "m4i_elastic_cluster"
 
     @classmethod
@@ -123,6 +117,8 @@ class ElasticCluster(BusinessSystem,
         references = [*super().get_referred_entities()]
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END ElasticCluster

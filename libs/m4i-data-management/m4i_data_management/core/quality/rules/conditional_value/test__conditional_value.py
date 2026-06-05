@@ -5,17 +5,9 @@ from .conditional_value import conditional_value
 
 
 def test__conditional_value_condition_met_with_expected_value():
+    values = {"xx.TMP": "XX No Grade"}
 
-    values = {
-        "xx.TMP": "XX No Grade"
-    }
-
-    data = DataFrame([
-        {
-            "value": "XX No Grade",
-            "conditional": "xx.TMP"
-        }
-    ])
+    data = DataFrame([{"value": "XX No Grade", "conditional": "xx.TMP"}])
 
     result = conditional_value(data, "conditional", "value", values)
 
@@ -23,17 +15,9 @@ def test__conditional_value_condition_met_with_expected_value():
 
 
 def test__conditional_value_condition_met_with_multiple_possible_values():
+    values = {"xx.TMP": ["XX No Grade", "Hello world"]}
 
-    values = {
-        "xx.TMP": ["XX No Grade", "Hello world"]
-    }
-
-    data = DataFrame([
-        {
-            "value": "XX No Grade",
-            "conditional": "xx.TMP"
-        }
-    ])
+    data = DataFrame([{"value": "XX No Grade", "conditional": "xx.TMP"}])
 
     result = conditional_value(data, "conditional", "value", values)
 
@@ -41,17 +25,9 @@ def test__conditional_value_condition_met_with_multiple_possible_values():
 
 
 def test__conditional_value_condition_met_with_no_valid_values():
+    values = {"xx.TMP": ["Something else", "Hello world"]}
 
-    values = {
-        "xx.TMP": ["Something else", "Hello world"]
-    }
-
-    data = DataFrame([
-        {
-            "value": "XX No Grade",
-            "conditional": "xx.TMP"
-        }
-    ])
+    data = DataFrame([{"value": "XX No Grade", "conditional": "xx.TMP"}])
 
     result = conditional_value(data, "conditional", "value", values)
 
@@ -59,35 +35,19 @@ def test__conditional_value_condition_met_with_no_valid_values():
 
 
 def test__conditional_value_condition_met_with_non_expected_value():
+    values = {"xx.TMP": "XX No Grade"}
 
-    values = {
-        "xx.TMP": "XX No Grade"
-    }
+    data = DataFrame([{"value": "Something Else", "conditional": "xx.TMP"}])
 
-    data = DataFrame([
-        {
-            "value": "Something Else",
-            "conditional": "xx.TMP"
-        }
-    ])
-
-    result = conditional_value(data,  "conditional", "value", values)
+    result = conditional_value(data, "conditional", "value", values)
 
     assert result.sum() == 0
 
 
 def test__conditional_value_condition_unmet_with_expected_value():
+    values = {"xx.TMP": "XX No Grade"}
 
-    values = {
-        "xx.TMP": "XX No Grade"
-    }
-
-    data = DataFrame([
-        {
-            "value": "Something Else",
-            "conditional": "xx.xx"
-        }
-    ])
+    data = DataFrame([{"value": "Something Else", "conditional": "xx.xx"}])
 
     result = conditional_value(data, "conditional", "value", values)
 
@@ -95,17 +55,9 @@ def test__conditional_value_condition_unmet_with_expected_value():
 
 
 def test__conditional_value_condition_unmet_with_no_value():
+    values = {"xx.TMP": "XX No Grade"}
 
-    values = {
-        "xx.TMP": "XX No Grade"
-    }
-
-    data = DataFrame([
-        {
-            "value": NaN,
-            "conditional": "xx.xx"
-        }
-    ])
+    data = DataFrame([{"value": NaN, "conditional": "xx.xx"}])
 
     result = conditional_value(data, "conditional", "value", values)
 
@@ -113,17 +65,9 @@ def test__conditional_value_condition_unmet_with_no_value():
 
 
 def test__conditional_value_with_non_existing_columns():
+    values = {"xx.TMP": "XX No Grade"}
 
-    values = {
-        "xx.TMP": "XX No Grade"
-    }
-
-    data = DataFrame([
-        {
-            "value": "XX No Grade",
-            "conditional": "xx.TMP"
-        }
-    ])
+    data = DataFrame([{"value": "XX No Grade", "conditional": "xx.TMP"}])
 
     result = conditional_value(data, "non_existing_column_a", "non_existing_column_b", values)
 

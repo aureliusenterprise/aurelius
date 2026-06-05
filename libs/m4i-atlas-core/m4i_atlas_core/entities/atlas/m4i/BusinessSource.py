@@ -3,10 +3,20 @@ from typing import Iterable, List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from ..core import (AttributeDef, Attributes, Cardinality, EntityBase,
-                    EntityDef, EntityDefaultsBase, ObjectId,
-                    RelationshipAttribute, RelationshipAttributeDef,
-                    RelationshipDef, RelationshipEndDef, TypeCategory)
+from ..core import (
+    AttributeDef,
+    Attributes,
+    Cardinality,
+    EntityBase,
+    EntityDef,
+    EntityDefaultsBase,
+    ObjectId,
+    RelationshipAttribute,
+    RelationshipAttributeDef,
+    RelationshipDef,
+    RelationshipEndDef,
+    TypeCategory,
+)
 from .M4IAttributes import M4IAttributesBase
 from .BusinessReferenceable import BusinessReferenceable
 
@@ -16,19 +26,16 @@ business_source_attributes_def = [
         name="name",
         type_name="string",
         description="The unique functional name of the source",
-        display_name="Name"
+        display_name="Name",
     ),
     AttributeDef(
         name="hashCode",
         type_name="string",
         description="The unique hash code of the source",
-        display_name="Hash Code"
+        display_name="Hash Code",
     ),
     AttributeDef(
-        name="branch",
-        type_name="string",
-        description="The branch of the source",
-        display_name="Branch"
+        name="branch", type_name="string", description="The branch of the source", display_name="Branch"
     ),
     RelationshipAttributeDef(
         name="changeLog",
@@ -36,8 +43,8 @@ business_source_attributes_def = [
         relationship_type_name="m4i_referenceable_source_assignment",
         cardinality=Cardinality.SET,
         description="A list of the most recent added/updated relationships with the source",
-        display_name="Change Log"
-    )  # TODO depends on what we decide, this might just be an attribute
+        display_name="Change Log",
+    ),  # TODO depends on what we decide, this might just be an attribute
 ]
 
 business_source_super_type = ["m4i_referenceable"]
@@ -50,15 +57,9 @@ business_source_def = EntityDef(
     super_types=business_source_super_type,
     attribute_defs=business_source_attributes_def,
 )
-end_1_source_changelog = RelationshipEndDef(
-    type="m4i_source",
-    name="changeLog",
-    cardinality=Cardinality.SET
-)
+end_1_source_changelog = RelationshipEndDef(type="m4i_source", name="changeLog", cardinality=Cardinality.SET)
 end_2_source_references = RelationshipEndDef(
-    type="m4i_referenceable",
-    name="source",
-    cardinality=Cardinality.SET
+    type="m4i_referenceable", name="source", cardinality=Cardinality.SET
 )
 
 m4i_business_source_rel_def = RelationshipDef(
@@ -74,7 +75,7 @@ m4i_business_source_rel_def = RelationshipDef(
 # END TypeDef for Entity & Relationships
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessSourceAttributesBase(M4IAttributesBase):
     name: Optional[str] = None
@@ -85,7 +86,7 @@ class BusinessSourceAttributesBase(M4IAttributesBase):
 # END BusinessSourceAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessSourceAttributesDefaultsBase(Attributes):
     pass
@@ -94,16 +95,16 @@ class BusinessSourceAttributesDefaultsBase(Attributes):
 # END BusinessSourceAttributesDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessSourceAttributes(BusinessSourceAttributesDefaultsBase,
-                               BusinessSourceAttributesBase):
+class BusinessSourceAttributes(BusinessSourceAttributesDefaultsBase, BusinessSourceAttributesBase):
     pass
 
 
 # END BusinessSourceAttributes
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessSourceRelationshipAttributes(Attributes):
     change_log: List[RelationshipAttribute] = field(default_factory=list)
@@ -111,7 +112,8 @@ class BusinessSourceRelationshipAttributes(Attributes):
 
 # END BusinessSourceRelationshipAttributes
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessSourceBase(EntityBase):
     attributes: BusinessSourceAttributes
@@ -120,25 +122,24 @@ class BusinessSourceBase(EntityBase):
 # END BusinessSourceBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessSourceDefaultsBase(EntityDefaultsBase):
-    relationship_attributes: Optional[BusinessSourceRelationshipAttributes] = None
+    relationship_attributes: Optional[BusinessSourceRelationshipAttributes] = None  # type: ignore[reportIncompatibleMethodOverride]
 
 
 # END BusinessSourceDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessSource(BusinessReferenceable,
-                     BusinessSourceDefaultsBase,
-                     BusinessSourceBase,
-                     ):
+class BusinessSource(  # type: ignore[reportGeneralTypeIssues]
+    BusinessReferenceable, BusinessSourceDefaultsBase, BusinessSourceBase
+):
     type_name: str = "m4i_source"
 
     @classmethod
-    def get_type_def(cls):
+    def get_type_def(cls):  # type: ignore[reportIncompatibleMethodOverride]
         return business_source_def
 
     def get_referred_entities(self) -> Iterable[ObjectId]:
@@ -146,11 +147,13 @@ class BusinessSource(BusinessReferenceable,
         Returns the following references for this archimate project:
         * source
         """
-        references = [
-            *self.relationship_attributes.change_log
-        ]
+        if self.relationship_attributes is None:
+            return []
+        references = list(self.relationship_attributes.change_log)
 
-        return references
+        return references  # type: ignore[reportGeneralTypeIssues]
+
     # END get_referred_entities
+
 
 # END BusinessSource

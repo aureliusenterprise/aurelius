@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
-from .TextualMetric import TextualMetric
 from .ConceptLabelFormattingMetric import ConceptLabelFormattingMetric
 from .LabelAndConceptDuplicationMetric import LabelAndConceptDuplicationMetric
+from .TextualMetric import TextualMetric
+
+__all__ = ["ConceptLabelFormattingMetric", "LabelAndConceptDuplicationMetric", "TextualMetric"]

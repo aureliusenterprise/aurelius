@@ -11,15 +11,11 @@ def kubernetes_service_process():
         "name": "testing_m4i_kubernetes_service_process",
         "description": "test_m4i_kubernetes_service_process",
         "processOwner": "test_m4i_person",
-        "inputs": [
-            "test_m4i_dataset"
-        ],
-        "outputs": [
-            "test_m4i_dataset"
-        ],
+        "inputs": ["test_m4i_dataset"],
+        "outputs": ["test_m4i_dataset"],
         "ingressObject": "test_m4i_ingress_object_process",
         "namespace": "test_m4i_kubernetes_namespace",
-        "microservice": ["test_m4i_microservice_process"]
+        "microservice": ["test_m4i_microservice_process"],
     }
 
 
@@ -100,8 +96,9 @@ def test__kubernetes_service_process_convert_to_atlas_entity(kubernetes_service_
     assert atlas_microservice is not None
     assert getattr(atlas_microservice.unique_attributes, "qualified_name") == instance.microservice[0]
 
-    atlas_namespace = atlas_instance.relationship_attributes.namespace[0]
+    atlas_namespace = atlas_instance.relationship_attributes.namespace[0]  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
     assert atlas_namespace is not None
     assert getattr(atlas_namespace.unique_attributes, "qualified_name") == instance.namespace
+
 
 # END test__kubernetes_service_process_convert_to_atlas_entity

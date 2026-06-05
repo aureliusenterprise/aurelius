@@ -9,11 +9,11 @@ def request_to_make():
     return {
         "name": "testing_m4i_confluent_environment",
         "schema_registry": True,
-        "confluent_cloud": "test_m4i_confluent_cloud"
+        "confluent_cloud": "test_m4i_confluent_cloud",
     }
 
 
-path = '/lin_api/entity/confluentEnvironment_entity/'
+path = "/lin_api/entity/confluentEnvironment_entity/"
 entity_qn = "test_m4i_confluent_cloud--testing_m4i_confluent_environment"
 entity_type = "m4i_confluent_environment"
 
@@ -27,7 +27,7 @@ def test_confluent_environment_get(client):
 def test_confluent_environment_post(client, request_to_make, check_made, cleanup):
     t = client.post(path, headers={"Content-Type": "application/json"}, json=request_to_make)
     assert t.status_code == 200
-    assert t.json == {'CREATE': 1, 'UPDATE': 1, 'DELETE': 0}
+    assert t.json == {"CREATE": 1, "UPDATE": 1, "DELETE": 0}
     guid = asyncio.run(check_made(entity_qn=entity_qn, entity_type=entity_type))
     asyncio.run(cleanup(guid=guid, entity_qn=entity_qn, entity_type=entity_type))
 
@@ -38,13 +38,13 @@ def test_confluent_environment_post(client, request_to_make, check_made, cleanup
 def test_confluent_environment_post_potency_double(client, request_to_make, check_made, cleanup):
     t = client.post(path, headers={"Content-Type": "application/json"}, json=request_to_make)
     assert t.status_code == 200
-    assert t.json == {'CREATE': 1, 'UPDATE': 1, 'DELETE': 0}
+    assert t.json == {"CREATE": 1, "UPDATE": 1, "DELETE": 0}
     guid = asyncio.run(check_made(entity_qn=entity_qn, entity_type=entity_type))
 
     # Run Same request a second time and check it is not recreated.
     t = client.post(path, headers={"Content-Type": "application/json"}, json=request_to_make)
     assert t.status_code == 200
-    assert t.json == {'CREATE': 0, 'UPDATE': 0, 'DELETE': 0}
+    assert t.json == {"CREATE": 0, "UPDATE": 0, "DELETE": 0}
     guid_2 = asyncio.run(check_made(entity_qn=entity_qn, entity_type=entity_type))
 
     ## The audits should be only 1
@@ -60,19 +60,19 @@ def test_confluent_environment_post_potency_double(client, request_to_make, chec
 
 def test_confluent_environment_post_potency_diff(client, request_to_make, check_made, cleanup):
     request_diff = request_to_make.copy()
-    request_diff['schema_registry'] = False
+    request_diff["schema_registry"] = False
     assert request_to_make != request_diff
 
     # Run first time and check it creates
     t = client.post(path, headers={"Content-Type": "application/json"}, json=request_to_make)
     assert t.status_code == 200  # Does it claim to have been made?
-    assert t.json == {'CREATE': 1, 'UPDATE': 1, 'DELETE': 0}
+    assert t.json == {"CREATE": 1, "UPDATE": 1, "DELETE": 0}
     guid = asyncio.run(check_made(entity_qn=entity_qn, entity_type=entity_type))
 
     # Run Same request a second time and check it is not recreated.
     t = client.post(path, headers={"Content-Type": "application/json"}, json=request_diff)
     assert t.status_code == 200  # Does it claim to have been made?
-    assert t.json == {'CREATE': 0, 'UPDATE': 1, 'DELETE': 0}
+    assert t.json == {"CREATE": 0, "UPDATE": 1, "DELETE": 0}
     guid_2 = asyncio.run(check_made(entity_qn=entity_qn, entity_type=entity_type))
 
     ## The audits should be 2 since something is different
@@ -81,4 +81,6 @@ def test_confluent_environment_post_potency_diff(client, request_to_make, check_
     assert len(audits) == 2  ## Should be new Audit
 
     asyncio.run(cleanup(guid=guid, entity_qn=entity_qn, entity_type=entity_type))
+
+
 # END test_confluent_environment_post_potency_diff

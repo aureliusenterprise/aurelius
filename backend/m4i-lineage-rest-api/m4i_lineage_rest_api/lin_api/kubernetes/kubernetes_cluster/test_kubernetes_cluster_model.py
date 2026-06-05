@@ -67,10 +67,17 @@ def test__kubernetes_cluster_convert_to_atlas_entity(kubernetes_cluster):
 
     atlas_kubernetes_namespace = atlas_attributes.kubernetes_namespace[0]
     assert atlas_kubernetes_namespace is not None
-    assert getattr(atlas_kubernetes_namespace.unique_attributes, "qualified_name") == instance.kubernetes_namespace[0]
+    assert (
+        getattr(atlas_kubernetes_namespace.unique_attributes, "qualified_name")
+        == instance.kubernetes_namespace[0]
+    )
 
     atlas_kubernetes_environment = atlas_attributes.kubernetes_environment[0]
     assert atlas_kubernetes_environment is not None
-    assert getattr(atlas_kubernetes_environment.unique_attributes, "qualified_name") == instance.kubernetes_environment
+    assert (
+        getattr(atlas_kubernetes_environment.unique_attributes, "qualified_name")
+        == instance.kubernetes_environment
+    )
+
 
 # END test__kubernetes_cluster_convert_to_atlas_entity

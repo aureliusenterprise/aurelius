@@ -13,7 +13,7 @@ def kubernetes_cronjob():
         "kubernetesNamespace": "test_m4i_kubernetes_namespace",
         "kubernetesPod": ["test_m4i_kubernetes_pod"],
         "tags": "Tag",
-        "schedule": "date--time"
+        "schedule": "date--time",
     }
 
 
@@ -79,6 +79,10 @@ def test__kubernetes_cronjob_convert_to_atlas_entity(kubernetes_cronjob):
 
     atlas_kubernetes_namespace = atlas_attributes.kubernetes_namespace[0]
     assert atlas_kubernetes_namespace is not None
-    assert getattr(atlas_kubernetes_namespace.unique_attributes, "qualified_name") == instance.kubernetes_namespace
+    assert (
+        getattr(atlas_kubernetes_namespace.unique_attributes, "qualified_name")
+        == instance.kubernetes_namespace
+    )
+
 
 # END test__kubernetes_cronjob_convert_to_atlas_entity

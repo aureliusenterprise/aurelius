@@ -1,1 +1,1 @@
-from .compare_first_characters import *
+from .compare_first_characters import compare_first_characters as compare_first_characters

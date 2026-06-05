@@ -1,54 +1,46 @@
 {
-  "name": "m4i-analytics",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
-  "sourceRoot": "{projectRoot}/m4i_analytics",
-  "tags": [],
-  "targets": {
-    "add": {
-      "executor": "@nxlv/python:add",
-      "options": {}
-    },
-    "update": {
-      "executor": "@nxlv/python:update",
-      "options": {}
-    },
-    "remove": {
-      "executor": "@nxlv/python:remove",
-      "options": {}
-    },
-    "build": {
-      "executor": "@nxlv/python:build",
-      "outputs": [
-        "{workspaceRoot}/dist/libs/m4i-analytics"
-      ],
-      "options": {
-        "outputPath": "{workspaceRoot}/dist/libs/m4i-analytics",
-        "publish": false,
-        "lockedVersions": true,
-        "bundleLocalDependencies": true
-      }
-    },
-    "lint": {
-      "executor": "@nxlv/python:ruff-check",
-      "outputs": [],
-      "options": {
-        "lintFilePatterns": [
-          "m4i_analytics",
-          "tests"
-        ]
-      }
-    },
-    "test": {
-      "executor": "@nxlv/python:run-commands",
-      "outputs": [
-        "{workspaceRoot}/reports/{projectRoot}/unittests",
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
-      "options": {
-        "command": "poetry run pytest tests/",
-        "cwd": "{projectRoot}"
-      }
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "name": "m4i-analytics",
+    "projectType": "library",
+    "sourceRoot": "{projectRoot}/m4i_analytics",
+    "tags": [],
+    "targets": {
+        "add": {
+            "executor": "@nxlv/python:add",
+            "options": {}
+        },
+        "build": {
+            "executor": "@nxlv/python:build",
+            "options": {
+                "bundleLocalDependencies": true,
+                "lockedVersions": true,
+                "outputPath": "{workspaceRoot}/dist/libs/m4i-analytics",
+                "publish": false
+            },
+            "outputs": ["{workspaceRoot}/dist/libs/m4i-analytics"]
+        },
+        "lint": {
+            "executor": "@nxlv/python:ruff-check",
+            "options": {
+                "lintFilePatterns": ["m4i_analytics", "tests"]
+            },
+            "outputs": []
+        },
+        "remove": {
+            "executor": "@nxlv/python:remove",
+            "options": {}
+        },
+        "test": {
+            "executor": "@nxlv/python:run-commands",
+            "options": {
+                "command": "poetry run pytest tests/",
+                "cwd": "{projectRoot}"
+            },
+            "outputs": ["{workspaceRoot}/reports/{projectRoot}/unittests", "{workspaceRoot}/coverage/{projectRoot}"]
+        },
+        "update": {
+            "executor": "@nxlv/python:update",
+            "options": {}
+        }
     }
-  }
 }

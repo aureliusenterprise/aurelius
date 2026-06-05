@@ -1,5 +1,5 @@
 import pytest
-from m4i_atlas_core import ElasticIndex, ElasticField
+from m4i_atlas_core import ElasticIndex
 
 from .ElasticIndexApiModel import ElasticIndexApiModel
 from .ElasticIndexTemplateMappings import ElasticIndexTemplateMappings
@@ -19,27 +19,15 @@ def data():
                 "_meta": {
                     "testing_elastic_field_1": "test_m4i_data_attribute",
                     "testing_elastic_field_2": ["test_m4i_data_attribute"],
-                    "testing_elastic_field_3": {
-                        "testing_elastic_field_4": "test_m4i_data_attribute"
-                    }
+                    "testing_elastic_field_3": {"testing_elastic_field_4": "test_m4i_data_attribute"},
                 },
                 "properties": {
-                    "testing_elastic_field_1": {
-                        "type": "keyword"
-                    },
-                    "testing_elastic_field_2": {
-                        "type": "text"
-                    },
-                    "testing_elastic_field_3": {
-                        "properties": {
-                            "testing_elastic_field_4": {
-                                "type": "text"
-                            }
-                        }
-                    }
-                }
+                    "testing_elastic_field_1": {"type": "keyword"},
+                    "testing_elastic_field_2": {"type": "text"},
+                    "testing_elastic_field_3": {"properties": {"testing_elastic_field_4": {"type": "text"}}},
+                },
             }
-        }
+        },
     }
 
 
@@ -69,9 +57,11 @@ def test__ElasticIndexApiModel_from_dict(data: dict):
     assert isinstance(props["testing_elastic_field_3"], ElasticIndexTemplateMappingsProperty)
     assert props["testing_elastic_field_3"].type is None
 
-    assert isinstance(props["testing_elastic_field_3"].properties['testing_elastic_field_4'],
-                      ElasticIndexTemplateMappingsProperty)
-    assert props["testing_elastic_field_3"].properties['testing_elastic_field_4'].type == "text"
+    assert isinstance(
+        props["testing_elastic_field_3"].properties["testing_elastic_field_4"],
+        ElasticIndexTemplateMappingsProperty,
+    )
+    assert props["testing_elastic_field_3"].properties["testing_elastic_field_4"].type == "text"
 
 
 # END test__ElasticIndexApiModel_from_dict
@@ -81,82 +71,86 @@ def test__ElasticIndexApiModel_convert_to_atlas_entity(data: dict):
     model = ElasticIndexApiModel.from_dict(data)
     atlas, atlas_ref = model.convert_to_atlas()
 
-    assert isinstance(atlas[0], ElasticIndex)
-    index_attributes = atlas[0].attributes
+    assert isinstance(atlas[0], ElasticIndex)  # type: ignore[reportArgumentType]
+    index_attributes = atlas[0].attributes  # type: ignore[reportArgumentType]
     assert index_attributes.name == model.name
     assert index_attributes.qualified_name == model.qualified_name
     index_collection = index_attributes.collections[0]
     assert index_collection is not None
-    assert getattr(index_collection.unique_attributes, "qualified_name") == 'test_elastic_cluster--data'
+    assert getattr(index_collection.unique_attributes, "qualified_name") == "test_elastic_cluster--data"
 
-    index_field_attribute = atlas[0].attributes.fields[0].attributes
-    assert index_field_attribute.name == 'testing_elastic_field_1'
-    assert index_field_attribute.qualified_name == 'testing_elastic_index--testing_elastic_field_1'
+    index_field_attribute = atlas[0].attributes.fields[0].attributes  # type: ignore[reportArgumentType]
+    assert index_field_attribute.name == "testing_elastic_field_1"
+    assert index_field_attribute.qualified_name == "testing_elastic_index--testing_elastic_field_1"
     index_field_attributes = index_field_attribute.attributes[0]
     assert index_field_attributes is not None
-    assert getattr(index_field_attributes.unique_attributes, "qualified_name") == 'test_m4i_data_attribute'
+    assert getattr(index_field_attributes.unique_attributes, "qualified_name") == "test_m4i_data_attribute"
     index_field_dataset = index_field_attribute.datasets[0]
     assert index_field_dataset is not None
-    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == 'testing_elastic_index'
+    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == "testing_elastic_index"
 
-    index_field_attribute = atlas[0].attributes.fields[1].attributes
-    assert index_field_attribute.name == 'testing_elastic_field_2'
-    assert index_field_attribute.qualified_name == 'testing_elastic_index--testing_elastic_field_2'
+    index_field_attribute = atlas[0].attributes.fields[1].attributes  # type: ignore[reportArgumentType]
+    assert index_field_attribute.name == "testing_elastic_field_2"
+    assert index_field_attribute.qualified_name == "testing_elastic_index--testing_elastic_field_2"
     index_field_attributes = index_field_attribute.attributes[0]
     assert index_field_attributes is not None
-    assert getattr(index_field_attributes.unique_attributes, "qualified_name") == 'test_m4i_data_attribute'
+    assert getattr(index_field_attributes.unique_attributes, "qualified_name") == "test_m4i_data_attribute"
     index_field_dataset = index_field_attribute.datasets[0]
     assert index_field_dataset is not None
-    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == 'testing_elastic_index'
+    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == "testing_elastic_index"
 
-    index_field_attribute = atlas[0].attributes.fields[2].attributes
-    assert index_field_attribute.name == 'testing_elastic_field_3'
-    assert index_field_attribute.qualified_name == 'testing_elastic_index--testing_elastic_field_3'
+    index_field_attribute = atlas[0].attributes.fields[2].attributes  # type: ignore[reportArgumentType]
+    assert index_field_attribute.name == "testing_elastic_field_3"
+    assert index_field_attribute.qualified_name == "testing_elastic_index--testing_elastic_field_3"
     assert index_field_attribute.child_field == []
     index_field_attributes = index_field_attribute.attributes
     assert index_field_attributes == []
     index_field_dataset = index_field_attribute.datasets[0]
     assert index_field_dataset is not None
-    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == 'testing_elastic_index'
+    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == "testing_elastic_index"
 
-    ref_guid_list = list(atlas_ref.keys())
+    ref_guid_list = list(atlas_ref.keys())  # type: ignore[reportGeneralTypeIssues]
     index_field_attribute = atlas_ref[ref_guid_list[1]].attributes
-    assert index_field_attribute.name == 'testing_elastic_field_1'
-    assert index_field_attribute.qualified_name == 'testing_elastic_index--testing_elastic_field_1'
+    assert index_field_attribute.name == "testing_elastic_field_1"
+    assert index_field_attribute.qualified_name == "testing_elastic_index--testing_elastic_field_1"
     index_field_attributes = index_field_attribute.attributes[0]
     assert index_field_attributes is not None
-    assert getattr(index_field_attributes.unique_attributes, "qualified_name") == 'test_m4i_data_attribute'
+    assert getattr(index_field_attributes.unique_attributes, "qualified_name") == "test_m4i_data_attribute"
     index_field_dataset = index_field_attribute.datasets[0]
     assert index_field_dataset is not None
-    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == 'testing_elastic_index'
+    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == "testing_elastic_index"
 
     index_field_attribute = atlas_ref[ref_guid_list[2]].attributes
-    assert index_field_attribute.name == 'testing_elastic_field_2'
-    assert index_field_attribute.qualified_name == 'testing_elastic_index--testing_elastic_field_2'
+    assert index_field_attribute.name == "testing_elastic_field_2"
+    assert index_field_attribute.qualified_name == "testing_elastic_index--testing_elastic_field_2"
     index_field_attributes = index_field_attribute.attributes[0]
     assert index_field_attributes is not None
-    assert getattr(index_field_attributes.unique_attributes, "qualified_name") == 'test_m4i_data_attribute'
+    assert getattr(index_field_attributes.unique_attributes, "qualified_name") == "test_m4i_data_attribute"
     index_field_dataset = index_field_attribute.datasets[0]
     assert index_field_dataset is not None
-    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == 'testing_elastic_index'
+    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == "testing_elastic_index"
 
     index_field_attribute = atlas_ref[ref_guid_list[3]].attributes
-    assert index_field_attribute.name == 'testing_elastic_field_3'
-    assert index_field_attribute.qualified_name == 'testing_elastic_index--testing_elastic_field_3'
+    assert index_field_attribute.name == "testing_elastic_field_3"
+    assert index_field_attribute.qualified_name == "testing_elastic_index--testing_elastic_field_3"
     assert index_field_attribute.child_field != []
     index_field_attributes = index_field_attribute.attributes
     assert index_field_attributes == []
     index_field_dataset = index_field_attribute.datasets[0]
     assert index_field_dataset is not None
-    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == 'testing_elastic_index'
+    assert getattr(index_field_dataset.unique_attributes, "qualified_name") == "testing_elastic_index"
 
     index_field_attribute = atlas_ref[ref_guid_list[4]].attributes
-    assert index_field_attribute.name == 'testing_elastic_field_4'
-    assert index_field_attribute.qualified_name == 'testing_elastic_index--testing_elastic_field_3--testing_elastic_field_4'
+    assert index_field_attribute.name == "testing_elastic_field_4"
+    assert (
+        index_field_attribute.qualified_name
+        == "testing_elastic_index--testing_elastic_field_3--testing_elastic_field_4"
+    )
     index_field_attributes = index_field_attribute.attributes[0]
     assert index_field_attributes is not None
-    assert getattr(index_field_attributes.unique_attributes, "qualified_name") == 'test_m4i_data_attribute'
+    assert getattr(index_field_attributes.unique_attributes, "qualified_name") == "test_m4i_data_attribute"
     index_field_dataset = index_field_attribute.datasets
-    assert index_field_dataset == None
+    assert index_field_dataset is None
+
 
 # END test__ElasticIndexApiModel_convert_to_atlas_entity

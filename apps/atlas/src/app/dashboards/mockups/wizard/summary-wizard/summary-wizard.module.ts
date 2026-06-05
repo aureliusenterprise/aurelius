@@ -4,8 +4,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SummaryWizardComponent } from './summary-wizard.component';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule],
-  declarations: [SummaryWizardComponent],
-  exports: [SummaryWizardComponent],
+    imports: [CommonModule, FontAwesomeModule],
+    declarations: [SummaryWizardComponent],
+    exports: [SummaryWizardComponent],
 })
 export class SummaryWizardModule {}

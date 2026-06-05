@@ -11,18 +11,18 @@ import { DatePickerModule } from '../date-picker';
 import { ControlShellModule } from '../control-shell';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ControlShellModule,
-    DatePickerModule,
-    FontAwesomeModule,
-    FormsModule,
-    FuzzySearchInputModule,
-    ReactiveFormsModule,
-    ModalModule,
-    SortableTableModule,
-  ],
-  declarations: [SearchModalComponent, SelectComponent],
-  exports: [SelectComponent],
+    imports: [
+        CommonModule,
+        ControlShellModule,
+        DatePickerModule,
+        FontAwesomeModule,
+        FormsModule,
+        FuzzySearchInputModule,
+        ReactiveFormsModule,
+        ModalModule,
+        SortableTableModule,
+    ],
+    declarations: [SearchModalComponent, SelectComponent],
+    exports: [SelectComponent],
 })
 export class SelectModule {}

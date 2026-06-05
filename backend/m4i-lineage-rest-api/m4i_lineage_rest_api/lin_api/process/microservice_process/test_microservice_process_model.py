@@ -11,16 +11,10 @@ def microservice_process():
         "name": "test_m4i_microservice_process",
         "description": "test_m4i_microservice_process",
         "processOwner": "test_m4i_person",
-        "inputs": [
-            "test_m4i_dataset"
-        ],
-        "outputs": [
-            "test_m4i_dataset"
-        ],
-        "source": [
-            "test_m4i_source"
-        ],
-        "system": "test_m4i_kubernetes_pod"
+        "inputs": ["test_m4i_dataset"],
+        "outputs": ["test_m4i_dataset"],
+        "source": ["test_m4i_source"],
+        "system": "test_m4i_kubernetes_pod",
     }
 
 
@@ -91,12 +85,15 @@ def test__microservice_process_convert_to_atlas_entity(microservice_process):
     assert atlas_outputs is not None
     assert getattr(atlas_outputs.unique_attributes, "qualified_name") == instance.outputs[0]
 
-    atlas_source = atlas_attributes.source[0]
+    atlas_source = atlas_attributes.source[0]  # type: ignore[reportGeneralTypeIssues]
     assert atlas_source is not None
-    assert getattr(atlas_source.unique_attributes, "qualified_name") == instance.source[0]
+    assert (
+        getattr(atlas_source.unique_attributes, "qualified_name") == instance.source[0]  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
+    )
 
     atlas_system = atlas_attributes.system[0]
     assert atlas_system is not None
     assert getattr(atlas_system.unique_attributes, "qualified_name") == instance.system
+
 
 # END test__microservice_process_convert_to_atlas_entity

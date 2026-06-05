@@ -1,7 +1,13 @@
 from unittest.mock import Mock
 
 import pytest
-from m4i_atlas_core import Attributes, BusinessDataDomain, BusinessDataDomainAttributes, Entity, EntityAuditAction
+from m4i_atlas_core import (
+    Attributes,
+    BusinessDataDomain,
+    BusinessDataDomainAttributes,
+    Entity,
+    EntityAuditAction,
+)
 
 from m4i_flink_tasks import EntityMessage, EntityMessageType
 
@@ -66,11 +72,9 @@ def test__update_with_valid_attributes(elasticsearch: Mock) -> None:
         new_value=BusinessDataDomain(
             guid="1234",
             type_name="m4i_data_domain",
-            attributes=BusinessDataDomainAttributes.from_dict({
-                "definition": "updated definition",
-                "name": "new domain name",
-                "qualified_name": "1111",
-                }),
+            attributes=BusinessDataDomainAttributes.from_dict(
+                {"definition": "updated definition", "name": "new domain name", "qualified_name": "1111"}
+            ),
         ),
         inserted_attributes=["definition", "name"],
     )

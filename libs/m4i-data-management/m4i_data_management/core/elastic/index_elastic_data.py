@@ -19,11 +19,7 @@ def index_elastic_data(data: DataFrame, index: str):
         for id, row in data.iterrows():
             body = row.to_dict()
 
-            response = elastic.index(
-                index=index,
-                id=str(id),
-                body=body
-            )
+            response = elastic.index(index=index, id=str(id), body=body)  # type: ignore[call-arg]
 
             log.debug(response)
         # END LOOP
@@ -32,4 +28,6 @@ def index_elastic_data(data: DataFrame, index: str):
     finally:
         elastic.close()
     # END TRY
+
+
 # END index_elastic_data

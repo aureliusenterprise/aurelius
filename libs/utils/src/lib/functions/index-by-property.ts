@@ -12,13 +12,13 @@ import { SubType } from '../types';
  * @param propertyName The name of the property to index by
  */
 export function indexByProperty<T extends Dictionary<any>>(
-  data: Iterable<T>,
-  propertyName: keyof SubType<T, string | number>
+    data: Iterable<T>,
+    propertyName: keyof SubType<T, string | number>,
 ): Dictionary<T> {
-  // Iterate over the dataset and add every row to the index keyed by its respective value for `propertyName`.
-  const result: Dictionary<T> = {};
-  for (const row of data) {
-    result[row[propertyName as string | number]] = row;
-  }
-  return result;
+    // Iterate over the dataset and add every row to the index keyed by its respective value for `propertyName`.
+    const result: Dictionary<T> = {};
+    for (const row of data) {
+        result[row[propertyName as string | number]] = row;
+    }
+    return result;
 }

@@ -3,34 +3,33 @@ from typing import Iterable, List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from ..core import (AttributeDef, Cardinality, EntityDef, ObjectId,
-                    RelationshipDef, RelationshipEndDef, TypeCategory)
+from ..core import (
+    AttributeDef,
+    Cardinality,
+    EntityDef,
+    ObjectId,
+    RelationshipDef,
+    RelationshipEndDef,
+    TypeCategory,
+)
 from ..data_dictionary.BusinessSystem import (
-    BusinessSystem, BusinessSystemAttributes, BusinessSystemAttributesBase,
-    BusinessSystemAttributesDefaultsBase, BusinessSystemBase,
-    BusinessSystemDefaultsBase)
+    BusinessSystem,
+    BusinessSystemAttributes,
+    BusinessSystemAttributesBase,
+    BusinessSystemAttributesDefaultsBase,
+    BusinessSystemBase,
+    BusinessSystemDefaultsBase,
+)
 
 kubernetes_cronjob_super_type = ["m4i_system"]
 
 kubernetes_cronjob_attributes_def = [
     AttributeDef(
-        name="kubernetesNamespace",
-        type_name="array<m4i_kubernetes_namespace>",
-        cardinality=Cardinality.SET
+        name="kubernetesNamespace", type_name="array<m4i_kubernetes_namespace>", cardinality=Cardinality.SET
     ),
-    AttributeDef(
-        name="kubernetesPod",
-        type_name="array<m4i_kubernetes_pod>",
-        cardinality=Cardinality.SET
-    ),
-    AttributeDef(
-        name="schedule",
-        type_name="string"
-    ),
-    AttributeDef(
-        name="tags",
-        type_name="string"
-    )
+    AttributeDef(name="kubernetesPod", type_name="array<m4i_kubernetes_pod>", cardinality=Cardinality.SET),
+    AttributeDef(name="schedule", type_name="string"),
+    AttributeDef(name="tags", type_name="string"),
 ]
 
 kubernetes_cronjob_def = EntityDef(
@@ -39,27 +38,21 @@ kubernetes_cronjob_def = EntityDef(
     description="A type definition for a generic Kubernetes CronJob in the context of models4insight.com",
     type_version="1.0",
     super_types=kubernetes_cronjob_super_type,
-    attribute_defs=kubernetes_cronjob_attributes_def
+    attribute_defs=kubernetes_cronjob_attributes_def,
 )
 
-end_1_knamespace_kcronjob = RelationshipEndDef(
-    type="m4i_kubernetes_namespace",
-    name="kubernetesCronjob",
-)
-end_2_knamespace_kcronjob = RelationshipEndDef(
-    type="m4i_kubernetes_cronjob",
-    name="kubernetesNamespace"
-)
+end_1_knamespace_kcronjob = RelationshipEndDef(type="m4i_kubernetes_namespace", name="kubernetesCronjob")
+end_2_knamespace_kcronjob = RelationshipEndDef(type="m4i_kubernetes_cronjob", name="kubernetesNamespace")
 
 m4i_knamespace_kcronjob_rel_def = RelationshipDef(
     end_def1=end_1_knamespace_kcronjob,
     end_def2=end_2_knamespace_kcronjob,
     name="m4i_kubernetes_namespace_cronjob_assignment",
-    category=TypeCategory.RELATIONSHIP
+    category=TypeCategory.RELATIONSHIP,
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesCronjobAttributesBase(BusinessSystemAttributesBase):
     pass
@@ -68,7 +61,7 @@ class KubernetesCronjobAttributesBase(BusinessSystemAttributesBase):
 # END KubernetesCronjobAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesCronjobAttributesDefaultsBase(BusinessSystemAttributesDefaultsBase):
     kubernetes_namespace: List[ObjectId] = field(default_factory=list)
@@ -80,27 +73,27 @@ class KubernetesCronjobAttributesDefaultsBase(BusinessSystemAttributesDefaultsBa
 # END KubernetesCronjobAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class KubernetesCronjobAttributes(BusinessSystemAttributes,
-                                  KubernetesCronjobAttributesDefaultsBase,
-                                  KubernetesCronjobAttributesBase):
+class KubernetesCronjobAttributes(
+    BusinessSystemAttributes, KubernetesCronjobAttributesDefaultsBase, KubernetesCronjobAttributesBase
+):
     pass
 
 
 # END KubernetesCronjobAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesCronjobBase(BusinessSystemBase):
-    attributes: KubernetesCronjobAttributes
+    attributes: KubernetesCronjobAttributes  # type: ignore[reportIncompatibleMethodOverride]
 
 
 # END KubernetesCronjobBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesCronjobDefaultsBase(BusinessSystemDefaultsBase):
     pass
@@ -109,12 +102,11 @@ class KubernetesCronjobDefaultsBase(BusinessSystemDefaultsBase):
 # END KubernetesCronjobDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class KubernetesCronjob(BusinessSystem,
-                        KubernetesCronjobDefaultsBase,
-                        KubernetesCronjobBase
-                        ):
+class KubernetesCronjob(  # type: ignore[reportGeneralTypeIssues]
+    BusinessSystem, KubernetesCronjobDefaultsBase, KubernetesCronjobBase
+):
     type_name: str = "m4i_kubernetes_cronjob"
 
     @classmethod
@@ -128,11 +120,15 @@ class KubernetesCronjob(BusinessSystem,
         * list of kubernetes pod
         """
 
-        references = [*super().get_referred_entities(),
-                      *self.attributes.kubernetes_namespace,
-                      *self.attributes.kubernetes_pod]
+        references = [
+            *super().get_referred_entities(),
+            *self.attributes.kubernetes_namespace,
+            *self.attributes.kubernetes_pod,
+        ]
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END KubernetesCronjob

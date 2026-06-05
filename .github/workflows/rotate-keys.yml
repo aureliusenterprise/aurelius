@@ -1,0 +1,52 @@
+name: Update SOPS keys
+
+on:
+    pull_request:
+        branches:
+            - main
+        paths:
+            - '.sops.yaml'
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    update-keys:
+        name: Update SOPS Keys
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup toolchain
+              uses: ./.github/actions/setup-toolchain
+              with:
+                  node: 'true'
+                  sops: 'true'
+
+            - name: Update keys for all projects
+              env:
+                  SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
+              run: npx nx run-many -t update-keys
+
+            - run: git config --global user.email "info@aureliusenterprise.com"
+            - run: git config --global user.name "Aurelius Enterprise"
+
+            - name: Commit and push changes
+              run: |
+                  git add -A
+                  git commit -m "chore: update SOPS keys"
+                  git push --set-upstream origin HEAD:"${{ github.head_ref }}"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Add PR comment
+              uses: hasura/comment-progress@v2.3.0
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  repository: ${{ github.repository }}
+                  number: ${{ github.event.number }}
+                  id: secret-update-note
+                  message: 'Updated SOPS keys due to changes in .sops.yaml. Please review the changes.'

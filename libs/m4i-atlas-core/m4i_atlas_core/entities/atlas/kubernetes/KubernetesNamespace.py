@@ -3,31 +3,36 @@ from typing import Iterable, List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json, DataClassJsonMixin
 
-from ..core import (AttributeDef, Cardinality, EntityDef, ObjectId,
-                    RelationshipDef, RelationshipEndDef, TypeCategory)
+from ..core import (
+    AttributeDef,
+    Cardinality,
+    EntityDef,
+    ObjectId,
+    RelationshipDef,
+    RelationshipEndDef,
+    TypeCategory,
+)
 from ..data_dictionary.BusinessSystem import (
-    BusinessSystem, BusinessSystemAttributes, BusinessSystemAttributesBase,
-    BusinessSystemAttributesDefaultsBase, BusinessSystemBase,
-    BusinessSystemDefaultsBase)
+    BusinessSystem,
+    BusinessSystemAttributes,
+    BusinessSystemAttributesBase,
+    BusinessSystemAttributesDefaultsBase,
+    BusinessSystemBase,
+    BusinessSystemDefaultsBase,
+)
 
 kubernetes_namespace_super_type = ["m4i_system"]
 
 kubernetes_namespace_attributes_def = [
     AttributeDef(
-        name="kubernetesCluster",
-        type_name="array<m4i_kubernetes_cluster>",
-        cardinality=Cardinality.SET
+        name="kubernetesCluster", type_name="array<m4i_kubernetes_cluster>", cardinality=Cardinality.SET
     ),
     AttributeDef(
-        name="kubernetesCronjob",
-        type_name="array<m4i_kubernetes_cronjob>",
-        cardinality=Cardinality.SET
+        name="kubernetesCronjob", type_name="array<m4i_kubernetes_cronjob>", cardinality=Cardinality.SET
     ),
     AttributeDef(
-        name="kubernetesDeployment",
-        type_name="array<m4i_kubernetes_deployment>",
-        cardinality=Cardinality.SET
-    )
+        name="kubernetesDeployment", type_name="array<m4i_kubernetes_deployment>", cardinality=Cardinality.SET
+    ),
 ]
 
 kubernetes_namespace_def = EntityDef(
@@ -36,27 +41,21 @@ kubernetes_namespace_def = EntityDef(
     description="A type definition for a generic Kubernetes Namespace in the context of models4insight.com",
     type_version="1.0",
     super_types=kubernetes_namespace_super_type,
-    attribute_defs=kubernetes_namespace_attributes_def
+    attribute_defs=kubernetes_namespace_attributes_def,
 )
 
-end_1_kcluster_knamespace = RelationshipEndDef(
-    type="m4i_kubernetes_cluster",
-    name="kubernetesNamespace",
-)
-end_2_kcluster_knamespace = RelationshipEndDef(
-    type="m4i_kubernetes_namespace",
-    name="kubernetesCluster"
-)
+end_1_kcluster_knamespace = RelationshipEndDef(type="m4i_kubernetes_cluster", name="kubernetesNamespace")
+end_2_kcluster_knamespace = RelationshipEndDef(type="m4i_kubernetes_namespace", name="kubernetesCluster")
 
 m4i_kcluster_knamespace_rel_def = RelationshipDef(
     end_def1=end_1_kcluster_knamespace,
     end_def2=end_2_kcluster_knamespace,
     name="m4i_kubernetes_cluster_namespace_assignment",
-    category=TypeCategory.RELATIONSHIP
+    category=TypeCategory.RELATIONSHIP,
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesNamespaceAttributesBase(BusinessSystemAttributesBase):
     pass
@@ -65,7 +64,7 @@ class KubernetesNamespaceAttributesBase(BusinessSystemAttributesBase):
 # END KubernetesNamespaceAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesNamespaceAttributesDefaultsBase(BusinessSystemAttributesDefaultsBase):
     kubernetes_cluster: List[ObjectId] = field(default_factory=list)
@@ -76,47 +75,47 @@ class KubernetesNamespaceAttributesDefaultsBase(BusinessSystemAttributesDefaults
 # END KubernetesNamespaceAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class KubernetesNamespaceAttributes(BusinessSystemAttributes,
-                                    KubernetesNamespaceAttributesDefaultsBase,
-                                    KubernetesNamespaceAttributesBase):
+class KubernetesNamespaceAttributes(
+    BusinessSystemAttributes, KubernetesNamespaceAttributesDefaultsBase, KubernetesNamespaceAttributesBase
+):
     pass
 
 
 # END KubernetesNamespaceAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesNamespaceBase(BusinessSystemBase):
-    attributes: KubernetesNamespaceAttributes
+    attributes: KubernetesNamespaceAttributes  # type: ignore[reportIncompatibleMethodOverride]
 
 
 # END KubernetesNamespaceBase
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesNamespaceRelationshipAttributes(DataClassJsonMixin):
     ingress_object: List[ObjectId] = field(default_factory=list)
     kubernetes_service: List[ObjectId] = field(default_factory=list)
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesNamespaceDefaultsBase(BusinessSystemDefaultsBase):
-    relationship_attributes: KubernetesNamespaceRelationshipAttributes = None
+    relationship_attributes: Optional[KubernetesNamespaceRelationshipAttributes] = None  # type: ignore[reportIncompatibleMethodOverride]
 
 
 # END KubernetesNamespaceDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class KubernetesNamespace(BusinessSystem,
-                          KubernetesNamespaceDefaultsBase,
-                          KubernetesNamespaceBase
-                          ):
+class KubernetesNamespace(  # type: ignore[reportGeneralTypeIssues]
+    BusinessSystem, KubernetesNamespaceDefaultsBase, KubernetesNamespaceBase
+):
     type_name: str = "m4i_kubernetes_namespace"
 
     @classmethod
@@ -133,14 +132,18 @@ class KubernetesNamespace(BusinessSystem,
         * kubernetes service relationship
         """
 
-        references = [*super().get_referred_entities(),
-                      *self.attributes.kubernetes_cluster,
-                      *self.attributes.kubernetes_cronjob,
-                      *self.attributes.kubernetes_deployment,
-                      *self.relationship_attributes.ingress_object,
-                      *self.relationship_attributes.kubernetes_service]
+        references = [
+            *super().get_referred_entities(),
+            *self.attributes.kubernetes_cluster,
+            *self.attributes.kubernetes_cronjob,
+            *self.attributes.kubernetes_deployment,
+            *(self.relationship_attributes.ingress_object if self.relationship_attributes else []),
+            *(self.relationship_attributes.kubernetes_service if self.relationship_attributes else []),
+        ]
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END KubernetesNamespace

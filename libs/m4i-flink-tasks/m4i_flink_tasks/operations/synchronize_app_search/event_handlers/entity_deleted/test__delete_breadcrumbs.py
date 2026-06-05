@@ -5,10 +5,7 @@ from m4i_atlas_core import Attributes, Entity, EntityAuditAction
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
-from .delete_breadcrumbs import (
-    EntityDataNotProvidedError,
-    handle_delete_breadcrumbs,
-)
+from .delete_breadcrumbs import EntityDataNotProvidedError, handle_delete_breadcrumbs
 
 
 def test__handle_update_breadcrumb_on_entity_delete() -> None:
@@ -47,7 +44,7 @@ def test__handle_update_breadcrumb_on_entity_delete() -> None:
     )
 
     with patch(
-        __package__ + ".delete_breadcrumbs.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs.get_documents",
         return_value=[document_to_update],
     ):
         updated_documents = handle_delete_breadcrumbs(message, Mock(), "test_index", {})
@@ -97,7 +94,7 @@ def test__handle_update_breadcrumb_removes_parents() -> None:
     )
 
     with patch(
-        __package__ + ".delete_breadcrumbs.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs.get_documents",
         return_value=[document_to_update],
     ):
         updated_documents = handle_delete_breadcrumbs(message, Mock(), "test_index", {})
@@ -173,19 +170,19 @@ def test__handle_update_breadcrumbs_malformed_breadcrumb() -> None:
     )
 
     with patch(
-        __package__ + ".delete_breadcrumbs.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs.get_documents",
         return_value=[document_to_update],
-    ), patch(
-        __package__ + ".delete_breadcrumbs.logging.error",
-    ) as mock_logger:
-        updated_documents = handle_delete_breadcrumbs(message, Mock(), "test_index", {})
+    ):  # type: ignore[reportGeneralTypeIssues]
+        with patch(
+            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs.logging.error"
+        ) as mock_logger:
+            updated_documents = handle_delete_breadcrumbs(message, Mock(), "test_index", {})
 
-        assert len(updated_documents) == 0
+            assert len(updated_documents) == 0
 
-        mock_logger.assert_called_once_with(
-            "Breadcrumb for document %s is malformed. Skipping document update.",
-            document_to_update.guid,
-        )
+            mock_logger.assert_called_once_with(
+                "Breadcrumb for document %s is malformed. Skipping document update.", document_to_update.guid
+            )
 
 
 def test__handle_update_breadcrumbs_guid_not_present() -> None:
@@ -225,7 +222,7 @@ def test__handle_update_breadcrumbs_guid_not_present() -> None:
     )
 
     with patch(
-        __package__ + ".delete_breadcrumbs.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_deleted.delete_breadcrumbs.get_documents",
         return_value=[document_to_update],
     ):
         updated_documents = handle_delete_breadcrumbs(message, Mock(), "test_index", {})

@@ -5,8 +5,8 @@ import { CommonModule } from '@angular/common';
 import { ControlShellModule } from '../control-shell';
 
 @NgModule({
-  imports: [CommonModule, ControlShellModule, FormsModule, ReactiveFormsModule],
-  declarations: [BranchNameInputComponent],
-  exports: [BranchNameInputComponent],
+    imports: [CommonModule, ControlShellModule, FormsModule, ReactiveFormsModule],
+    declarations: [BranchNameInputComponent],
+    exports: [BranchNameInputComponent],
 })
 export class BranchNameInputModule {}

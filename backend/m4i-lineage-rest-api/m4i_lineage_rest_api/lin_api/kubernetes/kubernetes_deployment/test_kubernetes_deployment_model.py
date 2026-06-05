@@ -75,6 +75,10 @@ def test__kubernetes_deployment_convert_to_atlas_entity(kubernetes_deployment):
 
     atlas_kubernetes_namespace = atlas_attributes.kubernetes_namespace[0]
     assert atlas_kubernetes_namespace is not None
-    assert getattr(atlas_kubernetes_namespace.unique_attributes, "qualified_name") == instance.kubernetes_namespace
+    assert (
+        getattr(atlas_kubernetes_namespace.unique_attributes, "qualified_name")
+        == instance.kubernetes_namespace
+    )
+
 
 # END test__kubernetes_deployment_convert_to_atlas_entity

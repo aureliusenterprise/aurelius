@@ -4,8 +4,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SystemsWizardComponent } from './systems-wizard.component';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule],
-  declarations: [SystemsWizardComponent],
-  exports: [SystemsWizardComponent],
+    imports: [CommonModule, FontAwesomeModule],
+    declarations: [SystemsWizardComponent],
+    exports: [SystemsWizardComponent],
 })
 export class SystemsWizardModule {}

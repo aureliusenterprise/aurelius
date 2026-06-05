@@ -13,12 +13,12 @@ from m4i_atlas_core import (
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
-from .entity_created import (
-    EntityDataNotProvidedError,
-    handle_entity_created,
+from .entity_created import EntityDataNotProvidedError, handle_entity_created
+
+QUERY_PATH = (
+    "flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit"
 )
 
-QUERY_PATH = "flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit"
 
 def test__default_create_handler_with_complete_details() -> None:
     """
@@ -37,16 +37,15 @@ def test__default_create_handler_with_complete_details() -> None:
             guid="1234",
             type_name="m4i_data_domain",
             attributes=BusinessDataEntityAttributes.from_dict(
-                {
-                    "qualifiedName": "1234-test",
-                    "name": "test",
-                    "unmapped_attributes": {},
-                },
+                {"qualifiedName": "1234-test", "name": "test", "unmapped_attributes": {}}
             ),
         ),
     )
 
-    with patch(__package__ + ".entity_created.get_related_documents", return_value=[]):
+    with patch(
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_related_documents",
+        return_value=[],
+    ):
         result = handle_entity_created(entity_message, Mock(), "test_index", {})
 
         assert len(result) == 1
@@ -77,16 +76,15 @@ def test__create_person_handler_with_email() -> None:
             guid="1234",
             type_name="m4i_person",
             attributes=AtlasPersonAttributes.from_dict(
-                {
-                    "qualifiedName": "1234-test",
-                    "name": "test",
-                    "email": "john.doe@example.com",
-                },
+                {"qualifiedName": "1234-test", "name": "test", "email": "john.doe@example.com"}
             ),
         ),
     )
 
-    with patch(__package__ + ".entity_created.get_related_documents", return_value=[]):
+    with patch(
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_related_documents",
+        return_value=[],
+    ):
         result = handle_entity_created(entity_message, Mock(), "test_index", {})
 
         assert len(result) == 1
@@ -135,7 +133,7 @@ def test__handle_entity_created_with_breadcrumbs() -> None:
                 "name": "test entity",
                 "unmapped_attributes": {"qualifiedName": "test-data-entity"},
                 "definition": "An example definition.",
-            },
+            }
         ),
     )
 
@@ -166,20 +164,24 @@ def test__handle_entity_created_with_breadcrumbs() -> None:
         breadcrumbtype=["m4i_data_domain"],
     )
 
-    with (
-        patch(__package__ + ".entity_created.get_related_documents", return_value=[parent_document]),
-        patch(__package__ + ".entity_created.get_child_documents", return_value=[]),
-    ):
-        result = handle_entity_created(entity_message, Mock(), "test_index", {})
+    with patch(
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_related_documents",
+        return_value=[parent_document],
+    ):  # type: ignore[reportGeneralTypeIssues]
+        with patch(
+            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_child_documents",
+            return_value=[],
+        ):
+            result = handle_entity_created(entity_message, Mock(), "test_index", {})
 
-        assert len(result) == 2
+            assert len(result) == 2
 
-        document = result["1111"]
+            document = result["1111"]
 
-        assert document.breadcrumbname == ["Parent Data Domain Name", "Domain Name"]
-        assert document.breadcrumbguid == ["5678", "2222"]
-        assert document.breadcrumbtype == ["m4i_data_domain", "m4i_data_domain"]
-        assert document.parentguid == "2222"
+            assert document.breadcrumbname == ["Parent Data Domain Name", "Domain Name"]
+            assert document.breadcrumbguid == ["5678", "2222"]
+            assert document.breadcrumbtype == ["m4i_data_domain", "m4i_data_domain"]
+            assert document.parentguid == "2222"
 
 
 def test__handle_entity_created_add_relations() -> None:
@@ -188,11 +190,7 @@ def test__handle_entity_created_add_relations() -> None:
         guid="1111",
         type_name="m4i_data_entity",
         attributes=BusinessDataEntityAttributes.from_dict(
-            {
-                "qualifiedName": "test-data-entity",
-                "name": "test entity",
-                "unmapped_attributes": {},
-            },
+            {"qualifiedName": "test-data-entity", "name": "test entity", "unmapped_attributes": {}}
         ),
     )
 
@@ -200,11 +198,8 @@ def test__handle_entity_created_add_relations() -> None:
         ObjectId(
             guid="2222",
             type_name="m4i_data_domain",
-            unique_attributes=M4IAttributes(
-                qualified_name="My Data Domain",
-                unmapped_attributes={},
-            ),
-        ),
+            unique_attributes=M4IAttributes(qualified_name="My Data Domain", unmapped_attributes={}),
+        )
     ]
 
     entity_message = EntityMessage(
@@ -227,23 +222,27 @@ def test__handle_entity_created_add_relations() -> None:
         parentguid="5678",
     )
 
-    with (
-        patch(__package__ + ".entity_created.get_related_documents", return_value=[related_document]),
-        patch(__package__ + ".entity_created.get_child_documents", return_value=[]),
-    ):
-        result = handle_entity_created(entity_message, Mock(), "test_index", {})
+    with patch(
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_related_documents",
+        return_value=[related_document],
+    ):  # type: ignore[reportGeneralTypeIssues]
+        with patch(
+            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_child_documents",
+            return_value=[],
+        ):
+            result = handle_entity_created(entity_message, Mock(), "test_index", {})
 
-        document = result["1111"]
+            document = result["1111"]
 
-        assert document.deriveddatadomainguid == ["2222"]
-        assert document.deriveddatadomain == ["My Data Domain"]
-        assert document.parentguid == "2222"
+            assert document.deriveddatadomainguid == ["2222"]
+            assert document.deriveddatadomain == ["My Data Domain"]
+            assert document.parentguid == "2222"
 
-        related_document = result["2222"]
+            related_document = result["2222"]
 
-        assert related_document.deriveddataentityguid == ["1111"]
-        assert related_document.deriveddataentity == ["test entity"]
-        assert related_document.parentguid == "5678"
+            assert related_document.deriveddataentityguid == ["1111"]
+            assert related_document.deriveddataentity == ["test entity"]
+            assert related_document.parentguid == "5678"
 
 
 def test__handle_entity_created_multiple_relations() -> None:
@@ -256,7 +255,7 @@ def test__handle_entity_created_multiple_relations() -> None:
                 "qualifiedName": "1111-data-entity",
                 "name": "Test Entity",
                 "unmapped_attributes": {"qualifiedName": "1111-data-entity"},
-            },
+            }
         ),
     )
 
@@ -265,10 +264,9 @@ def test__handle_entity_created_multiple_relations() -> None:
             guid="2222",
             type_name="m4i_data_domain",
             unique_attributes=M4IAttributes(
-                qualified_name="2222-domain",
-                unmapped_attributes={"name": "Test Data Domain"},
+                qualified_name="2222-domain", unmapped_attributes={"name": "Test Data Domain"}
             ),
-        ),
+        )
     ]
 
     data_entity.attributes.attributes = [
@@ -276,10 +274,9 @@ def test__handle_entity_created_multiple_relations() -> None:
             guid="3333",
             type_name="m4i_data_attribute",
             unique_attributes=M4IAttributes(
-                qualified_name="3333-attribute",
-                unmapped_attributes={"name": "Test Data Attribute"},
+                qualified_name="3333-attribute", unmapped_attributes={"name": "Test Data Attribute"}
             ),
-        ),
+        )
     ]
 
     message = EntityMessage(
@@ -291,7 +288,7 @@ def test__handle_entity_created_multiple_relations() -> None:
         inserted_relationships={
             "dataDomain": data_entity.attributes.data_domain,
             "attributes": data_entity.attributes.attributes,
-            },
+        },
     )
 
     related = [
@@ -309,31 +306,35 @@ def test__handle_entity_created_multiple_relations() -> None:
         ),
     ]
 
-    with (
-        patch(__package__ + ".entity_created.get_related_documents", return_value=related),
-        patch(__package__ + ".entity_created.get_child_documents", return_value=[]),
-    ):
-        result = handle_entity_created(message, Mock(), "test_index", {})
+    with patch(
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_related_documents",
+        return_value=related,
+    ):  # type: ignore[reportGeneralTypeIssues]
+        with patch(
+            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created.get_child_documents",
+            return_value=[],
+        ):
+            result = handle_entity_created(message, Mock(), "test_index", {})
 
-        # Assert created entity's relations
-        assert result["1111"].deriveddatadomainguid == ["2222"]
-        assert result["1111"].deriveddatadomain == ["Test Data Domain"]
-        assert result["1111"].deriveddataattributeguid == ["3333"]
-        assert result["1111"].deriveddataattribute == ["Test Data Attribute"]
-        # Assert relating back to the data entity
-        assert result["2222"].deriveddataentityguid == ["1111"]
-        assert result["2222"].deriveddataentity == ["Test Entity"]
-        assert result["3333"].deriveddataentityguid == ["1111"]
-        assert result["3333"].deriveddataentity == ["Test Entity"]
-        # Assert breadcrumbs
-        assert result["1111"].breadcrumbname == ["Test Data Domain"]
-        assert result["1111"].breadcrumbguid == ["2222"]
-        assert result["1111"].breadcrumbtype == ["m4i_data_domain"]
+            # Assert created entity's relations
+            assert result["1111"].deriveddatadomainguid == ["2222"]
+            assert result["1111"].deriveddatadomain == ["Test Data Domain"]
+            assert result["1111"].deriveddataattributeguid == ["3333"]
+            assert result["1111"].deriveddataattribute == ["Test Data Attribute"]
+            # Assert relating back to the data entity
+            assert result["2222"].deriveddataentityguid == ["1111"]
+            assert result["2222"].deriveddataentity == ["Test Entity"]
+            assert result["3333"].deriveddataentityguid == ["1111"]
+            assert result["3333"].deriveddataentity == ["Test Entity"]
+            # Assert breadcrumbs
+            assert result["1111"].breadcrumbname == ["Test Data Domain"]
+            assert result["1111"].breadcrumbguid == ["2222"]
+            assert result["1111"].breadcrumbtype == ["m4i_data_domain"]
 
-        assert result["2222"].breadcrumbname == []
-        assert result["2222"].breadcrumbguid == []
-        assert result["2222"].breadcrumbtype == []
+            assert result["2222"].breadcrumbname == []
+            assert result["2222"].breadcrumbguid == []
+            assert result["2222"].breadcrumbtype == []
 
-        assert result["3333"].breadcrumbname == ["Test Data Domain", "Test Entity"]
-        assert result["3333"].breadcrumbguid == ["2222", "1111"]
-        assert result["3333"].breadcrumbtype == ["m4i_data_domain", "m4i_data_entity"]
+            assert result["3333"].breadcrumbname == ["Test Data Domain", "Test Entity"]
+            assert result["3333"].breadcrumbguid == ["2222", "1111"]
+            assert result["3333"].breadcrumbtype == ["m4i_data_domain", "m4i_data_entity"]

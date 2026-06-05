@@ -5,27 +5,23 @@ from dataclasses_json import LetterCase, dataclass_json
 
 from .. import Cardinality
 from ..core import AttributeDef, EntityDef, ObjectId, TypeCategory
-from ..data_dictionary import (BusinessSystem, BusinessSystemAttributes,
-                               BusinessSystemAttributesBase,
-                               BusinessSystemAttributesDefaultsBase,
-                               BusinessSystemBase, BusinessSystemDefaultsBase)
+from ..data_dictionary import (
+    BusinessSystem,
+    BusinessSystemAttributes,
+    BusinessSystemAttributesBase,
+    BusinessSystemAttributesDefaultsBase,
+    BusinessSystemBase,
+    BusinessSystemDefaultsBase,
+)
 
 kafka_cluster_super_type = ["m4i_system"]
 
 kafka_cluster_attributes_def = [
+    AttributeDef(name="kafkaPartitions", type_name="int"),
+    AttributeDef(name="kafkaReplicas", type_name="int"),
     AttributeDef(
-        name="kafkaPartitions",
-        type_name="int"
+        name="confluentEnvironment", type_name="array<m4i_confluent_environment>", cardinality=Cardinality.SET
     ),
-    AttributeDef(
-        name="kafkaReplicas",
-        type_name="int"
-    ),
-    AttributeDef(
-        name="confluentEnvironment",
-        type_name="array<m4i_confluent_environment>",
-        cardinality=Cardinality.SET
-    )
 ]
 
 kafka_cluster_def = EntityDef(
@@ -34,12 +30,11 @@ kafka_cluster_def = EntityDef(
     description="a type definition for a generic confluent_environment in the context of models4insight.com",
     type_version="1.0",
     super_types=kafka_cluster_super_type,
-    attribute_defs=kafka_cluster_attributes_def
+    attribute_defs=kafka_cluster_attributes_def,
 )
 
 
-
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KafkaClusterAttributesBase(BusinessSystemAttributesBase):
     confluent_environment: List[ObjectId]
@@ -48,7 +43,7 @@ class KafkaClusterAttributesBase(BusinessSystemAttributesBase):
 # END KafkaClusterAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KafkaClusterAttributesDefaultsBase(BusinessSystemAttributesDefaultsBase):
     kafka_partitions: Optional[int] = None
@@ -58,26 +53,27 @@ class KafkaClusterAttributesDefaultsBase(BusinessSystemAttributesDefaultsBase):
 # END KafkaClusterAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class KafkaClusterAttributes(BusinessSystemAttributes,
-                             KafkaClusterAttributesDefaultsBase, KafkaClusterAttributesBase):
+class KafkaClusterAttributes(
+    BusinessSystemAttributes, KafkaClusterAttributesDefaultsBase, KafkaClusterAttributesBase
+):
     pass
 
 
 # END KafkaClusterAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KafkaClusterBase(BusinessSystemBase):
-    attributes: KafkaClusterAttributes
+    attributes: KafkaClusterAttributes  # type: ignore[reportIncompatibleMethodOverride]
 
 
 # END KafkaClusterBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KafkaClusterDefaultsBase(BusinessSystemDefaultsBase):
     pass
@@ -86,10 +82,9 @@ class KafkaClusterDefaultsBase(BusinessSystemDefaultsBase):
 # END KafkaClusterDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class KafkaCluster(BusinessSystem,
-                   KafkaClusterDefaultsBase, KafkaClusterBase):
+class KafkaCluster(BusinessSystem, KafkaClusterDefaultsBase, KafkaClusterBase):  # type: ignore[reportGeneralTypeIssues]
     type_name: str = "m4i_kafka_cluster"
 
     @classmethod
@@ -102,12 +97,11 @@ class KafkaCluster(BusinessSystem,
         * Confluent Environment
         """
 
-        references = [
-            *super().get_referred_entities(),
-            *self.attributes.confluent_environment
-        ]
+        references = [*super().get_referred_entities(), *self.attributes.confluent_environment]
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END KafkaCluster

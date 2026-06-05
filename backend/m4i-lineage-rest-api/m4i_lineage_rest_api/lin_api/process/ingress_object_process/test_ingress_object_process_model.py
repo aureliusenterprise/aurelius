@@ -11,17 +11,11 @@ def ingress_object_process():
         "name": "testing_m4i_ingress_object_process",
         "description": "test_m4i_ingress_object_process",
         "processOwner": "test_m4i_person",
-        "inputs": [
-            "test_m4i_dataset"
-        ],
-        "outputs": [
-            "test_m4i_dataset"
-        ],
+        "inputs": ["test_m4i_dataset"],
+        "outputs": ["test_m4i_dataset"],
         "ingressController": "test_m4i_ingress_controller_process",
-        "kubernetesService": [
-            "test_m4i_kubernetes_service_process"
-        ],
-        "namespace": "test_m4i_kubernetes_namespace"
+        "kubernetesService": ["test_m4i_kubernetes_service_process"],
+        "namespace": "test_m4i_kubernetes_namespace",
     }
 
 
@@ -96,14 +90,20 @@ def test__ingress_object_process_convert_to_atlas_entity(ingress_object_process)
 
     atlas_kubernetes_service = atlas_attributes.kubernetes_service[0]
     assert atlas_kubernetes_service is not None
-    assert getattr(atlas_kubernetes_service.unique_attributes, "qualified_name") == instance.kubernetes_service[0]
+    assert (
+        getattr(atlas_kubernetes_service.unique_attributes, "qualified_name")
+        == instance.kubernetes_service[0]
+    )
 
     atlas_ingress_controller = atlas_attributes.ingress_controller[0]
     assert atlas_ingress_controller is not None
-    assert getattr(atlas_ingress_controller.unique_attributes, "qualified_name") == instance.ingress_controller
+    assert (
+        getattr(atlas_ingress_controller.unique_attributes, "qualified_name") == instance.ingress_controller
+    )
 
-    atlas_namespace = atlas_instance.relationship_attributes.namespace[0]
+    atlas_namespace = atlas_instance.relationship_attributes.namespace[0]  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
     assert atlas_namespace is not None
     assert getattr(atlas_namespace.unique_attributes, "qualified_name") == instance.namespace
+
 
 # END test__ingress_object_process_convert_to_atlas_entity

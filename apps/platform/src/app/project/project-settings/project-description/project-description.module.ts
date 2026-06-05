@@ -6,13 +6,13 @@ import { ProjectDescriptionSettingsComponent } from './project-description.compo
 import { DescriptionInputModule } from '@models4insight/components';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    DescriptionInputModule,
-    ProjectDescriptionSettingsRoutingModule
-  ],
-  declarations: [ProjectDescriptionSettingsComponent]
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        DescriptionInputModule,
+        ProjectDescriptionSettingsRoutingModule,
+    ],
+    declarations: [ProjectDescriptionSettingsComponent],
 })
 export class ProjectDescriptionSettingsModule {}

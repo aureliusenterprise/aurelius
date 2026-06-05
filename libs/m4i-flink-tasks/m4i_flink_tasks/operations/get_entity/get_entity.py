@@ -2,7 +2,7 @@ import asyncio
 import contextlib
 import logging
 from datetime import datetime, timedelta, timezone
-from typing import Tuple, Callable, Union, cast
+from typing import Any, Callable, Dict, Tuple, Union, cast
 
 from aiohttp import ClientResponseError
 from aiohttp.web import HTTPError
@@ -51,10 +51,7 @@ class GetEntityFunction(MapFunction):
     """
 
     def __init__(
-        self,
-        atlas_url: str,
-        keycloak_factory: KeycloakFactory,
-        credentials: Tuple[str, str],
+        self, atlas_url: str, keycloak_factory: KeycloakFactory, credentials: Tuple[str, str]
     ) -> None:
         """
         Initialize the GetEntityFunction with a Keycloak factory and credentials.
@@ -84,13 +81,13 @@ class GetEntityFunction(MapFunction):
         store.set("atlas.server.url", self.atlas_url)
 
         with contextlib.suppress(ExistingEntityTypeException):
-            register_atlas_entity_types(data_dictionary_entity_types)
+            register_atlas_entity_types(data_dictionary_entity_types)  # type: ignore[arg-type]
 
     def close(self) -> None:
         """Close the event loop."""
         self.loop.close()
 
-    def map(self, value: str) -> Union[AtlasChangeMessage, Exception]:  # noqa: PLR0911
+    def map(self, value: str) -> Union[AtlasChangeMessage, Exception]:  # noqa: PLR0911 # type: ignore[override]
         """
         Process the incoming message and enrich it with entity details.
 
@@ -109,10 +106,7 @@ class GetEntityFunction(MapFunction):
         try:
             # Deserialize the JSON string into a KafkaNotification object.
             # Using `cast` due to a known type hinting issue with schema.loads
-            change_message = cast(
-                AtlasChangeMessage,
-                AtlasChangeMessage.schema().loads(value, many=False),
-            )
+            change_message = cast(AtlasChangeMessage, AtlasChangeMessage.schema().loads(value, many=False))
         except ValidationError as e:
             logging.exception("Error deserializing message")
             return e
@@ -163,7 +157,11 @@ class GetEntityFunction(MapFunction):
 
         return change_message
 
-    @retry(retry_strategy=ExponentialBackoff(), catch=(HTTPError, KeycloakError, ClientResponseError), max_retries=2)
+    @retry(
+        retry_strategy=ExponentialBackoff(),
+        catch=(HTTPError, KeycloakError, ClientResponseError),
+        max_retries=2,
+    )
     def get_entity(self, guid: str, entity_type: str) -> Entity:
         """
         Get the entity details for the given GUID and entity type.
@@ -180,14 +178,12 @@ class GetEntityFunction(MapFunction):
         Entity
             The entity details.
         """
-        return self.loop.run_until_complete(
+        result: Entity = self.loop.run_until_complete(  # type: ignore[assignment]
             get_entity_by_guid(
-                guid=guid,
-                entity_type=entity_type,
-                access_token=self.access_token,
-                cache_read=False,
-            ),
+                guid=guid, entity_type=entity_type, access_token=self.access_token, cache_read=False
+            )
         )
+        return result
 
     @property
     def access_token(self) -> str:
@@ -208,7 +204,7 @@ class GetEntityFunction(MapFunction):
         now = datetime.now(tz=timezone.utc)
         # If the token is expired or about to expire, fetch a new one
         if now > self._token_expiration or self._access_token is None:
-            token_response = self.keycloak.token(*self.credentials)
+            token_response = cast(Dict[str, Any], self.keycloak.token(*self.credentials))
 
             # Calculate the expiration time with some buffer (80% of the actual expiration)
             expires_in = int(token_response["expires_in"])
@@ -255,6 +251,6 @@ class GetEntity:
         """
         self.data_stream = data_stream
 
-        self.main = self.data_stream.map(
-            GetEntityFunction(atlas_url, keycloak_factory, credentials),
-        ).name("enriched_entities")
+        self.main = self.data_stream.map(GetEntityFunction(atlas_url, keycloak_factory, credentials)).name(
+            "enriched_entities"
+        )

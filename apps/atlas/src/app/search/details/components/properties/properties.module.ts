@@ -5,8 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { PropertiesComponent } from './properties.component';
 import { PropertiesItemComponent } from './properties-item/properties-item.component';
 @NgModule({
-  imports: [CommonModule, SortableTableShellModule, TranslateModule.forChild()],
-  declarations: [PropertiesComponent, PropertiesItemComponent],
-  exports: [PropertiesComponent, PropertiesItemComponent]
+    imports: [CommonModule, SortableTableShellModule, TranslateModule.forChild()],
+    declarations: [PropertiesComponent, PropertiesItemComponent],
+    exports: [PropertiesComponent, PropertiesItemComponent],
 })
-export class PropertiesModule { }
+export class PropertiesModule {}

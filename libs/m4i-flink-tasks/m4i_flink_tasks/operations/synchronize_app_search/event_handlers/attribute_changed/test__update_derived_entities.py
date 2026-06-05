@@ -13,10 +13,7 @@ from m4i_atlas_core import (
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
-from .update_derived_entities import (
-    EntityDataNotProvidedError,
-    handle_update_derived_entities,
-)
+from .update_derived_entities import EntityDataNotProvidedError, handle_update_derived_entities
 
 
 def test__handle_update_derived_entities_update_document() -> None:
@@ -44,10 +41,9 @@ def test__handle_update_derived_entities_update_document() -> None:
         new_value=BusinessDataEntity(
             guid="1234",
             type_name="m4i_data_entity",
-            attributes=BusinessDataEntityAttributes.from_dict({
-                "name": "New Data Entity Name",
-                "qualified_name": "1111",
-            }),
+            attributes=BusinessDataEntityAttributes.from_dict(
+                {"name": "New Data Entity Name", "qualified_name": "1111"}
+            ),
         ),
         changed_attributes=["name"],
     )
@@ -62,7 +58,7 @@ def test__handle_update_derived_entities_update_document() -> None:
     )
 
     with patch(
-        __package__ + ".update_derived_entities.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_derived_entities.get_documents",
         return_value=[document_to_update],
     ):
         updated_documents = handle_update_derived_entities(message, Mock(), "test_index", {})
@@ -101,16 +97,15 @@ def test__handle_update_derived_entities_no_derived_entities() -> None:
         new_value=BusinessDataDomain(
             guid="1234",
             type_name="test_entity",
-            attributes=BusinessDataDomainAttributes.from_dict({
-                "name": "New Data Domain Name",
-                "qualified_name": "1111",
-            }),
+            attributes=BusinessDataDomainAttributes.from_dict(
+                {"name": "New Data Domain Name", "qualified_name": "1111"}
+            ),
         ),
         changed_attributes=["name"],
     )
 
     with patch(
-        __package__ + ".update_derived_entities.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_derived_entities.get_documents",
         return_value=[],
     ):
         updated_documents = handle_update_derived_entities(message, Mock(), "test_index", {})
@@ -135,9 +130,7 @@ def test__handle_update_derived_entities_no_name_update() -> None:
         original_event_type=EntityAuditAction.ENTITY_CREATE,
         event_type=EntityMessageType.ENTITY_CREATED,
         new_value=Entity(
-            guid="1234",
-            type_name="m4i_data_domain",
-            attributes=Attributes.from_dict({"description": "test"}),
+            guid="1234", type_name="m4i_data_domain", attributes=Attributes.from_dict({"description": "test"})
         ),
         inserted_attributes=["description"],
     )

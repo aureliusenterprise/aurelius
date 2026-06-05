@@ -1,1 +1,1 @@
-from .annotate_results_with_metdata import *
+from .annotate_results_with_metdata import annotate_results_with_metadata as annotate_results_with_metadata

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Union
+from typing import Any, Dict, Union
 
 from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
 from m4i_atlas_core import AtlasChangeMessage, Entity
@@ -38,7 +38,7 @@ class KafkaNotification(DataClassJsonMixin):
 
     msg_creation_time: int
     event_time: int
-    atlas_entity_audit: dict
+    atlas_entity_audit: Dict[str, Any]
     kafka_notification: AtlasChangeMessage
     atlas_entity: Union[Entity, None] = None
     previous_version: Union[Entity, None] = None

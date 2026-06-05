@@ -17,8 +17,7 @@ def formatting(data: DataFrame, column_name: str, pattern: str) -> Series:
     regex = re.compile(pattern)
 
     def check(value):
-
-        if isna(value):
+        if isna(value):  # type: ignore[arg-type]
             return 0
 
         return 1 if regex.match(str(value)) else 0
@@ -26,4 +25,4 @@ def formatting(data: DataFrame, column_name: str, pattern: str) -> Series:
     if column_name not in data.columns:
         return Series([0] * len(data), index=data.index)
 
-    return data[column_name].apply(check)
+    return data[column_name].apply(check)  # type: ignore[return-value]

@@ -30,37 +30,37 @@ const untilDestroyedSymbol = Symbol('untilDestroyed');
  * }
  */
 export function untilDestroyed<T>(
-  /** The parent Angular component or object instance. */
-  instance: OnDestroy
+    /** The parent Angular component or object instance. */
+    instance: OnDestroy,
 ): (source: Observable<T>) => Observable<T>;
 export function untilDestroyed<T>(
-  /** The parent Angular component or object instance. */
-  instance: object,
-  /** The method to hook on. Defaults to `ngOnDestroy`. */
-  destroyMethodName: string = 'ngOnDestroy'
+    /** The parent Angular component or object instance. */
+    instance: object,
+    /** The method to hook on. Defaults to `ngOnDestroy`. */
+    destroyMethodName: string = 'ngOnDestroy',
 ): (source: Observable<T>) => Observable<T> {
-  return (source: Observable<T>) => {
-    const originalDestroy = instance[destroyMethodName];
-    const hasDestroyFunction = typeof originalDestroy === 'function';
+    return (source: Observable<T>) => {
+        const originalDestroy = instance[destroyMethodName];
+        const hasDestroyFunction = typeof originalDestroy === 'function';
 
-    if (!hasDestroyFunction) {
-      throw new Error(
-        `${instance.constructor.name} is using untilDestroyed but doesn't implement ${destroyMethodName}`
-      );
-    }
-
-    if (!instance[untilDestroyedSymbol]) {
-      instance[untilDestroyedSymbol] = new Subject();
-
-      instance[destroyMethodName] = function () {
-        if (hasDestroyFunction) {
-          originalDestroy.apply(this, arguments);
+        if (!hasDestroyFunction) {
+            throw new Error(
+                `${instance.constructor.name} is using untilDestroyed but doesn't implement ${destroyMethodName}`,
+            );
         }
-        instance[untilDestroyedSymbol].next();
-        instance[untilDestroyedSymbol].complete();
-      };
-    }
 
-    return source.pipe(takeUntil<T>(instance[untilDestroyedSymbol]));
-  };
+        if (!instance[untilDestroyedSymbol]) {
+            instance[untilDestroyedSymbol] = new Subject();
+
+            instance[destroyMethodName] = function () {
+                if (hasDestroyFunction) {
+                    originalDestroy.apply(this, arguments);
+                }
+                instance[untilDestroyedSymbol].next();
+                instance[untilDestroyedSymbol].complete();
+            };
+        }
+
+        return source.pipe(takeUntil<T>(instance[untilDestroyedSymbol]));
+    };
 }

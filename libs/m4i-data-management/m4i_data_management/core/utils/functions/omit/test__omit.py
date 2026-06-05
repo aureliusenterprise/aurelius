@@ -8,6 +8,8 @@ def test__omit_does_not_modify_input():
 
     assert "test" in obj
     assert "abc" in obj
+
+
 # END test__omit_does_not_modify_input
 
 
@@ -18,6 +20,8 @@ def test__omit_multiple_keys():
 
     assert "test" not in test
     assert "abc" not in test
+
+
 # END test__omit_multiple_keys
 
 
@@ -28,6 +32,8 @@ def test__omit_none():
 
     assert "test" in test
     assert "abc" in test
+
+
 # END test__omit_none
 
 
@@ -38,4 +44,6 @@ def test__omit_single_key():
 
     assert "test" not in test
     assert "abc" in test
+
+
 # END test__omit_single_key

@@ -1,7 +1,4 @@
 SEVERITY_LEVELS = ("CRITICAL", "HIGH", "MEDIUM", "LOW", "UNKNOWN")
-SEVERITY_RANKS = {
-    severity: len(SEVERITY_LEVELS) - index
-    for index, severity in enumerate(SEVERITY_LEVELS)
-}
+SEVERITY_RANKS = {severity: len(SEVERITY_LEVELS) - index for index, severity in enumerate(SEVERITY_LEVELS)}
 CATEGORY_LEVELS = ("restricted", "reciprocal", "notice", "unknown", "other")
 SKIP_PATH_PARTS = {".git", ".nx", ".venv", "node_modules", "__pycache__"}

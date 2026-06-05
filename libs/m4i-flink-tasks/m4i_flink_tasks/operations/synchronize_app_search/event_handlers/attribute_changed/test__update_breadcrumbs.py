@@ -1,15 +1,17 @@
 from unittest.mock import Mock, patch
 
 import pytest
-from m4i_atlas_core import Attributes, BusinessDataDomain, BusinessDataDomainAttributes, Entity, EntityAuditAction
+from m4i_atlas_core import (
+    Attributes,
+    BusinessDataDomain,
+    BusinessDataDomainAttributes,
+    Entity,
+    EntityAuditAction,
+)
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
 
-from .update_breadcrumbs import (
-    EntityDataNotProvidedError,
-    EntityNameNotFoundError,
-    handle_update_breadcrumbs,
-)
+from .update_breadcrumbs import EntityDataNotProvidedError, EntityNameNotFoundError, handle_update_breadcrumbs
 
 
 def test__handle_update_derived_entities_update_document() -> None:
@@ -37,10 +39,9 @@ def test__handle_update_derived_entities_update_document() -> None:
         new_value=BusinessDataDomain(
             guid="1234",
             type_name="m4i_data_domain",
-            attributes=BusinessDataDomainAttributes.from_dict({
-                "name": "New Data Domain Name",
-                "qualified_name": "1111",
-            }),
+            attributes=BusinessDataDomainAttributes.from_dict(
+                {"name": "New Data Domain Name", "qualified_name": "1111"}
+            ),
         ),
         changed_attributes=["name"],
     )
@@ -55,7 +56,7 @@ def test__handle_update_derived_entities_update_document() -> None:
     )
 
     with patch(
-        __package__ + ".update_breadcrumbs.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.get_documents",
         return_value=[document_to_update],
     ):
         updated_documents = handle_update_breadcrumbs(message, Mock(), "test_index", {})
@@ -94,16 +95,15 @@ def test__handle_update_derived_entities_no_derived_entities() -> None:
         new_value=BusinessDataDomain(
             guid="1234",
             type_name="m4i_data_domain",
-            attributes=BusinessDataDomainAttributes.from_dict({
-                "name": "Data Domain Name",
-                "qualified_name": "1111",
-            }),
+            attributes=BusinessDataDomainAttributes.from_dict(
+                {"name": "Data Domain Name", "qualified_name": "1111"}
+            ),
         ),
         changed_attributes=["name"],
     )
 
     with patch(
-        __package__ + ".update_breadcrumbs.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.get_documents",
         return_value=[],
     ):
         updated_documents = handle_update_breadcrumbs(message, Mock(), "test_index", {})
@@ -127,11 +127,7 @@ def test__handle_update_derived_entities_no_name_update() -> None:
         guid="1234",
         original_event_type=EntityAuditAction.ENTITY_CREATE,
         event_type=EntityMessageType.ENTITY_CREATED,
-        new_value=Entity(
-            guid="1234",
-            type_name="m4i_data_domain",
-            attributes=Attributes.from_dict({}),
-        ),
+        new_value=Entity(guid="1234", type_name="m4i_data_domain", attributes=Attributes.from_dict({})),
         changed_attributes=["name"],
     )
 
@@ -185,10 +181,9 @@ def test__handle_update_breadcrumbs_malformed_breadcrumb() -> None:
         new_value=BusinessDataDomain(
             guid="1234",
             type_name="m4i_data_domain",
-            attributes=BusinessDataDomainAttributes.from_dict({
-                "name": "Data Domain Name",
-                "qualified_name": "1111",
-            }),
+            attributes=BusinessDataDomainAttributes.from_dict(
+                {"name": "Data Domain Name", "qualified_name": "1111"}
+            ),
         ),
         changed_attributes=["name"],
     )
@@ -203,19 +198,19 @@ def test__handle_update_breadcrumbs_malformed_breadcrumb() -> None:
     )
 
     with patch(
-        __package__ + ".update_breadcrumbs.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.get_documents",
         return_value=[document_to_update],
-    ), patch(
-        __package__ + ".update_breadcrumbs.logging.error",
-    ) as mock_logger:
-        updated_documents = handle_update_breadcrumbs(message, Mock(), "test_index", {})
+    ):  # type: ignore[reportGeneralTypeIssues]
+        with patch(
+            "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.logging.error"
+        ) as mock_logger:
+            updated_documents = handle_update_breadcrumbs(message, Mock(), "test_index", {})
 
-        assert len(updated_documents) == 0
+            assert len(updated_documents) == 0
 
-        mock_logger.assert_called_once_with(
-            "Breadcrumb for document %s is malformed. Skipping document update.",
-            document_to_update.guid,
-        )
+            mock_logger.assert_called_once_with(
+                "Breadcrumb for document %s is malformed. Skipping document update.", document_to_update.guid
+            )
 
 
 def test__handle_update_breadcrumbs_guid_not_present() -> None:
@@ -241,10 +236,9 @@ def test__handle_update_breadcrumbs_guid_not_present() -> None:
         new_value=BusinessDataDomain(
             guid="1234",
             type_name="m4i_data_domain",
-            attributes=BusinessDataDomainAttributes.from_dict({
-                "name": "Data Domain Name",
-                "qualified_name": "1111",
-            }),
+            attributes=BusinessDataDomainAttributes.from_dict(
+                {"name": "Data Domain Name", "qualified_name": "1111"}
+            ),
         ),
         changed_attributes=["name"],
     )
@@ -259,7 +253,7 @@ def test__handle_update_breadcrumbs_guid_not_present() -> None:
     )
 
     with patch(
-        __package__ + ".update_breadcrumbs.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.get_documents",
         return_value=[document_to_update],
     ):
         updated_documents = handle_update_breadcrumbs(message, Mock(), "test_index", {})
@@ -290,10 +284,9 @@ def test__handle_update_breadcrumbs_name_already_correct() -> None:
         new_value=BusinessDataDomain(
             guid="1234",
             type_name="m4i_data_domain",
-            attributes=BusinessDataDomainAttributes.from_dict({
-                "name": "New Data Domain Name",
-                "qualified_name": "1111",
-            }),
+            attributes=BusinessDataDomainAttributes.from_dict(
+                {"name": "New Data Domain Name", "qualified_name": "1111"}
+            ),
         ),
         changed_attributes=["name"],
     )
@@ -308,7 +301,7 @@ def test__handle_update_breadcrumbs_name_already_correct() -> None:
     )
 
     with patch(
-        __package__ + ".update_breadcrumbs.get_documents",
+        "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.attribute_changed.update_breadcrumbs.get_documents",
         return_value=[document_to_update],
     ):
         updated_documents = handle_update_breadcrumbs(message, Mock(), "test_index", {})

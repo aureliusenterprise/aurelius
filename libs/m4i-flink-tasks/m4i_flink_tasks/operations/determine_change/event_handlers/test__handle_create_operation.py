@@ -1,14 +1,13 @@
+from typing import Dict, Any
+
 from m4i_atlas_core import Attributes, ObjectId
 
-from m4i_flink_tasks import (
-    AtlasChangeMessageWithPreviousVersion,
-    EntityMessageType,
-)
+from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion, EntityMessageType
 
 from .handle_create_operation import handle_create_operation
 
 
-def create_mock_change_message(entity: dict) -> AtlasChangeMessageWithPreviousVersion:
+def create_mock_change_message(entity: Dict[str, Any]) -> AtlasChangeMessageWithPreviousVersion:
     """
     Create a mock change message for testing purposes.
 
@@ -42,10 +41,7 @@ def create_mock_change_message(entity: dict) -> AtlasChangeMessageWithPreviousVe
             "type": "ENTITY_NOTIFICATION_V2",
             "entity": entity,
         },
-        "version": {
-            "version": "1.0",
-            "version_parts": [1, 0],
-        },
+        "version": {"version": "1.0", "version_parts": [1, 0]},
         "msg_source_ip": "192.168.1.1",
         "previous_version": None,
         "spooled": False,
@@ -63,10 +59,7 @@ def test_handle_create_operation_no_attributes_relationships() -> None:
     - Process the message with handle_create_operation.
     - Validate that the outcome has ENTITY_CREATED type with empty attributes/relationships.
     """
-    entity = {
-        "type_name": "SampleEntity",
-        "relationship_attributes": {},
-    }
+    entity = {"type_name": "SampleEntity", "relationship_attributes": {}}
 
     change_message = create_mock_change_message(entity)
 
@@ -87,11 +80,7 @@ def test_handle_create_operation_attributes_only() -> None:
     - Process the message with handle_create_operation.
     - Validate the outcome has ENTITY_CREATED type and correct attributes with no relationships.
     """
-    entity = {
-        "type_name": "SampleEntity",
-        "attributes": {"attr1": "test"},
-        "relationship_attributes": {},
-    }
+    entity = {"type_name": "SampleEntity", "attributes": {"attr1": "test"}, "relationship_attributes": {}}
 
     change_message = create_mock_change_message(entity)
 
@@ -116,17 +105,9 @@ def test_handle_create_operation_relationships_only() -> None:
         "type_name": "SampleEntity",
         "relationship_attributes": {
             "relation1": [
-                {
-                    "guid": "12345",
-                    "relationship_guid": "12345",
-                    "type_name": "RelatedEntity",
-                },
-                {
-                    "guid": "23456",
-                    "relationship_guid": "23456",
-                    "type_name": "RelatedEntity",
-                },
-            ],
+                {"guid": "12345", "relationship_guid": "12345", "type_name": "RelatedEntity"},
+                {"guid": "23456", "relationship_guid": "23456", "type_name": "RelatedEntity"},
+            ]
         },
     }
 
@@ -141,7 +122,7 @@ def test_handle_create_operation_relationships_only() -> None:
         "relation1": [
             ObjectId(type_name="RelatedEntity", guid="12345", unique_attributes=Attributes()),
             ObjectId(type_name="RelatedEntity", guid="23456", unique_attributes=Attributes()),
-        ],
+        ]
     }
 
 
@@ -159,17 +140,9 @@ def test_handle_create_operation_both_attributes_relationships() -> None:
         "attributes": {"attr1": "test", "attr2": "value"},
         "relationship_attributes": {
             "relation1": [
-                {
-                    "guid": "12345",
-                    "relationship_guid": "12345",
-                    "type_name": "RelatedEntity",
-                },
-                {
-                    "guid": "23456",
-                    "relationship_guid": "23456",
-                    "type_name": "RelatedEntity",
-                },
-            ],
+                {"guid": "12345", "relationship_guid": "12345", "type_name": "RelatedEntity"},
+                {"guid": "23456", "relationship_guid": "23456", "type_name": "RelatedEntity"},
+            ]
         },
     }
 
@@ -184,5 +157,5 @@ def test_handle_create_operation_both_attributes_relationships() -> None:
         "relation1": [
             ObjectId(type_name="RelatedEntity", guid="12345", unique_attributes=Attributes()),
             ObjectId(type_name="RelatedEntity", guid="23456", unique_attributes=Attributes()),
-        ],
+        ]
     }

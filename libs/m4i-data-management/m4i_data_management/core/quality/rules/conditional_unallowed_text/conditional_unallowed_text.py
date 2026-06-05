@@ -4,11 +4,16 @@ from pandas import DataFrame, Series
 
 from ..unallowed_text import unallowed_text
 
-def conditional_unallowed_text(data: DataFrame, key_column: str, value_column: str, values: Iterable[str], text: str) -> Series:
-    """
-    Checks if values in the column with the given `value_column` contain a specific unallowed `text`. 
 
-    Before applying the metric, filter out all rows where the value in the given `key_column` is not a substring of the given `values`.
+def conditional_unallowed_text(
+    data: DataFrame, key_column: str, value_column: str, values: Iterable[str], text: str
+) -> Series:
+    """
+    Checks if values in the column with the given `value_column` contain a specific
+    unallowed `text`.
+
+    Before applying the metric, filter out all rows where the value in the given
+    `key_column` is not a substring of the given `values`.
 
     This metric is derived from the `unallowed_text` metric.
 
@@ -23,10 +28,10 @@ def conditional_unallowed_text(data: DataFrame, key_column: str, value_column: s
     if key_column not in data.columns or value_column not in data.columns:
         return Series([0] * len(data), index=data.index)
 
-    row_matches_values = data[key_column].apply(filter)
+    row_matches_values = data[key_column].apply(filter)  # type: ignore[assignment]
     rows_to_check = data[row_matches_values]
 
-    if len(rows_to_check) == 0:
+    if len(rows_to_check) == 0:  # type: ignore[arg-type]
         return Series()
 
-    return unallowed_text(rows_to_check, value_column, text)
+    return unallowed_text(rows_to_check, value_column, text)  # type: ignore[arg-type]

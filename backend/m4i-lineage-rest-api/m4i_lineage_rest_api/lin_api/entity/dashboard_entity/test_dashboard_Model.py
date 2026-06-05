@@ -1,5 +1,3 @@
-import pytest
-
 from .dashboard_Model import Dashboard
 
 
@@ -15,12 +13,8 @@ def test__create_dashboard_from_dict():
         "updatedAt": "updatedAT",
         "version": "VERSION",
         "kibanaSpace": "test_m4i_kibana_space",
-        "creator": [
-            "test_m4i_person"
-        ],
-        "child_dataset": [
-            "tester_m4i_visualization"
-        ]
+        "creator": ["test_m4i_person"],
+        "child_dataset": ["tester_m4i_visualization"],
     }
 
     instance = Dashboard.from_dict(dashboard)
@@ -37,8 +31,7 @@ def test__create_dashboard_from_json():
     Tests whether or not a `Dashboard` can be created from a json string with its attributes
     """
 
-    dashboard = (
-        """
+    dashboard = """
         {
             "qualifiedName": "dashboard",
             "name": "Dashboard",
@@ -54,7 +47,6 @@ def test__create_dashboard_from_json():
             ]
         }
         """
-    )
 
     instance = Dashboard.from_json(dashboard)
 
@@ -72,10 +64,7 @@ def test__dashboard_calculates_correct_qualified_name():
     Tests whether or not the generated qualified name matches the expected format
     """
 
-    dashboard = {
-        "name": "dashboard",
-        "qualifiedName": "dashboard"
-    }
+    dashboard = {"name": "dashboard", "qualifiedName": "dashboard"}
 
     instance = Dashboard.from_dict(dashboard)
 
@@ -97,12 +86,8 @@ def test__dashboard_convert_to_atlas_entity():
         "updatedAt": "updatedAt",
         "version": "VERSION",
         "kibanaSpace": "test_m4i_kibana_space",
-        "creator": [
-            "test_m4i_person"
-        ],
-        "child_dataset": [
-            "tester_m4i_visualization"
-        ]
+        "creator": ["test_m4i_person"],
+        "child_dataset": ["tester_m4i_visualization"],
     }
 
     instance = Dashboard.from_dict(dashboard)
@@ -132,12 +117,8 @@ def test__dashboard_convert_to_atlas_entity_with_kibana_space():
         "updatedAt": "updatedAt",
         "version": "VERSION",
         "kibanaSpace": "test_m4i_kibana_space",
-        "creator": [
-            "test_m4i_person"
-        ],
-        "child_dataset": [
-            "tester_m4i_visualization"
-        ]
+        "creator": ["test_m4i_person"],
+        "child_dataset": ["tester_m4i_visualization"],
     }
 
     instance = Dashboard.from_dict(dashboard)
@@ -149,8 +130,7 @@ def test__dashboard_convert_to_atlas_entity_with_kibana_space():
 
     assert atlas_kibana_space is not None
     assert atlas_kibana_space.type_name == "m4i_kibana_space"
-    assert getattr(atlas_kibana_space.unique_attributes,
-                   "qualified_name") == instance.kibana_space
+    assert getattr(atlas_kibana_space.unique_attributes, "qualified_name") == instance.kibana_space
 
 
 # END test__dashboard_convert_to_atlas_entity_with_kibana_space
@@ -168,12 +148,8 @@ def test__dashboard_convert_to_atlas_entity_with_creator():
         "updatedAt": "updatedAt",
         "version": "VERSION",
         "kibanaSpace": "test_m4i_kibana_space",
-        "creator": [
-            "test_m4i_person"
-        ],
-        "child_dataset": [
-            "tester_m4i_visualization"
-        ]
+        "creator": ["test_m4i_person"],
+        "child_dataset": ["tester_m4i_visualization"],
     }
 
     instance = Dashboard.from_dict(dashboard)
@@ -186,11 +162,13 @@ def test__dashboard_convert_to_atlas_entity_with_creator():
     for person in atlas_person:
         assert person is not None
         assert person.type_name == "m4i_person"
-        assert getattr(person.unique_attributes,
-                       "qualified_name") == instance.creator[0]
+        assert (
+            getattr(person.unique_attributes, "qualified_name") == instance.creator[0]  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
+        )
 
 
 # END test__dashboard_convert_to_atlas_entity_with_creator
+
 
 def test__dashboard_convert_to_atlas_entity_with_dataset():
     """
@@ -204,12 +182,8 @@ def test__dashboard_convert_to_atlas_entity_with_dataset():
         "updatedAt": "updatedAt",
         "version": "VERSION",
         "kibanaSpace": "test_m4i_kibana_space",
-        "creator": [
-            "test_m4i_person"
-        ],
-        "child_dataset": [
-            "tester_m4i_visualization"
-        ]
+        "creator": ["test_m4i_person"],
+        "child_dataset": ["tester_m4i_visualization"],
     }
 
     instance = Dashboard.from_dict(dashboard)
@@ -222,6 +196,9 @@ def test__dashboard_convert_to_atlas_entity_with_dataset():
     for dataset in atlas_dataset:
         assert dataset is not None
         assert dataset.type_name == "m4i_visualization"
-        assert getattr(dataset.unique_attributes,
-                       "qualified_name") == instance.child_dataset[0]
+        assert (
+            getattr(dataset.unique_attributes, "qualified_name") == instance.child_dataset[0]  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
+        )
+
+
 # END test__dashboard_convert_to_atlas_entity_with_dataset

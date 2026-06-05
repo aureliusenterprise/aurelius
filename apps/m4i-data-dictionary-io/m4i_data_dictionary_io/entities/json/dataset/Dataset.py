@@ -10,10 +10,9 @@ from ..ToAtlasConvertible import ToAtlasConvertible
 from ..utils import get_qualified_name
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class DatasetBase(BaseObject):
-
     collection: str
     name: str
 
@@ -22,69 +21,56 @@ class DatasetBase(BaseObject):
         Returns the qualified name of the dataset based on its parent `collection` and its `name`
         """
 
-        return get_qualified_name(
-            self.name,
-            prefix=self.collection
-        )
+        return get_qualified_name(self.name, prefix=self.collection)
+
     # END _qualified_name
+
+
 # END DatasetBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class DatasetDefaultsBase(DataClassJsonMixin):
-
     definition: Optional[str] = None
     source: Optional[str] = None
+
 
 # END DatasetDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
-class Dataset(
-    DatasetDefaultsBase,
-    DatasetBase,
-    ToAtlasConvertible[BusinessDataset]
-):
+class Dataset(DatasetDefaultsBase, DatasetBase, ToAtlasConvertible[BusinessDataset]):
     def convert_to_atlas(self) -> BusinessDataset:
         """
         Returns a corresponding Atlas `BusinessDataset` instance.
         """
 
-        collection_unique_attributes = M4IAttributes(
-            qualified_name=self.collection
-        )
+        collection_unique_attributes = M4IAttributes(qualified_name=self.collection)
 
-        collection = ObjectId(
-            type_name="m4i_collection",
-            unique_attributes=collection_unique_attributes
-        )
+        collection = ObjectId(type_name="m4i_collection", unique_attributes=collection_unique_attributes)
 
         attributes = BusinessDatasetAttributes(
             collections=[collection],
             definition=self.definition,
             name=self.name,
-            qualified_name=self.qualified_name
+            qualified_name=self.qualified_name,
         )
 
         if bool(self.source):
-            unique_attributes = M4IAttributes(
-                qualified_name=self.source
-            )
+            unique_attributes = M4IAttributes(qualified_name=self.source)
 
-            source = ObjectId(
-                type_name="m4i_source",
-                unique_attributes=unique_attributes
-            )
+            source = ObjectId(type_name="m4i_source", unique_attributes=unique_attributes)
 
             attributes.source = [source]
         # END IF
 
-        entity = BusinessDataset(
-            attributes=attributes,
-        )
+        entity = BusinessDataset(attributes=attributes)
 
         return entity
+
     # END convert_to_atlas
+
+
 # END Dataset

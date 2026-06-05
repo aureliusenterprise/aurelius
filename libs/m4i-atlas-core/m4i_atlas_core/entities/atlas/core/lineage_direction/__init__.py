@@ -1,1 +1,3 @@
-from .LineageDirection import *
+from .LineageDirection import LineageDirection
+
+__all__ = ["LineageDirection"]

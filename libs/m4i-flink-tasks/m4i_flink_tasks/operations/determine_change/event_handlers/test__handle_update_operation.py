@@ -1,16 +1,14 @@
+from typing import Any, Dict
+
 from m4i_atlas_core import Attributes, ObjectId
 
-from m4i_flink_tasks import (
-    AtlasChangeMessageWithPreviousVersion,
-    EntityMessageType,
-)
+from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion, EntityMessageType
 
 from .handle_update_operation import handle_update_operation
 
 
 def create_mock_change_message(
-    previous: dict,
-    current: dict,
+    previous: Dict[str, Any], current: Dict[str, Any]
 ) -> AtlasChangeMessageWithPreviousVersion:
     """
     Create a mock change message for testing purposes.
@@ -45,10 +43,7 @@ def create_mock_change_message(
             "type": "ENTITY_NOTIFICATION_V2",
             "entity": current,
         },
-        "version": {
-            "version": "1.0",
-            "version_parts": [1, 0],
-        },
+        "version": {"version": "1.0", "version_parts": [1, 0]},
         "msg_source_ip": "192.168.1.1",
         "previous_version": previous,
         "spooled": False,
@@ -69,17 +64,9 @@ def test_handle_update_operation_no_changes() -> None:
         "attributes": {"attr1": "test"},
         "relationship_attributes": {
             "relation1": [
-                {
-                    "guid": "12345",
-                    "relationship_guid": "12345",
-                    "type_name": "RelatedEntity",
-                },
-                {
-                    "guid": "23456",
-                    "relationship_guid": "23456",
-                    "type_name": "RelatedEntity",
-                },
-            ],
+                {"guid": "12345", "relationship_guid": "12345", "type_name": "RelatedEntity"},
+                {"guid": "23456", "relationship_guid": "23456", "type_name": "RelatedEntity"},
+            ]
         },
     }
 
@@ -100,11 +87,7 @@ def test_handle_update_operation_attribute_changes_only() -> None:
     - The correct attributes are marked as inserted and changed.
     - No attributes are marked as deleted.
     """
-    previous = {
-        "type_name": "SampleEntity",
-        "attributes": {"attr1": "test"},
-        "relationship_attributes": {},
-    }
+    previous = {"type_name": "SampleEntity", "attributes": {"attr1": "test"}, "relationship_attributes": {}}
 
     current = {
         "type_name": "SampleEntity",
@@ -136,13 +119,7 @@ def test_handle_update_operation_relationship_changes_only() -> None:
     previous = {
         "type_name": "SampleEntity",
         "relationship_attributes": {
-            "relation1": [
-                {
-                    "guid": "12345",
-                    "relationship_guid": "12345",
-                    "type_name": "RelatedEntity",
-                },
-            ],
+            "relation1": [{"guid": "12345", "relationship_guid": "12345", "type_name": "RelatedEntity"}]
         },
     }
 
@@ -150,17 +127,9 @@ def test_handle_update_operation_relationship_changes_only() -> None:
         "type_name": "SampleEntity",
         "relationship_attributes": {
             "relation1": [
-                {
-                    "guid": "12345",
-                    "relationship_guid": "12345",
-                    "type_name": "RelatedEntity",
-                },
-                {
-                    "guid": "23456",
-                    "relationship_guid": "23456",
-                    "type_name": "RelatedEntity",
-                },
-            ],
+                {"guid": "12345", "relationship_guid": "12345", "type_name": "RelatedEntity"},
+                {"guid": "23456", "relationship_guid": "23456", "type_name": "RelatedEntity"},
+            ]
         },
     }
 
@@ -171,9 +140,7 @@ def test_handle_update_operation_relationship_changes_only() -> None:
     assert len(messages) == 1
     assert messages[0].event_type == EntityMessageType.ENTITY_RELATIONSHIP_AUDIT
     assert messages[0].inserted_relationships == {
-        "relation1": [
-            ObjectId(type_name="RelatedEntity", guid="23456", unique_attributes=Attributes()),
-        ],
+        "relation1": [ObjectId(type_name="RelatedEntity", guid="23456", unique_attributes=Attributes())]
     }
     assert messages[0].deleted_relationships == {"relation1": []}
 
@@ -190,13 +157,7 @@ def test_handle_update_operation_both_attribute_and_relationship_changes() -> No
         "type_name": "SampleEntity",
         "attributes": {"attr1": "test"},
         "relationship_attributes": {
-            "relation1": [
-                {
-                    "guid": "12345",
-                    "relationship_guid": "12345",
-                    "type_name": "RelatedEntity",
-                },
-            ],
+            "relation1": [{"guid": "12345", "relationship_guid": "12345", "type_name": "RelatedEntity"}]
         },
     }
 
@@ -204,13 +165,7 @@ def test_handle_update_operation_both_attribute_and_relationship_changes() -> No
         "type_name": "SampleEntity",
         "attributes": {"attr1": "new_value", "attr2": "value"},
         "relationship_attributes": {
-            "relation1": [
-                {
-                    "guid": "23456",
-                    "relationship_guid": "23456",
-                    "type_name": "RelatedEntity",
-                },
-            ],
+            "relation1": [{"guid": "23456", "relationship_guid": "23456", "type_name": "RelatedEntity"}]
         },
     }
 
@@ -229,12 +184,8 @@ def test_handle_update_operation_both_attribute_and_relationship_changes() -> No
     relationship_audit_message = messages[1]
 
     assert relationship_audit_message.inserted_relationships == {
-        "relation1": [
-            ObjectId(type_name="RelatedEntity", guid="23456", unique_attributes=Attributes()),
-        ],
+        "relation1": [ObjectId(type_name="RelatedEntity", guid="23456", unique_attributes=Attributes())]
     }
     assert relationship_audit_message.deleted_relationships == {
-        "relation1": [
-            ObjectId(type_name="RelatedEntity", guid="12345", unique_attributes=Attributes()),
-        ],
+        "relation1": [ObjectId(type_name="RelatedEntity", guid="12345", unique_attributes=Attributes())]
     }

@@ -7,14 +7,8 @@ import { ClassificationSourceModule } from './classification-source/classificati
 import { ClassificationComponent } from './classification.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ClassificationSourceModule,
-    FontAwesomeModule,
-    TooltipModule,
-    TranslateModule
-  ],
-  declarations: [ClassificationComponent],
-  exports: [ClassificationComponent]
+    imports: [CommonModule, ClassificationSourceModule, FontAwesomeModule, TooltipModule, TranslateModule],
+    declarations: [ClassificationComponent],
+    exports: [ClassificationComponent],
 })
 export class ClassificationModule {}

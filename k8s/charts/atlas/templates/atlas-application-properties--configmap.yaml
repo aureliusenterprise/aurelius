@@ -4,4 +4,4 @@ metadata:
   name: atlas-application-properties-configmap
 data:
   atlas-application.properties: |
-{{ tpl ( .Files.Get "conf/atlas-application--properties.yaml" ) . | indent 4}}
+{{ tpl ( .Files.Get "conf/atlas-application--properties.yaml.tmpl" ) . | indent 4}}

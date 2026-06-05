@@ -1,1 +1,1 @@
-from .omit import *
+from .omit import omit as omit

@@ -1,25 +1,20 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import {
-  AuthenticationConfig,
-  AuthenticationConfigService,
-} from './authentication-config.service';
+import { AuthenticationConfig, AuthenticationConfigService } from './authentication-config.service';
 
 @NgModule({
-  imports: [RouterModule],
+    imports: [RouterModule],
 })
 export class AuthenticationModule {
-  static forRoot(
-    config: AuthenticationConfig
-  ): ModuleWithProviders<AuthenticationModule> {
-    return {
-      ngModule: AuthenticationModule,
-      providers: [
-        {
-          provide: AuthenticationConfigService,
-          useValue: config,
-        },
-      ],
-    };
-  }
+    static forRoot(config: AuthenticationConfig): ModuleWithProviders<AuthenticationModule> {
+        return {
+            ngModule: AuthenticationModule,
+            providers: [
+                {
+                    provide: AuthenticationConfigService,
+                    useValue: config,
+                },
+            ],
+        };
+    }
 }

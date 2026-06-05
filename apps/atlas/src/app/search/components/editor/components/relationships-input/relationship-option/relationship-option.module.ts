@@ -7,14 +7,8 @@ import { TypeNameModule } from '../../../../type-name/type-name.module';
 import { RelationshipOptionComponent } from './relationship-option.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    BreadCrumbsModule,
-    TranslateModule.forChild(),
-    TypeNameModule,
-  ],
-  declarations: [RelationshipOptionComponent],
-  exports: [RelationshipOptionComponent],
+    imports: [CommonModule, FontAwesomeModule, BreadCrumbsModule, TranslateModule.forChild(), TypeNameModule],
+    declarations: [RelationshipOptionComponent],
+    exports: [RelationshipOptionComponent],
 })
 export class RelationshipOptionModule {}

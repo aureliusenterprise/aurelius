@@ -71,10 +71,16 @@ def test__kubernetes_pod_convert_to_atlas_entity(kubernetes_pod):
 
     atlas_kubernetes_deployment = atlas_attributes.kubernetes_deployment[0]
     assert atlas_kubernetes_deployment is not None
-    assert getattr(atlas_kubernetes_deployment.unique_attributes, "qualified_name") == instance.kubernetes_deployment
+    assert (
+        getattr(atlas_kubernetes_deployment.unique_attributes, "qualified_name")
+        == instance.kubernetes_deployment
+    )
 
     atlas_kubernetes_cronjob = atlas_attributes.kubernetes_cronjob[0]
     assert atlas_kubernetes_cronjob is not None
-    assert getattr(atlas_kubernetes_cronjob.unique_attributes, "qualified_name") == instance.kubernetes_cronjob
+    assert (
+        getattr(atlas_kubernetes_cronjob.unique_attributes, "qualified_name") == instance.kubernetes_cronjob
+    )
+
 
 # END test__kubernetes_pod_convert_to_atlas_entity

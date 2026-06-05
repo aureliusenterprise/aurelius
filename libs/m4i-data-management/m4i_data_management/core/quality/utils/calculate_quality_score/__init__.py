@@ -1,1 +1,1 @@
-from .calculate_quality_score import *
+from .calculate_quality_score import calculate_quality_score as calculate_quality_score

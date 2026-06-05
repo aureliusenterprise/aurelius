@@ -1,6 +1,6 @@
 import logging
 from functools import partial
-from typing import Dict, Generator
+from typing import Any, Dict, Generator
 
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan
@@ -41,9 +41,7 @@ class EntityNameNotFoundError(SynchronizeAppSearchError):
 
 @retry(retry_strategy=ExponentialBackoff())
 def get_documents(
-    query: dict,
-    elastic: Elasticsearch,
-    index_name: str,
+    query: Dict[str, Any], elastic: Elasticsearch, index_name: str
 ) -> Generator[AppSearchDocument, None, None]:
     """
     Yield AppSearchDocument objects from Elasticsearch based on the given query.
@@ -126,7 +124,9 @@ def handle_derived_entities_update(  # noqa: PLR0913
 
         names[index] = entity_name
 
-        logging.info("Updated relationship %s for document %s: %s", relationship_attribute_name, document.guid, names)
+        logging.info(
+            "Updated relationship %s for document %s: %s", relationship_attribute_name, document.guid, names
+        )
 
         updated_documents[document.guid] = document
 

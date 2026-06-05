@@ -1,8 +1,7 @@
 import re
-from typing import List
 
 DELIMITER = "--"
-WHITE_SPACE = re.compile("[\s]+")
+WHITE_SPACE = re.compile(r"[\s]+")
 ILLEGAL_CHARACTERS = re.compile("[&]+")
 
 
@@ -15,15 +14,9 @@ def get_qualified_name(*components: str, prefix: str = ""):
 
     lowercase = map(str.lower, not_empty)
 
-    without_illegal_characters = map(
-        lambda c: ILLEGAL_CHARACTERS.sub("", c),
-        lowercase
-    )
+    without_illegal_characters = map(lambda c: ILLEGAL_CHARACTERS.sub("", c), lowercase)
 
-    with_hyphens = map(
-        lambda c: WHITE_SPACE.sub("-", c),
-        without_illegal_characters
-    )
+    with_hyphens = map(lambda c: WHITE_SPACE.sub("-", c), without_illegal_characters)
 
     qualified_name = DELIMITER.join(with_hyphens)
 
@@ -32,4 +25,6 @@ def get_qualified_name(*components: str, prefix: str = ""):
     # END IF
 
     return qualified_name
+
+
 # END get_qualified_name

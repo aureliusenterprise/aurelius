@@ -5,31 +5,19 @@ from .conditional_completeness import conditional_completeness
 
 
 def test__conditional_completeness_condition_met_with_value():
+    values = [".TMP", ".FREE"]
 
-    values = ['.TMP', '.FREE']
+    data = DataFrame([{"value": "Something", "conditional": "xx.FREE.eur"}])
 
-    data = DataFrame([
-        {
-            "value": "Something",
-            "conditional": "xx.FREE.eur"
-        }
-    ])
-
-    result = conditional_completeness(data,  "conditional", "value", values)
+    result = conditional_completeness(data, "conditional", "value", values)
 
     assert result.sum() == 1
 
 
 def test__conditional_completeness_condition_met_without_value():
+    values = [".TMP", ".FREE"]
 
-    values = ['.TMP', '.FREE']
-
-    data = DataFrame([
-        {
-            "value": NaN,
-            "conditional": "xx.FREE.eur"
-        }
-    ])
+    data = DataFrame([{"value": NaN, "conditional": "xx.FREE.eur"}])
 
     result = conditional_completeness(data, "conditional", "value", values)
 
@@ -37,15 +25,9 @@ def test__conditional_completeness_condition_met_without_value():
 
 
 def test__conditional_completeness_condition_unmet_with_value():
+    values = [".TMP", ".FREE"]
 
-    values = ['.TMP', '.FREE']
-
-    data = DataFrame([
-        {
-            "value": "Something",
-            "conditional": "Something"
-        }
-    ])
+    data = DataFrame([{"value": "Something", "conditional": "Something"}])
 
     result = conditional_completeness(data, "conditional", "value", values)
 
@@ -53,15 +35,9 @@ def test__conditional_completeness_condition_unmet_with_value():
 
 
 def test__conditional_completeness_with_non_existing_columns():
+    values = [".TMP", ".FREE"]
 
-    values = ['.TMP', '.FREE']
-
-    data = DataFrame([
-        {
-            "value": "Something",
-            "conditional": "xx.FREE.eur"
-        }
-    ])
+    data = DataFrame([{"value": "Something", "conditional": "xx.FREE.eur"}])
 
     result = conditional_completeness(data, "non_existing_column_a", "non_existing_column_b", values)
 

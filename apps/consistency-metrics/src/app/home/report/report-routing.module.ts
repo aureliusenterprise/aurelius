@@ -4,17 +4,17 @@ import { ReportComponent } from './report.component';
 import { ReportResolver } from './report.resolver';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: ReportComponent,
-    data: { title: 'Report' },
-    resolve: { report: ReportResolver },
-    runGuardsAndResolvers: 'paramsOrQueryParamsChange'
-  }
+    {
+        path: '',
+        component: ReportComponent,
+        data: { title: 'Report' },
+        resolve: { report: ReportResolver },
+        runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+    },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
 export class ReportRoutingModule {}

@@ -1,27 +1,27 @@
 [tool.poetry]
-name = "m4i-lineage-model"
-version = "1.0.0"
-description = "Lineage model generator for Aurelius Atlas"
 authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+description = "Lineage model generator for Aurelius Atlas"
 license = 'UNLICENSED'
+name = "m4i-lineage-model"
 readme = 'README.md'
+version = "1.0.0"
 
 [[tool.poetry.packages]]
 include = "m4i_lineage_model"
 
 [tool.poetry.dependencies]
-python = "~3.8"
 aiohttp = "~3.9"
 gunicorn = "^22.0.0"
+python = "~3.8"
 
 [tool.poetry.dependencies.m4i-atlas-core]
-path = "../../libs/m4i-atlas-core"
 develop = true
+path = "../../libs/m4i-atlas-core"
 
 [tool.poetry.dependencies.m4i-backend-core]
-path = "../../libs/m4i-backend-core"
 develop = true
+path = "../../libs/m4i-backend-core"
 
 [build-system]
-requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]

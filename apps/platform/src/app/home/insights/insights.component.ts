@@ -6,44 +6,42 @@ import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsisH, faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-insights',
-  templateUrl: './insights.component.html',
-  styleUrls: ['./insights.component.scss']
+    selector: 'app-insights',
+    templateUrl: './insights.component.html',
+    styleUrls: ['./insights.component.scss'],
 })
 export class InsightsComponent implements OnInit, AfterViewInit {
-  @ViewChild('credentialsDisplay', { static: false })
-  credentialsDisplay: ElementRef;
-  @ViewChild('credentialsDisplayCopy', { static: false })
-  credentialsDisplayCopy: ElementRef;
+    @ViewChild('credentialsDisplay', { static: false })
+    credentialsDisplay: ElementRef;
+    @ViewChild('credentialsDisplayCopy', { static: false })
+    credentialsDisplayCopy: ElementRef;
 
-  credentials$: Observable<Credentials>;
+    credentials$: Observable<Credentials>;
 
-  faCopy = faCopy;
-  faGlobe = faGlobe;
-  faEllipsisH = faEllipsisH;
+    faCopy = faCopy;
+    faGlobe = faGlobe;
+    faEllipsisH = faEllipsisH;
 
-  constructor(private authenticationService: AuthenticationService) {}
+    constructor(private authenticationService: AuthenticationService) {}
 
-  ngOnInit() {
-    this.credentials$ = this.authenticationService
-      .credentials()
-      .pipe(shareReplay());
-  }
+    ngOnInit() {
+        this.credentials$ = this.authenticationService.credentials().pipe(shareReplay());
+    }
 
-  ngAfterViewInit() {
-    fromEvent(this.credentialsDisplayCopy.nativeElement, 'click').subscribe(
-      () => this.copyCredentialsToClipboard()
-    );
-  }
+    ngAfterViewInit() {
+        fromEvent(this.credentialsDisplayCopy.nativeElement, 'click').subscribe(() =>
+            this.copyCredentialsToClipboard(),
+        );
+    }
 
-  accountManagement() {
-    this.authenticationService.accountManagement();
-  }
+    accountManagement() {
+        this.authenticationService.accountManagement();
+    }
 
-  copyCredentialsToClipboard() {
-    const input = this.credentialsDisplay.nativeElement;
-    input.select();
-    document.execCommand('copy');
-    input.blur();
-  }
+    copyCredentialsToClipboard() {
+        const input = this.credentialsDisplay.nativeElement;
+        input.select();
+        document.execCommand('copy');
+        input.blur();
+    }
 }

@@ -167,9 +167,25 @@ async function createNodesInternal(
                         },
                     },
                     [vulnScanTargetName]: {
-                        command:
-                            'trivy sbom {args.sbomPath} --scanners vuln --format json --output {args.reportPath} --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache',
+                        configurations: {
+                            json: {
+                                command:
+                                    'trivy sbom {args.sbomPath} --scanners vuln --format json --output {args.reportPath} --exit-code {args.exitCode}',
+                                exitCode: 0,
+                                reportPath: '{projectRoot}/vulnerabilities.json',
+                                sbomPath: '{projectRoot}/sbom.json',
+                            },
+                            sarif: {
+                                command:
+                                    'trivy sbom {args.sbomPath} --scanners vuln --format sarif --output {args.reportPath} --exit-code {args.exitCode}',
+                                exitCode: 0,
+                                reportPath: '{projectRoot}/vulnerabilities.sarif',
+                                sbomPath: '{projectRoot}/sbom.json',
+                            },
+                        },
+                        defaultConfiguration: 'json',
                         dependsOn: [{ target: sbomTargetName, params: 'forward' }],
+                        executor: 'nx:run-commands',
                         options: {
                             exitCode: 0,
                             reportPath: '{projectRoot}/vulnerabilities.json',

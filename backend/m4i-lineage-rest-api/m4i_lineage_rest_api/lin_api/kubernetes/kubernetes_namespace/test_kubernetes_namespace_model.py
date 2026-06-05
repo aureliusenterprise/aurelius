@@ -70,14 +70,23 @@ def test__kubernetes_namespace_convert_to_atlas_entity(kubernetes_namespace):
 
     atlas_kubernetes_deployment = atlas_attributes.kubernetes_deployment[0]
     assert atlas_kubernetes_deployment is not None
-    assert getattr(atlas_kubernetes_deployment.unique_attributes, "qualified_name") == instance.kubernetes_deployment[0]
+    assert (
+        getattr(atlas_kubernetes_deployment.unique_attributes, "qualified_name")
+        == instance.kubernetes_deployment[0]
+    )
 
     atlas_kubernetes_cronjob = atlas_attributes.kubernetes_cronjob[0]
     assert atlas_kubernetes_cronjob is not None
-    assert getattr(atlas_kubernetes_cronjob.unique_attributes, "qualified_name") == instance.kubernetes_cronjob[0]
+    assert (
+        getattr(atlas_kubernetes_cronjob.unique_attributes, "qualified_name")
+        == instance.kubernetes_cronjob[0]
+    )
 
     atlas_kubernetes_cluster = atlas_attributes.kubernetes_cluster[0]
     assert atlas_kubernetes_cluster is not None
-    assert getattr(atlas_kubernetes_cluster.unique_attributes, "qualified_name") == instance.kubernetes_cluster
+    assert (
+        getattr(atlas_kubernetes_cluster.unique_attributes, "qualified_name") == instance.kubernetes_cluster
+    )
+
 
 # END test__kubernetes_namespace_convert_to_atlas_entity

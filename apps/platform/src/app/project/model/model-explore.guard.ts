@@ -8,23 +8,21 @@ const log = new Logger('ModelExploreGuard');
 
 @Injectable()
 export class ModelExploreGuard implements CanActivate {
-  constructor(
-    private readonly projectPermissionService: ProjectPermissionService,
-    private readonly router: Router
-  ) {}
+    constructor(
+        private readonly projectPermissionService: ProjectPermissionService,
+        private readonly router: Router,
+    ) {}
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const hasPermission = await this.projectPermissionService.hasPermission(
-      PermissionLevel.BUSINESS_USER
-    );
+    async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const hasPermission = await this.projectPermissionService.hasPermission(PermissionLevel.BUSINESS_USER);
 
-    log.debug(`Can access model explore: ${hasPermission}`);
+        log.debug(`Can access model explore: ${hasPermission}`);
 
-    if (!hasPermission) {
-      const [parentRoute] = state.url.split('/explore');
-      return this.router.createUrlTree([parentRoute]);
+        if (!hasPermission) {
+            const [parentRoute] = state.url.split('/explore');
+            return this.router.createUrlTree([parentRoute]);
+        }
+
+        return hasPermission;
     }
-
-    return hasPermission;
-  }
 }

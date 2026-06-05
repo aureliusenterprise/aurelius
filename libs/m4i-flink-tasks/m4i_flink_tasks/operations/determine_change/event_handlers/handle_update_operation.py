@@ -1,17 +1,11 @@
 from typing import Dict, List, Union
 from m4i_atlas_core import Entity, ObjectId
 
-from m4i_flink_tasks import (
-    AtlasChangeMessageWithPreviousVersion,
-    EntityMessage,
-    EntityMessageType,
-)
+from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion, EntityMessage, EntityMessageType
 
 
 def handle_attribute_changes(
-    change_message: AtlasChangeMessageWithPreviousVersion,
-    previous: Entity,
-    current: Entity,
+    change_message: AtlasChangeMessageWithPreviousVersion, previous: Entity, current: Entity
 ) -> Union[EntityMessage, None]:
     """
     Identify and process changes in entity attributes between two versions of an entity.
@@ -40,7 +34,7 @@ def handle_attribute_changes(
 
     previous_attributes_dict = previous.attributes.to_dict()
 
-    if "unmappedAttributes" in  previous_attributes_dict:
+    if "unmappedAttributes" in previous_attributes_dict:
         del previous_attributes_dict["unmappedAttributes"]
 
     inserted_attributes = [key for key in attributes_dict if key not in previous_attributes_dict]
@@ -57,8 +51,7 @@ def handle_attribute_changes(
         return None
 
     entity_message = EntityMessage.from_change_message(
-        change_message=change_message,
-        event_type=EntityMessageType.ENTITY_ATTRIBUTE_AUDIT,
+        change_message=change_message, event_type=EntityMessageType.ENTITY_ATTRIBUTE_AUDIT
     )
 
     entity_message.old_value = previous
@@ -116,9 +109,7 @@ def get_relationships_diff(a: Entity, b: Entity) -> Dict[str, List[ObjectId]]:
 
 
 def handle_relationship_changes(
-    change_message: AtlasChangeMessageWithPreviousVersion,
-    previous: Entity,
-    current: Entity,
+    change_message: AtlasChangeMessageWithPreviousVersion, previous: Entity, current: Entity
 ) -> Union[EntityMessage, None]:
     """
     Identify and process changes in entity relationships between two versions of an entity.
@@ -152,8 +143,7 @@ def handle_relationship_changes(
         return None
 
     entity_message = EntityMessage.from_change_message(
-        change_message=change_message,
-        event_type=EntityMessageType.ENTITY_RELATIONSHIP_AUDIT,
+        change_message=change_message, event_type=EntityMessageType.ENTITY_RELATIONSHIP_AUDIT
     )
 
     entity_message.old_value = previous
@@ -165,9 +155,7 @@ def handle_relationship_changes(
     return entity_message
 
 
-def handle_update_operation(
-    change_message: AtlasChangeMessageWithPreviousVersion,
-) -> List[EntityMessage]:
+def handle_update_operation(change_message: AtlasChangeMessageWithPreviousVersion) -> List[EntityMessage]:
     """
     Process the update operation on an entity to identify changes in attributes and relationships.
 
@@ -207,18 +195,14 @@ def handle_update_operation(
     messages: list[EntityMessage] = []
 
     attribute_audit_message = handle_attribute_changes(
-        change_message=change_message,
-        previous=previous_entity,
-        current=entity,
+        change_message=change_message, previous=previous_entity, current=entity
     )
 
     if attribute_audit_message is not None:
         messages.append(attribute_audit_message)
 
     relationship_audit_message = handle_relationship_changes(
-        change_message=change_message,
-        previous=previous_entity,
-        current=entity,
+        change_message=change_message, previous=previous_entity, current=entity
     )
 
     if relationship_audit_message is not None:

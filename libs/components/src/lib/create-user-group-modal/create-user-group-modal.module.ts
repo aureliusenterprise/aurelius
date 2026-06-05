@@ -13,23 +13,19 @@ import { CreateUserGroupModalService } from './create-user-group-modal.service';
 import { GroupMembersComponent } from './group-members/group-members.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    DescriptionInputModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ModalModule,
-    HoldableModule,
-    FuzzySearchInputModule,
-    SortableTableShellModule,
-  ],
-  declarations: [
-    AddGroupMemberComponent,
-    CreateUserGroupModalComponent,
-    GroupMembersComponent,
-  ],
-  providers: [CreateUserGroupModalService],
-  exports: [CreateUserGroupModalComponent],
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        DescriptionInputModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ModalModule,
+        HoldableModule,
+        FuzzySearchInputModule,
+        SortableTableShellModule,
+    ],
+    declarations: [AddGroupMemberComponent, CreateUserGroupModalComponent, GroupMembersComponent],
+    providers: [CreateUserGroupModalService],
+    exports: [CreateUserGroupModalComponent],
 })
 export class CreateUserGroupModalModule {}

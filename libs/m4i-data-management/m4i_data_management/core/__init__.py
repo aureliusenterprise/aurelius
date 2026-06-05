@@ -1,6 +1,25 @@
-from .cdc import *
-from .confluent import *
-from .elastic import *
-from .producer import *
-from .quality import *
-from .utils import *
+from .cdc import (
+    are_hashes_equal as are_hashes_equal,
+    CDCChangeType as CDCChangeType,
+    CHANGE_TYPE_COLUMN as CHANGE_TYPE_COLUMN,
+    HASH_COLUMN as HASH_COLUMN,
+    compare_datasets as compare_datasets,
+)
+from .confluent import (
+    format_change_event as format_change_event,
+    format_change_events as format_change_events,
+    produce_message as produce_message,
+    propagate_change_events as propagate_change_events,
+    read_messages_from_topic as read_messages_from_topic,
+    make_serializer as make_serializer,
+    make_confluent_consumer as make_confluent_consumer,
+    make_confluent_producer as make_confluent_producer,
+    make_deserializer as make_deserializer,
+    make_deserializing_consumer as make_deserializing_consumer,
+    make_schema_registry_client as make_schema_registry_client,
+    make_serializing_producer as make_serializing_producer,
+)
+from .elastic import index_elastic_data as index_elastic_data, retrieve_elastic_data as retrieve_elastic_data
+from .producer import Producer as Producer
+from .quality import Quality as Quality
+from .utils import BidirectionalMutliMap as BidirectionalMutliMap, T as T, identity as identity, omit as omit

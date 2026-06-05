@@ -1,54 +1,49 @@
 {
-  "name": "m4i-graphviz-layouts",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
-  "sourceRoot": "libs/m4i-analytics-extensions/m4i_graphviz_layouts",
-  "targets": {
-    "add": {
-      "executor": "@nxlv/python:add",
-      "options": {}
-    },
-    "update": {
-      "executor": "@nxlv/python:update",
-      "options": {}
-    },
-    "remove": {
-      "executor": "@nxlv/python:remove",
-      "options": {}
-    },
-    "build": {
-      "executor": "@nxlv/python:build",
-      "outputs": [
-        "{projectRoot}/dist"
-      ],
-      "options": {
-        "outputPath": "libs/m4i-analytics-extensions/dist",
-        "publish": false,
-        "lockedVersions": true,
-        "bundleLocalDependencies": true
-      }
-    },
-    "lint": {
-      "executor": "@nxlv/python:ruff-check",
-      "outputs": [],
-      "options": {
-        "lintFilePatterns": [
-          "m4i_graphviz_layouts",
-          "tests"
-        ]
-      }
-    },
-    "test": {
-      "executor": "@nxlv/python:run-commands",
-      "outputs": [
-        "{workspaceRoot}/reports/libs/m4i-analytics-extensions/unittests",
-        "{workspaceRoot}/coverage/libs/m4i-analytics-extensions"
-      ],
-      "options": {
-        "command": "poetry run pytest tests/",
-        "cwd": "libs/m4i-analytics-extensions"
-      }
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "name": "m4i-graphviz-layouts",
+    "projectType": "library",
+    "sourceRoot": "libs/m4i-analytics-extensions/m4i_graphviz_layouts",
+    "tags": [],
+    "targets": {
+        "add": {
+            "executor": "@nxlv/python:add",
+            "options": {}
+        },
+        "build": {
+            "executor": "@nxlv/python:build",
+            "options": {
+                "bundleLocalDependencies": true,
+                "lockedVersions": true,
+                "outputPath": "libs/m4i-analytics-extensions/dist",
+                "publish": false
+            },
+            "outputs": ["{projectRoot}/dist"]
+        },
+        "lint": {
+            "executor": "@nxlv/python:ruff-check",
+            "options": {
+                "lintFilePatterns": ["m4i_graphviz_layouts", "tests"]
+            },
+            "outputs": []
+        },
+        "remove": {
+            "executor": "@nxlv/python:remove",
+            "options": {}
+        },
+        "test": {
+            "executor": "@nxlv/python:run-commands",
+            "options": {
+                "command": "poetry run pytest tests/",
+                "cwd": "libs/m4i-analytics-extensions"
+            },
+            "outputs": [
+                "{workspaceRoot}/reports/libs/m4i-analytics-extensions/unittests",
+                "{workspaceRoot}/coverage/libs/m4i-analytics-extensions"
+            ]
+        },
+        "update": {
+            "executor": "@nxlv/python:update",
+            "options": {}
+        }
     }
-  },
-  "tags": []
 }

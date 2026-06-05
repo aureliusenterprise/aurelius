@@ -1,8 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient, HttpInterceptor } from '@angular/common/http';
 
 import { HttpService } from './http.service';
@@ -11,114 +8,98 @@ import { ErrorHandlerInterceptor } from './error-handler.interceptor';
 import { CacheInterceptor } from './cache.interceptor';
 
 describe('HttpService', () => {
-  let httpCacheService: HttpCacheService;
-  let http: HttpClient;
-  let httpMock: HttpTestingController;
+    let httpCacheService: HttpCacheService;
+    let http: HttpClient;
+    let httpMock: HttpTestingController;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
-        ErrorHandlerInterceptor,
-        CacheInterceptor,
-        HttpCacheService,
-        {
-          provide: HttpClient,
-          useClass: HttpService,
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
+            providers: [
+                ErrorHandlerInterceptor,
+                CacheInterceptor,
+                HttpCacheService,
+                {
+                    provide: HttpClient,
+                    useClass: HttpService,
+                },
+            ],
+            teardown: { destroyAfterEach: false },
+        });
+    });
+
+    beforeEach(inject(
+        [HttpClient, HttpTestingController, HttpCacheService],
+        (_http: HttpClient, _httpMock: HttpTestingController, _httpCacheService: HttpCacheService) => {
+            http = _http;
+            httpMock = _httpMock;
+            httpCacheService = _httpCacheService;
         },
-      ],
-      teardown: { destroyAfterEach: false },
-    });
-  });
+    ));
 
-  beforeEach(inject(
-    [HttpClient, HttpTestingController, HttpCacheService],
-    (
-      _http: HttpClient,
-      _httpMock: HttpTestingController,
-      _httpCacheService: HttpCacheService
-    ) => {
-      http = _http;
-      httpMock = _httpMock;
-      httpCacheService = _httpCacheService;
-    }
-  ));
-
-  afterEach(() => {
-    httpCacheService.cleanCache();
-    httpMock.verify();
-  });
-
-  it('should use error handler and no cache by default', () => {
-    // Arrange
-    let interceptors: HttpInterceptor[];
-    const realRequest = http.request;
-    spyOn(HttpService.prototype, 'request').and.callFake(function (this: any) {
-      interceptors = this.interceptors;
-      return realRequest.apply(this, arguments);
+    afterEach(() => {
+        httpCacheService.cleanCache();
+        httpMock.verify();
     });
 
-    // Act
-    const request = http.get('/toto');
+    it('should use error handler and no cache by default', () => {
+        // Arrange
+        let interceptors: HttpInterceptor[];
+        const realRequest = http.request;
+        spyOn(HttpService.prototype, 'request').and.callFake(function (this: any) {
+            interceptors = this.interceptors;
+            return realRequest.apply(this, arguments);
+        });
 
-    // Assert
-    request.subscribe(() => {
-      expect(http.request).toHaveBeenCalled();
-      expect(
-        interceptors.some((i) => i instanceof ErrorHandlerInterceptor)
-      ).toBeTruthy();
-      expect(
-        interceptors.some((i) => i instanceof CacheInterceptor)
-      ).toBeFalsy();
-    });
-    httpMock.expectOne({}).flush({});
-  });
+        // Act
+        const request = http.get('/toto');
 
-  it('should use cache', () => {
-    // Arrange
-    let interceptors: HttpInterceptor[];
-    const realRequest = http.request;
-    spyOn(HttpService.prototype, 'request').and.callFake(function (this: any) {
-      interceptors = this.interceptors;
-      return realRequest.apply(this, arguments);
+        // Assert
+        request.subscribe(() => {
+            expect(http.request).toHaveBeenCalled();
+            expect(interceptors.some((i) => i instanceof ErrorHandlerInterceptor)).toBeTruthy();
+            expect(interceptors.some((i) => i instanceof CacheInterceptor)).toBeFalsy();
+        });
+        httpMock.expectOne({}).flush({});
     });
 
-    // Act
-    const request = http.cache().get('/toto');
+    it('should use cache', () => {
+        // Arrange
+        let interceptors: HttpInterceptor[];
+        const realRequest = http.request;
+        spyOn(HttpService.prototype, 'request').and.callFake(function (this: any) {
+            interceptors = this.interceptors;
+            return realRequest.apply(this, arguments);
+        });
 
-    // Assert
-    request.subscribe(() => {
-      expect(
-        interceptors.some((i) => i instanceof ErrorHandlerInterceptor)
-      ).toBeTruthy();
-      expect(
-        interceptors.some((i) => i instanceof CacheInterceptor)
-      ).toBeTruthy();
-    });
-    httpMock.expectOne({}).flush({});
-  });
+        // Act
+        const request = http.cache().get('/toto');
 
-  it('should skip error handler', () => {
-    // Arrange
-    let interceptors: HttpInterceptor[];
-    const realRequest = http.request;
-    spyOn(HttpService.prototype, 'request').and.callFake(function (this: any) {
-      interceptors = this.interceptors;
-      return realRequest.apply(this, arguments);
+        // Assert
+        request.subscribe(() => {
+            expect(interceptors.some((i) => i instanceof ErrorHandlerInterceptor)).toBeTruthy();
+            expect(interceptors.some((i) => i instanceof CacheInterceptor)).toBeTruthy();
+        });
+        httpMock.expectOne({}).flush({});
     });
 
-    // Act
-    const request = http.skipErrorHandler().get('/toto');
+    it('should skip error handler', () => {
+        // Arrange
+        let interceptors: HttpInterceptor[];
+        const realRequest = http.request;
+        spyOn(HttpService.prototype, 'request').and.callFake(function (this: any) {
+            interceptors = this.interceptors;
+            return realRequest.apply(this, arguments);
+        });
 
-    // Assert
-    request.subscribe(() => {
-      expect(
-        interceptors.some((i) => i instanceof ErrorHandlerInterceptor)
-      ).toBeFalsy();
-      expect(
-        interceptors.some((i) => i instanceof CacheInterceptor)
-      ).toBeFalsy();
+        // Act
+        const request = http.skipErrorHandler().get('/toto');
+
+        // Assert
+        request.subscribe(() => {
+            expect(interceptors.some((i) => i instanceof ErrorHandlerInterceptor)).toBeFalsy();
+            expect(interceptors.some((i) => i instanceof CacheInterceptor)).toBeFalsy();
+        });
+        httpMock.expectOne({}).flush({});
     });
-    httpMock.expectOne({}).flush({});
-  });
 });

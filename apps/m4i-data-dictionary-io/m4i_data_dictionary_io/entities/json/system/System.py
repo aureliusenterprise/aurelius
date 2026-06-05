@@ -9,10 +9,9 @@ from ..ToAtlasConvertible import ToAtlasConvertible
 from ..utils import get_qualified_name
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class SystemBase(BaseObject):
-
     name: str
 
     def _qualified_name(self):
@@ -21,56 +20,48 @@ class SystemBase(BaseObject):
         """
 
         return get_qualified_name(self.name)
+
     # END _qualified_name
+
+
 # END SystemBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class SystemDefaultsBase(DataClassJsonMixin):
-
     definition: Optional[str] = None
     source: Optional[str] = None
+
 
 # END SystemDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
-class System(
-    SystemDefaultsBase,
-    SystemBase,
-    ToAtlasConvertible[BusinessSystem]
-):
+class System(SystemDefaultsBase, SystemBase, ToAtlasConvertible[BusinessSystem]):
     def convert_to_atlas(self) -> BusinessSystem:
         """
         Returns a corresponding Atlas `BusinessSystem` instance.
         """
 
         attributes = BusinessSystemAttributes(
-            definition=self.definition,
-            name=self.name,
-            qualified_name=self.qualified_name,
+            definition=self.definition, name=self.name, qualified_name=self.qualified_name
         )
 
         if bool(self.source):
-            unique_attributes = M4IAttributes(
-                qualified_name=self.source
-            )
+            unique_attributes = M4IAttributes(qualified_name=self.source)
 
-            source = ObjectId(
-                type_name="m4i_source",
-                unique_attributes=unique_attributes
-            )
+            source = ObjectId(type_name="m4i_source", unique_attributes=unique_attributes)
 
             attributes.source = [source]
         # END IF
 
-        entity = BusinessSystem(
-            attributes=attributes,
-        )
-
+        entity = BusinessSystem(attributes=attributes)
 
         return entity
+
     # END convert_to_atlas
+
+
 # END System

@@ -1,27 +1,34 @@
 # Aurelius Atlas
 
-This part of the repository contains the code base for the Aurelius Atlas software.
-This a data dictionary tool that takes into account the Data modeling of our company. It's still in it's early stages, but with time, it's going to be a key feature of data governance.
+This part of the repository contains the code base for the Aurelius Atlas
+software. This a data dictionary tool that takes into account the Data modeling
+of our company. It's still in it's early stages, but with time, it's going to
+be a key feature of data governance.
 
-# Security
+## Security
 
-We are basing the security on KeyCloack, which is already into place for our tools.
+We are basing the security on KeyCloack, which is already into place for our
+tools.
 
-# Nx
+## Nx
 
 This project was generated using [Nx](https://nx.dev).
 
-<p><img src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png" width="45"></p>
+![Nx Logo](https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png)
 
 🔎 **Nx is a set of Angular CLI power-ups for modern development.**
 
 ## Development server
 
-From inside the Models4Insight repository, run `npm run start atlas` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
+From inside the Models4Insight repository, run `npm run start atlas` for a dev
+server. Navigate to [http://localhost:4200/](http://localhost:4200/). The app
+will automatically reload if you change any of the source files.
 
 ## Build
 
-Run `npm run build atlas` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `build:prod` modifier for a production build.
+Run `npm run build atlas` to build the project.
+The build artifacts will be stored in the `dist/` directory.
+Use the `build:prod` modifier for a production build.
 
 ## Running unit tests
 

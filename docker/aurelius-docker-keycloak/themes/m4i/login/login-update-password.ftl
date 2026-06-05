@@ -24,7 +24,7 @@
             </div>
 
             <hr class="hr">
-            
+
             <div class="field">
                 <input class="button is-primary is-large is-fullwidth" type="submit" value="${msg("doSubmit")}"/>
             </div>

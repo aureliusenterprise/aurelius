@@ -7,7 +7,8 @@ from ..validity import validity
 
 def invalidity(data: DataFrame, column_name: str, values: Iterable[Any]) -> Series:
     """
-    Checks whether or not the values in the column with the given `column_name` does not exist in the given list of `values`.
+    Checks whether or not the values in the column with the given `column_name` does
+    not exist in the given list of `values`.
 
     This metric is the inverse of the `validity` metric.
 

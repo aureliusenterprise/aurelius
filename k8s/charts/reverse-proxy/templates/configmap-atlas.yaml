@@ -4,4 +4,4 @@ metadata:
   name: cm-reverse-proxy-configs-atlas-conf
 data:
   atlas.conf: |
-{{ tpl ( .Files.Get "conf.d/atlas.yaml" ) . | indent 4}}
+{{ tpl ( .Files.Get "conf.d/atlas.yaml.tmpl" ) . | indent 4}}

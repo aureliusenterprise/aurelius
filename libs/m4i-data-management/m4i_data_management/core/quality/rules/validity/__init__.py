@@ -1,1 +1,1 @@
-from .validity import *
+from .validity import validity as validity

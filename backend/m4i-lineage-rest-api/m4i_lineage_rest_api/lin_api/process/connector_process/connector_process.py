@@ -13,32 +13,35 @@ from ... import output_filter_functions, m4i_output_model, m4i_output_get_model,
 Defining connector_process, (Kafka to Elastic) NameSpace
 """
 log = logging.getLogger(__name__)
-ns = api.namespace('process/connector_process', description='Connector Process',
-                   security='apikey',
-                   authorizations=authorizations
-                   )
+ns = api.namespace(
+    "process/connector_process",
+    description="Connector Process",
+    security="apikey",
+    authorizations=authorizations,
+)
 
 
 @ns.route("/")
 class connector_process_Class(Resource):
-
-    @api.response(200, 'Connector Process Entities in Atlas')
-    @api.response(400, 'Connector Process is not Defined in Atlas')
-    @api.doc(id='get_connector_process_entities', security='apikey')
+    @api.response(200, "Connector Process Entities in Atlas")
+    @api.response(400, "Connector Process is not Defined in Atlas")
+    @api.doc(id="get_connector_process_entities", security="apikey")
     @api.marshal_with(m4i_output_get_model)
     @requires_auth(transparent=True)
     def get(self, access_token=None):
         """
         Returns list of Connector Entities
         """
-        search_result = asyncio.run(get_entities_by_type_name("m4i_connector_process", access_token=access_token))
+        search_result = asyncio.run(
+            get_entities_by_type_name("m4i_connector_process", access_token=access_token)
+        )
         transformed_response = output_filter_functions.transform_get_response(search_result)
         return transformed_response, 200
 
-    @api.response(200, 'Connector Process Entity successfully created.')
+    @api.response(200, "Connector Process Entity successfully created.")
     @api.response(500, "ValueError")
     @api.expect(connector_process_serializer, validate=True)
-    @api.doc(id='post_connector_process_entities', security='apikey')
+    @api.doc(id="post_connector_process_entities", security="apikey")
     @api.marshal_with(m4i_output_model)
     @requires_auth(transparent=True)
     def post(self, access_token=None):

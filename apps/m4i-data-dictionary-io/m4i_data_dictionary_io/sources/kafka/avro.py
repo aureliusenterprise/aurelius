@@ -1,30 +1,15 @@
 from typing import Generator, Union
 
-from avro.schema import (
-    ArraySchema,
-    MapSchema,
-    RecordSchema,
-    UnionSchema,
-    PrimitiveSchema,
-    NamedSchema,
-)
+from avro.schema import ArraySchema, MapSchema, RecordSchema, UnionSchema, PrimitiveSchema, NamedSchema
 from confluent_kafka.avro import loads
 
-from m4i_data_dictionary_io.entities.json import (
-    DataField,
-)
+from m4i_data_dictionary_io.entities.json import DataField
 
 from .atlas import build_field
 
 
 def _parse_type_name(
-    schema: Union[
-        ArraySchema,
-        MapSchema,
-        PrimitiveSchema,
-        RecordSchema,
-        UnionSchema,
-    ],
+    schema: Union[ArraySchema, MapSchema, PrimitiveSchema, RecordSchema, UnionSchema],
 ) -> str:
     """Extract the type name from an Avro schema."""
     if isinstance(schema, UnionSchema):
@@ -40,9 +25,7 @@ def _parse_type_name(
 
 
 def _parse_avro_schema(
-    schema: RecordSchema,
-    dataset_qualified_name: str,
-    parent_field: Union[str, None] = None,
+    schema: RecordSchema, dataset_qualified_name: str, parent_field: Union[str, None] = None
 ) -> Generator[DataField, None, None]:
     """Parse an Avro schema and yield DataField instances."""
     for field in schema.fields:
@@ -103,12 +86,6 @@ def _parse_avro_schema(
                 )
 
 
-def parse_avro_schema(
-    schema: str,
-    dataset_qualified_name: str,
-) -> Generator[DataField, None, None]:
+def parse_avro_schema(schema: str, dataset_qualified_name: str) -> Generator[DataField, None, None]:
     """Parse an Avro schema and yield DataField instances."""
-    yield from _parse_avro_schema(
-        schema=loads(schema),
-        dataset_qualified_name=dataset_qualified_name,
-    )
+    yield from _parse_avro_schema(schema=loads(schema), dataset_qualified_name=dataset_qualified_name)

@@ -9,21 +9,18 @@ store = ConfigStore.get_instance()
 
 
 def read_data_from_dictionary(config: ExcelParserConfig) -> Iterable[dict]:
-
     data_path = store.get("data.dictionary.path")
 
     sheet: DataFrame = read_excel(
         data_path,
-        sheet_name=config.sheet_name,
+        sheet_name=config.sheet_name,  # type: ignore
         usecols=config.column_mapping,
         keep_default_na=False,
     )
 
-    data: DataFrame = (
-        sheet
-        .pipe(DataFrame.rename, columns=config.column_mapping)
-        .pipe(config.transform)
-    )
+    data: DataFrame = sheet.pipe(DataFrame.rename, columns=config.column_mapping).pipe(config.transform)
 
     return data.to_dict(orient="records")
+
+
 # END read_data_from_dictionary

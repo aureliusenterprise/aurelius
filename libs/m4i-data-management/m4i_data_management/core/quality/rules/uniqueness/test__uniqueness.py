@@ -5,15 +5,7 @@ from .uniqueness import uniqueness
 
 
 def test__uniqueness_with_single_duplicate_value():
-
-    data = DataFrame([
-        {
-            "id": "1234"
-        },
-        {
-            "id": "1234"
-        }
-    ])
+    data = DataFrame([{"id": "1234"}, {"id": "1234"}])
 
     result = uniqueness(data, "id")
 
@@ -21,18 +13,7 @@ def test__uniqueness_with_single_duplicate_value():
 
 
 def test__uniqueness_with_duplicate_and_unique_values():
-
-    data = DataFrame([
-        {
-            "id": "1234"
-        },
-        {
-            "id": "1234"
-        },
-        {
-            "id": "2345"
-        }
-    ])
+    data = DataFrame([{"id": "1234"}, {"id": "1234"}, {"id": "2345"}])
 
     result = uniqueness(data, "id")
 
@@ -40,15 +21,7 @@ def test__uniqueness_with_duplicate_and_unique_values():
 
 
 def test__uniqueness_without_duplicate_value():
-
-    data = DataFrame([
-        {
-            "id": "1234"
-        },
-        {
-            "id": "5678"
-        }
-    ])
+    data = DataFrame([{"id": "1234"}, {"id": "5678"}])
 
     result = uniqueness(data, "id")
 
@@ -56,15 +29,7 @@ def test__uniqueness_without_duplicate_value():
 
 
 def test__uniqueness_without_any_values():
-
-    data = DataFrame([
-        {
-            "id": NaN
-        },
-        {
-            "id": NaN
-        }
-    ])
+    data = DataFrame([{"id": NaN}, {"id": NaN}])
 
     result = uniqueness(data, "id")
 
@@ -72,12 +37,7 @@ def test__uniqueness_without_any_values():
 
 
 def test__uniqueness_with_non_existing_column():
-
-    data = DataFrame([
-        {
-            "id": "1234"
-        }
-    ])
+    data = DataFrame([{"id": "1234"}])
 
     result = uniqueness(data, "non_existing_column")
 

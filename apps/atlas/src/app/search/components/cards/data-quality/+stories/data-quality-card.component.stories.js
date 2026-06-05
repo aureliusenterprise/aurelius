@@ -1,12 +1,12 @@
 import { RouterTestingModule } from '@angular/router/testing';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
-  AtlasApiModule,
-  ClassificationDefAPIService,
-  ElasticApiModule,
-  EntityAPIService,
-  GovernanceQualitySearchService,
-  TypeDefAPIService,
+    AtlasApiModule,
+    ClassificationDefAPIService,
+    ElasticApiModule,
+    EntityAPIService,
+    GovernanceQualitySearchService,
+    TypeDefAPIService,
 } from '@models4insight/atlas/api';
 import { AuthenticationModule } from '@models4insight/authentication';
 import { HttpModule } from '@models4insight/http';
@@ -25,66 +25,65 @@ import SEARCH_RESULT from './search-result.json';
 import { MockTypeDefAPIService } from './type-def-api.mock.service';
 
 export default {
-  title:
-    'Apps/Atlas/Components/Search/Components/Cards/DataQualityCardComponent',
+    title: 'Apps/Atlas/Components/Search/Components/Cards/DataQualityCardComponent',
 
-  decorators: [
-    moduleMetadata({
-      imports: [
-        RouterTestingModule,
-        DataQualityCardModule,
-        DetailsCardModule,
-        TranslateModule.forRoot(),
-        TaskManagerModule,
-        FontAwesomeModule,
-        ReduxModule.forRoot({
-          production: environment.production,
+    decorators: [
+        moduleMetadata({
+            imports: [
+                RouterTestingModule,
+                DataQualityCardModule,
+                DetailsCardModule,
+                TranslateModule.forRoot(),
+                TaskManagerModule,
+                FontAwesomeModule,
+                ReduxModule.forRoot({
+                    production: environment.production,
+                }),
+                HttpModule.forRoot({
+                    production: environment.production,
+                }),
+                AuthenticationModule.forRoot(environment.keycloak),
+                AtlasApiModule,
+                ElasticApiModule.forRoot(environment.atlas),
+            ],
+
+            providers: [
+                {
+                    provide: EntityAPIService,
+                    useClass: MockEntityAPIService,
+                },
+                {
+                    provide: GovernanceQualitySearchService,
+                    useClass: MockGovQualityApiService,
+                },
+                {
+                    provide: TypeDefAPIService,
+                    useClass: MockTypeDefAPIService,
+                },
+            ],
         }),
-        HttpModule.forRoot({
-          production: environment.production,
-        }),
-        AuthenticationModule.forRoot(environment.keycloak),
-        AtlasApiModule,
-        ElasticApiModule.forRoot(environment.atlas),
-      ],
+    ],
 
-      providers: [
-        {
-          provide: EntityAPIService,
-          useClass: MockEntityAPIService,
+    argTypes: {
+        searchResult: {
+            control: 'object',
         },
-        {
-          provide: GovernanceQualitySearchService,
-          useClass: MockGovQualityApiService,
-        },
-        {
-          provide: TypeDefAPIService,
-          useClass: MockTypeDefAPIService,
-        },
-      ],
-    }),
-  ],
-
-  argTypes: {
-    searchResult: {
-      control: 'object',
     },
-  },
 };
 
 export const Primary = {
-  render: () => ({
-    component: DetailsCardComponent,
+    render: () => ({
+        component: DetailsCardComponent,
 
-    props: {
-      searchResult: SEARCH_RESULT,
+        props: {
+            searchResult: SEARCH_RESULT,
+        },
+    }),
+
+    name: 'Primary',
+    height: '200px',
+
+    args: {
+        searchResult: SEARCH_RESULT,
     },
-  }),
-
-  name: 'Primary',
-  height: '200px',
-
-  args: {
-    searchResult: SEARCH_RESULT,
-  },
 };

@@ -4,4 +4,4 @@ metadata:
   name: cm-reverse-proxy-configs-elastic-conf
 data:
   elastic.conf: |
-{{ tpl ( .Files.Get "conf.d/elastic.yaml" ) . | indent 4}}
+{{ tpl ( .Files.Get "conf.d/elastic.yaml.tmpl" ) . | indent 4}}

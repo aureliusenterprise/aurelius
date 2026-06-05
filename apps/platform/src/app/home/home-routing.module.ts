@@ -10,51 +10,51 @@ import { MonitoringComponent } from './monitoring/monitoring.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 const childRoutes: Routes = [
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'welcome'
-  },
-  {
-    path: 'welcome',
-    component: WelcomeComponent
-  },
-  {
-    path: 'modeling',
-    component: ModelingComponent
-  },
-  {
-    path: 'insights',
-    component: InsightsComponent
-  },
-  {
-    path: 'monitoring',
-    component: MonitoringComponent
-  },
-  {
-    path: 'analytics',
-    component: AnalyticsComponent
-  },
-  {
-    path: '**',
-    pathMatch: 'full',
-    redirectTo: 'welcome'
-  }
+    {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'welcome',
+    },
+    {
+        path: 'welcome',
+        component: WelcomeComponent,
+    },
+    {
+        path: 'modeling',
+        component: ModelingComponent,
+    },
+    {
+        path: 'insights',
+        component: InsightsComponent,
+    },
+    {
+        path: 'monitoring',
+        component: MonitoringComponent,
+    },
+    {
+        path: 'analytics',
+        component: AnalyticsComponent,
+    },
+    {
+        path: '**',
+        pathMatch: 'full',
+        redirectTo: 'welcome',
+    },
 ];
 
 const routes: Routes = [
-  Shell.childRoutes([
-    {
-      path: '',
-      component: HomeComponent,
-      data: { title: extract('Home') },
-      children: childRoutes
-    }
-  ])
+    Shell.childRoutes([
+        {
+            path: '',
+            component: HomeComponent,
+            data: { title: extract('Home') },
+            children: childRoutes,
+        },
+    ]),
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes), ShellModule],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes), ShellModule],
+    exports: [RouterModule],
 })
 export class HomeRoutingModule {}

@@ -1,6 +1,9 @@
 # backend-lineage-rest-api
 
-This application is a backend service that provides an API for registering applications and data flows in the Aurelius Atlas application. It is intended to be used by deployment pipelines to register the lineage of the deployed applications.
+This application is a backend service that provides an API for registering applications
+and data flows in the Aurelius Atlas application.
+It is intended to be used by deployment pipelines to register the lineage
+of the deployed applications.
 
 ## Installation
 
@@ -26,7 +29,8 @@ The application will be available at `http://localhost:6969`.
 
 ## Configuration
 
-The application can be configured using environment variables. The following environment variables are available:
+The application can be configured using environment variables.
+The following environment variables are available:
 
 | Environment Variable  | Description                                 | Default Value |
 | --------------------- | ------------------------------------------- | ------------- |

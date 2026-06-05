@@ -4,8 +4,8 @@ import { ClassificationModule } from '../classification/classification.module';
 import { ClassificationsListComponent } from './classifications-list.component';
 
 @NgModule({
-  imports: [CommonModule, ClassificationModule],
-  declarations: [ClassificationsListComponent],
-  exports: [ClassificationsListComponent]
+    imports: [CommonModule, ClassificationModule],
+    declarations: [ClassificationsListComponent],
+    exports: [ClassificationsListComponent],
 })
 export class ClassificationsListModule {}

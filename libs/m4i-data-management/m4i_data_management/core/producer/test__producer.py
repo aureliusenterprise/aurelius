@@ -4,34 +4,40 @@ from pandas import DataFrame
 from .producer import Producer
 
 
-def get_new():
-    return DataFrame({"id": [1], "abc": ["def"], "ghi": ["jkl"]}).set_index("id")
+def get_new() -> DataFrame:
+    return DataFrame({"id": [1], "abc": ["def"], "ghi": ["jkl"]}).set_index("id")  # type: ignore[return-value]
+
+
 # END get_new
 
 
-def get_old():
-    return DataFrame({"id": [1], "abc": ["def"], "ghi": ["mno"]}).set_index("id")
+def get_old() -> DataFrame:
+    return DataFrame({"id": [1], "abc": ["def"], "ghi": ["mno"]}).set_index("id")  # type: ignore[return-value]
+
+
 # END get_old
 
 
 def transform(data: DataFrame):
     data["abc"] = "test"
     return data
+
+
 # END transform
 
 
 def propagate(data: DataFrame):
     pass
+
+
 # END _propagate
 
 
 @pytest.fixture
 def producer():
-    return Producer(
-        get_new=get_new,
-        get_old=get_old,
-        propagate=propagate
-    )
+    return Producer(get_new=get_new, get_old=get_old, propagate=propagate)  # type: ignore[arg-type]
+
+
 # END producer
 
 
@@ -41,6 +47,8 @@ def producer_transform():
         get_new=get_new,
         get_old=get_old,
         transform=transform,
-        propagate=propagate
+        propagate=propagate,  # type: ignore[arg-type]
     )
+
+
 # END producer_transform

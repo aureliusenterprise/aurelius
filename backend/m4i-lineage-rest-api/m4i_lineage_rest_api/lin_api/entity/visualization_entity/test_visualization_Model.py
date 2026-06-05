@@ -1,5 +1,3 @@
-import pytest
-
 from .visualization_Model import Visualization
 
 
@@ -14,17 +12,11 @@ def test__create_visualization_from_dict():
         "description": "something",
         "updatedAt": "Updated At",
         "version": "VERSION",
-        "creator": [
-            "test_m4i_person"
-        ],
-        "parentDataset": [
-            "tester_m4i_visualization"
-        ],
-        "childDataset": [
-            "tester_m4i_indexPattern"
-        ],
+        "creator": ["test_m4i_person"],
+        "parentDataset": ["tester_m4i_visualization"],
+        "childDataset": ["tester_m4i_indexPattern"],
         "type": "a type",
-        "visualizationType": "visualization type"
+        "visualizationType": "visualization type",
     }
 
     instance = Visualization.from_dict(visualization)
@@ -47,17 +39,11 @@ def test__visualization_convert_to_atlas_entity():
         "description": "something",
         "updatedAt": "Updated At",
         "version": "VERSION",
-        "creator": [
-            "test_m4i_person"
-        ],
-        "parentDataset": [
-            "tester_m4i_visualization"
-        ],
-        "childDataset": [
-            "tester_m4i_indexPattern"
-        ],
+        "creator": ["test_m4i_person"],
+        "parentDataset": ["tester_m4i_visualization"],
+        "childDataset": ["tester_m4i_indexPattern"],
         "type": "a type",
-        "visualizationType": "visualization type"
+        "visualizationType": "visualization type",
     }
 
     instance = Visualization.from_dict(visualization)
@@ -74,6 +60,7 @@ def test__visualization_convert_to_atlas_entity():
 
 # END test__visualization_convert_to_atlas_entity
 
+
 def test__visualization_convert_to_atlas_entity_with_dataset():
     """
     Tests whether or not the `Child Dataset` field is correctly converted to the atlas format.
@@ -85,17 +72,11 @@ def test__visualization_convert_to_atlas_entity_with_dataset():
         "description": "something",
         "updatedAt": "Updated At",
         "version": "VERSION",
-        "creator": [
-            "test_m4i_person"
-        ],
-        "parentDataset": [
-            "tester_m4i_visualization"
-        ],
-        "childDataset": [
-            "tester_m4i_indexPattern"
-        ],
+        "creator": ["test_m4i_person"],
+        "parentDataset": ["tester_m4i_visualization"],
+        "childDataset": ["tester_m4i_indexPattern"],
         "type": "a type",
-        "visualizationType": "visualization type"
+        "visualizationType": "visualization type",
     }
 
     instance = Visualization.from_dict(visualization)
@@ -108,6 +89,9 @@ def test__visualization_convert_to_atlas_entity_with_dataset():
     for dataset in atlas_dataset:
         assert dataset is not None
         assert dataset.type_name == "m4i_index_pattern"
-        assert getattr(dataset.unique_attributes,
-                       "qualified_name") == instance.child_dataset[0]
+        assert (
+            getattr(dataset.unique_attributes, "qualified_name") == instance.child_dataset[0]  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
+        )
+
+
 # END test__visualization_convert_to_atlas_entity_with_dataset

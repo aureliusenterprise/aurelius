@@ -11,17 +11,15 @@ from ..relationship_def import RelationshipDef
 from ..struct_def import StructDef
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class TypesDef(DataClassJsonMixin):
-
-    business_metadata_defs: List[BusinessMetadataDef] = field(
-        default_factory=list
-    )
+    business_metadata_defs: List[BusinessMetadataDef] = field(default_factory=list)
     classification_defs: List[ClassificationDef] = field(default_factory=list)
     entity_defs: List[EntityDef] = field(default_factory=list)
     enum_defs: List[EnumDef] = field(default_factory=list)
     relationship_defs: List[RelationshipDef] = field(default_factory=list)
     struct_defs: List[StructDef] = field(default_factory=list)
+
 
 # END TypesDef

@@ -11,17 +11,11 @@ def connector_process():
         "name": "test_m4i_connector_process",
         "description": "test_m4i_connector_process",
         "processOwner": "test_m4i_person",
-        "inputs": [
-            "test_m4i_dataset"
-        ],
-        "outputs": [
-            "test_m4i_dataset"
-        ],
-        "source": [
-            "test_m4i_source"
-        ],
+        "inputs": ["test_m4i_dataset"],
+        "outputs": ["test_m4i_dataset"],
+        "source": ["test_m4i_source"],
         "connectorType": "test_m4i_connector_process Type",
-        "server": "test_m4i_connector_process Server"
+        "server": "test_m4i_connector_process Server",
     }
 
 
@@ -94,11 +88,14 @@ def test__connector_process_convert_to_atlas_entity(connector_process):
     assert atlas_outputs is not None
     assert getattr(atlas_outputs.unique_attributes, "qualified_name") == instance.outputs[0]
 
-    atlas_source = atlas_attributes.source[0]
+    atlas_source = atlas_attributes.source[0]  # type: ignore[reportGeneralTypeIssues]
     assert atlas_source is not None
-    assert getattr(atlas_source.unique_attributes, "qualified_name") == instance.source[0]
+    assert (
+        getattr(atlas_source.unique_attributes, "qualified_name") == instance.source[0]  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
+    )
 
     assert atlas_attributes.connector_type == instance.connector_type
     assert atlas_attributes.server == instance.server
+
 
 # END test__connector_process_convert_to_atlas_entity

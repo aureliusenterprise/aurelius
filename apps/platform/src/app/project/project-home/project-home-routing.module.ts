@@ -6,20 +6,20 @@ import { ProjectHomeResolver } from './project-home.resolver';
 import { ProjectHomeGuard } from './project-home.guard';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: ProjectHomeComponent,
-    data: {
-      title: extract('Project Home')
+    {
+        path: '',
+        component: ProjectHomeComponent,
+        data: {
+            title: extract('Project Home'),
+        },
+        canActivate: [ProjectHomeGuard],
+        resolve: { projectHomeParams: ProjectHomeResolver },
     },
-    canActivate: [ProjectHomeGuard],
-    resolve: { projectHomeParams: ProjectHomeResolver }
-  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-  providers: []
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
+    providers: [],
 })
 export class ProjectHomeRoutingModule {}
