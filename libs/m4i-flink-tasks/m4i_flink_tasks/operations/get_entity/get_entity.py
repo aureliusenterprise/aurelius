@@ -13,7 +13,7 @@ from m4i_atlas_core import (
     EntityAuditAction,
     ExistingEntityTypeException,
     UnknownEntityTypeException,
-    data_dictionary_entity_types,
+    data_dictionary_entity_type_mapping,
     get_entity_by_guid,
     register_atlas_entity_types,
 )
@@ -81,7 +81,7 @@ class GetEntityFunction(MapFunction):
         store.set("atlas.server.url", self.atlas_url)
 
         with contextlib.suppress(ExistingEntityTypeException):
-            register_atlas_entity_types(data_dictionary_entity_types)  # type: ignore[arg-type]
+            register_atlas_entity_types(data_dictionary_entity_type_mapping)  # type: ignore[arg-type]
 
     def close(self) -> None:
         """Close the event loop."""
