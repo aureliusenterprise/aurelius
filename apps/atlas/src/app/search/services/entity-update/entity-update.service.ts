@@ -49,7 +49,7 @@ export class EntityUpdateService extends BasicStore<EntityUpdateStoreContext> {
         return this.entityUpdated$.asObservable();
     }
 
-    @ManagedTask('Saving the entity', { isQuiet: true })
+    @ManagedTask('search.services.entityUpdate.save', { isQuiet: true })
     @MonitorAsync('isUpdatingEntity')
     private async handleUpdateEntity(entityDetails: AtlasEntityWithEXTInformation) {
         const [guid, _] = await this.handleSaveEntity(entityDetails);

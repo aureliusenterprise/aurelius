@@ -6,7 +6,7 @@ export const environment = {
     },
     i18n: {
         defaultLanguage: 'en-US',
-        languages: {},
+        languages: { 'nl-NL': {}, 'en-US': {} },
     },
     keycloak: {
         url: '/auth',

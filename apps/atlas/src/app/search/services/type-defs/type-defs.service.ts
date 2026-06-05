@@ -26,7 +26,7 @@ export class TypeDefsService extends BasicStore<TypeDefsStoreContext> {
             .subscribe((typeDefs) => this.handleIndexEntityTypes(typeDefs));
     }
 
-    @ManagedTask('Retrieving the type definitions', { isQuiet: true })
+    @ManagedTask('search.services.typeDefs.retrieve', { isQuiet: true })
     @MonitorAsync('isRetrievingTypeDefs')
     private async handleRetrieveTypeDefs() {
         const typeDefs = await this.typeDefApiService.getTypeDefs().toPromise();

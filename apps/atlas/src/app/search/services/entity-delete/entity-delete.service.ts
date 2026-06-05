@@ -41,7 +41,7 @@ export class EntityDeleteService extends BasicStore<EntityDeleteStoreContext> {
         return this.entityDeleted$.pipe(filter(identity));
     }
 
-    @ManagedTask('Deleting the entity', { isQuiet: true })
+    @ManagedTask('search.services.entityDelete.delete', { isQuiet: true })
     @MonitorAsync('isDeletingEntity')
     private async handleDeleteEntity() {
         const guid = await this.entityDetailsService.get(['entityDetails', 'entity', 'guid']);

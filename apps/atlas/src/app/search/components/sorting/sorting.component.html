@@ -2,7 +2,7 @@
     <div class="control has-icons-left is-expanded">
         <div class="select is-fullwidth">
             <select [formControl]="sortBy">
-                <option value="_score">Relevance</option>
+                <option value="_score" translate>search.components.sorting.relevance</option>
                 <ng-container *ngFor="let option of sortingOptions">
                     <option [value]="option">
                         <a class="dropdown-item">

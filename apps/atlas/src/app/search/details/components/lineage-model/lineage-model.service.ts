@@ -32,7 +32,7 @@ export class LineageModelService extends BasicStore<LineageModelStoreContext> {
             .subscribe();
     }
 
-    @ManagedTask('Retrieving the lineage model', { isQuiet: true })
+    @ManagedTask('search.details.components.lineageModel.retrieve', { isQuiet: true })
     @MonitorAsync('isRetrievingLineageModel')
     private async handleRetrieveLineageModel(guid: string) {
         try {

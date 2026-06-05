@@ -34,7 +34,7 @@ export class TermService extends BasicStore<TermStoreContext> {
         });
     }
 
-    @ManagedTask('Retrieving the term definition', {
+    @ManagedTask('search.components.term.retrieve', {
         isQuiet: true,
     })
     @MonitorAsync('isRetrievingTerm')

@@ -22,7 +22,7 @@
                     <div class="dropdown-content">
                         <div class="dropdown-item">
                             <strong>{{ classificationType.name | translate }}</strong>
-                            originates from the following sources:
+                            <span translate> search.components.classification.originates </span>
                         </div>
                         <ng-container *ngFor="let source of sources$ | async">
                             <hr class="dropdown-divider" />

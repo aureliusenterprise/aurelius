@@ -118,7 +118,7 @@ export class SearchResultService extends BasicStore<SearchResultStoreContext> {
         });
     }
 
-    @ManagedTask('Retrieving the search result', { isQuiet: true })
+    @ManagedTask('search.services.searchResult.retrieve', { isQuiet: true })
     @MonitorAsync('isRetrievingSearchResult')
     private async handleRetrieveSearchResult(guid: string) {
         const searchResult = await getFiltersAndResults('', defaultQueryFacets, defaultResultFields, defaultPage, {

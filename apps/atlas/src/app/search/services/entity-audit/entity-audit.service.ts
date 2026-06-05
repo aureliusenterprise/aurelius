@@ -43,7 +43,7 @@ export class EntityAuditService extends BasicStore<EntityAuditStoreContext> {
             .subscribe();
     }
 
-    @ManagedTask('Retrieving the audit log', { isQuiet: true })
+    @ManagedTask('search.services.entityAudit.retrieve', { isQuiet: true })
     @MonitorAsync('isRetrievingAudits')
     private async handleRetrieveEntityAudits(guid: string) {
         if (guid.startsWith('-')) return;

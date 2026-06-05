@@ -42,7 +42,7 @@ export class ClassificationService extends BasicStore<ClassificationStoreContext
         });
     }
 
-    @ManagedTask('Retrieving the classification type definition', {
+    @ManagedTask('search.components.classification.retrieve', {
         isQuiet: true,
     })
     @MonitorAsync('isRetrievingTypeDefinition')

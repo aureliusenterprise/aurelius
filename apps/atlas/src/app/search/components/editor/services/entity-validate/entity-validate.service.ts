@@ -31,7 +31,7 @@ export class EntityValidateService extends BasicStore<EntityValidateStoreContext
         );
     }
 
-    @ManagedTask('Validating the data governance quality', { isQuiet: true })
+    @ManagedTask('search.components.editor.services.entityValidate.validate', { isQuiet: true })
     @MonitorAsync('isValidatingEntity')
     private async validateEntity(entityFormData: AtlasEntityWithEXTInformation) {
         return this.govQualityApiService

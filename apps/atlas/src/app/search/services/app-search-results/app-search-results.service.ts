@@ -190,7 +190,7 @@ export class AppSearchResultsService<
         return allResults;
     }
 
-    @ManagedTask('Loading a page of search results', { isQuiet: true })
+    @ManagedTask('search.services.appSearchResults.loading', { isQuiet: true })
     @MonitorAsync('isLoadingPage')
     private async getPage(currentPage: number, queryObject: AppSearchQuery<T, P>, pageSize: number) {
         const page: AppSearchPage = {

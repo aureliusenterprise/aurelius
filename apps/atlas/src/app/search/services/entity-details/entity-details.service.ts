@@ -35,10 +35,7 @@ export class EntityDetailsService extends BasicStore<EntityDetailsStoreContext> 
     set entityId(entityId: string) {
         this.update({
             description: 'New entity id available',
-            payload: {
-                entityId,
-                entityDetails: undefined,
-            },
+            payload: { entityId },
         });
     }
 
@@ -51,7 +48,7 @@ export class EntityDetailsService extends BasicStore<EntityDetailsStoreContext> 
         });
     }
 
-    @ManagedTask('Retrieving the entity details', { isQuiet: true })
+    @ManagedTask('search.services.entityDetails.retrieve', { isQuiet: true })
     @MonitorAsync('isRetrievingDetails')
     private async handleGetEntityDetails(entityId: string) {
         this.entityDetails = await this.entityApiService.getEntityById(entityId).toPromise();

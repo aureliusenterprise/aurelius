@@ -86,7 +86,7 @@ export class EditorFormService implements OnDestroy {
         this.update$.next();
     }
 
-    @ManagedTask('Submitting the form', { isQuiet: true })
+    @ManagedTask('search.components.editor.services.submit', { isQuiet: true })
     private async handleSubmitForm() {
         this.form.markAllAsTouched();
         this.form.updateValueAndValidity();

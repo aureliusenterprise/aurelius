@@ -1,6 +1,6 @@
 <ng-container [formGroup]="editorFormService.form" *ngIf="validationResults$ | async as rules">
     <div class="field">
-        <label class="label">Name*</label>
+        <label class="label" translate> search.components.editor.system.name </label>
         <div class="grid">
             <div class="control">
                 <input
@@ -8,7 +8,7 @@
                     name="name"
                     class="input"
                     type="text"
-                    placeholder="Name"
+                    placeholder="{{ 'search.components.editor.system.namePlaceholder' | translate }}"
                     [formControl]="name"
                     required
                     [class.is-danger]="(editorFormService.submitted | async) && name.invalid"
@@ -22,18 +22,17 @@
             ></ng-container>
         </div>
         <ng-container *ngIf="(editorFormService.submitted | async) && name.invalid">
-            <p *ngIf="name.errors?.required" class="help is-danger">Name is required.</p>
+            <p *ngIf="name.errors?.required" class="help is-danger" translate>
+                search.components.editor.system.nameRequired
+            </p>
         </ng-container>
         <ng-container *ngIf="name.value && name.value.includes('\u2019')">
-            <p class="help is-warning">
-                Importing the character ’ (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
-                Please replace it with a standard apostrophe (') before importing your text.
-            </p>
+            <p class="help is-warning" translate>search.components.editor.system.nameWarning</p>
         </ng-container>
     </div>
 
     <div *ngIf="false" class="field">
-        <label class="label">Type alias</label>
+        <label class="label" translate> search.components.editor.system.typeAlias </label>
         <div class="grid">
             <div class="control">
                 <input
@@ -41,7 +40,7 @@
                     name="typeAlias"
                     class="input"
                     type="text"
-                    placeholder="Type alias"
+                    placeholder="{{ 'search.components.editor.system.typeAliasPlaceholder' | translate }}"
                     [formControl]="typeAlias"
                     [class.is-danger]="(editorFormService.submitted | async) && typeAlias.invalid"
                 />
@@ -56,10 +55,14 @@
     </div>
 
     <div class="field">
-        <label class="label">Definition</label>
+        <label class="label" translate> search.components.editor.system.definition </label>
         <div class="grid">
             <div class="control">
-                <textarea class="textarea" placeholder="Definition" [formControl]="definition"></textarea>
+                <textarea
+                    class="textarea"
+                    placeholder="{{ 'search.components.editor.system.definitionPlaceholder' | translate }}"
+                    [formControl]="definition"
+                ></textarea>
             </div>
             <ng-container *ngIf="rules.definition as rules">
                 <models4insight-gov-quality-display
@@ -69,15 +72,12 @@
             ></ng-container>
         </div>
         <ng-container *ngIf="definition.value && definition.value.includes('\u2019')">
-            <p class="help is-warning">
-                Importing the character ’ (Unicode U+2019, Right Single Quotation Mark) may cause representation issues.
-                Please replace it with a standard apostrophe (') before importing your text.
-            </p>
+            <p class="help is-warning" translate>search.components.editor.system.definitionWarning</p>
         </ng-container>
     </div>
 
     <div class="field">
-        <label class="label">Parent system</label>
+        <label class="label" translate> search.components.editor.system.parentSystem </label>
         <div class="grid">
             <div class="control">
                 <models4insight-relationships-input
@@ -97,7 +97,7 @@
     </div>
 
     <div class="field">
-        <label class="label">Subsystems</label>
+        <label class="label" translate> search.components.editor.system.subsystems </label>
         <div class="grid">
             <div class="control">
                 <models4insight-relationships-input
@@ -116,7 +116,7 @@
     </div>
 
     <div class="field">
-        <label class="label">Collections</label>
+        <label class="label" translate> search.components.editor.system.collections </label>
         <div class="grid">
             <div class="control">
                 <models4insight-relationships-input
@@ -137,7 +137,7 @@
         <div class="grid">
             <ng-container *ngIf="(editorFormService.submitted | async) && editorFormService.form.invalid">
                 <div class="notification is-danger is-light mb-4">
-                    <p><strong>This entity can't be saved because one or more required fields are missing.</strong></p>
+                    <p><strong translate> search.components.editor.system.notification </strong></p>
                 </div>
             </ng-container>
         </div>
