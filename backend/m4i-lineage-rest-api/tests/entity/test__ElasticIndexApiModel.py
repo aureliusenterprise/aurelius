@@ -1,16 +1,11 @@
 import pytest
 from m4i_atlas_core import ElasticIndex
 
-from m4i_lineage_rest_api.lin_api.entity.elasticIndex_entity.model.ElasticIndexApiModel import (
+
+from m4i_lineage_rest_api.lin_api.entity.elasticIndex_entity.model import (
     ElasticIndexApiModel,
-)
-from m4i_lineage_rest_api.lin_api.entity.elasticIndex_entity.model.ElasticIndexTemplateMappings import (
     ElasticIndexTemplateMappings,
-)
-from m4i_lineage_rest_api.lin_api.entity.elasticIndex_entity.model.ElasticIndexTemplateMappingsProperty import (
     ElasticIndexTemplateMappingsProperty,
-)
-from m4i_lineage_rest_api.lin_api.entity.elasticIndex_entity.model.ElasticIndexTemplateModel import (
     ElasticIndexTemplateModel,
 )
 
@@ -158,7 +153,7 @@ def test__ElasticIndexApiModel_convert_to_atlas_entity(data: dict):
     assert index_field_attributes is not None
     assert getattr(index_field_attributes.unique_attributes, "qualified_name") == "test_m4i_data_attribute"
     index_field_dataset = index_field_attribute.datasets
-    assert index_field_dataset is None
+    assert index_field_dataset == []
 
 
 # END test__ElasticIndexApiModel_convert_to_atlas_entity
