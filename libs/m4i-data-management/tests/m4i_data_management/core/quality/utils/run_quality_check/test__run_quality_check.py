@@ -87,7 +87,7 @@ def test__run_quality_check_unfinished_must_have_no_success_status(data: DataFra
 def test__run_quality_check_must_have_rule_id(data: DataFrame, rule_a: Series):
     result, _, _ = run_quality_check(data, rule_a)
 
-    assert result["business_rule_id"] == rule_a["id"]
+    assert result["business_rule_id"] == str(rule_a["id"])
 
 
 # END test__run_quality_check_must_have_rule_id
