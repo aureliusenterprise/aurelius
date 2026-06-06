@@ -5,20 +5,5 @@
     "projectType": "library",
     "sourceRoot": "libs/styles/src",
     "tags": [],
-    "targets": {
-        "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": ["libs/styles/**/*.ts", "libs/styles/**/*.html"]
-            }
-        },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "options": {
-                "jestConfig": "libs/styles/jest.config.ts",
-                "passWithNoTests": true
-            },
-            "outputs": ["{workspaceRoot}/coverage/libs/styles"]
-        }
-    }
+    "targets": {}
 }
