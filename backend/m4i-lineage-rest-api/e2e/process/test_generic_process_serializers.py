@@ -85,7 +85,7 @@ def test_m4i_generic_process_model_empty_inputs(client, request_to_make):
     assert t.status_code == 400
     t_json = t.get_json()
     assert t_json["message"] == "Input payload validation failed"
-    assert t_json["errors"] == {"inputs": "[] is too short"}
+    assert t_json["errors"] == {"inputs": "[] should be non-empty"}
 
 
 # END test_m4i_generic_process_model_no_inputs
@@ -113,7 +113,7 @@ def test_m4i_generic_process_model_empty_outputs(client, request_to_make):
     assert t.status_code == 400
     t_json = t.get_json()
     assert t_json["message"] == "Input payload validation failed"
-    assert t_json["errors"] == {"outputs": "[] is too short"}
+    assert t_json["errors"] == {"outputs": "[] should be non-empty"}
 
 
 # END test_m4i_generic_process_model_empty_outputs
@@ -155,7 +155,7 @@ def test_m4i_generic_process_model_empty_source(client, request_to_make):
     assert t.status_code == 400
     t_json = t.get_json()
     assert t_json["message"] == "Input payload validation failed"
-    assert t_json["errors"] == {"source": "[] is too short"}
+    assert t_json["errors"] == {"source": "[] should be non-empty"}
 
 
 # END test_m4i_generic_process_model_empty_source

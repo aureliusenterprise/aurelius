@@ -1,7 +1,7 @@
 import pytest
 from pandas import DataFrame
 
-from m4i_data_management.core.quality.utils.annotate_results_with_metadata.annotate_results_with_metdata import (
+from m4i_data_management.core.quality.utils.annotate_results_with_metadata import (
     annotate_results_with_metadata,
 )
 

@@ -1,7 +1,7 @@
 from numpy import NaN
 from pandas import DataFrame
 
-from m4i_data_management.core.quality.rules.compare_first_characters_starting_without.compare_first_characters_starting_without import (
+from m4i_data_management.core.quality.rules.compare_first_characters_starting_without import (
     compare_first_characters_starting_without,
 )
 

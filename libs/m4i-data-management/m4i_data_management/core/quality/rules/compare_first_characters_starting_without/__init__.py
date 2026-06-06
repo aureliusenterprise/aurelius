@@ -1,3 +1,3 @@
-from .compare_first_characters_starting_without import (
-    compare_first_characters_starting_without as compare_first_characters_starting_without,
-)
+from .compare_first_characters_starting_without import compare_first_characters_starting_without
+
+__all__ = ["compare_first_characters_starting_without"]
