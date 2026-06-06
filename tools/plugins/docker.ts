@@ -188,14 +188,14 @@ async function createNodesInternal(
                         configurations: {
                             json: {
                                 command:
-                                    'trivy sbom {args.sbomPath} --scanners vuln --format json --output {args.reportPath} --exit-code {args.exitCode}',
+                                    'trivy sbom {args.sbomPath} --scanners vuln --format json --output {args.reportPath} --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache',
                                 exitCode: 0,
                                 reportPath: '{projectRoot}/vulnerabilities.json',
                                 sbomPath: '{projectRoot}/sbom.json',
                             },
                             sarif: {
                                 command:
-                                    'trivy sbom {args.sbomPath} --scanners vuln --format sarif --output {args.reportPath} --exit-code {args.exitCode}',
+                                    'trivy sbom {args.sbomPath} --scanners vuln --format sarif --output {args.reportPath} --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache',
                                 exitCode: 0,
                                 reportPath: '{projectRoot}/vulnerabilities.sarif',
                                 sbomPath: '{projectRoot}/sbom.json',
