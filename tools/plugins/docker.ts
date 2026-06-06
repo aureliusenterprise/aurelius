@@ -80,12 +80,21 @@ async function createNodesInternal(
                         },
                     },
                     [buildTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
+                        configurations: {
+                            local: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
+                            },
+                            ci: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --cache-from="type=gha,key={projectName}-cache-main" --cache-from="type=gha,key={projectName}-cache-${branchName}" --cache-to="type=gha,key={projectName}-cache-${branchName},mode=max,scope={projectName}"`,
+                            },
+                        },
+                        defaultConfiguration: 'local',
                         dependsOn: [
                             { target: 'build' },
                             { target: setupBuilderTargetName, projects: ['.'], params: 'forward' },
                             { target: buildTargetName, dependencies: true },
                         ],
+                        executor: 'nx:run-commands',
                         metadata: {
                             description: 'Build the Docker image for the application',
                         },
@@ -98,7 +107,16 @@ async function createNodesInternal(
                         },
                     },
                     [publishTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --push --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
+                        configurations: {
+                            local: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --push --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
+                            },
+                            ci: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --push --cache-from="type=gha,key={projectName}-cache-main" --cache-from="type=gha,key={projectName}-cache-${branchName}" --cache-to="type=gha,key={projectName}-cache-${branchName},mode=max,scope={projectName}"`,
+                            },
+                        },
+                        defaultConfiguration: 'local',
+                        executor: 'nx:run-commands',
                         options: {
                             env: {
                                 DOCKER_BUILDKIT: '1',

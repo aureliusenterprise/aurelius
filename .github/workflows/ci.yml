@@ -112,7 +112,7 @@ jobs:
               uses: nrwl/nx-set-shas@v5
 
             - name: Build docker images for affected projects
-              run: npx nx affected -t docker-build
+              run: npx nx affected -t docker-build -c ci
 
             - name: Generate vulnerability reports for affected projects
               run: npx nx affected -t docker-vuln-scan -c sarif
