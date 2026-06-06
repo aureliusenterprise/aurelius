@@ -34,13 +34,6 @@
             },
             "outputs": ["{options.outputPath}"]
         },
-        "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": ["libs/storybook/**/*.ts"]
-            },
-            "outputs": ["{options.outputFile}"]
-        },
         "storybook": {
             "configurations": {
                 "ci": {
@@ -68,14 +61,6 @@
                 "port": 4400,
                 "styles": ["libs/storybook/storybook.scss"]
             }
-        },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "options": {
-                "jestConfig": "libs/storybook/jest.config.ts",
-                "passWithNoTests": true
-            },
-            "outputs": ["{workspaceRoot}/coverage/libs/storybook"]
         }
     }
 }
