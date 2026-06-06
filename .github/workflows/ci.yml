@@ -167,4 +167,6 @@ jobs:
               run: npx nx affected -t decrypt
 
             - name: Run SonarQube analysis
+              env:
+                  SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
               run: npx nx affected -t sonar
