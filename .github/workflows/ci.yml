@@ -56,6 +56,18 @@ jobs:
             - name: Set SHA for affected command
               uses: nrwl/nx-set-shas@v5
 
+            - name: Create docker-compose v1→v2 compatibility wrapper
+              shell: bash
+              run: |
+                  # testcontainers <4.0.0 calls the legacy 'docker-compose' binary,
+                  # but modern Docker ships only 'docker compose' (v2 plugin).
+                  # This wrapper forwards all arguments transparently.
+                  cat > /usr/local/bin/docker-compose << 'EOF'
+                  #!/usr/bin/env bash
+                  exec docker compose "$@"
+                  EOF
+                  chmod +x /usr/local/bin/docker-compose
+
             - name: Test affected projects
               env:
                   SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
