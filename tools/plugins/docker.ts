@@ -1,6 +1,6 @@
 import { CreateNodes, CreateNodesResult } from '@nx/devkit';
-import { execSync } from 'child_process';
-import { dirname } from 'path';
+import { execSync } from 'node:child_process';
+import { dirname } from 'node:path';
 
 export interface DockerPluginOptions {
     readonly attestTargetName?: string;

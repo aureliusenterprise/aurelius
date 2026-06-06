@@ -1,5 +1,5 @@
 import { CreateNodesResult, CreateNodes } from '@nx/devkit';
-import { dirname } from 'path';
+import { dirname } from 'node:path';
 
 export interface SopsPluginOptions {
     readonly keygenTargetName?: string;

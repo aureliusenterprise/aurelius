@@ -1,6 +1,6 @@
 import { CreateNodesResult, CreateNodes } from '@nx/devkit';
-import { existsSync } from 'fs';
-import { dirname, join } from 'path';
+import { existsSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 
 export interface DockerComposePluginOptions {
     readonly serveTargetName?: string;
