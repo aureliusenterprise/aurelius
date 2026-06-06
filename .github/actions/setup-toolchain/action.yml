@@ -119,7 +119,7 @@ runs:
           shell: bash
           run: |
               if [ ! -f /usr/local/bin/cyclonedx ]; then
-                  curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/${{ inputs.cyclonedx-version }}/download/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
+                  curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/download/v${{ inputs.cyclonedx-version }}/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
                   chmod +x /usr/local/bin/cyclonedx
               fi
 
