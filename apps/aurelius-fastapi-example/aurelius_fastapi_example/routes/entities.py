@@ -3,17 +3,16 @@ from typing import Annotated
 from uuid import UUID
 
 from aurelius_example.models import PG_NOTIFY_ENTITY_CHANNEL, Entity
-from fastapi import APIRouter, Depends, HTTPException, Security
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.sse import EventSourceResponse, ServerSentEvent
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql.ext import plainto_tsquery
 from sqlmodel import Session, col, or_, select
 
-from aurelius_fastapi_example.globals import LOGGER
 from aurelius_fastapi_example.models import Envelope, FindAllQueryParams, PaginatedResponse
-from aurelius_fastapi_example.providers import notifications, session, user_info
+from aurelius_fastapi_example.providers import notifications, require_auth, session
 
-ENTITIES = APIRouter()
+ENTITIES = APIRouter(dependencies=[require_auth])
 
 
 @ENTITIES.get(
@@ -24,7 +23,6 @@ ENTITIES = APIRouter()
 def find_all(
     params: Annotated[FindAllQueryParams, Depends()],
     session: Annotated[Session, Depends(session)],
-    user_info: Annotated[dict, Security(user_info)],
 ) -> PaginatedResponse[Entity]:
     """
     Retrieve all entities from the database with pagination support.
@@ -32,13 +30,10 @@ def find_all(
     Args:
         params (FindAllQueryParams): Query parameters for the find all endpoint.
         session (Session): The database session to use for the query.
-        user_info (dict): Decoded user information from the authentication token.
 
     Returns:
         PaginatedResponse[Entity]: Paginated entities with total count.
     """
-    LOGGER.info("User %s is retrieving entities", user_info.get("sub"))
-
     base_query = select(Entity)
 
     if params.search:
@@ -70,20 +65,14 @@ def find_all(
 )
 async def sse(
     notifications: Annotated[Callable[[], AsyncGenerator[Envelope[Entity]]], Depends(notifications)],
-    user_info: Annotated[dict, Depends(user_info)],
 ) -> AsyncGenerator[ServerSentEvent]:
     """
     Stream server-sent events for entity changes.
 
     This endpoint streams real-time updates whenever entities are modified in the database.
     """
-    LOGGER.info("User %s connected to SSE endpoint", user_info.get("sub"))
-
-    try:
-        async for envelope in notifications():
-            yield ServerSentEvent(event=PG_NOTIFY_ENTITY_CHANNEL, data=envelope)
-    finally:
-        LOGGER.info("User %s disconnected from SSE endpoint", user_info.get("sub"))
+    async for envelope in notifications():
+        yield ServerSentEvent(event=PG_NOTIFY_ENTITY_CHANNEL, data=envelope)
 
 
 @ENTITIES.get(
@@ -97,7 +86,6 @@ async def sse(
 def find_one(
     guid: UUID,
     session: Annotated[Session, Depends(session)],
-    user_info: Annotated[dict, Security(user_info)],
 ) -> Entity:
     """
     Retrieve an entity by its GUID.
@@ -105,7 +93,6 @@ def find_one(
     Args:
         guid (UUID): The GUID of the entity to retrieve.
         session (Session): The database session to use for the query.
-        user_info (dict): Decoded user information from the authentication token.
 
     Returns:
         Entity: The entity with the specified GUID.
@@ -113,8 +100,6 @@ def find_one(
     Raises:
         HTTPException: If the entity is not found, a 410 Gone error is raised.
     """
-    LOGGER.info("User %s is retrieving entity with GUID %s", user_info.get("sub"), guid)
-
     if not (entity := session.get(Entity, guid)):
         raise HTTPException(status_code=410, detail="Entity not found")
 
@@ -129,7 +114,6 @@ def find_one(
 def create_or_update(
     entity: Entity,
     session: Annotated[Session, Depends(session)],
-    user_info: Annotated[dict, Security(user_info)],
 ) -> Entity:
     """
     Create a new entity or update an existing one.
@@ -137,7 +121,6 @@ def create_or_update(
     Args:
         entity (Entity): The entity to create or update.
         session (Session): The database session to use for the operation.
-        user_info (dict): Decoded user information from the authentication token.
 
     Returns:
         Entity: The created or updated entity.
@@ -146,8 +129,6 @@ def create_or_update(
     # re-validate it here to ensure it's in the correct format.
     if isinstance(entity.guid, str):
         entity = Entity.model_validate(entity.model_dump(mode="json"))
-
-    LOGGER.info("User %s is creating or updating entity with GUID %s", user_info.get("sub"), entity.guid)
 
     session.merge(entity)
     session.commit()
@@ -166,7 +147,6 @@ def create_or_update(
 def delete(
     guid: UUID,
     session: Annotated[Session, Depends(session)],
-    user_info: Annotated[dict, Security(user_info)],
 ) -> None:
     """
     Delete an entity by its GUID.
@@ -174,13 +154,10 @@ def delete(
     Args:
         guid (UUID): The GUID of the entity to delete.
         session (Session): The database session to use for the operation.
-        user_info (dict): Decoded user information from the authentication token.
 
     Raises:
         HTTPException: If the entity is not found, a 410 Gone error is raised.
     """
-    LOGGER.info("User %s is deleting entity with GUID %s", user_info.get("sub"), guid)
-
     if not (entity := session.get(Entity, guid)):
         raise HTTPException(status_code=410, detail="Entity not found")
 

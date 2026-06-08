@@ -3,26 +3,13 @@ import jwt
 import pytest
 from aurelius_fastapi_example.models import Settings
 from aurelius_fastapi_example.providers import auth
-from fastapi import HTTPException, Request
+from fastapi import HTTPException
+from fastapi.security import HTTPAuthorizationCredentials
 
 
-def build_request_with_bearer(token: str) -> Request:
-    """Create a minimal ASGI request object carrying an Authorization header."""
-    scope = {
-        "type": "http",
-        "asgi": {"version": "3.0"},
-        "http_version": "1.1",
-        "method": "GET",
-        "scheme": "http",
-        "path": "/",
-        "raw_path": b"/",
-        "query_string": b"",
-        "headers": [(b"authorization", f"Bearer {token}".encode())],
-        "client": ("127.0.0.1", 12345),
-        "server": ("127.0.0.1", 80),
-    }
-
-    return Request(scope)
+def build_credentials(token: str) -> HTTPAuthorizationCredentials:
+    """Create an HTTPAuthorizationCredentials object with the given bearer token."""
+    return HTTPAuthorizationCredentials(scheme="Bearer", credentials=token)
 
 
 def test__auth_base_url_builds_realm_url(auth_base_url: str, auth_settings: Settings) -> None:
@@ -48,12 +35,11 @@ def test__jwks_loads_keys_from_keycloak(auth_base_url: str, http_client: httpx.C
     assert keys
 
 
-async def test__auth_token_extracts_bearer_token(keycloak_access_token: str) -> None:
-    """Auth token provider should return the bearer token from request headers."""
-    oauth2 = auth.auth_provider(auth_base_url="http://issuer.example/realms/test")
-    request = build_request_with_bearer(keycloak_access_token)
+def test__auth_token_extracts_bearer_token(keycloak_access_token: str) -> None:
+    """Auth token provider should return the bearer token from credentials."""
+    credentials = build_credentials(keycloak_access_token)
 
-    token = await auth.auth_token(oauth2, request)
+    token = auth.auth_token(credentials)
 
     assert token == keycloak_access_token
 

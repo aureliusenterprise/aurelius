@@ -6,8 +6,8 @@ import jwt
 from cachetools import TTLCache, cached
 from cachetools.keys import hashkey
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
-from fastapi import Depends, HTTPException, Request
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordBearer
 from jwt.algorithms import RSAAlgorithm
 from pydantic import BaseModel, HttpUrl
 
@@ -15,6 +15,8 @@ from aurelius_fastapi_example.globals import LOGGER
 
 from .http import http_client
 from .settings import Settings
+
+auth_scheme = HTTPBearer(auto_error=True)
 
 
 class OpenIdConfig(BaseModel):
@@ -83,18 +85,9 @@ def jwks(
     return result
 
 
-async def auth_token(
-    auth_provider: Annotated[OAuth2PasswordBearer, Depends(auth_provider)],
-    request: Request,
-) -> str:
+def auth_token(auth: Annotated[HTTPAuthorizationCredentials, Depends(auth_scheme)]) -> str:
     """Return the authentication token from the request."""
-    token = await auth_provider(request)
-
-    if token is None:
-        LOGGER.error("No authentication token provided")
-        raise HTTPException(status_code=401, detail="Missing authorization token")
-
-    return token
+    return auth.credentials
 
 
 def jwk(
@@ -149,3 +142,6 @@ def user_info(
     except jwt.PyJWTError as e:
         LOGGER.exception("Failed to verify authentication token")
         raise HTTPException(status_code=401, detail="Invalid authorization token") from e
+
+
+require_auth = Depends(user_info)
