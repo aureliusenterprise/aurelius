@@ -46,5 +46,15 @@ async def get_entity_by_guid(guid: str, entity_type: Union[Type[T], str] = Entit
         access_token=access_token
     )
 
+    # If entity_type is the generic Entity class, auto-detect the actual type from the response
+    if entity_type == Entity and 'entity' in response and 'typeName' in response['entity']:
+        type_name = response['entity']['typeName']
+        try:
+            entity_type = get_entity_type_by_type_name(type_name)
+        except Exception:
+            # If type resolution fails, fall back to generic Entity
+            pass
+    # END IF
+
     return entity_type.from_dict(response['entity'])
 # END get_entity_by_guid
