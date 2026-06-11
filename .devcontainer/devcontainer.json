@@ -110,7 +110,9 @@
             "version": "3.8"
         },
         "ghcr.io/dhoeric/features/google-cloud-cli:1": {},
-        "ghcr.io/dhoeric/features/trivy:1": {}
+        "ghcr.io/dhoeric/features/trivy:1": {
+            "version": "0.71.0"
+        }
     },
     "forwardPorts": [5601, 8081, 8082, 9200, 8180, 18081, 18082, 18083, 21000],
     "image": "mcr.microsoft.com/devcontainers/base:noble",
