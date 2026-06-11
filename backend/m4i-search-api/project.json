@@ -1,5 +1,6 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["aurelius-docker-keycloak"],
     "name": "m4i-search-api",
     "projectType": "application",
     "sourceRoot": "backend/m4i-search-api/m4i_search_api",
