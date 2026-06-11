@@ -1,1 +1,3 @@
-from .QualifiedNameNotValidException import *
+from .QualifiedNameNotValidException import QualifiedNameNotValidException
+
+__all__ = ["QualifiedNameNotValidException"]

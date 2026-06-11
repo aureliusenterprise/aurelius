@@ -4,14 +4,14 @@ import { AtlasSearchResult, GetOptions } from '../../types';
 import { getHttpClient } from '../atlas-api.module';
 
 export function getDomains(
-  /** Optional parameters for the get domains operation */
-  { forceUpdate }: GetOptions = {}
+    /** Optional parameters for the get domains operation */
+    { forceUpdate }: GetOptions = {},
 ): Observable<AtlasSearchResult> {
-  const http = getHttpClient();
+    const http = getHttpClient();
 
-  validateRequiredArguments(arguments, 'getDomains');
+    validateRequiredArguments(arguments, 'getDomains');
 
-  const path = `atlas/v2/search/basic/?typeName=m4i_data_domain`;
+    const path = `atlas/v2/search/basic/?typeName=m4i_data_domain`;
 
-  return http.cache(forceUpdate).get<AtlasSearchResult>(path);
+    return http.cache(forceUpdate).get<AtlasSearchResult>(path);
 }

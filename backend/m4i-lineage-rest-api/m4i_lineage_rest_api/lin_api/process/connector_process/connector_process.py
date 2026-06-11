@@ -7,38 +7,45 @@ from m4i_backend_core.auth import requires_auth
 
 from .connector_process_model import ConnectorProcess
 from .connector_process_serializers import m4i_connector_process_model as connector_process_serializer
-from ... import output_filter_functions, m4i_output_model, m4i_output_get_model, api, authorizations
+from ...atlas_get_response_seralizer import m4i_output_get_model
+from ...atlas_put_response_seralizer import m4i_output_model
+from ...authorization_definition import authorizations
+from ...output_filter_functions import transform_get_response, transform_post_response
+from ...restplus import api
 
 """
 Defining connector_process, (Kafka to Elastic) NameSpace
 """
 log = logging.getLogger(__name__)
-ns = api.namespace('process/connector_process', description='Connector Process',
-                   security='apikey',
-                   authorizations=authorizations
-                   )
+ns = api.namespace(
+    "process/connector_process",
+    description="Connector Process",
+    security="apikey",
+    authorizations=authorizations,
+)
 
 
 @ns.route("/")
 class connector_process_Class(Resource):
-
-    @api.response(200, 'Connector Process Entities in Atlas')
-    @api.response(400, 'Connector Process is not Defined in Atlas')
-    @api.doc(id='get_connector_process_entities', security='apikey')
+    @api.response(200, "Connector Process Entities in Atlas")
+    @api.response(400, "Connector Process is not Defined in Atlas")
+    @api.doc(id="get_connector_process_entities", security="apikey")
     @api.marshal_with(m4i_output_get_model)
     @requires_auth(transparent=True)
     def get(self, access_token=None):
         """
         Returns list of Connector Entities
         """
-        search_result = asyncio.run(get_entities_by_type_name("m4i_connector_process", access_token=access_token))
-        transformed_response = output_filter_functions.transform_get_response(search_result)
+        search_result = asyncio.run(
+            get_entities_by_type_name("m4i_connector_process", access_token=access_token)
+        )
+        transformed_response = transform_get_response(search_result)
         return transformed_response, 200
 
-    @api.response(200, 'Connector Process Entity successfully created.')
+    @api.response(200, "Connector Process Entity successfully created.")
     @api.response(500, "ValueError")
     @api.expect(connector_process_serializer, validate=True)
-    @api.doc(id='post_connector_process_entities', security='apikey')
+    @api.doc(id="post_connector_process_entities", security="apikey")
     @api.marshal_with(m4i_output_model)
     @requires_auth(transparent=True)
     def post(self, access_token=None):
@@ -48,5 +55,5 @@ class connector_process_Class(Resource):
         obj = ConnectorProcess.from_dict(request.json)
         entity = obj.convert_to_atlas()
         data_read_response = asyncio.run(create_entities(entity, access_token=access_token))
-        transformed_response = output_filter_functions.transform_post_response(data_read_response)
+        transformed_response = transform_post_response(data_read_response)
         return transformed_response, 200

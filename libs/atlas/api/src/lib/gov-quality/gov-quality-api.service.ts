@@ -5,23 +5,21 @@ import { AtlasEntityWithEXTInformation } from '../types';
 import { GovQualityApiClient } from './gov-quality-api-client.service';
 
 export interface EntityValidationResult {
-  readonly items: AppSearchResult<GovQualitySearchObject>[];
-  readonly isNonCompliant: boolean;
+    readonly items: AppSearchResult<GovQualitySearchObject>[];
+    readonly isNonCompliant: boolean;
 }
 
 export interface EntityValidationResponse {
-  readonly [key: string]: EntityValidationResult;
+    readonly [key: string]: EntityValidationResult;
 }
 
 @Injectable()
 export class GovQualityApi {
-  readonly PATH = 'validate_entity';
+    readonly PATH = 'validate_entity';
 
-  constructor(private readonly http: GovQualityApiClient) {}
+    constructor(private readonly http: GovQualityApiClient) {}
 
-  validateEntity(
-    entity: AtlasEntityWithEXTInformation
-  ): Observable<EntityValidationResponse> {
-    return this.http.post<EntityValidationResponse>(this.PATH, entity);
-  }
+    validateEntity(entity: AtlasEntityWithEXTInformation): Observable<EntityValidationResponse> {
+        return this.http.post<EntityValidationResponse>(this.PATH, entity);
+    }
 }

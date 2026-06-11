@@ -1,11 +1,10 @@
-from typing import Optional
+from typing import Any, Dict, Optional
 
 
 class MetricColumnConfig:
-
     displayName: Optional[str]
     description: Optional[str]
-    isNarrow: Optional[str]
+    isNarrow: Optional[bool]
     isStatic: Optional[bool]
     isTimestamp: Optional[bool]
 
@@ -15,7 +14,8 @@ class MetricColumnConfig:
         displayName: Optional[str] = None,
         isNarrow: Optional[bool] = None,
         isStatic: Optional[bool] = None,
-        isTimestamp: Optional[bool] = False
+        isTimestamp: Optional[bool] = False,
+        **kwargs: Any,
     ):
         """
         Creates a new `MetricColumnConfig`
@@ -37,15 +37,19 @@ class MetricColumnConfig:
         self.isNarrow = isNarrow
         self.isStatic = isStatic
         self.isTimestamp = isTimestamp
+
     # END __init__
 
-    def __dict__(self):
+    def to_dict(self) -> Dict[str, Optional[object]]:
         return {
-            'description': self.description,
-            'displayName': self.displayName,
-            'isNarrow': self.isNarrow,
-            'isStatic': self.isStatic,
-            'isTimestamp': self.isTimestamp
+            "description": self.description,
+            "displayName": self.displayName,
+            "isNarrow": self.isNarrow,
+            "isStatic": self.isStatic,
+            "isTimestamp": self.isTimestamp,
         }
-    # END __dict__
+
+    # END to_dict
+
+
 # END MetricDataConfig

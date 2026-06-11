@@ -1,0 +1,117 @@
+name: Scan
+
+on:
+    schedule:
+        - cron: '0 2 * * *'
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        permissions:
+            actions: read
+            contents: read
+            packages: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Setup toolchain
+              uses: ./.github/actions/setup-toolchain
+              with:
+                  cleanup: 'true'
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  node: 'true'
+                  python: 'true'
+                  sops: 'true'
+
+            - name: Run unit tests and end-to-end tests
+              env:
+                  SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
+              run: npx nx run-many -t test e2e -c ci
+
+            - name: Upload coverage reports
+              uses: actions/upload-artifact@v7
+              with:
+                  name: coverage-reports
+                  path: |
+                      **/coverage.xml
+                      **/lcov.info
+                  if-no-files-found: ignore
+
+    build-and-scan:
+        runs-on: ubuntu-latest
+
+        permissions:
+            actions: read
+            contents: read
+            packages: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Setup toolchain
+              uses: ./.github/actions/setup-toolchain
+              with:
+                  cleanup: 'true'
+                  cosign: 'true'
+                  cyclonedx: 'true'
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  node: 'true'
+                  python: 'true'
+                  trivy: 'true'
+
+            - name: Build docker images
+              run: npx nx run-many -t docker-build
+
+            - name: Generate vulnerability reports
+              run: npx nx run-many -t docker-vuln-scan -c sarif
+
+            - name: Upload vulnerability reports
+              uses: actions/upload-artifact@v7
+              with:
+                  name: vuln-reports
+                  path: '**/vulnerabilities.sarif'
+                  if-no-files-found: ignore
+
+    sonar:
+        runs-on: ubuntu-latest
+        needs: [test, build-and-scan]
+
+        permissions:
+            actions: read
+            contents: read
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Setup toolchain
+              uses: ./.github/actions/setup-toolchain
+              with:
+                  cleanup: 'true'
+                  node: 'true'
+                  sonar: 'true'
+                  sops: 'true'
+
+            - name: Download coverage reports
+              continue-on-error: true
+              uses: actions/download-artifact@v8
+              with:
+                  name: coverage-reports
+
+            - name: Download vulnerability reports
+              continue-on-error: true
+              uses: actions/download-artifact@v8
+              with:
+                  name: vuln-reports
+
+            - name: Decrypt secrets for SonarQube
+              env:
+                  SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
+              run: npx nx run-many -t decrypt -p tag:sonarqube
+
+            - name: Run SonarQube analysis
+              run: npx nx run-many -t sonar

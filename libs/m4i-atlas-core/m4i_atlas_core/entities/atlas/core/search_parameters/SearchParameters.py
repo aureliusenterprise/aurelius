@@ -10,13 +10,14 @@ from ..filter_criteria import FilterCriteria
 class SortBy(Enum):
     ASCENDING = "ASCENDING"
     DESCENDING = "DESCENDING"
+
+
 # END SortBy
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class SearchParameters(DataClassJsonMixin):
-
     attributes: List[str] = field(default_factory=list)
     classification: Optional[str] = None
     entity_filters: Optional[FilterCriteria] = None
@@ -31,5 +32,6 @@ class SearchParameters(DataClassJsonMixin):
     tag_filters: Optional[FilterCriteria] = None
     term_name: Optional[str] = None
     type_name: Optional[str] = None
+
 
 # END SearchParameters

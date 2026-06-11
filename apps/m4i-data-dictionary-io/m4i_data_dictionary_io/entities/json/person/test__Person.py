@@ -6,17 +6,15 @@ def test__create_person_from_dict():
     Tests whether or not a `Person` can be created from a dict with its attributes
     """
 
-    person = {
-        "email": "person@example.com",
-        "name": "person",
-        "source": "source"
-    }
+    person = {"email": "person@example.com", "name": "person", "source": "source"}
 
     instance = Person.from_dict(person)
 
     assert instance.email == "person@example.com"
     assert instance.name == "person"
     assert instance.source == "source"
+
+
 # END test__create_person_from_dict
 
 
@@ -25,21 +23,21 @@ def test__create_person_from_json():
     Tests whether or not a `Person` can be created from a json string with its attributes
     """
 
-    person = (
-        """
+    person = """
         {
             "email": "person@example.com",
             "name": "person",
             "source": "source"
         }
         """
-    )
 
     instance = Person.from_json(person)
 
     assert instance.email == "person@example.com"
     assert instance.name == "person"
     assert instance.source == "source"
+
+
 # END test__create_person_from_json
 
 
@@ -48,11 +46,7 @@ def test__person_convert_to_atlas_entity():
     Tests whether or not all required fields are correctly converted to the atlas format.
     """
 
-    person = {
-        "email": "person@example.com",
-        "name": "person",
-        "source": "source"
-    }
+    person = {"email": "person@example.com", "name": "person", "source": "source"}
 
     instance = Person.from_dict(person)
 
@@ -68,7 +62,7 @@ def test__person_convert_to_atlas_entity():
 
     assert atlas_source is not None
     assert atlas_source.type_name == "m4i_source"
-    assert getattr(atlas_source.unique_attributes,
-                   "qualified_name") == instance.source
+    assert getattr(atlas_source.unique_attributes, "qualified_name") == instance.source
+
 
 # END test__person_convert_to_atlas_entity

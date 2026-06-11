@@ -9,25 +9,23 @@ const log = new Logger('ProjectGuard');
 
 @Injectable()
 export class ProjectGuard implements CanActivate {
-  constructor(
-    private readonly projectService: ProjectService,
-    private readonly projectPermissionService: ProjectPermissionService,
-    private readonly router: Router
-  ) {}
+    constructor(
+        private readonly projectService: ProjectService,
+        private readonly projectPermissionService: ProjectPermissionService,
+        private readonly router: Router,
+    ) {}
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    this.projectService.setCurrentProject(route.params.id);
+    async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        this.projectService.setCurrentProject(route.params.id);
 
-    const hasPermission = await this.projectPermissionService.hasPermission(
-      PermissionLevel.BUSINESS_USER
-    );
+        const hasPermission = await this.projectPermissionService.hasPermission(PermissionLevel.BUSINESS_USER);
 
-    log.debug(`Can access project: ${hasPermission}`);
+        log.debug(`Can access project: ${hasPermission}`);
 
-    if (!hasPermission) {
-      return this.router.createUrlTree(['projects']);
+        if (!hasPermission) {
+            return this.router.createUrlTree(['projects']);
+        }
+
+        return hasPermission;
     }
-
-    return hasPermission;
-  }
 }

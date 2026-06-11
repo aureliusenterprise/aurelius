@@ -5,12 +5,7 @@ from typing import Callable, Dict, List, Tuple, Union
 from elasticsearch import Elasticsearch
 from pyflink.datastream import DataStream, MapFunction, OutputTag, RuntimeContext
 
-from m4i_flink_tasks import (
-    AppSearchDocument,
-    EntityMessage,
-    EntityMessageType,
-    SynchronizeAppSearchError,
-)
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType, SynchronizeAppSearchError
 
 from .event_handlers import (
     handle_delete_breadcrumbs,
@@ -23,7 +18,9 @@ from .event_handlers import (
 )
 
 ElasticsearchFactory = Callable[[], Elasticsearch]
-EventHandler = Callable[[EntityMessage, Elasticsearch, str, Dict[str, AppSearchDocument]], Dict[str, AppSearchDocument]]
+EventHandler = Callable[
+    [EntityMessage, Elasticsearch, str, Dict[str, AppSearchDocument]], Dict[str, AppSearchDocument]
+]
 
 EVENT_HANDLERS: Dict[EntityMessageType, List[EventHandler]] = {
     EntityMessageType.ENTITY_CREATED: [handle_entity_created],
@@ -77,9 +74,8 @@ class SynchronizeAppSearchFunction(MapFunction):
         """
         self.elastic = self.elastic_factory()
 
-    def map(
-        self,
-        value: Union[EntityMessage, Exception],
+    def map(  # type: ignore[override]
+        self, value: Union[EntityMessage, Exception]
     ) -> Union[List[Tuple[str, Union[AppSearchDocument, None]]], List[Exception]]:
         """
         Process an EntityMessage and perform actions based on the type of change event.
@@ -113,9 +109,7 @@ class SynchronizeAppSearchFunction(MapFunction):
 
         try:
             updated_documents = reduce(
-                lambda docs, handler: handler(value, self.elastic, self.index_name, docs),
-                event_handlers,
-                {},
+                lambda docs, handler: handler(value, self.elastic, self.index_name, docs), event_handlers, {}
             )
 
             if event_type == EntityMessageType.ENTITY_DELETED:
@@ -149,19 +143,20 @@ class SynchronizeAppSearch:
     """
 
     def __init__(
-            self,
-            data_stream: DataStream,
-            elastic_factory: ElasticsearchFactory,
-            index_name: str,
+        self, data_stream: DataStream, elastic_factory: ElasticsearchFactory, index_name: str
     ) -> None:
         self.data_stream = data_stream
 
         self.app_search_documents = self.data_stream.map(
-            SynchronizeAppSearchFunction(elastic_factory, index_name),
+            SynchronizeAppSearchFunction(elastic_factory, index_name)
         ).name("synchronize_app_search")
 
-        self.main = self.app_search_documents.flat_map(
-            lambda documents: (
-                document for document in documents if not isinstance(document, Exception)
-            ),
-        ).name("app_search_documents")
+        # Note: pyflink's type system doesn't play well with pyright
+        def filter_exceptions(documents):  # type: ignore[missing-parameter-type, unknown-parameter-type]
+            return (
+                document
+                for document in documents  # type: ignore[unknown-variable-type]
+                if not isinstance(document, Exception)
+            )  # type: ignore[return-value]
+
+        self.main = self.app_search_documents.flat_map(filter_exceptions).name("app_search_documents")  # type: ignore[assignment]

@@ -1,15 +1,8 @@
-
 from typing import List
-from m4i_flink_tasks import (
-    AtlasChangeMessageWithPreviousVersion,
-    EntityMessage,
-    EntityMessageType,
-)
+from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion, EntityMessage, EntityMessageType
 
 
-def handle_create_operation(
-    change_message: AtlasChangeMessageWithPreviousVersion,
-) -> List[EntityMessage]:
+def handle_create_operation(change_message: AtlasChangeMessageWithPreviousVersion) -> List[EntityMessage]:
     """
     Identify the changes when an entity is created.
 
@@ -49,8 +42,7 @@ def handle_create_operation(
     inserted_attributes = list(attributes_dict.keys())
 
     entity_message = EntityMessage.from_change_message(
-        change_message=change_message,
-        event_type=EntityMessageType.ENTITY_CREATED,
+        change_message=change_message, event_type=EntityMessageType.ENTITY_CREATED
     )
 
     entity_message.inserted_attributes = inserted_attributes

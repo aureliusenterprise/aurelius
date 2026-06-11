@@ -1,12 +1,12 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "types": ["node", "jest"]
-  },
-  "include": ["./**/*.ts"],
-  "references": [
-    {
-      "path": "./.storybook/tsconfig.json"
-    }
-  ]
+    "compilerOptions": {
+        "types": ["node", "jest"]
+    },
+    "extends": "../../tsconfig.base.json",
+    "include": ["./**/*.ts"],
+    "references": [
+        {
+            "path": "./.storybook/tsconfig.json"
+        }
+    ]
 }

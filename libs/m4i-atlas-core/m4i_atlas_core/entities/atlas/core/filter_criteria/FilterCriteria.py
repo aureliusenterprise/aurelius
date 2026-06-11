@@ -8,6 +8,8 @@ from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
 class Condition(Enum):
     AND = "AND"
     OR = "OR"
+
+
 # END Condition
 
 
@@ -28,34 +30,36 @@ class Operator(Enum):
     CONTAINS_ALL = "CONTAINS_ALL"
     IS_NULL = "IS_NULL"
     NOT_NULL = "NOT_NULL"
+
+
 # END Operator
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class FilterCriteriaBase(DataClassJsonMixin):
-
     attribute_name: str
     attribute_value: str
+
 
 # END FilterCriteriaBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class FilterCriteriaDefaultsBase(DataClassJsonMixin):
-
     condition: Optional[Condition] = None
-    criterion: List['FilterCriteria'] = field(default_factory=list)
+    criterion: List["FilterCriteria"] = field(default_factory=list)
     operator: Optional[Operator] = None
+
 
 # END FilterCriteriaDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class FilterCriteria(FilterCriteriaDefaultsBase, FilterCriteriaBase):
-
     pass
+
 
 # END FilterCriteria

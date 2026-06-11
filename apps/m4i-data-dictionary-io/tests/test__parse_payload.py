@@ -26,21 +26,9 @@ def test__parse_payload_basic():
     """
 
     expected = [
-        build_field(
-            name="name",
-            dataset_qualified_name="example_dataset",
-            type_name="string",
-        ),
-        build_field(
-            name="age",
-            dataset_qualified_name="example_dataset",
-            type_name="integer",
-        ),
-        build_field(
-            name="email",
-            dataset_qualified_name="example_dataset",
-            type_name="null",
-        ),
+        build_field(name="name", dataset_qualified_name="example_dataset", type_name="string"),
+        build_field(name="age", dataset_qualified_name="example_dataset", type_name="integer"),
+        build_field(name="email", dataset_qualified_name="example_dataset", type_name="null"),
     ]
 
     parsed_payload = parse_payload(payload, "example_dataset")
@@ -63,11 +51,7 @@ def test__parse_payload_with_complex_type():
     """
 
     expected = [
-        build_field(
-            name="user",
-            dataset_qualified_name="example_dataset",
-            type_name="object",
-        ),
+        build_field(name="user", dataset_qualified_name="example_dataset", type_name="object"),
         build_field(
             name="name",
             dataset_qualified_name="example_dataset",
@@ -124,13 +108,7 @@ def test__parse_payload_with_nested_array():
     }
     """
 
-    expected = [
-        build_field(
-            name="users",
-            dataset_qualified_name="example_dataset",
-            type_name="array",
-        ),
-    ]
+    expected = [build_field(name="users", dataset_qualified_name="example_dataset", type_name="array")]
 
     parsed_payload = parse_payload(payload, "example_dataset")
 

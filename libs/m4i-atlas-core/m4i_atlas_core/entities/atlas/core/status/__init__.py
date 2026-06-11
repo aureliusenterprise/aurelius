@@ -1,1 +1,3 @@
-from .Status import *
+from .Status import Status
+
+__all__ = ["Status"]

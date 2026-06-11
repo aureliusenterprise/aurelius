@@ -1,44 +1,44 @@
 [
-  {
-    "id": 1,
-    "expressionVersion": 1,
-    "expression": "completeness('name')",
-    "qualifiedName": "m4i_collection--name",
-    "qualityDimension": "completeness",
-    "ruleTitle": "Collection has a name",
-    "ruleDescription": "A collection should have a name",
-    "compliantMessage": "This collection has a name",
-    "noncompliantMessage": "This collection should have a name",
-    "active": 1,
-    "type": "attribute",
-    "guid": "b7e35a21-90ef-43db-949b-8fedba5c1fec"
-  },
-  {
-    "id": 2,
-    "expressionVersion": 1,
-    "expression": "length('systems', 1)",
-    "qualifiedName": "m4i_collection--systems",
-    "qualityDimension": "completeness",
-    "ruleTitle": "Collection belongs to a system",
-    "ruleDescription": "A collection should belong to a system",
-    "compliantMessage": "This collection belongs to a system",
-    "noncompliantMessage": "This collection should belong to a system",
-    "active": 1,
-    "type": "relationship",
-    "guid": "198cbc37-3ec8-4eb0-a1a3-372240e37e29"
-  },
-  {
-    "id": 3,
-    "expressionVersion": 1,
-    "expression": "length('datasets', 1)",
-    "qualifiedName": "m4i_collection--datasets",
-    "qualityDimension": "completeness",
-    "ruleTitle": "Collection has a dataset",
-    "ruleDescription": "A collection should have at least one dataset",
-    "compliantMessage": "This collection has at least one dataset",
-    "noncompliantMessage": "This collection should have at least one dataset",
-    "active": 1,
-    "type": "relationship",
-    "guid": "69c6a273-9255-4454-ba81-e58cf1a1d055"
-  }
+    {
+        "active": 1,
+        "compliantMessage": "This collection has a name",
+        "expression": "completeness('name')",
+        "expressionVersion": 1,
+        "guid": "b7e35a21-90ef-43db-949b-8fedba5c1fec",
+        "id": 1,
+        "noncompliantMessage": "This collection should have a name",
+        "qualifiedName": "m4i_collection--name",
+        "qualityDimension": "completeness",
+        "ruleDescription": "A collection should have a name",
+        "ruleTitle": "Collection has a name",
+        "type": "attribute"
+    },
+    {
+        "active": 1,
+        "compliantMessage": "This collection belongs to a system",
+        "expression": "length('systems', 1)",
+        "expressionVersion": 1,
+        "guid": "198cbc37-3ec8-4eb0-a1a3-372240e37e29",
+        "id": 2,
+        "noncompliantMessage": "This collection should belong to a system",
+        "qualifiedName": "m4i_collection--systems",
+        "qualityDimension": "completeness",
+        "ruleDescription": "A collection should belong to a system",
+        "ruleTitle": "Collection belongs to a system",
+        "type": "relationship"
+    },
+    {
+        "active": 1,
+        "compliantMessage": "This collection has at least one dataset",
+        "expression": "length('datasets', 1)",
+        "expressionVersion": 1,
+        "guid": "69c6a273-9255-4454-ba81-e58cf1a1d055",
+        "id": 3,
+        "noncompliantMessage": "This collection should have at least one dataset",
+        "qualifiedName": "m4i_collection--datasets",
+        "qualityDimension": "completeness",
+        "ruleDescription": "A collection should have at least one dataset",
+        "ruleTitle": "Collection has a dataset",
+        "type": "relationship"
+    }
 ]

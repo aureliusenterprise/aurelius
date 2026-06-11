@@ -33,18 +33,9 @@ def test__filters_hop_by_hop_headers(header: str) -> None:
 @responses.activate
 def test__proxy_replaces_authorization_header(client: FlaskClient) -> None:
     """The incoming Bearer token is replaced with the App Search API key."""
-    responses.add(
-        responses.POST,
-        ALLOWED_SEARCH_URL,
-        status=200,
-        json={"results": []},
-    )
+    responses.add(responses.POST, ALLOWED_SEARCH_URL, status=200, json={"results": []})
 
-    client.post(
-        ALLOWED_SEARCH_PATH,
-        headers={"Authorization": "Bearer user-token"},
-        json={"query": "test"},
-    )
+    client.post(ALLOWED_SEARCH_PATH, headers={"Authorization": "Bearer user-token"}, json={"query": "test"})
 
     # Verify the outgoing request used the App Search key, not the user token
     assert len(responses.calls) == 1
@@ -58,12 +49,7 @@ def test__proxy_replaces_authorization_header(client: FlaskClient) -> None:
 @responses.activate
 def test__proxy_preserves_other_headers(client: FlaskClient) -> None:
     """Non-auth headers pass through to the backend."""
-    responses.add(
-        responses.POST,
-        ALLOWED_SEARCH_URL,
-        status=200,
-        json={"results": []},
-    )
+    responses.add(responses.POST, ALLOWED_SEARCH_URL, status=200, json={"results": []})
 
     client.post(
         ALLOWED_SEARCH_PATH,
@@ -91,12 +77,7 @@ def test__integration_hop_by_hop_headers_not_forwarded(client: FlaskClient) -> N
     so we verify that our custom hop-by-hop headers are filtered, not that the
     header is completely absent.
     """
-    responses.add(
-        responses.POST,
-        ALLOWED_SEARCH_URL,
-        status=200,
-        json={"ok": True},
-    )
+    responses.add(responses.POST, ALLOWED_SEARCH_URL, status=200, json={"ok": True})
 
     client.post(
         ALLOWED_SEARCH_PATH,
@@ -119,19 +100,11 @@ def test__integration_hop_by_hop_headers_not_forwarded(client: FlaskClient) -> N
 @responses.activate
 def test__integration_preserves_content_type(client: FlaskClient) -> None:
     """Content-Type header is preserved on the outgoing request."""
-    responses.add(
-        responses.POST,
-        ALLOWED_SEARCH_URL,
-        status=200,
-        json={"ok": True},
-    )
+    responses.add(responses.POST, ALLOWED_SEARCH_URL, status=200, json={"ok": True})
 
     client.post(
         ALLOWED_SEARCH_PATH,
-        headers={
-            "Authorization": "Bearer user-token",
-            "Content-Type": "application/json",
-        },
+        headers={"Authorization": "Bearer user-token", "Content-Type": "application/json"},
         json={"query": "test"},
     )
 
@@ -142,12 +115,7 @@ def test__integration_preserves_content_type(client: FlaskClient) -> None:
 @responses.activate
 def test__integration_preserves_custom_headers(client: FlaskClient) -> None:
     """Custom headers are forwarded to the backend."""
-    responses.add(
-        responses.POST,
-        ALLOWED_SEARCH_URL,
-        status=200,
-        json={"ok": True},
-    )
+    responses.add(responses.POST, ALLOWED_SEARCH_URL, status=200, json={"ok": True})
 
     client.post(
         ALLOWED_SEARCH_PATH,

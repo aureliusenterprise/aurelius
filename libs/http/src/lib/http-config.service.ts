@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 
 export interface HttpConfig {
-  production?: boolean;
+    production?: boolean;
 }
 
 export const HttpConfigService = new InjectionToken<HttpConfig>('HttpConfig');

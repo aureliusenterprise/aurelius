@@ -1,35 +1,35 @@
 .truncate {
-  max-width: 15rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
+    max-width: 15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
 }
 
 .business {
-  color: orange;
+    color: orange;
 }
 
 .technical {
-  color: blue;
+    color: blue;
 }
 
 .technical-process {
-  color: #00d1b2;
+    color: #00d1b2;
 }
 
 .meta {
-  color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 71%);
 }
 
 .breadcrumb ul {
-  margin-left: 0;
+    margin-left: 0;
 }
 
 .breadcrumb li {
-  margin-top: 0;
+    margin-top: 0;
 }
 
 ul {
-  margin-top: 0;
+    margin-top: 0;
 }

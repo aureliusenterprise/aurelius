@@ -1,12 +1,13 @@
 # Kafka-UI Helm Chart
 
-taken from https://github.com/provectus/kafka-ui
+taken from <https://github.com/provectus/kafka-ui>
 
-## Configuration
+## # Configuration
 
-Most of the Helm charts parameters are common, follow table describe unique parameters related to application configuration.
+Most of the Helm charts parameters are common, follow table describe unique parameters related to application
+configuration.
 
-### Kafka-UI parameters
+## # Kafka-UI parameters
 
 | Parameter                                | Description                                                                                                                                    | Default |
 | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
@@ -21,16 +22,22 @@ Most of the Helm charts parameters are common, follow table describe unique para
 | `networkPolicy.ingressRules.customRules` | Custom network ingress policy rules                                                                                                            | `[]`    |
 | `podLabels`                              | Extra labels for Kafka-UI pod                                                                                                                  | `{}`    |
 
-
-## Example
+## # Example
 
 To install Kafka-UI need to execute follow:
-``` bash
+
+````bash
 helm repo add kafka-ui https://provectus.github.io/kafka-ui
 helm install kafka-ui kafka-ui/kafka-ui --set envs.config.KAFKA_CLUSTERS_0_NAME=local --set envs.config.KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-```
+
+```text
+
 To connect to Kafka-UI web application need to execute:
-``` bash
+
+```bash
 kubectl port-forward svc/kafka-ui 8080:80
-```
+
+```text
+
 Open the `http://127.0.0.1:8080` on the browser to access Kafka-UI.
+````

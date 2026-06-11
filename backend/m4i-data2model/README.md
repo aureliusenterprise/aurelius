@@ -1,6 +1,7 @@
 # backend-data2model
 
-This application is a backend service that provides an API for converting a given dataset to an ArchiMate model. It supports the data2model application.
+This application is a backend service that provides an API for converting a given
+dataset to an ArchiMate model. It supports the data2model application.
 
 ## Installation
 

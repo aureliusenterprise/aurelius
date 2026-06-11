@@ -6,12 +6,7 @@ import { AboutRoutingModule } from './about-routing.module';
 import { AboutComponent } from './about.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    TranslateModule,
-    AboutRoutingModule,
-    FontAwesomeModule
-  ],
-  declarations: [AboutComponent]
+    imports: [CommonModule, TranslateModule, AboutRoutingModule, FontAwesomeModule],
+    declarations: [AboutComponent],
 })
 export class AboutModule {}

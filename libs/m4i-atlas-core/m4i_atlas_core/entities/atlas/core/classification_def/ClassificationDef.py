@@ -6,12 +6,12 @@ from dataclasses_json import LetterCase, dataclass_json
 from ..struct_def import StructDef
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ClassificationDef(StructDef):
-
     entity_types: List[str] = field(default_factory=list)
     sub_types: List[str] = field(default_factory=list)
     super_types: List[str] = field(default_factory=list)
+
 
 # END ClassificationDef

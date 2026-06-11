@@ -14,26 +14,28 @@ class RoundingMode(Enum):
     HALF_DOWN = "HALF_DOWN"
     HALF_EVEN = "HALF_EVEN"
     UNNECESSARY = "UNNECESSARY"
+
+
 # END RoundingMode
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class NumberFormat(DataClassJsonMixin):
-
     available_locales: List[str] = field(default_factory=list)
     currency: Optional[str] = None
-    currency_instance: Optional['NumberFormat'] = None
+    currency_instance: Optional["NumberFormat"] = None
     grouping_used: bool = False
-    instance: Optional['NumberFormat'] = None
-    integer_instance: Optional['NumberFormat'] = None
+    instance: Optional["NumberFormat"] = None
+    integer_instance: Optional["NumberFormat"] = None
     maximum_fraction_digits: Optional[int] = None
     maximum_integer_digits: Optional[int] = None
     minimum_fraction_digits: Optional[int] = None
     minimum_integer_digits: Optional[int] = None
-    number_instance: Optional['NumberFormat'] = None
+    number_instance: Optional["NumberFormat"] = None
     parse_integer_only: bool = False
-    percent_instance: Optional['NumberFormat'] = None
+    percent_instance: Optional["NumberFormat"] = None
     rounding_mode: RoundingMode = RoundingMode.UNNECESSARY
+
 
 # END NumberFormat

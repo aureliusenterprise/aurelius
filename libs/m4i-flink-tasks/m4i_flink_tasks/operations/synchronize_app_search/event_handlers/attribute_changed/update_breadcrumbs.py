@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Generator
+from typing import Any, Dict, Generator
 
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan
@@ -40,9 +40,7 @@ class EntityNameNotFoundError(SynchronizeAppSearchError):
 
 @retry(retry_strategy=ExponentialBackoff())
 def get_documents(
-    query: dict,
-    elastic: Elasticsearch,
-    index_name: str,
+    query: Dict[str, Any], elastic: Elasticsearch, index_name: str
 ) -> Generator[AppSearchDocument, None, None]:
     """
     Yield AppSearchDocument objects from Elasticsearch based on the given query.
@@ -107,10 +105,7 @@ def update_document_breadcrumb(
         breadcrumb_name = document.breadcrumbname
 
         if len(breadcrumb_guid) != len(breadcrumb_name):
-            logging.error(
-                "Breadcrumb for document %s is malformed. Skipping document update.",
-                document.guid,
-            )
+            logging.error("Breadcrumb for document %s is malformed. Skipping document update.", document.guid)
             continue
 
         try:
@@ -191,4 +186,6 @@ def handle_update_breadcrumbs(
         logging.error("Entity name not found for entity %s", entity_details.guid)
         raise EntityNameNotFoundError(entity_details.guid)
 
-    return update_document_breadcrumb(entity_details.guid, entity_name, elastic, index_name, updated_documents)
+    return update_document_breadcrumb(
+        entity_details.guid, entity_name, elastic, index_name, updated_documents
+    )

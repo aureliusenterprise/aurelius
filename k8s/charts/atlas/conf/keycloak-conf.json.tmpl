@@ -1,0 +1,10 @@
+{
+    "auth-server-url": "https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth/",
+    "autodetect-bearer-only": true,
+    "confidential-port": 0,
+    "principal-attribute": "preferred_username",
+    "public-client": true,
+    "realm": "m4i",
+    "resource": "m4i_public",
+    "ssl-required": "none"
+}

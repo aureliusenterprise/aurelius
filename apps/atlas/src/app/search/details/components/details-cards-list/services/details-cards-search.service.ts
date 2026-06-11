@@ -5,27 +5,27 @@ import { map } from 'rxjs/operators';
 import { SearchService } from '../../../../services/search/search.service';
 
 export abstract class DetailsCardsSearchService<
-  T extends AppSearchDocument,
-  P extends Partial<T> = T
+    T extends AppSearchDocument,
+    P extends Partial<T> = T,
 > extends SearchService<T, P> {
-  readonly isFilterActive$: Observable<boolean>;
+    readonly isFilterActive$: Observable<boolean>;
 
-  protected defaultQueryObject: AppSearchQuery<T, P>;
+    protected defaultQueryObject: AppSearchQuery<T, P>;
 
-  constructor(defaultQueryObject?: AppSearchQuery<T, P>) {
-    super(defaultQueryObject);
+    constructor(defaultQueryObject?: AppSearchQuery<T, P>) {
+        super(defaultQueryObject);
 
-    this.isFilterActive$ = this.queryObject$.pipe(
-      map((queryObject) => !isEqual(queryObject, this.defaultQueryObject))
-    );
-  }
+        this.isFilterActive$ = this.queryObject$.pipe(
+            map((queryObject) => !isEqual(queryObject, this.defaultQueryObject)),
+        );
+    }
 
-  reset() {
-    this.queryObject = this.defaultQueryObject;
-  }
+    reset() {
+        this.queryObject = this.defaultQueryObject;
+    }
 
-  protected updateDefaultQueryObject(queryObject: AppSearchQuery<T, P>) {
-    this.defaultQueryObject = queryObject;
-    this.queryObject = queryObject;
-  }
+    protected updateDefaultQueryObject(queryObject: AppSearchQuery<T, P>) {
+        this.defaultQueryObject = queryObject;
+        this.queryObject = queryObject;
+    }
 }

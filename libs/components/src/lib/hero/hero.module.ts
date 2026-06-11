@@ -5,8 +5,8 @@ import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
 import { HeroComponent } from './hero.component';
 
 @NgModule({
-  imports: [CommonModule, NgxPageScrollCoreModule, RouterModule],
-  declarations: [HeroComponent],
-  exports: [HeroComponent],
+    imports: [CommonModule, NgxPageScrollCoreModule, RouterModule],
+    declarations: [HeroComponent],
+    exports: [HeroComponent],
 })
 export class HeroModule {}

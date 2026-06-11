@@ -4,14 +4,8 @@ import { HasKeycloakRolePermissionDirective } from './has-keycloak-role-permissi
 import { KeycloakRolePermissionDirective } from './keycloak-role-permission.directive';
 
 @NgModule({
-  imports: [RepositoryModule],
-  declarations: [
-    KeycloakRolePermissionDirective,
-    HasKeycloakRolePermissionDirective,
-  ],
-  exports: [
-    KeycloakRolePermissionDirective,
-    HasKeycloakRolePermissionDirective,
-  ],
+    imports: [RepositoryModule],
+    declarations: [KeycloakRolePermissionDirective, HasKeycloakRolePermissionDirective],
+    exports: [KeycloakRolePermissionDirective, HasKeycloakRolePermissionDirective],
 })
 export class KeycloakRolePermissionModule {}

@@ -19,23 +19,13 @@ def propagate_relationship(
 ):
     for data_entity_guid in data_attribute_document["deriveddataentityguid"]:
         for dataset_guid in field_document["deriveddatasetguid"]:
-            if (
-                dataset_guid
-                not in atlas_dev_index[data_entity_guid]["deriveddatasetguid"]
-            ):
-                atlas_dev_index[data_entity_guid]["deriveddatasetguid"].append(
-                    dataset_guid
-                )
+            if dataset_guid not in atlas_dev_index[data_entity_guid]["deriveddatasetguid"]:
+                atlas_dev_index[data_entity_guid]["deriveddatasetguid"].append(dataset_guid)
                 atlas_dev_index[data_entity_guid]["deriveddataset"].append(
                     atlas_dev_index[dataset_guid]["name"]
                 )
-            if (
-                data_entity_guid
-                not in atlas_dev_index[dataset_guid]["deriveddataentityguid"]
-            ):
-                atlas_dev_index[dataset_guid]["deriveddataentityguid"].append(
-                    data_entity_guid
-                )
+            if data_entity_guid not in atlas_dev_index[dataset_guid]["deriveddataentityguid"]:
+                atlas_dev_index[dataset_guid]["deriveddataentityguid"].append(data_entity_guid)
                 atlas_dev_index[dataset_guid]["deriveddataentity"].append(
                     atlas_dev_index[data_entity_guid]["name"]
                 )
@@ -55,17 +45,13 @@ def connect_datasets_with_entities(atlas_dev_index: MutableMapping[str, Any]):
 
 def main():
     args = parse_args()
-    app_search_api_key = get_enterprise_search_key(
-        args.url, args.username, args.password
-    )
+    app_search_api_key = get_enterprise_search_key(args.url, args.username, args.password)
     app_search_client = AppSearch(args.url, bearer_auth=app_search_api_key)
     atlas_dev_documents = load_documents(Path("data/atlas-dev.json"))
     atlas_dev_index = index_documents(atlas_dev_documents)
     connect_datasets_with_entities(atlas_dev_index)
     index_all_documents(
-        app_search_client=app_search_client,
-        engine_name="atlas-dev",
-        documents=list(atlas_dev_index.values()),
+        app_search_client=app_search_client, engine_name="atlas-dev", documents=list(atlas_dev_index.values())
     )
 
 

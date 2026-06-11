@@ -2,57 +2,65 @@
 
 # Apache ZooKeeper packaged by Bitnami
 
-Apache ZooKeeper provides a reliable, centralized register of configuration data and services for distributed applications.
+Apache ZooKeeper provides a reliable, centralized register of configuration data and services for distributed
+applications.
 
 [Overview of Apache ZooKeeper](https://zookeeper.apache.org)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
-                           
-## TL;DR
+Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering
+are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
-```console
-$ helm repo add bitnami https://charts.bitnami.com/bitnami
-$ helm install my-release bitnami/zookeeper
-```
+## # TL;DR
 
-## Introduction
+````console
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-release bitnami/zookeeper
 
-This chart bootstraps a [ZooKeeper](https://github.com/bitnami/containers/tree/main/bitnami/zookeeper) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+```text
 
-Bitnami charts can be used with [Kubeapps](https://kubeapps.dev/) for deployment and management of Helm Charts in clusters.
+## # Introduction
 
-## Prerequisites
+This chart bootstraps a [ZooKeeper](<https://github.com/bitnami/containers/tree/main/bitnami/zookeeper>)
+deployment on a [Kubernetes](<https://kubernetes.io>) cluster using the [Helm](<https://helm.sh>) package manager.
+
+Bitnami charts can be used with [Kubeapps](<https://kubeapps.dev/>) for deployment and management of Helm Charts
+in clusters.
+
+## # Prerequisites
 
 - Kubernetes 1.19+
 - Helm 3.2.0+
 - PV provisioner support in the underlying infrastructure
 
-## Installing the Chart
+## # Installing the Chart
 
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add bitnami https://charts.bitnami.com/bitnami
-$ helm install my-release bitnami/zookeeper
-```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-release bitnami/zookeeper
 
-These commands deploy ZooKeeper on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
+```text
+
+These commands deploy ZooKeeper on the Kubernetes cluster in the default configuration. The
+[Parameters](#parameters) section lists the parameters that can be configured during installation.
 
 > **Tip**: List all releases using `helm list`
 
-## Uninstalling the Chart
+## # Uninstalling the Chart
 
 To uninstall/delete the `my-release` deployment:
 
 ```console
-$ helm delete my-release
-```
+helm delete my-release
+
+```text
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
-## Parameters
+## # Parameters
 
-### Global parameters
+## # Global parameters
 
 | Name                      | Description                                     | Value |
 | ------------------------- | ----------------------------------------------- | ----- |
@@ -60,8 +68,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `global.imagePullSecrets` | Global Docker registry secret names as an array | `[]`  |
 | `global.storageClass`     | Global StorageClass for Persistent Volume(s)    | `""`  |
 
-
-### Common parameters
+## # Common parameters
 
 | Name                     | Description                                                                                  | Value           |
 | ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
@@ -77,8 +84,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `diagnosticMode.command` | Command to override all containers in the statefulset                                        | `["sleep"]`     |
 | `diagnosticMode.args`    | Args to override all containers in the statefulset                                           | `["infinity"]`  |
 
-
-### ZooKeeper chart parameters
+## # ZooKeeper chart parameters
 
 | Name                          | Description                                                                                                                | Value                   |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
@@ -124,8 +130,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `command`                     | Override default container command (useful when using custom images)                                                       | `["/scripts/setup.sh"]` |
 | `args`                        | Override default container args (useful when using custom images)                                                          | `[]`                    |
 
-
-### Statefulset parameters
+## # Statefulset parameters
 
 | Name                                    | Description                                                                                                                                                                                       | Value           |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
@@ -191,8 +196,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `pdb.minAvailable`                      | Minimum available ZooKeeper replicas                                                                                                                                                              | `""`            |
 | `pdb.maxUnavailable`                    | Maximum unavailable ZooKeeper replicas                                                                                                                                                            | `1`             |
 
-
-### Traffic Exposure parameters
+## # Traffic Exposure parameters
 
 | Name                                        | Description                                                                             | Value       |
 | ------------------------------------------- | --------------------------------------------------------------------------------------- | ----------- |
@@ -217,8 +221,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `networkPolicy.enabled`                     | Specifies whether a NetworkPolicy should be created                                     | `false`     |
 | `networkPolicy.allowExternal`               | Don't require client label for connections                                              | `true`      |
 
-
-### Other Parameters
+## # Other Parameters
 
 | Name                                          | Description                                                            | Value   |
 | --------------------------------------------- | ---------------------------------------------------------------------- | ------- |
@@ -227,8 +230,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `serviceAccount.automountServiceAccountToken` | Allows auto mount of ServiceAccountToken on the serviceAccount created | `true`  |
 | `serviceAccount.annotations`                  | Additional custom annotations for the ServiceAccount                   | `{}`    |
 
-
-### Persistence parameters
+## # Persistence parameters
 
 | Name                                   | Description                                                                    | Value               |
 | -------------------------------------- | ------------------------------------------------------------------------------ | ------------------- |
@@ -243,8 +245,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `persistence.dataLogDir.existingClaim` | Provide an existing `PersistentVolumeClaim` for ZooKeeper's data log directory | `""`                |
 | `persistence.dataLogDir.selector`      | Selector to match an existing Persistent Volume for ZooKeeper's data log PVC   | `{}`                |
 
-
-### Volume Permissions parameters
+## # Volume Permissions parameters
 
 | Name                                                   | Description                                                                     | Value                   |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------- | ----------------------- |
@@ -258,8 +259,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `volumePermissions.resources.requests`                 | Init container volume-permissions resource requests                             | `{}`                    |
 | `volumePermissions.containerSecurityContext.runAsUser` | User ID for the init container                                                  | `0`                     |
 
-
-### Metrics parameters
+## # Metrics parameters
 
 | Name                                       | Description                                                                           | Value       |
 | ------------------------------------------ | ------------------------------------------------------------------------------------- | ----------- |
@@ -283,8 +283,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `metrics.prometheusRule.additionalLabels`  | Additional labels that can be used so PrometheusRule will be discovered by Prometheus | `{}`        |
 | `metrics.prometheusRule.rules`             | PrometheusRule definitions                                                            | `[]`        |
 
-
-### TLS/SSL parameters
+## # TLS/SSL parameters
 
 | Name                                      | Description                                                                                        | Value                                                                 |
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
@@ -317,46 +316,62 @@ The command removes all the Kubernetes components associated with the chart and 
 | `tls.resources.limits`                    | The resources limits for the TLS init container                                                    | `{}`                                                                  |
 | `tls.resources.requests`                  | The requested resources for the TLS init container                                                 | `{}`                                                                  |
 
-
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```console
 $ helm install my-release \
   --set auth.clientUser=newUser \
     bitnami/zookeeper
-```
+
+```text
 
 The above command sets the ZooKeeper user to `newUser`.
 
-> NOTE: Once this chart is deployed, it is not possible to change the application's access credentials, such as usernames or passwords, using Helm. To change these application credentials after deployment, delete any persistent volumes (PVs) used by the chart and re-deploy it, or use the application's built-in administrative tools if available.
+> NOTE: Once this chart is deployed, it is not possible to change the application's access credentials, such
+> as usernames or passwords, using Helm. To change these application credentials after deployment, delete any
+> persistent volumes (PVs) used by the chart and re-deploy it, or use the application's built-in
+> administrative
+> tools if available.
 
-Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
+Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the
+chart. For example,
 
 ```console
-$ helm install my-release -f values.yaml bitnami/zookeeper
-```
+helm install my-release -f values.yaml bitnami/zookeeper
+
+```text
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
 
-## Configuration and installation details
+## # Configuration and installation details
 
-### [Rolling vs Immutable tags](https://docs.bitnami.com/containers/how-to/understand-rolling-tags-containers/)
+## # [Rolling vs Immutable tags](https://docs.bitnami.com/containers/how-to/understand-rolling-tags-containers/)
 
-It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
+It is strongly recommended to use immutable tags in a production environment. This ensures your deployment
+does not change automatically if the same tag is updated with a different image.
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+Bitnami will release a new chart updating its containers if a new version of the main container, significant
+changes, or critical vulnerabilities exist.
 
-### Configure log level
+## # Configure log level
 
-You can configure the ZooKeeper log level using the `ZOO_LOG_LEVEL` environment variable or the parameter `logLevel`. By default, it is set to `ERROR` because each use of the liveness probe and the readiness probe produces an `INFO` message on connection and a `WARN` message on disconnection, generating a high volume of noise in your logs.
+You can configure the ZooKeeper log level using the `ZOO_LOG_LEVEL` environment variable or the parameter
+`logLevel`. By default, it is set to `ERROR` because each use of the liveness probe and the readiness probe
+produces an `INFO` message on connection and a `WARN` message on disconnection, generating a high volume of
+noise in your logs.
 
 In order to remove that log noise so levels can be set to 'INFO', two changes must be made.
 
-First, ensure that you are not getting metrics via the deprecated pattern of polling 'mntr' on the ZooKeeper client port. The preferred method of polling for Apache ZooKeeper metrics is the ZooKeeper metrics server. This is supported in this chart when setting `metrics.enabled` to `true`.
+First, ensure that you are not getting metrics via the deprecated pattern of polling 'mntr' on the ZooKeeper
+client port. The preferred method of polling for Apache ZooKeeper metrics is the ZooKeeper metrics server.
+This is supported in this chart when setting `metrics.enabled` to `true`.
 
-Second, to avoid the connection/disconnection messages from the probes, you can set custom values for these checks which direct them to the ZooKeeper Admin Server instead of the client port. By default, an Admin Server will be started that listens on `localhost` at port `8080`. The following is an example of this use of the Admin Server for probes:
+Second, to avoid the connection/disconnection messages from the probes, you can set custom values for these
+checks which direct them to the ZooKeeper Admin Server instead of the client port. By default, an Admin Server
+will be started that listens on `localhost` at port `8080`. The following is an example of this use of the
+Admin Server for probes:
 
-```
+```text
 livenessProbe:
   enabled: false
 readinessProbe:
@@ -377,13 +392,17 @@ customReadinessProbe:
   timeoutSeconds: 5
   successThreshold: 1
   failureThreshold: 6
-```
 
-You can also set the log4j logging level and what log appenders are turned on, by using `ZOO_LOG4J_PROP` set inside of conf/log4j.properties as zookeeper.root.logger by default to
+```text
+
+You can also set the log4j logging level and what log appenders are turned on, by using `ZOO_LOG4J_PROP` set
+inside of conf/log4j.properties as zookeeper.root.logger by default to
 
 ```console
 zookeeper.root.logger=INFO, CONSOLE
-```
+
+```text
+
 the available appender is
 
 - CONSOLE
@@ -391,63 +410,86 @@ the available appender is
 - RFAAUDIT
 - TRACEFILE
 
-## Persistence
+## # Persistence
 
-The [Bitnami ZooKeeper](https://github.com/bitnami/containers/tree/main/bitnami/zookeeper) image stores the ZooKeeper data and configurations at the `/bitnami/zookeeper` path of the container.
+The [Bitnami ZooKeeper](<https://github.com/bitnami/containers/tree/main/bitnami/zookeeper>) image stores the
+ZooKeeper data and configurations at the `/bitnami/zookeeper` path of the container.
 
-Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and minikube. See the [Parameters](#parameters) section to configure the PVC or to disable persistence.
+Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and
+minikube. See the [Parameters](#parameters) section to configure the PVC or to disable persistence.
 
-If you encounter errors when working with persistent volumes, refer to our [troubleshooting guide for persistent volumes](https://docs.bitnami.com/kubernetes/faq/troubleshooting/troubleshooting-persistence-volumes/).
+If you encounter errors when working with persistent volumes, refer to our [troubleshooting guide for
+persistent
+volumes](<https://docs.bitnami.com/kubernetes/faq/troubleshooting/troubleshooting-persistence-volumes/>).
 
-### Adjust permissions of persistent volume mountpoint
+## # Adjust permissions of persistent volume mountpoint
 
-As the image run as non-root by default, it is necessary to adjust the ownership of the persistent volume so that the container can write data into it.
+As the image run as non-root by default, it is necessary to adjust the ownership of the persistent volume so
+that the container can write data into it.
 
-By default, the chart is configured to use Kubernetes Security Context to automatically change the ownership of the volume. However, this feature does not work in all Kubernetes distributions.
-As an alternative, this chart supports using an initContainer to change the ownership of the volume before mounting it in the final destination.
+By default, the chart is configured to use Kubernetes Security Context to automatically change the ownership
+of the volume. However, this feature does not work in all Kubernetes distributions.
+As an alternative, this chart supports using an initContainer to change the ownership of the volume before
+mounting it in the final destination.
 
 You can enable this initContainer by setting `volumePermissions.enabled` to `true`.
 
-### Configure the data log directory
+## # Configure the data log directory
 
-You can use a dedicated device for logs (instead of using the data directory) to help avoiding competition between logging and snaphots. To do so, set the `dataLogDir` parameter with the path to be used for writing transaction logs. Alternatively, set this parameter with an empty string and it will result in the log being written to the data directory (Zookeeper's default behavior).
+You can use a dedicated device for logs (instead of using the data directory) to help avoiding competition
+between logging and snaphots. To do so, set the `dataLogDir` parameter with the path to be used for writing
+transaction logs. Alternatively, set this parameter with an empty string and it will result in the log being
+written to the data directory (Zookeeper's default behavior).
 
-When using a dedicated device for logs, you can use a PVC to persist the logs. To do so, set `persistence.enabled` to `true`. See the [Persistence Parameters](#persistence-parameters) section for more information.
+When using a dedicated device for logs, you can use a PVC to persist the logs. To do so, set
+`persistence.enabled` to `true`. See the [Persistence Parameters](#persistence-parameters) section for more
+information.
 
-### Set pod affinity
+## # Set pod affinity
 
-This chart allows you to set custom pod affinity using the `affinity` parameter. Find more information about pod affinity in the [Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
+This chart allows you to set custom pod affinity using the `affinity` parameter. Find more information about
+pod affinity in the [Kubernetes
+documentation](<https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity>).
 
-As an alternative, you can use any of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/master/bitnami/common#affinities) chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
+As an alternative, you can use any of the preset configurations for pod affinity, pod anti-affinity, and node
+affinity available at the
+[bitnami/common](<https://github.com/bitnami/charts/tree/master/bitnami/common#affinities>) chart. To do so, set
+the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
 
-## Troubleshooting
+## # Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to Bitnami's Helm charts in [this
+troubleshooting guide](<https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues>).
 
-## Upgrading
+## # Upgrading
 
-### To 10.0.0
+## # To 10.0.0
 
 This new version of the chart adds support for server-server authentication.
-The chart previously supported client-server authentication, to avioud confusion, the previous parameters have been renamed from `auth.*` to `auth.client.*`.
+The chart previously supported client-server authentication, to avioud confusion, the previous parameters have
+been renamed from `auth.*` to `auth.client.*`.
 
-### To 9.0.0
+## # To 9.0.0
 
-This new version of the chart includes the new ZooKeeper major version 3.8.0. Upgrade compatibility is not guaranteed.
+This new version of the chart includes the new ZooKeeper major version 3.8.0. Upgrade compatibility is not
+guaranteed.
 
-### To 8.0.0
+## # To 8.0.0
 
-This major release renames several values in this chart and adds missing features, in order to be inline with the rest of assets in the Bitnami charts repository.
+This major release renames several values in this chart and adds missing features, in order to be inline with
+the rest of assets in the Bitnami charts repository.
 
 Affected values:
 
 - `allowAnonymousLogin` is deprecated.
-- `containerPort`, `tlsContainerPort`, `followerContainerPort` and `electionContainerPort` have been regrouped under the `containerPorts` map.
-- `service.port`, `service.tlsClientPort`, `service.followerPort`, and  `service.electionPort` have been regrouped under the `service.ports` map.
+- `containerPort`, `tlsContainerPort`, `followerContainerPort` and `electionContainerPort` have been regrouped
+  under the `containerPorts` map.
+- `service.port`, `service.tlsClientPort`, `service.followerPort`, and `service.electionPort` have been
+  regrouped under the `service.ports` map.
 - `updateStrategy` (string) and `rollingUpdatePartition` are regrouped under the `updateStrategy` map.
 - `podDisruptionBudget.*` parameters are renamed to `pdb.*`.
 
-### To 7.0.0
+## # To 7.0.0
 
 This new version renames the parameters used to configure TLS for both client and quorum.
 
@@ -464,49 +506,65 @@ This new version renames the parameters used to configure TLS for both client an
 - `service.tls.quorum_keystore_password` is renamed to `tls.quorum.keystorePassword`
 - `service.tls.quorum_truststore_password` is renamed to `tls.quorum.truststorePassword`
 
-### To 6.1.0
+## # To 6.1.0
 
-This version introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/master/bitnami/common#bitnami-common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
+This version introduces `bitnami/common`, a
+[library chart](<https://helm.sh/docs/topics/library_charts/#helm>) as a dependency.
+More documentation about this new utility could be found
+[Bitnami Common Library
+Chart](<https://github.com/bitnami/charts/tree/master/bitnami/common#bitnami-common-library-chart>).
+Please make sure that you have updated the chart dependencies before executing any upgrade.
 
-### To 6.0.0
+## # To 6.0.0
 
-[On November 13, 2020, Helm v2 support was formally finished](https://github.com/helm/charts#status-of-the-project), this major version is the result of the required changes applied to the Helm Chart to be able to incorporate the different features added in Helm v3 and to be consistent with the Helm project itself regarding the Helm v2 EOL.
+[On November 13, 2020, Helm v2 support was formally
+finished](<https://github.com/helm/charts#status-of-the-project>), this major version is the result of the
+required changes applied to the Helm Chart to be able to incorporate the different features added in Helm v3
+and to be consistent with the Helm project itself regarding the Helm v2 EOL.
 
-[Learn more about this change and related upgrade considerations](https://docs.bitnami.com/kubernetes/infrastructure/zookeeper/administration/upgrade-helm3/).
+[Learn more about this change and related upgrade
+considerations](<https://docs.bitnami.com/kubernetes/infrastructure/zookeeper/administration/upgrade-helm3/>).
 
-### To 5.21.0
+## # To 5.21.0
 
 A couple of parameters related to Zookeeper metrics were renamed or disappeared in favor of new ones:
 
 - `metrics.port` is renamed to `metrics.containerPort`.
 - `metrics.annotations` is deprecated in favor of `metrics.service.annotations`.
 
-### To 3.0.0
+## # To 3.0.0
 
-This new version of the chart includes the new ZooKeeper major version 3.5.5. Note that to perform an automatic upgrade
-of the application, each node will need to have at least one snapshot file created in the data directory. If not, the
-new version of the application won't be able to start the service. Please refer to [ZOOKEEPER-3056](https://issues.apache.org/jira/browse/ZOOKEEPER-3056)
+This new version of the chart includes the new ZooKeeper major version 3.5.5. Note that to perform an
+automatic upgrade
+of the application, each node will need to have at least one snapshot file created in the data directory. If
+not, the
+new version of the application won't be able to start the service. Please refer to
+[ZOOKEEPER-3056](<https://issues.apache.org/jira/browse/ZOOKEEPER-3056>)
 in order to find ways to workaround this issue in case you are facing it.
 
-### To 2.0.0
+## # To 2.0.0
 
 Backwards compatibility is not guaranteed unless you modify the labels used on the chart's statefulsets.
-Use the workaround below to upgrade from versions previous to 2.0.0. The following example assumes that the release name is `zookeeper`:
+Use the workaround below to upgrade from versions previous to 2.0.0. The following example assumes that the
+release name is `zookeeper`:
 
 ```console
-$ kubectl delete statefulset zookeeper-zookeeper --cascade=false
-```
+kubectl delete statefulset zookeeper-zookeeper --cascade=false
 
-### To 1.0.0
+```text
+
+## # To 1.0.0
 
 Backwards compatibility is not guaranteed unless you modify the labels used on the chart's deployments.
-Use the workaround below to upgrade from versions previous to 1.0.0. The following example assumes that the release name is zookeeper:
+Use the workaround below to upgrade from versions previous to 1.0.0. The following example assumes that the
+release name is zookeeper:
 
 ```console
-$ kubectl delete statefulset zookeeper-zookeeper --cascade=false
-```
+kubectl delete statefulset zookeeper-zookeeper --cascade=false
 
-## License
+```text
+
+## # License
 
 Copyright &copy; 2022 Bitnami
 
@@ -514,10 +572,11 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    <http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+````

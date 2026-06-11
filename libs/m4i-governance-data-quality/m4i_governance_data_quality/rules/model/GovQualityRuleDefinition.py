@@ -2,7 +2,8 @@ from dataclasses import dataclass
 
 from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[arg-type]
 @dataclass
 class GovQualityRuleDefinition(DataClassJsonMixin):
     active: bool
@@ -17,4 +18,6 @@ class GovQualityRuleDefinition(DataClassJsonMixin):
     rule_title: str
     type: str
     guid: str
+
+
 # END GovQualityRuleDefinition

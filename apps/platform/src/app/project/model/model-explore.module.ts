@@ -14,20 +14,20 @@ import { ModelExploreResolver } from './model-explore.resolver';
 import { ModelExploreService } from './model-explore.service';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ArchimateIconModule,
-    FontAwesomeModule,
-    TranslateModule,
-    ModelExploreRoutingModule,
-    FormsModule,
-    ProjectPermissionModule,
-    BranchPermissionModule,
-    RepositoryModule,
-    SelectModule,
-    Modelview2Module
-  ],
-  declarations: [ModelExploreComponent],
-  providers: [ModelExploreGuard, ModelExploreResolver, ModelExploreService]
+    imports: [
+        CommonModule,
+        ArchimateIconModule,
+        FontAwesomeModule,
+        TranslateModule,
+        ModelExploreRoutingModule,
+        FormsModule,
+        ProjectPermissionModule,
+        BranchPermissionModule,
+        RepositoryModule,
+        SelectModule,
+        Modelview2Module,
+    ],
+    declarations: [ModelExploreComponent],
+    providers: [ModelExploreGuard, ModelExploreResolver, ModelExploreService],
 })
 export class ModelExploreModule {}

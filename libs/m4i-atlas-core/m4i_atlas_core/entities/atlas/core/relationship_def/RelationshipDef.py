@@ -14,34 +14,36 @@ class RelationshipCategory(Enum):
     ASSOCIATION = "ASSOCIATION"
     AGGREGATION = "AGGREGATION"
     COMPOSITION = "COMPOSITION"
+
+
 # END RelationshipCategory
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class RelationshipDefBase(BaseTypeDefBase):
-
     end_def1: RelationshipEndDef
     end_def2: RelationshipEndDef
+
 
 # END RelationshipDefBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class RelationshipDefDefaultsBase(BaseTypeDefDefaultsBase):
-
     propagate_tags: PropagateTags = PropagateTags.NONE
     relationship_category: RelationshipCategory = RelationshipCategory.ASSOCIATION
     relationship_label: Optional[str] = None
 
+
 # END RelationshipDefDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class RelationshipDef(StructDef, RelationshipDefDefaultsBase, RelationshipDefBase):
-
     pass
+
 
 # END RelationshipDef

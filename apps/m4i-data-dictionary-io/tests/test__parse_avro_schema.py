@@ -36,21 +36,9 @@ def test__parse_avro_schema_basic():
     """
 
     expected = [
-        build_field(
-            name="name",
-            dataset_qualified_name="example_dataset",
-            type_name="string",
-        ),
-        build_field(
-            name="age",
-            dataset_qualified_name="example_dataset",
-            type_name="int",
-        ),
-        build_field(
-            name="email",
-            dataset_qualified_name="example_dataset",
-            type_name="null | string",
-        ),
+        build_field(name="name", dataset_qualified_name="example_dataset", type_name="string"),
+        build_field(name="age", dataset_qualified_name="example_dataset", type_name="int"),
+        build_field(name="email", dataset_qualified_name="example_dataset", type_name="null | string"),
     ]
 
     parsed_schema = parse_avro_schema(avro_schema, "example_dataset")
@@ -120,21 +108,9 @@ def test__parse_avro_schema_with_nested_fields():
     """
 
     expected = [
-        build_field(
-            name="name",
-            dataset_qualified_name="example_dataset",
-            type_name="string",
-        ),
-        build_field(
-            name="age",
-            dataset_qualified_name="example_dataset",
-            type_name="int",
-        ),
-        build_field(
-            name="address",
-            dataset_qualified_name="example_dataset",
-            type_name="Address",
-        ),
+        build_field(name="name", dataset_qualified_name="example_dataset", type_name="string"),
+        build_field(name="age", dataset_qualified_name="example_dataset", type_name="int"),
+        build_field(name="address", dataset_qualified_name="example_dataset", type_name="Address"),
         build_field(
             name="street",
             dataset_qualified_name="example_dataset",
@@ -174,20 +150,10 @@ def test__parse_avro_schema_with_union_types():
     """
 
     expected = [
+        build_field(name="name", dataset_qualified_name="example_dataset", type_name="string"),
+        build_field(name="age", dataset_qualified_name="example_dataset", type_name="null | int"),
         build_field(
-            name="name",
-            dataset_qualified_name="example_dataset",
-            type_name="string",
-        ),
-        build_field(
-            name="age",
-            dataset_qualified_name="example_dataset",
-            type_name="null | int",
-        ),
-        build_field(
-            name="preferences",
-            dataset_qualified_name="example_dataset",
-            type_name="map<null | string>",
+            name="preferences", dataset_qualified_name="example_dataset", type_name="map<null | string>"
         ),
         build_field(
             name="preferences_value",
@@ -221,16 +187,8 @@ def test__parse_avro_schema_with_array_types():
     """
 
     expected = [
-        build_field(
-            name="name",
-            dataset_qualified_name="example_dataset",
-            type_name="string",
-        ),
-        build_field(
-            name="tags",
-            dataset_qualified_name="example_dataset",
-            type_name="array<string>",
-        ),
+        build_field(name="name", dataset_qualified_name="example_dataset", type_name="string"),
+        build_field(name="tags", dataset_qualified_name="example_dataset", type_name="array<string>"),
         build_field(
             name="tags_item",
             dataset_qualified_name="example_dataset",

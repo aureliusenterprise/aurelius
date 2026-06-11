@@ -8,55 +8,53 @@ import { ResultsComponent } from './results/results.component';
 import { SearchComponent } from './search.component';
 
 const childRoutes: Routes = [
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'browse'
-  },
-  {
-    path: 'browse',
-    component: BrowseComponent
-  },
-  {
-    path: 'results',
-    component: ResultsComponent,
-    resolve: { query: QueryResolver },
-    runGuardsAndResolvers: 'paramsOrQueryParamsChange'
-  },
-  {
-    path: 'details',
-    loadChildren: () =>
-      import('./details/details.module').then(m => m.DetailsModule)
-  },
-  {
-    path: 'create-entity',
-    component: CreateEntityComponent
-  },
-  {
-    path: 'edit-entity',
-    loadChildren: () =>
-      import('./edit-entity/edit-entity.module').then(m => m.EditEntityModule)
-  },
-  {
-    path: '**',
-    pathMatch: 'full',
-    redirectTo: 'browse'
-  }
+    {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'browse',
+    },
+    {
+        path: 'browse',
+        component: BrowseComponent,
+    },
+    {
+        path: 'results',
+        component: ResultsComponent,
+        resolve: { query: QueryResolver },
+        runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+    },
+    {
+        path: 'details',
+        loadChildren: () => import('./details/details.module').then((m) => m.DetailsModule),
+    },
+    {
+        path: 'create-entity',
+        component: CreateEntityComponent,
+    },
+    {
+        path: 'edit-entity',
+        loadChildren: () => import('./edit-entity/edit-entity.module').then((m) => m.EditEntityModule),
+    },
+    {
+        path: '**',
+        pathMatch: 'full',
+        redirectTo: 'browse',
+    },
 ];
 
 const routes: Routes = [
-  Shell.childRoutes([
-    {
-      path: '',
-      component: SearchComponent,
-      children: childRoutes
-    }
-  ])
+    Shell.childRoutes([
+        {
+            path: '',
+            component: SearchComponent,
+            children: childRoutes,
+        },
+    ]),
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-  providers: [QueryResolver]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
+    providers: [QueryResolver],
 })
 export class SearchRoutingModule {}

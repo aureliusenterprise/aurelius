@@ -1,1 +1,1 @@
-from .identity import *
+from .identity import T as T, identity as identity

@@ -8,40 +8,37 @@ from ..base_object import BaseObject
 from ..ToAtlasConvertible import ToAtlasConvertible
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class SourceBase(BaseObject):
     name: str
+
+
 # END SourceBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class SourceDefaultsBase(DataClassJsonMixin):
     hash_code: Optional[str] = None
     branch: Optional[str] = None
+
+
 # END SourceDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
-class Source(
-    SourceDefaultsBase,
-    SourceBase,
-    ToAtlasConvertible[BusinessSource]
-):
+class Source(SourceDefaultsBase, SourceBase, ToAtlasConvertible[BusinessSource]):
     def convert_to_atlas(self) -> BusinessSource:
         """
         Returns a corresponding Atlas `BusinessSource` instance.
         """
 
-        attributes = BusinessSourceAttributes(
-            name=self.name,
-            qualified_name=self._qualified_name(),
-        )
+        attributes = BusinessSourceAttributes(name=self.name, qualified_name=self._qualified_name())
 
         entity = BusinessSource(
-            attributes=attributes,
+            attributes=attributes  # type: ignore
         )
 
         return entity
@@ -52,5 +49,8 @@ class Source(
         Returns the qualified name of the entity based on its `name`.
         """
         return self.name
+
     # END _qualified_name
+
+
 # END Source

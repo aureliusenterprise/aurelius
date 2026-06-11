@@ -9,21 +9,21 @@ import { SuggestionsComponent } from './suggestions.component';
 import { SuggestionsService } from './suggestions.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ValidationResultModule } from '../validation-result/validation-result.module';
-import { Modelview2Module} from '@models4insight/modelview2'
+import { Modelview2Module } from '@models4insight/modelview2';
 @NgModule({
-  imports: [
-    ApiModule,
-    CommonModule,
-    SuggestionsRoutingModule,
-    FormsModule,
-    HoldableModule,
-    ReactiveFormsModule,
-    Modelview2Module,
-    SortableTableShellModule,
-    FontAwesomeModule,
-    ValidationResultModule
-  ],
-  declarations: [SuggestionsComponent],
-  providers: [SuggestionsService]
+    imports: [
+        ApiModule,
+        CommonModule,
+        SuggestionsRoutingModule,
+        FormsModule,
+        HoldableModule,
+        ReactiveFormsModule,
+        Modelview2Module,
+        SortableTableShellModule,
+        FontAwesomeModule,
+        ValidationResultModule,
+    ],
+    declarations: [SuggestionsComponent],
+    providers: [SuggestionsService],
 })
 export class SuggestionsModule {}

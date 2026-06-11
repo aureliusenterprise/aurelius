@@ -2,39 +2,36 @@ replicaCount: 1
 enabled: true
 
 image:
-  registry: docker.io
-  repository: provectuslabs/kafka-ui
-  pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+    registry: docker.io
+    repository: provectuslabs/kafka-ui
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: 'latest'
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: ''
+fullnameOverride: ''
 
 serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ''
 
-existingConfigMap: ""
-yamlApplicationConfig:
-  {}
-yamlApplicationConfigConfigMap:
-  {}
-existingSecret: ""
+existingConfigMap: ''
+yamlApplicationConfig: {}
+yamlApplicationConfigConfigMap: {}
+existingSecret: ''
 envs:
-  secret: {}
-  config:
-    SERVER_SERVLET_CONTEXT_PATH_PARTIAL: /kafka-ui
-    JAVA_OPTS: "-Djava.net.preferIPv4Stack=true"
-    SECURITY_BASIC_ENABLED: "true"
-    AUTH_TYPE: OAUTH2
-
+    secret: {}
+    config:
+        SERVER_SERVLET_CONTEXT_PATH_PARTIAL: /kafka-ui
+        JAVA_OPTS: '-Djava.net.preferIPv4Stack=true'
+        SECURITY_BASIC_ENABLED: 'true'
+        AUTH_TYPE: OAUTH2
 
 # networkPolicy:
 #   enabled: false
@@ -60,24 +57,22 @@ envs:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext:
-  {}
-  # fsGroup: 2000
+podSecurityContext: {}
+    # fsGroup: 2000
 
-securityContext:
-  {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
 
 service:
-  type: ClusterIP
-  port: 8080
-  # if you want to force a specific nodePort. Must be use with service.type=NodePort
-  # nodePort:
+    type: ClusterIP
+    port: 8080
+    # if you want to force a specific nodePort. Must be use with service.type=NodePort
+    # nodePort:
 
 # # Ingress configuration
 # ingress:
@@ -109,21 +104,20 @@ service:
 #   # Http paths to add to the Ingress after the default path
 #   succeedingPaths: []
 
-resources:
-  {}
-  # limits:
-  #   cpu: 200m
-  #   memory: 512Mi
-  # requests:
-  #   cpu: 200m
-  #   memory: 256Mi
+resources: {}
+    # limits:
+    #   cpu: 200m
+    #   memory: 512Mi
+    # requests:
+    #   cpu: 200m
+    #   memory: 256Mi
 
 autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 1
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 1
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 

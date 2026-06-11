@@ -8,16 +8,16 @@ import { getHttpClient } from '../utils';
  * Retrieve a list of projects the given user owns or has permission to access
  */
 export function getUserProjects(
-  /** The username of the user for whom to retrieve the projects */
-  userId: string,
-  /** Optional parameters for the get user projects operation */
-  { forceUpdate }: GetOptions = {}
+    /** The username of the user for whom to retrieve the projects */
+    userId: string,
+    /** Optional parameters for the get user projects operation */
+    { forceUpdate }: GetOptions = {},
 ): Observable<Project[]> {
-  const http = getHttpClient();
+    const http = getHttpClient();
 
-  validateRequiredArguments(arguments, 'getUserProjects');
+    validateRequiredArguments(arguments, 'getUserProjects');
 
-  const path = `${repositoryApiBasePath}/project/user/${userId}`;
+    const path = `${repositoryApiBasePath}/project/user/${userId}`;
 
-  return http.authorize().cache(forceUpdate).get<Project[]>(path);
+    return http.authorize().cache(forceUpdate).get<Project[]>(path);
 }

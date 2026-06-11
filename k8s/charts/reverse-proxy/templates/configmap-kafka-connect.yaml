@@ -4,4 +4,4 @@ metadata:
   name: cm-reverse-proxy-configs-kafka-connect-conf
 data:
   kafka-connect.conf: |
-{{ tpl ( .Files.Get "conf.d/kafka-connect.yaml" ) . | indent 4}}
+{{ tpl ( .Files.Get "conf.d/kafka-connect.yaml.tmpl" ) . | indent 4}}

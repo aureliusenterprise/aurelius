@@ -13,10 +13,7 @@ from testcontainers.core.waiting_utils import wait_container_is_ready
 class E2ESettings(BaseSettings):
     """Settings for e2e tests, loaded from the .env file."""
 
-    model_config = SettingsConfigDict(
-        env_file=dotenv.find_dotenv(),
-        extra="ignore",
-    )
+    model_config = SettingsConfigDict(env_file=dotenv.find_dotenv(), extra="ignore")
 
     # Keycloak
     keycloak_username: str
@@ -40,10 +37,7 @@ def _environment() -> None:
 @wait_container_is_ready()  # type: ignore
 def compose() -> Generator[DockerCompose, None, None]:
     """Spin up the full e2e stack via Docker Compose."""
-    with DockerCompose(
-        Path(__file__).parent.absolute(),
-        env_file=dotenv.find_dotenv(),
-    ) as compose:
+    with DockerCompose(Path(__file__).parent.absolute(), env_file=dotenv.find_dotenv()) as compose:
         yield compose
 
 
@@ -78,11 +72,7 @@ def es_base_url(compose: DockerCompose) -> str:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _setup_keycloak_user(
-    compose: DockerCompose,
-    e2e_settings: E2ESettings,
-    keycloak_url: str,
-) -> None:
+def _setup_keycloak_user(compose: DockerCompose, e2e_settings: E2ESettings, keycloak_url: str) -> None:
     """Create a test user in Keycloak via the Admin REST API."""
 
     def _get_admin_token() -> str:
@@ -124,11 +114,7 @@ def _setup_keycloak_user(
                 "username": e2e_settings.keycloak_username,
                 "enabled": True,
                 "credentials": [
-                    {
-                        "type": "password",
-                        "value": e2e_settings.keycloak_password,
-                        "temporary": False,
-                    }
+                    {"type": "password", "value": e2e_settings.keycloak_password, "temporary": False}
                 ],
             },
             headers={"Authorization": f"Bearer {admin_token}"},
@@ -137,20 +123,14 @@ def _setup_keycloak_user(
         resp.raise_for_status()
 
     # Wait for Keycloak Admin API to be ready, then create user
-    for attempt in Retrying(
-        stop=stop_after_attempt(15),
-        wait=wait_exponential(multiplier=1, min=2, max=15),
-    ):
+    for attempt in Retrying(stop=stop_after_attempt(15), wait=wait_exponential(multiplier=1, min=2, max=15)):
         with attempt:
             admin_token = _get_admin_token()
             _create_user_if_not_exists(admin_token)
 
 
 @pytest.fixture(scope="session")
-def auth_token(
-    keycloak_url: str,
-    e2e_settings: E2ESettings,
-) -> str:
+def auth_token(keycloak_url: str, e2e_settings: E2ESettings) -> str:
     """Obtain a JWT Bearer token for the test user."""
 
     def _get_token() -> str:
@@ -168,10 +148,7 @@ def auth_token(
         return resp.json()["access_token"]
 
     # Retry in case Keycloak is still initializing
-    for attempt in Retrying(
-        stop=stop_after_attempt(10),
-        wait=wait_exponential(multiplier=1, min=2, max=10),
-    ):
+    for attempt in Retrying(stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=2, max=10)):
         with attempt:
             return _get_token()
 
@@ -187,22 +164,13 @@ def api_session(auth_token: str) -> requests.Session:
 
 
 @pytest.fixture(scope="session")
-def es_private_key(
-    es_base_url: str,
-    e2e_settings: E2ESettings,
-) -> str:
+def es_private_key(es_base_url: str, e2e_settings: E2ESettings) -> str:
     """Fetch the App Search private API key from Enterprise Search."""
-    for attempt in Retrying(
-        stop=stop_after_attempt(10),
-        wait=wait_exponential(multiplier=1, min=2, max=10),
-    ):
+    for attempt in Retrying(stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=2, max=10)):
         with attempt:
             key_resp = requests.get(
                 f"{es_base_url}/api/as/v1/credentials/private-key",
-                auth=(
-                    e2e_settings.app_search_username,
-                    e2e_settings.app_search_password,
-                ),
+                auth=(e2e_settings.app_search_username, e2e_settings.app_search_password),
                 timeout=30,
                 verify=False,
             )
@@ -213,26 +181,17 @@ def es_private_key(
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _setup_app_search_engine(
-    es_base_url: str,
-    es_private_key: str,
-) -> None:
+def _setup_app_search_engine(es_base_url: str, es_private_key: str) -> None:
     """Create a minimal test engine in Enterprise Search.
 
     This ensures there is at least one engine for proxy tests to target.
     """
-    for attempt in Retrying(
-        stop=stop_after_attempt(10),
-        wait=wait_exponential(multiplier=1, min=2, max=10),
-    ):
+    for attempt in Retrying(stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=2, max=10)):
         with attempt:
             # Create test engine (idempotent — ignore 409 if it already exists)
             requests.post(
                 f"{es_base_url}/api/as/v1/engines",
-                json={
-                    "name": "test-engine",
-                    "type": "default",
-                },
+                json={"name": "test-engine", "type": "default"},
                 headers={"Authorization": f"Bearer {es_private_key}"},
                 timeout=30,
                 verify=False,

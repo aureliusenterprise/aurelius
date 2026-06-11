@@ -57,9 +57,7 @@ class ProjectSummary(BaseModel):
 class ReportGenerationSettings(BaseSettings):
     """CLI and environment-backed settings for workspace report generation."""
 
-    model_config = SettingsConfigDict(
-        env_prefix="AURELIUS_LICENSE_REPORT_", extra="ignore"
-    )
+    model_config = SettingsConfigDict(env_prefix="AURELIUS_LICENSE_REPORT_", extra="ignore")
 
     input_root: Path = Path()
     output: Path = Path("reports/aurelius-license-report/dist/licenses.html")

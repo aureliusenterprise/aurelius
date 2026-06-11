@@ -6,13 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ClassificationsInputComponent } from './classifications-input.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    ReactiveFormsModule,
-    TranslateModule.forChild()
-  ],
-  declarations: [ClassificationsInputComponent],
-  exports: [ClassificationsInputComponent]
+    imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule, TranslateModule.forChild()],
+    declarations: [ClassificationsInputComponent],
+    exports: [ClassificationsInputComponent],
 })
 export class ClassificationsInputModule {}

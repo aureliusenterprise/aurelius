@@ -1,1 +1,1 @@
-from .make_confluent_producer import *
+from .make_confluent_producer import make_confluent_producer as make_confluent_producer

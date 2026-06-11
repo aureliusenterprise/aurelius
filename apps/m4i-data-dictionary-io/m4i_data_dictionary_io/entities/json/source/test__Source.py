@@ -32,8 +32,7 @@ def test__create_source_from_json():
     Tests whether or not a `Source` can be created from a json string with its attributes
     """
 
-    source = (
-        """
+    source = """
         {
             "hash_code": "hash_code",
             "branch": "branch",
@@ -41,7 +40,6 @@ def test__create_source_from_json():
             "qualifiedName": "//folder//dept//Data Dictionary.xlsm@branch@hash_code"
         }
         """
-    )
 
     instance = Source.from_json(source)
 
@@ -63,7 +61,7 @@ def test__source_calculates_correct_qualified_name():
         "hash_code": "hash_code",
         "branch": "branch",
         "name": "//folder//dept//Data Dictionary.xlsm",
-        "qualifiedName": "//folder//dept//Data Dictionary.xlsm@branch@hash_code"
+        "qualifiedName": "//folder//dept//Data Dictionary.xlsm@branch@hash_code",
     }
 
     instance = Source.from_dict(source)
@@ -103,7 +101,7 @@ def test__source_convert_to_atlas_entity():
         "hash_code": "hash_code",
         "branch": "branch",
         "name": "//folder//dept//Data Dictionary.xlsm",
-        "qualifiedName": "//folder//dept//Data Dictionary.xlsm@branch@hash_code"
+        "qualifiedName": "//folder//dept//Data Dictionary.xlsm@branch@hash_code",
     }
 
     instance = Source.from_dict(source)
@@ -112,8 +110,10 @@ def test__source_convert_to_atlas_entity():
 
     atlas_attributes = atlas_instance.attributes
 
-    assert atlas_attributes.name == instance.name
-    assert atlas_attributes.hash_code == instance.hash_code
-    assert atlas_attributes.branch == instance.branch
-    assert atlas_attributes.qualified_name == instance.qualified_name
+    assert atlas_attributes.name == instance.name  # type: ignore
+    assert atlas_attributes.hash_code == instance.hash_code  # type: ignore
+    assert atlas_attributes.branch == instance.branch  # type: ignore
+    assert atlas_attributes.qualified_name == instance.qualified_name  # type: ignore
+
+
 # END test__source_convert_to_atlas_entity

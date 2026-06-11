@@ -115,3 +115,30 @@ testcontainers = "3.7.1"
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core==1.1.0"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py38"
+
+[tool.ruff.lint]
+select = ["F", "E", "W"]
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "double"
+skip-magic-trailing-comma = true
+
+[tool.pyright]
+pythonVersion = "3.8"
+typeCheckingMode = "standard"
+# Pandas 1.3.0 has limited type stub support, causing false positives for DataFrame/Series operations
+# These reportOptionalMemberAccess and similar errors are not actual runtime issues with pandas
+reportArgumentType = "warning"
+reportAttributeAccessIssue = "warning"
+reportCallIssue = "warning"
+reportGeneralTypeIssues = "warning"
+reportIndexIssue = "warning"
+reportOptionalMemberAccess = "warning"
+reportOptionalSubscript = "warning"
+# Optional/external dependencies that may not be installed in all environments
+reportMissingImports = "warning"

@@ -8,13 +8,13 @@ import { getHttpClient } from '../utils';
  * Whether a `Branch` is updated or created depends on whether or not the `branch_id` property is set.
  */
 export function updateBranch(
-  /** The branch which to create or update */
-  branch: Branch
+    /** The branch which to create or update */
+    branch: Branch,
 ) {
-  const http = getHttpClient(),
-    path = `${repositoryApiBasePath}/project/branch`;
+    const http = getHttpClient(),
+        path = `${repositoryApiBasePath}/project/branch`;
 
-  validateRequiredArguments(arguments, 'updateBranch');
+    validateRequiredArguments(arguments, 'updateBranch');
 
-  return http.authorize().post<Branch>(path, branch);
+    return http.authorize().post<Branch>(path, branch);
 }

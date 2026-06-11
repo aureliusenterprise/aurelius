@@ -1,5 +1,8 @@
 from __future__ import absolute_import
 
-from m4i_metrics import Metric
-from m4i_metrics import MetricCategory
-from m4i_metrics import config
+from .Metric import Metric
+from .MetricCategory import MetricCategory
+from .MetricColumnConfig import MetricColumnConfig
+from .MetricConfig import MetricConfig
+
+__all__ = ["Metric", "MetricCategory", "MetricColumnConfig", "MetricConfig"]

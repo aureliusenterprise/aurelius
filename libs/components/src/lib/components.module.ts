@@ -9,24 +9,24 @@ import { ModalModule } from './modal';
 import { SortableTableModule } from './sortable-table/sortable-table.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SortableTableModule,
-    BranchNameInputModule,
-    BranchSelectModule,
-    CreateBranchModalModule,
-    ModalModule,
-    FileDropzoneModule,
-    DescriptionInputModule,
-  ],
-  exports: [
-    SortableTableModule,
-    BranchNameInputModule,
-    BranchSelectModule,
-    CreateBranchModalModule,
-    ModalModule,
-    FileDropzoneModule,
-    DescriptionInputModule,
-  ],
+    imports: [
+        CommonModule,
+        SortableTableModule,
+        BranchNameInputModule,
+        BranchSelectModule,
+        CreateBranchModalModule,
+        ModalModule,
+        FileDropzoneModule,
+        DescriptionInputModule,
+    ],
+    exports: [
+        SortableTableModule,
+        BranchNameInputModule,
+        BranchSelectModule,
+        CreateBranchModalModule,
+        ModalModule,
+        FileDropzoneModule,
+        DescriptionInputModule,
+    ],
 })
 export class ComponentsModule {}

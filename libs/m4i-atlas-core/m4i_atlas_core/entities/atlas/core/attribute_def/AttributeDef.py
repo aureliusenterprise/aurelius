@@ -11,23 +11,24 @@ from ..constraint_def import ConstraintDef
 class IndexType(Enum):
     DEFAULT = "DEFAULT"
     STRING = "STRING"
+
+
 # END IndexType
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class AttributeDefBase(DataClassJsonMixin):
-
     name: str
     type_name: str
+
 
 # END AttributeDefBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class AttributeDefDefaultsBase(DataClassJsonMixin):
-
     cardinality: Cardinality = Cardinality.SINGLE
     constraints: List[ConstraintDef] = field(default_factory=list)
     default_value: Optional[str] = None
@@ -43,13 +44,14 @@ class AttributeDefDefaultsBase(DataClassJsonMixin):
     values_max_count: Optional[int] = None
     values_min_count: Optional[int] = None
 
+
 # END AttributeDefDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class AttributeDef(AttributeDefDefaultsBase, AttributeDefBase):
-
     pass
+
 
 # END AttributeDef

@@ -5,11 +5,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    ...Core.imports(environment),
-    AppRoutingModule // must be imported as the last module as it contains the fallback route
-  ],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent],
+    imports: [
+        ...Core.imports(environment),
+        AppRoutingModule, // must be imported as the last module as it contains the fallback route
+    ],
+    bootstrap: [AppComponent],
 })
 export class AppModule {}

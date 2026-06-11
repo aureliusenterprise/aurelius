@@ -20,17 +20,11 @@ DATA_TYPE_MAPPING = {
 
 
 def _parse_payload(
-    payload: dict,
-    dataset_qualified_name: str,
-    parent_field: Union[str, None] = None,
+    payload: dict, dataset_qualified_name: str, parent_field: Union[str, None] = None
 ) -> Generator[DataField, None, None]:
     """Parse a JSON payload and yield DataField instances."""
     for key, value in payload.items():
-        type_name = (
-            value.get("type", "object")
-            if isinstance(value, dict)
-            else type(value).__name__
-        )
+        type_name = value.get("type", "object") if isinstance(value, dict) else type(value).__name__
 
         field = build_field(
             name=key,
@@ -50,10 +44,7 @@ def _parse_payload(
             )
 
 
-def parse_payload(
-    payload: str,
-    dataset_qualified_name: str,
-) -> Generator[DataField, None, None]:
+def parse_payload(payload: str, dataset_qualified_name: str) -> Generator[DataField, None, None]:
     """Attempt to parse the given payload as JSON and yield DataField instances."""
     try:
         data = json.loads(payload)
@@ -65,7 +56,4 @@ def parse_payload(
         logging.error("JSON payload is not a dictionary")
         return
 
-    yield from _parse_payload(
-        payload=data,
-        dataset_qualified_name=dataset_qualified_name,
-    )
+    yield from _parse_payload(payload=data, dataset_qualified_name=dataset_qualified_name)

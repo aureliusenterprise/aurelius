@@ -6,30 +6,29 @@ import { Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
 const branchesTableConfig: SortableTableShellConfig = {
-  _id: { displayName: 'Branch name', description: 'The name of the branch' },
-  cnt: {
-    displayName: 'Total updates',
-    description: 'The total numer of model versions in this branch'
-  },
-  context_menu: { isStatic: true }
+    _id: { displayName: 'Branch name', description: 'The name of the branch' },
+    cnt: {
+        displayName: 'Total updates',
+        description: 'The total numer of model versions in this branch',
+    },
+    context_menu: { isStatic: true },
 };
 
 @Component({
-  selector: 'models4insight-branches-table',
-  templateUrl: 'branches-table.component.html',
-  styleUrls: ['branches-table.component.scss']
+    selector: 'models4insight-branches-table',
+    templateUrl: 'branches-table.component.html',
+    styleUrls: ['branches-table.component.scss'],
 })
-export class BranchesTableComponent extends AbstractSortableTable
-  implements OnInit {
-  project$: Observable<Project>;
+export class BranchesTableComponent extends AbstractSortableTable implements OnInit {
+    project$: Observable<Project>;
 
-  constructor(private readonly projectService: ProjectService) {
-    super();
-  }
+    constructor(private readonly projectService: ProjectService) {
+        super();
+    }
 
-  ngOnInit() {
-    this.config = branchesTableConfig;
+    ngOnInit() {
+        this.config = branchesTableConfig;
 
-    this.project$ = this.projectService.selectCurrentProject().pipe(shareReplay());
-  }
+        this.project$ = this.projectService.selectCurrentProject().pipe(shareReplay());
+    }
 }

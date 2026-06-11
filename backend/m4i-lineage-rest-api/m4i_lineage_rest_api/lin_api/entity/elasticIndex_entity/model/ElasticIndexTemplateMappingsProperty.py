@@ -3,7 +3,7 @@ from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
 from typing import Optional, Dict
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticIndexTemplateMappingsPropertyBase(DataClassJsonMixin):
     pass
@@ -12,22 +12,23 @@ class ElasticIndexTemplateMappingsPropertyBase(DataClassJsonMixin):
 # END ElasticIndexTemplateMappingsPropertyBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticIndexTemplateMappingsPropertyDefaultsBase(DataClassJsonMixin):
     format: Optional[str] = None
-    properties: Dict[str, 'ElasticIndexTemplateMappingsProperty'] = field(default_factory=dict)
+    properties: Dict[str, "ElasticIndexTemplateMappingsProperty"] = field(default_factory=dict)
     type: Optional[str] = None
 
 
 # END ElasticIndexTemplateMappingsPropertyDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticIndexTemplateMappingsProperty(
-    ElasticIndexTemplateMappingsPropertyDefaultsBase,
-    ElasticIndexTemplateMappingsPropertyBase,
+    ElasticIndexTemplateMappingsPropertyDefaultsBase, ElasticIndexTemplateMappingsPropertyBase
 ):
     pass
+
+
 # END ElasticIndexTemplateMappingsProperty

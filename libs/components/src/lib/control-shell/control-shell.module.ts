@@ -5,8 +5,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ControlShellComponent } from './control-shell.component';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule],
-  declarations: [ControlShellComponent],
-  exports: [ControlShellComponent, FormsModule, ReactiveFormsModule],
+    imports: [CommonModule, FontAwesomeModule],
+    declarations: [ControlShellComponent],
+    exports: [ControlShellComponent, FormsModule, ReactiveFormsModule],
 })
 export class ControlShellModule {}

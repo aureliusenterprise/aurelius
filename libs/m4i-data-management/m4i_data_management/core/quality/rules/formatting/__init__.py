@@ -1,1 +1,1 @@
-from .formatting import *
+from .formatting import formatting as formatting

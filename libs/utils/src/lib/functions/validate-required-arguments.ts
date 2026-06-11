@@ -28,27 +28,25 @@ import { Dictionary, isNil } from 'lodash';
  *          // -> Error: Required parameter 0 was null when calling exampleApiCall.
  */
 export function validateRequiredArguments(
-  /** The arguments to validate. */
-  args: Dictionary<any>,
-  /**
-   * The name of the function to which the arguments belong.
-   * Passing the function name ensures a meaningful error message from uglified code.
-   */
-  calleeName: string,
-  /**
-   * The function used to validate each of the given arguments.
-   * It should return `true` if the given argument is invalid.
-   * By default, checks whether the given argument is `null` or `undefined`.
-   */
-  isInvalidFn: (arg: any) => boolean = isNil
+    /** The arguments to validate. */
+    args: Dictionary<any>,
+    /**
+     * The name of the function to which the arguments belong.
+     * Passing the function name ensures a meaningful error message from uglified code.
+     */
+    calleeName: string,
+    /**
+     * The function used to validate each of the given arguments.
+     * It should return `true` if the given argument is invalid.
+     * By default, checks whether the given argument is `null` or `undefined`.
+     */
+    isInvalidFn: (arg: any) => boolean = isNil,
 ) {
-  const invalidArgument = Object.entries(args).find(([, value]) =>
-    isInvalidFn(value)
-  );
+    const invalidArgument = Object.entries(args).find(([, value]) => isInvalidFn(value));
 
-  if (invalidArgument) {
-    throw new Error(
-      `Required parameter ${invalidArgument[0]} was ${invalidArgument[1]} when calling ${calleeName}.`
-    );
-  }
+    if (invalidArgument) {
+        throw new Error(
+            `Required parameter ${invalidArgument[0]} was ${invalidArgument[1]} when calling ${calleeName}.`,
+        );
+    }
 }

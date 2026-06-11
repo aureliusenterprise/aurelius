@@ -40,11 +40,7 @@ class EntityDataNotProvidedError(SynchronizeAppSearchError):
 
 
 @retry(retry_strategy=ExponentialBackoff())
-def get_document(
-    guid: str,
-    elastic: Elasticsearch,
-    index_name: str,
-) -> AppSearchDocument:
+def get_document(guid: str, elastic: Elasticsearch, index_name: str) -> AppSearchDocument:
     """
     Retrieve an AppSearchDocument from the Elasticsearch index based on the GUID.
 
@@ -110,7 +106,9 @@ def handle_update_attributes(
     The function only updates attributes that are in the `ATTRIBUTES_WHITELIST` and have been
     either inserted or changed as indicated by the `EntityMessage`.
     """
-    attributes_to_update = ATTRIBUTES_WHITELIST & (set(message.inserted_attributes) | set(message.changed_attributes))
+    attributes_to_update = ATTRIBUTES_WHITELIST & (
+        set(message.inserted_attributes) | set(message.changed_attributes)
+    )
 
     logging.debug("Attributes to update for entity %s: %s", message.guid, attributes_to_update)
 

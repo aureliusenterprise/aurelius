@@ -6,19 +6,18 @@ from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
 from ..term_relationship_status import TermRelationshipStatus
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class RelatedTermHeaderBase(DataClassJsonMixin):
-
     term_guid: str
+
 
 # END RelatedTermHeaderBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class RelatedTermHeaderDefaultsBase(DataClassJsonMixin):
-
     description: Optional[str] = None
     display_text: Optional[str] = None
     expression: Optional[str] = None
@@ -27,13 +26,14 @@ class RelatedTermHeaderDefaultsBase(DataClassJsonMixin):
     status: Optional[TermRelationshipStatus] = None
     steward: Optional[str] = None
 
+
 # END RelatedTermHeaderDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class RelatedTermHeader(RelatedTermHeaderDefaultsBase, RelatedTermHeaderBase):
-
     pass
+
 
 # END RelatedTermHeader

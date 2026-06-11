@@ -1,10 +1,12 @@
 # backend-lineage-model
 
-This application is a backend service that provides an API for generating a lineage graph for a given dataset entity.
-It supports the Aurelius Atlas application.
+This application is a backend service that provides an API for generating a lineage
+graph for a given dataset entity. It supports the Aurelius Atlas application.
 
 > [!NOTE]
-> The application depends on the [backend-data2model](../m4i-data2model/README.md) service to construct the lineage graph.
+> The application depends on the
+> [backend-data2model](../m4i-data2model/README.md) service to construct the lineage
+> graph.
 
 ## Installation
 

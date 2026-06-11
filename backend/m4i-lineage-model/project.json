@@ -1,11 +1,13 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["backend-data2model"],
     "name": "backend-lineage-model",
     "projectType": "application",
     "sourceRoot": "backend/m4i-lineage-model/m4i_lineage_model",
     "tags": [],
     "targets": {
         "serve": {
+            "dependsOn": ["decrypt"],
             "executor": "@nxlv/python:run-commands",
             "options": {
                 "command": "poetry run gunicorn -c {projectRoot}/conf.py -b 127.0.0.1:${WSGI_PORT} m4i_lineage_model:app --reload"

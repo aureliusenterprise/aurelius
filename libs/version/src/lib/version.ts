@@ -7,5 +7,5 @@ import { version as packageVersion } from 'package.json';
  * @param production Whether or not the application is running in production mode. Defaults to `false`.
  */
 export function version(production: boolean = false): string {
-  return `${packageVersion}#${gitHash}${production ? '' : '-dev'}`;
+    return `${packageVersion}#${gitHash}${production ? '' : '-dev'}`;
 }

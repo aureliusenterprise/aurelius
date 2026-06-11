@@ -82,13 +82,7 @@ def test__summarize_report_counts_only_license_class(tmp_path: Path) -> None:
     assert summary.target_count == 1
     assert summary.worst_severity == "HIGH"
     assert summary.report_link == "apps/service-a/licenses.html"
-    assert summary.severity_counts == {
-        "CRITICAL": 0,
-        "HIGH": 1,
-        "MEDIUM": 0,
-        "LOW": 1,
-        "UNKNOWN": 0,
-    }
+    assert summary.severity_counts == {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 0, "LOW": 1, "UNKNOWN": 0}
     assert summary.category_counts["restricted"] == 1
     assert summary.category_counts["notice"] == 1
 
@@ -137,11 +131,7 @@ def test__sort_projects_orders_by_severity_then_finding_count() -> None:
         ),
     ]
 
-    assert [project.name for project in sort_projects(projects)] == [
-        "apps/critical",
-        "apps/high",
-        "apps/low",
-    ]
+    assert [project.name for project in sort_projects(projects)] == ["apps/critical", "apps/high", "apps/low"]
 
 
 def test__count_merges_cover_all_levels() -> None:
@@ -274,9 +264,7 @@ def test__build_context_aggregates_workspace_summary() -> None:
     assert context["workspace_category_counts"]["restricted"] == 2
 
 
-def test__render_report_outputs_empty_state_when_no_projects_exist(
-    tmp_path: Path,
-) -> None:
+def test__render_report_outputs_empty_state_when_no_projects_exist(tmp_path: Path) -> None:
     """Test that render_report outputs an empty state message when no projects exist."""
     output_path = tmp_path / "reports" / "dist" / "workspace" / "licenses.html"
 
@@ -313,10 +301,7 @@ def test__generate_project_reports_creates_html_for_each_report(tmp_path: Path) 
             encoding="utf-8",
         )
 
-    settings = ReportGenerationSettings(
-        input_root=input_root,
-        output=output_dir / "licenses.html",
-    )
+    settings = ReportGenerationSettings(input_root=input_root, output=output_dir / "licenses.html")
 
     generate_project_reports(settings)
 
@@ -338,7 +323,12 @@ def test__generate_workspace_report_creates_summary_page(tmp_path: Path) -> None
               "Class": "license",
               "Target": "OS Packages",
               "Type": "debian",
-              "Licenses": [{"Severity": "HIGH", "Category": "restricted", "PkgName": "a", "Name": "GPL-2.0-only"}]
+              "Licenses": [{
+                "Severity": "HIGH",
+                "Category": "restricted",
+                "PkgName": "a",
+                "Name": "GPL-2.0-only"
+              }]
             }
           ]
         }

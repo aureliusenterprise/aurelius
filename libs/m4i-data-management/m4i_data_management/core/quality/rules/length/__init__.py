@@ -1,1 +1,1 @@
-from .length import *
+from .length import length as length

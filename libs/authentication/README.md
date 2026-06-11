@@ -4,15 +4,17 @@ This library provides a common authentication service that integrates with Keycl
 
 ## Initialization
 
-The authentication module needs to be configured to connect to Keycloak. It is recommended that you include your Keycloak configuration as part of your app's environment settings.
+The authentication module needs to be configured to connect to Keycloak.
+It is recommended that you include your Keycloak configuration
+as part of your app's environment settings.
 
 ```javascript
 export const environment = {
-  keycloak: {
-    url: '/auth',
-    realm: 'example_realm',
-    clientId: 'example_client'
-  }
+    keycloak: {
+        url: '/auth',
+        realm: 'example_realm',
+        clientId: 'example_client',
+    },
 };
 ```
 
@@ -24,14 +26,14 @@ import { AuthenticationModule } from '@models4insight/authentication';
 import { environment } from '../environments/environment';
 
 @NgModule({
-  imports: [AuthenticationModule.forRoot(environment.keycloak)]
+    imports: [AuthenticationModule.forRoot(environment.keycloak)],
 })
 export class AppModule {}
 ```
 
 The `AuthenticationModule` is loaded as part of the Models4Insight `core`.
 
-# Nx
+## Nx
 
 This library was generated with [Nx](https://nx.dev).
 

@@ -3,7 +3,8 @@ from pandas import DataFrame, Series, isna
 
 def starts_with(data: DataFrame, column_name: str, *prefixes: str) -> Series:
     """
-    Checks whether or not the values in the column with the given `column_name` start with any of the given `prefixes`.
+    Checks whether or not the values in the column with the given `column_name` start
+    with any of the given `prefixes`.
 
     This only works for textual values.
     If a value is not a string, it is converted to a string before comparison.
@@ -13,15 +14,14 @@ def starts_with(data: DataFrame, column_name: str, *prefixes: str) -> Series:
     """
 
     def check(value):
-
-        if isna(value):
+        if isna(value):  # type: ignore[arg-type]
             return 1
 
         str_value = str(value)
 
         return 1 if str_value.startswith(prefixes) else 0
-    
+
     if column_name not in data.columns:
         return Series([0] * len(data), index=data.index)
 
-    return data[column_name].apply(check)
+    return data[column_name].apply(check)  # type: ignore[return-value]

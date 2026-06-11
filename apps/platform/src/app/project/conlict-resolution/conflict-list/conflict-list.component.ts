@@ -7,83 +7,82 @@ import { ConflictResolutionService, SaveContext } from '../conflict-resolution.s
 import { ConflictSetContext } from '@models4insight/services/model';
 
 @Component({
-  selector: 'models4insight-conflict-list',
-  templateUrl: 'conflict-list.component.html',
-  styleUrls: ['conflict-list.component.scss']
+    selector: 'models4insight-conflict-list',
+    templateUrl: 'conflict-list.component.html',
+    styleUrls: ['conflict-list.component.scss'],
 })
 export class ConflictListComponent implements OnInit {
+    readonly ConflictResolutionTemplateEnum = ConflictResolutionTemplateEnum;
 
-  readonly ConflictResolutionTemplateEnum = ConflictResolutionTemplateEnum;
-  
-  @ViewChild(CdkVirtualScrollViewport, {static: false}) viewport: CdkVirtualScrollViewport;
+    @ViewChild(CdkVirtualScrollViewport, { static: false }) viewport: CdkVirtualScrollViewport;
 
-  currentContext$: Observable<ConflictSetContext>;
-  conflicts$: Observable<Conflict[]>;
-  selectedConflict$: Observable<Conflict>;
-  selectedTemplate$: Observable<ConflictResolutionTemplateEnum | 'manual'>;
-  appliedTemplate$: Observable<ConflictResolutionTemplateEnum | 'manual'>;
-  resolvedConflictsCnt$: Observable<number>;
-  isLoading$: Observable<boolean>;
-  publishToPortal$: Observable<boolean>;
+    currentContext$: Observable<ConflictSetContext>;
+    conflicts$: Observable<Conflict[]>;
+    selectedConflict$: Observable<Conflict>;
+    selectedTemplate$: Observable<ConflictResolutionTemplateEnum | 'manual'>;
+    appliedTemplate$: Observable<ConflictResolutionTemplateEnum | 'manual'>;
+    resolvedConflictsCnt$: Observable<number>;
+    isLoading$: Observable<boolean>;
+    publishToPortal$: Observable<boolean>;
 
-  constructor(private conflictResolutionService: ConflictResolutionService) {}
+    constructor(private conflictResolutionService: ConflictResolutionService) {}
 
-  ngOnInit() {
-    this.currentContext$ = this.conflictResolutionService.select('currentContext');
-    this.conflicts$ = this.conflictResolutionService.select('conflictList');
-    this.selectedConflict$ = this.conflictResolutionService.select('selectedConflict').pipe(shareReplay(1));
-    this.selectedTemplate$ = this.conflictResolutionService.select('selectedTemplate').pipe(shareReplay(1));
-    this.appliedTemplate$ = this.conflictResolutionService.select('appliedTemplate').pipe(shareReplay(1));
-    this.resolvedConflictsCnt$ = this.conflictResolutionService
-      .select('resolvedConflictsCount', { includeFalsy: true })
-      .pipe(shareReplay(1));
-    this.isLoading$ = this.conflictResolutionService.select('isLoadingConflicts');
-  }
-
-  nextBatch(offset: number): void {
-    const end = this.viewport.getRenderedRange().end;
-    const total = this.viewport.getDataLength();
-
-    if (end === total) {
-      this.conflictResolutionService.nextBatch(offset);
+    ngOnInit() {
+        this.currentContext$ = this.conflictResolutionService.select('currentContext');
+        this.conflicts$ = this.conflictResolutionService.select('conflictList');
+        this.selectedConflict$ = this.conflictResolutionService.select('selectedConflict').pipe(shareReplay(1));
+        this.selectedTemplate$ = this.conflictResolutionService.select('selectedTemplate').pipe(shareReplay(1));
+        this.appliedTemplate$ = this.conflictResolutionService.select('appliedTemplate').pipe(shareReplay(1));
+        this.resolvedConflictsCnt$ = this.conflictResolutionService
+            .select('resolvedConflictsCount', { includeFalsy: true })
+            .pipe(shareReplay(1));
+        this.isLoading$ = this.conflictResolutionService.select('isLoadingConflicts');
     }
-  }
 
-  set selectedConflict(conflict: Conflict) {
-    this.conflictResolutionService.update({
-      description: 'New conflict selection available',
-      payload: {
-        selectedConflict: conflict
-      }
-    });
-  }
+    nextBatch(offset: number): void {
+        const end = this.viewport.getRenderedRange().end;
+        const total = this.viewport.getDataLength();
 
-  selectTemplate(event: Event) {
-    this.conflictResolutionService.update({
-      description: 'Selected a new template',
-      payload: {
-        selectedTemplate: event.srcElement['value']
-      }
-    });
-  }
+        if (end === total) {
+            this.conflictResolutionService.nextBatch(offset);
+        }
+    }
 
-  applySelectedTemplate() {
-    this.conflictResolutionService.applySelectedTemplate();
-  }
+    set selectedConflict(conflict: Conflict) {
+        this.conflictResolutionService.update({
+            description: 'New conflict selection available',
+            payload: {
+                selectedConflict: conflict,
+            },
+        });
+    }
 
-  classifyConflict(conflict: Conflict) {
-    return this.conflictResolutionService.classifyConflict(conflict);
-  }
+    selectTemplate(event: Event) {
+        this.conflictResolutionService.update({
+            description: 'Selected a new template',
+            payload: {
+                selectedTemplate: event.srcElement['value'],
+            },
+        });
+    }
 
-  handleSave(context: ConflictSetContext, save: SaveContext) {
-    this.conflictResolutionService.save(context, save);
-  }
+    applySelectedTemplate() {
+        this.conflictResolutionService.applySelectedTemplate();
+    }
 
-  onResolveClicked() {
-    this.conflictResolutionService.resolveConflicts();
-  }
+    classifyConflict(conflict: Conflict) {
+        return this.conflictResolutionService.classifyConflict(conflict);
+    }
 
-  trackByIndex(i: number) {
-    return i;
-  }
+    handleSave(context: ConflictSetContext, save: SaveContext) {
+        this.conflictResolutionService.save(context, save);
+    }
+
+    onResolveClicked() {
+        this.conflictResolutionService.resolveConflicts();
+    }
+
+    trackByIndex(i: number) {
+        return i;
+    }
 }

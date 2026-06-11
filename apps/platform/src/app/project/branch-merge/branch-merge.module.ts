@@ -1,7 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BranchSelectModule, ContextMenuModule, CreateBranchModalModule, DescriptionInputModule, SortableTableShellModule } from '@models4insight/components';
+import {
+    BranchSelectModule,
+    ContextMenuModule,
+    CreateBranchModalModule,
+    DescriptionInputModule,
+    SortableTableShellModule,
+} from '@models4insight/components';
 import { BranchPermissionModule, ProjectPermissionModule } from '@models4insight/permissions';
 import { TranslateModule } from '@ngx-translate/core';
 import { BranchMergeRoutingModule } from './branch-merge-routing.module';
@@ -12,24 +18,20 @@ import { BranchesTableContextMenuComponent } from './branches-table/branches-tab
 import { BranchesTableComponent } from './branches-table/branches-table.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    TranslateModule,
-    BranchMergeRoutingModule,
-    ReactiveFormsModule,
-    ProjectPermissionModule,
-    BranchPermissionModule,
-    BranchSelectModule,
-    DescriptionInputModule,
-    ContextMenuModule,
-    CreateBranchModalModule,
-    SortableTableShellModule,
-  ],
-  declarations: [
-    BranchMergeComponent,
-    BranchesTableComponent,
-    BranchesTableContextMenuComponent
-  ],
-  providers: [BranchMergeGuard, BranchMergeService]
+    imports: [
+        CommonModule,
+        TranslateModule,
+        BranchMergeRoutingModule,
+        ReactiveFormsModule,
+        ProjectPermissionModule,
+        BranchPermissionModule,
+        BranchSelectModule,
+        DescriptionInputModule,
+        ContextMenuModule,
+        CreateBranchModalModule,
+        SortableTableShellModule,
+    ],
+    declarations: [BranchMergeComponent, BranchesTableComponent, BranchesTableContextMenuComponent],
+    providers: [BranchMergeGuard, BranchMergeService],
 })
 export class BranchMergeModule {}

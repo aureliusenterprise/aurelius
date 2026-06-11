@@ -1,6 +1,6 @@
 import logging
 from functools import partial
-from typing import Dict, Generator
+from typing import Any, Dict, Generator
 
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan
@@ -26,9 +26,7 @@ class EntityDataNotProvidedError(SynchronizeAppSearchError):
 
 @retry(retry_strategy=ExponentialBackoff())
 def get_documents(
-    query: dict,
-    elastic: Elasticsearch,
-    index_name: str,
+    query: Dict[str, Any], elastic: Elasticsearch, index_name: str
 ) -> Generator[AppSearchDocument, None, None]:
     """
     Yield AppSearchDocument objects from Elasticsearch based on the given query.
@@ -85,16 +83,7 @@ def handle_derived_entities_delete(  # noqa: PLR0913
         Yields updated AppSearchDocument instances.
     """
     # Get the Elasticsearch documents for all related entities
-    query = {
-        "query": {
-            "match": {
-                relationship_attribute_guid: {
-                    "query": entity_guid,
-                    "operator": "and",
-                },
-            },
-        },
-    }
+    query = {"query": {"match": {relationship_attribute_guid: {"query": entity_guid, "operator": "and"}}}}
 
     logging.debug(
         "Searching for documents with relationship %s containing entity %s",

@@ -8,15 +8,15 @@ import { FileUploadComponent } from './file-upload.component';
 import { FileUploadService } from './file-upload.service';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    TranslateModule,
-    FileUploadRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FileDropzoneModule
-  ],
-  declarations: [FileUploadComponent],
-  providers: [FileUploadService]
+    imports: [
+        CommonModule,
+        TranslateModule,
+        FileUploadRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        FileDropzoneModule,
+    ],
+    declarations: [FileUploadComponent],
+    providers: [FileUploadService],
 })
 export class FileUploadModule {}

@@ -1,0 +1,314 @@
+import importlib
+from unittest.mock import Mock, patch
+
+import pytest
+from m4i_atlas_core import (
+    AtlasPerson,
+    AtlasPersonAttributes,
+    BusinessDataEntity,
+    BusinessDataEntityAttributes,
+    EntityAuditAction,
+    M4IAttributes,
+    ObjectId,
+)
+
+from m4i_flink_tasks import AppSearchDocument, EntityMessage, EntityMessageType
+
+from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created import (
+    EntityDataNotProvidedError,
+    handle_entity_created,
+)
+
+# Import module object for patch.object() - avoids string-based path resolution issues
+entity_created_module = importlib.import_module(
+    "m4i_flink_tasks.operations.synchronize_app_search.event_handlers.entity_created.entity_created"
+)
+
+
+def test__default_create_handler_with_complete_details() -> None:
+    """
+    Verify that `handle_entity_created` correctly processes an entity.
+
+    Asserts:
+    - The function produces one AppSearchDocument.
+    - The AppSearchDocument's attributes correctly reflect the entity's details.
+    """
+    entity_message = EntityMessage(
+        type_name="m4i_data_domain",
+        guid="1234",
+        original_event_type=EntityAuditAction.ENTITY_CREATE,
+        event_type=EntityMessageType.ENTITY_CREATED,
+        new_value=BusinessDataEntity(
+            guid="1234",
+            type_name="m4i_data_domain",
+            attributes=BusinessDataEntityAttributes.from_dict(
+                {"qualifiedName": "1234-test", "name": "test", "unmapped_attributes": {}}
+            ),
+        ),
+    )
+
+    with patch.object(entity_created_module, "get_related_documents", return_value=[]):
+        result = handle_entity_created(entity_message, Mock(), "test_index", {})
+
+        assert len(result) == 1
+
+        document = result["1234"]
+
+        assert document.id == "1234"
+        assert document.guid == "1234"
+        assert document.typename == "m4i_data_domain"
+        assert document.name == "test"
+        assert document.referenceablequalifiedname == "1234-test"
+
+
+def test__create_person_handler_with_email() -> None:
+    """
+    Verify that `handle_entity_created` correctly processes a person entity.
+
+    Asserts:
+    - The function produces one AppSearchDocument.
+    - The AppSearchDocument includes the `email` attribute, matching the entity's email.
+    """
+    entity_message = EntityMessage(
+        type_name="m4i_person",
+        guid="1234",
+        original_event_type=EntityAuditAction.ENTITY_CREATE,
+        event_type=EntityMessageType.ENTITY_CREATED,
+        new_value=AtlasPerson(
+            guid="1234",
+            type_name="m4i_person",
+            attributes=AtlasPersonAttributes.from_dict(
+                {"qualifiedName": "1234-test", "name": "test", "email": "john.doe@example.com"}
+            ),
+        ),
+    )
+
+    with patch.object(entity_created_module, "get_related_documents", return_value=[]):
+        result = handle_entity_created(entity_message, Mock(), "test_index", {})
+
+        assert len(result) == 1
+
+        document = result["1234"]
+
+        assert document.id == "1234"
+        assert document.guid == "1234"
+        assert document.typename == "m4i_person"
+        assert document.name == "test"
+        assert document.referenceablequalifiedname == "1234-test"
+        assert document.email == "john.doe@example.com"
+
+
+def test__handle_entity_created_missing_entity_data() -> None:
+    """
+    Verify that `handle_entity_created` raises `EntityDataNotProvidedError` when no entity is given.
+
+    Asserts:
+    - `EntityDataNotProvidedError` is raised when the entity message lacks entity details.
+    """
+    entity_message = EntityMessage(
+        type_name="m4i_data_domain",
+        guid="1234",
+        original_event_type=EntityAuditAction.ENTITY_CREATE,
+        event_type=EntityMessageType.ENTITY_CREATED,
+    )
+
+    with pytest.raises(EntityDataNotProvidedError):
+        handle_entity_created(entity_message, Mock(), "test_index", {})
+
+
+def test__handle_entity_created_with_breadcrumbs() -> None:
+    """
+    Verify that handle_entity_created also creates breadcrumbs.
+
+    Asserts
+    - breadcrumbs are added
+    """
+    business_data_entity = BusinessDataEntity(
+        guid="1111",
+        type_name="m4i_data_entity",
+        attributes=BusinessDataEntityAttributes.from_dict(
+            {
+                "qualifiedName": "test-data-entity",
+                "name": "test entity",
+                "unmapped_attributes": {"qualifiedName": "test-data-entity"},
+                "definition": "An example definition.",
+            }
+        ),
+    )
+
+    parent_ref = ObjectId(
+        guid="2222",
+        type_name="m4i_data_domain",
+        unique_attributes=M4IAttributes(qualified_name="test object"),
+    )
+
+    business_data_entity.attributes.data_domain = [parent_ref]
+
+    entity_message = EntityMessage(
+        type_name="m4i_data_entity",
+        guid="1111",
+        original_event_type=EntityAuditAction.ENTITY_CREATE,
+        event_type=EntityMessageType.ENTITY_CREATED,
+        new_value=business_data_entity,
+        inserted_relationships={"dataDomain": [parent_ref]},
+    )
+
+    parent_document = AppSearchDocument(
+        guid="2222",
+        typename="m4i_data_domain",
+        name="Domain Name",
+        referenceablequalifiedname="entity_name",
+        breadcrumbguid=["5678"],
+        breadcrumbname=["Parent Data Domain Name"],
+        breadcrumbtype=["m4i_data_domain"],
+    )
+
+    with patch.object(entity_created_module, "get_related_documents", return_value=[parent_document]):  # type: ignore[reportGeneralTypeIssues]
+        with patch.object(entity_created_module, "get_child_documents", return_value=[]):
+            result = handle_entity_created(entity_message, Mock(), "test_index", {})
+
+            assert len(result) == 2
+
+            document = result["1111"]
+
+            assert document.breadcrumbname == ["Parent Data Domain Name", "Domain Name"]
+            assert document.breadcrumbguid == ["5678", "2222"]
+            assert document.breadcrumbtype == ["m4i_data_domain", "m4i_data_domain"]
+            assert document.parentguid == "2222"
+
+
+def test__handle_entity_created_add_relations() -> None:
+    """Verify that the created entity's relations are also added."""
+    business_data_entity = BusinessDataEntity(
+        guid="1111",
+        type_name="m4i_data_entity",
+        attributes=BusinessDataEntityAttributes.from_dict(
+            {"qualifiedName": "test-data-entity", "name": "test entity", "unmapped_attributes": {}}
+        ),
+    )
+
+    business_data_entity.attributes.data_domain = [
+        ObjectId(
+            guid="2222",
+            type_name="m4i_data_domain",
+            unique_attributes=M4IAttributes(qualified_name="My Data Domain", unmapped_attributes={}),
+        )
+    ]
+
+    entity_message = EntityMessage(
+        type_name="m4i_data_entity",
+        guid="1111",
+        original_event_type=EntityAuditAction.ENTITY_CREATE,
+        event_type=EntityMessageType.ENTITY_CREATED,
+        new_value=business_data_entity,
+        inserted_relationships={"dataDomain": business_data_entity.attributes.data_domain},
+    )
+
+    related_document = AppSearchDocument(
+        guid="2222",
+        typename="m4i_data_domain",
+        name="My Data Domain",
+        referenceablequalifiedname="entity_name",
+        breadcrumbguid=["5678"],
+        breadcrumbname=["Parent Data Domain Name"],
+        breadcrumbtype=["m4i_data_domain"],
+        parentguid="5678",
+    )
+
+    with patch.object(entity_created_module, "get_related_documents", return_value=[related_document]):  # type: ignore[reportGeneralTypeIssues]
+        with patch.object(entity_created_module, "get_child_documents", return_value=[]):
+            result = handle_entity_created(entity_message, Mock(), "test_index", {})
+
+            document = result["1111"]
+
+            assert document.deriveddatadomainguid == ["2222"]
+            assert document.deriveddatadomain == ["My Data Domain"]
+            assert document.parentguid == "2222"
+
+            related_document = result["2222"]
+
+            assert related_document.deriveddataentityguid == ["1111"]
+            assert related_document.deriveddataentity == ["test entity"]
+            assert related_document.parentguid == "5678"
+
+
+def test__handle_entity_created_multiple_relations() -> None:
+    """Verify that multiple relations are created."""
+    data_entity = BusinessDataEntity(
+        guid="1111",
+        type_name="m4i_data_entity",
+        attributes=BusinessDataEntityAttributes.from_dict(
+            {
+                "qualifiedName": "1111-data-entity",
+                "name": "Test Entity",
+                "unmapped_attributes": {"qualifiedName": "1111-data-entity"},
+            }
+        ),
+    )
+
+    data_entity.attributes.data_domain = [
+        ObjectId(
+            guid="2222",
+            type_name="m4i_data_domain",
+            unique_attributes=M4IAttributes(
+                qualified_name="2222-domain", unmapped_attributes={"name": "Test Data Domain"}
+            ),
+        )
+    ]
+
+    data_entity.attributes.attributes = [
+        ObjectId(
+            guid="3333",
+            type_name="m4i_data_attribute",
+            unique_attributes=M4IAttributes(
+                qualified_name="3333-attribute", unmapped_attributes={"name": "Test Data Attribute"}
+            ),
+        )
+    ]
+
+    entity_message = EntityMessage(
+        type_name="m4i_data_entity",
+        guid="1111",
+        original_event_type=EntityAuditAction.ENTITY_CREATE,
+        event_type=EntityMessageType.ENTITY_CREATED,
+        new_value=data_entity,
+        inserted_relationships={
+            "dataDomain": data_entity.attributes.data_domain,
+            "attributes": data_entity.attributes.attributes,
+        },
+    )
+
+    domain_document = AppSearchDocument(
+        guid="2222",
+        typename="m4i_data_domain",
+        name="Test Data Domain",
+        referenceablequalifiedname="2222-domain",
+    )
+
+    attribute_document = AppSearchDocument(
+        guid="3333",
+        typename="m4i_data_attribute",
+        name="Test Data Attribute",
+        referenceablequalifiedname="3333-attribute",
+    )
+
+    with patch.object(
+        entity_created_module, "get_related_documents", return_value=[domain_document, attribute_document]
+    ):  # type: ignore[reportGeneralTypeIssues]
+        with patch.object(entity_created_module, "get_child_documents", return_value=[]):
+            result = handle_entity_created(entity_message, Mock(), "test_index", {})
+
+            assert len(result) == 3
+
+            document = result["1111"]
+            assert document.deriveddatadomainguid == ["2222"]
+            assert document.deriveddatadomain == ["Test Data Domain"]
+            assert document.parentguid == "2222"
+
+            domain_doc = result["2222"]
+            assert domain_doc.deriveddataentityguid == ["1111"]
+            assert domain_doc.deriveddataentity == ["Test Entity"]
+
+            attribute_doc = result["3333"]
+            assert attribute_doc.deriveddataentityguid == ["1111"]
+            assert attribute_doc.deriveddataentity == ["Test Entity"]

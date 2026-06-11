@@ -1,1 +1,3 @@
-from .report import calculate_metric, generate_metric, report
+from .report import calculate_metric, generate_metric
+
+__all__ = ["calculate_metric", "generate_metric"]

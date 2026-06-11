@@ -1,1 +1,3 @@
-from .EntityDef import *
+from .EntityDef import EntityDef
+
+__all__ = ["EntityDef"]

@@ -5,8 +5,8 @@ import { MarkdownModule } from '../markdown.module';
 import { MarkdownEditorComponent } from './markdown-editor.component';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, MarkdownModule],
-  declarations: [MarkdownEditorComponent],
-  exports: [MarkdownEditorComponent],
+    imports: [CommonModule, ReactiveFormsModule, MarkdownModule],
+    declarations: [MarkdownEditorComponent],
+    exports: [MarkdownEditorComponent],
 })
 export class MarkdownEditorModule {}

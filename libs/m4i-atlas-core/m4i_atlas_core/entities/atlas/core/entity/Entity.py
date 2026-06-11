@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, Iterable, List, Optional, Union
+from typing import Dict, Iterable, List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
@@ -13,19 +13,18 @@ from ..term_assignment_header import TermAssignmentHeader
 from ..utils import create_placehoder_guid
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class EntityBase(StructBase):
-
     pass
+
 
 # END EntityBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class EntityDefaultsBase(StructDefaultsBase):
-
     classifications: List[Classification] = field(default_factory=list)
     classification_names: List[str] = field(default_factory=list)
     create_time: Optional[float] = None
@@ -49,13 +48,12 @@ class EntityDefaultsBase(StructDefaultsBase):
 # END EntityDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class Entity(Struct, EntityDefaultsBase, EntityBase):
-
     @classmethod
     def get_type_def(cls):
-        raise TypesDefNotFoundException(f'{cls.__name__}: Type Definition Not Found')
+        raise TypesDefNotFoundException(f"{cls.__name__}: Type Definition Not Found")  # type: ignore[reportGeneralTypeIssues]
 
     def get_children(self) -> Iterable[ObjectId]:
         """
@@ -63,6 +61,7 @@ class Entity(Struct, EntityDefaultsBase, EntityBase):
         Intended to be overridden by subtypes that declare specific reference points.
         """
         return []
+
     # END get_children
 
     def get_parents(self) -> Iterable[ObjectId]:
@@ -71,6 +70,7 @@ class Entity(Struct, EntityDefaultsBase, EntityBase):
         Intended to be overridden by subtypes that declare specific reference points.
         """
         return []
+
     # END get_parents
 
     def get_referred_entities(self) -> Iterable[ObjectId]:
@@ -79,6 +79,8 @@ class Entity(Struct, EntityDefaultsBase, EntityBase):
         Intended to be overridden by subtypes that declare specific reference points
         """
         return []
+
     # END get_referred_entities
+
 
 # END Entity
