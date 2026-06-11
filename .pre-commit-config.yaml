@@ -29,7 +29,7 @@ repos:
                 - prettier-plugin-toml@2.0.6
 
     - repo: https://github.com/pre-commit/mirrors-eslint
-      rev: v10.3.0
+      rev: v10.4.1
       hooks:
           - id: eslint
             name: Check for ESLint errors
