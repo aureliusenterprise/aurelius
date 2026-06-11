@@ -79,7 +79,7 @@
         "@fortawesome/angular-fontawesome": "^4.0.0",
         "@fortawesome/free-regular-svg-icons": "^7.0.0",
         "@fortawesome/free-solid-svg-icons": "^7.0.0",
-        "@opentelemetry/exporter-trace-otlp-http": "^0.216.0",
+        "@opentelemetry/exporter-trace-otlp-http": "^0.218.0",
         "@opentelemetry/sdk-trace-base": "^2.7.1",
         "@opentelemetry/sdk-trace-web": "^2.7.1",
         "keycloak-angular": "^21.0.0",
