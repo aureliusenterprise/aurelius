@@ -63,11 +63,11 @@ for more information on the available options.
 ## Publishing the Documentation
 
 The documentation is published automatically when changes are merged into the `main` branch. A GitHub Action workflow
-is trigged to build the documentation and push it to the `public-docs` branch. The published documentation is hosted
-on GitHub Pages.
+is trigged to build the documentation and push it to the `public-docs` branch. The published documentation is
+hosted on GitHub Pages.
 
-For review purposes, documentation is also published for pull requests. A link to the published documentation is
-provided as a comment on the pull request. This allows reviewers to view the changes in the documentation before
+For review purposes, documentation is also published for pull requests. A link to the published documentation
+is provided as a comment on the pull request. This allows reviewers to view the changes in the documentation before
 merging the pull request. When the pull request is merged, this documentation is removed.
 
 ### Versioning

@@ -68,9 +68,11 @@ are known to work well. There are also many open source connectors available on 
 
 The Kafka Producer API is a low-level interface that enables developers to publish events to a Kafka topic. This
 API is ideal for scenarios where Kafka Connect is not suitable, such as when publishing data from a custom application
-or a system without a pre-built connector. It provides a native method for integrating Kafka with your custom code.
+or a system without a pre-built connector. It provides a native method for integrating Kafka with your custom
+code.
 
-Read more about the Kafka Producer API in the official [Kafka documentation](https://kafka.apache.org/documentation/#producerapi).
+Read more about the Kafka Producer API in the official
+[Kafka documentation](https://kafka.apache.org/documentation/#producerapi).
 
 !!! WARNING "Avoid the Kafka Producer API"
 
@@ -183,8 +185,8 @@ Another common use case for Kafka is real-time data acquisition. This use case i
 you have a data stream from a field asset, such as a sensor or a PLC, that you want to publish to Kafka for further
 processing.
 
-Kafka Connect is a good fit for this use case, as it provides connectors for most common industrial protocols such
-as [Modbus](https://plc4x.apache.org/users/integrations/apache-kafka.html), [OPC-UA](https://www.confluent.io/hub/onewayautomation/ogamma-visual-logger-for-opc),
+Kafka Connect is a good fit for this use case, as it provides connectors for most common industrial protocols
+such as [Modbus](https://plc4x.apache.org/users/integrations/apache-kafka.html), [OPC-UA](https://www.confluent.io/hub/onewayautomation/ogamma-visual-logger-for-opc),
 and [MQTT](https://docs.confluent.io/kafka-connectors/mqtt/current/mqtt-source-connector/overview.html).
 
 ```mermaid

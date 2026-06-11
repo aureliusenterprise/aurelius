@@ -108,8 +108,8 @@ for user profiles, which contains all the schemas related to user profile events
 
 ## Schema Evolution
 
-Schemas are not static and will evolve over time as new fields are added, existing fields are removed, or the data
-types of fields are changed. The Schema Registry supports [schema evolution](https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html),
+Schemas are not static and will evolve over time as new fields are added, existing fields are removed, or the
+data types of fields are changed. The Schema Registry supports [schema evolution](https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html),
 which allows you to make changes to a schema without breaking compatibility with existing consumers.
 
 ### Compatibility Strategy

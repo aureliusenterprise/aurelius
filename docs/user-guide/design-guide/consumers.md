@@ -43,8 +43,8 @@ For simple data transformation, Kafka Connect can be used with [Single Message T
 SMTs are small pieces of code that can be applied to individual events as they are read from a Kafka topic. For
 example, you can use an SMT to filter events based on a condition, or to convert a field to a different data type.
 
-If there are no compatible connectors available, or if you have complex data processing requirements, you may need
-to use the [Kafka Consumer API](#kafka-consumer-api) instead.
+If there are no compatible connectors available, or if you have complex data processing requirements, you may
+need to use the [Kafka Consumer API](#kafka-consumer-api) instead.
 
 #### How to Use Kafka Connect
 
@@ -175,7 +175,8 @@ Read more about the Kafka Consumer API in the official [Kafka documentation](htt
 
 #### How to Use the Kafka Consumer API
 
-The diagram below shows how a custom application can consume data from a Kafka topic using the Kafka Consumer API.
+The diagram below shows how a custom application can consume data from a Kafka topic using the Kafka Consumer
+API.
 
 ```mermaid
 graph TB
@@ -312,8 +313,8 @@ initialization can be used for recovery.
 
 ### Orchestration
 
-Orchestration use cases use Kafka to coordinate behaviour between different systems. This is a common pattern for
-event-driven architectures where systems need to communicate with each other in a loosely coupled way.
+Orchestration use cases use Kafka to coordinate behaviour between different systems. This is a common pattern
+for event-driven architectures where systems need to communicate with each other in a loosely coupled way.
 
 The advantage of using Kafka for orchestration is that it provides a reliable and scalable way to communicate
 between systems without the need for direct point-to-point communication. This is valuable in distributed systems
@@ -394,4 +395,5 @@ graph TB
 ```
 
 In this example, a sensor from a field asset publishes logs to a Kafka topic, which are consumed by a consumer
-application. The consumer application stores the logs and sends alerts to an alerting system if anomalies are detected.
+application. The consumer application stores the logs and sends alerts to an alerting system if anomalies are
+detected.

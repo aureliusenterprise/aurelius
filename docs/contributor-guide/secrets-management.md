@@ -57,7 +57,8 @@ using your private key.
 
 ## Decrypting Secrets
 
-Once the encryption on the files you need to access has been rotated, you can decrypt them using your private key.
+Once the encryption on the files you need to access has been rotated, you can decrypt them using your private
+key.
 
 !!! TIP "Automatic Decryption with Nx"
 
