@@ -3,16 +3,10 @@ from typing import Callable, Dict, Generator, Union
 
 from confluent_kafka import Consumer
 from confluent_kafka.admin import AdminClient
-from confluent_kafka.schema_registry import (
-    Schema,
-    SchemaRegistryClient,
-)
+from confluent_kafka.schema_registry import Schema, SchemaRegistryClient
 from m4i_atlas_core import create_entities
 
-from m4i_data_dictionary_io.entities.json import (
-    DataField,
-    ToAtlasConvertible,
-)
+from m4i_data_dictionary_io.entities.json import DataField, ToAtlasConvertible
 from tenacity import Retrying, stop_after_attempt, wait_exponential
 
 from .admin import get_cluster_id, get_external_topic_names
@@ -25,16 +19,10 @@ from .schema_registry import get_message_schema, get_topic_schema
 
 Parser = Callable[[str, str], Generator[DataField, None, None]]
 
-SCHEMA_PARSERS: Dict[str, Parser] = {
-    "avro": parse_avro_schema,
-    "json": parse_json_schema,
-}
+SCHEMA_PARSERS: Dict[str, Parser] = {"avro": parse_avro_schema, "json": parse_json_schema}
 
 
-def parse_schema(
-    schema: Schema,
-    dataset_qualified_name: str,
-) -> Generator[DataField, None, None]:
+def parse_schema(schema: Schema, dataset_qualified_name: str) -> Generator[DataField, None, None]:
     """Parse a schema and yield DataField instances."""
     if schema.schema_type.lower() not in SCHEMA_PARSERS:
         logging.error(f"No parser found for schema type: {schema.schema_type}")
@@ -58,28 +46,19 @@ def discover_cluster(
 
     cluster_id = get_cluster_id(admin_client)
 
-    collection = build_collection(
-        cluster_id or "kafka_collection", system.qualified_name
-    )
+    collection = build_collection(cluster_id or "kafka_collection", system.qualified_name)
 
     yield collection
 
     topics = get_external_topic_names(admin_client)
 
     for topic in topics:
-        dataset = build_dataset(
-            topic,
-            collection.qualified_name,
-        )
+        dataset = build_dataset(topic, collection.qualified_name)
 
         yield dataset
 
         # Attempt to retrieve a schema for the topic from the Schema Registry
-        schema = (
-            get_topic_schema(topic, schema_registry_client)
-            if schema_registry_client
-            else None
-        )
+        schema = get_topic_schema(topic, schema_registry_client) if schema_registry_client else None
 
         data = consume_message(topic, consumer) if consumer and not schema else None
 
@@ -88,17 +67,11 @@ def discover_cluster(
 
         # Parse the schema if available
         if schema:
-            yield from parse_schema(
-                schema,
-                dataset.qualified_name,
-            )
+            yield from parse_schema(schema, dataset.qualified_name)
 
         # If no schema is found, but data is available, parse the payload
         elif data:
-            yield from parse_payload(
-                data.decode("utf-8"),
-                dataset.qualified_name,
-            )
+            yield from parse_payload(data.decode("utf-8"), dataset.qualified_name)
 
 
 async def create_from_kafka(
@@ -118,10 +91,7 @@ async def create_from_kafka(
     ):
         # Occasionally, the entity may fail to create due to transient issues.
         for attempt in Retrying(
-            stop=stop_after_attempt(10),
-            wait=wait_exponential(multiplier=1, min=2, max=10),
+            stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=2, max=10)
         ):
             with attempt:
-                await create_entities(
-                    entity.convert_to_atlas(), access_token=access_token
-                )
+                await create_entities(entity.convert_to_atlas(), access_token=access_token)

@@ -1,5 +1,5 @@
-
 from typing import Iterable
+
 
 def index_by_property(data: Iterable[dict], property_name: str) -> dict:
     """
@@ -20,4 +20,6 @@ def index_by_property(data: Iterable[dict], property_name: str) -> dict:
         # END IF
     # END LOOP
     return result
+
+
 # END index_by_property

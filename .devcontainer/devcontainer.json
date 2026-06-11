@@ -15,6 +15,7 @@
                 "nrwl.angular-console",
                 "PKief.material-icon-theme",
                 "tamasfe.even-better-toml",
+                "SonarSource.sonarlint-vscode",
                 "vitest.explorer",
                 "-ms-python.autopep8"
             ],
@@ -102,14 +103,16 @@
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
         "ghcr.io/devcontainers/features/node:1": {
-            "version": "lts"
+            "version": "22.22.3"
         },
         "ghcr.io/devcontainers/features/python:1": {
             "toolsToInstall": ["poetry"],
             "version": "3.8"
         },
         "ghcr.io/dhoeric/features/google-cloud-cli:1": {},
-        "ghcr.io/dhoeric/features/trivy:1": {}
+        "ghcr.io/dhoeric/features/trivy:1": {
+            "version": "0.71.0"
+        }
     },
     "forwardPorts": [5601, 8081, 8082, 9200, 8180, 18081, 18082, 18083, 21000],
     "image": "mcr.microsoft.com/devcontainers/base:noble",
@@ -163,6 +166,7 @@
     "postCreateCommand": {
         "gke": "bash .devcontainer/gke.sh",
         "pre-commit": "bash .devcontainer/pre-commit.sh",
+        "sonarqube": "bash .devcontainer/sonarqube.sh",
         "sops": "bash .devcontainer/sops.sh"
     },
     "runArgs": ["--add-host=keycloak.localhost:127.0.0.1"]

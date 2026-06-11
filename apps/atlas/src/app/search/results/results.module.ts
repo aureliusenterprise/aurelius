@@ -8,14 +8,14 @@ import { InfiniteScrollContainerModule } from '../components/infinite-scroll-con
 import { ResultsComponent } from './results.component';
 
 @NgModule({
-  declarations: [ResultsComponent],
-  imports: [
-    CommonModule,
-    FilterModule,
-    FontAwesomeModule,
-    InfiniteScrollContainerModule,
-    DetailsCardModule,
-    TranslateModule.forChild(),
-  ],
+    declarations: [ResultsComponent],
+    imports: [
+        CommonModule,
+        FilterModule,
+        FontAwesomeModule,
+        InfiniteScrollContainerModule,
+        DetailsCardModule,
+        TranslateModule.forChild(),
+    ],
 })
 export class ResultsModule {}

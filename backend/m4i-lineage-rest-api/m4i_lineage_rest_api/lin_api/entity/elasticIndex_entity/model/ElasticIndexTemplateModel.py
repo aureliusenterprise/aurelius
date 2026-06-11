@@ -4,7 +4,7 @@ from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
 from .ElasticIndexTemplateMappings import ElasticIndexTemplateMappings
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticIndexTemplateModelBase(DataClassJsonMixin):
     mappings: ElasticIndexTemplateMappings
@@ -13,7 +13,7 @@ class ElasticIndexTemplateModelBase(DataClassJsonMixin):
 # END ElasticIndexTemplateModelBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticIndexTemplateModelDefaultsBase(DataClassJsonMixin):
     pass
@@ -22,11 +22,10 @@ class ElasticIndexTemplateModelDefaultsBase(DataClassJsonMixin):
 # END ElasticIndexTemplateModelDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class ElasticIndexTemplateModel(
-    ElasticIndexTemplateModelDefaultsBase,
-    ElasticIndexTemplateModelBase,
-):
+class ElasticIndexTemplateModel(ElasticIndexTemplateModelDefaultsBase, ElasticIndexTemplateModelBase):
     pass
+
+
 # END ElasticIndexTemplateModel

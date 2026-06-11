@@ -6,13 +6,8 @@ import { DataQualityListModule } from '../../data-quality-list/data-quality-list
 import { DatasetDetailsCardComponent } from './dataset-details-card.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ClassificationsListModule,
-    BreadCrumbsModule,
-    DataQualityListModule
-  ],
-  declarations: [DatasetDetailsCardComponent],
-  exports: [DatasetDetailsCardComponent]
+    imports: [CommonModule, ClassificationsListModule, BreadCrumbsModule, DataQualityListModule],
+    declarations: [DatasetDetailsCardComponent],
+    exports: [DatasetDetailsCardComponent],
 })
 export class DatasetDetailsCardModule {}

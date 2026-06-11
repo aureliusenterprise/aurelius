@@ -9,16 +9,16 @@ import { getHttpClient } from '../utils';
  * The identity of the user is derived from the bearer token
  */
 export function getUserRole(
-  /** The full name of the project for which to look up the role */
-  projectName: string,
-  /** Additional parameters for the get user role operation */
-  { forceUpdate }: GetOptions = {}
+    /** The full name of the project for which to look up the role */
+    projectName: string,
+    /** Additional parameters for the get user role operation */
+    { forceUpdate }: GetOptions = {},
 ): Observable<UserRole> {
-  const http = getHttpClient();
+    const http = getHttpClient();
 
-  validateRequiredArguments(arguments, 'getUserRole');
+    validateRequiredArguments(arguments, 'getUserRole');
 
-  const path = `${repositoryApiBasePath}/auth/role/${projectName}`;
+    const path = `${repositoryApiBasePath}/auth/role/${projectName}`;
 
-  return http.authorize().cache(forceUpdate).get<UserRole>(path);
+    return http.authorize().cache(forceUpdate).get<UserRole>(path);
 }

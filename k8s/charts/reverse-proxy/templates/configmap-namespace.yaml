@@ -4,4 +4,4 @@ metadata:
   name: cm-reverse-proxy-configs-namespace-conf
 data:
   namespace.conf: |
-{{ tpl ( .Files.Get "conf.d/namespace.yaml" ) . | indent 4}}
+{{ tpl ( .Files.Get "conf.d/namespace.yaml.tmpl" ) . | indent 4}}

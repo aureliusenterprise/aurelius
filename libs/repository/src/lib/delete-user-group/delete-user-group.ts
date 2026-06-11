@@ -6,24 +6,21 @@ import { createHttpParams, getHttpClient } from '../utils';
 /**
  * Deletes the `UserGroup` with the given `projectId` and `userGroupId` from the repository.
  */
-export function deleteUserGroup(
-  projectId: string,
-  userGroupId: string
-): Observable<string> {
-  const http = getHttpClient(),
-    path = `${repositoryApiBasePath}/project/group`;
+export function deleteUserGroup(projectId: string, userGroupId: string): Observable<string> {
+    const http = getHttpClient(),
+        path = `${repositoryApiBasePath}/project/group`;
 
-  validateRequiredArguments(arguments, 'deleteUserGroup');
+    validateRequiredArguments(arguments, 'deleteUserGroup');
 
-  const requestParameters = createHttpParams({
-    project_id: projectId,
-    group_id: userGroupId,
-  });
+    const requestParameters = createHttpParams({
+        project_id: projectId,
+        group_id: userGroupId,
+    });
 
-  const requestOptions = {
-    params: requestParameters,
-    responseType: 'text' as 'text',
-  };
+    const requestOptions = {
+        params: requestParameters,
+        responseType: 'text' as 'text',
+    };
 
-  return http.authorize().delete(path, requestOptions);
+    return http.authorize().delete(path, requestOptions);
 }

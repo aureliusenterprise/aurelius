@@ -1,1 +1,3 @@
-from .BaseModelObject import *
+from .BaseModelObject import BaseModelObject
+
+__all__ = ["BaseModelObject"]

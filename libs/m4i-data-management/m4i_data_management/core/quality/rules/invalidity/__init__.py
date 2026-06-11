@@ -1,1 +1,1 @@
-from .invalidity import *
+from .invalidity import invalidity as invalidity

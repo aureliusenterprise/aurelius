@@ -1,2 +1,2 @@
-from .index_elastic_data import *
-from .retrieve_elastic_data import *
+from .index_elastic_data import index_elastic_data as index_elastic_data
+from .retrieve_elastic_data import retrieve_elastic_data as retrieve_elastic_data

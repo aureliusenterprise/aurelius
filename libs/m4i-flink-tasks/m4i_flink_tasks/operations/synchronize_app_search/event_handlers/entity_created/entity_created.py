@@ -1,11 +1,13 @@
 import logging
-from typing import List, TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Dict
 
 from elasticsearch import Elasticsearch
 
 from m4i_flink_tasks import AppSearchDocument, EntityMessage, SynchronizeAppSearchError
-from m4i_flink_tasks.model.synchronize_app_search_error_with_payload import SynchronizeAppSearchWithPayloadError
-from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit.relationship_audit import (
+from m4i_flink_tasks.model.synchronize_app_search_error_with_payload import (
+    SynchronizeAppSearchWithPayloadError,
+)
+from m4i_flink_tasks.operations.synchronize_app_search.event_handlers.relationship_audit import (
     get_child_documents,
     get_related_documents,
 )
@@ -28,21 +30,12 @@ RELATIONSHIP_MAP = {
 
 RELATIONSHIP_BLACKLIST = ["m4i_data_quality", "m4i_gov_data_quality", "m4i_source"]
 
-TECHNICAL_TYPES = {
-    "m4i_system",
-    "m4i_collection",
-    "m4i_dataset",
-    "m4i_field"
-}
+TECHNICAL_TYPES = {"m4i_system", "m4i_collection", "m4i_dataset", "m4i_field"}
 
-BUSINESS_TYPES = {
-    "m4i_data_domain",
-    "m4i_data_entity",
-    "m4i_data_attribute",
-}
+BUSINESS_TYPES = {"m4i_data_domain", "m4i_data_entity", "m4i_data_attribute"}
 
 
-def determine_sourcetype(typename) -> str:
+def determine_sourcetype(typename: str) -> str:
     """
     Determine whether an entity is technical or business
 
@@ -120,7 +113,7 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
         supertypenames=[entity_details.type_name],
         typename=entity_details.type_name,
         definition=definition,
-        sourcetype=determine_sourcetype(entity_details.type_name)
+        sourcetype=determine_sourcetype(entity_details.type_name),
     )
     # Add document to created documents
     updated_documents[document.guid] = document
@@ -129,9 +122,9 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
 
     logging.info("Parents: %s", parents)
 
-    inserted = [
-        value for value in message.inserted_relationships.values() if value is not None
-    ] if message.inserted_relationships else []
+    inserted = (
+        [value for value in message.inserted_relationships.values()] if message.inserted_relationships else []
+    )
 
     logging.info("Relationships before filter (values): %s", inserted)
 
@@ -139,10 +132,7 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
         rel.guid
         for rels in inserted
         for rel in rels
-        if (
-            rel.guid is not None
-            and getattr(rel, "type_name", None) not in RELATIONSHIP_BLACKLIST
-        )
+        if (rel.guid is not None and getattr(rel, "type_name", None) not in RELATIONSHIP_BLACKLIST)
     ]
 
     logging.info("Relationships to insert: %s", inserted_relationships)
@@ -188,14 +178,16 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
             related_guids.append(document.guid)
             related_names.append(document.name)
 
-        logging.info("Inserted relationship %s for entity %s", related_document.typename, related_document.guid)
+        logging.info(
+            "Inserted relationship %s for entity %s", related_document.typename, related_document.guid
+        )
         logging.debug("Updated ids: %s", related_guids)
         logging.debug("Updated names: %s", related_names)
 
         updated_documents[document.guid] = document
         updated_documents[related_document.guid] = related_document
 
-    if message.new_value is None:
+    if not message.new_value:
         return updated_documents
 
     breadcrumb_refs = {
@@ -216,18 +208,9 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
         parent_doc = updated_documents[first_parent]
 
         if parent_doc.guid not in document.breadcrumbguid:
-            document.breadcrumbname = [
-                *parent_doc.breadcrumbname,
-                parent_doc.name,
-            ]
-            document.breadcrumbguid = [
-                *parent_doc.breadcrumbguid,
-                parent_doc.guid,
-            ]
-            document.breadcrumbtype = [
-                *parent_doc.breadcrumbtype,
-                parent_doc.typename,
-            ]
+            document.breadcrumbname = [*parent_doc.breadcrumbname, parent_doc.name]
+            document.breadcrumbguid = [*parent_doc.breadcrumbguid, parent_doc.guid]
+            document.breadcrumbtype = [*parent_doc.breadcrumbtype, parent_doc.typename]
 
             document.parentguid = parent_doc.guid
 
@@ -259,20 +242,11 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
         if document.guid in child_doc.breadcrumbguid:
             continue
 
-        child_doc.breadcrumbname = [
-            *document.breadcrumbname,
-            document.name,
-        ]
+        child_doc.breadcrumbname = [*document.breadcrumbname, document.name]
 
-        child_doc.breadcrumbguid = [
-            *document.breadcrumbguid,
-            document.guid,
-        ]
+        child_doc.breadcrumbguid = [*document.breadcrumbguid, document.guid]
 
-        child_doc.breadcrumbtype = [
-            *document.breadcrumbtype,
-            document.typename,
-        ]
+        child_doc.breadcrumbtype = [*document.breadcrumbtype, document.typename]
 
         child_doc.parentguid = document.guid
 
@@ -283,11 +257,7 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
 
         updated_documents[guid] = child_doc
 
-    for child_document in get_child_documents(
-            list(breadcrumb_refs),
-            elastic,
-            index_name,
-    ):
+    for child_document in get_child_documents(list(breadcrumb_refs), elastic, index_name):
         if child_document.guid in immediate_children:
             continue
 
@@ -316,9 +286,13 @@ def default_create_handler(  # noqa: C901, PLR0915, PLR0912
             *child_document.breadcrumbtype,
         ]
 
-        child_document.parentguid = child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
+        child_document.parentguid = (
+            child_document.breadcrumbguid[-1] if child_document.breadcrumbguid else None
+        )
 
-        logging.info("Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid)
+        logging.info(
+            "Set parent relationship of entity %s to %s", child_document.guid, child_document.parentguid
+        )
         logging.debug("Breadcrumb GUID: %s", child_document.breadcrumbguid)
         logging.debug("Breadcrumb Name: %s", child_document.breadcrumbname)
         logging.debug("Breadcrumb Type: %s", child_document.breadcrumbtype)
@@ -364,7 +338,7 @@ def create_person_handler(
 
     if hasattr(attributes, "email"):
         logging.debug("Adding email to person entity: %s", entity_details.guid)
-        result[entity_details.guid].email = attributes.email # type: ignore
+        result[entity_details.guid].email = attributes.email  # type: ignore
 
     return result
 

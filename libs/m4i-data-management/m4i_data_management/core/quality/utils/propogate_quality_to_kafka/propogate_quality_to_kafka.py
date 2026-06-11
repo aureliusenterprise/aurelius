@@ -32,49 +32,62 @@ def write_data_quality_results_to_kafka(results: DataFrame, compliant: DataFrame
 
     """
 
-    results = results.set_index(keys=['business_rule_id'], drop=False)
-    results = results.where(notnull(results), None)
-    results['result_id'] = results["result_id"].map(str)
-    results['run_id'] = results["run_id"].map(str)
+    results = results.set_index(keys=["business_rule_id"], drop=False)  # type: ignore[assignment]
+    results = results.where(notnull(results), None)  # type: ignore[assignment]
+    results["result_id"] = results["result_id"].map(str)  # type: ignore[union-attr]
+    results["run_id"] = results["run_id"].map(str)  # type: ignore[union-attr]
 
-    kafka_summary_topic_name, kafka_details_topic_name, dataset_index_column = store.get_many(
-        "kafka_quality_summary_topic",
-        "kafka_quality_detail_topic",
-        "dataset_index_column",
-        all_required=True
-    )
+    (kafka_summary_topic_name, kafka_details_topic_name, dataset_index_column) = store.get_many(
+        "kafka_quality_summary_topic", "kafka_quality_detail_topic", "dataset_index_column", all_required=True
+    )  # type: ignore[assignment]
     producer = make_confluent_producer()
 
-    for id, row in results.iterrows():
+    for id, row in results.iterrows():  # type: ignore[union-attr]
         row_data = row.to_dict()
         producer.produce(topic=kafka_summary_topic_name, value=row_data)
 
     columns = [dataset_index_column] + [
-                  'business_rule_id', 'data_field_qualified_name', 'data_quality_rule_description',
-                  'data_quality_rule_dimension', 'result_id', 'test_date', 'run_id', 'run_date',
-                  'data_attribute_qualified_name', 'data_field_name', 'data_entity_qualified_name',
-                  'data_attribute_name', 'data_attribute_owner', 'data_attribute_steward',
-                  'data_domain_qualified_name', 'data_entity_name', 'data_domain_name'
-              ]
+        "business_rule_id",
+        "data_field_qualified_name",
+        "data_quality_rule_description",
+        "data_quality_rule_dimension",
+        "result_id",
+        "test_date",
+        "run_id",
+        "run_date",
+        "data_attribute_qualified_name",
+        "data_field_name",
+        "data_entity_qualified_name",
+        "data_attribute_name",
+        "data_attribute_owner",
+        "data_attribute_steward",
+        "data_domain_qualified_name",
+        "data_entity_name",
+        "data_domain_name",
+    ]
 
-    compliant = compliant[columns]
+    compliant = compliant[columns]  # type: ignore[assignment]
     compliant = compliant.assign(passed=1)
 
-    non_compliant = non_compliant[columns]
+    non_compliant = non_compliant[columns]  # type: ignore[assignment]
     non_compliant = non_compliant.assign(passed=0)
 
     details = pd.concat([compliant, non_compliant])
 
-    details['data_index_rule_id'] = details[dataset_index_column].astype(
-        str) + '--' + details['business_rule_id'].astype(str)
-    details = details.set_index('data_index_rule_id')
-    details = details.where(notnull(details), None)
-    details['result_id'] = details["result_id"].map(str)
-    details['run_id'] = details["run_id"].map(str)
+    details["data_index_rule_id"] = (
+        details[dataset_index_column].astype(str)  # type: ignore[union-attr]
+        + "--"
+        + details["business_rule_id"].astype(str)  # type: ignore[union-attr]
+    )
+    details = details.set_index("data_index_rule_id")
+    details = details.where(notnull(details), None)  # type: ignore[assignment]
+    details["result_id"] = details["result_id"].map(str)  # type: ignore[union-attr]
+    details["run_id"] = details["run_id"].map(str)  # type: ignore[union-attr]
 
-    for id, row in details.iterrows():
+    for id, row in details.iterrows():  # type: ignore[union-attr]
         row_data = row.to_dict()
         producer.produce(topic=kafka_details_topic_name, value=row_data)
     producer.flush()
+
 
 # END write_data_quality_results_to_kafka

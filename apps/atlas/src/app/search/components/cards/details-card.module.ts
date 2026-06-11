@@ -18,24 +18,24 @@ import { GovernanceQualityCardModule } from './gov-quality/governance-quality-ca
 import { SystemDetailsCardModule } from './system/system-details-card.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    TranslateModule.forChild(),
-    AttributeDetailsCardModule,
-    CollectionDetailsCardModule,
-    DataQualityCardModule,
-    DatasetDetailsCardModule,
-    DomainDetailsCardModule,
-    EntityDetailsCardModule,
-    FieldDetailsCardModule,
-    GovernanceQualityCardModule,
-    InfiniteScrollContainerModule,
-    SystemDetailsCardModule,
-    TooltipModule,
-    EntityTypeNameModule,
-  ],
-  declarations: [DetailsCardComponent, GovernanceQualityListComponent],
-  exports: [DetailsCardComponent],
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        TranslateModule.forChild(),
+        AttributeDetailsCardModule,
+        CollectionDetailsCardModule,
+        DataQualityCardModule,
+        DatasetDetailsCardModule,
+        DomainDetailsCardModule,
+        EntityDetailsCardModule,
+        FieldDetailsCardModule,
+        GovernanceQualityCardModule,
+        InfiniteScrollContainerModule,
+        SystemDetailsCardModule,
+        TooltipModule,
+        EntityTypeNameModule,
+    ],
+    declarations: [DetailsCardComponent, GovernanceQualityListComponent],
+    exports: [DetailsCardComponent],
 })
 export class DetailsCardModule {}

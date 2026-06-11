@@ -17,7 +17,7 @@ def range(data: DataFrame, column_name: str, lower_bound: int = 0, upper_bound: 
 
     def check(value):
         is_in_range = (
-            not isna(value)
+            not isna(value)  # type: ignore[arg-type]
             and int(value) >= lower_bound
             and int(value) <= upper_bound
         )
@@ -27,4 +27,4 @@ def range(data: DataFrame, column_name: str, lower_bound: int = 0, upper_bound: 
     if column_name not in data.columns:
         return Series([0] * len(data), index=data.index)
 
-    return data[column_name].apply(check)
+    return data[column_name].apply(check)  # type: ignore[return-value]

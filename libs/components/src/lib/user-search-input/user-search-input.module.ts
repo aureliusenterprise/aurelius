@@ -4,8 +4,8 @@ import { RepositoryModule } from '@models4insight/repository';
 import { UserSearchInputComponent } from './user-search-input.component';
 
 @NgModule({
-  imports: [CommonModule, RepositoryModule],
-  declarations: [UserSearchInputComponent],
-  exports: [UserSearchInputComponent],
+    imports: [CommonModule, RepositoryModule],
+    declarations: [UserSearchInputComponent],
+    exports: [UserSearchInputComponent],
 })
 export class UserSearchInputModule {}

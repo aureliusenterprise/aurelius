@@ -1,1 +1,1 @@
-from .find_different_rows import *
+from .find_different_rows import find_different_rows as find_different_rows

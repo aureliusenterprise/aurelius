@@ -3,12 +3,7 @@ import logging
 from flask import Flask
 from m4i_backend_core.shared import register as register_shared
 
-from m4i_search_api.providers import (
-    AppSearchKeyProvider,
-    AuthProvider,
-    KeycloakAuthProvider,
-    KeyProvider,
-)
+from m4i_search_api.providers import AppSearchKeyProvider, AuthProvider, KeycloakAuthProvider, KeyProvider
 
 from .globals import LOGGER, METADATA
 from .routes import create_proxy_blueprint, health_bp
@@ -28,36 +23,23 @@ def setup_logging(log_level: str) -> None:
     if not LOGGER.handlers:
         handler = logging.StreamHandler()
         handler.setLevel(log_level.upper())
-        formatter = logging.Formatter(
-            "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
-        )
+        formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s")
         handler.setFormatter(formatter)
         LOGGER.addHandler(handler)
 
 
 def setup_routes(
-    app: Flask,
-    auth_provider: AuthProvider,
-    key_provider: KeyProvider,
-    settings: Settings,
+    app: Flask, auth_provider: AuthProvider, key_provider: KeyProvider, settings: Settings
 ) -> None:
     """Register routes with the Flask application."""
     app.register_blueprint(health_bp)
 
     app.register_blueprint(
-        create_proxy_blueprint(
-            auth_provider=auth_provider,
-            key_provider=key_provider,
-            settings=settings,
-        )
+        create_proxy_blueprint(auth_provider=auth_provider, key_provider=key_provider, settings=settings)
     )
 
 
-def create_app(
-    auth_provider: AuthProvider,
-    key_provider: KeyProvider,
-    settings: Settings,
-) -> Flask:
+def create_app(auth_provider: AuthProvider, key_provider: KeyProvider, settings: Settings) -> Flask:
     """
     Factory function to create and configure the Flask application.
 
@@ -78,9 +60,7 @@ def create_app(
     LOGGER.debug("Settings: %s", settings)
 
     if not settings.ca_cert_path:
-        LOGGER.warning(
-            "No CA certificate path provided; SSL verification is disabled. This is not recommended for production environments."
-        )
+        LOGGER.warning("No CA certificate path provided; SSL verification is disabled.")
 
     return app
 
@@ -92,8 +72,4 @@ def main() -> Flask:
     auth_provider = KeycloakAuthProvider()
     key_provider = AppSearchKeyProvider(settings)
 
-    return create_app(
-        auth_provider=auth_provider,
-        key_provider=key_provider,
-        settings=settings,
-    )
+    return create_app(auth_provider=auth_provider, key_provider=key_provider, settings=settings)

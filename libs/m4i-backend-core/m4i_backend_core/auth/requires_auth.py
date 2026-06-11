@@ -31,9 +31,7 @@ class JwksFetchError(requests.RequestException):
     """Raised when there is an error fetching the JWKS keys"""
 
     def __init__(self, original_exception: Exception):
-        super().__init__(
-            f"Unable to fetch JWKS keys for token verification: {str(original_exception)}"
-        )
+        super().__init__(f"Unable to fetch JWKS keys for token verification: {str(original_exception)}")
         self.original_exception = original_exception
 
 
@@ -49,11 +47,7 @@ def openid_configuration() -> Dict:
 
 
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
-@retry(
-    stop=stop_after_attempt(2),
-    retry=retry_if_exception_type(JwksFetchError),
-    reraise=True,
-)
+@retry(stop=stop_after_attempt(2), retry=retry_if_exception_type(JwksFetchError), reraise=True)
 def jwks() -> Dict[str, RSAPublicKey]:
     """Return the JWKS configuration for the JWT authentication."""
     openid = openid_configuration()
@@ -70,10 +64,7 @@ def jwks() -> Dict[str, RSAPublicKey]:
 
     response_json = response.json()
 
-    result = {
-        key["kid"]: cast("RSAPublicKey", RSAAlgorithm.from_jwk(key))
-        for key in response_json["keys"]
-    }
+    result = {key["kid"]: cast("RSAPublicKey", RSAAlgorithm.from_jwk(key)) for key in response_json["keys"]}
 
     return result
 
@@ -84,7 +75,8 @@ def requires_auth(f=None, transparent: bool = False):
     Determines whether the access token provided with the request is valid.
     Passes the access token to the decorated function as a named parameter called `access_token`.
 
-    When `transparent`, does not validate the token. This is useful when the token just needs to be passed on to another service.
+    When `transparent`, does not validate the token. This is useful when the token
+    just needs to be passed on to another service.
 
     :exception AuthError: Thrown whenever the access token cannot be verified for any reason
     """
@@ -93,11 +85,7 @@ def requires_auth(f=None, transparent: bool = False):
         return partial(requires_auth, transparent=transparent)
 
     @wraps(f)
-    @retry(
-        stop=stop_after_attempt(2),
-        retry=retry_if_exception_type(KidNotFoundError),
-        reraise=True,
-    )
+    @retry(stop=stop_after_attempt(2), retry=retry_if_exception_type(KidNotFoundError), reraise=True)
     def decorated(*args, **kwargs):
         token = get_token_auth_header()
 
@@ -110,21 +98,14 @@ def requires_auth(f=None, transparent: bool = False):
 
             if alg != "RS256":
                 raise AuthError(
-                    {
-                        "code": "invalid_algorithm",
-                        "description": f"Unsupported signing algorithm: {alg}",
-                    },
-                    401,
+                    {"code": "invalid_algorithm", "description": f"Unsupported signing algorithm: {alg}"}, 401
                 )
 
             kid = headers.get("kid")
 
             if not kid:
                 raise AuthError(
-                    {
-                        "code": "invalid_header",
-                        "description": "Authorization token is missing 'kid' header.",
-                    },
+                    {"code": "invalid_header", "description": "Authorization token is missing 'kid' header."},
                     401,
                 )
 
@@ -145,45 +126,23 @@ def requires_auth(f=None, transparent: bool = False):
                 raise KidNotFoundError()
 
             payload = jwt.decode(
-                token,
-                key=keys[kid],
-                algorithms=["RS256"],
-                issuer=AUTH_ISSUER,
-                options={"verify_aud": False},
+                token, key=keys[kid], algorithms=["RS256"], issuer=AUTH_ISSUER, options={"verify_aud": False}
             )
 
         except jwt.ExpiredSignatureError:
-            raise AuthError(
-                {
-                    "code": "token_expired",
-                    "description": "Token expired.",
-                },
-                401,
-            )
+            raise AuthError({"code": "token_expired", "description": "Token expired."}, 401)
 
         except jwt.InvalidIssuerError:
             raise AuthError(
-                {
-                    "code": "invalid_claims",
-                    "description": "Incorrect claims. Please, check the issuer.",
-                },
-                401,
+                {"code": "invalid_claims", "description": "Incorrect claims. Please, check the issuer."}, 401
             )
         except jwt.InvalidSignatureError:
             raise AuthError(
-                {
-                    "code": "invalid_signature",
-                    "description": "Signature verification failed.",
-                },
-                401,
+                {"code": "invalid_signature", "description": "Signature verification failed."}, 401
             )
         except jwt.PyJWTError:
             raise AuthError(
-                {
-                    "code": "invalid_header",
-                    "description": "Unable to parse authentication token.",
-                },
-                401,
+                {"code": "invalid_header", "description": "Unable to parse authentication token."}, 401
             )
 
         _request_ctx_stack.top.current_user = payload

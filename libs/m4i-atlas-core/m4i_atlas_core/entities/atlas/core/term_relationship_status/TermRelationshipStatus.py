@@ -7,4 +7,6 @@ class TermRelationshipStatus(Enum):
     DEPRECATED = "DEPRECATED"
     OBSOLETE = "OBSOLETE"
     OTHER = "OTHER"
+
+
 # EMD TermRelationshipStatus

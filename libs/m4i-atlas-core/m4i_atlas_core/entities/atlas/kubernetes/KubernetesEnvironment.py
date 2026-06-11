@@ -3,20 +3,21 @@ from typing import Iterable, List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from ..core import (AttributeDef, Cardinality, EntityDef, ObjectId,
-                    TypeCategory)
+from ..core import AttributeDef, Cardinality, EntityDef, ObjectId, TypeCategory
 from ..data_dictionary.BusinessSystem import (
-    BusinessSystem, BusinessSystemAttributes, BusinessSystemAttributesBase,
-    BusinessSystemAttributesDefaultsBase, BusinessSystemBase,
-    BusinessSystemDefaultsBase)
+    BusinessSystem,
+    BusinessSystemAttributes,
+    BusinessSystemAttributesBase,
+    BusinessSystemAttributesDefaultsBase,
+    BusinessSystemBase,
+    BusinessSystemDefaultsBase,
+)
 
 kubernetes_environment_super_type = ["m4i_system"]
 
 kubernetes_environment_attributes_def = [
     AttributeDef(
-        name="kubernetesClusters",
-        type_name="array<m4i_kubernetes_cluster>",
-        cardinality=Cardinality.SET
+        name="kubernetesClusters", type_name="array<m4i_kubernetes_cluster>", cardinality=Cardinality.SET
     )
 ]
 
@@ -26,11 +27,11 @@ kubernetes_environment_def = EntityDef(
     description="A type definition for a generic Kubernetes Environment in the context of models4insight.com",
     type_version="1.0",
     super_types=kubernetes_environment_super_type,
-    attribute_defs=kubernetes_environment_attributes_def
+    attribute_defs=kubernetes_environment_attributes_def,
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesEnvironmentAttributesBase(BusinessSystemAttributesBase):
     pass
@@ -39,35 +40,36 @@ class KubernetesEnvironmentAttributesBase(BusinessSystemAttributesBase):
 # END KubernetesEnvironmentAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesEnvironmentAttributesDefaultsBase(BusinessSystemAttributesDefaultsBase):
     kubernetes_clusters: Optional[List[ObjectId]] = field(default_factory=list)
 
+
 # END KubernetesEnvironmentAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class KubernetesEnvironmentAttributes(BusinessSystemAttributes,
-                                     KubernetesEnvironmentAttributesDefaultsBase,
-                                     KubernetesEnvironmentAttributesBase):
+class KubernetesEnvironmentAttributes(
+    BusinessSystemAttributes, KubernetesEnvironmentAttributesDefaultsBase, KubernetesEnvironmentAttributesBase
+):
     pass
 
 
 # END KubernetesEnvironmentAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesEnvironmentBase(BusinessSystemBase):
-    attributes: KubernetesEnvironmentAttributes
+    attributes: KubernetesEnvironmentAttributes  # type: ignore[reportIncompatibleMethodOverride]
 
 
 # END KubernetesEnvironmentBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class KubernetesEnvironmentDefaultsBase(BusinessSystemDefaultsBase):
     pass
@@ -76,12 +78,11 @@ class KubernetesEnvironmentDefaultsBase(BusinessSystemDefaultsBase):
 # END KubernetesEnvironmentDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class KubernetesEnvironment(BusinessSystem,
-                           KubernetesEnvironmentDefaultsBase,
-                           KubernetesEnvironmentBase
-                           ):
+class KubernetesEnvironment(  # type: ignore[reportGeneralTypeIssues]
+    BusinessSystem, KubernetesEnvironmentDefaultsBase, KubernetesEnvironmentBase
+):
     type_name: str = "m4i_kubernetes_environment"
 
     @classmethod
@@ -94,10 +95,14 @@ class KubernetesEnvironment(BusinessSystem,
         * List of Kubernetes Clusters
         """
 
-        references = [*super().get_referred_entities(),
-                      *self.attributes.kubernetes_clusters]
+        references = [
+            *(super().get_referred_entities() or []),
+            *(self.attributes.kubernetes_clusters if self.attributes else []),  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
+        ]
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END KubernetesEnvironment

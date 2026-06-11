@@ -4,18 +4,18 @@ import { extract } from '@models4insight/i18n';
 import { DatasetComponent } from './dataset.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: DatasetComponent,
-    data: {
-      title: extract('Review the dataset')
-    }
-  }
+    {
+        path: '',
+        component: DatasetComponent,
+        data: {
+            title: extract('Review the dataset'),
+        },
+    },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-  providers: []
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
+    providers: [],
 })
 export class DatasetRoutingModule {}

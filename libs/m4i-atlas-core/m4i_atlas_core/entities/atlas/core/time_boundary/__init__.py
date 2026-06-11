@@ -1,1 +1,3 @@
-from .TimeBoundary import *
+from .TimeBoundary import TimeBoundary
+
+__all__ = ["TimeBoundary"]

@@ -7,50 +7,40 @@ import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export interface ProjectsStoreContext {
-  readonly suggestedProjects?: Project[];
-  readonly filteredProjects?: Project[];
-  readonly search?: string;
+    readonly suggestedProjects?: Project[];
+    readonly filteredProjects?: Project[];
+    readonly search?: string;
 }
 
 export const projectsServiceDefaultState: ProjectsStoreContext = {
-  filteredProjects: [],
-  suggestedProjects: []
+    filteredProjects: [],
+    suggestedProjects: [],
 };
 
 @Injectable()
 export class ProjectsSearchService extends BasicStore<ProjectsStoreContext> {
-  constructor(private projectsService: Projects) {
-    super({
-      defaultState: projectsServiceDefaultState
-    });
-    this.init();
-  }
+    constructor(private projectsService: Projects) {
+        super({
+            defaultState: projectsServiceDefaultState,
+        });
+        this.init();
+    }
 
-  private init() {
-    combineLatest([
-      this.projectsService.projects,
-      this.select('suggestedProjects')
-    ])
-      .pipe(
-        map(([projects, search]) =>
-          this.handleFilterProjects(projects, search)
-        ),
-        untilDestroyed(this)
-      )
-      .subscribe();
-  }
+    private init() {
+        combineLatest([this.projectsService.projects, this.select('suggestedProjects')])
+            .pipe(
+                map(([projects, search]) => this.handleFilterProjects(projects, search)),
+                untilDestroyed(this),
+            )
+            .subscribe();
+    }
 
-  private handleFilterProjects(
-    projects: Project[],
-    suggestedProjects: Project[]
-  ) {
-    const filteredProjects = suggestedProjects.length
-      ? suggestedProjects
-      : projects;
+    private handleFilterProjects(projects: Project[], suggestedProjects: Project[]) {
+        const filteredProjects = suggestedProjects.length ? suggestedProjects : projects;
 
-    this.update({
-      description: 'New filtered user projects available',
-      payload: { filteredProjects }
-    });
-  }
+        this.update({
+            description: 'New filtered user projects available',
+            payload: { filteredProjects },
+        });
+    }
 }

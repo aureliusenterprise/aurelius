@@ -6,14 +6,8 @@ import { ModalModule } from '../modal';
 import { CreateProjectModalComponent } from './create-project-modal.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    DescriptionInputModule,
-    ModalModule,
-  ],
-  declarations: [CreateProjectModalComponent],
-  exports: [CreateProjectModalComponent],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, DescriptionInputModule, ModalModule],
+    declarations: [CreateProjectModalComponent],
+    exports: [CreateProjectModalComponent],
 })
 export class CreateProjectModalModule {}

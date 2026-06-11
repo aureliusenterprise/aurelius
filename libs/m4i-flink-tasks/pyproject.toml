@@ -27,3 +27,7 @@ path = "../../libs/m4i-governance-data-quality"
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]
+
+[tool.pyright]
+pythonVersion = "3.9"
+typeCheckingMode = "strict"

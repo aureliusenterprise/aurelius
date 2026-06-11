@@ -4,8 +4,8 @@ import { ConflictResolutionTemplateSelectComponent } from './conflict-resolution
 import { SelectModule } from '../select';
 
 @NgModule({
-  imports: [CommonModule, SelectModule],
-  declarations: [ConflictResolutionTemplateSelectComponent],
-  exports: [ConflictResolutionTemplateSelectComponent],
+    imports: [CommonModule, SelectModule],
+    declarations: [ConflictResolutionTemplateSelectComponent],
+    exports: [ConflictResolutionTemplateSelectComponent],
 })
 export class ConflictResolutionTemplateSelectModule {}

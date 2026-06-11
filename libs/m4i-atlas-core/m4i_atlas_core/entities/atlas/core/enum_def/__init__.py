@@ -1,1 +1,3 @@
-from .EnumDef import *
+from .EnumDef import EnumDef
+
+__all__ = ["EnumDef"]

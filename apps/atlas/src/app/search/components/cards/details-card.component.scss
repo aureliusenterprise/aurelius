@@ -1,46 +1,46 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
-  align-items: stretch;
-  min-height: 100%;
-}
-
-.card {
-  min-height: 100%;
-
-  .media:not(:last-child) {
-    margin-bottom: 0.75rem;
-  }
-
-  .card-content {
     display: flex;
     flex-direction: column;
     justify-content: stretch;
     align-items: stretch;
     min-height: 100%;
-  }
+}
 
-  .content {
-    margin-bottom: 0px;
-  }
+.card {
+    min-height: 100%;
+
+    .media:not(:last-child) {
+        margin-bottom: 0.75rem;
+    }
+
+    .card-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: stretch;
+        align-items: stretch;
+        min-height: 100%;
+    }
+
+    .content {
+        margin-bottom: 0px;
+    }
 }
 
 .media-content {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 .title a {
-  color: inherit;
+    color: inherit;
 }
 
 .columns {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
 .quality {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
 }

@@ -5,4 +5,6 @@ class Status(Enum):
     ACTIVE = "ACTIVE"
     DELETED = "DELETED"
     PURGED = "PURGED"
+
+
 # END Status

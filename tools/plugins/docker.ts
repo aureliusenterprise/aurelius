@@ -1,6 +1,6 @@
 import { CreateNodes, CreateNodesResult } from '@nx/devkit';
-import { execSync } from 'child_process';
-import { dirname } from 'path';
+import { execSync } from 'node:child_process';
+import { dirname } from 'node:path';
 
 export interface DockerPluginOptions {
     readonly attestTargetName?: string;
@@ -80,12 +80,21 @@ async function createNodesInternal(
                         },
                     },
                     [buildTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
+                        configurations: {
+                            local: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
+                            },
+                            ci: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --cache-from="type=gha,key={projectName}-cache-main" --cache-from="type=gha,key={projectName}-cache-${branchName}" --cache-to="type=gha,key={projectName}-cache-${branchName},mode=max,scope={projectName}"`,
+                            },
+                        },
+                        defaultConfiguration: 'local',
                         dependsOn: [
                             { target: 'build' },
                             { target: setupBuilderTargetName, projects: ['.'], params: 'forward' },
                             { target: buildTargetName, dependencies: true },
                         ],
+                        executor: 'nx:run-commands',
                         metadata: {
                             description: 'Build the Docker image for the application',
                         },
@@ -98,7 +107,16 @@ async function createNodesInternal(
                         },
                     },
                     [publishTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --push --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
+                        configurations: {
+                            local: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --push --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:main" --cache-from="type=registry,ref={args.namespace}/{projectName}-cache:${branchName}" --cache-to="type=registry,ref={args.namespace}/{projectName}-cache:${branchName},mode=max"`,
+                            },
+                            ci: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --push --cache-from="type=gha,key={projectName}-cache-main" --cache-from="type=gha,key={projectName}-cache-${branchName}" --cache-to="type=gha,key={projectName}-cache-${branchName},mode=max,scope={projectName}"`,
+                            },
+                        },
+                        defaultConfiguration: 'local',
+                        executor: 'nx:run-commands',
                         options: {
                             env: {
                                 DOCKER_BUILDKIT: '1',
@@ -167,9 +185,25 @@ async function createNodesInternal(
                         },
                     },
                     [vulnScanTargetName]: {
-                        command:
-                            'trivy sbom {args.sbomPath} --scanners vuln --format json --output {args.reportPath} --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache',
+                        configurations: {
+                            json: {
+                                command:
+                                    'trivy sbom {args.sbomPath} --scanners vuln --format json --output {args.reportPath} --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache',
+                                exitCode: 0,
+                                reportPath: '{projectRoot}/vulnerabilities.json',
+                                sbomPath: '{projectRoot}/sbom.json',
+                            },
+                            sarif: {
+                                command:
+                                    'trivy sbom {args.sbomPath} --scanners vuln --format sarif --output {args.reportPath} --exit-code {args.exitCode} --cache-dir {projectRoot}/.trivy-cache',
+                                exitCode: 0,
+                                reportPath: '{projectRoot}/vulnerabilities.sarif',
+                                sbomPath: '{projectRoot}/sbom.json',
+                            },
+                        },
+                        defaultConfiguration: 'json',
                         dependsOn: [{ target: sbomTargetName, params: 'forward' }],
+                        executor: 'nx:run-commands',
                         options: {
                             exitCode: 0,
                             reportPath: '{projectRoot}/vulnerabilities.json',

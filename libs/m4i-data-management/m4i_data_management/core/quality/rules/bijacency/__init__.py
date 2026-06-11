@@ -1,1 +1,1 @@
-from .bijacency import *
+from .bijacency import bijacency as bijacency

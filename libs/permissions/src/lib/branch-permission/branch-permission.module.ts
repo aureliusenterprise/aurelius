@@ -6,15 +6,15 @@ import { BranchPermissionService } from './branch-permission.service';
 import { HasBranchPermissionDirective } from './has-branch-permission.directive';
 
 @NgModule({
-  imports: [RepositoryModule, ProjectPermissionModule],
-  declarations: [BranchPermissionDirective, HasBranchPermissionDirective],
-  exports: [BranchPermissionDirective, HasBranchPermissionDirective],
+    imports: [RepositoryModule, ProjectPermissionModule],
+    declarations: [BranchPermissionDirective, HasBranchPermissionDirective],
+    exports: [BranchPermissionDirective, HasBranchPermissionDirective],
 })
 export class BranchPermissionModule {
-  static forRoot(): ModuleWithProviders<BranchPermissionModule> {
-    return {
-      ngModule: BranchPermissionModule,
-      providers: [BranchPermissionService],
-    };
-  }
+    static forRoot(): ModuleWithProviders<BranchPermissionModule> {
+        return {
+            ngModule: BranchPermissionModule,
+            providers: [BranchPermissionService],
+        };
+    }
 }

@@ -1,1 +1,1 @@
-from .validate_function_string import *
+from .validate_function_string import validate_function_string as validate_function_string

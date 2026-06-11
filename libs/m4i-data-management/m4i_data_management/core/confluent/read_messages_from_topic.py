@@ -13,8 +13,7 @@ MessageType = Tuple[str, Optional[str]]
 logger = logging.getLogger(__name__)
 
 
-def _listener(consumer: Consumer, timeout: int = -1) -> MessageType:
-
+def _listener(consumer: Consumer, timeout: int = -1) -> Optional[MessageType]:
     # Listen for new messages on the topic
     message = consumer.poll(timeout)
 
@@ -42,20 +41,27 @@ def _listener(consumer: Consumer, timeout: int = -1) -> MessageType:
     # Else, raise the error as an exception to stop the listener
     raise KafkaException(error)
 
+
 # END _listener
 
 
-def read_messages_from_topic(*topic_name: str, timeout: int = -1, consumer: Consumer = None) -> Generator[MessageType, None, None]:
+def read_messages_from_topic(
+    *topic_name: str, timeout: int = -1, consumer: Optional[Consumer] = None
+) -> Generator[MessageType, None, None]:
     """
-    Returns a generator that continuously reads messages from the specified topic(s) until the topic is depleted, or until a timeout occurs.
+    Returns a generator that continuously reads messages from the specified
+    topic(s) until the topic is depleted, or until a timeout occurs.
 
-    You can specify the topic(s) from which to read the messages by providing a (set of) `topic_name`.
+    You can specify the topic(s) from which to read the messages by providing
+    a (set of) `topic_name`.
 
-    When a `timeout` is provided, the listener will stop after no messages have been received for the given number of seconds.
-    By default, the generator keeps listening for new messages until the topic is depleted.
+    When a `timeout` is provided, the listener will stop after no messages have
+    been received for the given number of seconds. By default, the generator
+    keeps listening for new messages until the topic is depleted.
 
-    Optionally, you can provide a `consumer` instance to specify the listening behaviour.
-    If no `consumer` is provided, an instance with default settings is used.
+    Optionally, you can provide a `consumer` instance to specify the listening
+    behaviour. If no `consumer` is provided, an instance with default settings
+    is used.
     """
 
     if consumer is None:
@@ -63,30 +69,31 @@ def read_messages_from_topic(*topic_name: str, timeout: int = -1, consumer: Cons
     # END IF
 
     # Subscribe to the topic with the given name. A topic name can also be a regex.
-    consumer.subscribe(list(topic_name))
+    consumer.subscribe(list(topic_name))  # type: ignore[union-attr]
 
     try:
         # Listen for new events from the consumer until the stream is exhausted
         yield from iter(lambda: _listener(consumer, timeout), _SENTINEL)
 
         # After the stream is exhausted, commit the current partition offset
-        consumer.commit(asynchronous=False)
+        consumer.commit(asynchronous=False)  # type: ignore[union-attr]
 
     except KafkaException as e:
-
         error = e.args[0]
 
         if error.code() == KafkaError._NO_OFFSET:
             """
-            An exception will be raised by `consumer.commit` when the local offset does not need to be committed.
-            This can happen when no new messages were retrieved, or when the local offset was already committed previously.
+            An exception is raised by `consumer.commit` when the local offset does not need to be committed.
+            This can happen when no new messages were retrieved, or when the offset was already committed.
             This can safely be ignored.
 
-            Reference: https://github.com/confluentinc/confluent-kafka-python/issues/71#issuecomment-260368554
+            See https://github.com/confluentinc/confluent-kafka-python/issues/71
             """
 
             logger.warning(
-                "The local offset did not need to be committed. This is most likely because no new messages were retrieved, or because the local offset was already committed previously."
+                "The local offset did not need to be committed. "
+                "This is most likely because no new messages were retrieved, "
+                "or because the local offset was already committed previously."
             )
 
         else:
@@ -94,7 +101,8 @@ def read_messages_from_topic(*topic_name: str, timeout: int = -1, consumer: Cons
         # END IF
 
     finally:
-        consumer.close()
+        consumer.close()  # type: ignore[union-attr]
     # END TRY
+
 
 # END read_messages_from_topic

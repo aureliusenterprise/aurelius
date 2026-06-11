@@ -10,7 +10,7 @@ from ..ToAtlasConvertible import ToAtlasConvertible
 from ..utils import get_qualified_name
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class DataDomainBase(BaseObject):
     name: str
@@ -21,13 +21,14 @@ class DataDomainBase(BaseObject):
         """
 
         return get_qualified_name(self.name)
+
     # END _qualified_name
 
 
 # END DataDomainBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class DataDomainDefaultsBase(DataClassJsonMixin):
     definition: Optional[str] = None
@@ -38,13 +39,9 @@ class DataDomainDefaultsBase(DataClassJsonMixin):
 # END DataDomainDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
-class DataDomain(
-    DataDomainDefaultsBase,
-    DataDomainBase,
-    ToAtlasConvertible[BusinessDataDomain]
-):
+class DataDomain(DataDomainDefaultsBase, DataDomainBase, ToAtlasConvertible[BusinessDataDomain]):
     def convert_to_atlas(self) -> BusinessDataDomain:
         """
         Returns a corresponding Atlas `BusinessDataDomain` instance.
@@ -54,39 +51,30 @@ class DataDomain(
             definition=self.definition,
             name=self.name,
             qualified_name=self.qualified_name,
-            source=self.source
+            source=self.source if self.source else [],  # type: ignore
         )
 
         if bool(self.domain_lead):
-            unique_attributes = M4IAttributes(
-                qualified_name=self.domain_lead
-            )
+            unique_attributes = M4IAttributes(qualified_name=self.domain_lead)
 
-            domain_lead = ObjectId(
-                type_name="m4i_person",
-                unique_attributes=unique_attributes
-            )
+            domain_lead = ObjectId(type_name="m4i_person", unique_attributes=unique_attributes)
 
             attributes.domain_lead = [domain_lead]
         # END IF
 
         if bool(self.source):
-            unique_attributes = M4IAttributes(
-                qualified_name=self.source
-            )
+            unique_attributes = M4IAttributes(qualified_name=self.source)
 
-            source = ObjectId(
-                type_name="m4i_source",
-                unique_attributes=unique_attributes
-            )
+            source = ObjectId(type_name="m4i_source", unique_attributes=unique_attributes)
 
             attributes.source = [source]
         # END IF
 
-        entity = BusinessDataDomain(
-            attributes=attributes,
-        )
+        entity = BusinessDataDomain(attributes=attributes)
 
         return entity
+
     # END convert_to_atlas
+
+
 # END DataDomain

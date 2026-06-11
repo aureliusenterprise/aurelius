@@ -30,43 +30,47 @@ class EntityAuditAction(Enum):
     RELATIONSHIP_CREATE = "RELATIONSHIP_CREATE"
     RELATIONSHIP_UPDATE = "RELATIONSHIP_UPDATE"
     RELATIONSHIP_DELETE = "RELATIONSHIP_DELETE"
+
+
 # END EntityAuditAction
 
 
 class EntityAuditType(Enum):
     ENTITY_AUDIT_V1 = "ENTITY_AUDIT_V1"
     ENTITY_AUDIT_V2 = "ENTITY_AUDIT_V2"
+
+
 # END EntityAuditType
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class EntityAuditEventBase(DataClassJsonMixin):
-
     action: EntityAuditAction
     entity_id: str
     event_key: str
     timestamp: int
     user: str
 
+
 # END EntityAuditEventBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class EntityAuditEventDefaultsBase(DataClassJsonMixin):
-
     details: Optional[str] = None
     entity: Optional[Entity] = None
     type: EntityAuditType = EntityAuditType.ENTITY_AUDIT_V2
 
+
 # END EntityAuditEventDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class EntityAuditEvent(EntityAuditEventDefaultsBase, EntityAuditEventBase):
-
     pass
+
 
 # END EntityAuditEvent

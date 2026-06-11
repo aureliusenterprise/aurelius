@@ -9,55 +9,48 @@ import { EntityDetailsService } from '../../services/entity-details/entity-detai
 import { ClassificationService } from './classification.service';
 
 @Component({
-  selector: 'models4insight-classification',
-  templateUrl: 'classification.component.html',
-  styleUrls: ['classification.component.scss'],
-  providers: [ClassificationService, IntersectionObserverService]
+    selector: 'models4insight-classification',
+    templateUrl: 'classification.component.html',
+    styleUrls: ['classification.component.scss'],
+    providers: [ClassificationService, IntersectionObserverService],
 })
 export class ClassificationComponent implements OnInit, OnDestroy {
-  readonly faAngleDoubleRight = faAngleDoubleRight;
-  readonly faHashtag = faHashtag;
+    readonly faAngleDoubleRight = faAngleDoubleRight;
+    readonly faHashtag = faHashtag;
 
-  classificationType$: Observable<ClassificationDef>;
-  isPropagated$: Observable<boolean>;
-  isRetrievingTypeDefinition$: Observable<boolean>;
-  sources$: Observable<string[]>;
+    classificationType$: Observable<ClassificationDef>;
+    isPropagated$: Observable<boolean>;
+    isRetrievingTypeDefinition$: Observable<boolean>;
+    sources$: Observable<string[]>;
 
-  @Input() classificationName: string;
+    @Input() classificationName: string;
 
-  constructor(
-    private readonly classificationService: ClassificationService,
-    private readonly entityDetailsService: EntityDetailsService,
-    private readonly intersectionObserver: IntersectionObserverService
-  ) {}
+    constructor(
+        private readonly classificationService: ClassificationService,
+        private readonly entityDetailsService: EntityDetailsService,
+        private readonly intersectionObserver: IntersectionObserverService,
+    ) {}
 
-  ngOnInit() {
-    this.classificationType$ = this.classificationService.select(
-      'classificationType'
-    );
-    this.isRetrievingTypeDefinition$ = this.classificationService.select(
-      'isRetrievingTypeDefinition'
-    );
+    ngOnInit() {
+        this.classificationType$ = this.classificationService.select('classificationType');
+        this.isRetrievingTypeDefinition$ = this.classificationService.select('isRetrievingTypeDefinition');
 
-    this.isPropagated$ = combineLatest([
-      this.classificationService.select('sources'),
-      this.entityDetailsService.select('entityId')
-    ]).pipe(map(([sources, entityId]) => !sources.includes(entityId)));
+        this.isPropagated$ = combineLatest([
+            this.classificationService.select('sources'),
+            this.entityDetailsService.select('entityId'),
+        ]).pipe(map(([sources, entityId]) => !sources.includes(entityId)));
 
-    this.sources$ = this.classificationService.select('sources');
+        this.sources$ = this.classificationService.select('sources');
 
-    this.intersectionObserver.onIntersection
-      .pipe(untilDestroyed(this))
-      .subscribe(
-        () =>
-          (this.classificationService.classificationName = this.classificationName)
-      );
-  }
+        this.intersectionObserver.onIntersection
+            .pipe(untilDestroyed(this))
+            .subscribe(() => (this.classificationService.classificationName = this.classificationName));
+    }
 
-  ngOnDestroy() {}
+    ngOnDestroy() {}
 
-  @Input()
-  set sources(sources: string[]) {
-    this.classificationService.sources = sources;
-  }
+    @Input()
+    set sources(sources: string[]) {
+        this.classificationService.sources = sources;
+    }
 }

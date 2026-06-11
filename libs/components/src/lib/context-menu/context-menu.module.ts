@@ -6,8 +6,8 @@ import { ContextMenuComponent } from './context-menu.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule, HoldableModule],
-  declarations: [ContextMenuComponent, ContextMenuItemComponent],
-  exports: [ContextMenuComponent],
+    imports: [CommonModule, FontAwesomeModule, HoldableModule],
+    declarations: [ContextMenuComponent, ContextMenuItemComponent],
+    exports: [ContextMenuComponent],
 })
 export class ContextMenuModule {}

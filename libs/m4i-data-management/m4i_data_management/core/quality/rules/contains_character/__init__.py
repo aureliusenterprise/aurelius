@@ -1,1 +1,1 @@
-from .contains_character import *
+from .contains_character import contains_character as contains_character

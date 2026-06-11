@@ -19,6 +19,7 @@ def validate_function_string(function_string: str, valid_function_names: dict) -
     for name in code.co_names:
         if name not in valid_function_names:
             raise NameError(f"{name} is not a quality function")
-       # END IF
+    # END IF
     # END LOOP
-# END validate_function_string
+
+    return True

@@ -8,25 +8,22 @@ declare var window: any;
  * @param workerFunction The function for which to create an object url
  */
 export function buildWorkerBlobURL(workerFunction: Function): string {
-  const functionName = workerFunction.name;
+    const functionName = workerFunction.name;
 
-  // Make sure code starts with "function()"
-  // Chrome, Firefox: "[`functionName`](){...}", Safari: "function [`functionName`](){...}"
-  // we need an anonymous function: "function() {...}"
-  const functionAsString = workerFunction.toString().replace(/^function +/, '');
+    // Make sure code starts with "function()"
+    // Chrome, Firefox: "[`functionName`](){...}", Safari: "function [`functionName`](){...}"
+    // we need an anonymous function: "function() {...}"
+    const functionAsString = workerFunction.toString().replace(/^function +/, '');
 
-  // Convert to anonymous function
-  const anonymousFunctionString = functionAsString.replace(
-    functionName + '()',
-    'function()'
-  );
+    // Convert to anonymous function
+    const anonymousFunctionString = functionAsString.replace(functionName + '()', 'function()');
 
-  // Self executing
-  const workerString = '(' + anonymousFunctionString + ')();';
+    // Self executing
+    const workerString = '(' + anonymousFunctionString + ')();';
 
-  // Build the worker blob
-  const workerBlob = new Blob([workerString], { type: 'text/javascript' });
+    // Build the worker blob
+    const workerBlob = new Blob([workerString], { type: 'text/javascript' });
 
-  const workerBlobUrl = window.URL.createObjectURL(workerBlob);
-  return workerBlobUrl;
+    const workerBlobUrl = window.URL.createObjectURL(workerBlob);
+    return workerBlobUrl;
 }

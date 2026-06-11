@@ -1,1 +1,1 @@
-from .quality import *
+from .quality import Quality as Quality

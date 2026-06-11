@@ -2,12 +2,12 @@
  * Describes a degree of severity for a validation error
  */
 export enum ValidationErrorSeverity {
-  /** Does not affect the extraction result, but may not be intended by the user. */
-  INFO = 'info',
-  /** Affects the extraction result, but a model can still be extracted. */
-  WARNING = 'warning',
-  /** Prevents a model from being extracted. */
-  ERROR = 'error'
+    /** Does not affect the extraction result, but may not be intended by the user. */
+    INFO = 'info',
+    /** Affects the extraction result, but a model can still be extracted. */
+    WARNING = 'warning',
+    /** Prevents a model from being extracted. */
+    ERROR = 'error',
 }
 
 /**
@@ -16,10 +16,10 @@ export enum ValidationErrorSeverity {
  * All extractor rule validators should return an implementation of this class.
  */
 export interface ValidationError {
-  /** A reference to the id of the rule this error is associated with. */
-  readonly rule: string;
-  /** A textual description of the rule inconsistency. */
-  readonly description: string;
-  /** The severity type of this error */
-  readonly severity: ValidationErrorSeverity;
+    /** A reference to the id of the rule this error is associated with. */
+    readonly rule: string;
+    /** A textual description of the rule inconsistency. */
+    readonly description: string;
+    /** The severity type of this error */
+    readonly severity: ValidationErrorSeverity;
 }

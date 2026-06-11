@@ -6,8 +6,8 @@ import { DeleteProjectSettingsComponent } from './delete-project.component';
 import { DeleteProjectSettingsGuard } from './delete-project.guard';
 
 @NgModule({
-  imports: [CommonModule, HoldableModule, DeleteProjectSettingsRoutingModule],
-  declarations: [DeleteProjectSettingsComponent],
-  providers: [DeleteProjectSettingsGuard]
+    imports: [CommonModule, HoldableModule, DeleteProjectSettingsRoutingModule],
+    declarations: [DeleteProjectSettingsComponent],
+    providers: [DeleteProjectSettingsGuard],
 })
 export class DeleteProjectSettingsModule {}

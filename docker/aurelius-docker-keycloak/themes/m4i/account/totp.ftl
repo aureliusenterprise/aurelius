@@ -4,7 +4,7 @@
 <h2 class="title is-2">Mobile authenticator</h2>
 
     <#if totp.enabled>
-        <p class="content">            
+        <p class="content">
             You have currently set up a mobile authenticator for your account. You can unlink your account by pressing the button below.
         </p>
         <form action="${url.totpUrl}" method="post" class="form-inline">
@@ -51,7 +51,7 @@
                             <p class="title">
                                 Google Authenticator
                             </p>
-                            
+
                         </div>
                         <footer class="card-footer">
                             <p class="card-footer-item">
@@ -75,7 +75,7 @@
             <p><strong>${totp.totpSecretEncoded}</strong></p>
             <p class="has-text-link"><a href="${totp.qrUrl}" id="mode-barcode">${msg("totpScanBarcode")}</a></p>
         </li>
-        <li>                        
+        <li>
             <p class="title is-6">${msg("totpManualStep3")}</p>
             <ul>
                 <li id="kc-totp-type">${msg("totpType")}: ${msg("totp." + totp.policy.type)}</li>

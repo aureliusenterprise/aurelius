@@ -6,23 +6,20 @@ from ..meta import ExcelParserConfig
 from .parse_json_to_atlas_entities import parse_json_to_atlas_entities
 from .read_data_from_dictionary import read_data_from_dictionary
 from ..meta import get_source
-from ..entities.json.source.Source import *
 from ..entities import T
 
 
 async def get_ref_and_push(atlas_entities: List[T], with_referred_entities: bool, access_token: str):
-    referred_entities = await get_all_referred_entities(
-        atlas_entities
-    ) if with_referred_entities else None
+    referred_entities = await get_all_referred_entities(atlas_entities) if with_referred_entities else None
 
-    mutation_response = await create_entities(*atlas_entities, referred_entities=referred_entities, access_token=access_token)
+    mutation_response = await create_entities(
+        *atlas_entities, referred_entities=referred_entities, access_token=access_token
+    )
     print(mutation_response)
 
 
 async def create_from_excel(
-    *parser_configs: ExcelParserConfig,
-    access_token: str,
-    with_referred_entities: bool = False
+    *parser_configs: ExcelParserConfig, access_token: str, with_referred_entities: bool = False
 ):
     data = map(read_data_from_dictionary, parser_configs)
 
@@ -39,7 +36,6 @@ async def create_from_excel(
     print(mutation_response)
 
     for sheet_entities in atlas_entities_per_sheet:
-
         atlas_entities = list(sheet_entities)
 
         if len(atlas_entities) > 0:
@@ -50,4 +46,6 @@ async def create_from_excel(
                     await get_ref_and_push([i], with_referred_entities, access_token)
 
     # END LOOP
+
+
 # END create_from_excel

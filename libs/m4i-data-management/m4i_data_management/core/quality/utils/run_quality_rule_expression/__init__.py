@@ -1,1 +1,1 @@
-from .run_quality_rule_expression import *
+from .run_quality_rule_expression import run_quality_rule_expression as run_quality_rule_expression

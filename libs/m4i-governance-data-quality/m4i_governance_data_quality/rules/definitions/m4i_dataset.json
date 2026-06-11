@@ -1,44 +1,44 @@
 [
-  {
-    "id": 1,
-    "expressionVersion": 1,
-    "expression": "completeness('name')",
-    "qualifiedName": "m4i_dataset--name",
-    "qualityDimension": "completeness",
-    "ruleTitle": "Dataset has a name",
-    "ruleDescription": "A dataset should have a name",
-    "compliantMessage": "This dataset has a name",
-    "noncompliantMessage": "This dataset should have a name",
-    "active": 1,
-    "type": "attribute",
-    "guid": "e7c13ff2-f389-462f-aa53-f6652a687f42"
-  },
-  {
-    "id": 2,
-    "expressionVersion": 1,
-    "expression": "length('collections', 1)",
-    "qualifiedName": "m4i_dataset--collections",
-    "qualityDimension": "completeness",
-    "ruleTitle": "Dataset belongs to a collection",
-    "ruleDescription": "A dataset should belong to a collection",
-    "compliantMessage": "This dataset belongs to a collection",
-    "noncompliantMessage": "This dataset should belong to a collection",
-    "active": 1,
-    "type": "relationship",
-    "guid": "fb2c608f-d7ff-4574-8c2d-a240c8c79e91"
-  },
-  {
-    "id": 3,
-    "expressionVersion": 1,
-    "expression": "length('fields', 1)",
-    "qualifiedName": "m4i_dataset--fields",
-    "qualityDimension": "completeness",
-    "ruleTitle": "Dataset has a field",
-    "ruleDescription": "A dataset should have at least one field",
-    "compliantMessage": "This dataset has at least one field",
-    "noncompliantMessage": "This dataset should have at least one field",
-    "active": 1,
-    "type": "relationship",
-    "guid": "cfd24715-125d-46e2-854d-b0c1b16340bf"
-  }
+    {
+        "active": 1,
+        "compliantMessage": "This dataset has a name",
+        "expression": "completeness('name')",
+        "expressionVersion": 1,
+        "guid": "e7c13ff2-f389-462f-aa53-f6652a687f42",
+        "id": 1,
+        "noncompliantMessage": "This dataset should have a name",
+        "qualifiedName": "m4i_dataset--name",
+        "qualityDimension": "completeness",
+        "ruleDescription": "A dataset should have a name",
+        "ruleTitle": "Dataset has a name",
+        "type": "attribute"
+    },
+    {
+        "active": 1,
+        "compliantMessage": "This dataset belongs to a collection",
+        "expression": "length('collections', 1)",
+        "expressionVersion": 1,
+        "guid": "fb2c608f-d7ff-4574-8c2d-a240c8c79e91",
+        "id": 2,
+        "noncompliantMessage": "This dataset should belong to a collection",
+        "qualifiedName": "m4i_dataset--collections",
+        "qualityDimension": "completeness",
+        "ruleDescription": "A dataset should belong to a collection",
+        "ruleTitle": "Dataset belongs to a collection",
+        "type": "relationship"
+    },
+    {
+        "active": 1,
+        "compliantMessage": "This dataset has at least one field",
+        "expression": "length('fields', 1)",
+        "expressionVersion": 1,
+        "guid": "cfd24715-125d-46e2-854d-b0c1b16340bf",
+        "id": 3,
+        "noncompliantMessage": "This dataset should have at least one field",
+        "qualifiedName": "m4i_dataset--fields",
+        "qualityDimension": "completeness",
+        "ruleDescription": "A dataset should have at least one field",
+        "ruleTitle": "Dataset has a field",
+        "type": "relationship"
+    }
 ]

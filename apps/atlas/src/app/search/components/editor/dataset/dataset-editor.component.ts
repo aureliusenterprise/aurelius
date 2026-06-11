@@ -1,254 +1,220 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  FormControl,
-  UntypedFormArray,
-  UntypedFormControl,
-  UntypedFormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
+    FormControl,
+    UntypedFormArray,
+    UntypedFormControl,
+    UntypedFormGroup,
+    ValidationErrors,
+    ValidatorFn,
+    Validators,
 } from '@angular/forms';
-import {
-  AtlasEntityWithEXTInformation,
-  EntityValidationResponse
-} from '@models4insight/atlas/api';
+import { AtlasEntityWithEXTInformation, EntityValidationResponse } from '@models4insight/atlas/api';
 import { merge } from 'lodash';
 import { Observable, Subscription } from 'rxjs';
 
 import {
-  EditorFormService,
-  EDITOR_FORM_FACTORY,
-  EDITOR_MERGE_STRATEGY,
-  EDITOR_UPDATE_STRATEGY
+    EditorFormService,
+    EDITOR_FORM_FACTORY,
+    EDITOR_MERGE_STRATEGY,
+    EDITOR_UPDATE_STRATEGY,
 } from '../services/editor-form.service';
 import { EntityValidateService } from '../services/entity-validate/entity-validate.service';
 
 function rightSingleQuotationMarkValidator(): ValidatorFn {
-  return (control): ValidationErrors | null => {
-    if (!control.value) {
-      return null;
-    }
-    // Check for right single quotation mark (U+2019)
-    const hasRightSingleQuotation = /[’]/.test(control.value);
-    return hasRightSingleQuotation ? { rightSingleQuotationMark: true } : null;
-  };
+    return (control): ValidationErrors | null => {
+        if (!control.value) {
+            return null;
+        }
+        // Check for right single quotation mark (U+2019)
+        const hasRightSingleQuotation = /[’]/.test(control.value);
+        return hasRightSingleQuotation ? { rightSingleQuotationMark: true } : null;
+    };
 }
 
 function createDatasetEditorForm(): UntypedFormGroup {
-  const name = new FormControl<string>(null, [Validators.required]),
-    typeAlias = new FormControl<string>(null),
-    definition = new FormControl<string>(null),
-    qualifiedName = new FormControl<string>(null);
+    const name = new FormControl<string>(null, [Validators.required]),
+        typeAlias = new FormControl<string>(null),
+        definition = new FormControl<string>(null),
+        qualifiedName = new FormControl<string>(null);
 
-  const attributes = new UntypedFormGroup({
-    definition,
-    name,
-    qualifiedName,
-    typeAlias,
-  });
+    const attributes = new UntypedFormGroup({
+        definition,
+        name,
+        qualifiedName,
+        typeAlias,
+    });
 
-  const fields = new UntypedFormArray([]),
-    childDataset = new UntypedFormArray([]),
-    collections = new UntypedFormArray([]),
-    inputToProcesses = new UntypedFormArray([]),
-    outputFromProcesses = new UntypedFormArray([]),
-    parentDataset = new UntypedFormArray([]);
+    const fields = new UntypedFormArray([]),
+        childDataset = new UntypedFormArray([]),
+        collections = new UntypedFormArray([]),
+        inputToProcesses = new UntypedFormArray([]),
+        outputFromProcesses = new UntypedFormArray([]),
+        parentDataset = new UntypedFormArray([]);
 
-  const relationshipAttributes = new UntypedFormGroup({
-    fields,
-    childDataset,
-    collections,
-    inputToProcesses,
-    outputFromProcesses,
-    parentDataset,
-  });
+    const relationshipAttributes = new UntypedFormGroup({
+        fields,
+        childDataset,
+        collections,
+        inputToProcesses,
+        outputFromProcesses,
+        parentDataset,
+    });
 
-  return new UntypedFormGroup({ attributes, relationshipAttributes });
+    return new UntypedFormGroup({ attributes, relationshipAttributes });
 }
 
 function mergeDatasetEditorForm(
-  entityDetails: AtlasEntityWithEXTInformation,
-  form: UntypedFormGroup
+    entityDetails: AtlasEntityWithEXTInformation,
+    form: UntypedFormGroup,
 ): AtlasEntityWithEXTInformation {
-  const entity = entityDetails.entity,
-    { attributes, relationshipAttributes } = form.value;
+    const entity = entityDetails.entity,
+        { attributes, relationshipAttributes } = form.value;
 
-  merge(entity.attributes, attributes);
-  Object.assign(entity.relationshipAttributes, relationshipAttributes);
+    merge(entity.attributes, attributes);
+    Object.assign(entity.relationshipAttributes, relationshipAttributes);
 
-  return entityDetails;
+    return entityDetails;
 }
 
-function updateDatasetEditorForm(
-  entityDetails: AtlasEntityWithEXTInformation,
-  form: UntypedFormGroup
-) {
-  const attributes: UntypedFormGroup = form.get(
-    'attributes'
-  ) as UntypedFormGroup;
+function updateDatasetEditorForm(entityDetails: AtlasEntityWithEXTInformation, form: UntypedFormGroup) {
+    const attributes: UntypedFormGroup = form.get('attributes') as UntypedFormGroup;
 
-  const relationshipAttributes: UntypedFormGroup = form.get(
-    'relationshipAttributes'
-  ) as UntypedFormGroup;
+    const relationshipAttributes: UntypedFormGroup = form.get('relationshipAttributes') as UntypedFormGroup;
 
-  const fields: UntypedFormArray = relationshipAttributes.get(
-    'fields'
-  ) as UntypedFormArray;
+    const fields: UntypedFormArray = relationshipAttributes.get('fields') as UntypedFormArray;
 
-  const childDataset: UntypedFormArray = relationshipAttributes.get(
-    'childDataset'
-  ) as UntypedFormArray;
+    const childDataset: UntypedFormArray = relationshipAttributes.get('childDataset') as UntypedFormArray;
 
-  const collections: UntypedFormArray = relationshipAttributes.get(
-    'collections'
-  ) as UntypedFormArray;
+    const collections: UntypedFormArray = relationshipAttributes.get('collections') as UntypedFormArray;
 
-  const inputToProcesses: UntypedFormArray = relationshipAttributes.get(
-    'inputToProcesses'
-  ) as UntypedFormArray;
+    const inputToProcesses: UntypedFormArray = relationshipAttributes.get('inputToProcesses') as UntypedFormArray;
 
-  const outputFromProcesses: UntypedFormArray = relationshipAttributes.get(
-    'outputFromProcesses'
-  ) as UntypedFormArray;
+    const outputFromProcesses: UntypedFormArray = relationshipAttributes.get('outputFromProcesses') as UntypedFormArray;
 
-  const parentDataset: UntypedFormArray = relationshipAttributes.get(
-    'parentDataset'
-  ) as UntypedFormArray;
+    const parentDataset: UntypedFormArray = relationshipAttributes.get('parentDataset') as UntypedFormArray;
 
-  attributes.patchValue(entityDetails.entity.attributes);
+    attributes.patchValue(entityDetails.entity.attributes);
 
-  fields.clear();
-  entityDetails.entity.relationshipAttributes.fields?.forEach((field) =>
-    fields.push(new UntypedFormControl(field))
-  );
+    fields.clear();
+    entityDetails.entity.relationshipAttributes.fields?.forEach((field) => fields.push(new UntypedFormControl(field)));
 
-  childDataset.clear();
-  entityDetails.entity.relationshipAttributes.childDataset?.forEach((dataset) =>
-    childDataset.push(new UntypedFormControl(dataset))
-  );
+    childDataset.clear();
+    entityDetails.entity.relationshipAttributes.childDataset?.forEach((dataset) =>
+        childDataset.push(new UntypedFormControl(dataset)),
+    );
 
-  collections.clear();
-  entityDetails.entity.relationshipAttributes.collections?.forEach(
-    (collection) => collections.push(new UntypedFormControl(collection))
-  );
+    collections.clear();
+    entityDetails.entity.relationshipAttributes.collections?.forEach((collection) =>
+        collections.push(new UntypedFormControl(collection)),
+    );
 
-  inputToProcesses.clear();
-  entityDetails.entity.relationshipAttributes.inputToProcesses?.forEach(
-    (process) => inputToProcesses.push(new UntypedFormControl(process))
-  );
+    inputToProcesses.clear();
+    entityDetails.entity.relationshipAttributes.inputToProcesses?.forEach((process) =>
+        inputToProcesses.push(new UntypedFormControl(process)),
+    );
 
-  outputFromProcesses.clear();
-  entityDetails.entity.relationshipAttributes.outputFromProcesses?.forEach(
-    (process) => outputFromProcesses.push(new UntypedFormControl(process))
-  );
+    outputFromProcesses.clear();
+    entityDetails.entity.relationshipAttributes.outputFromProcesses?.forEach((process) =>
+        outputFromProcesses.push(new UntypedFormControl(process)),
+    );
 
-  parentDataset.clear();
-  entityDetails.entity.relationshipAttributes.parentDataset?.forEach(
-    (dataset) => parentDataset.push(new UntypedFormControl(dataset))
-  );
+    parentDataset.clear();
+    entityDetails.entity.relationshipAttributes.parentDataset?.forEach((dataset) =>
+        parentDataset.push(new UntypedFormControl(dataset)),
+    );
 }
 
 @Component({
-  selector: 'models4insight-dataset-editor',
-  templateUrl: 'dataset-editor.component.html',
-  styleUrls: ['dataset-editor.component.scss'],
-  providers: [
-    EditorFormService,
-    EntityValidateService,
-    { provide: EDITOR_FORM_FACTORY, useValue: createDatasetEditorForm },
-    { provide: EDITOR_MERGE_STRATEGY, useValue: mergeDatasetEditorForm },
-    { provide: EDITOR_UPDATE_STRATEGY, useValue: updateDatasetEditorForm },
-  ],
+    selector: 'models4insight-dataset-editor',
+    templateUrl: 'dataset-editor.component.html',
+    styleUrls: ['dataset-editor.component.scss'],
+    providers: [
+        EditorFormService,
+        EntityValidateService,
+        { provide: EDITOR_FORM_FACTORY, useValue: createDatasetEditorForm },
+        { provide: EDITOR_MERGE_STRATEGY, useValue: mergeDatasetEditorForm },
+        { provide: EDITOR_UPDATE_STRATEGY, useValue: updateDatasetEditorForm },
+    ],
 })
 export class DatasetEditorComponent {
-  readonly validationResults$: Observable<EntityValidationResponse>;
-  private readonly subscriptions: Subscription[] = [];
+    readonly validationResults$: Observable<EntityValidationResponse>;
+    private readonly subscriptions: Subscription[] = [];
 
-  constructor(
-    readonly editorFormService: EditorFormService,
-    private readonly entityValidateService: EntityValidateService
-  ) {
-    this.validationResults$ = this.entityValidateService.validationResults$;
-  }
-
-  ngOnInit(): void {
-    const parent = this.parentDatasets as unknown as UntypedFormArray;
-    const collections = this.collections as unknown as UntypedFormArray;
-
-    if (parent && collections) {
-      this.subscriptions.push(
-        parent.valueChanges.subscribe(() => {
-          if (parent.length > 0 && collections.length > 0) {
-            collections.clear();
-          }
-        })
-      );
-
-      this.subscriptions.push(
-        collections.valueChanges.subscribe(() => {
-          if (collections.length > 0 && parent.length > 0) {
-            parent.clear();
-          }
-        })
-      );
+    constructor(
+        readonly editorFormService: EditorFormService,
+        private readonly entityValidateService: EntityValidateService,
+    ) {
+        this.validationResults$ = this.entityValidateService.validationResults$;
     }
-  }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((s) => s.unsubscribe());
-  }
+    ngOnInit(): void {
+        const parent = this.parentDatasets as unknown as UntypedFormArray;
+        const collections = this.collections as unknown as UntypedFormArray;
 
-  get attributes() {
-    return this.editorFormService.form.get('attributes');
-  }
+        if (parent && collections) {
+            this.subscriptions.push(
+                parent.valueChanges.subscribe(() => {
+                    if (parent.length > 0 && collections.length > 0) {
+                        collections.clear();
+                    }
+                }),
+            );
 
-  get childDatasets() {
-    return this.editorFormService.form.get(
-      'relationshipAttributes.childDataset'
-    );
-  }
+            this.subscriptions.push(
+                collections.valueChanges.subscribe(() => {
+                    if (collections.length > 0 && parent.length > 0) {
+                        parent.clear();
+                    }
+                }),
+            );
+        }
+    }
 
-  get collections() {
-    return this.editorFormService.form.get(
-      'relationshipAttributes.collections'
-    );
-  }
+    ngOnDestroy(): void {
+        this.subscriptions.forEach((s) => s.unsubscribe());
+    }
 
-  get definition() {
-    return this.editorFormService.form.get('attributes.definition');
-  }
+    get attributes() {
+        return this.editorFormService.form.get('attributes');
+    }
 
-  get fields() {
-    return this.editorFormService.form.get('relationshipAttributes.fields');
-  }
+    get childDatasets() {
+        return this.editorFormService.form.get('relationshipAttributes.childDataset');
+    }
 
-  get inputToProcesses() {
-    return this.editorFormService.form.get(
-      'relationshipAttributes.inputToProcesses'
-    );
-  }
+    get collections() {
+        return this.editorFormService.form.get('relationshipAttributes.collections');
+    }
 
-  get name() {
-    return this.editorFormService.form.get('attributes.name');
-  }
+    get definition() {
+        return this.editorFormService.form.get('attributes.definition');
+    }
 
-  get outputFromProcesses() {
-    return this.editorFormService.form.get(
-      'relationshipAttributes.outputFromProcesses'
-    );
-  }
+    get fields() {
+        return this.editorFormService.form.get('relationshipAttributes.fields');
+    }
 
-  get parentDatasets() {
-    return this.editorFormService.form.get(
-      'relationshipAttributes.parentDataset'
-    );
-  }
+    get inputToProcesses() {
+        return this.editorFormService.form.get('relationshipAttributes.inputToProcesses');
+    }
 
-  get relationshipAttributes() {
-    return this.editorFormService.form.get('relationshipAttributes');
-  }
+    get name() {
+        return this.editorFormService.form.get('attributes.name');
+    }
 
-  get typeAlias() {
-    return this.editorFormService.form.get('attributes.typeAlias');
-  }
+    get outputFromProcesses() {
+        return this.editorFormService.form.get('relationshipAttributes.outputFromProcesses');
+    }
+
+    get parentDatasets() {
+        return this.editorFormService.form.get('relationshipAttributes.parentDataset');
+    }
+
+    get relationshipAttributes() {
+        return this.editorFormService.form.get('relationshipAttributes');
+    }
+
+    get typeAlias() {
+        return this.editorFormService.form.get('attributes.typeAlias');
+    }
 }

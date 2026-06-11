@@ -10,20 +10,20 @@ import { getHttpClient } from '../utils';
  * The API interprets the Bearer token in the request header to determine which user info to update.
  */
 export function updateUserInfo(
-  /** The new user info */
-  userinfo: UserInfo
+    /** The new user info */
+    userinfo: UserInfo,
 ): Observable<UserInfo> {
-  const http = getHttpClient(),
-    path = `${repositoryApiBasePath}/user/update`;
+    const http = getHttpClient(),
+        path = `${repositoryApiBasePath}/user/update`;
 
-  validateRequiredArguments(arguments, 'updateUserInfo');
+    validateRequiredArguments(arguments, 'updateUserInfo');
 
-  let headers = new HttpHeaders();
-  headers = headers.set('Content-Type', 'application/json');
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
 
-  const requestOptions = {
-    headers,
-  };
+    const requestOptions = {
+        headers,
+    };
 
-  return http.authorize().post<UserInfo>(path, userinfo, requestOptions);
+    return http.authorize().post<UserInfo>(path, userinfo, requestOptions);
 }

@@ -4,7 +4,7 @@ description = "Shared code for the M4I backend"
 license = 'UNLICENSED'
 name = "m4i-backend-core"
 readme = 'README.md'
-version = "1.0.1"
+version = "1.0.0"
 
 [[tool.poetry.packages]]
 include = "m4i_backend_core"

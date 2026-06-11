@@ -2,15 +2,21 @@ from dataclasses import dataclass
 from typing import Optional
 
 from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
-from m4i_atlas_core import ObjectId, BusinessDataAttribute, BusinessDataAttributeAttributes, Classification, \
-    M4IAttributes, create_placehoder_guid
+from m4i_atlas_core import (
+    ObjectId,
+    BusinessDataAttribute,
+    BusinessDataAttributeAttributes,
+    Classification,
+    M4IAttributes,
+    create_placehoder_guid,
+)
 
 from ..base_object import BaseObject
 from ..ToAtlasConvertible import ToAtlasConvertible
 from ..utils import get_qualified_name
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class DataAttributeBase(BaseObject):
     name: str
@@ -21,17 +27,15 @@ class DataAttributeBase(BaseObject):
         Returns the qualified name of the attribute based on its parent `data_entity` and its `name`
         """
 
-        return get_qualified_name(
-            self.name,
-            prefix=self.data_entity
-        )
+        return get_qualified_name(self.name, prefix=self.data_entity or "")
+
     # END _qualified_name
 
 
 # END DataAttributeBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class DataAttributeDefaultsBase(DataClassJsonMixin):
     business_owner: Optional[str] = None
@@ -47,26 +51,19 @@ class DataAttributeDefaultsBase(DataClassJsonMixin):
 # END DataAttributeDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
-class DataAttribute(
-    DataAttributeDefaultsBase,
-    DataAttributeBase,
-    ToAtlasConvertible[BusinessDataAttribute]
-):
+class DataAttribute(DataAttributeDefaultsBase, DataAttributeBase, ToAtlasConvertible[BusinessDataAttribute]):
     def convert_to_atlas(self) -> BusinessDataAttribute:
         """
         Returns a corresponding Atlas `BusinessDataAttribute` instance.
         """
 
         if bool(self.data_entity):
-            data_entity_unique_attributes = M4IAttributes(
-                qualified_name=self.data_entity
-            )
+            data_entity_unique_attributes = M4IAttributes(qualified_name=self.data_entity)
 
             data_entity = ObjectId(
-                type_name="m4i_data_entity",
-                unique_attributes=data_entity_unique_attributes
+                type_name="m4i_data_entity", unique_attributes=data_entity_unique_attributes
             )
         else:
             data_entity = None
@@ -79,44 +76,29 @@ class DataAttribute(
             attribute_type=self.attribute_type,
             risk_classification=self.risk_classification,
             has_pii=self.has_pii,
-            is_key_data=self.is_key_data
+            is_key_data=self.is_key_data,
         )
 
         if bool(self.business_owner):
-            unique_attributes = M4IAttributes(
-                qualified_name=self.business_owner
-            )
+            unique_attributes = M4IAttributes(qualified_name=self.business_owner)
 
-            business_owner = ObjectId(
-                type_name="m4i_person",
-                unique_attributes=unique_attributes
-            )
+            business_owner = ObjectId(type_name="m4i_person", unique_attributes=unique_attributes)
 
             attributes.business_owner = [business_owner]
         # END IF
 
         if bool(self.steward):
-            unique_attributes = M4IAttributes(
-                qualified_name=self.steward
-            )
+            unique_attributes = M4IAttributes(qualified_name=self.steward)
 
-            steward = ObjectId(
-                type_name="m4i_person",
-                unique_attributes=unique_attributes
-            )
+            steward = ObjectId(type_name="m4i_person", unique_attributes=unique_attributes)
 
             attributes.steward = [steward]
         # END IF
 
         if bool(self.source):
-            unique_attributes = M4IAttributes(
-                qualified_name=self.source
-            )
+            unique_attributes = M4IAttributes(qualified_name=self.source)
 
-            source = ObjectId(
-                type_name="m4i_source",
-                unique_attributes=unique_attributes
-            )
+            source = ObjectId(type_name="m4i_source", unique_attributes=unique_attributes)
 
             attributes.source = [source]
         # END IF
@@ -125,37 +107,29 @@ class DataAttribute(
         classifications = []
 
         if self.has_pii == "Yes":
-            classifications.append(Classification(
-                type_name="PII",
-                entity_guids=create_placehoder_guid()
-            ))
+            classifications.append(Classification(type_name="PII", entity_guids=create_placehoder_guid()))
         if self.is_key_data == "Yes":
-            classifications.append(Classification(
-                type_name="key_data",
-                entity_guids=create_placehoder_guid()
-            ))
+            classifications.append(
+                Classification(type_name="key_data", entity_guids=create_placehoder_guid())
+            )
         if self.risk_classification == "Low":
-            classifications.append(Classification(
-                type_name="low_risk",
-                entity_guids=create_placehoder_guid()
-            ))
+            classifications.append(
+                Classification(type_name="low_risk", entity_guids=create_placehoder_guid())
+            )
         if self.risk_classification == "Medium":
-            classifications.append(Classification(
-                type_name="medium_risk",
-                entity_guids=create_placehoder_guid()
-            ))
+            classifications.append(
+                Classification(type_name="medium_risk", entity_guids=create_placehoder_guid())
+            )
         if self.risk_classification == "High":
-            classifications.append(Classification(
-                type_name="high_risk",
-                entity_guids=create_placehoder_guid()
-            ))
+            classifications.append(
+                Classification(type_name="high_risk", entity_guids=create_placehoder_guid())
+            )
 
-
-        entity = BusinessDataAttribute(
-            attributes=attributes,
-            classifications= classifications
-        )
+        entity = BusinessDataAttribute(attributes=attributes, classifications=classifications)
 
         return entity
+
     # END convert_to_atlas
+
+
 # END DataAttribute

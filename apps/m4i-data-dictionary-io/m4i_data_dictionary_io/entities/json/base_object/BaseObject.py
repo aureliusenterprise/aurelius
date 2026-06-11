@@ -9,15 +9,15 @@ from m4i_atlas_core import ConfigStore
 store = ConfigStore.get_instance()
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class BaseObject(DataClassJsonMixin):
-
     qualified_name: str
 
     def __post_init__(self):
         if store.get("validate_qualified_name", default=True):
             self.validate_qualified_name()
+
     # END __post_init__
 
     def validate_qualified_name(self):
@@ -33,6 +33,7 @@ class BaseObject(DataClassJsonMixin):
                 f"Qualified name validation failed. Expected {expected} but received {self.qualified_name}."
             )
         # END IF
+
     # END validate_qualified_name
 
     def _qualified_name(self) -> str:
@@ -42,5 +43,8 @@ class BaseObject(DataClassJsonMixin):
         Should be implemented by inheriting classes.
         """
         return self.qualified_name
+
     # END _qualified_name
+
+
 # END BaseObject

@@ -1,6 +1,8 @@
 # Core
 
-This module defines the core of all Models4Insight applications by providing a set of shared module imports for use in the `AppModule` of every application, as well as a shared `index.html` page.
+This module defines the core of all Models4Insight applications
+by providing a set of shared module imports for use in the
+`AppModule` of every application, as well as a shared `index.html` page.
 
 ## Usage
 
@@ -12,31 +14,32 @@ import { Core } from '@models4insight/core';
 import { environment } from '../environments/environment';
 
 @NgModule({
-  imports: [...Core.imports(environment)]
+    imports: [...Core.imports(environment)],
 })
 export class AppModule {}
 ```
 
-To use the shared `index.html` for your application, include the following in the `angular.json` for the application project:
+To use the shared `index.html` for your application,
+include the following in the `angular.json` for the application project:
 
 ```json
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "projects": {
-    "<your-app-name>": {
-      "architect": {
-        "build": {
-          "options": {
-            "index": "libs/core/src/index.html"
-          }
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "projects": {
+        "<your-app-name>": {
+            "architect": {
+                "build": {
+                    "options": {
+                        "index": "libs/core/src/index.html"
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }
 ```
 
-# Nx
+## Nx
 
 This library was generated with [Nx](https://nx.dev).
 

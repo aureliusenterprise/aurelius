@@ -1,1 +1,1 @@
-from .conditional_completeness import *
+from .conditional_completeness import conditional_completeness as conditional_completeness

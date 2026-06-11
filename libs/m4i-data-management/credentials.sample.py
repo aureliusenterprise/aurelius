@@ -5,5 +5,5 @@ credentials = {
     "confluent.schema.registry.secret": "YOUR_SCHEMA_REGISTRY_SECRET",
     "elastic.cloud.id": "YOUR_ELASTIC_CLOUD_ID",
     "elastic.cloud.username": "YOUR_ELASTIC_CLOUD_USERNAME",
-    "elastic.cloud.password": "YOUR_ELASTIC_CLOUD_PASSWORD"
+    "elastic.cloud.password": "YOUR_ELASTIC_CLOUD_PASSWORD",
 }

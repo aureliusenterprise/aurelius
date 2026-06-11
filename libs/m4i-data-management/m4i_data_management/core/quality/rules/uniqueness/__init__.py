@@ -1,1 +1,1 @@
-from .uniqueness import *
+from .uniqueness import uniqueness as uniqueness

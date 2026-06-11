@@ -4,28 +4,31 @@ from uuid import uuid4 as uuid
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from ..core import (AttributeDef, Attributes, Cardinality, Entity, EntityBase,
-                    EntityDef, EntityDefaultsBase, ObjectId, TypeCategory)
+from ..core import (
+    AttributeDef,
+    Attributes,
+    Cardinality,
+    Entity,
+    EntityBase,
+    EntityDef,
+    EntityDefaultsBase,
+    ObjectId,
+    TypeCategory,
+)
 from .M4IAttributes import M4IAttributesBase
 
 # TypeDef for Entity & Relationships
 m4i_referenceable_attributes_def = [
     AttributeDef(
-        name="archimateReference",
-        type_name="array<m4i_archimate_project>",
-        cardinality=Cardinality.SET
+        name="archimateReference", type_name="array<m4i_archimate_project>", cardinality=Cardinality.SET
     ),
-    AttributeDef(
-        name="source",
-        type_name="array<m4i_source>",
-        cardinality=Cardinality.SET
-    ),
+    AttributeDef(name="source", type_name="array<m4i_source>", cardinality=Cardinality.SET),
     AttributeDef(
         name="typeAlias",
         type_name="string",
         description="Type name to display in the UI instead of the base type name.",
-        display_name="Type alias"
-    )
+        display_name="Type alias",
+    ),
 ]
 
 m4i_referenceable_super_type = ["Referenceable"]
@@ -40,57 +43,66 @@ m4i_referenceable_def = EntityDef(
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessReferenceableAttributesBase(M4IAttributesBase):
     pass
+
+
 # END BusinessReferenceableAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessReferenceableAttributesDefaultsBase(Attributes):
     archimate_reference: List[ObjectId] = field(default_factory=list)
     source: List[ObjectId] = field(default_factory=list)
     type_alias: Optional[str] = field(default=None)
+
+
 # END BusinessReferenceableAttributesDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessReferenceableAttributes(BusinessReferenceableAttributesDefaultsBase, BusinessReferenceableAttributesBase):
+class BusinessReferenceableAttributes(
+    BusinessReferenceableAttributesDefaultsBase, BusinessReferenceableAttributesBase
+):
     pass
+
+
 # END BusinessReferenceableAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessReferenceableBase(EntityBase):
     pass
+
+
 # END BusinessReferenceableBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessReferenceableDefaultsBase(EntityDefaultsBase):
-    attributes: BusinessReferenceableAttributes = field(
+    attributes: BusinessReferenceableAttributes = field(  # type: ignore[reportIncompatibleMethodOverride]
         default_factory=lambda: BusinessReferenceableAttributes(str(uuid()))
     )
+
+
 # END BusinessReferenceableDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessReferenceable(
-        Entity,
-        BusinessReferenceableDefaultsBase,
-        BusinessReferenceableBase
-):
+class BusinessReferenceable(Entity, BusinessReferenceableDefaultsBase, BusinessReferenceableBase):
     type_name: str = "m4i_referenceable"
 
     @staticmethod
-    def get_type_def() -> EntityDef:
+    def get_type_def() -> EntityDef:  # type: ignore[reportIncompatibleMethodOverride]
         return m4i_referenceable_def
+
     # END get_type_def
 
     def get_referred_entities(self) -> Iterable[ObjectId]:
@@ -99,12 +111,11 @@ class BusinessReferenceable(
         * archimate_reference
         * source
         """
-        references = [
-            *self.attributes.archimate_reference,
-            *self.attributes.source
-        ]
+        references = [*self.attributes.archimate_reference, *self.attributes.source]
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END BusinessReferenceable

@@ -5,8 +5,8 @@ import { ControlShellModule } from '../control-shell';
 import { SimpleSearchInputComponent } from './simple-search-input.component';
 
 @NgModule({
-  imports: [CommonModule, ControlShellModule, FontAwesomeModule],
-  declarations: [SimpleSearchInputComponent],
-  exports: [SimpleSearchInputComponent],
+    imports: [CommonModule, ControlShellModule, FontAwesomeModule],
+    declarations: [SimpleSearchInputComponent],
+    exports: [SimpleSearchInputComponent],
 })
 export class SimpleSearchInputModule {}

@@ -6,12 +6,12 @@ import { HoldableDirective } from './holdable.directive';
 import enUS from './translations/en-US.json';
 
 @NgModule({
-  imports: [CommonModule, TranslateModule.forChild()],
-  declarations: [HoldableDirective],
-  exports: [HoldableDirective],
+    imports: [CommonModule, TranslateModule.forChild()],
+    declarations: [HoldableDirective],
+    exports: [HoldableDirective],
 })
 export class HoldableModule {
-  constructor(private i18nService: I18nService) {
-    this.i18nService.setTranslation('en-US', enUS);
-  }
+    constructor(private i18nService: I18nService) {
+        this.i18nService.setTranslation('en-US', enUS);
+    }
 }

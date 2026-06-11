@@ -5,8 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BreadCrumbsComponent } from './bread-crumbs.component';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule, TranslateModule.forChild()],
-  declarations: [BreadCrumbsComponent],
-  exports: [BreadCrumbsComponent]
+    imports: [CommonModule, FontAwesomeModule, TranslateModule.forChild()],
+    declarations: [BreadCrumbsComponent],
+    exports: [BreadCrumbsComponent],
 })
 export class BreadCrumbsModule {}

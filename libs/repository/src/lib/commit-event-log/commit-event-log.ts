@@ -8,29 +8,26 @@ import { getHttpClient } from '../utils';
 /**
  * Commit a history of redux events to the repository
  */
-export function commitEventLog(
-  sessionId: string,
-  event: Action<any>
-): Observable<void> {
-  const http = getHttpClient(),
-    path = `${repositoryLogBasePath}/event`;
+export function commitEventLog(sessionId: string, event: Action<any>): Observable<void> {
+    const http = getHttpClient(),
+        path = `${repositoryLogBasePath}/event`;
 
-  validateRequiredArguments(arguments, 'commitEventLog');
+    validateRequiredArguments(arguments, 'commitEventLog');
 
-  let eventPath: (string | number)[];
-  if (event.type === ActionType.UPDATE || event.type === ActionType.DELETE) {
-    eventPath = event.path;
-  }
+    let eventPath: (string | number)[];
+    if (event.type === ActionType.UPDATE || event.type === ActionType.DELETE) {
+        eventPath = event.path;
+    }
 
-  const body = {
-    sessionId,
-    event: {
-      description: event.description,
-      path: eventPath,
-      timestamp: now(),
-      type: event.type,
-    },
-  };
+    const body = {
+        sessionId,
+        event: {
+            description: event.description,
+            path: eventPath,
+            timestamp: now(),
+            type: event.type,
+        },
+    };
 
-  return http.post<void>(path, body);
+    return http.post<void>(path, body);
 }

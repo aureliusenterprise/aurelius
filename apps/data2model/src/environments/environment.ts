@@ -3,27 +3,27 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  name: 'm4i_data2model',
-  googleAnalyticsMeasurementID: 'UA-138359451-1',
-  i18n: {
-    defaultLanguage: 'en-US',
-    languages: {}
-  },
-  keycloak: {
-    url: '/auth',
-    realm: 'm4i',
-    clientId: 'm4i_thijs'
-  },
-  notifications: {
-    badgePath: 'assets/d2m-icon.png',
-    iconPath: 'assets/d2m-icon.png'
-  },
-  production: false,
-  shell: {
-    appCopyright: 2020,
-    appLogoPath: 'assets/m4i-data2model-logo.png',
-    appName: 'Data2Model',
-  }
+    name: 'm4i_data2model',
+    googleAnalyticsMeasurementID: 'UA-138359451-1',
+    i18n: {
+        defaultLanguage: 'en-US',
+        languages: {},
+    },
+    keycloak: {
+        url: '/auth',
+        realm: 'm4i',
+        clientId: 'm4i_thijs',
+    },
+    notifications: {
+        badgePath: 'assets/d2m-icon.png',
+        iconPath: 'assets/d2m-icon.png',
+    },
+    production: false,
+    shell: {
+        appCopyright: 2020,
+        appLogoPath: 'assets/m4i-data2model-logo.png',
+        appName: 'Data2Model',
+    },
 };
 
 /*

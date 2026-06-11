@@ -18,8 +18,8 @@ def annotate_detailed_results(
     data_quality_rule_description: str,
     data_quality_rule_dimension: str,
     result_id: str,
-    test_date: str
-):
+    test_date: str,
+) -> DataFrame:
     result = data.copy()
 
     result["business_rule_id"] = business_rule_id
@@ -30,30 +30,31 @@ def annotate_detailed_results(
     result["test_date"] = test_date
 
     return result
+
+
 # annotate_detailed_results
 
 
 def run_quality_check(data: DataFrame, rule: Series) -> Tuple[dict, DataFrame, DataFrame]:
-
-    business_rule_id = rule['id']
-    data_field_qualified_name = rule['data_field_qualified_name']
-    data_quality_rule_description = rule['data_quality_rule_description']
-    data_quality_rule_dimension = rule['data_quality_rule_dimension']
-    result_id = uuid()
-    rule_expression = rule['expression']
+    business_rule_id: str = str(rule["id"])
+    data_field_qualified_name: str = str(rule["data_field_qualified_name"])
+    data_quality_rule_description: str = str(rule["data_quality_rule_description"])
+    data_quality_rule_dimension: str = str(rule["data_quality_rule_dimension"])
+    result_id: str = str(uuid())
+    rule_expression: str = str(rule["expression"])
     test_date = datetime.now().isoformat()
 
-    result = {
+    result: dict = {
         "business_rule_id": business_rule_id,
         "data_field_qualified_name": data_field_qualified_name,
         "dq_score": 0.0,
         "data_quality_rule_description": data_quality_rule_description,
         "data_quality_rule_dimension": data_quality_rule_dimension,
         "expression": rule_expression,
-        "expression_version": rule['expression_version'],
+        "expression_version": rule["expression_version"],
         "result_id": result_id,
         "status": "no_success",
-        "test_date": test_date
+        "test_date": test_date,
     }
 
     compliant_rows = DataFrame()
@@ -67,20 +68,18 @@ def run_quality_check(data: DataFrame, rule: Series) -> Tuple[dict, DataFrame, D
         dq_score = calculate_quality_score(dq_score_per_row)
 
         compliant = dq_score_per_row[dq_score_per_row == 1]
-        compliant_rows = data[data.index.isin(compliant.index)]
+        compliant_rows = data[data.index.isin(compliant.index)]  # type: ignore[index]
 
         non_compliant = dq_score_per_row[dq_score_per_row < 1]
-        non_compliant_rows = data[data.index.isin(non_compliant.index)]
+        non_compliant_rows = data[data.index.isin(non_compliant.index)]  # type: ignore[index]
 
         log.info(
-            f"Data qualty score for rule {rule['id']} is {dq_score}, with {len(compliant.index)} rows compliant and {len(non_compliant.index)} rows non-compliant"
+            f"Data quality score for rule {rule['id']} is {dq_score}, "
+            f"with {len(compliant.index)} rows compliant and "  # type: ignore[arg-type]
+            f"{len(non_compliant.index)} rows non-compliant"  # type: ignore[arg-type]
         )
 
-        result = {
-            **result,
-            "dq_score": dq_score,
-            "status": "success"
-        }
+        result = {**result, "dq_score": dq_score, "status": "success"}
     except Exception as e:
         log.exception(e)
     # END TRY
@@ -88,22 +87,24 @@ def run_quality_check(data: DataFrame, rule: Series) -> Tuple[dict, DataFrame, D
     return (
         result,
         annotate_detailed_results(
-            data=compliant_rows,
+            data=compliant_rows,  # type: ignore[arg-type]
             business_rule_id=business_rule_id,
             data_field_qualified_name=data_field_qualified_name,
             data_quality_rule_description=data_quality_rule_description,
             data_quality_rule_dimension=data_quality_rule_dimension,
             result_id=result_id,
-            test_date=test_date
+            test_date=test_date,
         ),
         annotate_detailed_results(
-            data=non_compliant_rows,
+            data=non_compliant_rows,  # type: ignore[arg-type]
             business_rule_id=business_rule_id,
             data_field_qualified_name=data_field_qualified_name,
             data_quality_rule_description=data_quality_rule_description,
             data_quality_rule_dimension=data_quality_rule_dimension,
             result_id=result_id,
-            test_date=test_date
-        )
+            test_date=test_date,
+        ),
     )
+
+
 # END run_quality_check

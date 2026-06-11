@@ -3,11 +3,11 @@ import { Observable } from 'rxjs';
 import { getHttpClient } from '../atlas-api.module';
 
 export function getDashboard(forceUpdate = false): Observable<any> {
-  const http = getHttpClient();
+    const http = getHttpClient();
 
-  validateRequiredArguments(arguments, 'getDashboard');
+    validateRequiredArguments(arguments, 'getDashboard');
 
-  const path = 'api/data_governance_dashboard';
+    const path = 'api/data_governance_dashboard';
 
-  return http.cache(forceUpdate).get<any>(path);
+    return http.cache(forceUpdate).get<any>(path);
 }

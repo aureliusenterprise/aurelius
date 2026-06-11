@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
 @NgModule({
-  imports: [],
+    imports: [],
 })
 export class IntersectionObserverModule {}

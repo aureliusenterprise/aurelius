@@ -1,20 +1,21 @@
 from typing import Tuple
 
-from flask import Flask, jsonify
+from flask import Flask, Response, jsonify
 
 from .model import AuthError
 
 
 def register(app: Flask):
     """
-    Registers the authentication module with the given application. This includes error handling for authenticaton errors
+    Registers the authentication module with the given application.
+    This includes error handling for authenticaton errors
 
     :param app: The application with which to register the auth module.
     :type app: Flask
     """
 
     @app.errorhandler(AuthError)
-    def handle_auth_error(ex: AuthError) -> Tuple[str, int]:
+    def handle_auth_error(ex: AuthError) -> Tuple[Response, int]:
         """
         Error handler for exceptions related to authentication
 
@@ -27,5 +28,8 @@ def register(app: Flask):
 
         response = jsonify(ex.error)
         return response, ex.status_code
+
     # END handle_auth_error
+
+
 # END register

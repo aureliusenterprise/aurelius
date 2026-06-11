@@ -1,37 +1,36 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { Shell } from "@models4insight/shell";
-import { DomainsComponent } from "./domains/domains.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { Shell } from '@models4insight/shell';
+import { DomainsComponent } from './domains/domains.component';
 
 const childRoutes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'domains'
+        redirectTo: 'domains',
     },
     {
         path: 'domains',
-        component: DomainsComponent
+        component: DomainsComponent,
     },
     {
         path: '**',
         pathMatch: 'full',
-        redirectTo: 'domains'
-    }
-]
+        redirectTo: 'domains',
+    },
+];
 const routes: Routes = [
     Shell.childRoutes([
         {
             path: '',
             component: DomainsComponent,
-            children: childRoutes
-        }
-    ])
+            children: childRoutes,
+        },
+    ]),
 ];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+    exports: [RouterModule],
 })
-export class DashboardRoutingModule { }
-
+export class DashboardRoutingModule {}

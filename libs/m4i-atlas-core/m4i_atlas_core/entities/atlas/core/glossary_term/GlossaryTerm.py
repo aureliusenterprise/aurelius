@@ -3,27 +3,25 @@ from typing import List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from ..glossary_base_object import (GlossaryBaseObjectBase,
-                                    GlossaryBaseObjectDefaultsBase)
+from ..glossary_base_object import GlossaryBaseObjectBase, GlossaryBaseObjectDefaultsBase
 from ..glossary_header import GlossaryHeader
 from ..related_object_id import RelatedObjectId
 from ..related_term_header import RelatedTermHeader
 from ..term_categorization_header import TermCategorizationHeader
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class GlossaryTermBase(GlossaryBaseObjectBase):
-
     anchor: GlossaryHeader
+
 
 # END GlossaryTermBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class GlossaryTermDefaultsBase(GlossaryBaseObjectDefaultsBase):
-
     abbreviation: Optional[str] = None
     antonyms: List[RelatedTermHeader] = field(default_factory=list)
     assigned_entities: List[RelatedObjectId] = field(default_factory=list)
@@ -42,13 +40,14 @@ class GlossaryTermDefaultsBase(GlossaryBaseObjectDefaultsBase):
     valid_values: List[RelatedTermHeader] = field(default_factory=list)
     valid_values_for: List[RelatedTermHeader] = field(default_factory=list)
 
+
 # END GlossaryTermDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class GlossaryTerm(GlossaryTermDefaultsBase, GlossaryTermBase):
-
     pass
+
 
 # END GlossaryTerm

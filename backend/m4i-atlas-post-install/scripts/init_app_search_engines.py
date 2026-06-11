@@ -13,12 +13,9 @@ from requests.auth import HTTPBasicAuth
 
 NAMESPACE = os.getenv("NAMESPACE", "demo")
 
-elastic_url = os.getenv(
-    "ELASTIC_URL", f"http://elastic-search-es-http.{NAMESPACE}.svc.cluster.local:9200/"
-)
+elastic_url = os.getenv("ELASTIC_URL", f"http://elastic-search-es-http.{NAMESPACE}.svc.cluster.local:9200/")
 enterprise_search_url = os.getenv(
-    "ENTERPRISE_SEARCH_URL",
-    f"http://enterprise-search-ent-http.{NAMESPACE}.svc.cluster.local:3002/",
+    "ENTERPRISE_SEARCH_URL", f"http://enterprise-search-ent-http.{NAMESPACE}.svc.cluster.local:3002/"
 )
 elastic_username = os.getenv("ELASTIC_USERNAME", "elastic")
 elastic_password = os.getenv("ELASTIC_PASSWORD", "elastic")
@@ -29,14 +26,12 @@ UPLOAD_DATA = os.getenv("UPLOAD_DATA", False)
 
 ENGINES_TO_UPLOAD = {
     "atlas-dev-quality": Path(__file__).parent / "../data/atlas-dev-quality.json",
-    "atlas-dev-gov-quality":Path(__file__).parent / "../data/atlas-dev-gov-quality.json",
+    "atlas-dev-gov-quality": Path(__file__).parent / "../data/atlas-dev-gov-quality.json",
     "atlas-dev": Path(__file__).parent / "../data/atlas-dev.json",
 }
 
 
-def get_enterprise_api_private_key(
-    enterprise_search_url, elastic_username, elastic_password
-):
+def get_enterprise_api_private_key(enterprise_search_url, elastic_username, elastic_password):
     key_response = requests.get(
         f"{enterprise_search_url}api/as/v1/credentials/private-key",
         auth=HTTPBasicAuth(elastic_username, elastic_password),
@@ -58,9 +53,7 @@ def create_engines(app_search_client: AppSearch) -> None:
     for engine in engines:
         try:
             app_search_client.create_engine(engine_name=engine["name"])
-            app_search_client.put_schema(
-                engine_name=engine["name"], schema=engine["schema"]
-            )
+            app_search_client.put_schema(engine_name=engine["name"], schema=engine["schema"])
             app_search_client.put_search_settings(
                 engine_name=engine["name"],
                 search_fields=engine["search-settings"]["search_fields"],
@@ -68,15 +61,11 @@ def create_engines(app_search_client: AppSearch) -> None:
             )
         except BadRequestError as e:
             if e.body["errors"] == ["Name is already taken"]:
-                logging.warning(
-                    f'Skipping creation of {engine["name"]}. Engine already exists.'
-                )
+                logging.warning(f"Skipping creation of {engine['name']}. Engine already exists.")
             else:
                 raise e
         finally:
-            app_search_client.put_schema(
-                engine_name=engine["name"], schema=engine["schema"]
-            )
+            app_search_client.put_schema(engine_name=engine["name"], schema=engine["schema"])
             app_search_client.put_search_settings(
                 engine_name=engine["name"],
                 search_fields=engine["search-settings"]["search_fields"],

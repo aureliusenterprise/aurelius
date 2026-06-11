@@ -1,1 +1,1 @@
-from .calculate_hash_for_row import *
+from .calculate_hash_for_row import calculate_hash_for_row as calculate_hash_for_row

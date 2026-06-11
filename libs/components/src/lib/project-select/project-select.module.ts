@@ -5,8 +5,8 @@ import { SelectModule } from '../select';
 import { ProjectSelectComponent } from './project-select.component';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SelectModule],
-  declarations: [ProjectSelectComponent],
-  exports: [ProjectSelectComponent],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, SelectModule],
+    declarations: [ProjectSelectComponent],
+    exports: [ProjectSelectComponent],
 })
 export class ProjectSelectModule {}

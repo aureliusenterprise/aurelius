@@ -6,20 +6,20 @@ import { ModelExploreGuard } from './model-explore.guard';
 import { ModelExploreResolver } from './model-explore.resolver';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: ModelExploreComponent,
-    data: {
-      title: extract('Model Explorer')
+    {
+        path: '',
+        component: ModelExploreComponent,
+        data: {
+            title: extract('Model Explorer'),
+        },
+        canActivate: [ModelExploreGuard],
+        resolve: { modelExploreParams: ModelExploreResolver },
     },
-    canActivate: [ModelExploreGuard],
-    resolve: { modelExploreParams: ModelExploreResolver }
-  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-  providers: []
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
+    providers: [],
 })
 export class ModelExploreRoutingModule {}

@@ -2,7 +2,7 @@
 
 This module provides several common utility classes and functions, as well as custom RxJS operators.
 
-# Nx
+## Nx
 
 This library was generated with [Nx](https://nx.dev).
 

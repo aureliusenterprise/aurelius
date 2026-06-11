@@ -52,12 +52,7 @@ class PrepareNotificationToIndexFunction(MapFunction):
 
         doc_id = f"{entity.guid}_{msg_creation_time}"
 
-        return EntityVersion(
-            entity,
-            doc_id,
-            event_time,
-            msg_creation_time,
-        )
+        return EntityVersion(entity, doc_id, event_time, msg_creation_time)
 
 
 class PrepareNotificationToIndex:
@@ -86,10 +81,8 @@ class PrepareNotificationToIndex:
         """
         self.input_stream = input_stream
 
-        self.main = self.input_stream.map(PrepareNotificationToIndexFunction()).name(
-            "index_preparation",
-        )
+        self.main = self.input_stream.map(PrepareNotificationToIndexFunction()).name("index_preparation")
 
         self.main = self.main.flat_map(
-            lambda x: [x] if isinstance(x, EntityVersion) else [],
+            lambda x: [x] if isinstance(x, EntityVersion) else []  # type: ignore[assignment]
         )

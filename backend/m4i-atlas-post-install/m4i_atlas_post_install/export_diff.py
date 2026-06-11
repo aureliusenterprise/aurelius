@@ -9,11 +9,7 @@ from zipfile import ZipFile
 
 import dictdiffer
 
-NON_ENTITY = [
-    "atlas-typesdef.json",
-    "atlas-export-order.json",
-    "atlas-export-info.json",
-]
+NON_ENTITY = ["atlas-typesdef.json", "atlas-export-order.json", "atlas-export-info.json"]
 
 TYPES_MAP = {
     "m4i_kafka_field": "m4i_field",
@@ -32,9 +28,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--left", "-l", required=True, help="First export", type=Path)
     parser.add_argument("--right", "-r", required=True, help="Second export", type=Path)
-    parser.add_argument(
-        "--output", "-o", required=True, help="Output with patched types", type=Path
-    )
+    parser.add_argument("--output", "-o", required=True, help="Output with patched types", type=Path)
     return parser.parse_args()
 
 
@@ -64,10 +58,7 @@ def index_entities(path: Path) -> MutableMapping[str, MutableMapping[str, Any]]:
 
 def index_both(
     left: Path, right: Path
-) -> Tuple[
-    MutableMapping[str, MutableMapping[str, Any]],
-    MutableMapping[str, MutableMapping[str, Any]],
-]:
+) -> Tuple[MutableMapping[str, MutableMapping[str, Any]], MutableMapping[str, MutableMapping[str, Any]]]:
     return index_entities(left), index_entities(right)
 
 
@@ -92,9 +83,7 @@ def get_deleted_entities(diff: List[Tuple]) -> List[Tuple]:
 
 
 def filter_gov_quality(entities: List[Tuple]) -> List[Tuple]:
-    return [
-        i for i in entities if i[1]["entity"]["typeName"] in ["m4i_gov_data_quality"]
-    ]
+    return [i for i in entities if i[1]["entity"]["typeName"] in ["m4i_gov_data_quality"]]
 
 
 def update_types(entity: MutableMapping[str, Any]) -> MutableMapping[str, Any]:
@@ -115,9 +104,7 @@ def create_patch(entities: List[Tuple]) -> List[Tuple]:
     return [("add", "", entities)]
 
 
-def update_index(
-    index: MutableMapping[str, Any], patch: List[Tuple]
-) -> MutableMapping[str, Any]:
+def update_index(index: MutableMapping[str, Any], patch: List[Tuple]) -> MutableMapping[str, Any]:
     return dictdiffer.patch(patch, index)
 
 

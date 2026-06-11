@@ -16,40 +16,34 @@ import { ShellConfig, ShellConfigService } from './shell-config.service';
 import { ShellComponent } from './shell.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FeatureModule,
-    FontAwesomeModule,
-    RouterModule,
-    TranslateModule.forChild(),
-  ],
-  declarations: [
-    HeaderComponent,
-    FooterComponent,
-    ShellComponent,
-    LoadingComponent,
-    PipelineComponent,
-    PipelineTaskComponent,
-  ],
+    imports: [CommonModule, FeatureModule, FontAwesomeModule, RouterModule, TranslateModule.forChild()],
+    declarations: [
+        HeaderComponent,
+        FooterComponent,
+        ShellComponent,
+        LoadingComponent,
+        PipelineComponent,
+        PipelineTaskComponent,
+    ],
 })
 export class ShellModule {
-  constructor(private i18nService: I18nService) {
-    this.i18nService.setTranslation('en-US', enUS);
-  }
+    constructor(private i18nService: I18nService) {
+        this.i18nService.setTranslation('en-US', enUS);
+    }
 
-  static forRoot(config: ShellConfig = {}): ModuleWithProviders<ShellModule> {
-    return {
-      ngModule: ShellModule,
-      providers: [
-        {
-          provide: ShellConfigService,
-          useValue: config,
-        },
-        {
-          provide: RouteReuseStrategy,
-          useClass: RouteReusableStrategy,
-        },
-      ],
-    };
-  }
+    static forRoot(config: ShellConfig = {}): ModuleWithProviders<ShellModule> {
+        return {
+            ngModule: ShellModule,
+            providers: [
+                {
+                    provide: ShellConfigService,
+                    useValue: config,
+                },
+                {
+                    provide: RouteReuseStrategy,
+                    useClass: RouteReusableStrategy,
+                },
+            ],
+        };
+    }
 }
