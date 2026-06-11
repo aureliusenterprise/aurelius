@@ -27,10 +27,7 @@ class MockAuthProvider(AuthProvider):
 
                 parts = auth.split()
                 if parts[0].lower() != "bearer" or len(parts) != 2:
-                    abort(
-                        401,
-                        description='Authorization header must be "Bearer <token>".',
-                    )
+                    abort(401, description='Authorization header must be "Bearer <token>".')
 
                 token = parts[1]
                 return f(access_token=token, *args, **kwargs)
@@ -78,17 +75,9 @@ def settings() -> Settings:
 
 
 @pytest.fixture(scope="session")
-def app(
-    auth_provider: MockAuthProvider,
-    key_provider: MockKeyProvider,
-    settings: Settings,
-) -> Flask:
+def app(auth_provider: MockAuthProvider, key_provider: MockKeyProvider, settings: Settings) -> Flask:
     """Create the Flask app with test dependencies."""
-    return create_app(
-        auth_provider=auth_provider,
-        key_provider=key_provider,
-        settings=settings,
-    )
+    return create_app(auth_provider=auth_provider, key_provider=key_provider, settings=settings)
 
 
 @pytest.fixture

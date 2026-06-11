@@ -79,8 +79,7 @@ def test__proxy_with_root_path(client: FlaskClient) -> None:
 def test__proxy_disallows_get_on_allowed_path(client: FlaskClient) -> None:
     """GET requests are rejected even on allowlisted paths."""
     response = client.get(
-        "/api/as/v1/engines/test-engine/search",
-        headers={"Authorization": "Bearer user-token"},
+        "/api/as/v1/engines/test-engine/search", headers={"Authorization": "Bearer user-token"}
     )
 
     assert response.status_code == 403

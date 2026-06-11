@@ -25,10 +25,7 @@ def fetch_app_search_key(settings: Settings) -> str:
 
     key_response = requests.get(
         f"{clean_base}/api/as/v1/credentials/{settings.key_name}",
-        auth=HTTPBasicAuth(
-            username=settings.username,
-            password=settings.password.get_secret_value(),
-        ),
+        auth=HTTPBasicAuth(username=settings.username, password=settings.password.get_secret_value()),
         timeout=settings.timeout_seconds,
         verify=settings.ca_cert_path.as_posix() if settings.ca_cert_path else False,
     )
