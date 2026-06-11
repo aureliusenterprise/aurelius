@@ -29,7 +29,7 @@
             "^/data_quality": ""
         },
         "secure": true,
-        "target": "http://localhost:3002/api/as/v1/engines/atlas-dev-quality/search.json"
+        "target": "http://localhost:8531/api/as/v1/engines/atlas-dev-quality/search.json"
     },
     "/elastic": {
         "changeOrigin": true,
@@ -37,7 +37,7 @@
             "^/elastic": ""
         },
         "secure": true,
-        "target": "http://localhost:3002/api/as/v1/engines/atlas-dev/search.json"
+        "target": "http://localhost:8531/api/as/v1/engines/atlas-dev/search.json"
     },
     "/errorlog/api": {
         "changeOrigin": true,
@@ -61,7 +61,7 @@
             "^/gov_quality": ""
         },
         "secure": true,
-        "target": "http://localhost:3002/api/as/v1/engines/atlas-dev-gov-quality/search.json"
+        "target": "http://localhost:8531/api/as/v1/engines/atlas-dev-gov-quality/search.json"
     },
     "/lineage_model": {
         "changeOrigin": false,

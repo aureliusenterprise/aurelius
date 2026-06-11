@@ -67,6 +67,12 @@ export default {
                 },
             ],
         }),
+        HttpModule.forRoot({
+            production: environment.production,
+        }),
+        AuthenticationModule.forRoot(environment.keycloak),
+        AtlasApiModule,
+        ElasticApiModule.forRoot(),
     ],
 
     argTypes: {

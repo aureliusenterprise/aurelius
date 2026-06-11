@@ -97,6 +97,9 @@ spec:
           - name: v-reverse-proxy-configs-elastic-conf
             mountPath: /usr/local/apache2/conf.d/elastic.conf
             subPath: elastic.conf
+          - name: v-reverse-proxy-configs-search-api-conf
+            mountPath: /usr/local/apache2/conf.d/search-api.conf
+            subPath: search-api.conf
       volumes:
         - name: v-reverse-proxy-configs-auth-conf
           configMap:
@@ -122,3 +125,6 @@ spec:
         - name: v-reverse-proxy-configs-elastic-conf
           configMap:
             name: cm-reverse-proxy-configs-elastic-conf
+        - name: v-reverse-proxy-configs-search-api-conf
+          configMap:
+            name: cm-reverse-proxy-configs-search-api-conf

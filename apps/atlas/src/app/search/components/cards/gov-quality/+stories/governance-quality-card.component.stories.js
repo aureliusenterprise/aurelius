@@ -1,19 +1,12 @@
 import { RouterTestingModule } from '@angular/router/testing';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-    AtlasApiModule,
-    ClassificationDefAPIService,
-    ElasticApiModule,
-    EntityAPIService,
-    TypeDefAPIService,
-} from '@models4insight/atlas/api';
+import { AtlasApiModule, ElasticApiModule, EntityAPIService, TypeDefAPIService } from '@models4insight/atlas/api';
 import { AuthenticationModule } from '@models4insight/authentication';
 import { HttpModule } from '@models4insight/http';
 import { ReduxModule } from '@models4insight/redux';
 import { TaskManagerModule } from '@models4insight/task-manager';
 import { TranslateModule } from '@ngx-translate/core';
 import { moduleMetadata } from '@storybook/angular';
-import { Mermaid } from 'mdx-mermaid/Mermaid';
 import { environment } from '../../../../../../environments/environment';
 import { DetailsCardComponent } from '../../details-card.component';
 import { DetailsCardModule } from '../../details-card.module';
@@ -61,6 +54,12 @@ export default {
                 },
             ],
         }),
+        HttpModule.forRoot({
+            production: environment.production,
+        }),
+        AuthenticationModule.forRoot(environment.keycloak),
+        AtlasApiModule,
+        ElasticApiModule.forRoot(),
     ],
 
     argTypes: {
