@@ -35,16 +35,6 @@
         "serve": {
             "dependsOn": ["decrypt", "docker-build", "^docker-build", "generate-certs"]
         },
-        "update-app-search-token": {
-            "dependsOn": ["decrypt"],
-            "executor": "@nxlv/python:run-commands",
-            "metadata": {
-                "description": "Update the App Search token in the Aurelius Atlas frontend environment file."
-            },
-            "options": {
-                "command": "poetry run {projectRoot}/bin/update-app-search-token.sh"
-            }
-        },
         "upload-sample-data": {
             "dependsOn": ["decrypt", "init-atlas-types"],
             "executor": "@nxlv/python:run-commands",

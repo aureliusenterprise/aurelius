@@ -44,7 +44,7 @@ export default {
         }),
         AuthenticationModule.forRoot(environment.keycloak),
         AtlasApiModule,
-        ElasticApiModule.forRoot(environment.atlas),
+        ElasticApiModule.forRoot(),
       ],
 
       providers: [

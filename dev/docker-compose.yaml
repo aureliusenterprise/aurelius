@@ -2,7 +2,7 @@ name: aurelius-atlas-dev
 
 services:
     atlas:
-        image: aurelius-docker-apache-atlas:local
+        image: ghcr.io/aureliusenterprise/aurelius-docker-apache-atlas:local
         depends_on:
             - broker
             - keycloak
@@ -21,7 +21,7 @@ services:
               target: /apache-atlas/conf/keycloak-conf.json
 
     keycloak:
-        image: aurelius-docker-keycloak:local
+        image: ghcr.io/aureliusenterprise/aurelius-docker-keycloak:local
         command: ['start-dev', '--import-realm']
         configs:
             - source: keycloak-realm
@@ -68,7 +68,7 @@ services:
             - keycloak-data:/var/lib/postgresql
 
     keycloak-setup:
-        image: aurelius-docker-keycloak:local
+        image: ghcr.io/aureliusenterprise/aurelius-docker-keycloak:local
         command: ['/aurelius/keycloak-setup.sh']
         configs:
             - source: keycloak-setup
