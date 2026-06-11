@@ -10,7 +10,7 @@ dependencies = [
     "psycopg[binary]>=3.3",
     "pydantic>=2.13",
     "pydantic-settings>=2.14",
-    "pyjwt>=2.12",
+    "pyjwt>=2.13.0",
     "uvicorn[standard]>=0.46",
 ]
 description = "This is an example FastAPI application."
