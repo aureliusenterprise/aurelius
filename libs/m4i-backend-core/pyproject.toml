@@ -12,7 +12,7 @@ include = "m4i_backend_core"
 [tool.poetry.dependencies]
 cachetools = ">=5.5.2"
 cryptography = ">=41.0.0"
-flask = "2.1.2"
+flask = ">=2.2,<3.0"
 pyjwt = ">=2.9.0"
 python = ">=3.9,<3.13"
 requests = ">=2.26.0"

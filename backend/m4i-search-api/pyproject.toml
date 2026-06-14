@@ -11,7 +11,7 @@ include = "m4i_search_api"
 
 [tool.poetry.dependencies]
 cachetools = "^5.5.2"
-flask = "2.1.2"
+flask = ">=2.2,<3.0"
 gunicorn = "^22.0.0"
 pydantic = "^2.8.0"
 pydantic-settings = "^2.6.0"
