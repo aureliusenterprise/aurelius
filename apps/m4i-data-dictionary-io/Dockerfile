@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Use the official Python image as a base image for building the application
-FROM python:3.8 AS build-image
+FROM python:3.9 AS build-image
 
 # Set the working directory
 WORKDIR /build
@@ -15,7 +15,7 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
     rm ./*.whl
 
 # Use a slim version of the base Python image to reduce the final image size
-FROM python:3.8-slim
+FROM python:3.9-slim
 
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"

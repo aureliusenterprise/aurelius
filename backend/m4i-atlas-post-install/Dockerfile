@@ -1,5 +1,5 @@
 # Use the official Python image as the base
-FROM python:3.8
+FROM python:3.9
 
 LABEL org.opencontainers.image.source=https://github.com/aureliusenterprise/aurelius
 

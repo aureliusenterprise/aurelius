@@ -10,9 +10,9 @@ version = "1.0.0"
 include = "m4i_publish_state"
 
 [tool.poetry.dependencies]
-apache-flink = "~1.17"
+apache-flink = "^2.0"
 cryptography = "<43"
-python = "~3.8"
+python = ">=3.9,<3.13"
 python-keycloak = "0.18.0"
 urllib3 = "1.26.2"
 

@@ -10,9 +10,9 @@ version = "1.0.0"
 include = "m4i_consistency_metrics"
 
 [tool.poetry.dependencies]
-bokeh = "2.4.3"
+bokeh = "^3.1"
 gunicorn = "^22.0.0"
-python = "~3.8"
+python = ">=3.9,<3.13"
 requests_cache = "0.5.2"
 
 [tool.poetry.dependencies.m4i-analytics]

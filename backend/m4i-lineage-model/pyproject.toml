@@ -12,7 +12,7 @@ include = "m4i_lineage_model"
 [tool.poetry.dependencies]
 aiohttp = "~3.9"
 gunicorn = "^22.0.0"
-python = "~3.8"
+python = ">=3.9,<3.13"
 
 [tool.poetry.dependencies.m4i-atlas-core]
 develop = true

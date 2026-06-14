@@ -15,7 +15,7 @@ flask-restx = "1.0.3"
 gunicorn = "^22.0.0"
 itsdangerous = "2.0.1"
 markupsafe = "2.0.1"
-python = "~3.8"
+python = ">=3.9,<3.13"
 
 [tool.poetry.dependencies.m4i-atlas-core]
 develop = true

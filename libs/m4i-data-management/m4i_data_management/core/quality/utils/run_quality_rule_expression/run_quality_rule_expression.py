@@ -12,7 +12,7 @@ def run_quality_rule_expression(data: DataFrame, rule_expression: str) -> Series
     if "|" in rule_expression:
         # Split the expression by logical OR operator
         # Evaluate each part separately and combine the results
-        return DataFrame(
+        return DataFrame(  # type: ignore[return-value]
             [
                 run_quality_rule_expression(data, expression.strip())
                 for expression in rule_expression.split(" | ")
