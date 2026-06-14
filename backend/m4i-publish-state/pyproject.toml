@@ -14,7 +14,7 @@ apache-flink = "^2.0"
 cryptography = "<43"
 python = ">=3.9,<3.13"
 python-keycloak = "0.18.0"
-urllib3 = "1.26.2"
+urllib3 = ">=1.26.18,<2"
 
 [tool.poetry.dependencies.m4i-flink-tasks]
 develop = true
