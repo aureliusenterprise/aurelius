@@ -120,7 +120,9 @@
             "toolsToInstall": ["uv"],
             "version": "3.14"
         },
-        "ghcr.io/dhoeric/features/trivy:1": {}
+        "ghcr.io/dhoeric/features/trivy:1": {
+            "version": "0.71.0"
+        }
     },
     "forwardPorts": [1880, 4200, 4400, 8000, 8080, 8081, 8082, 9092],
     "image": "mcr.microsoft.com/devcontainers/base:noble",
