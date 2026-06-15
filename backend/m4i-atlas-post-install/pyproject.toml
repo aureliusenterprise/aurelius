@@ -11,7 +11,7 @@ include = "m4i_atlas_post_install"
 
 [tool.poetry.dependencies]
 dictdiffer = "0.9.0"
-elastic-transport = "8.13.1"
+elastic-transport = "~8.13"
 elastic_enterprise_search = "~8.11"
 elasticsearch = "~8.9"
 python = ">=3.10,<3.14"
