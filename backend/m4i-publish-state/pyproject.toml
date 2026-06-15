@@ -12,7 +12,7 @@ include = "m4i_publish_state"
 [tool.poetry.dependencies]
 apache-flink = "^2.0"
 cryptography = "<43"
-python = ">=3.9,<3.13"
+python = ">=3.10,<3.14"
 python-keycloak = "0.18.0"
 urllib3 = ">=1.26.18,<2"
 

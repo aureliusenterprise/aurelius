@@ -107,7 +107,7 @@
         },
         "ghcr.io/devcontainers/features/python:1": {
             "toolsToInstall": ["poetry"],
-            "version": "3.9"
+            "version": "3.10"
         },
         "ghcr.io/dhoeric/features/google-cloud-cli:1": {},
         "ghcr.io/dhoeric/features/trivy:1": {

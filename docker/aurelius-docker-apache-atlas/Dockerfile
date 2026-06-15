@@ -1,5 +1,5 @@
 ARG JAVA_VERSION=8
-ARG PYTHON_VERSION=3.9
+ARG PYTHON_VERSION=3.10
 
 # Build Apache Atlas from source
 FROM eclipse-temurin:${JAVA_VERSION}-jdk-noble AS build
