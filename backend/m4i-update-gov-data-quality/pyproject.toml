@@ -11,7 +11,7 @@ include = "m4i_update_gov_data_quality"
 
 [tool.poetry.dependencies]
 apache-flink = "^2.0"
-cryptography = "<43"
+cryptography = ">=41.0.0,<47"
 elastic-transport = "8.13.1"
 elasticsearch = "~8.9"
 python = ">=3.10,<3.14"

@@ -10,7 +10,6 @@ version = "1.0.0"
 include = "m4i_graphviz_layouts"
 
 [tool.poetry.dependencies]
-future = "0.18.2"
 graphviz = "0.13.2"
 pydotplus = "2.0.2"
 python = "^3.10"
