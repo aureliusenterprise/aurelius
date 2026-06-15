@@ -5,7 +5,7 @@ import jwt
 import requests
 from cachetools import TTLCache, cached
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
-from flask import _request_ctx_stack
+from flask import g
 from jwt.algorithms import RSAAlgorithm
 from tenacity import retry, retry_if_exception_type, stop_after_attempt
 
@@ -145,7 +145,7 @@ def requires_auth(f=None, transparent: bool = False):
                 {"code": "invalid_header", "description": "Unable to parse authentication token."}, 401
             )
 
-        _request_ctx_stack.top.current_user = payload
+        g.current_user = payload
 
         return f(access_token=token, *args, **kwargs)
 

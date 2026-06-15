@@ -2,6 +2,7 @@ import importlib
 from typing import List, Optional, Tuple
 from unittest.mock import Mock
 
+import flask
 import pytest
 import requests
 from flask import Flask
@@ -66,7 +67,7 @@ def test__retries_once_on_kid_miss_and_succeeds(app: Flask, monkeypatch: pytest.
         result = protected()
 
         assert result == "token"
-        assert requires_auth_module._request_ctx_stack.top.current_user == payload
+        assert flask.g.current_user == payload
 
     jwks_mock.cache_clear.assert_called_once_with()
     openid_configuration_mock.cache_clear.assert_called_once_with()

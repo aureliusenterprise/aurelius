@@ -35,10 +35,11 @@ def _bypass_auth_for_e2e() -> Generator[None, None, None]:
 
     monkeypatch = MonkeyPatch()
     requires_auth_module = importlib.import_module("m4i_backend_core.auth.requires_auth")
+    config_module = importlib.import_module("m4i_backend_core.config")
 
     monkeypatch.setattr(requires_auth_module, "get_token_auth_header", lambda: "e2e-test-token")
-    monkeypatch.setattr(requires_auth_module, "AUTH_PUBLIC_KEY", "e2e-test-public-key")
-    monkeypatch.setattr(requires_auth_module, "AUTH_ISSUER", "https://e2e.local/")
+    monkeypatch.setattr(config_module, "AUTH_PUBLIC_KEY", "e2e-test-public-key")
+    monkeypatch.setattr(config_module, "AUTH_ISSUER", "https://e2e.local/")
     monkeypatch.setattr(requires_auth_module.jwt, "decode", lambda *args, **kwargs: {"sub": "e2e-test-user"})
 
     yield

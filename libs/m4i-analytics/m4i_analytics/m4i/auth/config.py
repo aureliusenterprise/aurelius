@@ -1,4 +1,4 @@
-import imp
+import importlib.util
 import os
 import sys
 
@@ -18,7 +18,9 @@ try:
     if CONFIG_PATH_ENV_VAR in os.environ:
         print(f"Loaded your LOCAL configuration at [{os.environ[CONFIG_PATH_ENV_VAR]}]")
         module = sys.modules[__name__]
-        override_conf = imp.load_source("m4i_keycloak_config", os.environ[CONFIG_PATH_ENV_VAR])
+        spec = importlib.util.spec_from_file_location("m4i_keycloak_config", os.environ[CONFIG_PATH_ENV_VAR])
+        override_conf = importlib.util.module_from_spec(spec)  # type: ignore
+        spec.loader.exec_module(override_conf)  # type: ignore
         for key in dir(override_conf):
             if key.isupper():
                 setattr(module, key, getattr(override_conf, key))
