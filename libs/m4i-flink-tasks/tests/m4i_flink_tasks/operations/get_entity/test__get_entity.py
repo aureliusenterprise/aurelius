@@ -51,9 +51,10 @@ def test_get_entity_process_valid_input_event() -> None:
 
     get_entity_module = importlib.import_module("m4i_flink_tasks.operations.get_entity.get_entity")
 
-    with patch.object(
-        GetEntityFunction, "access_token", new=PropertyMock(return_value="test-token")
-    ), patch.object(get_entity_module, "get_entity_by_guid", new=AsyncMock(return_value=entity)):
+    with (
+        patch.object(GetEntityFunction, "access_token", new=PropertyMock(return_value="test-token")),
+        patch.object(get_entity_module, "get_entity_by_guid", new=AsyncMock(return_value=entity)),
+    ):
         result = func.map(event.to_json())
 
         assert isinstance(result, AtlasChangeMessage)
@@ -108,9 +109,10 @@ def test_get_entity_handle_http_error_during_entity_lookup() -> None:
 
     get_entity_module = importlib.import_module("m4i_flink_tasks.operations.get_entity.get_entity")
 
-    with patch.object(
-        GetEntityFunction, "access_token", new=PropertyMock(return_value="test-token")
-    ), patch.object(get_entity_module, "get_entity_by_guid", new=AsyncMock(side_effect=HTTPError())):
+    with (
+        patch.object(GetEntityFunction, "access_token", new=PropertyMock(return_value="test-token")),
+        patch.object(get_entity_module, "get_entity_by_guid", new=AsyncMock(side_effect=HTTPError())),
+    ):
         result = func.map(event.to_json())
 
         assert isinstance(result, RuntimeError)
