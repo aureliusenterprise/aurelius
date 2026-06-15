@@ -21,7 +21,7 @@ python = ">=3.10,<3.14"
 python-keycloak = "0.18.0"
 requests = ">=2.32.0"
 requests-toolbelt = "0.9.1"
-sqlalchemy = "^1.4"
+sqlalchemy = ">=2.0,<3.0"
 sqlparse = "0.3.0"
 uuid = "1.30"
 

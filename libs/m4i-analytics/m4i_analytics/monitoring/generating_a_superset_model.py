@@ -21,8 +21,8 @@ def getConnection(db):
 
 
 def getTableData(con, metadata, tablename):
-    table = Table(tablename, metadata, autoload=True, autoload_with=con)
-    return con.execute(select([table])).fetchall()
+    table = Table(tablename, metadata, autoload_with=con)
+    return con.execute(select(table)).fetchall()
 
 
 # END getTableData
@@ -47,7 +47,7 @@ def generate_superset_model(db_url):
 
     con = getConnection(db_url)
     metadata = MetaData()
-    metadata.reflect(bind=con, views=True)
+    metadata.reflect(con, views=True)
 
     # Content Tables
     slices = getTableData(con, metadata, "slices")
