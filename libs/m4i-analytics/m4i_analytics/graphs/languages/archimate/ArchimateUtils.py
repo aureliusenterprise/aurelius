@@ -12,7 +12,7 @@ from itertools import chain
 from typing import Optional, Union
 
 import numpy as np
-from pandas import DataFrame
+from pandas import concat, DataFrame
 
 from m4i_analytics.graphs.GraphUtils import GraphUtils
 from m4i_analytics.graphs.languages.archimate.metamodel.Archi import ArchiElement
@@ -839,7 +839,7 @@ class ArchimateUtils(GraphUtils):
         # END LOOP
 
         view = format_view(view_id, viewlabels + viewnodes, viewedges)
-        model.views = model.views.append(view, ignore_index=True)
+        model.views = concat([model.views, DataFrame([view])], ignore_index=True)
 
         organization_path = {"idRef": view_id}
 
@@ -849,7 +849,7 @@ class ArchimateUtils(GraphUtils):
 
         organization_path[f"level{str(len(path) + 1)}"] = ""
 
-        model.organizations = model.organizations.append(organization_path, ignore_index=True)
+        model.organizations = concat([model.organizations, DataFrame([organization_path])], ignore_index=True)
         model.organizations.fillna("")
 
         return view
