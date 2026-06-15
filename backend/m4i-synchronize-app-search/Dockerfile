@@ -7,9 +7,9 @@ ARG FLINK_VERSION=1.17.0
 FROM flink:${FLINK_VERSION}
 
 # Set build arguments
-ARG PYTHON_VERSION=3.8
+ARG PYTHON_VERSION=3.9
 
-# Install Python 3.8. Use cache mounts to speed up the process.
+# Install Python 3.9. Use cache mounts to speed up the process.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
