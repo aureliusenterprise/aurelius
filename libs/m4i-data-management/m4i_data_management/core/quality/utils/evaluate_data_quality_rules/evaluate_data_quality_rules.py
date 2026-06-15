@@ -47,7 +47,7 @@ def evaluate_data_quality_rules(data: DataFrame, rules: DataFrame) -> DataFrame:
     all_non_compliant = DataFrame()
 
     for summary, compliant, non_compliant in run_checks():
-        summaries = summaries.append(summary, ignore_index=True)  # type: ignore[assignment]
+        summaries = concat([summaries, DataFrame([summary])], ignore_index=True)
         all_compliant = concat([all_compliant, compliant], ignore_index=True)
         all_non_compliant = concat([all_non_compliant, non_compliant], ignore_index=True)
     # END LOOP
