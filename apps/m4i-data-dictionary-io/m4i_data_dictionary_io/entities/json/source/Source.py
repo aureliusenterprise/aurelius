@@ -35,7 +35,12 @@ class Source(SourceDefaultsBase, SourceBase, ToAtlasConvertible[BusinessSource])
         Returns a corresponding Atlas `BusinessSource` instance.
         """
 
-        attributes = BusinessSourceAttributes(name=self.name, qualified_name=self._qualified_name())
+        attributes = BusinessSourceAttributes(
+            name=self.name,
+            qualified_name=self._qualified_name(),
+            hash_code=self.hash_code,
+            branch=self.branch,
+        )
 
         entity = BusinessSource(
             attributes=attributes  # type: ignore
@@ -46,9 +51,15 @@ class Source(SourceDefaultsBase, SourceBase, ToAtlasConvertible[BusinessSource])
     # END convert_to_atlas
     def _qualified_name(self):
         """
-        Returns the qualified name of the entity based on its `name`.
+        Returns the qualified name of the entity based on its `name`,
+        optionally including `branch` and `hash_code` suffixes.
         """
-        return self.name
+        result = self.name
+        if self.branch:
+            result += "@" + self.branch
+        if self.hash_code:
+            result += "@" + self.hash_code
+        return result
 
     # END _qualified_name
 

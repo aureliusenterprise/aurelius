@@ -1,10 +1,12 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from json import loads
-from typing import Any, Dict, List, Optional, Sequence
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence
+
+if TYPE_CHECKING:
+    from bokeh.plotting._figure import figure as Figure
 
 from bokeh.embed import json_item
-from bokeh.plotting import Figure
 from flask import request
 from m4i_analytics.graphs.languages.archimate.ArchimateUtils import ArchimateUtils
 from m4i_analytics.m4i.ApiUtils import ApiUtils
@@ -221,7 +223,7 @@ async def _calculate_metric_category(metric_category: type, model_options: Dict[
 # END _calculate_metric_category
 
 
-def _format_chart(chart: Figure) -> Figure:
+def _format_chart(chart: "Figure") -> "Figure":
     """
     Ensures the given `chart` has a responsive layout and does not display the Bokeh logo
 
