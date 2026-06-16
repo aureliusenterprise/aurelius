@@ -10,9 +10,9 @@ version = "1.0.0"
 include = "m4i_atlas_core"
 
 [tool.poetry.dependencies]
-aiocache = "~0.12"
-aiohttp = "~3.9"
-dataclasses-json = "~0.6"
+aiocache = ">=0.12,<1"
+aiohttp = ">=3.9,<4"
+dataclasses-json = ">=0.6,<1"
 pandas = "^2.2"
 python = ">=3.10,<3.14"
 python-keycloak = "0.18.0"

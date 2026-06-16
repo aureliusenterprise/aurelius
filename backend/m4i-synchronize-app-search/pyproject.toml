@@ -11,12 +11,12 @@ include = "m4i_synchronize_app_search"
 
 [tool.poetry.dependencies]
 apache-flink = "^2.0"
-cryptography = ">=41.0.0,<47"
-elastic-transport = "~8.13"
+cryptography = ">=41.0.0,<48"
+elastic-transport = ">=8.13,<9"
 elasticsearch = "^8.9"
 python = ">=3.10,<3.14"
 python-keycloak = "0.18.0"
-urllib3 = ">=1.26.18,<2"
+urllib3 = ">=1.26.18"
 
 [tool.poetry.dependencies.m4i-flink-tasks]
 develop = true

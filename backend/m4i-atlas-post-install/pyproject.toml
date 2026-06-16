@@ -10,12 +10,12 @@ version = "1.0.0"
 include = "m4i_atlas_post_install"
 
 [tool.poetry.dependencies]
-dictdiffer = "0.9.0"
-elastic-transport = "~8.13"
-elastic_enterprise_search = "~8.11"
+dictdiffer = ">=0.9,<1"
+elastic-transport = ">=8.13,<9"
+elastic_enterprise_search = ">=8.11,<9"
 elasticsearch = "^8.9"
 python = ">=3.10,<3.14"
-urllib3 = ">=1.26.18,<2"
+urllib3 = ">=1.26.18"
 urlpath = "^1.2"
 
 [tool.poetry.dependencies.m4i-atlas-core]
