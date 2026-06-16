@@ -32,7 +32,7 @@ class _Auth:
     # END get_token
 
     def get_well_know(self) -> Any:
-        return self._keycloak_client.well_know()
+        return self._keycloak_client.well_known()
 
     # END get_well_know
 
