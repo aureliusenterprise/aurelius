@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.rules.starts_with.starts_with import starts_with
@@ -37,7 +37,7 @@ def test__starts_with_with_multiple_prefixes():
 
 
 def test__starts_with_with_empty_value():
-    data = DataFrame([{"id": NaN}])
+    data = DataFrame([{"id": nan}])
 
     result = starts_with(data, "id", "1")
 

@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.rules.length.length import length
@@ -29,7 +29,7 @@ def test__length_with_smaller_length():
 
 
 def test__length_without_value():
-    data = DataFrame([{"id": NaN}])
+    data = DataFrame([{"id": nan}])
 
     result = length(data, "id", 4)
 

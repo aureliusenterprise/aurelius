@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.rules.bijacency.bijacency import bijacency
@@ -33,7 +33,7 @@ def test__bijacency_with_non_bijacent_columns():
 def test__bijacency_with_one_empty_value():
     data = DataFrame(
         [
-            {"id": 1234, "name": NaN, "function": "Developer", "from": "01-01-2021"},
+            {"id": 1234, "name": nan, "function": "Developer", "from": "01-01-2021"},
             {"id": 1234, "name": "John Doe", "function": "Senior developer", "from": "01-01-2022"},
         ]
     )
@@ -46,7 +46,7 @@ def test__bijacency_with_one_empty_value():
 def test__bijacency_with_both_empty_values():
     data = DataFrame(
         [
-            {"id": 1234, "name": NaN, "function": "Developer", "from": "01-01-2021"},
+            {"id": 1234, "name": nan, "function": "Developer", "from": "01-01-2021"},
             {"id": 1234, "name": None, "function": "Senior developer", "from": "01-01-2022"},
         ]
     )

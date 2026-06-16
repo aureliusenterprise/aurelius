@@ -1,7 +1,7 @@
 from m4i_data_management.core.quality.rules.compare_first_characters.compare_first_characters import (
     compare_first_characters,
 )
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 
@@ -22,7 +22,7 @@ def test__compare_first_characters_with_other_values():
 
 
 def test__compare_first_characters_without_values():
-    data = DataFrame([{"id": NaN, "name": NaN}])
+    data = DataFrame([{"id": nan, "name": nan}])
 
     result = compare_first_characters(data, "id", "name", 2)
 

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from numpy import NaN
+from numpy import nan
 from pandas import Series
 
 from m4i_data_management.core.cdc.utils.calculate_hash_for_row.calculate_hash_for_row import (
@@ -31,7 +31,7 @@ def test_calculate_hash_for_row_produces_different_hash_for_different_input():
 def test__calculate_hash_for_row_empty_fields_do_not_influence_hash():
     row_a = Series({"abc": "def"})
 
-    row_b = Series({"abc": "def", "jkl": None, "mno": NaN})
+    row_b = Series({"abc": "def", "jkl": None, "mno": nan})
 
     assert calculate_hash_for_row(row_a) == calculate_hash_for_row(row_b)
 

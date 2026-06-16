@@ -18,7 +18,7 @@ def atlas_delete(
     access_token: Optional[str] = None,
 ) -> Awaitable[R]:
     def request_factory(url: str, session: ClientSession):
-        return session.delete(url=url, headers=headers, params=params, verify_ssl=False)
+        return session.delete(url=url, headers=headers, params=params, ssl=False)
 
     # END request_factory
 

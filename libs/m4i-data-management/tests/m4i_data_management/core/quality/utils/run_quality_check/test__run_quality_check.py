@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import pytest
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 from pandas.core.series import Series
 
@@ -13,7 +13,7 @@ def data():
     return DataFrame(
         [
             {"id": 1, "abc": "def", "ghi": "jkl"},
-            {"id": 2, "abc": NaN, "ghi": "mno"},
+            {"id": 2, "abc": nan, "ghi": "mno"},
             {"id": 3, "abc": "pqr", "ghi": "stu"},
         ]
     ).set_index("id")

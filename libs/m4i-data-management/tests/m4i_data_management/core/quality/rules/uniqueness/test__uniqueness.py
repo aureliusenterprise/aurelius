@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.rules.uniqueness.uniqueness import uniqueness
@@ -29,7 +29,7 @@ def test__uniqueness_without_duplicate_value():
 
 
 def test__uniqueness_without_any_values():
-    data = DataFrame([{"id": NaN}, {"id": NaN}])
+    data = DataFrame([{"id": nan}, {"id": nan}])
 
     result = uniqueness(data, "id")
 

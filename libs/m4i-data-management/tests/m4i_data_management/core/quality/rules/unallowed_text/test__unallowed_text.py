@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.rules.unallowed_text.unallowed_text import unallowed_text
@@ -21,7 +21,7 @@ def test__unallowed_text_without_unallowed_text():
 
 
 def test__unallowed_text_with_empty_value():
-    data = DataFrame([{"Organisation": NaN}])
+    data = DataFrame([{"Organisation": nan}])
 
     result = unallowed_text(data, "Organisation", "Stratonis Group")
 

@@ -1,5 +1,5 @@
 import pytest
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.utils.run_quality_rule_expression.run_quality_rule_expression import (
@@ -9,7 +9,7 @@ from m4i_data_management.core.quality.utils.run_quality_rule_expression.run_qual
 
 @pytest.fixture
 def data() -> DataFrame:
-    return DataFrame([{"abc": "def"}, {"abc": NaN}])
+    return DataFrame([{"abc": "def"}, {"abc": nan}])
 
 
 # END data

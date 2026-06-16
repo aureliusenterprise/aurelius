@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.rules.conditional_unallowed_text.conditional_unallowed_text import (
@@ -35,7 +35,7 @@ def test__conditional_unallowed_text_condition_met_without_value():
 
     unallowed_text_item = "(1)"
 
-    data = DataFrame([{"value": NaN, "conditional": "xx.FREE.eur"}])
+    data = DataFrame([{"value": nan, "conditional": "xx.FREE.eur"}])
 
     result = conditional_unallowed_text(data, "conditional", "value", values, unallowed_text_item)
 

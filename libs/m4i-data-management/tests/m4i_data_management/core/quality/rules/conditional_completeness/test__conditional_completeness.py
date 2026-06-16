@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.rules.conditional_completeness.conditional_completeness import (
@@ -19,7 +19,7 @@ def test__conditional_completeness_condition_met_with_value():
 def test__conditional_completeness_condition_met_without_value():
     values = [".TMP", ".FREE"]
 
-    data = DataFrame([{"value": NaN, "conditional": "xx.FREE.eur"}])
+    data = DataFrame([{"value": nan, "conditional": "xx.FREE.eur"}])
 
     result = conditional_completeness(data, "conditional", "value", values)
 

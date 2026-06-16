@@ -12,7 +12,7 @@ from itertools import chain
 from typing import Optional, Union
 
 import numpy as np
-from pandas import concat, DataFrame
+from pandas import DataFrame, concat
 
 from m4i_analytics.graphs.GraphUtils import GraphUtils
 from m4i_analytics.graphs.languages.archimate.metamodel.Archi import ArchiElement
@@ -359,7 +359,7 @@ class ArchimateUtils(GraphUtils):
         # Sometimes nan values appear instead of None values, but further
         # processing expects None. Nan values produce extra folders and cause
         # problems with RestApi.
-        result = result.applymap(lambda x: x if x == x else None)
+        result = result.applymap(lambda x: x if x == x else None)  # type: ignore[reportCallIssue]
 
         return result
 
@@ -785,7 +785,7 @@ class ArchimateUtils(GraphUtils):
 
             coords = GraphPlotter.get_coordinates(
                 viewmodel, layout=layout, node_width=node_width, node_height=node_height
-            )
+            )  # type: ignore[reportAssignmentType]
         else:
             coords = layout.get_coordinates(
                 viewmodel, coords=coords, node_width=node_width, node_height=node_height

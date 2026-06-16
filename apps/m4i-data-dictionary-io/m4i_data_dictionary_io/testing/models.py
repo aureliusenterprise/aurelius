@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from pydantic import Field
-from pydantic_avro.base import AvroBase
+from pydantic_avro.to_avro.base import AvroBase
 
 
 class Message(AvroBase):

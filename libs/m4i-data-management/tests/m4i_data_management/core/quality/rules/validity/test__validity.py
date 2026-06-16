@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.rules.validity.validity import validity
@@ -37,7 +37,7 @@ def test_validity_with_nonexisting_value():
 def test_validity_with_empty_values():
     example_values = ["Definite Contract", "Indefinite Contract"]
 
-    data = DataFrame([{"value": NaN}, {"value": None}])
+    data = DataFrame([{"value": nan}, {"value": None}])
 
     result = validity(data, "value", example_values)
 

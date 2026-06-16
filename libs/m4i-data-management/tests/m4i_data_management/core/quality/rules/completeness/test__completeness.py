@@ -1,5 +1,5 @@
 from m4i_data_management.core.quality.rules.completeness.completeness import completeness
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 
@@ -12,7 +12,7 @@ def test__completeness_with_non_empty_value():
 
 
 def test__completeness_with_one_empty_value():
-    data = DataFrame([{"id": 1234, "name": NaN, "function": "Developer", "from": "01-01-2021"}])
+    data = DataFrame([{"id": 1234, "name": nan, "function": "Developer", "from": "01-01-2021"}])
 
     result = completeness(data, "name")
 

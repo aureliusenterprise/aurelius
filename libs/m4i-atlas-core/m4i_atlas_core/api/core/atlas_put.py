@@ -18,7 +18,7 @@ def atlas_put(
     access_token: Optional[str] = None,
 ) -> Awaitable[R]:
     def request_factory(url: str, session: ClientSession):
-        return session.put(url=url, headers=headers, data=body, verify_ssl=False)
+        return session.put(url=url, headers=headers, data=body, ssl=False)
 
     # END request_factory
 

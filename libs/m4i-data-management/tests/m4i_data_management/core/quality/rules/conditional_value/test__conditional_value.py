@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.rules.conditional_value.conditional_value import conditional_value
@@ -57,7 +57,7 @@ def test__conditional_value_condition_unmet_with_expected_value():
 def test__conditional_value_condition_unmet_with_no_value():
     values = {"xx.TMP": "XX No Grade"}
 
-    data = DataFrame([{"value": NaN, "conditional": "xx.xx"}])
+    data = DataFrame([{"value": nan, "conditional": "xx.xx"}])
 
     result = conditional_value(data, "conditional", "value", values)
 

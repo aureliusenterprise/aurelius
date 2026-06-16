@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.rules.compare_first_characters_starting_without import (
@@ -34,7 +34,7 @@ def test__compare_first_characters_starting_without_match_with():
 
 
 def test__compare_first_characters_starting_without_nan():
-    data = DataFrame([{"id": NaN, "name": NaN}])
+    data = DataFrame([{"id": nan, "name": nan}])
 
     result = compare_first_characters_starting_without(data, "id", "name", 2, "BE")
 
@@ -44,8 +44,8 @@ def test__compare_first_characters_starting_without_nan():
 def test__compare_first_characters_starting_without_all():
     # Test all at once
     info = {
-        "id": ["NL.xxx", "NL.xxx", "BE.xxx", NaN, NaN, "NL.xxx"],
-        "name": ["NL.xxx", "BE.xxx", "BE.xxx", NaN, "NL.xxx", NaN],
+        "id": ["NL.xxx", "NL.xxx", "BE.xxx", nan, nan, "NL.xxx"],
+        "name": ["NL.xxx", "BE.xxx", "BE.xxx", nan, "NL.xxx", nan],
     }
 
     columns = ["id", "name"]
@@ -60,8 +60,8 @@ def test__compare_first_characters_starting_without_all():
 def test__result_index_matches_original_index():
     info = {
         "index": ["a", "b", "c", "d", "e", "f"],
-        "id": ["NL.xxx", "NL.xxx", "BE.xxx", NaN, NaN, "NL.xxx"],
-        "name": ["NL.xxx", "BE.xxx", "BE.xxx", NaN, "NL.xxx", NaN],
+        "id": ["NL.xxx", "NL.xxx", "BE.xxx", nan, nan, "NL.xxx"],
+        "name": ["NL.xxx", "BE.xxx", "BE.xxx", nan, "NL.xxx", nan],
     }
 
     data = DataFrame(info, columns=info.keys()).set_index("index")  # type: ignore[arg-type]

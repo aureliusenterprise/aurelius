@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import Series
 
 from m4i_data_management.core.cdc.columns import HASH_COLUMN
@@ -46,7 +46,7 @@ def test__are_hashes_not_equal_for_different_rows():
 
 
 def test__are_hashes_equal_with_empty_column():
-    a = Series({"a": "100", "b": 100, "c": NaN})
+    a = Series({"a": "100", "b": 100, "c": nan})
     b = Series({"a": "100", "b": 100})
 
     assert are_hashes_equal(a, b)

@@ -1,5 +1,5 @@
 from m4i_data_management.core.quality.rules.formatting.formatting import formatting
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 
@@ -44,7 +44,7 @@ def test__formatting_with_incorrect_numeric_format_combined():
 
 
 def test__formatting_without_value():
-    data = DataFrame([{"name": NaN}])
+    data = DataFrame([{"name": nan}])
 
     result = formatting(data, "name", r"^[a-zA-Z]+$")
 

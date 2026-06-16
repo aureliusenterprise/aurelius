@@ -1,4 +1,4 @@
-from numpy import NaN
+from numpy import nan
 from pandas import DataFrame
 
 from m4i_data_management.core.quality.rules.contains_character.contains_character import contains_character
@@ -37,7 +37,7 @@ def test__contains_character_with_multiple_characters():
 
 
 def test__contains_character_with_empty_value():
-    data = DataFrame([{"id": NaN}])
+    data = DataFrame([{"id": nan}])
 
     result = contains_character(data, "id", ".", 1)
 
