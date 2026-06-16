@@ -18,6 +18,18 @@ msgpack = ["msgpack (>=0.5.5)"]
 redis = ["redis (>=4.2.0)"]
 
 [[package]]
+name = "aiofiles"
+version = "25.1.0"
+description = "File support for asyncio."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "aiofiles-25.1.0-py3-none-any.whl", hash = "sha256:abe311e527c862958650f9438e859c1fa7568a141b22abcd015e120e86a85695"},
+    {file = "aiofiles-25.1.0.tar.gz", hash = "sha256:a8d728f0a29de45dc521f18f07297428d56992a742f0cd2701ba86e44d23d5b2"},
+]
+
+[[package]]
 name = "aiohttp"
 version = "3.9.5"
 description = "Async http client/server framework (asyncio)"
@@ -156,6 +168,26 @@ files = [
     {file = "annotated_types-0.7.0-py3-none-any.whl", hash = "sha256:1f02e8b43a8fbbc3f3e0d4f0f4bfc8131bcb4eebe8849b8e5c773f3a1c582a53"},
     {file = "annotated_types-0.7.0.tar.gz", hash = "sha256:aff07c09a53a08bc8cfccb9c85b05f1aa9a2a6f23728d790723543408344ce89"},
 ]
+
+[[package]]
+name = "anyio"
+version = "4.14.0"
+description = "High-level concurrency and networking framework on top of asyncio or Trio"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "anyio-4.14.0-py3-none-any.whl", hash = "sha256:dd9b7a2a9799ed6552fde617b2c5df02b7fdd7d88392fc48101e51bae46164d9"},
+    {file = "anyio-4.14.0.tar.gz", hash = "sha256:b47c1f9ccf73e67021df785332508f99379c68fa7d0684e8e3492cb1d4b23f89"},
+]
+
+[package.dependencies]
+exceptiongroup = {version = ">=1.0.2", markers = "python_version < \"3.11\""}
+idna = ">=2.8"
+typing_extensions = {version = ">=4.5", markers = "python_version < \"3.13\""}
+
+[package.extras]
+trio = ["trio (>=0.32.0)"]
 
 [[package]]
 name = "apache-beam"
@@ -428,6 +460,19 @@ files = [
 dev = ["backports.zoneinfo ; python_version < \"3.9\"", "freezegun (>=1.0,<2.0)", "jinja2 (>=3.0)", "pytest (>=6.0)", "pytest-cov", "pytz", "setuptools", "tzdata ; sys_platform == \"win32\""]
 
 [[package]]
+name = "backports-asyncio-runner"
+version = "1.2.0"
+description = "Backport of asyncio.Runner, a context manager that controls event loop life cycle."
+optional = false
+python-versions = "<3.11,>=3.8"
+groups = ["dev"]
+markers = "python_version == \"3.10\""
+files = [
+    {file = "backports_asyncio_runner-1.2.0-py3-none-any.whl", hash = "sha256:0da0a936a8aeb554eccb426dc55af3ba63bcdc69fa1a600b5bb305413a4477b5"},
+    {file = "backports_asyncio_runner-1.2.0.tar.gz", hash = "sha256:a5aa7b2b7d8f8bfcaa2b57313f70792df84e32a2a746f585213373f900b42162"},
+]
+
+[[package]]
 name = "backrefs"
 version = "5.9"
 description = "A wrapper around re and regex that adds additional back references."
@@ -493,6 +538,34 @@ files = [
     {file = "cachetools-5.5.2-py3-none-any.whl", hash = "sha256:d26a22bcc62eb95c3beabd9f1ee5e820d3d2704fe2967cbe350e20c8ffcd3f0a"},
     {file = "cachetools-5.5.2.tar.gz", hash = "sha256:1a661caa9175d26759571b2e19580f9d6393969e5dfca11fdb1f947a23e640d4"},
 ]
+
+[[package]]
+name = "cattrs"
+version = "26.1.0"
+description = "Composable complex class support for attrs and dataclasses."
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "cattrs-26.1.0-py3-none-any.whl", hash = "sha256:d1e0804c42639494d469d08d4f26d6b9de9b8ab26b446db7b5f8c2e97f7c3096"},
+    {file = "cattrs-26.1.0.tar.gz", hash = "sha256:fa239e0f0ec0715ba34852ce813986dfed1e12117e209b816ab87401271cdd40"},
+]
+
+[package.dependencies]
+attrs = ">=25.4.0"
+exceptiongroup = {version = ">=1.1.1", markers = "python_version < \"3.11\""}
+typing-extensions = ">=4.14.0"
+
+[package.extras]
+bson = ["pymongo (>=4.4.0)"]
+cbor2 = ["cbor2 (>=5.4.6)"]
+msgpack = ["msgpack (>=1.0.5)"]
+msgspec = ["msgspec (>=0.19.0) ; implementation_name == \"cpython\""]
+orjson = ["orjson (>=3.11.3) ; implementation_name == \"cpython\""]
+pyyaml = ["pyyaml (>=6.0)"]
+tomlkit = ["tomlkit (>=0.11.8)"]
+tomllib = ["tomli (>=1.1.0) ; python_version < \"3.11\"", "tomli-w (>=1.1.0)"]
+ujson = ["ujson (>=5.10.0)"]
 
 [[package]]
 name = "certifi"
@@ -1114,14 +1187,12 @@ files = []
 develop = true
 
 [package.dependencies]
-bokeh = "^3.6"
 gunicorn = "^23.0.0"
 m4i-analytics = {path = "../../libs/m4i-analytics", develop = true}
 m4i-backend-core = {path = "../../libs/m4i-backend-core", develop = true}
 m4i-graphviz-layouts = {path = "../../libs/m4i-analytics-extensions/m4i-graphviz-layouts", develop = true}
 numpy = ">=1.26,<3"
 pandas = "^2.2"
-xlrd = "1.2.0"
 
 [package.source]
 type = "directory"
@@ -1156,6 +1227,21 @@ files = [
 
 [package.extras]
 test = ["pytest", "pytest-cov", "random_dict", "validate_version_code"]
+
+[[package]]
+name = "deprecation"
+version = "2.1.0"
+description = "A library to handle automated deprecations"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "deprecation-2.1.0-py2.py3-none-any.whl", hash = "sha256:a10811591210e1fb0e768a8c25517cabeabcba6f0bf96564f8ff45189f90b14a"},
+    {file = "deprecation-2.1.0.tar.gz", hash = "sha256:72b3bde64e5d778694b0cf68178aed03d15e15477116add3fb773e581f9518ff"},
+]
+
+[package.dependencies]
+packaging = "*"
 
 [[package]]
 name = "dict-hash"
@@ -1274,25 +1360,6 @@ files = [
 ]
 
 [[package]]
-name = "ecdsa"
-version = "0.19.2"
-description = "ECDSA cryptographic signature library (pure python)"
-optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.6"
-groups = ["main"]
-files = [
-    {file = "ecdsa-0.19.2-py2.py3-none-any.whl", hash = "sha256:840f5dc5e375c68f36c1a7a5b9caad28f95daa65185c9253c0c08dd952bb7399"},
-    {file = "ecdsa-0.19.2.tar.gz", hash = "sha256:62635b0ac1ca2e027f82122b5b81cb706edc38cd91c63dda28e4f3455a2bf930"},
-]
-
-[package.dependencies]
-six = ">=1.9.0"
-
-[package.extras]
-gmpy = ["gmpy"]
-gmpy2 = ["gmpy2"]
-
-[[package]]
 name = "elastic-enterprise-search"
 version = "8.11.0"
 description = "Official Python client for Elastic Enterprise Search, App Search, and Workplace Search"
@@ -1353,24 +1420,12 @@ async = ["aiohttp (>=3,<4)"]
 requests = ["requests (>=2.4.0,<3.0.0)"]
 
 [[package]]
-name = "et-xmlfile"
-version = "2.0.0"
-description = "An implementation of lxml.xmlfile for the standard library"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "et_xmlfile-2.0.0-py3-none-any.whl", hash = "sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa"},
-    {file = "et_xmlfile-2.0.0.tar.gz", hash = "sha256:dab3f4764309081ce75662649be815c4c9081e88f0837825f90fd28317d4da54"},
-]
-
-[[package]]
 name = "exceptiongroup"
 version = "1.3.1"
 description = "Backport of PEP 654 (exception groups)"
 optional = false
 python-versions = ">=3.7"
-groups = ["dev"]
+groups = ["main", "dev"]
 markers = "python_version == \"3.10\""
 files = [
     {file = "exceptiongroup-1.3.1-py3-none-any.whl", hash = "sha256:a7a39a3bd276781e98394987d3a5701d0c4edffb633bb7a5144577f82c773598"},
@@ -1510,25 +1565,6 @@ werkzeug = ">=3.1.0"
 [package.extras]
 async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
-
-[[package]]
-name = "flask-httpauth"
-version = "4.8.1"
-description = "HTTP authentication for Flask routes"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "flask_httpauth-4.8.1-py3-none-any.whl", hash = "sha256:0080393d70e12327781f7509115175ec5e47209816489a620d4fd39e20cea2e8"},
-    {file = "flask_httpauth-4.8.1.tar.gz", hash = "sha256:88499b22f1353893743c3cd68f2ca561c4ad9ef75cd6bcc7f621161cd0e80744"},
-]
-
-[package.dependencies]
-flask = "*"
-
-[package.extras]
-dev = ["tox"]
-docs = ["furo", "sphinx"]
 
 [[package]]
 name = "flask-restx"
@@ -1979,6 +2015,18 @@ testing = ["coverage", "eventlet", "gevent", "pytest", "pytest-cov"]
 tornado = ["tornado (>=0.2)"]
 
 [[package]]
+name = "h11"
+version = "0.16.0"
+description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "h11-0.16.0-py3-none-any.whl", hash = "sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86"},
+    {file = "h11-0.16.0.tar.gz", hash = "sha256:4e35b956cf45792e4caa5885e69fba00bdbc6ffafbfa020300e549b208ee5ff1"},
+]
+
+[[package]]
 name = "hdfs"
 version = "2.7.3"
 description = "HdfsCLI: API and command line interface for HDFS."
@@ -2000,6 +2048,28 @@ dataframe = ["fastavro (>=0.21.19)", "pandas (>=0.14.1)"]
 kerberos = ["requests-kerberos (>=0.7.0)"]
 
 [[package]]
+name = "httpcore"
+version = "1.0.9"
+description = "A minimal low-level HTTP client."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "httpcore-1.0.9-py3-none-any.whl", hash = "sha256:2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55"},
+    {file = "httpcore-1.0.9.tar.gz", hash = "sha256:6e34463af53fd2ab5d807f399a9b45ea31c3dfa2276f15a2c3f00afff6e176e8"},
+]
+
+[package.dependencies]
+certifi = "*"
+h11 = ">=0.16"
+
+[package.extras]
+asyncio = ["anyio (>=4.0,<5.0)"]
+http2 = ["h2 (>=3,<5)"]
+socks = ["socksio (==1.*)"]
+trio = ["trio (>=0.22.0,<1.0)"]
+
+[[package]]
 name = "httplib2"
 version = "0.22.0"
 description = "A comprehensive HTTP client library."
@@ -2013,6 +2083,31 @@ files = [
 
 [package.dependencies]
 pyparsing = {version = ">=2.4.2,<3.0.0 || >3.0.0,<3.0.1 || >3.0.1,<3.0.2 || >3.0.2,<3.0.3 || >3.0.3,<4", markers = "python_version > \"3.0\""}
+
+[[package]]
+name = "httpx"
+version = "0.28.1"
+description = "The next generation HTTP client."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "httpx-0.28.1-py3-none-any.whl", hash = "sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad"},
+    {file = "httpx-0.28.1.tar.gz", hash = "sha256:75e98c5f16b0f35b567856f597f06ff2270a374470a5c2392242528e3e3e42fc"},
+]
+
+[package.dependencies]
+anyio = "*"
+certifi = "*"
+httpcore = "==1.*"
+idna = "*"
+
+[package.extras]
+brotli = ["brotli ; platform_python_implementation == \"CPython\"", "brotlicffi ; platform_python_implementation != \"CPython\""]
+cli = ["click (==8.*)", "pygments (==2.*)", "rich (>=10,<14)"]
+http2 = ["h2 (>=3,<5)"]
+socks = ["socksio (==1.*)"]
+zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "identify"
@@ -2163,23 +2258,20 @@ files = [
 referencing = ">=0.31.0"
 
 [[package]]
-name = "kafka-python"
-version = "2.0.6"
-description = "Pure Python client for Apache Kafka"
+name = "jwcrypto"
+version = "1.5.7"
+description = "Implementation of JOSE Web standards"
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "kafka_python-2.0.6-py2.py3-none-any.whl", hash = "sha256:a2fdb00eaea7a827f5f74693365af6b615ff0795860261d8ebaad2bb5bc73e81"},
-    {file = "kafka_python-2.0.6.tar.gz", hash = "sha256:3ac47e7c41a67a1c23f1856c1953594440bb3d9cd532ad70e353982724e5d52d"},
+    {file = "jwcrypto-1.5.7-py3-none-any.whl", hash = "sha256:729463fefe28b6de5cf1ebfda3e94f1a1b41d2799148ef98a01cb9678ebe2bb0"},
+    {file = "jwcrypto-1.5.7.tar.gz", hash = "sha256:70204d7cca406eda8c82352e3c41ba2d946610dafd19e54403f0a1f4f18633c6"},
 ]
 
-[package.extras]
-crc32c = ["crc32c"]
-lz4 = ["lz4"]
-snappy = ["python-snappy"]
-testing = ["mock", "pytest", "pytest-mock"]
-zstd = ["zstandard"]
+[package.dependencies]
+cryptography = ">=3.4"
+typing_extensions = ">=4.5.0"
 
 [[package]]
 name = "kiwisolver"
@@ -2324,8 +2416,7 @@ matplotlib = "^3.8"
 networkx = "^3.4"
 pandas = "^2.2"
 pydotplus = ">=2.0,<3"
-pymysql = "^1.0"
-python-keycloak = "0.18.0"
+python-keycloak = "^7.1.1"
 requests = ">=2.32.0"
 requests-toolbelt = ">=0.9,<1"
 sqlalchemy = ">=2.0,<3.0"
@@ -2350,8 +2441,7 @@ develop = true
 aiocache = ">=0.12,<1"
 aiohttp = ">=3.9,<4"
 dataclasses-json = ">=0.6,<1"
-pandas = "^2.2"
-python-keycloak = "0.18.0"
+python-keycloak = "^7.1.1"
 
 [package.source]
 type = "directory"
@@ -2373,7 +2463,6 @@ elastic_enterprise_search = ">=8.11,<9"
 elastic-transport = ">=8.13,<9"
 elasticsearch = "^8.9"
 m4i-atlas-core = {path = "../../libs/m4i-atlas-core", develop = true}
-urllib3 = ">=1.26.18"
 urlpath = "^1.2"
 
 [package.source]
@@ -2397,7 +2486,6 @@ flask = ">=3.0,<4.0"
 pyjwt = ">=2.9.0"
 requests = ">=2.32.0"
 tenacity = ">=8.5.0"
-werkzeug = ">=3.0,<4.0"
 
 [package.source]
 type = "directory"
@@ -2418,7 +2506,7 @@ bokeh = "^3.6"
 gunicorn = "^23.0.0"
 m4i-analytics = {path = "../../libs/m4i-analytics", develop = true}
 m4i-backend-core = {path = "../../libs/m4i-backend-core", develop = true}
-requests_cache = "0.5.2"
+requests-cache = "^1.3"
 
 [package.source]
 type = "directory"
@@ -2440,7 +2528,6 @@ avro-python3 = ">=1.10,<1.11"
 confluent-kafka = ">=2.6,<3"
 dataclasses-json = ">=0.6,<1"
 m4i-atlas-core = {path = "../../libs/m4i-atlas-core", develop = true}
-openpyxl = "^3.1.5"
 pandas = "^2.2"
 tenacity = ">=8.5.0"
 urllib3 = ">=1.26.18"
@@ -2464,7 +2551,6 @@ confluent-kafka = "~2.6.0"
 dataclasses-json = "~0.6"
 dict_hash = "~1.3"
 elasticsearch = "^8.9"
-jsonschema = "~4.23"
 m4i-atlas-core = {path = "../m4i-atlas-core", develop = true}
 pandas = "^2.2"
 
@@ -2486,7 +2572,6 @@ develop = true
 apache-flink = "^2.0"
 dataclasses-json = "~0.6"
 elasticsearch = "^8.9"
-kafka-python = "~2.0"
 m4i-atlas-core = {path = "../../libs/m4i-atlas-core", develop = true}
 m4i-governance-data-quality = {path = "../../libs/m4i-governance-data-quality", develop = true}
 
@@ -2563,13 +2648,10 @@ files = []
 develop = true
 
 [package.dependencies]
-flask-httpauth = "^4.8.0"
 flask-restx = ">=1.3.2,<2.0.0"
 gunicorn = "^23.0.0"
-itsdangerous = ">=2.0,<3"
 m4i-atlas-core = {path = "../../libs/m4i-atlas-core", develop = true}
 m4i-backend-core = {path = "../../libs/m4i-backend-core", develop = true}
-markupsafe = ">=2.1,<4"
 
 [package.source]
 type = "directory"
@@ -2608,10 +2690,8 @@ develop = true
 
 [package.dependencies]
 apache-flink = "^2.0"
-cryptography = ">=41.0.0,<48"
 m4i-flink-tasks = {path = "../../libs/m4i-flink-tasks", develop = true}
-python-keycloak = "0.18.0"
-urllib3 = ">=1.26.18"
+python-keycloak = "^7.1.1"
 
 [package.source]
 type = "directory"
@@ -2653,12 +2733,10 @@ develop = true
 
 [package.dependencies]
 apache-flink = "^2.0"
-cryptography = ">=41.0.0,<48"
 elastic-transport = ">=8.13,<9"
 elasticsearch = "^8.9"
 m4i-flink-tasks = {path = "../../libs/m4i-flink-tasks", develop = true}
-python-keycloak = "0.18.0"
-urllib3 = ">=1.26.18"
+python-keycloak = "^7.1.1"
 
 [package.source]
 type = "directory"
@@ -2676,12 +2754,9 @@ develop = true
 
 [package.dependencies]
 apache-flink = "^2.0"
-cryptography = ">=41.0.0,<48"
 elastic-transport = ">=8.13,<9"
-elasticsearch = "^8.9"
 m4i-flink-tasks = {path = "../../libs/m4i-flink-tasks", develop = true}
-python-keycloak = "0.18.0"
-urllib3 = ">=1.26.18"
+python-keycloak = "^7.1.1"
 
 [package.source]
 type = "directory"
@@ -3422,21 +3497,6 @@ dev = ["black", "bumpver", "coveralls", "flake8", "isort", "mypy", "pip-tools", 
 docs = ["myst_parser", "sphinx", "sphinx-markdown-builder (>=0.6.0)", "sphinx-rtd-theme", "sphinx_rtd_dark_mode"]
 
 [[package]]
-name = "openpyxl"
-version = "3.1.5"
-description = "A Python library to read/write Excel 2010 xlsx/xlsm files"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "openpyxl-3.1.5-py2.py3-none-any.whl", hash = "sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2"},
-    {file = "openpyxl-3.1.5.tar.gz", hash = "sha256:cf0e3cf56142039133628b5acffe8ef0c12bc902d2aadd3e0fe5878dc08d1050"},
-]
-
-[package.dependencies]
-et-xmlfile = "*"
-
-[[package]]
 name = "orjson"
 version = "3.11.9"
 description = "Fast, correct Python JSON library supporting dataclasses, datetimes, and numpy"
@@ -3802,7 +3862,7 @@ version = "4.10.0"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
 optional = false
 python-versions = ">=3.10"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "platformdirs-4.10.0-py3-none-any.whl", hash = "sha256:fb516cdb12eb0d857d0cd85a7c57cea4d060bee4578d6cf5a14dfdf8cbf8784a"},
     {file = "platformdirs-4.10.0.tar.gz", hash = "sha256:31e761a6a0ca04faf7353ea759bdba55652be214725111e5aac52dfa29d4bef7"},
@@ -4084,18 +4144,6 @@ groups = ["main"]
 files = [
     {file = "pyarrow_hotfix-0.7-py3-none-any.whl", hash = "sha256:3236f3b5f1260f0e2ac070a55c1a7b339c4bb7267839bd2015e283234e758100"},
     {file = "pyarrow_hotfix-0.7.tar.gz", hash = "sha256:59399cd58bdd978b2e42816a4183a55c6472d4e33d183351b6069f11ed42661d"},
-]
-
-[[package]]
-name = "pyasn1"
-version = "0.6.3"
-description = "Pure-Python implementation of ASN.1 types and DER/BER/CER codecs (X.208)"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "pyasn1-0.6.3-py3-none-any.whl", hash = "sha256:a80184d120f0864a52a073acc6fc642847d0be408e7c7252f31390c0f4eadcde"},
-    {file = "pyasn1-0.6.3.tar.gz", hash = "sha256:697a8ecd6d98891189184ca1fa05d1bb00e2f84b5977c481452050549c8a72cf"},
 ]
 
 [[package]]
@@ -4490,22 +4538,6 @@ test = ["importlib-metadata (>=7.0) ; python_version < \"3.13\"", "pytest (>=8.2
 zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 
 [[package]]
-name = "pymysql"
-version = "1.2.0"
-description = "Pure Python MySQL Driver"
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "pymysql-1.2.0-py3-none-any.whl", hash = "sha256:62169ce6d5510f08e140c5e7990ee884a9764024e4a9a27b2cc11f1099322ae0"},
-    {file = "pymysql-1.2.0.tar.gz", hash = "sha256:6c7b17ca686988104d7426c27895b455cdeea3e9d3ceb1270f0c3704fead8c33"},
-]
-
-[package.extras]
-ed25519 = ["PyNaCl (>=1.6.2)"]
-rsa = ["cryptography (>=46.0.7)"]
-
-[[package]]
 name = "pyparsing"
 version = "3.3.2"
 description = "pyparsing - Classes and methods to define and execute parsing grammars"
@@ -4567,21 +4599,23 @@ dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "requests
 
 [[package]]
 name = "pytest-asyncio"
-version = "0.24.0"
+version = "1.4.0"
 description = "Pytest support for asyncio"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "pytest_asyncio-0.24.0-py3-none-any.whl", hash = "sha256:a811296ed596b69bf0b6f3dc40f83bcaf341b155a269052d82efa2b25ac7037b"},
-    {file = "pytest_asyncio-0.24.0.tar.gz", hash = "sha256:d081d828e576d85f875399194281e92bf8a68d60d72d1a2faf2feddb6c46b276"},
+    {file = "pytest_asyncio-1.4.0-py3-none-any.whl", hash = "sha256:933ca923a23075a87fb7070c0ec272a6848489824d887c85c812670932835aa1"},
+    {file = "pytest_asyncio-1.4.0.tar.gz", hash = "sha256:c6c0d2259945122819f171a32ecea2c349ead889ee28176caaf492143424be42"},
 ]
 
 [package.dependencies]
-pytest = ">=8.2,<9"
+backports-asyncio-runner = {version = ">=1.1,<2", markers = "python_version < \"3.11\""}
+pytest = ">=8.4,<10"
+typing-extensions = {version = ">=4.12", markers = "python_version < \"3.13\""}
 
 [package.extras]
-docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1.0)"]
+docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1)", "sphinx-tabs (>=3.5)"]
 testing = ["coverage (>=6.2)", "hypothesis (>=5.7.1)"]
 
 [[package]]
@@ -4675,42 +4709,24 @@ files = [
 cli = ["click (>=5.0)"]
 
 [[package]]
-name = "python-jose"
-version = "3.5.0"
-description = "JOSE implementation in Python"
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "python_jose-3.5.0-py2.py3-none-any.whl", hash = "sha256:abd1202f23d34dfad2c3d28cb8617b90acf34132c7afd60abd0b0b7d3cb55771"},
-    {file = "python_jose-3.5.0.tar.gz", hash = "sha256:fb4eaa44dbeb1c26dcc69e4bd7ec54a1cb8dd64d3b4d81ef08d90ff453f2b01b"},
-]
-
-[package.dependencies]
-ecdsa = "!=0.15"
-pyasn1 = ">=0.5.0"
-rsa = ">=4.0,<4.1.1 || >4.1.1,<4.4 || >4.4,<5.0"
-
-[package.extras]
-cryptography = ["cryptography (>=3.4.0)"]
-pycrypto = ["pycrypto (>=2.6.0,<2.7.0)"]
-pycryptodome = ["pycryptodome (>=3.3.1,<4.0.0)"]
-test = ["pytest", "pytest-cov"]
-
-[[package]]
 name = "python-keycloak"
-version = "0.18.0"
+version = "7.1.1"
 description = "python-keycloak is a Python package providing access to the Keycloak API."
 optional = false
-python-versions = "*"
+python-versions = "<4,>=3.10"
 groups = ["main"]
 files = [
-    {file = "python-keycloak-0.18.0.tar.gz", hash = "sha256:c1ffcdfd8f770774c02b7cbfacdba9d7ef94c0be4e42fabe49308e436ba21490"},
+    {file = "python_keycloak-7.1.1-py3-none-any.whl", hash = "sha256:d8295bec6c4805ab7335b03bc92753c8c6258d5511b080cac061da20ae77f61c"},
+    {file = "python_keycloak-7.1.1.tar.gz", hash = "sha256:38973e54694a656fe6f3f8fc2af0b89c78136863f928261f0d243445e9e486bc"},
 ]
 
 [package.dependencies]
-python-jose = ">=1.4.0"
+aiofiles = ">=24.1.0"
+deprecation = ">=2.1.0"
+httpx = ">=0.23.2"
+jwcrypto = ">=1.5.4"
 requests = ">=2.20.0"
+requests-toolbelt = ">=0.6.0"
 
 [[package]]
 name = "pytz"
@@ -5039,18 +5055,31 @@ use-chardet-on-py3 = ["chardet (>=3.0.2,<8)"]
 
 [[package]]
 name = "requests-cache"
-version = "0.5.2"
-description = "Persistent cache for requests library"
+version = "1.3.2"
+description = "A persistent cache for python requests"
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "requests-cache-0.5.2.tar.gz", hash = "sha256:813023269686045f8e01e2289cc1e7e9ae5ab22ddd1e2849a9093ab3ab7270eb"},
-    {file = "requests_cache-0.5.2-py2.py3-none-any.whl", hash = "sha256:81e13559baee64677a7d73b85498a5a8f0639e204517b5d05ff378e44a57831a"},
+    {file = "requests_cache-1.3.2-py3-none-any.whl", hash = "sha256:c52666c76b08daa94d05a99327dd24afc46f405abc044e8c2267b540f90673d0"},
+    {file = "requests_cache-1.3.2.tar.gz", hash = "sha256:bdc3680931f98a1dea509d339ea6b45cea526945b47b250ce63ffd2744ee0b14"},
 ]
 
 [package.dependencies]
-requests = ">=1.1.0"
+attrs = ">=21.2"
+cattrs = ">=22.2"
+platformdirs = ">=2.5"
+requests = ">=2.22"
+url-normalize = ">=2.0"
+urllib3 = ">=1.25.5"
+
+[package.extras]
+all = ["boto3 (>=1.15)", "botocore (>=1.18)", "itsdangerous (>=2.0)", "orjson (>=3.0) ; python_version < \"3.14\"", "pymongo (>=3)", "pyyaml (>=6.0.1)", "redis (>=3)", "ujson (>=5.4)"]
+dynamodb = ["boto3 (>=1.15)", "botocore (>=1.18)"]
+mongodb = ["pymongo (>=3)"]
+redis = ["redis (>=3)"]
+security = ["itsdangerous (>=2.0)"]
+yaml = ["pyyaml (>=6.0.1)"]
 
 [[package]]
 name = "requests-toolbelt"
@@ -5353,21 +5382,6 @@ files = [
     {file = "rpds_py-2026.5.1-pp311-pypy311_pp73-musllinux_1_2_x86_64.whl", hash = "sha256:8c43a8a973270fd173bf48cdf80bbe66312421cba68d40845034f174f2389049"},
     {file = "rpds_py-2026.5.1.tar.gz", hash = "sha256:07b24fea40541e28570e5b795a4a38fbdcd12550c06bd0748005ecc8116ca256"},
 ]
-
-[[package]]
-name = "rsa"
-version = "4.9.1"
-description = "Pure-Python RSA implementation"
-optional = false
-python-versions = "<4,>=3.6"
-groups = ["main"]
-files = [
-    {file = "rsa-4.9.1-py3-none-any.whl", hash = "sha256:68635866661c6836b8d39430f97a996acbd61bfa49406748ea243539fe239762"},
-    {file = "rsa-4.9.1.tar.gz", hash = "sha256:e7bdbfdb5497da4c07dfd35530e1a902659db6ff241e39d9953cad06ebd0ae75"},
-]
-
-[package.dependencies]
-pyasn1 = ">=0.1.3"
 
 [[package]]
 name = "ruamel-yaml"
@@ -5773,6 +5787,24 @@ files = [
 ]
 
 [[package]]
+name = "url-normalize"
+version = "3.0.0"
+description = "URL normalization for Python"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "url_normalize-3.0.0-py3-none-any.whl", hash = "sha256:95234bd359f86831c1fd87c248877f2a6887db2f3b5087120083f2fffcba4889"},
+    {file = "url_normalize-3.0.0.tar.gz", hash = "sha256:0552cbf2831a32a28994a13d29bca58a60e10ff6c0380e343ec6d1c2a0d232d8"},
+]
+
+[package.dependencies]
+idna = ">=3.3"
+
+[package.extras]
+dev = ["mypy", "pre-commit", "pytest", "pytest-cov", "pytest-socket", "ruff"]
+
+[[package]]
 name = "urllib3"
 version = "1.26.20"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -6001,18 +6033,6 @@ files = [
 
 [package.extras]
 dev = ["pytest", "setuptools"]
-
-[[package]]
-name = "xlrd"
-version = "1.2.0"
-description = "Library for developers to extract data from Microsoft Excel (tm) spreadsheet files"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-groups = ["main"]
-files = [
-    {file = "xlrd-1.2.0-py2.py3-none-any.whl", hash = "sha256:e551fb498759fa3a5384a94ccd4c3c02eb7c00ea424426e212ac0c57be9dfbde"},
-    {file = "xlrd-1.2.0.tar.gz", hash = "sha256:546eb36cee8db40c3eaa46c351e67ffee6eeb5fa2650b71bc4c758a29a1b29b2"},
-]
 
 [[package]]
 name = "xyzservices"
@@ -6260,4 +6280,4 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.14"
-content-hash = "1e574015da55c07ef181958727d3ada5e83cd7dd69fba1a85f075a8bb65d709d"
+content-hash = "86852ae84b9d996a64bd7803d3e703fe819c5ef3f01ad4771820d6f00041d781"
