@@ -676,7 +676,7 @@ access_token = get_keycloak_token()
 access_token = get_keycloak_token(keycloak=my_keycloak_instance, credentials=("my_username", "my_password"))
 
 # Example: Using multi-factor authentication (TOTP)
-access_token = get_keycloak_token(totp="123456")
+access_token = get_keycloak_token(totp=123456)
 ```
 
 The `access_token` can then be used to authenticate requests to the Apache Atlas API.

@@ -10,7 +10,7 @@ store = ConfigStore.get_instance()
 def get_keycloak_token(
     keycloak: Optional[KeycloakOpenID] = None,
     credentials: Optional[Tuple[str, str]] = None,
-    totp: Optional[str] = None,
+    totp: Optional[int] = None,
 ) -> str:
     """
     Retrieves an access token from the given Keycloak instance using the given username and password.
@@ -33,7 +33,7 @@ def get_keycloak_token(
     :param credentials Tuple[str, str]: Optional username and password for
         authentication with Keycloak. If none are given, uses pre-configured
         credentials. Default is `None`.
-    :param totp str: Optional one-time access token for multi-factor authenticaton.
+    :param totp int: Optional one-time access token for multi-factor authenticaton.
         Default is `None`.
 
     :return: A valid access token
