@@ -24,7 +24,6 @@ develop = true
 path = "../../libs/m4i-backend-core"
 
 [tool.poetry.group.dev.dependencies]
-cryptography = "^41.0.0"
 pytest = "^8.0.0"
 pytest-mock = "^3.14.0"
 python-dotenv = "^1.0.0"
