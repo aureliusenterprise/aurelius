@@ -13,7 +13,7 @@ include = "m4i_synchronize_app_search"
 apache-flink = "^2.0"
 elastic-transport = ">=8.13,<9"
 elasticsearch = "^8.9"
-python = ">=3.10,<3.14"
+python = ">=3.11,<3.14"
 python-keycloak = "^7.1.1"
 
 [tool.poetry.dependencies.m4i-flink-tasks]

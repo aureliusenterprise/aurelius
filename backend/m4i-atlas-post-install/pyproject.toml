@@ -14,7 +14,7 @@ dictdiffer = ">=0.9,<1"
 elastic-transport = ">=8.13,<9"
 elastic_enterprise_search = ">=8.11,<9"
 elasticsearch = "^8.9"
-python = ">=3.10,<3.14"
+python = ">=3.11,<3.14"
 urlpath = "^1.2"
 
 [tool.poetry.dependencies.m4i-atlas-core]

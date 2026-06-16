@@ -15,7 +15,7 @@ avro-python3 = ">=1.10,<1.11"
 confluent-kafka = ">=2.6,<3"
 dataclasses-json = ">=0.6,<1"
 pandas = "^2.2"
-python = ">=3.10,<3.14"
+python = ">=3.11,<3.14"
 tenacity = ">=8.5.0"
 urllib3 = ">=1.26.18"
 

@@ -1,5 +1,5 @@
 # Use the official Python image as a base
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 # Set environment variables
 ENV WSGI_PORT=7000

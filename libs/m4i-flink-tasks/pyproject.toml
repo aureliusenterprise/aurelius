@@ -13,7 +13,7 @@ include = "m4i_flink_tasks"
 apache-flink = "^2.0"
 dataclasses-json = "~0.6"
 elasticsearch = "^8.9"
-python = ">=3.10,<3.14"
+python = ">=3.11,<3.14"
 
 [tool.poetry.dependencies.m4i-atlas-core]
 develop = true

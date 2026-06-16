@@ -13,7 +13,7 @@ include = "m4i_data2model"
 gunicorn = "^23.0.0"
 numpy = ">=1.26,<3"
 pandas = "^2.2"
-python = ">=3.10,<3.14"
+python = ">=3.11,<3.14"
 
 [tool.poetry.dependencies.m4i-analytics]
 develop = true

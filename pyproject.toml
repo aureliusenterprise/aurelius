@@ -6,7 +6,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 avro-python3 = "==1.10.2"
-python = ">=3.10,<3.14"
+python = ">=3.11,<3.14"
 
 [tool.poetry.dependencies.aurelius-license-report]
 develop = true
