@@ -22,8 +22,7 @@ CACHE_NAME = "consistency_metrics"
 EXPIRE_AFTER = 60 * 60 * 24  # seconds = 1 day
 CACHED_PATHS = ["private/metric", "model/retrieve"]
 install_cache(
-    CACHE_NAME,
-    backend="sqlite",
+    f"sqlite:///{CACHE_NAME}",
     expire_after=EXPIRE_AFTER,
     filter_fn=lambda response: any(path in response.url for path in CACHED_PATHS),  # type: ignore[arg-type]
 )
