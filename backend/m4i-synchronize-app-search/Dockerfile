@@ -18,7 +18,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update && \
     apt-get install -y --no-install-recommends python${PYTHON_VERSION} python${PYTHON_VERSION}-distutils && \
-    curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION} && \
+    curl -sS https://bootstrap.pypa.ioPYTHON_VERSION} && \
     ln -sf /usr/bin/python${PYTHON_VERSION} /usr/bin/python
 
 # Set the working directory
