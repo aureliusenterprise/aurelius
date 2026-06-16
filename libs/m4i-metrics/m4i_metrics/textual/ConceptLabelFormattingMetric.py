@@ -63,9 +63,11 @@ class ConceptLabelFormattingMetric(Metric):
             lambda x: config.COMPLIANT_TAG if sentence.match(x) is not None else config.NON_COMPLIANT_TAG
         )
         rels["sentence"] = rels.name.apply(
-            lambda x: config.COMPLIANT_TAG
-            if x in ["Yes", "No"] or x is None or len(x) == 0
-            else config.NON_COMPLIANT_TAG
+            lambda x: (
+                config.COMPLIANT_TAG
+                if x in ["Yes", "No"] or x is None or len(x) == 0
+                else config.NON_COMPLIANT_TAG
+            )
         )
         views["sentence"] = views.name.apply(
             lambda x: config.COMPLIANT_TAG if sentence.match(x) is not None else config.NON_COMPLIANT_TAG

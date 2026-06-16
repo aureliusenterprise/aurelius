@@ -109,7 +109,7 @@ def test__integration_preserves_content_type(client: FlaskClient) -> None:
     )
 
     call = cast("responses.Call", responses.calls[0])
-    assert "application/json" in (call.request.headers.get("Content-Type") or "")
+    assert "application/json" in str(call.request.headers.get("Content-Type") or "")
 
 
 @responses.activate

@@ -171,7 +171,7 @@ def get_violating_nodes_for_relationship_type(
     violating_nodes["rel_type"] = relationship_type["typename"]
 
     violating_nodes["is_violation"] = violating_nodes["id"].apply(  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
-        lambda id: (id in transition_matrix.inverse and len(transition_matrix.inverse[id]) > 1)
+        lambda id: id in transition_matrix.inverse and len(transition_matrix.inverse[id]) > 1
     )
 
     return sample_size, violating_nodes  # type: ignore[reportAssignmentType]
