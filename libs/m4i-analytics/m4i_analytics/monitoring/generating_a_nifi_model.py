@@ -561,7 +561,7 @@ def generate_nifi_model(xml_paths):
                 name=process_view["name"],
                 nodes=[node["id"] for node in process_view["view_nodes"]],
                 layout=Layout.MANUAL,
-                coords={node["id"]: [node["x"], node["y"]] for node in process_view["view_nodes"]},
+                coords={node["id"]: [node["x"], node["y"]] for node in process_view["view_nodes"]},  # type: ignore[arg-type]
                 labels=process_view["labels"],
                 path=["Views"] + process_view["path"],
             )

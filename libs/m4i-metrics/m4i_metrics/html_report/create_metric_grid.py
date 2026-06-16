@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Sequence
 
 import pandas as pd
-from bokeh.layouts import layout, widgetbox
+from bokeh.layouts import layout, widgetbox  # type: ignore[assignment]
 from bokeh.models import ColumnDataSource
 from bokeh.models.widgets import DataTable, Div, TableColumn
 
@@ -68,7 +68,7 @@ def _create_partial_grid(
             columns2.append(TableColumn(field=key, title=value.displayName))  # type: ignore[reportGeneralTypeIssues]
         # END LOOP
 
-        source2 = ColumnDataSource(data[columns])
+        source2 = ColumnDataSource(data[columns])  # type: ignore[arg-type]
 
         data_table2 = DataTable(source=source2, columns=columns2, width=800, height=280, editable=True)
         playout_nested.append([widgetbox(data_table2)])  # type: ignore[reportGeneralTypeIssues]

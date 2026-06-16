@@ -171,7 +171,7 @@ class NestedElementsInViewMetric(Metric):
             # select columns to send as payload
             df_no_relations = df_no_relations[
                 ["concept_id", "concept_name", "concept_type", "view_name", "view_path"]
-            ].reset_index()
+            ].reset_index()  # type: ignore[union-attr]
             df_invalid_relations = df_invalid_relations[
                 [
                     "concept_id",
@@ -183,7 +183,7 @@ class NestedElementsInViewMetric(Metric):
                     "relation_name",
                     "relation_type",
                 ]
-            ].reset_index()
+            ].reset_index()  # type: ignore[union-attr]
 
         return {
             "no relationships": {

@@ -57,7 +57,7 @@ try:
                 setattr(module, key, getattr(override_conf, key))
 
     else:
-        import m4i_portal_config
+        import m4i_portal_config  # type: ignore[import-not-found]
 
         print(f"Loaded your LOCAL configuration at [{m4i_portal_config.__file__}]")
 except ImportError:

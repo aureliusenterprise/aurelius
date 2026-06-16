@@ -1,12 +1,8 @@
-from typing import TypeVar
-
 from ...api import get_entity_by_guid
 from ...entities import Entity, ObjectId
 
-T = TypeVar("T", bound=Entity)
 
-
-async def resolve_entity_header(header: ObjectId) -> T:
+async def resolve_entity_header(header: ObjectId) -> Entity:
     entity = await get_entity_by_guid(header.guid, header.type_name)
 
     # If the guid is a placeholder, it will start with a -.

@@ -29,7 +29,7 @@ class GraphPlotter:
     @staticmethod
     def _calculate_hierarchical_coordinates(graph, dpi=80, node_width=0.1, node_height=0.1):
         result = GraphUtils.toGraphvizGraph(graph)
-        gvz = cast(Digraph, next(result))
+        gvz: Digraph = cast(Digraph, next(result))  # type: ignore[assignment]
         node_name_mapping = next(result)
 
         gvz.attr(dpi=str(dpi), rankdir="BT", nodesep="1", ranksep="2")
@@ -39,11 +39,10 @@ class GraphPlotter:
         parsed_dot: pydotplus.graphviz.Dot = ptp.parser.parse_dot_data(dot)  # type: ignore[assignment]
 
         return {
-            node_name_mapping[node.obj_dict["name"].strip('"')]: node.obj_dict["attributes"]["pos"][
-                1:-1
-            ].split(",")
+            node_name_mapping[node.obj_dict["name"].strip('"')]:  # type: ignore[index]
+            node.obj_dict["attributes"]["pos"][1:-1].split(",")  # type: ignore[index]
             for node in parsed_dot.get_node_list()
-            if "pos" in node.obj_dict["attributes"]
+            if "pos" in node.obj_dict["attributes"]  # type: ignore[index]
         }
 
     # END _calculate_hierarchical_coordinates

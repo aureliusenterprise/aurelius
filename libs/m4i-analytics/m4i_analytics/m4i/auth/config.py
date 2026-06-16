@@ -26,7 +26,7 @@ try:
                 setattr(module, key, getattr(override_conf, key))
 
     else:
-        import m4i_keycloak_config
+        import m4i_keycloak_config  # type: ignore[import-not-found]
 
         print(f"Loaded your LOCAL configuration at [{m4i_keycloak_config.__file__}]")
 except ImportError:

@@ -376,8 +376,8 @@ def generate_superset_model(db_url):
     # END LOOP
 
     # Add the generated rows to dataframes
-    elems = DataFrame(nodes, columns=["id", "name", "type", "label"])
-    rels = DataFrame(edges, columns=["id", "name", "type", "label", "source", "target"])
+    elems = DataFrame(nodes, columns=["id", "name", "type", "label"])  # type: ignore[arg-type]
+    rels = DataFrame(edges, columns=["id", "name", "type", "label", "source", "target"])  # type: ignore[arg-type]
 
     # Initialize the model
     model = ArchimateModel("generated superset model", elems, rels, defaultAttributeMapping=True)

@@ -599,7 +599,7 @@ def propagate(model_options, propagation_table=PropagationTable.DEFAULT):
                     model.edges.type.isin(propagation_table[node["type"]]),
                     np.logical_or(model.edges.source == node["id"], model.edges.target == node["id"]),
                 )
-            ].to_dict(orient="records")
+            ].to_dict(orient="records")  # type: ignore[call-overload]
 
         # END find_edges
 

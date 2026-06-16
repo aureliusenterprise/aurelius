@@ -403,7 +403,7 @@ class ArchimateUtils(GraphUtils):
                 "edges": ArchimateUtils._load_relationships(model, format),
                 "views": ArchimateUtils._load_views(model, format)
                 if withViews
-                else DataFrame(columns=["id", "name", "type", "nodes", "connections", "properties"]),
+                else DataFrame(columns=["id", "name", "type", "nodes", "connections", "properties"]),  # type: ignore[arg-type]
                 "organizations": ArchimateUtils._load_organizations(model, format),
                 "defaultAttributeMapping": True,
             }
@@ -748,24 +748,30 @@ class ArchimateUtils(GraphUtils):
         viewmodel = copy.deepcopy(model)
 
         if nodes:
-            viewmodel.nodes = viewmodel.nodes[
-                viewmodel.nodes[viewmodel.getNodeAttributeMapping(NodeAttribute.ID)].isin(nodes)
-            ]
+            viewmodel.nodes = DataFrame(  # type: ignore[assignment]
+                viewmodel.nodes[
+                    viewmodel.nodes[viewmodel.getNodeAttributeMapping(NodeAttribute.ID)].isin(nodes)
+                ]
+            )
 
-            viewmodel.edges = viewmodel.edges[
-                np.logical_and(
-                    viewmodel.edges[viewmodel.getEdgeAttributeMapping(EdgeAttribute.SOURCE)].isin(
-                        viewmodel.nodes[viewmodel.getNodeAttributeMapping(NodeAttribute.ID)]
-                    ),
-                    viewmodel.edges[viewmodel.getEdgeAttributeMapping(EdgeAttribute.TARGET)].isin(
-                        viewmodel.nodes[viewmodel.getNodeAttributeMapping(NodeAttribute.ID)]
-                    ),
-                )
-            ]
+            viewmodel.edges = DataFrame(  # type: ignore[assignment]
+                viewmodel.edges[
+                    np.logical_and(
+                        viewmodel.edges[viewmodel.getEdgeAttributeMapping(EdgeAttribute.SOURCE)].isin(
+                            viewmodel.nodes[viewmodel.getNodeAttributeMapping(NodeAttribute.ID)]
+                        ),
+                        viewmodel.edges[viewmodel.getEdgeAttributeMapping(EdgeAttribute.TARGET)].isin(
+                            viewmodel.nodes[viewmodel.getNodeAttributeMapping(NodeAttribute.ID)]
+                        ),
+                    )
+                ]
+            )
         if edges:
-            viewmodel.edges = viewmodel.edges[
-                viewmodel.edges[viewmodel.getEdgeAttributeMapping(EdgeAttribute.ID)].isin(edges)
-            ]
+            viewmodel.edges = DataFrame(  # type: ignore[assignment]
+                viewmodel.edges[
+                    viewmodel.edges[viewmodel.getEdgeAttributeMapping(EdgeAttribute.ID)].isin(edges)
+                ]
+            )
 
         if layout is None:
             from m4i_analytics.graphs.visualisations.ManualLayout import ManualLayout
@@ -790,9 +796,9 @@ class ArchimateUtils(GraphUtils):
         viewnodes = []
         ii = 0
         for key in coords:
-            node_ref = next(
+            node_ref = next(  # type: ignore[assignment]
                 iter(
-                    model.nodes[model.nodes[model.getNodeAttributeMapping(NodeAttribute.ID)] == key].to_dict(
+                    model.nodes[model.nodes[model.getNodeAttributeMapping(NodeAttribute.ID)] == key].to_dict(  # type: ignore[call-overload]
                         orient="records"
                     )
                 ),
@@ -809,8 +815,8 @@ class ArchimateUtils(GraphUtils):
                 format_node(
                     view_id,
                     key,
-                    int(round(float(coords[key][0]))),
-                    int(round(float(coords[key][1]))),
+                    int(round(float(coords[key][0]))),  # type: ignore[index]
+                    int(round(float(coords[key][1]))),  # type: ignore[index]
                     node_width if not is_junction else 14,
                     node_height if not is_junction else 14,
                     ii,
@@ -824,10 +830,12 @@ class ArchimateUtils(GraphUtils):
         for viewedge in viewmodel.edges.to_dict(orient="records"):
             edgeid = viewedge[viewmodel.getEdgeAttributeMapping(EdgeAttribute.ID)]
             sources = find_viewnodes(
-                viewnodes, viewedge[viewmodel.getEdgeAttributeMapping(EdgeAttribute.SOURCE)]
+                viewnodes,
+                viewedge[viewmodel.getEdgeAttributeMapping(EdgeAttribute.SOURCE)],  # type: ignore[index]
             )
             targets = find_viewnodes(
-                viewnodes, viewedge[viewmodel.getEdgeAttributeMapping(EdgeAttribute.TARGET)]
+                viewnodes,
+                viewedge[viewmodel.getEdgeAttributeMapping(EdgeAttribute.TARGET)],  # type: ignore[index]
             )
 
             for source in sources:
@@ -883,7 +891,7 @@ class ArchimateUtils(GraphUtils):
                 "name": model.name + " slice for " + str(edge_types),
                 "nodes": elems,
                 "edges": rels,
-                "views": DataFrame(columns=["id", "name", "type", "connections", "nodes", "properties"]),
+                "views": DataFrame(columns=["id", "name", "type", "connections", "nodes", "properties"]),  # type: ignore[arg-type]
                 "organizations": orgs,
                 "defaultAttributeMapping": True,
             }
@@ -919,7 +927,7 @@ class ArchimateUtils(GraphUtils):
                 "name": model.name + " slice for " + str(node_types),
                 "nodes": sliced_nodes,
                 "edges": sliced_relations,
-                "views": DataFrame(columns=["id", "name", "type", "connections", "nodes", "properties"]),
+                "views": DataFrame(columns=["id", "name", "type", "connections", "nodes", "properties"]),  # type: ignore[arg-type]
                 "organizations": sliced_organizations,
                 "defaultAttributeMapping": True,
             }

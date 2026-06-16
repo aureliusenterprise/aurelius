@@ -29,7 +29,7 @@ def atlas_get_quality_rules_dataframe(data: List[BusinessDataQuality] = []):
         "expression_version",
     ]
     data_details = [get_data_quality_rule_details(rule) for rule in data]
-    result = DataFrame(data_details, columns=columns_names)
+    result = DataFrame(data_details, columns=columns_names)  # type: ignore[arg-type]
 
     return result  # type: ignore[return-value]
 

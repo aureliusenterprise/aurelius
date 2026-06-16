@@ -28,8 +28,8 @@ def calculate_gov_quality(*entities: Entity, rules: List[GovQualityRuleDefinitio
     index = [entity.guid for entity in entities]
 
     data = {
-        "attribute": DataFrame((entity.attributes for entity in entities), index=index),
-        "relationship": DataFrame((entity.relationship_attributes for entity in entities), index=index),
+        "attribute": DataFrame((entity.attributes for entity in entities), index=index),  # type: ignore[arg-type]
+        "relationship": DataFrame((entity.relationship_attributes for entity in entities), index=index),  # type: ignore[arg-type]
     }
 
     results = DataFrame(run_quality_rule_expression(data[rule.type], rule.expression) for rule in rules)

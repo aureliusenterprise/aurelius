@@ -60,7 +60,7 @@ class DBExtractor(Extractor):
                     "type": ElementType.DATA_OBJECT,
                 },
             ],
-            columns=["id", "name", "type", "label"],
+            columns=["id", "name", "type", "label"],  # type: ignore[arg-type]
         )
 
         # A table is a set of columns, so add an aggregation relationship between table and column
@@ -74,7 +74,7 @@ class DBExtractor(Extractor):
                     "name": "",
                 }
             ],
-            columns=["id", "name", "type", "label", "source", "target"],
+            columns=["id", "name", "type", "label", "source", "target"],  # type: ignore[arg-type]
         )
 
         # This is the model that will contain our generated schema
@@ -82,7 +82,7 @@ class DBExtractor(Extractor):
             f"created database schema: {db_name}",
             elems,
             rels,
-            DataFrame(columns=["id", "name", "type", "nodes", "connections", "properties"]),
+            DataFrame(columns=["id", "name", "type", "nodes", "connections", "properties"]),  # type: ignore[arg-type]
             DataFrame(),
             defaultAttributeMapping=True,
         )

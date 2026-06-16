@@ -54,7 +54,7 @@ def create_app(auth_provider: AuthProvider, key_provider: KeyProvider, settings:
     register_shared(app)
     setup_routes(app, auth_provider, key_provider, settings)
 
-    version = f"v{METADATA.get('Version', 'unknown')}"
+    version = f"v{METADATA['Version'] if 'Version' in METADATA else 'unknown'}"
 
     LOGGER.info("Started m4i-search-api version %s", version)
     LOGGER.debug("Settings: %s", settings)

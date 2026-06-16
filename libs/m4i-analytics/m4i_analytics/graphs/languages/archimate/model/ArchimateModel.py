@@ -53,17 +53,17 @@ class ArchimateModel(Graph):
 
         super().__init__(
             name if name is not None else "",
-            nodes if nodes is not None else DataFrame(columns=["id", "name", "type", "label"]),
+            nodes if nodes is not None else DataFrame(columns=["id", "name", "type", "label"]),  # type: ignore[arg-type]
             edges
             if edges is not None
-            else DataFrame(columns=["id", "name", "type", "label", "source", "target"]),
+            else DataFrame(columns=["id", "name", "type", "label", "source", "target"]),  # type: ignore[arg-type]
             defaultAttributeMapping=defaultAttributeMapping,
         )
         self.name = name
         self.views = (
             views
             if views is not None
-            else DataFrame(columns=["id", "name", "type", "nodes", "connections", "properties"])
+            else DataFrame(columns=["id", "name", "type", "nodes", "connections", "properties"])  # type: ignore[arg-type]
         )
         self.organizations = organizations if organizations is not None else DataFrame()
         self._viewAttributeMapping = {}

@@ -44,7 +44,7 @@ async def test__get_entity_by_qualified_name_single_search_result():
 
             if entity is not None:
                 assert entity.type_name == type_name
-                assert entity.attributes.qualified_name == qualified_name
+                assert entity.attributes["qualifiedName"] == qualified_name  # type: ignore[index]
     # END WITH mock_get_entities_by_attribute, mock_resolve_entity_header
 
 

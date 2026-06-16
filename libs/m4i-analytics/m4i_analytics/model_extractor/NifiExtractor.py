@@ -691,58 +691,58 @@ class NifiExtractor:
             # prop_conn_res = new_ids.merge(prop_conn_df, how = 'inner',
             #    left_on='id', right_on='source')[['id_x','target']]
             prop_conn_res = prop_conn_df[prop_conn_df.source.isin(new_ids)][["source", "target"]]
-            nn2 = nodes_df.merge(prop_conn_res, how="inner", right_on="target", left_on="id")
+            nn2 = nodes_df.merge(prop_conn_res, how="inner", right_on="target", left_on="id")  # type: ignore[arg-type]
             if len(nn2) > 0:
                 for _row in nn2.iterrows():
-                    row = _row
+                    row = _row  # type: ignore[assignment]
                     for elem_ in mapping:
-                        if elem_["id"] == row["source"] and elem_["group"] not in completed:
-                            rec = {"id": row["target"], "group": elem_["group"]}
+                        if elem_["id"] == row["source"] and elem_["group"] not in completed:  # type: ignore[index]
+                            rec = {"id": row["target"], "group": elem_["group"]}  # type: ignore[index]
                             completed.append(elem_["group"])
-                            jdbc_data = data_db.loc[data_db.id == row["target"]]
+                            jdbc_data = data_db.loc[data_db.id == row["target"]]  # type: ignore[index]
                             print(jdbc_data)
                             if len(jdbc_data) > 0:
                                 # print('miss for key %s' % row['target'])
                                 # else:
                                 # print('%s.%s' % (jdbc_data['key'], jdbc_data['name']))
-                                rec["_jdbc_key_"] = jdbc_data["key"].values[0]
-                                rec["_jdbc_name_"] = jdbc_data["name"].values[0]
-                                rec["_query_executor_"] = row["source"]
+                                rec["_jdbc_key_"] = jdbc_data["key"].values[0]  # type: ignore[index]
+                                rec["_jdbc_name_"] = jdbc_data["name"].values[0]  # type: ignore[index]
+                                rec["_query_executor_"] = row["source"]  # type: ignore[index]
                             mapping.extend([rec])
 
             # find queries which have not been mapped yet to a service
-            remaining_ids = [id_ for id_ in new_ids if id_ not in nn2.source]
+            remaining_ids = [id_ for id_ in new_ids if id_ not in nn2.source]  # type: ignore[index]
             new_ids = []
             mapping_new = []
             if len(remaining_ids) > 0:
                 # propagate along the process flow
                 rels = nodes_df[nodes_df.id.isin(remaining_ids)].merge(
                     connection_df, how="left", left_on="id", right_on="source"
-                )[["id_x", "target"]]
+                )[["id_x", "target"]]  # type: ignore[index]
                 # determine corresponding nodes
                 # I am ignoring relations to ports, since ports can not execute a query.
                 # I consider it unlikely that a query is built on one process group
                 # and actually executed in a different process group.
-                nn3 = nodes_df.merge(rels, how="inner", right_on="target", left_on="id")
+                nn3 = nodes_df.merge(rels, how="inner", right_on="target", left_on="id")  # type: ignore[arg-type]
                 # check whether a node has been visited before for a particular query
                 for _row in nn3.iterrows():
-                    row = _row
+                    row = _row  # type: ignore[assignment]
                     src_group = [
                         elem_["group"]
                         for elem_ in mapping
-                        if elem_["id"] == row["id_x"] and elem_["group"] not in completed
+                        if elem_["id"] == row["id_x"] and elem_["group"] not in completed  # type: ignore[index]
                     ]
                     trg_group = [
                         elem_["group"]
                         for elem_ in mapping
-                        if elem_["id"] == row["target"] and elem_["group"] not in completed
+                        if elem_["id"] == row["target"] and elem_["group"] not in completed  # type: ignore[index]
                     ]
                     dif_group = [id_ for id_ in src_group if id_ not in trg_group]
                     if len(dif_group) > 0:
                         mapping_new.extend(
-                            [{"id": row["target"], "group": group_id} for group_id in dif_group]
+                            [{"id": row["target"], "group": group_id} for group_id in dif_group]  # type: ignore[index]
                         )
-                        new_ids.append(row["target"])
+                        new_ids.append(row["target"])  # type: ignore[index]
             mapping.extend(mapping_new)
         # finding the database object the query is related to
         # there are queries which do not have a related jdbc element
@@ -758,7 +758,7 @@ class NifiExtractor:
             mapping_query_table = mapping_df.loc[mapping_df._query_executor_.nonzero()]
             mapping_agg_jdbc[["_query_executor_", "_service_id_"]] = mapping_agg_jdbc.merge(
                 mapping_query_table, how="left", on="group"
-            )[["_query_executor_", "id"]]
+            )[["_query_executor_", "id"]]  # type: ignore[index]
             # mapping_agg_jdbc['_query_executor_'] = mapping_agg_jdbc.merge(
             #    mapping_query_table, how='left', on='group')['_query_executor_']
 
@@ -767,10 +767,10 @@ class NifiExtractor:
                 ["id", "_query_", "_query_type_", "_table_"]
             ]
             query_helper = [
-                {"id": row["id"], "_query_": row["_query_"], "_query_type_": qt, "_table_": tt}
-                for index, row in query_df.iterrows()
-                for qt in row["_query_type_"]
-                for tt in row["_table_"]
+                {"id": row["id"], "_query_": row["_query_"], "_query_type_": qt, "_table_": tt}  # type: ignore[index]
+                for index, row in query_df.iterrows()  # type: ignore[union-attr]
+                for qt in row["_query_type_"]  # type: ignore[index]
+                for tt in row["_table_"]  # type: ignore[index]
             ]
             query_df = pd.DataFrame(query_helper)
             query_df = query_df[
@@ -788,7 +788,7 @@ class NifiExtractor:
             mapping_agg_jdbc_table = (
                 mapping_agg_jdbc.groupby(by=["name", "key", "_table_", "_jdbc_key_"])
                 .size()
-                .rename("cnt")
+                .rename("cnt")  # type: ignore[arg-type]
                 .reset_index()
             )
             mapping_agg_jdbc_table["generic_key"] = "generic_table"
@@ -1215,9 +1215,9 @@ class NifiExtractor:
             edges.extend(res["edges"])
 
         # edges representing hierarchical relations of process groups
-        data = pd.concat([nodes_df[["id", "parent"]], controller_service_df[["id", "parent"]], port_df])
+        data = pd.concat([nodes_df[["id", "parent"]], controller_service_df[["id", "parent"]], port_df])  # type: ignore[assignment]
         data = data[["id", "parent"]]
-        data = data.reset_index()
+        data = data.reset_index()  # type: ignore[union-attr]
         data = data.loc[data.parent.nonzero()]
         ids = [
             {
@@ -1421,7 +1421,7 @@ class NifiExtractor:
             ]
             res = ExtractorLanguagePrimitives.parse_relationship(
                 mapping_agg_jdbc, model, ids, script_name, data_only
-            )
+            )  # type: ignore[call-overload]
             element_metadata.extend(res["metadata"])
             edges.extend(res["edges"])
 
@@ -1475,9 +1475,9 @@ class NifiExtractor:
         model.edges = pd.DataFrame(edges)
         model.organize()
 
-        node_lookup = pd.concat([nodes_df[["id", "x", "y"]], port_df])
+        node_lookup = pd.concat([nodes_df[["id", "x", "y"]], port_df])  # type: ignore[assignment]
         node_lookup = node_lookup[["id", "x", "y"]]
-        node_lookup = node_lookup.set_index("id")
+        node_lookup = node_lookup.set_index("id")  # type: ignore[union-attr]
         inter = connection_df.merge(node_lookup, how="left", left_on="source", right_index=True)
         inter = inter.merge(node_lookup, how="left", left_on="target", right_index=True)
         inter["x"] = inter.apply(lambda x: (min(x["x_x"], x["x_y"]) + max(x["x_x"], x["x_y"])) / 2, axis=1)
@@ -1488,12 +1488,12 @@ class NifiExtractor:
         data["width"] = 0
         data["height"] = 0
         data["name"] = None
-        data = data.rename(index=str, columns={"id": "con_id"})
+        data = data.rename(index=str, columns={"id": "con_id"})  # type: ignore[call-overload]
         # data.columns=['con_id','groupId','parent','parentGroupId','path','x','y','width','height','name']
-        data = pd.concat([data, nodes_df[["id", "groupId", "parent", "parentGroupId", "path", "x", "y"]]])
+        data = pd.concat([data, nodes_df[["id", "groupId", "parent", "parentGroupId", "path", "x", "y"]]])  # type: ignore[assignment]
         if "port_df" in locals() and len(port_df) > 0:
-            data = pd.concat([data, port_df[["id", "groupId", "parent", "parentGroupId", "path", "x", "y"]]])
-        data = data.rename(index=str, columns={"id": "node_id"})
+            data = pd.concat([data, port_df[["id", "groupId", "parent", "parentGroupId", "path", "x", "y"]]])  # type: ignore[assignment]
+        data = data.rename(index=str, columns={"id": "node_id"})  # type: ignore[call-overload]
         # data.columns = ['con_id', 'groupId','node_id', 'parent',
         #    'parentGroupId', 'path', 'x', 'y','width','height','name']
         data["id"] = None
@@ -1518,7 +1518,7 @@ class NifiExtractor:
                 ]
             )
             # data= data[['id','groupId','parent','parentGroupId','path','x','y','width','height','name']]
-        data = data.reset_index()
+        data = data.reset_index()  # type: ignore[union-attr]
         data["view_name"] = data["path"].apply(lambda x: x[-1])
         data["path2"] = data["path"].apply(lambda x: x[0:-1])
         # data['name']
@@ -1601,12 +1601,15 @@ class NifiExtractor:
             data = mapping_df.copy()
             data["group"] = data.group.apply(lambda x: x[0])
             data2 = data_queries[["id", "_query_", "_table_", "_query_type_"]].copy()
-            data2["_table_"] = data2._table_.apply(lambda x: x[0])
-            data2["view_name"] = data2.apply(
+            data2["_table_"] = data2._table_.apply(lambda x: x[0])  # type: ignore[index]
+            data2["view_name"] = data2.apply(  # type: ignore[union-attr]
                 lambda x: "{} {}".format(x["_table_"], x["_query_type_"][0]), axis=1
             )
-            data = data.merge(
-                data2[["id", "_query_", "_table_", "view_name"]], how="left", left_on="group", right_on="id"
+            data = data.merge(  # type: ignore[arg-type]
+                data2[["id", "_query_", "_table_", "view_name"]],  # type: ignore[arg-type]
+                how="left",
+                left_on="group",
+                right_on="id",
             )
             data["table_key"] = data.apply(lambda x: "{}_{}".format(x["_jdbc_key_"], x["_table_"]), axis=1)
             # ll = list(data.target.unique())

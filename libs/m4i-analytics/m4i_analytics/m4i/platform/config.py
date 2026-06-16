@@ -33,7 +33,7 @@ try:
                 setattr(module, key, getattr(override_conf, key))
 
     else:
-        import m4i_platform_config
+        import m4i_platform_config  # type: ignore[import-not-found]
 
         HTTP_PROXY = getattr(m4i_platform_config, "HTTP_PROXY", None)
         HTTPS_PROXY = getattr(m4i_platform_config, "HTTPS_PROXY", None)

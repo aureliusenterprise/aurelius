@@ -108,13 +108,13 @@ class Pathing:
             transition_matrix = ArchimateUtils.toTransitionMatrix(working_copy)
 
             junction_bypasses = []
-            for junction in junctions.to_dict(orient="records"):
+            for junction in junctions.to_dict(orient="records"):  # type: ignore[call-overload]
                 junction_sources = transition_matrix[transition_matrix["target"] == junction["id"]].to_dict(
                     orient="records"
-                )
+                )  # type: ignore[call-overload]
                 junction_targets = transition_matrix[transition_matrix["source"] == junction["id"]].to_dict(
                     orient="records"
-                )
+                )  # type: ignore[call-overload]
 
                 junction_bypasses = junction_bypasses + [
                     {
@@ -379,7 +379,7 @@ class Pathing:
 
             if not paths_fmt.empty:
                 # Aggregate the paths
-                paths_grp = (
+                paths_grp = (  # type: ignore[assignment]
                     paths_fmt.groupby(
                         [
                             "source",

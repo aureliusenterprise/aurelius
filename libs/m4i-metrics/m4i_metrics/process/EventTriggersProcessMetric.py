@@ -111,7 +111,7 @@ def generateinvalidDF_(
             "id_end",
             "name_end",
             "type_end",
-        ]
+        ]  # type: ignore[arg-type]
     )
     # avoid ValueError by concat if there is nothing to concatenate
     invalid_junction_paths.append(emptyDF)
@@ -184,7 +184,7 @@ def breadth_first_search_(
             "id_end",
             "name_end",
             "type_end",
-        ]
+        ]  # type: ignore[arg-type]
     )
     # avoid ValueError by concat if there is nothing to concatenate
     pathslist.append(emptyDF)

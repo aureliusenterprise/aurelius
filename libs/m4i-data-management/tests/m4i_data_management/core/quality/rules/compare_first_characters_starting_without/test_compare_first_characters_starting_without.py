@@ -50,7 +50,7 @@ def test__compare_first_characters_starting_without_all():
 
     columns = ["id", "name"]
 
-    data = DataFrame(data=info, columns=columns)
+    data = DataFrame(data=info, columns=columns)  # type: ignore[arg-type]
 
     result = compare_first_characters_starting_without(data, "id", "name", 2, "BE")
 

@@ -63,7 +63,7 @@ class AbstractSlice:
     # END _init_params
 
     def directColumnDependencies(self):
-        table_columns_table = Table("table_columns", self.db_metadata, autoload_with=self.db_con)
+        table_columns_table = Table("table_columns", self.db_metadata, autoload_with=self.db_con)  # type: ignore[arg-type]
         table_columns = [
             row
             for row in self.db_con.execute(  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
@@ -88,7 +88,7 @@ class AbstractSlice:
         )
 
     def columnsFromSQL(self, sql):
-        table_columns_table = Table("table_columns", self.db_metadata, autoload_with=self.db_con)
+        table_columns_table = Table("table_columns", self.db_metadata, autoload_with=self.db_con)  # type: ignore[arg-type]
         table_columns = [
             row[4]
             for row in self.db_con.execute(  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
@@ -107,7 +107,7 @@ class AbstractSlice:
     # END columnsFromSQL
 
     def getMetrics(self):
-        table = Table("sql_metrics", self.db_metadata, autoload_with=self.db_con)
+        table = Table("sql_metrics", self.db_metadata, autoload_with=self.db_con)  # type: ignore[arg-type]
         data = self.db_con.execute(  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
             select(table).where(table.c.table_id == self.datasource_id)  # type: ignore[reportOptionalSubscript, reportOptionalMemberAccess]
         ).fetchall()

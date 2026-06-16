@@ -73,7 +73,7 @@ def get_partitions(model: ArchimateModel) -> pd.DataFrame:
     clustered_nodes = cluster_nodes(clusters)
 
     # Return the nodes per cluster as a pandas DataFrame
-    return pd.DataFrame(clustered_nodes, columns=["group", "id"])
+    return pd.DataFrame(clustered_nodes, columns=["group", "id"])  # type: ignore[arg-type]
 
 
 # END get_partitions

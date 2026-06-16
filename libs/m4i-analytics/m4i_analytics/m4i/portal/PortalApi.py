@@ -454,7 +454,7 @@ class PortalApi:
         result = response
 
         if not isinstance(response, str):
-            result = TableDashboardResponse(**result)
+            result = TableDashboardResponse(**(result if isinstance(result, dict) else {}))  # type: ignore[arg-type]
 
         return result
 

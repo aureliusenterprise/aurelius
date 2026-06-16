@@ -118,7 +118,7 @@ def generateinvalidDF_(elems: pd.DataFrame, type_agg: pd.DataFrame) -> Tuple[int
             "id_end",
             "name_end",
             "type_end",
-        ]
+        ]  # type: ignore[arg-type]
     )
     # avoid ValueError by concat if there is nothing to concatenate
     invalid_junction_paths.append(emptyDF)
@@ -185,7 +185,7 @@ def breadth_first_search_(startNodeID: str, elems: pd.DataFrame, type_agg: pd.Da
             "id_end",
             "name_end",
             "type_end",
-        ]
+        ]  # type: ignore[arg-type]
     )
     # avoid ValueError by concat if there is nothing to concatenate
     pathslist.append(emptyDF)

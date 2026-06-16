@@ -72,13 +72,13 @@ class DBUtils:
             session = sm()
             commit = True
 
-        _metadata = MetaData(bind=M4I_DB_Connector.M4I_DB)
+        _metadata = MetaData()
 
         _list_of_dicts = dataframe.to_dict(orient="records")
 
         try:
             with M4I_DB_Connector.M4I_DB.begin() as conn:
-                if not M4I_DB_Connector.M4I_DB.dialect.has_table(M4I_DB_Connector.M4I_DB, tablename):
+                if not M4I_DB_Connector.M4I_DB.dialect.has_table(conn, tablename):
                     dataframe.to_sql(tablename, conn)
                 else:
                     if if_exists == InsertBehavior.FAIL:

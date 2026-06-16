@@ -81,11 +81,11 @@ class Graph:
 
         self.id = id
         if nodes is None or len(list(nodes)) == 0:
-            self.nodes = DataFrame(columns=["id", "name", "type", "label"])
+            self.nodes = DataFrame(columns=["id", "name", "type", "label"])  # type: ignore[arg-type]
         else:
             self.nodes = nodes
         if edges is None or len(list(edges)) == 0:
-            self.edges = DataFrame(columns=["id", "name", "type", "label", "source", "target"])
+            self.edges = DataFrame(columns=["id", "name", "type", "label", "source", "target"])  # type: ignore[arg-type]
         else:
             self.edges = edges
         if data is None:
