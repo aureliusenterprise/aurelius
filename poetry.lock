@@ -1274,20 +1274,6 @@ files = [
 ]
 
 [[package]]
-name = "dotenv"
-version = "0.9.9"
-description = "Deprecated package"
-optional = false
-python-versions = "*"
-groups = ["dev"]
-files = [
-    {file = "dotenv-0.9.9-py2.py3-none-any.whl", hash = "sha256:29cf74a087b31dafdb5a446b6d7e11cbce8ed2741540e2339c69fbef92c94ce9"},
-]
-
-[package.dependencies]
-python-dotenv = "*"
-
-[[package]]
 name = "ecdsa"
 version = "0.19.2"
 description = "ECDSA cryptographic signature library (pure python)"
@@ -2344,7 +2330,7 @@ requests = ">=2.32.0"
 requests-toolbelt = ">=0.9,<1"
 sqlalchemy = ">=2.0,<3.0"
 sqlparse = ">=0.5,<1"
-uuid = "1.30"
+uuid = ">=1.30,<2"
 
 [package.source]
 type = "directory"
@@ -6274,4 +6260,4 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.14"
-content-hash = "aab5498a15a53bf447b7eb3e5413141fb232045775ed9004d0058e1a8f056ccb"
+content-hash = "1e574015da55c07ef181958727d3ada5e83cd7dd69fba1a85f075a8bb65d709d"
