@@ -5,9 +5,17 @@ import { DetailsNavigationModule } from '../components/navigation/details-naviga
 import { PropertiesModule } from '../components/properties/properties.module';
 import { DefaultDetailsComponent } from './default-details.component';
 import { DescriptionModule } from '../../components/description/description.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [CommonModule, DetailsNavigationModule, DescriptionModule, PropertiesModule, AccordionModule],
-  declarations: [DefaultDetailsComponent]
+    imports: [
+        CommonModule,
+        DetailsNavigationModule,
+        DescriptionModule,
+        PropertiesModule,
+        AccordionModule,
+        TranslateModule,
+    ],
+    declarations: [DefaultDetailsComponent],
 })
 export class DefaultDetailsModule {}

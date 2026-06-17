@@ -6,6 +6,7 @@ import { I18nService } from '@models4insight/i18n';
 import { FeatureModule } from '@models4insight/permissions';
 import { TranslateModule } from '@ngx-translate/core';
 import enUS from '../translations/en-US.json';
+import nlNL from '../translations/nl-NL.json';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { LoadingComponent } from './loading/loading.component';
@@ -16,40 +17,35 @@ import { ShellConfig, ShellConfigService } from './shell-config.service';
 import { ShellComponent } from './shell.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FeatureModule,
-    FontAwesomeModule,
-    RouterModule,
-    TranslateModule.forChild(),
-  ],
-  declarations: [
-    HeaderComponent,
-    FooterComponent,
-    ShellComponent,
-    LoadingComponent,
-    PipelineComponent,
-    PipelineTaskComponent,
-  ],
+    imports: [CommonModule, FeatureModule, FontAwesomeModule, RouterModule, TranslateModule.forChild()],
+    declarations: [
+        HeaderComponent,
+        FooterComponent,
+        ShellComponent,
+        LoadingComponent,
+        PipelineComponent,
+        PipelineTaskComponent,
+    ],
 })
 export class ShellModule {
-  constructor(private i18nService: I18nService) {
-    this.i18nService.setTranslation('en-US', enUS);
-  }
+    constructor(private i18nService: I18nService) {
+        this.i18nService.setTranslation('en-US', enUS);
+        this.i18nService.setTranslation('nl-NL', nlNL);
+    }
 
-  static forRoot(config: ShellConfig = {}): ModuleWithProviders<ShellModule> {
-    return {
-      ngModule: ShellModule,
-      providers: [
-        {
-          provide: ShellConfigService,
-          useValue: config,
-        },
-        {
-          provide: RouteReuseStrategy,
-          useClass: RouteReusableStrategy,
-        },
-      ],
-    };
-  }
+    static forRoot(config: ShellConfig = {}): ModuleWithProviders<ShellModule> {
+        return {
+            ngModule: ShellModule,
+            providers: [
+                {
+                    provide: ShellConfigService,
+                    useValue: config,
+                },
+                {
+                    provide: RouteReuseStrategy,
+                    useClass: RouteReusableStrategy,
+                },
+            ],
+        };
+    }
 }
