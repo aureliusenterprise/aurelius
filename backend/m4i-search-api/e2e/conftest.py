@@ -7,7 +7,7 @@ import requests
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from tenacity import Retrying, stop_after_attempt, wait_exponential
 from testcontainers.compose import DockerCompose
-from testcontainers.core.waiting_utils import wait_container_is_ready
+from testcontainers.core.wait_strategies import HttpWaitStrategy
 
 
 class E2ESettings(BaseSettings):
@@ -34,11 +34,10 @@ def _environment() -> None:
 
 
 @pytest.fixture(scope="session")
-@wait_container_is_ready()  # type: ignore
 def compose() -> Generator[DockerCompose, None, None]:
     """Spin up the full e2e stack via Docker Compose."""
     with DockerCompose(Path(__file__).parent.absolute(), env_file=dotenv.find_dotenv()) as compose:
-        yield compose
+        yield compose.waiting_for({"m4i-search-api": HttpWaitStrategy(path="/health", port=8531)})
 
 
 @pytest.fixture(scope="session")
