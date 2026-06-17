@@ -11,9 +11,9 @@ include = "m4i_metrics"
 
 [tool.poetry.dependencies]
 bokeh = "^3.6"
-networkx = "^3.4"
+networkx = ">=3.4,<5"
 numpy = ">=1.26,<3"
-pandas = ">=2.2,<2.3"
+pandas = ">=2.2,<2.4"
 python = ">=3.11,<3.14"
 
 [tool.poetry.dependencies.m4i-analytics]

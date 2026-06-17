@@ -11,13 +11,13 @@ include = "m4i_data_dictionary_io"
 
 [tool.poetry.dependencies]
 apache-flink = "^2.0"
-avro-python3 = ">=1.10,<1.11"
+avro-python3 = ">=1.10,<1.13"
 confluent-kafka = ">=2.6,<3"
 dataclasses-json = ">=0.6,<1"
-pandas = ">=2.2,<2.3"
+pandas = ">=2.2,<2.4"
 python = ">=3.11,<3.14"
 tenacity = ">=8.5.0"
-urllib3 = ">=1.26.18"
+urllib3 = ">=2.3,<3"
 
 [tool.poetry.dependencies.m4i-atlas-core]
 develop = true
