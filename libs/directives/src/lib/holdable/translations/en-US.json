@@ -1,8 +1,8 @@
 {
-  "holdable": {
-    "tooltip": {
-      "single": "Hold for {{seconds}} second",
-      "plural": "Hold for {{seconds}} seconds"
+    "holdable": {
+        "tooltip": {
+            "plural": "Hold for {{seconds}} seconds",
+            "single": "Hold for {{seconds}} second"
+        }
     }
-  }
 }

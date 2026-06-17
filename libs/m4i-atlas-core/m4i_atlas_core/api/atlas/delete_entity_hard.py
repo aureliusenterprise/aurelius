@@ -17,13 +17,11 @@ async def delete_entity_hard(guid: List[str], access_token: Optional[str] = None
     This API requires elevated user permissions.
     """
 
-    response: str = await atlas_put(
-        path=PATH,
-        body=json.dumps(guid),
-        access_token=access_token
-    )
+    response: str = await atlas_put(path=PATH, body=json.dumps(guid), access_token=access_token)
 
     mutations = EntityMutationResponse.from_json(response)
 
     return mutations
+
+
 # END delete_entity_hard

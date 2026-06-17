@@ -19,7 +19,7 @@ def test__create_data_quality_from_dict():
         "filterRequired": "Yes",
         "qualityDimension": "Quality Dimension",
         "dataField": "data-field",
-        "source": "source"
+        "source": "source",
     }
 
     instance = DataQuality.from_dict(data_quality)
@@ -35,6 +35,7 @@ def test__create_data_quality_from_dict():
     assert instance.quality_dimension == "Quality Dimension"
     assert instance.source == "source"
 
+
 # END test__create_data_quality_from_dict
 
 
@@ -43,8 +44,7 @@ def test__create_data_quality_from_json():
     Tests whether or not a `DataQuality` can be created from a json string with its attributes
     """
 
-    data_quality = (
-        """
+    data_quality = """
         {
             "id": "1",
             "qualifiedName": "data-field--1",
@@ -59,7 +59,6 @@ def test__create_data_quality_from_json():
             "source": "source"
         }
         """
-    )
 
     instance = DataQuality.from_json(data_quality)
 
@@ -84,11 +83,7 @@ def test__data_quality_calculates_correct_qualified_name():
     Tests whether or not the generated qualified name matches the expected format
     """
 
-    data_quality = {
-        "id": "1",
-        "dataField": "data-field",
-        "qualifiedName": "data-field--1"
-    }
+    data_quality = {"id": "1", "dataField": "data-field", "qualifiedName": "data-field--1"}
 
     instance = DataQuality.from_dict(data_quality)
 
@@ -103,11 +98,7 @@ def test__create_data_quality_with_wrong_qualified_name():
     Tests whether or not an exception is raised when the qualified name is not valid
     """
 
-    data_quality = {
-        "dataField": "data-field",
-        "id": "1",
-        "qualifiedName": "test",
-    }
+    data_quality = {"dataField": "data-field", "id": "1", "qualifiedName": "test"}
 
     with pytest.raises(QualifiedNameNotValidException):
         DataQuality.from_dict(data_quality)
@@ -133,7 +124,7 @@ def test__data_quality_convert_to_atlas_entity():
         "businessRuleDescription": "Business Rule",
         "filterRequired": "Yes",
         "qualityDimension": "Quality Dimension",
-        "source": "source"
+        "source": "source",
     }
 
     instance = DataQuality.from_dict(data_quality)
@@ -155,20 +146,13 @@ def test__data_quality_convert_to_atlas_entity():
     field_entity = atlas_attributes.fields[0]
     assert field_entity is not None
     assert field_entity.type_name == "m4i_field"
-    assert getattr(field_entity.unique_attributes,
-                   "qualified_name") == instance.data_field
+    assert getattr(field_entity.unique_attributes, "qualified_name") == instance.data_field
 
     atlas_source = atlas_attributes.source[0]
 
     assert atlas_source is not None
     assert atlas_source.type_name == "m4i_source"
-    assert getattr(atlas_source.unique_attributes,
-                   "qualified_name") == instance.source
+    assert getattr(atlas_source.unique_attributes, "qualified_name") == instance.source
 
 
 # END test__data_quality_convert_to_atlas_entity
-
-
-
-
-

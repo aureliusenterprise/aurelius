@@ -8,38 +8,31 @@ import { LineageModelService } from './lineage-model.service';
 import { ModelExplorerDataGovernanceComponent } from './model-explorer-data-governance/model-explorer-data-governance.component';
 
 const addons = {
-  'Data governance': ModelExplorerDataGovernanceComponent
+    'Data governance': ModelExplorerDataGovernanceComponent,
 };
 
 @Component({
-  selector: 'models4insight-lineage-model',
-  templateUrl: 'lineage-model.component.html',
-  styleUrls: ['lineage-model.component.scss'],
-  providers: [
-    LineageModelService,
-    { provide: MODEL_BROWSER_SELECTION_ADDONS, useValue: addons }
-  ]
+    selector: 'models4insight-lineage-model',
+    templateUrl: 'lineage-model.component.html',
+    styleUrls: ['lineage-model.component.scss'],
+    providers: [LineageModelService, { provide: MODEL_BROWSER_SELECTION_ADDONS, useValue: addons }],
 })
 export class LineageModelComponent implements OnInit {
-  entityId$: Observable<string>;
-  isRetrievingLineageModel$: Observable<boolean>;
-  hasLineageModel$: Observable<boolean>;
+    entityId$: Observable<string>;
+    isRetrievingLineageModel$: Observable<boolean>;
+    hasLineageModel$: Observable<boolean>;
 
-  constructor(
-    private readonly entityDetailsService: EntityDetailsService,
-    private readonly lineageModelService: LineageModelService,
-    private readonly modelService: ModelService
-  ) {}
+    constructor(
+        private readonly entityDetailsService: EntityDetailsService,
+        private readonly lineageModelService: LineageModelService,
+        private readonly modelService: ModelService,
+    ) {}
 
-  ngOnInit() {
-    this.entityId$ = this.entityDetailsService.select('entityId');
+    ngOnInit() {
+        this.entityId$ = this.entityDetailsService.select('entityId');
 
-    this.isRetrievingLineageModel$ = this.lineageModelService.select(
-      'isRetrievingLineageModel'
-    );
+        this.isRetrievingLineageModel$ = this.lineageModelService.select('isRetrievingLineageModel');
 
-    this.hasLineageModel$ = this.modelService
-      .select('model', { includeFalsy: true })
-      .pipe(map(Boolean));
-  }
+        this.hasLineageModel$ = this.modelService.select('model', { includeFalsy: true }).pipe(map(Boolean));
+    }
 }

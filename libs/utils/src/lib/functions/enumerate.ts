@@ -3,9 +3,9 @@
  * @param items The items to iterate over.
  */
 export function* enumerate<T>(items: Iterable<T>): Generator<[T, number]> {
-  let index = 0;
-  for (const item of items) {
-    yield [item, index];
-    index++;
-  }
+    let index = 0;
+    for (const item of items) {
+        yield [item, index];
+        index++;
+    }
 }

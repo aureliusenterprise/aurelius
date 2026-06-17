@@ -6,8 +6,8 @@ import { DatasetComponent } from './dataset.component';
 import { DatasetService } from './dataset.service';
 
 @NgModule({
-  imports: [CommonModule, DatasetRoutingModule, SortableTableModule],
-  declarations: [DatasetComponent],
-  providers: [DatasetService]
+    imports: [CommonModule, DatasetRoutingModule, SortableTableModule],
+    declarations: [DatasetComponent],
+    providers: [DatasetService],
 })
 export class DatasetModule {}

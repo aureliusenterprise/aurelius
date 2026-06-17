@@ -1,19 +1,20 @@
 from dataclasses import dataclass, field
 from dataclasses_json import DataClassJsonMixin
-from typing import Iterable, List
+from typing import Iterable, List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
 from ..core import RelationshipEndDef, Cardinality, RelationshipDef
-from ..core import (AttributeDef, EntityDef, ObjectId,
-                    TypeCategory)
+from ..core import AttributeDef, EntityDef, ObjectId, TypeCategory
 
-from .GenericProcess import (GenericProcess,
-                             GenericProcessAttributes,
-                             GenericProcessAttributesBase,
-                             GenericProcessAttributesDefaultsBase,
-                             GenericProcessBase,
-                             GenericProcessDefaultsBase)
+from .GenericProcess import (
+    GenericProcess,
+    GenericProcessAttributes,
+    GenericProcessAttributesBase,
+    GenericProcessAttributesDefaultsBase,
+    GenericProcessBase,
+    GenericProcessDefaultsBase,
+)
 
 ingress_object_process_super_type = ["m4i_generic_process"]
 
@@ -21,60 +22,48 @@ ingress_object_process_attributes_def = [
     AttributeDef(
         name="ingressController",
         type_name="array<m4i_ingress_controller_process>",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="kubernetesService",
         type_name="array<m4i_kubernetes_service_process>",
-        cardinality=Cardinality.SET
-    )
+        cardinality=Cardinality.SET,
+    ),
 ]
 
 ingress_object_process_def = EntityDef(
     category=TypeCategory.ENTITY,
     name="m4i_ingress_object_process",
-    description="A type definition for a kubernetes ingress object process in the context of models4insight.com",
+    description=(
+        "A type definition for a kubernetes ingress object process in the context of models4insight.com"
+    ),
     type_version="1.0",
     super_types=ingress_object_process_super_type,
-    attribute_defs=ingress_object_process_attributes_def
+    attribute_defs=ingress_object_process_attributes_def,
 )
 
-end_1_knamespace_ioprocess = RelationshipEndDef(
-    type="m4i_kubernetes_namespace",
-    name="ingressObject",
-
-)
-end_2_knamespace_ioprocess = RelationshipEndDef(
-    type="m4i_ingress_object_process",
-    name="namespace"
-)
+end_1_knamespace_ioprocess = RelationshipEndDef(type="m4i_kubernetes_namespace", name="ingressObject")
+end_2_knamespace_ioprocess = RelationshipEndDef(type="m4i_ingress_object_process", name="namespace")
 
 m4i_knamespace_ioprocess_rel_def = RelationshipDef(
     end_def1=end_1_knamespace_ioprocess,
     end_def2=end_2_knamespace_ioprocess,
     name="m4i_namespace_ingress_object_assignment",
-    category=TypeCategory.RELATIONSHIP
+    category=TypeCategory.RELATIONSHIP,
 )
 
-end_1_icprocess_ioprocess = RelationshipEndDef(
-    type="m4i_ingress_controller_process",
-    name="ingressObject",
-
-)
-end_2_icprocess_ioprocess = RelationshipEndDef(
-    type="m4i_ingress_object_process",
-    name="ingressController"
-)
+end_1_icprocess_ioprocess = RelationshipEndDef(type="m4i_ingress_controller_process", name="ingressObject")
+end_2_icprocess_ioprocess = RelationshipEndDef(type="m4i_ingress_object_process", name="ingressController")
 
 m4i_icprocess_ioprocess_rel_def = RelationshipDef(
     end_def1=end_1_icprocess_ioprocess,
     end_def2=end_2_icprocess_ioprocess,
     name="m4i_ingress_controller_ingress_object_assignment",
-    category=TypeCategory.RELATIONSHIP
+    category=TypeCategory.RELATIONSHIP,
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class IngressObjectProcessAttributesBase(GenericProcessAttributesBase):
     pass
@@ -82,13 +71,14 @@ class IngressObjectProcessAttributesBase(GenericProcessAttributesBase):
 
 # END IngressObjectProcessAttributesBase
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class IngressObjectProcessRelationshipAttributes(DataClassJsonMixin):
     namespace: List[ObjectId] = field(default_factory=list)
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class IngressObjectProcessAttributesDefaultsBase(GenericProcessAttributesDefaultsBase):
     ingress_controller: List[ObjectId] = field(default_factory=list)
@@ -98,41 +88,40 @@ class IngressObjectProcessAttributesDefaultsBase(GenericProcessAttributesDefault
 # END IngressObjectProcessAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class IngressObjectProcessAttributes(GenericProcessAttributes,
-                                     IngressObjectProcessAttributesDefaultsBase,
-                                     IngressObjectProcessAttributesBase):
+class IngressObjectProcessAttributes(  # type: ignore[reportGeneralTypeIssues]
+    GenericProcessAttributes, IngressObjectProcessAttributesDefaultsBase, IngressObjectProcessAttributesBase
+):
     pass
 
 
 # END IngressObjectProcessAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class IngressObjectProcessBase(GenericProcessBase):
-    attributes: IngressObjectProcessAttributes
+    attributes: IngressObjectProcessAttributes  # type: ignore[reportIncompatibleMethodOverride]
 
 
 # END IngressObjectProcessBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class IngressObjectProcessDefaultsBase(GenericProcessDefaultsBase):
-    relationship_attributes: IngressObjectProcessRelationshipAttributes = None
+    relationship_attributes: Optional[IngressObjectProcessRelationshipAttributes] = None  # type: ignore[reportIncompatibleMethodOverride]
 
 
 # END IngressObjectProcessDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class IngressObjectProcess(GenericProcess,
-                           IngressObjectProcessDefaultsBase,
-                           IngressObjectProcessBase
-                           ):
+class IngressObjectProcess(  # type: ignore[reportGeneralTypeIssues]
+    GenericProcess, IngressObjectProcessDefaultsBase, IngressObjectProcessBase
+):
     type_name: str = "m4i_ingress_object_process"
 
     @classmethod
@@ -147,12 +136,16 @@ class IngressObjectProcess(GenericProcess,
         namespace
         """
 
-        references = [*super().get_referred_entities(),
-                      *self.attributes.kubernetes_service,
-                      *self.attributes.ingress_controller,
-                      *self.relationship_attributes.namespace]
+        references = [
+            *super().get_referred_entities(),
+            *self.attributes.kubernetes_service,
+            *self.attributes.ingress_controller,
+            *(self.relationship_attributes.namespace if self.relationship_attributes else []),
+        ]
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END IngressObjectProcess

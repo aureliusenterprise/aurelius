@@ -3,11 +3,11 @@
  * @param items The seuqence of items
  */
 export function* pairwise<T>(items: Iterable<T>): Generator<[T, T]> {
-  let previous: T;
-  for (const item of items) {
-    if (previous) {
-      yield [previous, item];
+    let previous: T;
+    for (const item of items) {
+        if (previous) {
+            yield [previous, item];
+        }
+        previous = item;
     }
-    previous = item;
-  }
 }

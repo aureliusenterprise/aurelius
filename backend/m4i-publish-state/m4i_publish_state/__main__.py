@@ -5,12 +5,8 @@ from m4i_publish_state import PublishStateConfig, main
 
 config: PublishStateConfig = {
     "atlas_server_url": os.environ["ATLAS_SERVER_URL"],
-    "elasticsearch_app_search_index_name": os.environ[
-        "ELASTICSEARCH_APP_SEARCH_INDEX_NAME"
-    ],
-    "elasticsearch_publish_state_index_name": os.environ[
-        "ELASTICSEARCH_STATE_INDEX_NAME"
-    ],
+    "elasticsearch_app_search_index_name": os.environ["ELASTICSEARCH_APP_SEARCH_INDEX_NAME"],
+    "elasticsearch_publish_state_index_name": os.environ["ELASTICSEARCH_STATE_INDEX_NAME"],
     "elasticsearch_endpoint": os.environ["ELASTICSEARCH_ENDPOINT"],
     "elasticsearch_username": os.environ["ELASTICSEARCH_USERNAME"],
     "elasticsearch_password": os.environ["ELASTICSEARCH_PASSWORD"],

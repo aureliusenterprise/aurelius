@@ -1,1 +1,1 @@
-from .make_serializing_producer import *
+from .make_serializing_producer import make_serializing_producer as make_serializing_producer

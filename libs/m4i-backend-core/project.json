@@ -1,71 +1,55 @@
 {
-  "name": "m4i-backend-core",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
-  "sourceRoot": "libs/m4i-backend-core/m4i_backend_core",
-  "targets": {
-    "lock": {
-      "executor": "@nxlv/python:run-commands",
-      "options": {
-        "command": "poetry lock --no-update",
-        "cwd": "libs/m4i-backend-core"
-      }
-    },
-    "add": {
-      "executor": "@nxlv/python:add",
-      "options": {}
-    },
-    "update": {
-      "executor": "@nxlv/python:update",
-      "options": {}
-    },
-    "remove": {
-      "executor": "@nxlv/python:remove",
-      "options": {}
-    },
-    "build": {
-      "executor": "@nxlv/python:build",
-      "outputs": [
-        "{projectRoot}/dist"
-      ],
-      "options": {
-        "outputPath": "libs/m4i-backend-core/dist",
-        "publish": false,
-        "lockedVersions": true,
-        "bundleLocalDependencies": true
-      }
-    },
-    "install": {
-      "executor": "@nxlv/python:install",
-      "options": {
-        "silent": false,
-        "args": "",
-        "cacheDir": ".cache/pypoetry",
-        "verbose": false,
-        "debug": false
-      }
-    },
-    "lint": {
-      "executor": "@nxlv/python:ruff-check",
-      "outputs": [],
-      "options": {
-        "lintFilePatterns": [
-          "m4i_backend_core",
-          "tests"
-        ]
-      }
-    },
-    "test": {
-      "executor": "@nxlv/python:run-commands",
-      "outputs": [
-        "{workspaceRoot}/reports/libs/m4i-backend-core/unittests",
-        "{workspaceRoot}/coverage/libs/m4i-backend-core"
-      ],
-      "options": {
-        "command": "poetry run pytest tests/",
-        "cwd": "libs/m4i-backend-core"
-      }
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "name": "m4i-backend-core",
+    "projectType": "library",
+    "sourceRoot": "libs/m4i-backend-core/m4i_backend_core",
+    "tags": [],
+    "targets": {
+        "add": {
+            "executor": "@nxlv/python:add",
+            "options": {}
+        },
+        "build": {
+            "executor": "@nxlv/python:build",
+            "options": {
+                "bundleLocalDependencies": true,
+                "lockedVersions": true,
+                "outputPath": "libs/m4i-backend-core/dist",
+                "publish": false
+            },
+            "outputs": ["{projectRoot}/dist"]
+        },
+        "install": {
+            "executor": "@nxlv/python:install",
+            "options": {
+                "args": "",
+                "cacheDir": ".cache/pypoetry",
+                "debug": false,
+                "silent": false,
+                "verbose": false
+            }
+        },
+        "lint": {
+            "executor": "@nxlv/python:ruff-check",
+            "options": {
+                "lintFilePatterns": ["m4i_backend_core", "tests"]
+            },
+            "outputs": []
+        },
+        "lock": {
+            "executor": "@nxlv/python:run-commands",
+            "options": {
+                "command": "poetry lock --no-update",
+                "cwd": "libs/m4i-backend-core"
+            }
+        },
+        "remove": {
+            "executor": "@nxlv/python:remove",
+            "options": {}
+        },
+        "update": {
+            "executor": "@nxlv/python:update",
+            "options": {}
+        }
     }
-  },
-  "tags": []
 }

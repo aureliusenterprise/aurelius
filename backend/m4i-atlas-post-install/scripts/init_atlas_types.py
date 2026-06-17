@@ -7,12 +7,7 @@ import sys
 from typing import Union
 
 import aiohttp
-from m4i_atlas_core import (
-    ConfigStore,
-    create_type_defs,
-    data_dictionary_types_def,
-    get_keycloak_token,
-)
+from m4i_atlas_core import ConfigStore, create_type_defs, data_dictionary_types_def, get_keycloak_token
 
 
 async def main(access_token: Union[str, None] = None) -> None:
@@ -43,7 +38,7 @@ if __name__ == "__main__":
             "keycloak.realm.name": os.environ.get("KEYCLOAK_REALM_NAME"),
             "keycloak.client.secret.key": os.environ.get("KEYCLOAK_CLIENT_SECRET_KEY"),
             "keycloak.server.url": os.environ.get("KEYCLOAK_SERVER_URL"),
-        },
+        }
     )
 
     access_token = sys.argv[1] if len(sys.argv) > 1 else None

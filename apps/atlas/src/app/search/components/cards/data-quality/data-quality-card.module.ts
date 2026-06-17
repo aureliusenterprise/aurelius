@@ -6,13 +6,8 @@ import { DataQualityPieModule } from '../../data-quality-pie/data-quality-pie.mo
 import { DataQualityCardComponent } from './data-quality-card.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    TranslateModule.forChild(),
-    BreadCrumbsModule,
-    DataQualityPieModule
-  ],
-  declarations: [DataQualityCardComponent],
-  exports: [DataQualityCardComponent]
+    imports: [CommonModule, TranslateModule.forChild(), BreadCrumbsModule, DataQualityPieModule],
+    declarations: [DataQualityCardComponent],
+    exports: [DataQualityCardComponent],
 })
 export class DataQualityCardModule {}

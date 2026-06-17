@@ -1,7 +1,1 @@
-authorizations = {
-    "apikey": {
-        "type": "apiKey",
-        "in": "header",
-        "name":"Authorization"
-    }
-}
+authorizations = {"apikey": {"type": "apiKey", "in": "header", "name": "Authorization"}}

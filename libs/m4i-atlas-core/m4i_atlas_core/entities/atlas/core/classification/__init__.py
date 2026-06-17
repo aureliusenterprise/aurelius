@@ -1,1 +1,3 @@
-from .Classification import Classification
+from .Classification import Classification, ClassificationBase, ClassificationDefaultsBase
+
+__all__ = ["Classification", "ClassificationBase", "ClassificationDefaultsBase"]

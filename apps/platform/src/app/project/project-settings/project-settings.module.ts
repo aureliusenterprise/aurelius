@@ -8,14 +8,8 @@ import { ProjectSettingsGuard } from './project-settings.guard';
 import { ProjectPermissionModule } from '@models4insight/permissions';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    HoldableModule,
-    TranslateModule,
-    ProjectSettingsRoutingModule,
-    ProjectPermissionModule
-  ],
-  declarations: [ProjectSettingsComponent],
-  providers: [ProjectSettingsGuard]
+    imports: [CommonModule, HoldableModule, TranslateModule, ProjectSettingsRoutingModule, ProjectPermissionModule],
+    declarations: [ProjectSettingsComponent],
+    providers: [ProjectSettingsGuard],
 })
 export class ProjectSettingsModule {}

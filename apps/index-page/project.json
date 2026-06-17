@@ -108,9 +108,9 @@
             }
         },
         "test": {
-            "builder": "@nx/jest:jest",
+            "executor": "@nx/jest:jest",
             "options": {
-                "jestConfig": "apps/index-page/jest.config.js",
+                "jestConfig": "apps/index-page/jest.config.ts",
                 "passWithNoTests": true,
                 "setupFile": "apps/index-page/src/test-setup.ts",
                 "tsConfig": "apps/index-page/tsconfig.spec.json"

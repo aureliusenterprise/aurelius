@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Generator
+from typing import Any, Dict, Generator
 
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan
@@ -25,9 +25,7 @@ class EntityDataNotProvidedError(SynchronizeAppSearchError):
 
 @retry(retry_strategy=ExponentialBackoff())
 def get_documents(
-    query: dict,
-    elastic: Elasticsearch,
-    index_name: str,
+    query: Dict[str, Any], elastic: Elasticsearch, index_name: str
 ) -> Generator[AppSearchDocument, None, None]:
     """
     Yield AppSearchDocument objects from Elasticsearch based on the given query.
@@ -51,10 +49,7 @@ def get_documents(
 
 
 def update_document_breadcrumb(
-    guid: str,
-    elastic: Elasticsearch,
-    index_name: str,
-    updated_documents: Dict[str, AppSearchDocument],
+    guid: str, elastic: Elasticsearch, index_name: str, updated_documents: Dict[str, AppSearchDocument]
 ) -> Dict[str, AppSearchDocument]:
     """
     Update the breadcrumb information in documents related to a specified entity.
@@ -95,10 +90,7 @@ def update_document_breadcrumb(
         type_length_mismatch = len(breadcrumb_guid) != len(breadcrumb_type)
 
         if name_length_mismatch or type_length_mismatch:
-            logging.error(
-                "Breadcrumb for document %s is malformed. Skipping document update.",
-                document.guid,
-            )
+            logging.error("Breadcrumb for document %s is malformed. Skipping document update.", document.guid)
             continue
 
         try:

@@ -3,18 +3,18 @@ from pandas import DataFrame, Series, isna
 
 def unallowed_text(data: DataFrame, column_name: str, text: str) -> Series:
     """
-    Checks if values in the column with the given `column_name` contain a specific unallowed `text` (e.g. 'Stratonis Group'). 
-    
+    Checks if values in the column with the given `column_name` contain a specific
+    unallowed `text` (e.g. 'Stratonis Group').
+
     This only works for textual values.
     If a value is not a string, it is converted to a string before comparison.
 
-    If the value does not contain the given `text`, or if the value is empty, assigns a score of 1. 
+    If the value does not contain the given `text`, or if the value is empty, assigns a score of 1.
     Otherwise, assigns a score of 0.
     """
 
     def check(value):
-
-        if isna(value):
+        if isna(value):  # type: ignore[arg-type]
             return 1
 
         return 1 if text not in str(value) else 0
@@ -22,4 +22,4 @@ def unallowed_text(data: DataFrame, column_name: str, text: str) -> Series:
     if column_name not in data.columns:
         return Series([0] * len(data), index=data.index)
 
-    return data[column_name].apply(check)
+    return data[column_name].apply(check)  # type: ignore[return-value]

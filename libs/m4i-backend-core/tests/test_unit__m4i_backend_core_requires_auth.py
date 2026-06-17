@@ -2,6 +2,7 @@ import importlib
 from typing import List, Optional, Tuple
 from unittest.mock import Mock
 
+import flask
 import pytest
 import requests
 from flask import Flask
@@ -31,35 +32,24 @@ def _configure_auth_mocks(
     jwks_mock = Mock(side_effect=jwks_side_effect)
     jwks_mock.cache_clear = Mock()
 
-    openid_configuration_mock = Mock(
-        return_value={"jwks_uri": "https://issuer.example/jwks"}
-    )
+    openid_configuration_mock = Mock(return_value={"jwks_uri": "https://issuer.example/jwks"})
     openid_configuration_mock.cache_clear = Mock()
 
     get_token_mock = Mock(return_value="token")
     decode_mock = Mock(return_value=decode_result or {"sub": "user-1"})
 
     monkeypatch.setattr(requires_auth_module, "jwks", jwks_mock)
-    monkeypatch.setattr(
-        requires_auth_module,
-        "openid_configuration",
-        openid_configuration_mock,
-    )
+    monkeypatch.setattr(requires_auth_module, "openid_configuration", openid_configuration_mock)
     monkeypatch.setattr(requires_auth_module, "get_token_auth_header", get_token_mock)
     monkeypatch.setattr(
-        requires_auth_module.jwt,
-        "get_unverified_header",
-        Mock(return_value={"alg": "RS256", "kid": kid}),
+        requires_auth_module.jwt, "get_unverified_header", Mock(return_value={"alg": "RS256", "kid": kid})
     )
     monkeypatch.setattr(requires_auth_module.jwt, "decode", decode_mock)
 
     return jwks_mock, openid_configuration_mock, get_token_mock, decode_mock
 
 
-def test__retries_once_on_kid_miss_and_succeeds(
-    app: Flask,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test__retries_once_on_kid_miss_and_succeeds(app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
     old_key = object()
     new_key = object()
     payload = {"sub": "rotated-user"}
@@ -67,10 +57,7 @@ def test__retries_once_on_kid_miss_and_succeeds(
     jwks_mock, openid_configuration_mock, _, decode_mock = _configure_auth_mocks(
         monkeypatch,
         kid="new-kid",
-        jwks_side_effect=[
-            {"old-kid": old_key},
-            {"new-kid": new_key},
-        ],
+        jwks_side_effect=[{"old-kid": old_key}, {"new-kid": new_key}],
         decode_result=payload,
     )
 
@@ -80,7 +67,7 @@ def test__retries_once_on_kid_miss_and_succeeds(
         result = protected()
 
         assert result == "token"
-        assert requires_auth_module._request_ctx_stack.top.current_user == payload
+        assert flask.g.current_user == payload
 
     jwks_mock.cache_clear.assert_called_once_with()
     openid_configuration_mock.cache_clear.assert_called_once_with()
@@ -89,16 +76,10 @@ def test__retries_once_on_kid_miss_and_succeeds(
 
 
 def test__raises_auth_error_when_kid_still_missing_after_retry(
-    app: Flask,
-    monkeypatch: pytest.MonkeyPatch,
+    app: Flask, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     jwks_mock, openid_configuration_mock, _, decode_mock = _configure_auth_mocks(
-        monkeypatch,
-        kid="missing-kid",
-        jwks_side_effect=[
-            {"old-kid": object()},
-            {"other-kid": object()},
-        ],
+        monkeypatch, kid="missing-kid", jwks_side_effect=[{"old-kid": object()}, {"other-kid": object()}]
     )
 
     protected = requires_auth()(_protected_endpoint())
@@ -112,21 +93,14 @@ def test__raises_auth_error_when_kid_still_missing_after_retry(
     decode_mock.assert_not_called()
 
 
-def test__maps_jwks_fetch_exception_to_500_auth_error(
-    app: Flask,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test__maps_jwks_fetch_exception_to_500_auth_error(app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
     jwks_mock = Mock(side_effect=requests.RequestException("jwks down"))
     jwks_mock.cache_clear = Mock()
 
     monkeypatch.setattr(requires_auth_module, "jwks", jwks_mock)
+    monkeypatch.setattr(requires_auth_module, "get_token_auth_header", Mock(return_value="token"))
     monkeypatch.setattr(
-        requires_auth_module, "get_token_auth_header", Mock(return_value="token")
-    )
-    monkeypatch.setattr(
-        requires_auth_module.jwt,
-        "get_unverified_header",
-        Mock(return_value={"alg": "RS256", "kid": "kid-1"}),
+        requires_auth_module.jwt, "get_unverified_header", Mock(return_value={"alg": "RS256", "kid": "kid-1"})
     )
 
     decode_mock = Mock()

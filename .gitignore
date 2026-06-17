@@ -231,3 +231,7 @@ licenses.json
 vulnerabilities.json
 *sbom.json
 .trivy-cache/
+*.sarif
+
+# SonarQube
+.scannerwork

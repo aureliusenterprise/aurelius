@@ -2,34 +2,40 @@ from dataclasses import dataclass
 from typing import Iterable
 
 from dataclasses_json import LetterCase, dataclass_json
-from ..core import (AttributeDef, Attributes, Entity, EntityBase,
-                    EntityDef, EntityDefaultsBase, ObjectId,
-                    TypeCategory, RelationshipDef, RelationshipEndDef, Cardinality)
+from ..core import (
+    AttributeDef,
+    Attributes,
+    Entity,
+    EntityBase,
+    EntityDef,
+    EntityDefaultsBase,
+    ObjectId,
+    TypeCategory,
+    RelationshipDef,
+    RelationshipEndDef,
+    Cardinality,
+)
 
 from .M4IAttributes import M4IAttributesBase
 
 # TypeDef for Entity & Relationships
 archimate_project_attributes_def = [
-
     AttributeDef(
-        name="name",
-        type_name="string",
-        description="The name of the archimate project",
-        display_name="Name"
+        name="name", type_name="string", description="The name of the archimate project", display_name="Name"
     ),
     AttributeDef(
         name="branch",
         type_name="string",
         description="The branch in the archimate project",
-        display_name="Branch"
+        display_name="Branch",
     ),
     AttributeDef(
         name="ArchiMateReference",
         type_name="array<m4i_referenceable>",
         cardinality=Cardinality.SET,
         description="A list of references to the archimate project",
-        display_name="Archimate References"
-    )
+        display_name="Archimate References",
+    ),
 ]
 
 archimate_project_super_type = ["Referenceable"]
@@ -44,14 +50,10 @@ archimate_project_def = EntityDef(
 )
 
 end_1_referenceable_projects = RelationshipEndDef(
-    type="m4i_referenceable",
-    name="ArchiMateReference",
-    cardinality=Cardinality.SET
+    type="m4i_referenceable", name="ArchiMateReference", cardinality=Cardinality.SET
 )
 end_2_archimate_projects = RelationshipEndDef(
-    type="m4i_archimate_project",
-    name="ArchiMateReference",
-    cardinality=Cardinality.SET
+    type="m4i_archimate_project", name="ArchiMateReference", cardinality=Cardinality.SET
 )
 
 m4i_archimate_project_rel_def = RelationshipDef(
@@ -60,13 +62,17 @@ m4i_archimate_project_rel_def = RelationshipDef(
     name="m4i_referenceable_archimate_reference_assignment",
     category=TypeCategory.RELATIONSHIP,
     type_version="1.0",
-    description="This relationship demonstrates the connection between the referenced objects on Atlas to those in Archimate"
+    description=(
+        "This relationship demonstrates the connection between "
+        "the referenced objects on Atlas to those in Archimate"
+    ),
 )
 
 
 # END TypeDef for Entity & Relationships
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessArchimateAttributesBase(M4IAttributesBase):
     name: str
@@ -77,7 +83,7 @@ class BusinessArchimateAttributesBase(M4IAttributesBase):
 # END BusinessArchimateAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessArchimateAttributesDefaultsBase(Attributes):
     pass
@@ -86,7 +92,7 @@ class BusinessArchimateAttributesDefaultsBase(Attributes):
 # END BusinessArchimateAttributesDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessArchimateAttributes(BusinessArchimateAttributesDefaultsBase, BusinessArchimateAttributesBase):
     pass
@@ -95,7 +101,7 @@ class BusinessArchimateAttributes(BusinessArchimateAttributesDefaultsBase, Busin
 # END BusinessArchimateAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessArchimateBase(EntityBase):
     attributes: BusinessArchimateAttributes
@@ -104,7 +110,7 @@ class BusinessArchimateBase(EntityBase):
 # END BusinessArchimateBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessArchimateDefaultsBase(EntityDefaultsBase):
     pass
@@ -113,15 +119,13 @@ class BusinessArchimateDefaultsBase(EntityDefaultsBase):
 # END BusinessArchimateDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessArchimate(Entity,
-                        BusinessArchimateDefaultsBase,
-                        BusinessArchimateBase):
+class BusinessArchimate(Entity, BusinessArchimateDefaultsBase, BusinessArchimateBase):  # type: ignore[reportGeneralTypeIssues]
     type_name: str = "m4i_archimate_project"
 
     @classmethod
-    def get_type_def(cls):
+    def get_type_def(cls):  # type: ignore[reportIncompatibleMethodOverride]
         return archimate_project_def
 
     def get_referred_entities(self) -> Iterable[ObjectId]:
@@ -129,11 +133,11 @@ class BusinessArchimate(Entity,
         Returns the following references for this archimate reference:
         * archimate_reference
         """
-        references = [
-            self.attributes.archimate_reference
-        ]
+        references = [self.attributes.archimate_reference]  # type: ignore[reportGeneralTypeIssues]
 
         return references
+
     # END get_referred_entities
+
 
 # END BusinessArchimate

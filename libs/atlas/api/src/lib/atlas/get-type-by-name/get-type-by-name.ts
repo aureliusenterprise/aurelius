@@ -9,15 +9,15 @@ const BASE_PATH = 'atlas/v2/types/entitydef/name';
  * Retrieves the entity type definition with the given `name` from the Atlas API
  */
 export function getTypeByName(
-  /** The name of the type */
-  name: string,
-  { forceUpdate = false }: GetOptions = {}
+    /** The name of the type */
+    name: string,
+    { forceUpdate = false }: GetOptions = {},
 ): Observable<AtlasEntityDef> {
-  const http = getHttpClient();
+    const http = getHttpClient();
 
-  validateRequiredArguments(arguments, 'getTypeByName');
+    validateRequiredArguments(arguments, 'getTypeByName');
 
-  const path = `${BASE_PATH}/${name}`;
+    const path = `${BASE_PATH}/${name}`;
 
-  return http.cache(forceUpdate).get<AtlasEntityDef>(path);
+    return http.cache(forceUpdate).get<AtlasEntityDef>(path);
 }

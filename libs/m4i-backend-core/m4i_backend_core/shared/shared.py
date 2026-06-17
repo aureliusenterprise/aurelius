@@ -14,14 +14,18 @@ def register(app: Flask):
     # Register the authentication module with the given app
     register_auth(app)
 
-    @app.route('/heartbeat', methods=['GET'])
+    @app.route("/heartbeat", methods=["GET"])
     def heartbeat():
         """
-        This route can be called to check whether the application is still alive. It returns a simple json response.
+        This route can be called to check whether the application is still alive.
+        It returns a simple json response.
 
         :return: A simple json response
         :rtype: str
         """
         return jsonify(success=True)
+
     # END heartbeat
+
+
 # END register

@@ -6,13 +6,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { SortableTableShellComponent } from './sortable-table-shell.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    IntersectionObserverModule,
-    MatSortModule,
-    NgxPaginationModule,
-  ],
-  declarations: [SortableTableShellComponent],
-  exports: [SortableTableShellComponent],
+    imports: [CommonModule, IntersectionObserverModule, MatSortModule, NgxPaginationModule],
+    declarations: [SortableTableShellComponent],
+    exports: [SortableTableShellComponent],
 })
 export class SortableTableShellModule {}

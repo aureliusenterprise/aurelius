@@ -10,15 +10,15 @@ const BASE_PATH = 'atlas/v2/entity/guid';
  * @param classificationName the type name of the classification
  */
 export function getClassificationForEntity(
-  entityGuid: string,
-  classificationName: string,
-  { forceUpdate = false }: GetOptions = {}
+    entityGuid: string,
+    classificationName: string,
+    { forceUpdate = false }: GetOptions = {},
 ) {
-  const http = getHttpClient();
+    const http = getHttpClient();
 
-  validateRequiredArguments(arguments, 'getClassificationForEntity');
+    validateRequiredArguments(arguments, 'getClassificationForEntity');
 
-  const path = `${BASE_PATH}/${entityGuid}/classification/${classificationName}`;
+    const path = `${BASE_PATH}/${entityGuid}/classification/${classificationName}`;
 
-  return http.cache(forceUpdate).get<Classification>(path);
+    return http.cache(forceUpdate).get<Classification>(path);
 }

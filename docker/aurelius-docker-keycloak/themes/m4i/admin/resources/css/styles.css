@@ -1,4 +1,5 @@
-html,body {
+html,
+body {
     height: 100%;
 }
 
@@ -49,7 +50,6 @@ th.w-20 {
     width: 20%;
 }
 
-
 th.w-25 {
     width: 25%;
 }
@@ -57,7 +57,6 @@ th.w-25 {
 th.w-30 {
     width: 30%;
 }
-
 
 th.w-35 {
     width: 35%;
@@ -125,7 +124,7 @@ th.w-40 {
     color: white;
     float: left;
     font-size: 11px;
-    font-family: "Open Sans", sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-weight: bold;
     height: 24px;
     line-height: 24px;
@@ -138,7 +137,13 @@ th.w-40 {
     background-image: -moz-linear-gradient(top, #fafafa 0%, #ededed 100%);
     background-image: -webkit-linear-gradient(top, #fafafa 0%, #ededed 100%);
     background-image: -ms-linear-gradient(top, #fafafa 0%, #ededed 100%);
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fafafa), color-stop(1, 0, #ededed));
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #fafafa),
+        color-stop(1, 0, #ededed)
+    );
     border: 1px solid #aaa;
     border-radius: 2px;
     bottom: 0;
@@ -156,8 +161,14 @@ th.w-40 {
     background-image: -moz-linear-gradient(top, #00a9ec 0%, #009bd3 100%);
     background-image: -webkit-linear-gradient(top, #00a9ec 0%, #009bd3 100%);
     background-image: -ms-linear-gradient(top, #00a9ec 0%, #009bd3 100%);
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #00a9ec), color-stop(1, 0, #009bd3));
-    color: #FFFFFF;
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #00a9ec),
+        color-stop(1, 0, #009bd3)
+    );
+    color: #ffffff;
     padding-left: 10px;
 }
 .onoffswitch-checkbox:disabled + .onoffswitch-label .onoffswitch-inner .onoffswitch-active,
@@ -179,7 +190,6 @@ th.w-40 {
     right: 0;
 }
 
-
 /*********** Select 2 ***********/
 
 .select2-container {
@@ -190,138 +200,134 @@ th.w-40 {
     height: 26px;
 }
 
-
 /*********** New Menu ***********/
 
-
-.sidebar-pf-left{
-  background: #292e34;
+.sidebar-pf-left {
+    background: #292e34;
 }
 
-.sidebar-pf .nav-pills > li a i, .sidebar-pf .nav-pills > li a span{
-  color:  #72767b;
-  display: inline-block;
-  margin-right: 10px;
+.sidebar-pf .nav-pills > li a i,
+.sidebar-pf .nav-pills > li a span {
+    color: #72767b;
+    display: inline-block;
+    margin-right: 10px;
 }
-.sidebar-pf .nav-pills > li > a{
-  color: #dbdada;
-  padding: 0px 20px 0 30px!important;
-  line-height: 30px;
-  border-left-width: 12px;
-  border-left-style:  solid;
-  border-left-color: #292e34;
-  margin-left: -6px;
-}
-
-.sidebar-pf .nav-pills > li > a:hover{
-  background: #393f44;
-  border-color:#292e34; 
-  border-left-color: #393f44;
-  color: #fff;
+.sidebar-pf .nav-pills > li > a {
+    color: #dbdada;
+    padding: 0px 20px 0 30px !important;
+    line-height: 30px;
+    border-left-width: 12px;
+    border-left-style: solid;
+    border-left-color: #292e34;
+    margin-left: -6px;
 }
 
-.sidebar-pf .nav-pills > li > a:after{
-  display: none!important;
+.sidebar-pf .nav-pills > li > a:hover {
+    background: #393f44;
+    border-color: #292e34;
+    border-left-color: #393f44;
+    color: #fff;
 }
 
+.sidebar-pf .nav-pills > li > a:after {
+    display: none !important;
+}
 
 .sidebar-pf .nav-pills > li.active > a {
-  color: #fff;
-  background: #393f44!important;
-  border-bottom: 1px solid #000!important;
-  border-top: 1px solid #000!important;
-  border-left-color: #39a5dc!important;
+    color: #fff;
+    background: #393f44 !important;
+    border-bottom: 1px solid #000 !important;
+    border-top: 1px solid #000 !important;
+    border-left-color: #39a5dc !important;
 }
 
-.sidebar-pf .nav-pills > li.active a i, .sidebar-pf .nav-pills > li.active a span{
-  color: #39a5dc;
+.sidebar-pf .nav-pills > li.active a i,
+.sidebar-pf .nav-pills > li.active a span {
+    color: #39a5dc;
 }
 
 /*********** Realm selector ***********/
 
-.realm-selector{
-  color: #fff;
-  margin: 0 -20px;
-  position: relative;
+.realm-selector {
+    color: #fff;
+    margin: 0 -20px;
+    position: relative;
 }
 
-.realm-dropmenu{
-  display: none;
-  cursor: pointer;
-  position: absolute;
-  top: 60px;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  background: #fff;
+.realm-dropmenu {
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: #fff;
 }
 
-.realm-selector:hover .realm-dropmenu{
-  display: block;
+.realm-selector:hover .realm-dropmenu {
+    display: block;
 }
 
-.realm-add{
-  padding: 10px;
+.realm-add {
+    padding: 10px;
 }
 
-.realm-selector h2{
-  font-size: 16px;
-  line-height: 60px;
-  padding: 0 20px;
-  margin: 0;
-  border-bottom: 1px solid #d5d5d6;
+.realm-selector h2 {
+    font-size: 16px;
+    line-height: 60px;
+    padding: 0 20px;
+    margin: 0;
+    border-bottom: 1px solid #d5d5d6;
 }
 
-.realm-selector h2 i{
-  display: inline-block;
-  float: right;
-  line-height: 60px;
+.realm-selector h2 i {
+    display: inline-block;
+    float: right;
+    line-height: 60px;
 }
 
-
-.realm-selector ul{
-  padding-left: 0;
-  margin: 0;
-  list-style: none;
-  max-height: 200px;
-  overflow-y:auto;
+.realm-selector ul {
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
-
-.realm-selector ul li a{
-  line-height: 60px;
-  padding: 0 20px;
-  border-bottom: 1px solid #d5d5d6;
-  line-height: 39px;
-  display: block;
-  font-size: 14px;
+.realm-selector ul li a {
+    line-height: 60px;
+    padding: 0 20px;
+    border-bottom: 1px solid #d5d5d6;
+    line-height: 39px;
+    display: block;
+    font-size: 14px;
 }
-
 
 /*********** Overwrites header defaults ***********/
 
-.navbar-pf{
-  border-top: none!important;
+.navbar-pf {
+    border-top: none !important;
 }
 
 .navbar-pf .navbar-brand {
-  padding: 0;
-  height: 56px;
-  line-height: 56px;
-  background-position: center center;
-  background-image: url('../img/keyclok-logo.png');
-  background-size: 148px 30px;
-  background-repeat: no-repeat;
-  width: 148px;
+    padding: 0;
+    height: 56px;
+    line-height: 56px;
+    background-position: center center;
+    background-image: url('../img/keyclok-logo.png');
+    background-size: 148px 30px;
+    background-repeat: no-repeat;
+    width: 148px;
 }
 
-.navbar-pf .navbar-utility > li > a{
-  padding: 22px 30px 23px 40px!important;
+.navbar-pf .navbar-utility > li > a {
+    padding: 22px 30px 23px 40px !important;
 }
 /* @media (min-width: 768px) */
 .navbar-pf .navbar-utility li.dropdown > .dropdown-toggle .pficon-user {
-  top: 22px;
-  left:20px;
+    top: 22px;
+    left: 20px;
 }
 
 .clickable {
@@ -347,7 +353,7 @@ h1 i {
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .kc-action-cell:hover {
@@ -358,7 +364,6 @@ h1 i {
 .kc-sorter span {
     margin-left: 10px;
 }
-
 
 /* Time selector */
 
@@ -397,13 +402,13 @@ table.kc-authz-table-expanded {
 }
 
 .no-gutter > [class*='col-'] {
-    padding-right:0!important;
-    padding-left:0!important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
 }
 
 .password-conceal {
-  font-family: 'text-security-disc';
-  font-size: 14px;
+    font-family: 'text-security-disc';
+    font-size: 14px;
 }
 
 /* Deactivation styles for user-group membership tree models */

@@ -14,19 +14,19 @@ import { ModelCompareResolver } from './model-compare.resolver';
 import { ModelCompareService } from './model-compare.service';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    TranslateModule,
-    ModelCompareRoutingModule,
-    FormsModule,
-    Modelview2Module,
-    ProjectPermissionModule,
-    BranchPermissionModule,
-    RepositoryModule,
-    SelectModule
-  ],
-  declarations: [ModelCompareComponent],
-  providers: [ModelCompareGuard, ModelCompareResolver, ModelCompareService]
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        TranslateModule,
+        ModelCompareRoutingModule,
+        FormsModule,
+        Modelview2Module,
+        ProjectPermissionModule,
+        BranchPermissionModule,
+        RepositoryModule,
+        SelectModule,
+    ],
+    declarations: [ModelCompareComponent],
+    providers: [ModelCompareGuard, ModelCompareResolver, ModelCompareService],
 })
 export class ModelCompareModule {}

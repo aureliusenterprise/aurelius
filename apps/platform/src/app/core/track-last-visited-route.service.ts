@@ -8,10 +8,9 @@ import { filter } from 'rxjs/operators';
 const routesBlacklist = ['/home', '/about'];
 
 function routeNotBlacklisted(event: Event) {
-  return (
-    event instanceof NavigationEnd &&
-    !routesBlacklist.some((s: string) => event.urlAfterRedirects.startsWith(s))
-  );
+    return (
+        event instanceof NavigationEnd && !routesBlacklist.some((s: string) => event.urlAfterRedirects.startsWith(s))
+    );
 }
 
 /**
@@ -20,21 +19,19 @@ function routeNotBlacklisted(event: Event) {
 // TODO: Add Angular decorator.
 @Injectable()
 export class TrackLastVisitedRouteService implements OnDestroy {
-  constructor(
-    private readonly lastVisitedRouteService: LastVisitedRouteService,
-    private readonly router: Router
-  ) {}
+    constructor(
+        private readonly lastVisitedRouteService: LastVisitedRouteService,
+        private readonly router: Router,
+    ) {}
 
-  ngOnDestroy() {}
+    ngOnDestroy() {}
 
-  init() {
-    // Whenever a navigation event fires, update the last visited url if necessary.
-    this.router.events
-      .pipe(filter(routeNotBlacklisted), untilDestroyed(this))
-      .subscribe((event: NavigationEnd) =>
-        this.lastVisitedRouteService.updateLastVisitedRoute(
-          event.urlAfterRedirects
-        )
-      );
-  }
+    init() {
+        // Whenever a navigation event fires, update the last visited url if necessary.
+        this.router.events
+            .pipe(filter(routeNotBlacklisted), untilDestroyed(this))
+            .subscribe((event: NavigationEnd) =>
+                this.lastVisitedRouteService.updateLastVisitedRoute(event.urlAfterRedirects),
+            );
+    }
 }

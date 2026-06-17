@@ -7,24 +7,16 @@ from m4i_update_gov_data_quality import UpdateGovDataQualityConfig, main
 
 config: UpdateGovDataQualityConfig = {
     "atlas_server_url": os.environ["ATLAS_SERVER_URL"],
-    "elasticsearch_app_search_index_name": os.environ[
-        "ELASTICSEARCH_APP_SEARCH_INDEX_NAME"
-    ],
-    "elasticsearch_publish_state_index_name": os.environ[
-        "ELASTICSEARCH_STATE_INDEX_NAME"
-    ],
+    "elasticsearch_app_search_index_name": os.environ["ELASTICSEARCH_APP_SEARCH_INDEX_NAME"],
+    "elasticsearch_publish_state_index_name": os.environ["ELASTICSEARCH_STATE_INDEX_NAME"],
     "elasticsearch_endpoint": os.environ["ELASTICSEARCH_ENDPOINT"],
     "elasticsearch_username": os.environ["ELASTICSEARCH_USERNAME"],
     "elasticsearch_password": os.environ["ELASTICSEARCH_PASSWORD"],
-    "elasticsearch_certificate_path": os.environ.get(
-        "ELASTICSEARCH_CERTIFICATE_PATH", DefaultType(0)
-    ),
+    "elasticsearch_certificate_path": os.environ.get("ELASTICSEARCH_CERTIFICATE_PATH", DefaultType(0)),
     "kafka_app_search_topic_name": os.environ["KAFKA_APP_SEARCH_TOPIC_NAME"],
     "kafka_publish_state_topic_name": os.environ["KAFKA_PUBLISH_STATE_TOPIC_NAME"],
     "kafka_bootstrap_server_hostname": os.environ["KAFKA_BOOTSTRAP_SERVER_HOSTNAME"],
-    "kafka_gov_data_quality_topic_name": os.environ[
-        "KAFKA_GOV_DATA_QUALITY_TOPIC_NAME"
-    ],
+    "kafka_gov_data_quality_topic_name": os.environ["KAFKA_GOV_DATA_QUALITY_TOPIC_NAME"],
     "kafka_bootstrap_server_port": os.environ["KAFKA_BOOTSTRAP_SERVER_PORT"],
     "kafka_consumer_group_id": os.environ["KAFKA_CONSUMER_GROUP_ID"],
     "kafka_error_topic_name": os.environ["KAFKA_ERROR_TOPIC_NAME"],

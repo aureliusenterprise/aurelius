@@ -1,1 +1,1 @@
-from .conditional_unallowed_text import *
+from .conditional_unallowed_text import conditional_unallowed_text as conditional_unallowed_text

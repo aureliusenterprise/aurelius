@@ -2,65 +2,78 @@ from m4i_analytics.m4i.portal.model.superset.slices.AbstractSlice import Abstrac
 
 
 class BarSlice(AbstractSlice):
-    
-    VIZ_TYPE = 'bar'
-    
-    def _init_params(self
-        , annotation_layers=[]
-        , bar_stacked=False
-        , bottom_margin='auto'
-        , color_pn=None
-        , color_scheme='bnbColors'
-        , contribution=False
-        , datasource=None
-        , datasource_id=None
-        , druid_datasource_id=None
-        , date_filter=None
-        , extra_filters=[]
-        , filters=[]
-        , granularity_sqla=None
-        , groupby=[]
-        , having=''
-        , instant_filtering=False
-        , limit=50
-        , line_interpolation='linear'
-        , metric=None
-        , metrics=[]
-        , num_period_compare=''
-        , order_desc=True
-        , period_ratio_type='growth'
-        , resample_fillmethod=None
-        , resample_how=None
-        , resample_rule=None
-        , rich_tooltip=True
-        , rolling_type='None'
-        , show_bar_value=False
-        , show_brush=False
-        , show_controls=False
-        , show_druid_time_granularity=False
-        , show_druid_time_origin=False
-        , show_legend=True
-        , show_sqla_time_column=False
-        , show_sqla_time_granularity=False
-        , since=''
-        , slice_id = None
-        , time_compare=None
-        , time_grain_sqla=None
-        , timeseries_limit_metric=None
-        , until='now'
-        , url_params=None
-        , reduce_x_ticks=False
-        , viz_type=None
-        , where=''
-        , x_axis_format=''
-        , x_axis_label=''
-        , x_axis_showminmax=True
-        , y_axis_bounds=[None, None]
-        , y_axis_format='.3s'
-        , y_axis_label=''
-        , y_log_scale=False
-        , *arg
-        , **kwarg):
+    VIZ_TYPE = "bar"
+
+    def _init_params(
+        self,
+        annotation_layers=None,
+        bar_stacked=False,
+        bottom_margin="auto",
+        color_pn=None,
+        color_scheme="bnbColors",
+        contribution=False,
+        datasource=None,
+        datasource_id=None,
+        druid_datasource_id=None,
+        date_filter=None,
+        extra_filters=None,
+        filters=None,
+        granularity_sqla=None,
+        groupby=None,
+        having="",
+        instant_filtering=False,
+        limit=50,
+        line_interpolation="linear",
+        metric=None,
+        metrics=None,
+        num_period_compare="",
+        order_desc=True,
+        period_ratio_type="growth",
+        resample_fillmethod=None,
+        resample_how=None,
+        resample_rule=None,
+        rich_tooltip=True,
+        rolling_type="None",
+        show_bar_value=False,
+        show_brush=False,
+        show_controls=False,
+        show_druid_time_granularity=False,
+        show_druid_time_origin=False,
+        show_legend=True,
+        show_sqla_time_column=False,
+        show_sqla_time_granularity=False,
+        since="",
+        slice_id=None,
+        time_compare=None,
+        time_grain_sqla=None,
+        timeseries_limit_metric=None,
+        until="now",
+        url_params=None,
+        reduce_x_ticks=False,
+        viz_type=None,
+        where="",
+        x_axis_format="",
+        x_axis_label="",
+        x_axis_showminmax=True,
+        y_axis_bounds=None,
+        y_axis_format=".3s",
+        y_axis_label="",
+        y_log_scale=False,
+        *arg,
+        **kwarg,
+    ):
+        if y_axis_bounds is None:
+            y_axis_bounds = [None, None]
+        if metrics is None:
+            metrics = []
+        if groupby is None:
+            groupby = []
+        if filters is None:
+            filters = []
+        if extra_filters is None:
+            extra_filters = []
+        if annotation_layers is None:
+            annotation_layers = []
         self.annotation_layers = annotation_layers
         self.bar_stacked = bar_stacked
         self.bottom_margin = bottom_margin
@@ -79,7 +92,7 @@ class BarSlice(AbstractSlice):
         self.metrics = [metric]
         self.num_period_compare = num_period_compare
         self.order_desc = order_desc
-        self.period_ratio_type=period_ratio_type
+        self.period_ratio_type = period_ratio_type
         self.resample_fillmethod = resample_fillmethod
         self.resample_how = resample_how
         self.resample_rule = resample_rule
@@ -106,10 +119,13 @@ class BarSlice(AbstractSlice):
         self.y_axis_bounds = y_axis_bounds
         self.y_axis_label = y_axis_label
         self.y_log_scale = y_log_scale
+
     # END _init_params
-    
+
     def columnNames(self):
-        return list(set(super(BarSlice, self).columnNames() + self.groupby))
+        return list(set(super().columnNames() + self.groupby))
+
     # END directColumnDependencies
-    
+
+
 # END BarSlice

@@ -1,1 +1,3 @@
-from .Cardinality import *
+from .Cardinality import Cardinality
+
+__all__ = ["Cardinality"]

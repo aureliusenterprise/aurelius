@@ -1,7 +1,7 @@
 import json
 import logging
 import re
-from typing import Dict, List, Tuple, Callable, Union
+from typing import Dict, List, Tuple, Callable, Union, Optional
 
 from m4i_atlas_core import (
     AtlasPerson,
@@ -52,7 +52,7 @@ class GetRulesFunction(MapFunction):
     error message to a side output. Utilizes a Keycloak instance to manage authentication tokens.
     """
 
-    def map(
+    def map(  # type: ignore[override]
         self, value: str
     ) -> Union[List[Tuple[str, Union[GovDataQualityDocument, None]]], Exception]:
         """
@@ -74,13 +74,15 @@ class GetRulesFunction(MapFunction):
 
         logging.debug("Governance Data Quality rules: %s", value)
 
+        object_type: Optional[str] = None
+
         try:
             # Convert the JSON string into a Python dictionary.
             json_object = json.loads(value)
             # Get the type name of the object to determine its class.
-            object_type: str = json_object["value"]["typeName"]
+            object_type = json_object["value"]["typeName"]
             # Find the corresponding class from the ATLAS_ENTITY_TYPES dictionary.
-            atlas_type = ATLAS_ENTITY_TYPES[object_type]
+            atlas_type = ATLAS_ENTITY_TYPES[object_type]  # type: ignore[arg-type]
             # Deserialize the JSON data into an object of the determined class.
             entity = atlas_type.from_json(json.dumps(json_object["value"]))
         except ValidationError as e:
@@ -91,13 +93,9 @@ class GetRulesFunction(MapFunction):
 
         logging.info("Successfully deserialized message: %s", entity)
 
-        if entity is None:
-            logging.debug("No entity found in message: %s", entity)
-            return ValueError(f"No entity found in message. Value={value}")
-
         # Retrieve applicable rules for the entity type
         try:
-            rules = get_rules_for_type(object_type)
+            rules = get_rules_for_type(object_type)  # type: ignore[arg-type]
         except Exception:
             return ValueError("Creating rules, skipping type %s.", object_type)
 
@@ -148,6 +146,7 @@ class GetRulesFunction(MapFunction):
 
         return list(updated_rules.items())
 
+
 class GetRules:
     """
     A class to handle the data stream and process it using the GetRulesFunction.
@@ -163,10 +162,7 @@ class GetRules:
         The main data stream after processing with GetRulesFunction.
     """
 
-    def __init__(
-        self,
-        data_stream: DataStream,
-    ) -> None:
+    def __init__(self, data_stream: DataStream) -> None:
         """
         Initialize the GetRules class with a given data stream.
 
@@ -181,16 +177,12 @@ class GetRules:
         """
         self.data_stream = data_stream
 
-        self.rules = self.data_stream.map(
-            GetRulesFunction(),
-        ).name("enriched_rules")
+        self.rules = self.data_stream.map(GetRulesFunction()).name("enriched_rules")
 
         self.filtered_rules = self.rules.filter(
-            lambda messages: isinstance(messages, list)
+            lambda messages: isinstance(messages, list)  # type: ignore[assignment]
         ).name("filtered_rules")
 
         self.main = self.filtered_rules.flat_map(
-            lambda messages: (
-                message for message in messages
-            ),
+            lambda messages: (message for message in messages)  # type: ignore[assignment]
         ).name("flattened_messages")

@@ -9,11 +9,11 @@ const BASE_PATH = 'atlas/v2/entity/guid';
  * @param guid the guid of the entity
  */
 export function deleteEntitySoft(guid: string) {
-  const http = getHttpClient();
+    const http = getHttpClient();
 
-  validateRequiredArguments(arguments, 'deleteEntitySoft');
+    validateRequiredArguments(arguments, 'deleteEntitySoft');
 
-  const path = `${BASE_PATH}/${guid}`;
+    const path = `${BASE_PATH}/${guid}`;
 
-  return http.delete<EntityMutationResponse>(path);
+    return http.delete<EntityMutationResponse>(path);
 }

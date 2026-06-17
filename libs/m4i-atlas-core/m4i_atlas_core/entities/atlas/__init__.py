@@ -1,6 +1,62 @@
-from .core import *
-from .connectors import *
-from .data_dictionary import *
-from .kubernetes import *
-from .m4i import *
-from .processes import *
+from .connectors import connectors_entity_types, connectors_types_def
+from .core import (
+    Cardinality,
+    ClassificationDef,
+    EntitiesWithExtInfo,
+    Entity,
+    EntityAuditEvent,
+    EntityDef,
+    EntityHeader,
+    EntityMutationResponse,
+    FilterCriteria,
+    Glossary,
+    GlossaryCategory,
+    GlossaryTerm,
+    LineageDirection,
+    LineageInfo,
+    Operator,
+    ObjectId,
+    RelationshipDef,
+    RelationshipEndDef,
+    SearchParameters,
+    SearchResult,
+    TypesDef,
+)
+from .data_dictionary import data_dictionary_entity_types, data_dictionary_types_def
+from .kubernetes import kubernetes_entity_types, kubernetes_types_def
+from .m4i import m4i_entity_types, m4i_types_def
+from .processes import process_entity_types, process_types_def
+
+__all__ = [
+    "Cardinality",
+    "ClassificationDef",
+    "EntitiesWithExtInfo",
+    "Entity",
+    "EntityAuditEvent",
+    "EntityDef",
+    "EntityHeader",
+    "EntityMutationResponse",
+    "FilterCriteria",
+    "Glossary",
+    "GlossaryCategory",
+    "GlossaryTerm",
+    "LineageDirection",
+    "LineageInfo",
+    "ObjectId",
+    "Operator",
+    "RelationshipDef",
+    "RelationshipEndDef",
+    "SearchParameters",
+    "SearchResult",
+    "TypesDef",
+    "connectors_entity_types",
+    "connectors_types_def",
+    "data_dictionary_entity_types",
+    "data_dictionary_types_def",
+    "kubernetes_entity_types",
+    "kubernetes_types_def",
+    "m4i_entity_types",
+    "m4i_types_def",
+    "process_entity_types",
+    "process_types_def",
+]

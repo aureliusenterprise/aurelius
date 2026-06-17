@@ -4,4 +4,4 @@ metadata:
   name: cm-reverse-proxy-configs-flink-conf
 data:
   flink.conf: |
-{{ tpl ( .Files.Get "conf.d/flink.yaml" ) . | indent 4}}
+{{ tpl ( .Files.Get "conf.d/flink.yaml.tmpl" ) . | indent 4}}

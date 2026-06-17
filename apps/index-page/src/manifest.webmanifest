@@ -1,16 +1,16 @@
 {
-  "name": "Aurelius Atlas Data Governance Index Page",
-  "short_name": "Aurelius Atlas Index",
-  "theme_color": "#F7F7F7",
-  "background_color": "#F7F7F7",
-  "scope": "/index/",
-  "start_url": "/index/",
-  "display": "standalone",
-  "icons": [
-    {
-      "src": "assets/aurelius-atlas-logo.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+    "background_color": "#F7F7F7",
+    "display": "standalone",
+    "icons": [
+        {
+            "sizes": "512x512",
+            "src": "assets/aurelius-atlas-logo.png",
+            "type": "image/png"
+        }
+    ],
+    "name": "Aurelius Atlas Data Governance Index Page",
+    "scope": "/index/",
+    "short_name": "Aurelius Atlas Index",
+    "start_url": "/index/",
+    "theme_color": "#F7F7F7"
 }

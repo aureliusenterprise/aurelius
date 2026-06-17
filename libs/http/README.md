@@ -17,16 +17,16 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [HttpModule.forRoot({ production: environment.production })],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent],
+    imports: [HttpModule.forRoot({ production: environment.production })],
+    bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
 
 The `HttpModule` is loaded as part of the Models4Insight `core`.
 
-# Nx
+## Nx
 
 This library was generated with [Nx](https://nx.dev).
 

@@ -1,11 +1,11 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "files": [],
-  "include": [],
-  "references": [
-    {
-      "path": "./.storybook/tsconfig.json"
-    }
-  ],
-  "exclude": ["**/*.stories.ts", "**/*.stories.js"]
+    "exclude": ["**/*.stories.ts", "**/*.stories.js"],
+    "extends": "../../tsconfig.base.json",
+    "files": [],
+    "include": [],
+    "references": [
+        {
+            "path": "./.storybook/tsconfig.json"
+        }
+    ]
 }

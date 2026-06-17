@@ -1,6 +1,8 @@
 # backend-consistency-metrics
 
-This application is a backend service that provides an API for calculating various consistency metrics for a given ArchiMate model. It supports the consistency metrics application.
+This application is a backend service that provides an API
+for calculating various consistency metrics for a given ArchiMate model.
+It supports the consistency metrics application.
 
 ## Installation
 
@@ -26,7 +28,8 @@ The application will be available at `http://localhost:7300`.
 
 ## Configuration
 
-The application can be configured using environment variables. The following environment variables are available:
+The application can be configured using environment variables.
+The following environment variables are available:
 
 | Environment Variable | Description                                 | Default Value |
 | -------------------- | ------------------------------------------- | ------------- |

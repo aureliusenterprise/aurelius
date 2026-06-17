@@ -6,39 +6,30 @@ import { ValidationError, ValidationErrorSeverity } from './validation-error';
  * A duplicate id error describes an occurrence where the validator found two extractor rules with the same or equivalent identifiers.
  */
 export class DuplicateRuleIdError implements ValidationError {
-  public readonly severity: ValidationErrorSeverity =
-    ValidationErrorSeverity.WARNING;
+    public readonly severity: ValidationErrorSeverity = ValidationErrorSeverity.WARNING;
 
-  constructor(
-    public readonly rule: string,
-    /** The rule with the duplicate id */
-    public readonly otherRule: string
-  ) {}
+    constructor(
+        public readonly rule: string,
+        /** The rule with the duplicate id */
+        public readonly otherRule: string,
+    ) {}
 
-  get description() {
-    return `The identifier for rule ${
-      this.rule
-    } overlaps with the identifier of rule ${this.otherRule}`;
-  }
+    get description() {
+        return `The identifier for rule ${this.rule} overlaps with the identifier of rule ${this.otherRule}`;
+    }
 }
 
-function extractorRuleIdComparator(
-  rule: ExtractorRule,
-  otherRule: ExtractorRule
-): boolean {
-  switch (rule.id_type) {
-    case 'dynamic':
-      return (
-        otherRule.id_type === 'dynamic' &&
-        rule.id_key === otherRule.id_key &&
-        ((!rule.id_prefix && !otherRule.id_prefix) ||
-          rule.id_prefix === otherRule.id_prefix)
-      );
-    case 'static':
-      return (
-        otherRule.id_type === 'static' && rule.id_value === otherRule.id_value
-      );
-  }
+function extractorRuleIdComparator(rule: ExtractorRule, otherRule: ExtractorRule): boolean {
+    switch (rule.id_type) {
+        case 'dynamic':
+            return (
+                otherRule.id_type === 'dynamic' &&
+                rule.id_key === otherRule.id_key &&
+                ((!rule.id_prefix && !otherRule.id_prefix) || rule.id_prefix === otherRule.id_prefix)
+            );
+        case 'static':
+            return otherRule.id_type === 'static' && rule.id_value === otherRule.id_value;
+    }
 }
 
 /**
@@ -56,16 +47,16 @@ function extractorRuleIdComparator(
  * You can use the returned errors to perform a reverse mapping to compile a matrix of all id collisions.
  */
 export function uniqueRuleId(
-  /** The ruleset that should be validated */
-  rules: ExtractorRule[]
+    /** The ruleset that should be validated */
+    rules: ExtractorRule[],
 ): DuplicateRuleIdError[] {
-  const duplicateIdsByRule = rules
-    .filter(rule => rule.include)
-    .map((rule, index, includedRules) =>
-      includedRules
-        .slice(index + 1)
-        .filter(otherRule => extractorRuleIdComparator(rule, otherRule))
-        .map(otherRule => new DuplicateRuleIdError(rule.id, otherRule.id))
-    );
-  return flatten(duplicateIdsByRule);
+    const duplicateIdsByRule = rules
+        .filter((rule) => rule.include)
+        .map((rule, index, includedRules) =>
+            includedRules
+                .slice(index + 1)
+                .filter((otherRule) => extractorRuleIdComparator(rule, otherRule))
+                .map((otherRule) => new DuplicateRuleIdError(rule.id, otherRule.id)),
+        );
+    return flatten(duplicateIdsByRule);
 }

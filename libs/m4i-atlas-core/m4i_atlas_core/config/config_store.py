@@ -1,15 +1,17 @@
 from logging import warning
 from typing import Any, Dict, Iterator, Optional, TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
-_instance: 'ConfigStore' = None
+_instance: Optional["ConfigStore"] = None
 
 
 class MissingRequiredConfigException(Exception):
     """
     Exception raised when a required configuration setting is missing and no default value has been specified.
     """
+
+
 # END MissingRequiredConfigException
 
 
@@ -21,7 +23,7 @@ class ConfigStore:
     _config: Dict[str, Any] = {}
 
     @classmethod
-    def get_instance(cls) -> 'ConfigStore':
+    def get_instance(cls) -> "ConfigStore":
         """
         Returns the singleton instance of the ConfigStore class.
 
@@ -35,11 +37,15 @@ class ConfigStore:
             _instance = cls()
         # END IF
 
-        return _instance
+        instance = _instance
+        if instance is None:
+            raise RuntimeError("ConfigStore instance was not initialized")
+        return instance
+
     # END get_instance
 
     @classmethod
-    def initialize(cls, config: Dict[str, Any]) -> 'ConfigStore':
+    def initialize(cls, config: Dict[str, Any]) -> "ConfigStore":
         """
         Initializes the singleton instance of the ConfigStore class with the given config dictionary.
 
@@ -55,15 +61,20 @@ class ConfigStore:
             instance.load(config)
         # END IF
 
-        return _instance
+        result = _instance
+        if result is None:
+            raise RuntimeError("ConfigStore instance was not initialized")
+        return result
+
     # END initialize
 
-    def get(self, key: str, default: Optional[T] = None, required: bool = False) -> T:
+    def get(self, key: str, default: Optional[T] = None, required: Optional[bool] = False) -> T:
         """
         Returns the value of the configuration setting with the given key.
 
-        If the key is not found, returns the given default value, if specified. If required is `True` and no default value
-        is specified, raises a MissingRequiredConfigException.
+        If the key is not found, returns the given default value, if specified.
+        If required is `True` and no default value is specified,
+        raises a MissingRequiredConfigException.
 
         Args:
             key: The key of the configuration value to retrieve.
@@ -81,7 +92,9 @@ class ConfigStore:
         if key not in self._config:
             if required and default is None:
                 raise MissingRequiredConfigException(
-                    f"No value has been configured for required key {{{key}}}. Please provide a value for this key in the configuration or specify a default value."
+                    f"No value has been configured for required key "
+                    f"{{{key}}}. Please provide a value for this key "
+                    f"in the configuration or specify a default value."
                 )
             else:
                 warning(
@@ -91,32 +104,45 @@ class ConfigStore:
         # END IF
 
         return self._config.get(key, default)
+
     # END get
 
-    def get_many(self, *keys: str, defaults: Dict[str, T] = None, required: Dict[str, bool] = None,
-                 all_required: bool = False) -> Iterator[T]:
+    def get_many(
+        self,
+        *keys: str,
+        defaults: Optional[Dict[str, T]] = None,
+        required: Optional[Dict[str, bool]] = None,
+        all_required: Optional[bool] = False,
+    ) -> Iterator[T]:
         """
-        Returns an iterator over the values of the configuration settings with the given keys.
+        Returns an iterator over the values of the configuration settings
+        with the given keys.
 
-        If a default value is specified in the defaults dictionary for a key that is not found, that default value is
-        used. If a required value is `True` for a key that is not found and no default value is specified, raises a
-        MissingRequiredConfigException. If all_required is `True`, raises a MissingRequiredConfigException if any of the
-        specified keys are missing.
+        If a default value is specified in the defaults dictionary for a key that
+        is not found, that default value is used. If a required value is `True`
+        for a key that is not found and no default value is specified,
+        raises a MissingRequiredConfigException. If all_required is `True`,
+        raises a MissingRequiredConfigException if any of the specified keys
+        are missing.
 
         Args:
             *keys: The keys of the configuration values to retrieve.
-            defaults: A dictionary of default values to use if a key is not found. Defaults to an empty dictionary.
-            required: A dictionary of flags indicating whether a key is required. If a key is required and no default
-                value is specified, raises a MissingRequiredConfigException. Defaults to an empty dictionary.
-            all_required: Whether all of the specified keys are required. If `True` and any of the specified keys are missing,
-            raises a MissingRequiredConfigException. Defaults to `False`.
+            defaults: A dictionary of default values to use if a key is not found.
+                Defaults to an empty dictionary.
+            required: A dictionary of flags indicating whether a key is required.
+                If a key is required and no default value is specified, raises a
+                MissingRequiredConfigException. Defaults to an empty dictionary.
+            all_required: Whether all of the specified keys are required. If `True`
+                and any of the specified keys are missing,
+                raises a MissingRequiredConfigException. Defaults to `False`.
 
         Returns:
             An iterator over the values of the configuration settings with the given keys.
 
         Raises:
-            MissingRequiredConfigException: If a required key is missing and no default value is specified, or if
-                all_required is `True` and any of the specified keys are missing.
+            MissingRequiredConfigException: If a required key is missing and no default
+                value is specified, or if all_required is `True` and any of the
+                specified keys are missing.
         """
 
         if defaults is None:
@@ -129,9 +155,11 @@ class ConfigStore:
 
         def resolver(key):
             return self.get(key, defaults.get(key), all_required or required.get(key))
+
         # END resolver
 
         return map(resolver, keys)
+
     # END get_many
 
     def load(self, config: Dict[str, Any]) -> None:
@@ -143,6 +171,7 @@ class ConfigStore:
         """
 
         self.set_many(**config)
+
     # END load
 
     def reset(self) -> None:
@@ -150,6 +179,7 @@ class ConfigStore:
         Resets the configuration settings to an empty dictionary.
         """
         self._config = {}
+
     # END reset
 
     def set(self, key: str, value: Any) -> None:
@@ -162,6 +192,7 @@ class ConfigStore:
         """
 
         self._config[key] = value
+
     # END set
 
     def set_many(self, **kwargs) -> None:
@@ -175,5 +206,8 @@ class ConfigStore:
         for key, value in kwargs.items():
             self.set(key, value)
         # END LOOP
+
     # END set_many
+
+
 # END ConfigStore

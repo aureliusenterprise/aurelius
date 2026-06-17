@@ -1,1 +1,1 @@
-from .make_deserializer import *
+from .make_deserializer import make_deserializer as make_deserializer

@@ -11,11 +11,9 @@ async def create_glossary(glossary: Glossary, access_token: Optional[str] = None
     API to create a glossary in Atlas.
     """
 
-    response: str = await atlas_post(
-        path=PATH,
-        body=glossary.to_json(),
-        access_token=access_token
-    )
+    response: str = await atlas_post(path=PATH, body=glossary.to_json(), access_token=access_token)
 
     return Glossary.from_json(response)
+
+
 # END create_glossary

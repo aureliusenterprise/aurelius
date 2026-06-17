@@ -8,23 +8,21 @@ const log = new Logger('ConflictResolutionGuard');
 
 @Injectable()
 export class ConflictResolutionGuard implements CanActivate {
-  constructor(
-    private readonly projectPermissionService: ProjectPermissionService,
-    private readonly router: Router
-  ) {}
+    constructor(
+        private readonly projectPermissionService: ProjectPermissionService,
+        private readonly router: Router,
+    ) {}
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const hasPermission = await this.projectPermissionService.hasPermission(
-      PermissionLevel.CONTRIBUTOR
-    );
+    async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const hasPermission = await this.projectPermissionService.hasPermission(PermissionLevel.CONTRIBUTOR);
 
-    log.debug(`Can access model compare: ${hasPermission}`);
+        log.debug(`Can access model compare: ${hasPermission}`);
 
-    if (!hasPermission) {
-      const [parentRoute] = state.url.split('/conflicts');
-      return this.router.createUrlTree([parentRoute]);
+        if (!hasPermission) {
+            const [parentRoute] = state.url.split('/conflicts');
+            return this.router.createUrlTree([parentRoute]);
+        }
+
+        return hasPermission;
     }
-
-    return hasPermission;
-  }
 }

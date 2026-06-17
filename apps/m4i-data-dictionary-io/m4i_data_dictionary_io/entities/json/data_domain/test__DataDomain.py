@@ -14,7 +14,7 @@ def test__create_data_domain_from_dict():
         "qualifiedName": "data-domain",
         "definition": "definition",
         "domainLead": "domain lead",
-        "source": "source"
+        "source": "source",
     }
 
     instance = DataDomain.from_dict(data_domain)
@@ -24,6 +24,8 @@ def test__create_data_domain_from_dict():
     assert instance.definition == "definition"
     assert instance.domain_lead == "domain lead"
     assert instance.source == "source"
+
+
 # END test__create_data_domain_from_dict
 
 
@@ -32,8 +34,7 @@ def test__create_data_domain_from_json():
     Tests whether or not a `DataDomain` can be created from a json string with its attributes
     """
 
-    data_domain = (
-        """
+    data_domain = """
         {
             "name": "data domain",
             "qualifiedName": "data-domain",
@@ -43,7 +44,6 @@ def test__create_data_domain_from_json():
             "source": "source"
         }
         """
-    )
 
     instance = DataDomain.from_json(data_domain)
 
@@ -52,6 +52,8 @@ def test__create_data_domain_from_json():
     assert instance.definition == "definition"
     assert instance.domain_lead == "domain lead"
     assert instance.source == "source"
+
+
 # END test__create_data_domain_from_json
 
 
@@ -60,14 +62,13 @@ def test__data_domain_calculates_correct_qualified_name():
     Tests whether or not the generated qualified name matches the expected format
     """
 
-    data_domain = {
-        "name": "data domain",
-        "qualifiedName": "data-domain"
-    }
+    data_domain = {"name": "data domain", "qualifiedName": "data-domain"}
 
     instance = DataDomain.from_dict(data_domain)
 
     assert instance._qualified_name() == "data-domain"
+
+
 # END test__data_domain_calculates_correct_qualified_name
 
 
@@ -76,14 +77,13 @@ def test__create_data_attribute_with_wrong_qualified_name():
     Tests whether or not an exception is raised when the qualified name is not valid
     """
 
-    data_domain = {
-        "name": "data domain",
-        "qualifiedName": "test"
-    }
+    data_domain = {"name": "data domain", "qualifiedName": "test"}
 
     with pytest.raises(QualifiedNameNotValidException):
         DataDomain.from_dict(data_domain)
     # END WITH
+
+
 # END test__create_data_domain_with_wrong_qualified_name
 
 
@@ -92,11 +92,7 @@ def test__data_domain_convert_to_atlas_entity():
     Tests whether or not all required fields are correctly converted to the atlas format.
     """
 
-    data_domain = {
-        "name": "data domain",
-        "qualifiedName": "data-domain",
-        "definition": "definition"
-    }
+    data_domain = {"name": "data domain", "qualifiedName": "data-domain", "definition": "definition"}
 
     instance = DataDomain.from_dict(data_domain)
 
@@ -107,6 +103,8 @@ def test__data_domain_convert_to_atlas_entity():
     assert atlas_attributes.name == instance.name
     assert atlas_attributes.definition == instance.definition
     assert atlas_attributes.qualified_name == instance.qualified_name
+
+
 # END test__data_domain_convert_to_atlas_entity
 
 
@@ -119,7 +117,7 @@ def test__data_domain_convert_to_atlas_entity_with_domain_lead():
         "name": "data domain",
         "qualifiedName": "data-domain",
         "domainLead": "domain lead",
-        "source": "source-name"
+        "source": "source-name",
     }
 
     instance = DataDomain.from_dict(data_domain)
@@ -131,13 +129,13 @@ def test__data_domain_convert_to_atlas_entity_with_domain_lead():
 
     assert atlas_domain_lead is not None
     assert atlas_domain_lead.type_name == "m4i_person"
-    assert getattr(atlas_domain_lead.unique_attributes,
-                   "qualified_name") == instance.domain_lead
+    assert getattr(atlas_domain_lead.unique_attributes, "qualified_name") == instance.domain_lead
 
     atlas_domain_source = atlas_attributes.source[0]
 
     assert atlas_domain_source is not None
     assert atlas_domain_source.type_name == "m4i_source"
-    assert getattr(atlas_domain_source.unique_attributes,
-                   "qualified_name") == instance.source
+    assert getattr(atlas_domain_source.unique_attributes, "qualified_name") == instance.source
+
+
 # END test__data_domain_convert_to_atlas_entity_with_domain_lead

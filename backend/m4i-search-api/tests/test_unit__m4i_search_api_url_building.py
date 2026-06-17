@@ -12,10 +12,7 @@ def test__build_target_url_with_path(settings: Settings) -> None:
 
 def test__build_target_url_with_trailing_slash_in_base(settings: Settings) -> None:
     """Trailing slash in base URL is handled correctly."""
-    settings_with_slash = Mock(
-        spec=Settings,
-        base_url="http://app-search.test/",
-    )
+    settings_with_slash = Mock(spec=Settings, base_url="http://app-search.test/")
     url = build_target_url(settings_with_slash, "api/as/v1/search")
     assert url == "http://app-search.test/api/as/v1/search"
 

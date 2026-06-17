@@ -5,19 +5,16 @@ import { EntityDetailsService } from '../services/entity-details/entity-details.
 
 @Injectable()
 export class EditEntityResolver implements Resolve<string> {
-  constructor(
-    private readonly entityDetailsService: EntityDetailsService,
+    constructor(private readonly entityDetailsService: EntityDetailsService) {}
 
-  ) {}
+    resolve(route: ActivatedRouteSnapshot) {
+        const entityId = route.paramMap.get('id');
 
-  resolve(route: ActivatedRouteSnapshot) {
-    const entityId = route.paramMap.get('id');
+        // Ensures that the latest version of the entity will be shown on the page
+        clearEntityByIdCache(entityId);
 
-    // Ensures that the latest version of the entity will be shown on the page
-    clearEntityByIdCache(entityId);
+        this.entityDetailsService.entityId = entityId;
 
-    this.entityDetailsService.entityId = entityId;
-
-    return entityId;
-  }
+        return entityId;
+    }
 }

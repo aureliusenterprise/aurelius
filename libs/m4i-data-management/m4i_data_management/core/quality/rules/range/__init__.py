@@ -1,1 +1,1 @@
-from .range import *
+from .range import range as range

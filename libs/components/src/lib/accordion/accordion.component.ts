@@ -8,7 +8,7 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
     selector: 'models4insight-accordion',
     templateUrl: 'accordion.component.html',
     styleUrls: ['accordion.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccordionComponent {
     /**

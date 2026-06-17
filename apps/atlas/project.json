@@ -150,7 +150,7 @@
         "test": {
             "executor": "@nx/jest:jest",
             "options": {
-                "jestConfig": "apps/atlas/jest.config.js",
+                "jestConfig": "apps/atlas/jest.config.ts",
                 "passWithNoTests": true,
                 "setupFile": "apps/atlas/src/test-setup.ts",
                 "tsConfig": "apps/atlas/tsconfig.spec.json"

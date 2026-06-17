@@ -30,7 +30,7 @@ repos:
                 - prettier-plugin-toml@2.0.6
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.12.3
+      rev: v0.15.17
       hooks:
           - id: ruff
             name: Check for Python linting errors
@@ -38,7 +38,7 @@ repos:
           - id: ruff-format
 
     - repo: https://github.com/RobertCraigie/pyright-python
-      rev: v1.1.403
+      rev: v1.1.410
       hooks:
           - id: pyright
             name: Check for Python type errors

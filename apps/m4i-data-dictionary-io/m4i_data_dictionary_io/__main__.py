@@ -26,10 +26,8 @@ from m4i_data_dictionary_io.sources.kafka.create_from_kafka import create_from_k
 
 config = {
     "atlas.server.url": os.getenv("ATLAS_SERVER_URL"),
-    "enable.kafka.consumer": os.getenv("ENABLE_KAFKA_CONSUMER", "false").lower()
-    == "true",
-    "enable.schema.registry": os.getenv("ENABLE_SCHEMA_REGISTRY", "false").lower()
-    == "true",
+    "enable.kafka.consumer": os.getenv("ENABLE_KAFKA_CONSUMER", "false").lower() == "true",
+    "enable.schema.registry": os.getenv("ENABLE_SCHEMA_REGISTRY", "false").lower() == "true",
     "keycloak.client.id": os.environ.get("KEYCLOAK_CLIENT_ID", "m4i_atlas"),
     "keycloak.credentials.username": os.environ.get("KEYCLOAK_USERNAME"),
     "keycloak.credentials.password": os.environ.get("KEYCLOAK_ATLAS_ADMIN_PASSWORD"),
@@ -41,9 +39,7 @@ config = {
     "source": os.getenv("SOURCE", "excel"),
     "bootstrap_servers": os.getenv("BOOTSTRAP_SERVERS"),
     "schema_registry_url": os.getenv("SCHEMA_REGISTRY_URL"),
-    "consumer_group_id_prefix": os.getenv(
-        "CONSUMER_GROUP_ID_PREFIX", "check-format-group"
-    ),
+    "consumer_group_id_prefix": os.getenv("CONSUMER_GROUP_ID_PREFIX", "check-format-group"),
     "system_name": os.getenv("SYSTEM_NAME", "Kafka Broker"),
 }
 
@@ -73,11 +69,7 @@ read_mode = store.get("source", default="excel")
 if read_mode == "excel":
     asyncio.run(create_from_excel(*excel_parser_configs, access_token=access_token))
 elif read_mode == "kafka":
-    admin_client = AdminClient(
-        {
-            "bootstrap.servers": store.get("bootstrap_servers"),
-        }
-    )
+    admin_client = AdminClient({"bootstrap.servers": store.get("bootstrap_servers")})
 
     consumer = (
         Consumer(
@@ -92,11 +84,7 @@ elif read_mode == "kafka":
     )
 
     schema_registry_client = (
-        SchemaRegistryClient(
-            {
-                "url": schema_registry_url,
-            }
-        )
+        SchemaRegistryClient({"url": schema_registry_url})
         if store.get("enable.schema.registry", False)
         and (schema_registry_url := store.get("schema_registry_url"))
         else None

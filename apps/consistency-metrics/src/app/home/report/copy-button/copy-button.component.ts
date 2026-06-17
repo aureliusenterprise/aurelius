@@ -8,33 +8,33 @@ import { switchMapTo, tap } from 'rxjs/operators';
 const CHECK_DURATION = 1500; //ms
 
 @Component({
-  selector: 'models4insight-copy-button',
-  templateUrl: 'copy-button.component.html',
-  styleUrls: ['copy-button.component.scss']
+    selector: 'models4insight-copy-button',
+    templateUrl: 'copy-button.component.html',
+    styleUrls: ['copy-button.component.scss'],
 })
 export class CopyButtonComponent implements OnInit, OnDestroy {
-  readonly faCheck = faCheck;
-  readonly faCopy = faCopy;
+    readonly faCheck = faCheck;
+    readonly faCopy = faCopy;
 
-  private readonly toggleCheck$: Subject<void> = new Subject<void>();
+    private readonly toggleCheck$: Subject<void> = new Subject<void>();
 
-  showCheck = false;
-  @Input() value = '';
+    showCheck = false;
+    @Input() value = '';
 
-  ngOnInit() {
-    this.toggleCheck$
-      .pipe(
-        tap(() => (this.showCheck = true)),
-        switchMapTo(timer(CHECK_DURATION)),
-        tap(() => (this.showCheck = false)),
-        untilDestroyed(this)
-      )
-      .subscribe();
-  }
+    ngOnInit() {
+        this.toggleCheck$
+            .pipe(
+                tap(() => (this.showCheck = true)),
+                switchMapTo(timer(CHECK_DURATION)),
+                tap(() => (this.showCheck = false)),
+                untilDestroyed(this),
+            )
+            .subscribe();
+    }
 
-  ngOnDestroy() {}
+    ngOnDestroy() {}
 
-  toggleCheck() {
-    this.toggleCheck$.next();
-  }
+    toggleCheck() {
+        this.toggleCheck$.next();
+    }
 }

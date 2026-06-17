@@ -15,6 +15,7 @@ from pyflink.datastream.connectors.kafka import (
 )
 import logging
 
+
 class UpdateGovDataQualityConfig(TypedDict):
     """
     Configuration required to execute the PublishState job.
@@ -72,20 +73,17 @@ class UpdateGovDataQualityConfig(TypedDict):
     keycloak_username: str
     keycloak_password: str
 
+
 def log_and_transform(document):
     try:
         logging.info("Processing document: %s", document)
-        transformed_document = json.dumps(
-            {
-                "id": document.guid,
-                "value": json.loads(document.to_json()),
-            }
-        )
+        transformed_document = json.dumps({"id": document.guid, "value": json.loads(document.to_json())})
         logging.info("Successfully transformed document: %s", transformed_document)
         return transformed_document
     except Exception as e:
         logging.info("Error processing document with id: %s, error: %s", document.doc_id, str(e))
         raise
+
 
 def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
     """Sink an example message into a Kafka topic."""
@@ -99,11 +97,13 @@ def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
     env.set_parallelism(1)
     env.add_jars(*jars_path)
 
-    kafka_bootstrap_server = f"{config['kafka_bootstrap_server_hostname']}:{config['kafka_bootstrap_server_port']}"
+    kafka_bootstrap_server = (
+        f"{config['kafka_bootstrap_server_hostname']}:{config['kafka_bootstrap_server_port']}"
+    )
 
     kafka_consumer = (
         FlinkKafkaConsumer(
-            topics=config["kafka_publish_state_topic_name"], # Subscribe to publish state
+            topics=config["kafka_publish_state_topic_name"],  # Subscribe to publish state
             properties={
                 "bootstrap.servers": kafka_bootstrap_server,
                 "group.id": config["kafka_consumer_group_id"],
@@ -120,13 +120,9 @@ def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
         .set_record_serializer(
             KafkaRecordSerializationSchema.builder()
             .set_topic(config["kafka_gov_data_quality_topic_name"])
-            .set_key_serialization_schema(
-                SimpleStringSchema(),
-            )
-            .set_value_serialization_schema(
-                SimpleStringSchema(),
-            )
-            .build(),
+            .set_key_serialization_schema(SimpleStringSchema())
+            .set_value_serialization_schema(SimpleStringSchema())
+            .build()
         )
         .set_delivery_guarantee(DeliveryGuarantee.AT_LEAST_ONCE)
         .build()
@@ -139,7 +135,7 @@ def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
             KafkaRecordSerializationSchema.builder()
             .set_topic(config["kafka_error_topic_name"])
             .set_value_serialization_schema(SimpleStringSchema())
-            .build(),
+            .build()
         )
         .set_delivery_guarantee(DeliveryGuarantee.AT_LEAST_ONCE)
         .build()
@@ -156,19 +152,13 @@ def main(config: UpdateGovDataQualityConfig, jars_path: List[str]) -> None:
 
     input_stream = env.add_source(kafka_consumer).name("Kafka Source")
 
-    get_rules = GetRules(
-        input_stream,
-    )
+    get_rules = GetRules(input_stream)
 
     get_rules.main.map(
         lambda document: json.dumps(
-            {
-                "id": document[0],
-                "value": document[1] if document[1] is None else document[1].to_dict()
-            }
+            {"id": document[0], "value": document[1] if document[1] is None else document[1].to_dict()}
         ),
         Types.STRING(),
     ).sink_to(gov_data_quality_sink).name("Gov Data Quality Sink")
-
 
     env.execute("Gov Data Quality")

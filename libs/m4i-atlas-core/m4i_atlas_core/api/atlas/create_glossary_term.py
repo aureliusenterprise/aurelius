@@ -11,11 +11,9 @@ async def create_glossary_term(term: GlossaryTerm, access_token: Optional[str] =
     API to create a glossary term in Atlas.
     """
 
-    response: str = await atlas_post(
-        path=PATH,
-        body=term.to_json(),
-        access_token=access_token
-    )
+    response: str = await atlas_post(path=PATH, body=term.to_json(), access_token=access_token)
 
     return GlossaryTerm.from_json(response)
+
+
 # END create_glossary_term

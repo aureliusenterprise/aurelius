@@ -46,6 +46,7 @@
         "./tools/plugins/docker.ts",
         "./tools/plugins/mkdocs.ts",
         "./tools/plugins/python.ts",
+        "./tools/plugins/sonarqube.ts",
         "./tools/plugins/sops.ts",
         "./tools/plugins/sops-encrypt.ts",
         "./tools/plugins/sops-decrypt.ts"

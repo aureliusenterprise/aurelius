@@ -1,7 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ContextMenuModule, DescriptionInputModule, ModalModule, SelectModule, SortableTableShellModule } from '@models4insight/components';
+import {
+    ContextMenuModule,
+    DescriptionInputModule,
+    ModalModule,
+    SelectModule,
+    SortableTableShellModule,
+} from '@models4insight/components';
 import { BokehChartModule, CopyModule, HoldableModule } from '@models4insight/directives';
 import { Modelview2Module } from '@models4insight/modelview2';
 import { AddExemptionModalComponent } from './add-exemption-modal/add-exemption-modal.component';
@@ -21,31 +27,31 @@ import { ReportService } from './report.service';
 import { ViolationsService } from './violations.service';
 
 @NgModule({
-  imports: [
-    BokehChartModule,
-    CommonModule,
-    ContextMenuModule,
-    CopyModule,
-    DescriptionInputModule, 
-    FontAwesomeModule,
-    HoldableModule,
-    ModalModule,
-    Modelview2Module,
-    ReportRoutingModule,
-    SelectModule,
-    SortableTableShellModule
-  ],
-  declarations: [
-    AddExemptionModalComponent,
-    CopyButtonComponent,
-    ReportComponent,
-    ReportContextMenuComponent,
-    ReportExemptionsComponent,
-    ReportExemptionsContextMenuComponent,
-    ReportMetricComponent,
-    ReportTableComponent,
-    ScopeSelectComponent
-  ],
-  providers: [ExemptionsService, ReportExemptionsService, ReportResolver, ReportService, ViolationsService]
+    imports: [
+        BokehChartModule,
+        CommonModule,
+        ContextMenuModule,
+        CopyModule,
+        DescriptionInputModule,
+        FontAwesomeModule,
+        HoldableModule,
+        ModalModule,
+        Modelview2Module,
+        ReportRoutingModule,
+        SelectModule,
+        SortableTableShellModule,
+    ],
+    declarations: [
+        AddExemptionModalComponent,
+        CopyButtonComponent,
+        ReportComponent,
+        ReportContextMenuComponent,
+        ReportExemptionsComponent,
+        ReportExemptionsContextMenuComponent,
+        ReportMetricComponent,
+        ReportTableComponent,
+        ScopeSelectComponent,
+    ],
+    providers: [ExemptionsService, ReportExemptionsService, ReportResolver, ReportService, ViolationsService],
 })
 export class ReportModule {}

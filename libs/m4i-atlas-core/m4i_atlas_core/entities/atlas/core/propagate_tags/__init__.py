@@ -1,1 +1,3 @@
-from .PropagateTags import *
+from .PropagateTags import PropagateTags
+
+__all__ = ["PropagateTags"]

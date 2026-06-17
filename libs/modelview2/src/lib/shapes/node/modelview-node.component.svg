@@ -14,7 +14,7 @@
                 <ng-container *ngIf="shapeDefinition.showName">
                     <xhtml:div *ngIf="displayName$ | async as displayName" class="node-text" [attr.title]="displayName"
                         xmlns="http://www.w3.org/1999/xhtml">
-                    {{ displayName }} 
+                    {{ displayName }}
                     </xhtml:div>
                 </ng-container>
             </xhtml:div>

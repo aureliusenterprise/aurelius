@@ -1,13 +1,23 @@
+from typing import Any, Optional, cast
+
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroSerializer
 from confluent_kafka.schema_registry.json_schema import JSONSerializer
-from confluent_kafka.serialization import (SerializationContext,
-                                           StringSerializer)
+from confluent_kafka.serialization import StringSerializer
 
 from ..make_schema_registry_client import make_schema_registry_client
 
+AvroSerializerCtor = cast(Any, AvroSerializer)
+JSONSerializerCtor = cast(Any, JSONSerializer)
 
-def make_serializer(schema_id: str, schema_type: str = "string", schema_registry_client: SchemaRegistryClient = None, to_dict=None, conf=None) -> SerializationContext:
+
+def make_serializer(
+    schema_id: Optional[str],
+    schema_type: str = "string",
+    schema_registry_client: Optional[SchemaRegistryClient] = None,
+    to_dict: Any = None,
+    conf: Any = None,
+) -> Any:
     """
     Makes a serializer for the given `schema_type` and the given `schema_id`
     """
@@ -20,25 +30,17 @@ def make_serializer(schema_id: str, schema_type: str = "string", schema_registry
         schema_registry_client = make_schema_registry_client()
     # END IF
 
-    schema = schema_registry_client.get_schema(schema_id)
+    schema = schema_registry_client.get_schema(cast(Any, schema_id))
 
     serializers = {
-        "avro": lambda: AvroSerializer(
-            schema_str=schema.schema_str,
-            schema_registry_client=schema_registry_client,
-            to_dict=to_dict,
-            conf=conf
-        ),
-        "json": lambda: JSONSerializer(
-            schema_str=schema.schema_str,
-            schema_registry_client=schema_registry_client,
-            to_dict=to_dict,
-            conf=conf
-        ),
-        "string": lambda: StringSerializer("utf-8")
+        "avro": lambda: AvroSerializerCtor(schema_registry_client, schema.schema_str, to_dict, conf),
+        "json": lambda: JSONSerializerCtor(schema.schema_str, schema_registry_client, to_dict, conf),
+        "string": lambda: StringSerializer("utf-8"),
     }
 
     serializer_factory = serializers.get(schema_type, serializers["string"])
 
     return serializer_factory()
+
+
 # END make_serializer

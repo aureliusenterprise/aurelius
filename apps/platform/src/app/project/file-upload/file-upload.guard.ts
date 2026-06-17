@@ -8,23 +8,21 @@ const log = new Logger('FileUploadGuard');
 
 @Injectable()
 export class FileUploadGuard implements CanActivate {
-  constructor(
-    private readonly projectPermissionService: ProjectPermissionService,
-    private readonly router: Router
-  ) {}
+    constructor(
+        private readonly projectPermissionService: ProjectPermissionService,
+        private readonly router: Router,
+    ) {}
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const hasPermission = await this.projectPermissionService.hasPermission(
-      PermissionLevel.CONTRIBUTOR
-    );
+    async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const hasPermission = await this.projectPermissionService.hasPermission(PermissionLevel.CONTRIBUTOR);
 
-    log.debug(`Can access model upload: ${hasPermission}`);
+        log.debug(`Can access model upload: ${hasPermission}`);
 
-    if (!hasPermission) {
-      const [parentRoute] = state.url.split('/upload');
-      return this.router.createUrlTree([parentRoute]);
+        if (!hasPermission) {
+            const [parentRoute] = state.url.split('/upload');
+            return this.router.createUrlTree([parentRoute]);
+        }
+
+        return hasPermission;
     }
-
-    return hasPermission;
-  }
 }

@@ -1,1 +1,3 @@
-from .calculate_gov_quality import *
+from .calculate_gov_quality.calculate_gov_quality import calculate_gov_quality
+
+__all__ = ["calculate_gov_quality"]

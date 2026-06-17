@@ -15,25 +15,21 @@ import { CreateBranchModalComponent } from './create-branch-modal.component';
 import { CreateBranchModalService } from './create-branch-modal.service';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    BranchNameInputModule,
-    ModalModule,
-    FormsModule,
-    ReactiveFormsModule,
-    DescriptionInputModule,
-    FuzzySearchInputModule,
-    HoldableModule,
-    PermissionSelectModule,
-    SortableTableShellModule,
-  ],
-  declarations: [
-    AddBranchMemberComponent,
-    BranchMembersComponent,
-    CreateBranchModalComponent,
-  ],
-  providers: [CreateBranchModalService],
-  exports: [CreateBranchModalComponent],
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        BranchNameInputModule,
+        ModalModule,
+        FormsModule,
+        ReactiveFormsModule,
+        DescriptionInputModule,
+        FuzzySearchInputModule,
+        HoldableModule,
+        PermissionSelectModule,
+        SortableTableShellModule,
+    ],
+    declarations: [AddBranchMemberComponent, BranchMembersComponent, CreateBranchModalComponent],
+    providers: [CreateBranchModalService],
+    exports: [CreateBranchModalComponent],
 })
 export class CreateBranchModalModule {}

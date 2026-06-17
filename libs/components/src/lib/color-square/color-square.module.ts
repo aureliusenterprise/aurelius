@@ -4,8 +4,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { ColorSquareComponent } from './color-square.component';
 
 @NgModule({
-  imports: [ColorPickerModule, CommonModule],
-  declarations: [ColorSquareComponent],
-  exports: [ColorSquareComponent],
+    imports: [ColorPickerModule, CommonModule],
+    declarations: [ColorSquareComponent],
+    exports: [ColorSquareComponent],
 })
 export class ColorSquareModule {}

@@ -1,1 +1,1 @@
-from .producer import *
+from .producer import Producer as Producer

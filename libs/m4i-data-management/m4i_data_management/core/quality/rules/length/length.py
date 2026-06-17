@@ -3,7 +3,8 @@ from pandas import DataFrame, Series, isna
 
 def length(data: DataFrame, column_name: str, required_length: int) -> Series:
     """
-    Checks if the number of characters of the values in the column with the given `column_name` are equal to the `required_length`.
+    Checks if the number of characters of the values in the column with the given
+    `column_name` are equal to the `required_length`.
 
     This function only works for array-like values such as strings or lists.
 
@@ -12,17 +13,14 @@ def length(data: DataFrame, column_name: str, required_length: int) -> Series:
     """
 
     def check(value):
-
-        if not isinstance(value, list) and isna(value):
+        if not isinstance(value, list) and isna(value):  # type: ignore[arg-type]
             return 0
 
-        has_required_length = (
-            required_length <= len(value)
-        )
+        has_required_length = required_length <= len(value)
 
         return 1 if has_required_length else 0
-    
+
     if column_name not in data.columns:
         return Series([0] * len(data), index=data.index)
 
-    return data[column_name].apply(check)
+    return data[column_name].apply(check)  # type: ignore[return-value]

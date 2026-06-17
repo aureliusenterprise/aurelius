@@ -8,15 +8,15 @@ import { getHttpClient } from '../utils';
  * - Has the given exemption id
  */
 export function deleteMetricExemption(
-  /** The id of the project to which the exemption belongs */
-  projectId: string,
-  /** The id of the exemption */
-  exemptionId: string
+    /** The id of the project to which the exemption belongs */
+    projectId: string,
+    /** The id of the exemption */
+    exemptionId: string,
 ) {
-  const http = getHttpClient(),
-    path = `${repositoryApiBasePath}/exempt/${projectId}/${exemptionId}`;
+    const http = getHttpClient(),
+        path = `${repositoryApiBasePath}/exempt/${projectId}/${exemptionId}`;
 
-  validateRequiredArguments(arguments, 'deleteMetricExemption');
+    validateRequiredArguments(arguments, 'deleteMetricExemption');
 
-  return http.authorize().delete(path);
+    return http.authorize().delete(path);
 }

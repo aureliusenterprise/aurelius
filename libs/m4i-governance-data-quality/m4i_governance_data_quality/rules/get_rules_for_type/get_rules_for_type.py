@@ -29,4 +29,6 @@ def get_rules_for_type(type_name: str) -> List[GovQualityRuleDefinition]:
     # END WITH file
 
     return GovQualityRuleDefinition.schema().load(rules_json, many=True)
+
+
 # END get_rules_for_type

@@ -4,25 +4,25 @@ import { Shell } from '@models4insight/shell';
 import { CardsComponent } from './components/cards/cards.component';
 
 const routes: Routes = [
-  Shell.childRoutes(
-    [
-      {
-        path: '',
-        component: CardsComponent,
-        data: { title: 'Index', hidden: true },
-      },
-    ],
-    false
-  ),
+    Shell.childRoutes(
+        [
+            {
+                path: '',
+                component: CardsComponent,
+                data: { title: 'Index', hidden: true },
+            },
+        ],
+        false,
+    ),
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, {
-      scrollPositionRestoration: 'enabled',
-    }),
-  ],
-  exports: [RouterModule],
-  providers: [],
+    imports: [
+        RouterModule.forRoot(routes, {
+            scrollPositionRestoration: 'enabled',
+        }),
+    ],
+    exports: [RouterModule],
+    providers: [],
 })
 export class AppRoutingModule {}

@@ -1,9 +1,7 @@
 from m4i_analytics.shared.model.BaseModel import BaseModel
-from m4i_analytics.m4i.platform.model.DataContent import DataContent
 
 
 class MetricExemption(BaseModel):
-
     _fields = [
         ("branch", str, False),
         ("comment", str, False),
@@ -15,5 +13,6 @@ class MetricExemption(BaseModel):
         ("userid", str, False),
         ("start_date", int, False),
     ]
+
 
 # END MetricExemption

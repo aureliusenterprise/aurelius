@@ -7,15 +7,8 @@ import { SelectModule } from '../select';
 import { BranchSelectComponent } from './branch-select.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CreateBranchModalModule,
-    SelectModule,
-  ],
-  declarations: [BranchSelectComponent],
-  exports: [BranchSelectComponent],
+    imports: [CommonModule, FontAwesomeModule, FormsModule, ReactiveFormsModule, CreateBranchModalModule, SelectModule],
+    declarations: [BranchSelectComponent],
+    exports: [BranchSelectComponent],
 })
 export class BranchSelectModule {}

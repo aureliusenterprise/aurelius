@@ -20,16 +20,12 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--export", "-e", required=True, help="Export zip", type=Path)
     parser.add_argument("--url", "-a", required=True, help="App Search url", type=str)
-    parser.add_argument(
-        "--username", "-u", default="elastic", help="ES username", type=str
-    )
+    parser.add_argument("--username", "-u", default="elastic", help="ES username", type=str)
     parser.add_argument("--password", "-p", required=True, help="ES password", type=str)
     return parser.parse_args()
 
 
-def update_types_in_documents(
-    documents: List[MutableMapping[str, Any]],
-) -> List[MutableMapping[str, Any]]:
+def update_types_in_documents(documents: List[MutableMapping[str, Any]]) -> List[MutableMapping[str, Any]]:
     return [update_types(document) for document in documents]
 
 
@@ -54,9 +50,7 @@ def substitute_quality_guid(
 
 def main() -> None:
     args = parse_args()
-    app_search_api_key = get_enterprise_search_key(
-        args.url, args.username, args.password
-    )
+    app_search_api_key = get_enterprise_search_key(args.url, args.username, args.password)
 
     app_search_client = AppSearch(args.url, bearer_auth=app_search_api_key)
     engine_name = "atlas-dev-gov-quality"
@@ -68,9 +62,7 @@ def main() -> None:
     documents = update_types_in_documents(documents)
     substitute_quality_guid(documents, qualified_name_index)
     index_all_documents(
-        app_search_client=app_search_client,
-        engine_name=engine_name,
-        documents=list(documents),
+        app_search_client=app_search_client, engine_name=engine_name, documents=list(documents)
     )
     cleanup(extracted)
 

@@ -3,5 +3,5 @@
  * @param iterable The collection of elements to iterate over
  */
 export function* iterator<T>(iterable: Iterable<T>): Iterator<T> {
-  yield* iterable;
+    yield* iterable;
 }

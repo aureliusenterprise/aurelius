@@ -4,4 +4,4 @@ metadata:
   name: cm-reverse-proxy-configs-auth-conf
 data:
   auth.conf: |
-{{ tpl ( .Files.Get "conf.d/auth.yaml" ) . | indent 4}}
+{{ tpl ( .Files.Get "conf.d/auth.yaml.tmpl" ) . | indent 4}}

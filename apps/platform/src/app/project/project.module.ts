@@ -13,31 +13,26 @@ import { ProjectGuard } from './project.guard';
 import { TrackRecentProjectsService } from './track-recent-projects.service';
 
 @NgModule({
-  imports: [
-    BranchPermissionModule.forRoot(),
-    CommonModule,
-    CompareModalModule,
-    FontAwesomeModule,
-    HeroModule,
-    ProjectPermissionModule.forRoot(),
-    ProjectRoutingModule,
-    RepositoryModule,
-    TranslateModule
-  ],
-  declarations: [ProjectComponent],
-  providers: [
-    CompareModalService,
-    ConflictNotificationService,
-    ProjectGuard,
-    TrackRecentProjectsService
-  ]
+    imports: [
+        BranchPermissionModule.forRoot(),
+        CommonModule,
+        CompareModalModule,
+        FontAwesomeModule,
+        HeroModule,
+        ProjectPermissionModule.forRoot(),
+        ProjectRoutingModule,
+        RepositoryModule,
+        TranslateModule,
+    ],
+    declarations: [ProjectComponent],
+    providers: [CompareModalService, ConflictNotificationService, ProjectGuard, TrackRecentProjectsService],
 })
 export class ProjectModule {
-  constructor(
-    readonly conflictNotificationService: ConflictNotificationService,
-    readonly trackRecentProjectsService: TrackRecentProjectsService
-  ) {
-    conflictNotificationService.init();
-    trackRecentProjectsService.init();
-  }
+    constructor(
+        readonly conflictNotificationService: ConflictNotificationService,
+        readonly trackRecentProjectsService: TrackRecentProjectsService,
+    ) {
+        conflictNotificationService.init();
+        trackRecentProjectsService.init();
+    }
 }

@@ -12,4 +12,6 @@ class ExcelParserConfig:
     parser_class: Type[ToAtlasConvertible]
     sheet_name: str
     transform: Callable[[DataFrame], DataFrame] = lambda data: data
+
+
 # END ExcelParserConfig

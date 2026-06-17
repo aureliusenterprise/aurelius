@@ -1,78 +1,106 @@
-import { Logger, LogLevel, LogOutput } from './logger';
+import { Logger, LogLevel } from './logger';
 
 const logMethods = ['log', 'info', 'warn', 'error'];
 
 describe('Logger', () => {
-  let savedConsole: Function[];
-  let savedLevel: LogLevel;
-  let savedOutputs: LogOutput[];
+    let savedConsole: Record<string, Function>;
+    let savedLevel: LogLevel;
 
-  beforeAll(() => {
-    savedConsole = [];
-    logMethods.forEach((m) => {
-      savedConsole[m] = console[m];
-      console[m] = () => {};
+    beforeAll(() => {
+        savedConsole = {};
+        logMethods.forEach((m) => {
+            savedConsole[m] = console[m];
+            console[m] = () => {};
+        });
+        savedLevel = Logger.level;
     });
-    savedLevel = Logger.level;
-    savedOutputs = Logger.outputs;
-  });
 
-  afterAll(() => {
-    logMethods.forEach((m) => {
-      console[m] = savedConsole[m];
+    afterEach(() => {
+        jest.clearAllMocks();
+        Logger.level = LogLevel.Debug;
     });
-    Logger.level = savedLevel;
-    Logger.outputs = savedOutputs;
-  });
 
-  it('should create an instance', () => {
-    expect(new Logger()).toBeTruthy();
-  });
-
-  it('should add a new LogOutput and receives log entries', () => {
-    // Arrange
-    const outputSpy = jasmine.createSpy('outputSpy');
-    const log = new Logger('test');
-
-    // Act
-    Logger.outputs.push(outputSpy);
-
-    log.debug('d');
-    log.info('i');
-    log.warn('w');
-    log.error('e', { error: true });
-
-    // Assert
-    expect(outputSpy).toHaveBeenCalled();
-    expect(outputSpy.calls.count()).toBe(4);
-    expect(outputSpy).toHaveBeenCalledWith('test', LogLevel.Debug, 'd');
-    expect(outputSpy).toHaveBeenCalledWith('test', LogLevel.Info, 'i');
-    expect(outputSpy).toHaveBeenCalledWith('test', LogLevel.Warning, 'w');
-    expect(outputSpy).toHaveBeenCalledWith('test', LogLevel.Error, 'e', {
-      error: true,
+    afterAll(() => {
+        logMethods.forEach((m) => {
+            console[m] = savedConsole[m];
+        });
+        Logger.level = savedLevel;
     });
-  });
 
-  it('should add a new LogOutput and receives only production log entries', () => {
-    // Arrange
-    const outputSpy = jasmine.createSpy('outputSpy');
-    const log = new Logger('test');
-
-    // Act
-    Logger.outputs.push(outputSpy);
-    Logger.enableProductionMode();
-
-    log.debug('d');
-    log.info('i');
-    log.warn('w');
-    log.error('e', { error: true });
-
-    // Assert
-    expect(outputSpy).toHaveBeenCalled();
-    expect(outputSpy.calls.count()).toBe(2);
-    expect(outputSpy).toHaveBeenCalledWith('test', LogLevel.Warning, 'w');
-    expect(outputSpy).toHaveBeenCalledWith('test', LogLevel.Error, 'e', {
-      error: true,
+    it('should create an instance', () => {
+        expect(new Logger()).toBeTruthy();
     });
-  });
+
+    it('should log at debug level when level is Debug', () => {
+        // Arrange
+        const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+        const log = new Logger('test');
+        Logger.level = LogLevel.Debug;
+
+        // Act
+        log.debug('message');
+
+        // Assert
+        expect(consoleLogSpy).toHaveBeenCalledWith('[test] message');
+    });
+
+    it('should not log at debug level when level is Warning', () => {
+        // Arrange
+        const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+        const log = new Logger('test');
+        Logger.level = LogLevel.Warning;
+
+        // Act
+        log.debug('message');
+
+        // Assert
+        expect(consoleLogSpy).not.toHaveBeenCalled();
+    });
+
+    it('should log at warning level when level is Warning', () => {
+        // Arrange
+        const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const log = new Logger('test');
+        Logger.level = LogLevel.Warning;
+
+        // Act
+        log.warn('message');
+
+        // Assert
+        expect(consoleWarnSpy).toHaveBeenCalledWith('[test] message');
+    });
+
+    it('should log at error level when level is Error', () => {
+        // Arrange
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const log = new Logger('test');
+        Logger.level = LogLevel.Error;
+
+        // Act
+        log.error('message');
+
+        // Assert
+        expect(consoleErrorSpy).toHaveBeenCalledWith('[test] message');
+    });
+
+    it('should enable production mode', () => {
+        // Arrange & Act
+        Logger.enableProductionMode();
+
+        // Assert
+        expect(Logger.level).toBe(LogLevel.Warning);
+    });
+
+    it('should log without source when no source is provided', () => {
+        // Arrange
+        const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+        const log = new Logger();
+        Logger.level = LogLevel.Debug;
+
+        // Act
+        log.debug('message');
+
+        // Assert
+        expect(consoleLogSpy).toHaveBeenCalledWith('message');
+    });
 });

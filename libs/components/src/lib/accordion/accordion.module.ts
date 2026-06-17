@@ -8,4 +8,4 @@ import { AccordionComponent } from './accordion.component';
     declarations: [AccordionComponent],
     exports: [AccordionComponent],
 })
-export class AccordionModule { }
+export class AccordionModule {}

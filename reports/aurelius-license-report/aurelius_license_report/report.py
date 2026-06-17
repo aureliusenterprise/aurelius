@@ -64,24 +64,14 @@ def normalize_category(value: object) -> str:
     return "other"
 
 
-def merge_severity_counts(
-    left: Dict[str, int], right: Dict[str, int]
-) -> Dict[str, int]:
+def merge_severity_counts(left: Dict[str, int], right: Dict[str, int]) -> Dict[str, int]:
     """Merge two severity count dictionaries."""
-    return {
-        severity: left.get(severity, 0) + right.get(severity, 0)
-        for severity in SEVERITY_LEVELS
-    }
+    return {severity: left.get(severity, 0) + right.get(severity, 0) for severity in SEVERITY_LEVELS}
 
 
-def merge_category_counts(
-    left: Dict[str, int], right: Dict[str, int]
-) -> Dict[str, int]:
+def merge_category_counts(left: Dict[str, int], right: Dict[str, int]) -> Dict[str, int]:
     """Merge two category count dictionaries."""
-    return {
-        category: left.get(category, 0) + right.get(category, 0)
-        for category in CATEGORY_LEVELS
-    }
+    return {category: left.get(category, 0) + right.get(category, 0) for category in CATEGORY_LEVELS}
 
 
 def relative_report_link(report_path: Path, output_path: Path) -> str:
@@ -131,19 +121,11 @@ def build_license_findings(raw_result: JsonObject) -> List[LicenseFinding]:
         for finding in cast("JsonObjectList", raw_result.get("Licenses") or [])
     ]
     return sorted(
-        findings,
-        key=lambda lic: (
-            -SEVERITY_RANKS[lic.severity],
-            lic.category,
-            lic.pkg_name,
-            lic.name,
-        ),
+        findings, key=lambda lic: (-SEVERITY_RANKS[lic.severity], lic.category, lic.pkg_name, lic.name)
     )
 
 
-def build_scan_result(
-    raw_result: JsonObject, severity_counts: Dict[str, int]
-) -> Tuple[ScanResultDict, int]:
+def build_scan_result(raw_result: JsonObject, severity_counts: Dict[str, int]) -> Tuple[ScanResultDict, int]:
     """Build one rendered scan section and update aggregate severity counters."""
     licenses = build_license_findings(raw_result)
     section_worst_severity = "UNKNOWN"
@@ -163,18 +145,13 @@ def build_scan_result(
                 type=string_or_empty(raw_result.get("Type")),
                 licenses=licenses,
             ).model_dump(),
-            **{
-                "worst_severity": section_worst_severity,
-                "category_counts": section_category_counts,
-            },
+            **{"worst_severity": section_worst_severity, "category_counts": section_category_counts},
         },
     )
     return scan_result, len(licenses)
 
 
-def summarize_report(
-    report_path: Path, input_root: Path, output_path: Path
-) -> ProjectSummary:
+def summarize_report(report_path: Path, input_root: Path, output_path: Path) -> ProjectSummary:
     """Convert one Trivy JSON report into a workspace summary row."""
     report_data = json.loads(report_path.read_text(encoding="utf-8"))
     raw_results = cast("JsonObjectList", report_data.get("Results") or [])
@@ -221,21 +198,15 @@ def build_context(projects: List[ProjectSummary]) -> WorkspaceReportContext:
     projects_with_findings = 0
 
     for project in projects:
-        workspace_severity_counts = merge_severity_counts(
-            workspace_severity_counts, project.severity_counts
-        )
-        workspace_category_counts = merge_category_counts(
-            workspace_category_counts, project.category_counts
-        )
+        workspace_severity_counts = merge_severity_counts(workspace_severity_counts, project.severity_counts)
+        workspace_category_counts = merge_category_counts(workspace_category_counts, project.category_counts)
         total_findings += project.finding_count
         if project.finding_count > 0:
             projects_with_findings += 1
 
     return {
         "generated_at": datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
-        "projects": [
-            cast("ProjectSummaryDict", project.model_dump()) for project in projects
-        ],
+        "projects": [cast("ProjectSummaryDict", project.model_dump()) for project in projects],
         "projects_scanned": len(projects),
         "projects_with_findings": projects_with_findings,
         "total_findings": total_findings,
@@ -245,9 +216,7 @@ def build_context(projects: List[ProjectSummary]) -> WorkspaceReportContext:
 
 
 def render_report(
-    context: Union[WorkspaceReportContext, ProjectReportContext],
-    template_path: Path,
-    output_path: Path,
+    context: Union[WorkspaceReportContext, ProjectReportContext], template_path: Path, output_path: Path
 ) -> None:
     """Render an HTML report to disk."""
     environment = Environment(
@@ -265,26 +234,19 @@ def sort_projects(projects: List[ProjectSummary]) -> List[ProjectSummary]:
     """Sort projects by worst severity and then by total findings."""
     return sorted(
         projects,
-        key=lambda project: (
-            -SEVERITY_RANKS[project.worst_severity],
-            -project.finding_count,
-            project.name,
-        ),
+        key=lambda project: (-SEVERITY_RANKS[project.worst_severity], -project.finding_count, project.name),
     )
 
 
 def build_project_context(
-    report_path: Path,
-    workspace_report_link: str = f"../{REPORT_FILENAME}",
+    report_path: Path, workspace_report_link: str = f"../{REPORT_FILENAME}"
 ) -> ProjectReportContext:
     """Parse a Trivy JSON report into detailed template context for a project report."""
     report_data = json.loads(report_path.read_text(encoding="utf-8"))
     raw_results = cast("JsonObjectList", report_data.get("Results") or [])
 
     metadata = cast("JsonObject", report_data.get("Metadata") or {})
-    component_name = metadata.get("Reference") or report_data.get(
-        "ArtifactName", report_path.parent.name
-    )
+    component_name = metadata.get("Reference") or report_data.get("ArtifactName", report_path.parent.name)
 
     results: List[ScanResultDict] = []
     severity_counts = empty_severity_counts()
@@ -296,9 +258,7 @@ def build_project_context(
             continue
         result, section_total = build_scan_result(raw_result, severity_counts)
         finding_count += section_total
-        category_counts = merge_category_counts(
-            category_counts, result["category_counts"]
-        )
+        category_counts = merge_category_counts(category_counts, result["category_counts"])
         results.append(result)
 
     sections_with_findings = sum(1 for result in results if result["licenses"])
@@ -327,11 +287,7 @@ def generate_project_reports(settings: ReportGenerationSettings) -> None:
         output_path = dist_root / project_name / REPORT_FILENAME
         workspace_report_path = dist_root / REPORT_FILENAME
         workspace_report_link = relative_report_link(workspace_report_path, output_path)
-        render_report(
-            build_project_context(report_path, workspace_report_link),
-            template_path,
-            output_path,
-        )
+        render_report(build_project_context(report_path, workspace_report_link), template_path, output_path)
 
 
 def generate_workspace_report(settings: ReportGenerationSettings) -> None:
@@ -344,6 +300,6 @@ def generate_workspace_report(settings: ReportGenerationSettings) -> None:
         [
             summarize_report(report_path, input_root, output_path)
             for report_path in discover_report_paths(input_root)
-        ],
+        ]
     )
     render_report(build_context(projects), template_path, output_path)

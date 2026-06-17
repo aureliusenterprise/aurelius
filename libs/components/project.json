@@ -1,58 +1,55 @@
 {
-  "name": "components",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
-  "sourceRoot": "libs/components/src",
-  "prefix": "models4insight",
-  "tags": [],
-  "targets": {
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/components"],
-      "options": {
-        "jestConfig": "libs/components/jest.config.ts",
-        "passWithNoTests": true
-      }
-    },
-    "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": [
-          "libs/components/**/*.ts",
-          "libs/components/**/*.html"
-        ]
-      }
-    },
-    "storybook": {
-      "executor": "@storybook/angular:start-storybook",
-      "options": {
-        "port": 4400,
-        "configDir": "libs/components/.storybook",
-        "browserTarget": "components:build-storybook",
-        "compodoc": false,
-        "styles": ["libs/storybook/storybook.scss"]
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "name": "components",
+    "prefix": "models4insight",
+    "projectType": "library",
+    "sourceRoot": "libs/components/src",
+    "tags": [],
+    "targets": {
+        "build-storybook": {
+            "configurations": {
+                "ci": {
+                    "quiet": true
+                }
+            },
+            "executor": "@storybook/angular:build-storybook",
+            "options": {
+                "browserTarget": "components:build-storybook",
+                "compodoc": false,
+                "configDir": "libs/components/.storybook",
+                "outputDir": "dist/storybook/components",
+                "styles": ["libs/storybook/storybook.scss"]
+            },
+            "outputs": ["{options.outputPath}"]
+        },
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "options": {
+                "lintFilePatterns": ["libs/components/**/*.ts", "libs/components/**/*.html"]
+            }
+        },
+        "storybook": {
+            "configurations": {
+                "ci": {
+                    "quiet": true
+                }
+            },
+            "executor": "@storybook/angular:start-storybook",
+            "options": {
+                "browserTarget": "components:build-storybook",
+                "compodoc": false,
+                "configDir": "libs/components/.storybook",
+                "port": 4400,
+                "styles": ["libs/storybook/storybook.scss"]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/components/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "outputs": ["{workspaceRoot}/coverage/libs/components"]
         }
-      }
-    },
-    "build-storybook": {
-      "executor": "@storybook/angular:build-storybook",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputDir": "dist/storybook/components",
-        "configDir": "libs/components/.storybook",
-        "browserTarget": "components:build-storybook",
-        "compodoc": false,
-        "styles": ["libs/storybook/storybook.scss"]
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
-        }
-      }
     }
-  }
 }

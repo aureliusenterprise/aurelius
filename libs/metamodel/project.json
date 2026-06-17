@@ -1,27 +1,24 @@
 {
-  "name": "metamodel",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
-  "sourceRoot": "libs/metamodel/src",
-  "prefix": "models4insight",
-  "tags": [],
-  "targets": {
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/metamodel"],
-      "options": {
-        "jestConfig": "libs/metamodel/jest.config.ts",
-        "passWithNoTests": true
-      }
-    },
-    "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": [
-          "libs/metamodel/**/*.ts",
-          "libs/metamodel/**/*.html"
-        ]
-      }
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "name": "metamodel",
+    "prefix": "models4insight",
+    "projectType": "library",
+    "sourceRoot": "libs/metamodel/src",
+    "tags": [],
+    "targets": {
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "options": {
+                "lintFilePatterns": ["libs/metamodel/**/*.ts", "libs/metamodel/**/*.html"]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/metamodel/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "outputs": ["{workspaceRoot}/coverage/libs/metamodel"]
+        }
     }
-  }
 }

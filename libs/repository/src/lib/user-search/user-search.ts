@@ -9,27 +9,24 @@ import { createHttpParams, getHttpClient } from '../utils';
  * Get the user details matching the search string
  */
 export function userSearch(
-  /** String to match the first name, last name, username or email address of any users */
-  search: string,
-  { forceUpdate }: GetOptions = {}
+    /** String to match the first name, last name, username or email address of any users */
+    search: string,
+    { forceUpdate }: GetOptions = {},
 ): Observable<UserSearch[]> {
-  const http = getHttpClient(),
-    path = userSearchBasePath;
+    const http = getHttpClient(),
+        path = userSearchBasePath;
 
-  validateRequiredArguments(arguments, 'userSearch');
+    validateRequiredArguments(arguments, 'userSearch');
 
-  let headers = new HttpHeaders();
-  headers = headers.set('Content-Type', 'application/json');
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
 
-  const queryParameters = createHttpParams({ search });
+    const queryParameters = createHttpParams({ search });
 
-  const requestOptions = {
-    headers,
-    params: queryParameters,
-  };
+    const requestOptions = {
+        headers,
+        params: queryParameters,
+    };
 
-  return http
-    .authorize()
-    .cache(forceUpdate)
-    .get<UserSearch[]>(path, requestOptions);
+    return http.authorize().cache(forceUpdate).get<UserSearch[]>(path, requestOptions);
 }

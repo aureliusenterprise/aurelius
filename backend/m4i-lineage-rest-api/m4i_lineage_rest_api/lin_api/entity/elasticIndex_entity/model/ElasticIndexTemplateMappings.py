@@ -1,9 +1,8 @@
 import copy
 from dataclasses import dataclass
 from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
-from m4i_atlas_core import (ElasticField, ElasticFieldAttributes,
-                            M4IAttributes, ObjectId)
-from typing import Dict, List, Union
+from m4i_atlas_core import ElasticField, ElasticFieldAttributes, M4IAttributes, ObjectId
+from typing import Dict, List, Optional, Union
 
 from .ElasticIndexTemplateMappingsProperty import ElasticIndexTemplateMappingsProperty
 
@@ -14,7 +13,7 @@ class MappingPropertyUndefinedException(Exception):
     """
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticIndexTemplateMappingsBase(DataClassJsonMixin):
     properties: Dict[str, ElasticIndexTemplateMappingsProperty]
@@ -24,7 +23,7 @@ class ElasticIndexTemplateMappingsBase(DataClassJsonMixin):
 # END ElasticIndexTemplateMappingsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticIndexTemplateMappingsDefaultsBase(DataClassJsonMixin):
     pass
@@ -33,47 +32,49 @@ class ElasticIndexTemplateMappingsDefaultsBase(DataClassJsonMixin):
 # END ElasticIndexTemplateMappingsDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ElasticIndexTemplateMappings(
-    ElasticIndexTemplateMappingsDefaultsBase,
-    ElasticIndexTemplateMappingsBase,
+    ElasticIndexTemplateMappingsDefaultsBase, ElasticIndexTemplateMappingsBase
 ):
-
-    def convert_to_atlas(self, parent_index_qualified_name: str, parent_index_guid: str) -> List[ElasticField]:
+    def convert_to_atlas(
+        self, parent_index_qualified_name: str, parent_index_guid: str
+    ) -> List[ElasticField]:
         """
         Returns a list of `ElasticField` instances for all fields defined as part of the mapping.
         """
 
-        dataset_unique_attributes = M4IAttributes(
-            qualified_name=parent_index_qualified_name
-        )
+        dataset_unique_attributes = M4IAttributes(qualified_name=parent_index_qualified_name)
 
-        dataset = [ObjectId(
-            type_name="m4i_elastic_index",
-            unique_attributes=dataset_unique_attributes,
-            guid=parent_index_guid
-        )]
+        dataset = [
+            ObjectId(
+                type_name="m4i_elastic_index",
+                unique_attributes=dataset_unique_attributes,
+                guid=parent_index_guid,
+            )
+        ]
 
-        def to_elastic_field(field_key: str, parent_qn: str = None, parent_guid: str = None, meta_nested: dict = None,
-                             property_nested: dict = None):
-
+        def to_elastic_field(
+            field_key: str,
+            parent_qn: Optional[str] = None,
+            parent_guid: Optional[str] = None,
+            meta_nested: Optional[dict] = None,
+            property_nested: Optional[dict] = None,
+        ):
             if parent_qn is None:
                 mapping_meta = self._meta.get(field_key)
                 mapping_property = self.properties.get(field_key)
+                if mapping_property is None:
+                    return [], []
                 qn = f"{parent_index_qualified_name}--{field_key}"
             else:
-                try:
-                    mapping_meta = meta_nested.get(field_key)
-                except AttributeError:
-                    mapping_meta = None
-                mapping_property = property_nested.get(field_key)
+                mapping_meta = meta_nested.get(field_key) if meta_nested else None
+                mapping_property = property_nested.get(field_key) if property_nested else None
+                if mapping_property is None:
+                    return [], []
                 qn = f"{parent_qn}--{field_key}"
             attributes = ElasticFieldAttributes(
-                qualified_name=qn,
-                datasets=dataset,
-                name=field_key,
-                field_type=mapping_property.type
+                qualified_name=qn, datasets=dataset, name=field_key, field_type=mapping_property.type
             )
             if mapping_meta is not None and not isinstance(mapping_meta, dict):
                 metas = []
@@ -81,41 +82,42 @@ class ElasticIndexTemplateMappings(
                     mapping_meta = [mapping_meta]
 
                 for att in mapping_meta:
-                    attribute_unique_attributes = M4IAttributes(
-                        qualified_name=att
+                    attribute_unique_attributes = M4IAttributes(qualified_name=att)
+                    metas.append(
+                        ObjectId(
+                            type_name="m4i_data_attribute", unique_attributes=attribute_unique_attributes
+                        )
                     )
-                    metas.append(ObjectId(
-                        type_name="m4i_data_attribute",
-                        unique_attributes=attribute_unique_attributes
-                    ))
                 attributes.attributes = metas
             if parent_qn is not None:
-                parent_field_unique_attributes = M4IAttributes(
-                    qualified_name=parent_qn
-                )
-                parent_field = [(ObjectId(
-                    type_name="m4i_elastic_field",
-                    guid=parent_guid,
-                    unique_attributes=parent_field_unique_attributes
-                ))]
+                parent_field_unique_attributes = M4IAttributes(qualified_name=parent_qn)
+                parent_field = [
+                    (
+                        ObjectId(
+                            type_name="m4i_elastic_field",
+                            guid=parent_guid,
+                            unique_attributes=parent_field_unique_attributes,
+                        )
+                    )
+                ]
                 attributes.parent_field = parent_field
-                attributes.datasets = None
+                attributes.datasets = []
 
-            elastic_field = ElasticField(
-                attributes=attributes
-            )
+            elastic_field = ElasticField(attributes=attributes)
             elastic_ref = copy.deepcopy(elastic_field)
             nested_fields = []
             ref_fields = []
-            if mapping_property.properties != {}:
+            if mapping_property.properties and mapping_property.properties != {}:
                 for nest in mapping_property.properties.keys():
-                    field = to_elastic_field(field_key=nest, parent_qn=qn, parent_guid=elastic_field.guid,
-                                             meta_nested=mapping_meta,
-                                             property_nested=mapping_property.properties)
-                    nested_fields = [*nested_fields,
-                                     *field[0]]
-                    ref_fields = [*ref_fields,
-                                  *field[1]]
+                    field = to_elastic_field(
+                        field_key=nest,
+                        parent_qn=qn,
+                        parent_guid=elastic_field.guid,
+                        meta_nested=mapping_meta if isinstance(mapping_meta, dict) else None,
+                        property_nested=mapping_property.properties,
+                    )
+                    nested_fields = [*nested_fields, *field[0]]
+                    ref_fields = [*ref_fields, *field[1]]
 
                 elastic_ref.attributes.child_field = nested_fields
             return [elastic_field], [elastic_ref, *ref_fields]
@@ -129,6 +131,9 @@ class ElasticIndexTemplateMappings(
             elastic_fields = [*elastic_fields, *field_tuple[0]]
             elastic_fields_ref = [*elastic_fields_ref, *field_tuple[1]]
 
-        return elastic_fields, elastic_fields_ref
+        return elastic_fields, elastic_fields_ref  # type: ignore[reportGeneralTypeIssues]
+
     # END convert_to_atlas
+
+
 # END ElasticIndexTemplateMappings

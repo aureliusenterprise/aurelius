@@ -6,14 +6,14 @@ import { FileDropzone } from './file-dropzone';
  * By default, all extensions are valid.
  */
 export function extension(validExtensions: string[] = []) {
-  return (control: FileDropzone) => {
-    const file: File = control.value;
-    return file &&
-      file.name &&
-      validExtensions &&
-      validExtensions.length > 0 &&
-      !validExtensions.includes(file.name.split('.').pop())
-      ? { extension: true }
-      : null;
-  };
+    return (control: FileDropzone) => {
+        const file: File = control.value;
+        return file &&
+            file.name &&
+            validExtensions &&
+            validExtensions.length > 0 &&
+            !validExtensions.includes(file.name.split('.').pop())
+            ? { extension: true }
+            : null;
+    };
 }

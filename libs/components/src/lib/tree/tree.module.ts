@@ -6,8 +6,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TreeComponent } from './tree.component';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule, MatButtonModule, MatTreeModule],
-  declarations: [TreeComponent],
-  exports: [TreeComponent],
+    imports: [CommonModule, FontAwesomeModule, MatButtonModule, MatTreeModule],
+    declarations: [TreeComponent],
+    exports: [TreeComponent],
 })
 export class TreeModule {}

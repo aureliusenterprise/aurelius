@@ -4,8 +4,8 @@ import { TooltipModule } from '@models4insight/directives';
 import { TermComponent } from './term.component';
 
 @NgModule({
-  imports: [CommonModule, TooltipModule],
-  declarations: [TermComponent],
-  exports: [TermComponent]
+    imports: [CommonModule, TooltipModule],
+    declarations: [TermComponent],
+    exports: [TermComponent],
 })
 export class TermModule {}

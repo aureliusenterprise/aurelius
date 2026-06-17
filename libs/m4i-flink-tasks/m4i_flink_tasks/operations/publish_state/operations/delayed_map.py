@@ -16,7 +16,9 @@ class DelayedMap(MapFunction):
         self.time_to_sleep_s = 1
         self.time_between_messages_ms = 500
 
-    def map(self, value: Union[AppSearchDocument, Exception]) -> Union[AppSearchDocument, Exception]:
+    def map(  # type: ignore[override]
+        self, value: Union[AppSearchDocument, Exception]
+    ) -> Union[AppSearchDocument, Exception]:
         """
         Delay the incoming message so documents are already written in Elastic search.
 

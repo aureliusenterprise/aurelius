@@ -4,8 +4,8 @@ import { MarkdownModule as NgxMarkdownModule } from 'ngx-markdown';
 import { MarkdownComponent } from './markdown.component';
 
 @NgModule({
-  imports: [CommonModule, NgxMarkdownModule.forRoot()],
-  declarations: [MarkdownComponent],
-  exports: [MarkdownComponent],
+    imports: [CommonModule, NgxMarkdownModule.forRoot()],
+    declarations: [MarkdownComponent],
+    exports: [MarkdownComponent],
 })
 export class MarkdownModule {}

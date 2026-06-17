@@ -5,8 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TypeNameComponent } from './type-name.component';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule, TranslateModule],
-  declarations: [TypeNameComponent],
-  exports: [TypeNameComponent],
+    imports: [CommonModule, FontAwesomeModule, TranslateModule],
+    declarations: [TypeNameComponent],
+    exports: [TypeNameComponent],
 })
 export class TypeNameModule {}

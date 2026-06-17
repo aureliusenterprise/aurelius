@@ -1,28 +1,23 @@
 from dataclasses import dataclass
-from typing import Iterable, Optional, List
+from typing import Iterable, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from ..core import (AttributeDef, EntityDef, ObjectId,
-                    TypeCategory)
-from .GenericProcess import (GenericProcess,
-                             GenericProcessAttributes,
-                             GenericProcessAttributesBase,
-                             GenericProcessAttributesDefaultsBase,
-                             GenericProcessBase,
-                             GenericProcessDefaultsBase)
+from ..core import AttributeDef, EntityDef, ObjectId, TypeCategory
+from .GenericProcess import (
+    GenericProcess,
+    GenericProcessAttributes,
+    GenericProcessAttributesBase,
+    GenericProcessAttributesDefaultsBase,
+    GenericProcessBase,
+    GenericProcessDefaultsBase,
+)
 
 connector_process_super_type = ["m4i_generic_process"]
 
 connector_process_attributes_def = [
-    AttributeDef(
-        name="connectorType",
-        type_name="string"
-    ),
-    AttributeDef(
-        name="server",
-        type_name="string"
-    )
+    AttributeDef(name="connectorType", type_name="string"),
+    AttributeDef(name="server", type_name="string"),
 ]
 
 connector_process_def = EntityDef(
@@ -31,11 +26,11 @@ connector_process_def = EntityDef(
     description="A type definition for a connector process in the context of models4insight.com",
     type_version="1.0",
     super_types=connector_process_super_type,
-    attribute_defs=connector_process_attributes_def
+    attribute_defs=connector_process_attributes_def,
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ConnectorProcessAttributesBase(GenericProcessAttributesBase):
     pass
@@ -44,7 +39,7 @@ class ConnectorProcessAttributesBase(GenericProcessAttributesBase):
 # END ConnectorProcessAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ConnectorProcessAttributesDefaultsBase(GenericProcessAttributesDefaultsBase):
     connector_type: Optional[str] = None
@@ -54,27 +49,27 @@ class ConnectorProcessAttributesDefaultsBase(GenericProcessAttributesDefaultsBas
 # END ConnectorProcessAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class ConnectorProcessAttributes(GenericProcessAttributes,
-                                 ConnectorProcessAttributesDefaultsBase,
-                                 ConnectorProcessAttributesBase):
+class ConnectorProcessAttributes(  # type: ignore[reportGeneralTypeIssues]
+    GenericProcessAttributes, ConnectorProcessAttributesDefaultsBase, ConnectorProcessAttributesBase
+):
     pass
 
 
 # END ConnectorProcessAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ConnectorProcessBase(GenericProcessBase):
-    attributes: ConnectorProcessAttributes
+    attributes: ConnectorProcessAttributes  # type: ignore[reportIncompatibleMethodOverride]
 
 
 # END ConnectorProcessBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ConnectorProcessDefaultsBase(GenericProcessDefaultsBase):
     pass
@@ -83,12 +78,11 @@ class ConnectorProcessDefaultsBase(GenericProcessDefaultsBase):
 # END ConnectorProcessDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class ConnectorProcess(GenericProcess,
-                       ConnectorProcessDefaultsBase,
-                       ConnectorProcessBase
-                       ):
+class ConnectorProcess(  # type: ignore[reportGeneralTypeIssues]
+    GenericProcess, ConnectorProcessDefaultsBase, ConnectorProcessBase
+):
     type_name: str = "m4i_connector_process"
 
     @classmethod
@@ -103,6 +97,8 @@ class ConnectorProcess(GenericProcess,
         references = [*super().get_referred_entities()]
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END ConnectorProcess

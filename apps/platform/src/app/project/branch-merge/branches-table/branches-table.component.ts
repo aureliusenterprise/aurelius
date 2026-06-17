@@ -6,36 +6,35 @@ import { Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
 const branchesTableConfig: SortableTableShellConfig = {
-  name: { displayName: 'Branch name', description: 'The name of the branch' },
-  description: {
-    displayName: 'Description',
-    description: 'The description of the branch'
-  },
-  context_menu: { isStatic: true }
+    name: { displayName: 'Branch name', description: 'The name of the branch' },
+    description: {
+        displayName: 'Description',
+        description: 'The description of the branch',
+    },
+    context_menu: { isStatic: true },
 };
 
 @Component({
-  selector: 'models4insight-branches-table',
-  templateUrl: 'branches-table.component.html',
-  styleUrls: ['branches-table.component.scss']
+    selector: 'models4insight-branches-table',
+    templateUrl: 'branches-table.component.html',
+    styleUrls: ['branches-table.component.scss'],
 })
-export class BranchesTableComponent extends AbstractSortableTable
-  implements OnInit {
-  @Output() edit: EventEmitter<Branch> = new EventEmitter<Branch>();
+export class BranchesTableComponent extends AbstractSortableTable implements OnInit {
+    @Output() edit: EventEmitter<Branch> = new EventEmitter<Branch>();
 
-  project$: Observable<Project>;
+    project$: Observable<Project>;
 
-  constructor(private readonly projectService: ProjectService) {
-    super();
-  }
+    constructor(private readonly projectService: ProjectService) {
+        super();
+    }
 
-  ngOnInit() {
-    this.config = branchesTableConfig;
+    ngOnInit() {
+        this.config = branchesTableConfig;
 
-    this.project$ = this.projectService.selectCurrentProject().pipe(shareReplay());
-  }
+        this.project$ = this.projectService.selectCurrentProject().pipe(shareReplay());
+    }
 
-  onEdit(branch: Branch) {
-    this.edit.emit(branch);
-  }
+    onEdit(branch: Branch) {
+        this.edit.emit(branch);
+    }
 }

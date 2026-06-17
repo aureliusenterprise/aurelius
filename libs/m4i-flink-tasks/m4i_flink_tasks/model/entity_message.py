@@ -30,9 +30,7 @@ class EntityMessage(DataClassJsonMixin):
     changed_attributes: List[str] = field(default_factory=list)
     deleted_attributes: List[str] = field(default_factory=list)
 
-    inserted_relationships: Union[Dict[str, List[ObjectId]], None] = field(
-        default_factory=dict,
-    )
+    inserted_relationships: Union[Dict[str, List[ObjectId]], None] = field(default_factory=dict)
     changed_relationships: Union[Dict[str, List[ObjectId]], None] = field(default_factory=dict)
     deleted_relationships: Union[Dict[str, List[ObjectId]], None] = field(default_factory=dict)
 
@@ -43,9 +41,7 @@ class EntityMessage(DataClassJsonMixin):
 
     @classmethod
     def from_change_message(
-        cls,
-        change_message: AtlasChangeMessage,
-        event_type: EntityMessageType,
+        cls, change_message: AtlasChangeMessage, event_type: EntityMessageType
     ) -> "EntityMessage":
         """
         Create an `EntityMessage` instance from an `AtlasChangeMessage`.

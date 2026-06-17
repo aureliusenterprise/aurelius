@@ -5,19 +5,19 @@ import { ConflictResolutionComponent } from './conflict-resolution.component';
 import { ConflictResolutionGuard } from './conflict-resolution.guard';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: ConflictResolutionComponent,
-    data: {
-      title: extract('Resolve conflicts')
+    {
+        path: '',
+        component: ConflictResolutionComponent,
+        data: {
+            title: extract('Resolve conflicts'),
+        },
+        canActivate: [ConflictResolutionGuard],
     },
-    canActivate: [ConflictResolutionGuard]
-  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-  providers: []
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
+    providers: [],
 })
 export class ConflictResolutionRoutingModule {}

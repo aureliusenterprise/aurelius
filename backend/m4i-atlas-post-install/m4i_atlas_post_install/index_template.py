@@ -8,26 +8,17 @@ publish_state_template = {
                         "properties": {
                             "guid": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "typeName": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "uniqueAttributes": {
                                 "properties": {
                                     "qualifiedName": {
                                         "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256,
-                                            }
-                                        },
+                                        "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                                     }
                                 }
                             },
@@ -37,26 +28,17 @@ publish_state_template = {
                         "properties": {
                             "guid": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "typeName": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "uniqueAttributes": {
                                 "properties": {
                                     "qualifiedName": {
                                         "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256,
-                                            }
-                                        },
+                                        "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                                     }
                                 }
                             },
@@ -66,26 +48,17 @@ publish_state_template = {
                         "properties": {
                             "guid": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "typeName": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "uniqueAttributes": {
                                 "properties": {
                                     "qualifiedName": {
                                         "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256,
-                                            }
-                                        },
+                                        "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                                     }
                                 }
                             },
@@ -95,10 +68,7 @@ publish_state_template = {
                         "type": "text",
                         "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                     },
-                    "name": {
-                        "type": "text",
-                        "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                    },
+                    "name": {"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}},
                     "qualifiedName": {
                         "type": "text",
                         "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
@@ -107,18 +77,9 @@ publish_state_template = {
                 }
             },
             "createTime": {"type": "long", "ignore_malformed": False, "coerce": True},
-            "createdBy": {
-                "type": "text",
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-            },
-            "displayText": {
-                "type": "text",
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-            },
-            "guid": {
-                "type": "text",
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-            },
+            "createdBy": {"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}},
+            "displayText": {"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}},
+            "guid": {"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}},
             "isIncomplete": {"type": "boolean"},
             "relationshipAttributes": {
                 "properties": {
@@ -126,15 +87,11 @@ publish_state_template = {
                         "properties": {
                             "guid": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "typeName": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "uniqueAttributes": {"type": "object"},
                         }
@@ -143,15 +100,11 @@ publish_state_template = {
                         "properties": {
                             "guid": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "typeName": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "uniqueAttributes": {"type": "object"},
                         }
@@ -160,34 +113,21 @@ publish_state_template = {
                         "properties": {
                             "guid": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "typeName": {
                                 "type": "text",
-                                "fields": {
-                                    "keyword": {"type": "keyword", "ignore_above": 256}
-                                },
+                                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                             },
                             "uniqueAttributes": {"type": "object"},
                         }
                     },
                 }
             },
-            "status": {
-                "type": "text",
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-            },
-            "typeName": {
-                "type": "text",
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-            },
+            "status": {"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}},
+            "typeName": {"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}},
             "updateTime": {"type": "long", "ignore_malformed": False, "coerce": True},
-            "updatedBy": {
-                "type": "text",
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-            },
+            "updatedBy": {"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}},
             "version": {"type": "long"},
         },
     }

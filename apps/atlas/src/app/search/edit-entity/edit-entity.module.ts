@@ -6,8 +6,8 @@ import { EditEntityRoutingModule } from './edit-entity-routing.module';
 import { EditEntityComponent } from './edit-entity.component';
 
 @NgModule({
-  declarations: [EditEntityComponent],
-  imports: [EditorModule, EditEntityRoutingModule],
-  providers: [EditEntityResolver, EntityDetailsService],
+    declarations: [EditEntityComponent],
+    imports: [EditorModule, EditEntityRoutingModule],
+    providers: [EditEntityResolver, EntityDetailsService],
 })
 export class EditEntityModule {}

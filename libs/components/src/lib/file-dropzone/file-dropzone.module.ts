@@ -6,13 +6,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ControlShellModule } from '../control-shell';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ControlShellModule,
-    DropzoneModule,
-    FontAwesomeModule,
-  ],
-  declarations: [FileDropzoneComponent],
-  exports: [FileDropzoneComponent],
+    imports: [CommonModule, ControlShellModule, DropzoneModule, FontAwesomeModule],
+    declarations: [FileDropzoneComponent],
+    exports: [FileDropzoneComponent],
 })
 export class FileDropzoneModule {}

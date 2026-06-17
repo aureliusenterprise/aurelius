@@ -1,2 +1,2 @@
-from .assert_has_method_been_called import *
-from .track_has_been_called import *
+from .assert_has_method_been_called import assert_has_method_been_called as assert_has_method_been_called
+from .track_has_been_called import track_has_been_called as track_has_been_called

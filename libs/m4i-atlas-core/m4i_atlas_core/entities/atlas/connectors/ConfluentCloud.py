@@ -3,21 +3,30 @@ from typing import Iterable, List
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from ..core import (AttributeDef, EntityDef, TypeCategory,
-                    ObjectId,
-                    RelationshipEndDef, RelationshipDef, Cardinality)
+from ..core import (
+    AttributeDef,
+    EntityDef,
+    TypeCategory,
+    ObjectId,
+    RelationshipEndDef,
+    RelationshipDef,
+    Cardinality,
+)
 
-from ..data_dictionary.BusinessSystem import (BusinessSystem, BusinessSystemAttributesBase,
-                                              BusinessSystemAttributesDefaultsBase, BusinessSystemBase,
-                                              BusinessSystemAttributes, BusinessSystemDefaultsBase)
+from ..data_dictionary.BusinessSystem import (
+    BusinessSystem,
+    BusinessSystemAttributesBase,
+    BusinessSystemAttributesDefaultsBase,
+    BusinessSystemBase,
+    BusinessSystemAttributes,
+    BusinessSystemDefaultsBase,
+)
 
 confluent_cloud_super_type = ["m4i_system"]
 
 confluent_cloud_attributes_def = [
     AttributeDef(
-        name="confluentEnvironment",
-        type_name="array<m4i_confluent_environment>",
-        cardinality=Cardinality.SET
+        name="confluentEnvironment", type_name="array<m4i_confluent_environment>", cardinality=Cardinality.SET
     )
 ]
 
@@ -27,27 +36,21 @@ confluent_cloud_def = EntityDef(
     description="A type definition for a generic Confluent Cloud in the context of models4insight.com",
     type_version="1.0",
     super_types=confluent_cloud_super_type,
-    attribute_defs=confluent_cloud_attributes_def
+    attribute_defs=confluent_cloud_attributes_def,
 )
 
-end_1_ccloud_cenvironment = RelationshipEndDef(
-    type="m4i_confluent_environment",
-    name="confluentCloud"
-)
-end_2_ccloud_cenvironment = RelationshipEndDef(
-    type="m4i_confluent_cloud",
-    name="confluentEnvironment"
-)
+end_1_ccloud_cenvironment = RelationshipEndDef(type="m4i_confluent_environment", name="confluentCloud")
+end_2_ccloud_cenvironment = RelationshipEndDef(type="m4i_confluent_cloud", name="confluentEnvironment")
 
 m4i_ccloud_cenvironment_rel_def = RelationshipDef(
     end_def1=end_1_ccloud_cenvironment,
     end_def2=end_2_ccloud_cenvironment,
     name="m4i_confluent_environment_assignment",
-    category=TypeCategory.RELATIONSHIP
+    category=TypeCategory.RELATIONSHIP,
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ConfluentCloudAttributesBase(BusinessSystemAttributesBase):
     pass
@@ -56,7 +59,7 @@ class ConfluentCloudAttributesBase(BusinessSystemAttributesBase):
 # END ConfluentCloudAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ConfluentCloudAttributesDefaultsBase(BusinessSystemAttributesDefaultsBase):
     confluent_environment: List[ObjectId] = field(default_factory=list)
@@ -65,27 +68,27 @@ class ConfluentCloudAttributesDefaultsBase(BusinessSystemAttributesDefaultsBase)
 # END ConfluentCloudAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class ConfluentCloudAttributes(BusinessSystemAttributes,
-                               ConfluentCloudAttributesDefaultsBase,
-                               ConfluentCloudAttributesBase):
+class ConfluentCloudAttributes(
+    BusinessSystemAttributes, ConfluentCloudAttributesDefaultsBase, ConfluentCloudAttributesBase
+):
     pass
 
 
 # END ConfluentCloudAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ConfluentCloudBase(BusinessSystemBase):
-    attributes: ConfluentCloudAttributes
+    attributes: ConfluentCloudAttributes  # type: ignore[reportIncompatibleMethodOverride]
 
 
 # END ConfluentCloudBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class ConfluentCloudDefaultsBase(BusinessSystemDefaultsBase):
     pass
@@ -94,12 +97,9 @@ class ConfluentCloudDefaultsBase(BusinessSystemDefaultsBase):
 # END ConfluentCloudDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class ConfluentCloud(BusinessSystem,
-                     ConfluentCloudDefaultsBase,
-                     ConfluentCloudBase
-                     ):
+class ConfluentCloud(BusinessSystem, ConfluentCloudDefaultsBase, ConfluentCloudBase):  # type: ignore[reportGeneralTypeIssues]
     type_name: str = "m4i_confluent_cloud"
 
     @classmethod
@@ -112,10 +112,11 @@ class ConfluentCloud(BusinessSystem,
         * Confluent Environment
         """
 
-        references = [*super().get_referred_entities(),
-                      *self.attributes.confluent_environment]
+        references = [*super().get_referred_entities(), *self.attributes.confluent_environment]
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END ConfluentCloud

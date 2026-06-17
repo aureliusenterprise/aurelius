@@ -1,9 +1,8 @@
 import { InjectionToken } from '@angular/core';
 
 export interface GoogleAnalyticsConfig {
-  readonly production?: boolean;
-  readonly measurementID?: string;
+    readonly production?: boolean;
+    readonly measurementID?: string;
 }
 
-export const GoogleAnalyticsConfigService =
-  new InjectionToken<GoogleAnalyticsConfig>('GoogleAnalyticsConfig');
+export const GoogleAnalyticsConfigService = new InjectionToken<GoogleAnalyticsConfig>('GoogleAnalyticsConfig');

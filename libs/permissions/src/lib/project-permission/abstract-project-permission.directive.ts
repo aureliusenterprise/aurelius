@@ -7,22 +7,19 @@ import { TemplateRef, ViewContainerRef, Directive } from '@angular/core';
 
 @Directive()
 export abstract class AbstractProjectPermissionDirective extends AbstractPermissionDirective {
-  protected readonly level$: Subject<ProjectPermissionLevel> =
-    new ReplaySubject<ProjectPermissionLevel>();
+    protected readonly level$: Subject<ProjectPermissionLevel> = new ReplaySubject<ProjectPermissionLevel>();
 
-  constructor(
-    protected readonly projectPermissionService: ProjectPermissionService,
-    templateRef: TemplateRef<any>,
-    viewContainer: ViewContainerRef
-  ) {
-    super(templateRef, viewContainer);
-  }
+    constructor(
+        protected readonly projectPermissionService: ProjectPermissionService,
+        templateRef: TemplateRef<any>,
+        viewContainer: ViewContainerRef,
+    ) {
+        super(templateRef, viewContainer);
+    }
 
-  get permissionProvider(): Observable<boolean> {
-    return this.level$.pipe(
-      switchMap((permissionLevel) =>
-        this.projectPermissionService.checkPermission(permissionLevel)
-      )
-    );
-  }
+    get permissionProvider(): Observable<boolean> {
+        return this.level$.pipe(
+            switchMap((permissionLevel) => this.projectPermissionService.checkPermission(permissionLevel)),
+        );
+    }
 }

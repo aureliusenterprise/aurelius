@@ -10,8 +10,8 @@ version = "1.0.0"
 include = "m4i_governance_data_quality"
 
 [tool.poetry.dependencies]
-dataclasses-json = "~0.6"
-python = "~3.8"
+dataclasses-json = ">=0.6,<1"
+python = ">=3.11,<3.14"
 
 [tool.poetry.dependencies.m4i-atlas-core]
 develop = true

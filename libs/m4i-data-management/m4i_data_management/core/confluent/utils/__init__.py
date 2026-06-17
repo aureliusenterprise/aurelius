@@ -1,7 +1,7 @@
-from .make_serializer import *
-from .make_confluent_consumer import *
-from .make_confluent_producer import *
-from .make_deserializer import *
-from .make_deserializing_consumer import *
-from .make_schema_registry_client import *
-from .make_serializing_producer import *
+from .make_serializer import make_serializer as make_serializer
+from .make_confluent_consumer import make_confluent_consumer as make_confluent_consumer
+from .make_confluent_producer import make_confluent_producer as make_confluent_producer
+from .make_deserializer import make_deserializer as make_deserializer
+from .make_deserializing_consumer import make_deserializing_consumer as make_deserializing_consumer
+from .make_schema_registry_client import make_schema_registry_client as make_schema_registry_client
+from .make_serializing_producer import make_serializing_producer as make_serializing_producer

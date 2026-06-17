@@ -22,7 +22,7 @@ This components provides a wizard that guides users through the Aurelius Atlas f
 The first time setup wizard includes the following steps:
 
 <Mermaid
-  chart={`
+    chart={`
   graph LR
     A[Welcome] --> B[Data domains]
     B --> C[Systems]
@@ -37,7 +37,7 @@ Please find examples of each step below.
 This step introduces the purpose of the first time setup wizard and explains the next steps.
 
 <Canvas>
-  <Story of={WizardComponentStories.Welcome} />
+    <Story of={WizardComponentStories.Welcome} />
 </Canvas>
 
 ### Data domains
@@ -58,7 +58,7 @@ After completing the wizard, data domain entities corresponding to the selected 
 Alternatively, users have the option of skipping this step.
 
 <Canvas>
-  <Story of={WizardComponentStories.DataDomains} />
+    <Story of={WizardComponentStories.DataDomains} />
 </Canvas>
 
 ### Systems
@@ -79,7 +79,7 @@ After completing the wizard, system entities corresponding to the selected syste
 Alternatively, users have the option of skipping this step.
 
 <Canvas>
-  <Story of={WizardComponentStories.Systems} />
+    <Story of={WizardComponentStories.Systems} />
 </Canvas>
 
 ### Summary
@@ -88,5 +88,5 @@ This step provides a overview of the selected data domains and systems.
 After confirmation from the user, Atlas entities corresponding to the current selection are automatically generated.
 
 <Canvas>
-  <StoryFn of={WizardComponentStories.Summary} />
+    <StoryFn of={WizardComponentStories.Summary} />
 </Canvas>

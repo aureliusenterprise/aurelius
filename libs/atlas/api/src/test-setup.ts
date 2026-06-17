@@ -1,1 +1,2 @@
-import 'jest-preset-angular';
+import 'zone.js';
+import 'jest-preset-angular/setup-jest';

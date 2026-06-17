@@ -6,42 +6,37 @@ import { DataQualitySearchService } from './engines/data-quality-search.service'
 import { GovernanceQualitySearchService } from './engines/gov-quality-search.service';
 
 export function getHttpClient(): HttpService {
-  if (!ElasticApiModule.injector) {
-    throw new Error(
-      'Tried running an API query while the ElasticApiModule was not loaded. Please make sure the ElasticApiModule is imported.'
-    );
-  }
-  return ElasticApiModule.injector.get(AppSearchClient) as HttpService;
+    if (!ElasticApiModule.injector) {
+        throw new Error(
+            'Tried running an API query while the ElasticApiModule was not loaded. Please make sure the ElasticApiModule is imported.',
+        );
+    }
+    return ElasticApiModule.injector.get(AppSearchClient) as HttpService;
 }
 
 export function getHttpCache(): HttpCacheService {
-  if (!ElasticApiModule.injector) {
-    throw new Error(
-      'Tried accessing the cache while the ElasticApiModule was not loaded. Please make sure the ElasticApiModule is imported.'
-    );
-  }
-  return ElasticApiModule.injector.get(HttpCacheService);
+    if (!ElasticApiModule.injector) {
+        throw new Error(
+            'Tried accessing the cache while the ElasticApiModule was not loaded. Please make sure the ElasticApiModule is imported.',
+        );
+    }
+    return ElasticApiModule.injector.get(HttpCacheService);
 }
 
 @NgModule({
-  providers: [
-    AppSearchClient,
-    AtlasEntitySearchService,
-    DataQualitySearchService,
-    GovernanceQualitySearchService,
-  ],
+    providers: [AppSearchClient, AtlasEntitySearchService, DataQualitySearchService, GovernanceQualitySearchService],
 })
 export class ElasticApiModule {
-  static injector: Injector;
+    static injector: Injector;
 
-  constructor(injector: Injector) {
-    ElasticApiModule.injector = injector;
-  }
+    constructor(injector: Injector) {
+        ElasticApiModule.injector = injector;
+    }
 
-  static forRoot(): ModuleWithProviders<ElasticApiModule> {
-    return {
-      ngModule: ElasticApiModule,
-      providers: [],
-    };
-  }
+    static forRoot(): ModuleWithProviders<ElasticApiModule> {
+        return {
+            ngModule: ElasticApiModule,
+            providers: [],
+        };
+    }
 }

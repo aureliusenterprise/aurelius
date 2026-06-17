@@ -14,25 +14,25 @@ import { MonitoringComponent } from './monitoring/monitoring.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    TranslateModule,
-    RepositoryModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HomeRoutingModule,
-    CreateProjectModalModule,
-    SortableTableModule
-  ],
-  declarations: [
-    AnalyticsComponent,
-    HomeComponent,
-    InsightsComponent,
-    ModelingComponent,
-    MonitoringComponent,
-    WelcomeComponent
-  ],
-  providers: []
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        TranslateModule,
+        RepositoryModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HomeRoutingModule,
+        CreateProjectModalModule,
+        SortableTableModule,
+    ],
+    declarations: [
+        AnalyticsComponent,
+        HomeComponent,
+        InsightsComponent,
+        ModelingComponent,
+        MonitoringComponent,
+        WelcomeComponent,
+    ],
+    providers: [],
 })
 export class HomeModule {}

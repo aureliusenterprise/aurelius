@@ -49,4 +49,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "atlas.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-

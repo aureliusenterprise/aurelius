@@ -1,2 +1,2 @@
-from .identity import *
-from .omit import *
+from .identity import T as T, identity as identity
+from .omit import omit as omit

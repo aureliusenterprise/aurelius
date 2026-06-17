@@ -1,52 +1,53 @@
 div[angular-treeview] {
-  /* prevent user selection */
-  -moz-user-select: -moz-none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+    /* prevent user selection */
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
-  /* default */
-  font-family: Tahoma;
-  font-size:13px;
-  color: #555;
-  text-decoration: none;
+    /* default */
+    font-family: Tahoma;
+    font-size: 13px;
+    color: #555;
+    text-decoration: none;
 }
 
 div[tree-model] ul {
-  margin: 0;
-  padding: 0;
-  list-style: none; 
-  border: none;
-  overflow: hidden;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: none;
+    overflow: hidden;
 }
 
 div[tree-model] li {
-  position: relative;
-  padding: 0 0 0 20px;
-  line-height: 20px;
+    position: relative;
+    padding: 0 0 0 20px;
+    line-height: 20px;
 }
 
 div[tree-model] li .expanded {
-  padding: 1px 10px;
-  background-image: url("../img/folder.png");
-  background-repeat: no-repeat;
+    padding: 1px 10px;
+    background-image: url('../img/folder.png');
+    background-repeat: no-repeat;
 }
 
 div[tree-model] li .collapsed {
-  padding: 1px 10px;
-  background-image: url("../img/folder-closed.png");
-  background-repeat: no-repeat;
+    padding: 1px 10px;
+    background-image: url('../img/folder-closed.png');
+    background-repeat: no-repeat;
 }
 
 div[tree-model] li .normal {
-  padding: 1px 10px;
-  background-image: url("../img/file.png");
-  background-repeat: no-repeat;
+    padding: 1px 10px;
+    background-image: url('../img/file.png');
+    background-repeat: no-repeat;
 }
 
-div[tree-model] li i, div[tree-model] li span {
-  cursor: pointer;
+div[tree-model] li i,
+div[tree-model] li span {
+    cursor: pointer;
 }
 
 div[tree-model] li .selected {
@@ -57,7 +58,7 @@ div[tree-model] li .selected {
 
 div[tree-model] li .cut {
     font-weight: bold;
-    color: gray
+    color: gray;
 }
 
 /*
@@ -84,16 +85,14 @@ div[tree-model] li .cut {
 
 .expanded-folder {
     padding: 1px 10px;
-    background-image: url("../img/folder.png");
+    background-image: url('../img/folder.png');
     background-repeat: no-repeat;
     cursor: pointer;
 }
 
 .collapsed-folder {
     padding: 1px 10px;
-    background-image: url("../img/folder-closed.png");
+    background-image: url('../img/folder-closed.png');
     background-repeat: no-repeat;
     cursor: pointer;
 }
-
-

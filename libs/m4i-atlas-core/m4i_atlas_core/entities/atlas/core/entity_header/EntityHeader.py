@@ -9,19 +9,18 @@ from ..struct import Struct, StructBase, StructDefaultsBase
 from ..term_assignment_header import TermAssignmentHeader
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class EntityHeaderBase(StructBase):
-
     guid: str
+
 
 # END EntityHeaderBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class EntityHeaderDefaultsBase(StructDefaultsBase):
-
     classification_names: List[str] = field(default_factory=list)
     classifications: List[Classification] = field(default_factory=list)
     display_text: Optional[str] = None
@@ -31,13 +30,14 @@ class EntityHeaderDefaultsBase(StructDefaultsBase):
     meanings: List[TermAssignmentHeader] = field(default_factory=list)
     status: Optional[Status] = None
 
+
 # END EntityHeaderDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class EntityHeader(Struct, EntityHeaderDefaultsBase, EntityHeaderBase):
-
     pass
+
 
 # END EntityHeader

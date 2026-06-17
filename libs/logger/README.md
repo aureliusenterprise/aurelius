@@ -1,6 +1,7 @@
 # Logger
 
-This module provides a common logger which prints messages to the console. The logger provides the following log levels:
+This module provides a common logger which prints messages to the console.
+The logger provides the following log levels:
 
 - `DEBUG`
 - `INFO`
@@ -11,7 +12,10 @@ This module provides a common logger which prints messages to the console. The l
 
 By default, the logger runs in development mode. In development mode, the logger prints messages from all log levels.
 
-Alternatively, you can run the logger in production mode to only include `WARNING` and `ERROR` messages. To enable production mode, please include the following in your `app.module.ts`:
+Alternatively, you can run the logger in production mode
+to only include `WARNING` and `ERROR` messages.
+To enable production mode, please include the following
+in your `app.module.ts`:
 
 ```javascript
 import { NgModule } from '@angular/core';
@@ -19,7 +23,7 @@ import { LoggerModule } from '@models4insight/logger';
 import { environment } from './environments/environment';
 
 @NgModule({
-  imports: [LoggerModule.forRoot({ production: environment.production })]
+    imports: [LoggerModule.forRoot({ production: environment.production })],
 })
 export class AppModule {}
 ```
@@ -38,20 +42,20 @@ const log = new Logger('ExampleService');
 
 @Injectable()
 export class ExampleService {
-  constructor() {
-    try {
-      log.debug('debug');
-      log.info('info');
-      log.warning('warning');
-      throw new Error('error');
-    } catch (error) {
-      log.error(error);
+    constructor() {
+        try {
+            log.debug('debug');
+            log.info('info');
+            log.warning('warning');
+            throw new Error('error');
+        } catch (error) {
+            log.error(error);
+        }
     }
-  }
 }
 ```
 
-# Nx
+## Nx
 
 This library was generated with [Nx](https://nx.dev).
 

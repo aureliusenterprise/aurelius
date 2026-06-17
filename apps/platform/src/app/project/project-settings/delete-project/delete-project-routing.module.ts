@@ -5,19 +5,19 @@ import { DeleteProjectSettingsGuard } from './delete-project.guard';
 import { DeleteProjectSettingsComponent } from './delete-project.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: DeleteProjectSettingsComponent,
-    data: {
-      title: extract('Delete Project')
+    {
+        path: '',
+        component: DeleteProjectSettingsComponent,
+        data: {
+            title: extract('Delete Project'),
+        },
+        canActivate: [DeleteProjectSettingsGuard],
     },
-    canActivate: [DeleteProjectSettingsGuard]
-  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-  providers: []
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
+    providers: [],
 })
 export class DeleteProjectSettingsRoutingModule {}

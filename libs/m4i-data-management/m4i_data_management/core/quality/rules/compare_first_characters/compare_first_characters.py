@@ -1,19 +1,22 @@
 from pandas import DataFrame, Series, isna
 
-def compare_first_characters(data: DataFrame, first_column_name: str, second_column_name: str, number_of_characters: int = 1) -> Series:
+
+def compare_first_characters(
+    data: DataFrame, first_column_name: str, second_column_name: str, number_of_characters: int = 1
+) -> Series:
     """
-    Checks whether the first 'number_of_characters 'values in `first_column_name` and `second_column_name` are similar, and if the values are None or NaN.
+    Checks whether the first 'number_of_characters' values in `first_column_name`
+    and `second_column_name` are similar, and if the values are None or NaN.
 
     If the characters are not equal, assigns a score of 0.
     If the characters are equal, assigns a score of 1.
     """
 
     def check(value):
-
-        if isna(value[first_column_name]):
+        if isna(value[first_column_name]):  # type: ignore[arg-type]
             return 0
 
-        if isna(value[second_column_name]):
+        if isna(value[second_column_name]):  # type: ignore[arg-type]
             return 0
 
         str_first_value = str(value[first_column_name])
@@ -24,4 +27,4 @@ def compare_first_characters(data: DataFrame, first_column_name: str, second_col
     if first_column_name not in data.columns or second_column_name not in data.columns:
         return Series([0] * len(data), index=data.index)
 
-    return data[[first_column_name, second_column_name]].apply(check, axis=1)
+    return data[[first_column_name, second_column_name]].apply(check, axis=1)  # type: ignore[return-value]

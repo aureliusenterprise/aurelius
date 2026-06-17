@@ -1,8 +1,8 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "emitDecoratorMetadata": true
-  },
-  "exclude": ["../../**/*.spec.ts", "../../../apps/atlas/**/*.spec.ts"],
-  "include": ["../../**/*", "../../../apps/atlas/**/*", "*.js"]
+    "compilerOptions": {
+        "emitDecoratorMetadata": true
+    },
+    "exclude": ["../../**/*.spec.ts", "../../../apps/atlas/**/*.spec.ts"],
+    "extends": "../tsconfig.json",
+    "include": ["../../**/*", "../../../apps/atlas/**/*", "*.js"]
 }

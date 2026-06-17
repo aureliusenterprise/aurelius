@@ -7,15 +7,15 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ControlShellModule } from '../control-shell';
 
 @NgModule({
-  imports: [
-    ControlShellModule,
-    FontAwesomeModule,
-    FormsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    ReactiveFormsModule,
-  ],
-  declarations: [DatePickerComponent],
-  exports: [DatePickerComponent],
+    imports: [
+        ControlShellModule,
+        FontAwesomeModule,
+        FormsModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        ReactiveFormsModule,
+    ],
+    declarations: [DatePickerComponent],
+    exports: [DatePickerComponent],
 })
 export class DatePickerModule {}

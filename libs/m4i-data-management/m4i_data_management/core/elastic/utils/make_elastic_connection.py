@@ -14,22 +14,19 @@ def make_elastic_connection() -> Elasticsearch:
         "elastic.cloud.username",
         "elastic.cloud.password",
         "elastic.cloud.scheme",
-        "elastic.cloud.port"
-    )
+        "elastic.cloud.port",
+    )  # type: ignore[assignment]
 
     connection_config = {
         "cloud_id": cloud_id,
-        "http_auth": (
-            username,
-            password
-        ),
+        "http_auth": (username, password),
         "scheme": scheme,
-        "port": port
+        "port": port,
     }
 
-    connection = Elasticsearch(
-        **connection_config
-    )
+    connection = Elasticsearch(**connection_config)
 
     return connection
+
+
 # END make_elastic_connection

@@ -1,60 +1,211 @@
-from ..core import TypesDef
-from .KubernetesEnvironment import *
-from .KubernetesCluster import *
-from .KubernetesNamespace import *
-from .KubernetesCronjob import *
-from .KubernetesDeployment import *
-from .KubernetesPod import *
-from ..processes.MicroserviceProcess import *
-from ..processes.IngressControllerProcess import *
-from ..processes.IngressObjectProcess import *
-from ..processes.KubernetesServiceProcess import *
-from ..processes.ApiOperationProcess import *
+from typing import Dict, Type
 
-kubernetes_types_def = TypesDef(
-    entity_defs=[
-        kubernetes_environment_def,
-        kubernetes_cluster_def,
-        kubernetes_namespace_def,
-        kubernetes_deployment_def,
-        kubernetes_cronjob_def,
-        kubernetes_pod_def,
-        microservice_process_def,
-        api_operation_process_def,
-        ingress_controller_process_def,
-        ingress_object_process_def,
-        kubernetes_service_process_def,
-
-    ],
-    relationship_defs=[
-        m4i_kcluster_kenvironment_rel_def,
-        m4i_kcluster_knamespace_rel_def,
-        m4i_knamespace_kdeployment_rel_def,
-        m4i_knamespace_kcronjob_rel_def,
-        m4i_kcronjob_kpod_rel_def,
-        m4i_kdeployment_kpod_rel_def,
-        m4i_msprocess_aoprocess_rel_def,
-        m4i_kcluster_icprocess_rel_def,
-        m4i_knamespace_ioprocess_rel_def,
-        m4i_icprocess_ioprocess_rel_def,
-        m4i_knamespace_ksprocess_rel_def,
-        m4i_ioprocess_ksprocess_rel_def,
-        m4i_ksprocess_msprocess_rel_def,
-        m4i_system_msprocess_rel_def,
-    ]
+from .KubernetesEnvironment import (
+    KubernetesEnvironment,
+    KubernetesEnvironmentAttributes,
+    KubernetesEnvironmentAttributesBase,
+    KubernetesEnvironmentAttributesDefaultsBase,
+    KubernetesEnvironmentBase,
+    KubernetesEnvironmentDefaultsBase,
+    kubernetes_environment_attributes_def,
+    kubernetes_environment_def,
+    kubernetes_environment_super_type,
+)
+from .KubernetesCluster import (
+    KubernetesCluster,
+    KubernetesClusterAttributes,
+    KubernetesClusterAttributesBase,
+    KubernetesClusterAttributesDefaultsBase,
+    KubernetesClusterBase,
+    KubernetesClusterDefaultsBase,
+    KubernetesClusterRelationshipAttributes,
+    end_1_kcluster_kenvironment,
+    end_2_kcluster_kenvironment,
+    kubernetes_cluster_attributes_def,
+    kubernetes_cluster_def,
+    kubernetes_cluster_super_type,
+    m4i_kcluster_kenvironment_rel_def,
+)
+from .KubernetesNamespace import (
+    KubernetesNamespace,
+    KubernetesNamespaceAttributes,
+    KubernetesNamespaceAttributesBase,
+    KubernetesNamespaceAttributesDefaultsBase,
+    KubernetesNamespaceBase,
+    KubernetesNamespaceDefaultsBase,
+    KubernetesNamespaceRelationshipAttributes,
+    end_1_kcluster_knamespace,
+    end_2_kcluster_knamespace,
+    kubernetes_namespace_attributes_def,
+    kubernetes_namespace_def,
+    kubernetes_namespace_super_type,
+    m4i_kcluster_knamespace_rel_def,
+)
+from .KubernetesCronjob import (
+    KubernetesCronjob,
+    KubernetesCronjobAttributes,
+    KubernetesCronjobAttributesBase,
+    KubernetesCronjobAttributesDefaultsBase,
+    KubernetesCronjobBase,
+    KubernetesCronjobDefaultsBase,
+    end_1_knamespace_kcronjob,
+    end_2_knamespace_kcronjob,
+    kubernetes_cronjob_attributes_def,
+    kubernetes_cronjob_def,
+    kubernetes_cronjob_super_type,
+    m4i_knamespace_kcronjob_rel_def,
+)
+from .KubernetesDeployment import (
+    KubernetesDeployment,
+    KubernetesDeploymentAttributes,
+    KubernetesDeploymentAttributesBase,
+    KubernetesDeploymentAttributesDefaultsBase,
+    KubernetesDeploymentBase,
+    KubernetesDeploymentDefaultsBase,
+    end_1_knamespace_kdeployment,
+    end_2_knamespace_kdeployment,
+    kubernetes_deployment_attributes_def,
+    kubernetes_deployment_def,
+    kubernetes_deployment_super_type,
+    m4i_knamespace_kdeployment_rel_def,
+)
+from .KubernetesPod import (
+    KubernetesPod,
+    KubernetesPodAttributes,
+    KubernetesPodAttributesBase,
+    KubernetesPodAttributesDefaultsBase,
+    KubernetesPodBase,
+    KubernetesPodDefaultsBase,
+    end_1_kcronjob_kpod,
+    end_1_kdeployment_kpod,
+    end_2_kcronjob_kpod,
+    end_2_kdeployment_kpod,
+    kubernetes_pod_attributes_def,
+    kubernetes_pod_def,
+    kubernetes_pod_super_type,
+    m4i_kcronjob_kpod_rel_def,
+    m4i_kdeployment_kpod_rel_def,
 )
 
-kubernetes_entity_types = {
-    "m4i_kubernetes_environment": KubernetesEnvironment,
-    "m4i_kubernetes_cluster": KubernetesCluster,
-    "m4i_kubernetes_namespace": KubernetesNamespace,
-    "m4i_kubernetes_cronjob": KubernetesCronjob,
-    "m4i_kubernetes_deployment": KubernetesDeployment,
-    "m4i_kubernetes_pod": KubernetesPod,
-    "m4i_microservice_process": MicroserviceProcess,
-    "m4i_api_operation_process": ApiOperationProcess,
-    "m4i_kubernetes_service_process": KubernetesServiceProcess,
-    "m4i_ingress_object_process": IngressObjectProcess,
-    "m4i_ingress_controller_process": IngressControllerProcess
+__all__ = [
+    "KubernetesCluster",
+    "KubernetesClusterAttributes",
+    "KubernetesClusterAttributesBase",
+    "KubernetesClusterAttributesDefaultsBase",
+    "KubernetesClusterBase",
+    "KubernetesClusterDefaultsBase",
+    "KubernetesClusterRelationshipAttributes",
+    "KubernetesCronjob",
+    "KubernetesCronjobAttributes",
+    "KubernetesCronjobAttributesBase",
+    "KubernetesCronjobAttributesDefaultsBase",
+    "KubernetesCronjobBase",
+    "KubernetesCronjobDefaultsBase",
+    "KubernetesDeployment",
+    "KubernetesDeploymentAttributes",
+    "KubernetesDeploymentAttributesBase",
+    "KubernetesDeploymentAttributesDefaultsBase",
+    "KubernetesDeploymentBase",
+    "KubernetesDeploymentDefaultsBase",
+    "KubernetesEnvironment",
+    "KubernetesEnvironmentAttributes",
+    "KubernetesEnvironmentAttributesBase",
+    "KubernetesEnvironmentAttributesDefaultsBase",
+    "KubernetesEnvironmentBase",
+    "KubernetesEnvironmentDefaultsBase",
+    "KubernetesNamespace",
+    "KubernetesNamespaceAttributes",
+    "KubernetesNamespaceAttributesBase",
+    "KubernetesNamespaceAttributesDefaultsBase",
+    "KubernetesNamespaceBase",
+    "KubernetesNamespaceDefaultsBase",
+    "KubernetesNamespaceRelationshipAttributes",
+    "KubernetesPod",
+    "KubernetesPodAttributes",
+    "KubernetesPodAttributesBase",
+    "KubernetesPodAttributesDefaultsBase",
+    "KubernetesPodBase",
+    "KubernetesPodDefaultsBase",
+    "end_1_kcluster_kenvironment",
+    "end_1_kcluster_knamespace",
+    "end_1_kcronjob_kpod",
+    "end_1_kdeployment_kpod",
+    "end_1_knamespace_kcronjob",
+    "end_1_knamespace_kdeployment",
+    "end_2_kcluster_kenvironment",
+    "end_2_kcluster_knamespace",
+    "end_2_kcronjob_kpod",
+    "end_2_kdeployment_kpod",
+    "end_2_knamespace_kcronjob",
+    "end_2_knamespace_kdeployment",
+    "kubernetes_cluster_attributes_def",
+    "kubernetes_cluster_def",
+    "kubernetes_cluster_super_type",
+    "kubernetes_cronjob_attributes_def",
+    "kubernetes_cronjob_def",
+    "kubernetes_cronjob_super_type",
+    "kubernetes_deployment_attributes_def",
+    "kubernetes_deployment_def",
+    "kubernetes_deployment_super_type",
+    "kubernetes_environment_attributes_def",
+    "kubernetes_environment_def",
+    "kubernetes_environment_super_type",
+    "kubernetes_namespace_attributes_def",
+    "kubernetes_namespace_def",
+    "kubernetes_namespace_super_type",
+    "kubernetes_pod_attributes_def",
+    "kubernetes_pod_def",
+    "kubernetes_pod_super_type",
+    "m4i_kcluster_kenvironment_rel_def",
+    "m4i_kcluster_knamespace_rel_def",
+    "m4i_kcronjob_kpod_rel_def",
+    "m4i_kdeployment_kpod_rel_def",
+    "m4i_knamespace_kcronjob_rel_def",
+    "m4i_knamespace_kdeployment_rel_def",
+    # Aggregate type definitions
+    "kubernetes_entity_types",
+    "kubernetes_entity_type_mapping",
+    "kubernetes_types_def",
+]
 
+from ..core import Entity, TypesDef
+
+# Entity types list for registration
+kubernetes_entity_types = [
+    kubernetes_namespace_def,
+    kubernetes_environment_def,
+    kubernetes_cluster_def,
+    kubernetes_pod_def,
+    kubernetes_deployment_def,
+    kubernetes_cronjob_def,
+]
+
+# Aggregate TypesDef for API calls
+kubernetes_types_def = TypesDef(
+    entity_defs=[
+        kubernetes_namespace_def,
+        kubernetes_environment_def,
+        kubernetes_cluster_def,
+        kubernetes_pod_def,
+        kubernetes_deployment_def,
+        kubernetes_cronjob_def,
+    ],
+    relationship_defs=[
+        m4i_kcluster_knamespace_rel_def,
+        m4i_kcluster_kenvironment_rel_def,
+        m4i_kdeployment_kpod_rel_def,
+        m4i_kcronjob_kpod_rel_def,
+        m4i_knamespace_kdeployment_rel_def,
+        m4i_knamespace_kcronjob_rel_def,
+    ],
+)
+
+# Entity type mapping for register_atlas_entity_types (Dict[str, Type[Entity]])
+kubernetes_entity_type_mapping: Dict[str, Type[Entity]] = {
+    "KubernetesNamespace": KubernetesNamespace,
+    "KubernetesEnvironment": KubernetesEnvironment,
+    "KubernetesCluster": KubernetesCluster,
+    "KubernetesPod": KubernetesPod,
+    "KubernetesDeployment": KubernetesDeployment,
+    "KubernetesCronjob": KubernetesCronjob,
 }

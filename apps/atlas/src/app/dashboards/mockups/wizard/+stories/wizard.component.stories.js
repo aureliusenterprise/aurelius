@@ -10,52 +10,47 @@ import { WelcomeWizardComponent } from '../welcome-wizard/welcome-wizard.compone
 import { WelcomeWizardModule } from '../welcome-wizard/welcome-wizard.module';
 
 export default {
-  title: 'Apps/Atlas/Mockups/Dashboards/First Time Setup',
+    title: 'Apps/Atlas/Mockups/Dashboards/First Time Setup',
 
-  decorators: [
-    moduleMetadata({
-      imports: [
-        DomainsWizardModule,
-        SummaryWizardModule,
-        SystemsWizardModule,
-        WelcomeWizardModule,
-      ],
-    }),
-  ],
+    decorators: [
+        moduleMetadata({
+            imports: [DomainsWizardModule, SummaryWizardModule, SystemsWizardModule, WelcomeWizardModule],
+        }),
+    ],
 };
 
 export const Welcome = {
-  render: () => ({
-    component: WelcomeWizardComponent,
-  }),
+    render: () => ({
+        component: WelcomeWizardComponent,
+    }),
 
-  name: 'Welcome',
-  height: '575px',
+    name: 'Welcome',
+    height: '575px',
 };
 
 export const DataDomains = {
-  render: () => ({
-    component: DomainsWizardComponent,
-  }),
+    render: () => ({
+        component: DomainsWizardComponent,
+    }),
 
-  name: 'Data domains',
-  height: '800px',
+    name: 'Data domains',
+    height: '800px',
 };
 
 export const Systems = {
-  render: () => ({
-    component: SystemsWizardComponent,
-  }),
+    render: () => ({
+        component: SystemsWizardComponent,
+    }),
 
-  name: 'Systems',
-  height: '800px',
+    name: 'Systems',
+    height: '800px',
 };
 
 export const Summary = {
-  render: () => ({
-    component: SummaryWizardComponent,
-  }),
+    render: () => ({
+        component: SummaryWizardComponent,
+    }),
 
-  name: 'Summary',
-  height: '888px',
+    name: 'Summary',
+    height: '888px',
 };

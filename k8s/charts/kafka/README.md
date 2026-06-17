@@ -2,57 +2,65 @@
 
 # Apache Kafka packaged by Bitnami
 
-Apache Kafka is a distributed streaming platform designed to build real-time pipelines and can be used as a message broker or as a replacement for a log aggregation solution for big data applications.
+Apache Kafka is a distributed streaming platform designed to build real-time pipelines and can be used as a
+message broker or as a replacement for a log aggregation solution for big data applications.
 
 [Overview of Apache Kafka](http://kafka.apache.org/)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
-                           
-## TL;DR
+Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering
+are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
-```console
+## # TL;DR
+
+````console
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install my-release bitnami/kafka
-```
 
-## Introduction
+```text
 
-This chart bootstraps a [Kafka](https://github.com/bitnami/containers/tree/main/bitnami/kafka) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+## # Introduction
 
-Bitnami charts can be used with [Kubeapps](https://kubeapps.dev/) for deployment and management of Helm Charts in clusters.
+This chart bootstraps a [Kafka](<https://github.com/bitnami/containers/tree/main/bitnami/kafka>) deployment on a
+[Kubernetes](<https://kubernetes.io>) cluster using the [Helm](<https://helm.sh>) package manager.
 
-## Prerequisites
+Bitnami charts can be used with [Kubeapps](<https://kubeapps.dev/>) for deployment and management of Helm Charts
+in clusters.
+
+## # Prerequisites
 
 - Kubernetes 1.19+
 - Helm 3.2.0+
 - PV provisioner support in the underlying infrastructure
 
-## Installing the Chart
+## # Installing the Chart
 
 To install the chart with the release name `my-release`:
 
 ```console
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install my-release bitnami/kafka
-```
 
-These commands deploy Kafka on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
+```text
+
+These commands deploy Kafka on the Kubernetes cluster in the default configuration. The
+[Parameters](#parameters) section lists the parameters that can be configured during installation.
 
 > **Tip**: List all releases using `helm list`
 
-## Uninstalling the Chart
+## # Uninstalling the Chart
 
 To uninstall/delete the `my-release` deployment:
 
 ```console
 helm delete my-release
-```
+
+```text
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
-## Parameters
+## # Parameters
 
-### Global parameters
+## # Global parameters
 
 | Name                      | Description                                     | Value |
 | ------------------------- | ----------------------------------------------- | ----- |
@@ -60,8 +68,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `global.imagePullSecrets` | Global Docker registry secret names as an array | `[]`  |
 | `global.storageClass`     | Global StorageClass for Persistent Volume(s)    | `""`  |
 
-
-### Common parameters
+## # Common parameters
 
 | Name                     | Description                                                                             | Value           |
 | ------------------------ | --------------------------------------------------------------------------------------- | --------------- |
@@ -76,8 +83,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `diagnosticMode.command` | Command to override all containers in the statefulset                                   | `["sleep"]`     |
 | `diagnosticMode.args`    | Args to override all containers in the statefulset                                      | `["infinity"]`  |
 
-
-### Kafka parameters
+## # Kafka parameters
 
 | Name                                              | Description                                                                                                                                                                         | Value                               |
 | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
@@ -144,7 +150,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `auth.zookeeper.tls.type`                         | Format to use for TLS certificates. Allowed types: `jks` and `pem`.                                                                                                                 | `jks`                               |
 | `auth.zookeeper.tls.verifyHostname`               | Hostname validation.                                                                                                                                                                | `true`                              |
 | `auth.zookeeper.tls.existingSecret`               | Name of the existing secret containing the TLS certificates for ZooKeeper client communications.                                                                                    | `""`                                |
-| `auth.zookeeper.tls.existingSecretKeystoreKey`    | The secret key from the  auth.zookeeper.tls.existingSecret containing the Keystore.                                                                                                 | `zookeeper.keystore.jks`            |
+| `auth.zookeeper.tls.existingSecretKeystoreKey`    | The secret key from the auth.zookeeper.tls.existingSecret containing the Keystore.                                                                                                  | `zookeeper.keystore.jks`            |
 | `auth.zookeeper.tls.existingSecretTruststoreKey`  | The secret key from the auth.zookeeper.tls.existingSecret containing the Truststore.                                                                                                | `zookeeper.truststore.jks`          |
 | `auth.zookeeper.tls.passwordsSecret`              | Existing secret containing Keystore and Truststore passwords.                                                                                                                       | `""`                                |
 | `auth.zookeeper.tls.passwordsSecretKeystoreKey`   | The secret key from the auth.zookeeper.tls.passwordsSecret containing the password for the Keystore.                                                                                | `keystore-password`                 |
@@ -160,8 +166,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `extraEnvVarsCM`                                  | ConfigMap with extra environment variables                                                                                                                                          | `""`                                |
 | `extraEnvVarsSecret`                              | Secret with extra environment variables                                                                                                                                             | `""`                                |
 
-
-### Statefulset parameters
+## # Statefulset parameters
 
 | Name                                    | Description                                                                                                                                                                                   | Value           |
 | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
@@ -227,8 +232,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `pdb.minAvailable`                      | Maximum number/percentage of unavailable Kafka replicas                                                                                                                                       | `""`            |
 | `pdb.maxUnavailable`                    | Maximum number/percentage of unavailable Kafka replicas                                                                                                                                       | `1`             |
 
-
-### Traffic Exposure parameters
+## # Traffic Exposure parameters
 
 | Name                                              | Description                                                                                       | Value                 |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------- | --------------------- |
@@ -275,8 +279,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `networkPolicy.externalAccess.from`               | customize the from section for External Access on tcp-external port                               | `[]`                  |
 | `networkPolicy.egressRules.customRules`           | Custom network policy rule                                                                        | `{}`                  |
 
-
-### Persistence parameters
+## # Persistence parameters
 
 | Name                           | Description                                                                                                                            | Value                     |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
@@ -297,8 +300,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `logPersistence.selector`      | Selector to match an existing Persistent Volume for Kafka log data PVC. If set, the PVC can't have a PV dynamically provisioned for it | `{}`                      |
 | `logPersistence.mountPath`     | Mount path of the Kafka logs volume                                                                                                    | `/opt/bitnami/kafka/logs` |
 
-
-### Volume Permissions parameters
+## # Volume Permissions parameters
 
 | Name                                                   | Description                                                                     | Value                   |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------- | ----------------------- |
@@ -312,8 +314,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `volumePermissions.resources.requests`                 | Init container volume-permissions resource requests                             | `{}`                    |
 | `volumePermissions.containerSecurityContext.runAsUser` | User ID for the init container                                                  | `0`                     |
 
-
-### Other Parameters
+## # Other Parameters
 
 | Name                                          | Description                                                                                    | Value   |
 | --------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------- |
@@ -323,8 +324,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `serviceAccount.annotations`                  | Additional custom annotations for the ServiceAccount                                           | `{}`    |
 | `rbac.create`                                 | Whether to create & use RBAC resources or not                                                  | `false` |
 
-
-### Metrics parameters
+## # Metrics parameters
 
 | Name                                                        | Description                                                                                                                      | Value                                                                                   |
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
@@ -405,8 +405,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `metrics.serviceMonitor.honorLabels`                        | Specify honorLabels parameter to add the scrape endpoint                                                                         | `false`                                                                                 |
 | `metrics.serviceMonitor.jobLabel`                           | The name of the label on the target service to use as the job name in prometheus.                                                | `""`                                                                                    |
 
-
-### Kafka provisioning parameters
+## # Kafka provisioning parameters
 
 | Name                                                 | Description                                                                                                                   | Value                 |
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | --------------------- |
@@ -454,8 +453,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `provisioning.initContainers`                        | Add additional Add init containers to the Kafka provisioning pod(s)                                                           | `[]`                  |
 | `provisioning.waitForKafka`                          | If true use an init container to wait until kafka is ready before starting provisioning                                       | `true`                |
 
-
-### ZooKeeper chart parameters
+## # ZooKeeper chart parameters
 
 | Name                                    | Description                                                                                                                                                             | Value               |
 | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
@@ -472,91 +470,129 @@ The command removes all the Kubernetes components associated with the chart and 
 | `zookeeper.persistence.size`            | Persistent Volume size                                                                                                                                                  | `8Gi`               |
 | `externalZookeeper.servers`             | List of external zookeeper servers to use. Typically used in combination with 'zookeeperChrootPath'.                                                                    | `[]`                |
 
-
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```console
 helm install my-release \
   --set replicaCount=3 \
   bitnami/kafka
-```
+
+```text
 
 The above command deploys Kafka with 3 brokers (replicas).
 
-Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
+Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the
+chart. For example,
 
 ```console
 helm install my-release -f values.yaml bitnami/kafka
-```
+
+```text
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
 
-## Configuration and installation details
+## # Configuration and installation details
 
-### [Rolling VS Immutable tags](https://docs.bitnami.com/containers/how-to/understand-rolling-tags-containers/)
+## # [Rolling VS Immutable
 
-It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
+tags](<https://docs.bitnami.com/containers/how-to/understand-rolling-tags-containers/>)
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+It is strongly recommended to use immutable tags in a production environment. This ensures your deployment
+does not change automatically if the same tag is updated with a different image.
 
-### Setting custom parameters
+Bitnami will release a new chart updating its containers if a new version of the main container, significant
+changes, or critical vulnerabilities exist.
 
-Any environment variable beginning with `KAFKA_CFG_` will be mapped to its corresponding Kafka key. For example, use `KAFKA_CFG_BACKGROUND_THREADS` in order to set `background.threads`. In order to pass custom environment variables use the `extraEnvVars` property.
+## # Setting custom parameters
 
-Using `extraEnvVars` with `KAFKA_CFG_` is the preferred and simplest way to add custom Kafka parameters not otherwise specified in this chart. Alternatively, you can provide a *full* Kafka configuration using `config` or `existingConfigmap`.
-Setting either `config` or `existingConfigmap` will cause the chart to disregard `KAFKA_CFG_` settings, which are used by many other Kafka-related chart values described above, as well as dynamically generated parameters such as `zookeeper.connect`. This can cause unexpected behavior.
+Any environment variable beginning with `KAFKA_CFG_` will be mapped to its corresponding Kafka key. For
+example, use `KAFKA_CFG_BACKGROUND_THREADS` in order to set `background.threads`. In order to pass custom
+environment variables use the `extraEnvVars` property.
 
-### Listeners configuration
+Using `extraEnvVars` with `KAFKA_CFG_` is the preferred and simplest way to add custom Kafka parameters not
+otherwise specified in this chart. Alternatively, you can provide a _full_ Kafka configuration using `config`
+or `existingConfigmap`.
+Setting either `config` or `existingConfigmap` will cause the chart to disregard `KAFKA_CFG_` settings, which
+are used by many other Kafka-related chart values described above, as well as dynamically generated parameters
+such as `zookeeper.connect`. This can cause unexpected behavior.
+
+## # Listeners configuration
 
 This chart allows you to automatically configure Kafka with 3 listeners:
 
 - One for inter-broker communications.
 - A second one for communications with clients within the K8s cluster.
-- (optional) a third listener for communications with clients outside the K8s cluster. Check [this section](#accessing-kafka-brokers-from-outside-the-cluster) for more information.
+- (optional) a third listener for communications with clients outside the K8s cluster. Check [this
+  section](#accessing-kafka-brokers-from-outside-the-cluster) for more information.
 
-For more complex configurations, set the `listeners`, `advertisedListeners` and `listenerSecurityProtocolMap` parameters as needed.
+For more complex configurations, set the `listeners`, `advertisedListeners` and `listenerSecurityProtocolMap`
+parameters as needed.
 
-### Enable security for Kafka and Zookeeper
+## # Enable security for Kafka and Zookeeper
 
-You can configure different authentication protocols for each listener you configure in Kafka. For instance, you can use `sasl_tls` authentication for client communications, while using `tls` for inter-broker communications. This table shows the available protocols and the security they provide:
+You can configure different authentication protocols for each listener you configure in Kafka. For instance,
+you can use `sasl_tls` authentication for client communications, while using `tls` for inter-broker
+communications. This table shows the available protocols and the security they provide:
 
 | Method    | Authentication               | Encryption via TLS |
-|-----------|------------------------------|--------------------|
+| --------- | ---------------------------- | ------------------ |
 | plaintext | None                         | No                 |
 | tls       | None                         | Yes                |
 | mtls      | Yes (two-way authentication) | Yes                |
 | sasl      | Yes (via SASL)               | No                 |
 | sasl_tls  | Yes (via SASL)               | Yes                |
 
-Learn more about how to configure Kafka to use the different authentication protocols in the [chart documentation](https://docs.bitnami.com/kubernetes/infrastructure/kafka/administration/enable-security/).
+Learn more about how to configure Kafka to use the different authentication protocols in the [chart
+documentation](<https://docs.bitnami.com/kubernetes/infrastructure/kafka/administration/enable-security/>).
 
-If you enabled SASL authentication on any listener, you can set the SASL credentials using the parameters below:
+If you enabled SASL authentication on any listener, you can set the SASL credentials using the parameters
+below:
 
-- `auth.sasl.jaas.clientUsers`/`auth.sasl.jaas.clientPasswords`: when enabling SASL authentication for communications with clients.
-- `auth.sasl.jaas.interBrokerUser`/`auth.sasl.jaas.interBrokerPassword`:  when enabling SASL authentication for inter-broker communications.
-- `auth.jaas.zookeeperUser`/`auth.jaas.zookeeperPassword`: In the case that the Zookeeper chart is deployed with SASL authentication enabled.
+- `auth.sasl.jaas.clientUsers`/`auth.sasl.jaas.clientPasswords`: when enabling SASL authentication for
+  communications with clients.
+- `auth.sasl.jaas.interBrokerUser`/`auth.sasl.jaas.interBrokerPassword`: when enabling SASL authentication for
+  inter-broker communications.
+- `auth.jaas.zookeeperUser`/`auth.jaas.zookeeperPassword`: In the case that the Zookeeper chart is deployed
+  with SASL authentication enabled.
 
-In order to configure TLS authentication/encryption, you **can** create a secret per Kafka broker you have in the cluster containing the Java Key Stores (JKS) files: the truststore (`kafka.truststore.jks`) and the keystore (`kafka.keystore.jks`). Then, you need pass the secret names with the `auth.tls.existingSecrets` parameter when deploying the chart.
+In order to configure TLS authentication/encryption, you **can** create a secret per Kafka broker you have in
+the cluster containing the Java Key Stores (JKS) files: the truststore (`kafka.truststore.jks`) and the
+keystore (`kafka.keystore.jks`). Then, you need pass the secret names with the `auth.tls.existingSecrets`
+parameter when deploying the chart.
 
-> **Note**: If the JKS files are password protected (recommended), you will need to provide the password to get access to the keystores. To do so, use the `auth.tls.password` parameter to provide your password.
+> **Note**: If the JKS files are password protected (recommended), you will need to provide the password to
+> get access to the keystores. To do so, use the `auth.tls.password` parameter to provide your password.
 
-For instance, to configure TLS authentication on a Kafka cluster with 2 Kafka brokers use the commands below to create the secrets:
+For instance, to configure TLS authentication on a Kafka cluster with 2 Kafka brokers use the commands below
+to create the secrets:
 
 ```console
 kubectl create secret generic kafka-jks-0 --from-file=kafka.truststore.jks=./kafka.truststore.jks --from-file=kafka.keystore.jks=./kafka-0.keystore.jks
 kubectl create secret generic kafka-jks-1 --from-file=kafka.truststore.jks=./kafka.truststore.jks --from-file=kafka.keystore.jks=./kafka-1.keystore.jks
-```
 
-> **Note**: the command above assumes you already created the truststore and keystores files. This [script](https://raw.githubusercontent.com/confluentinc/confluent-platform-security-tools/master/kafka-generate-ssl.sh) can help you with the JKS files generation.
+```text
 
-If, for some reason (like using Cert-Manager) you can not use the default JKS secret scheme, you can use the additional parameters:
+> **Note**: the command above assumes you already created the truststore and keystores files. This
+>
+> [script](<https://raw.githubusercontent.com/confluentinc/confluent-platform-security-tools/master/kafka-generate-ssl.sh>)
+> can help you with the JKS files generation.
 
-- `auth.tls.jksTruststoreSecret` to define additional secret, where the `kafka.truststore.jks` is being kept. The truststore password **must** be the same as in `auth.tls.password`
+If, for some reason (like using Cert-Manager) you can not use the default JKS secret scheme, you can use the
+additional parameters:
+
+- `auth.tls.jksTruststoreSecret` to define additional secret, where the `kafka.truststore.jks` is being kept.
+  The truststore password **must** be the same as in `auth.tls.password`
 - `auth.tls.jksTruststore` to overwrite the default value of the truststore key (`kafka.truststore.jks`).
-- `auth.tls.jksKeystoreSAN` if you want to use a SAN certificate for your brokers. Setting this parameter would mean that the chart expects a existing key in the `auth.tls.jksTruststoreSecret` with the `auth.tls.jksKeystoreSAN` value and use this as a keystore for **all** brokers
-> **Note**: If you are using cert-manager, particularly when an ACME issuer is used, the `ca.crt` field is not put in the `Secret` that cert-manager creates. To handle this, the `auth.tls.pemChainIncluded` property can be set to `true` and the initContainer created by this Chart will attempt to extract the intermediate certs from the `tls.crt` field of the secret (which is a PEM chain)
+- `auth.tls.jksKeystoreSAN` if you want to use a SAN certificate for your brokers. Setting this parameter
+  would mean that the chart expects a existing key in the `auth.tls.jksTruststoreSecret` with the
+  `auth.tls.jksKeystoreSAN` value and use this as a keystore for **all** brokers > **Note**: If you are using
+  cert-manager, particularly when an ACME issuer is used, the `ca.crt` field is
+  not put in the `Secret` that cert-manager creates. To handle this, the `auth.tls.pemChainIncluded` property
+  can be set to `true` and the initContainer created by this Chart will attempt to extract the intermediate
+  certs from the `tls.crt` field of the secret (which is a PEM chain)
 
-> **Note**: The truststore/keystore from above **must** be protected with the same password as in `auth.tls.password`
+> **Note**: The truststore/keystore from above **must** be protected with the same password as in
+> `auth.tls.password`
 
 You can deploy the chart with authentication using the following parameters:
 
@@ -576,7 +612,8 @@ zookeeper.auth.serverUsers=zookeeperUser
 zookeeper.auth.serverPasswords=zookeeperPassword
 zookeeper.auth.clientUser=zookeeperUser
 zookeeper.auth.clientPassword=zookeeperPassword
-```
+
+```text
 
 You can deploy the chart with AclAuthorizer using the following parameters:
 
@@ -599,25 +636,32 @@ zookeeper.auth.clientPassword=zookeeperPassword
 authorizerClassName=kafka.security.authorizer.AclAuthorizer
 allowEveryoneIfNoAclFound=false
 superUsers=User:admin
-```
 
-If you also enable exposing metrics using the Kafka exporter, and you are using `sasl_tls`, `tls`, or `mtls` authentication protocols, you need to mount the CA certificated used to sign the brokers certificates in the exporter so it can validate the Kafka brokers. To do so, create a secret containing the CA, and set the `metrics.certificatesSecret` parameter. As an alternative, you can skip TLS validation using extra flags:
+```text
+
+If you also enable exposing metrics using the Kafka exporter, and you are using `sasl_tls`, `tls`, or `mtls`
+authentication protocols, you need to mount the CA certificated used to sign the brokers certificates in the
+exporter so it can validate the Kafka brokers. To do so, create a secret containing the CA, and set the
+`metrics.certificatesSecret` parameter. As an alternative, you can skip TLS validation using extra flags:
 
 ```console
 metrics.kafka.extraFlags={tls.insecure-skip-tls-verify: ""}
-```
 
-### Accessing Kafka brokers from outside the cluster
+```text
 
-In order to access Kafka Brokers from outside the cluster, an additional listener and advertised listener must be configured. Additionally, a specific service per kafka pod will be created.
+## # Accessing Kafka brokers from outside the cluster
+
+In order to access Kafka Brokers from outside the cluster, an additional listener and advertised listener must
+be configured. Additionally, a specific service per kafka pod will be created.
 
 There are two ways of configuring external access. Using LoadBalancer services or using NodePort services.
 
-#### Using LoadBalancer services
+### # Using LoadBalancer services
 
 You have two alternatives to use LoadBalancer services:
 
-- Option A) Use random load balancer IPs using an **initContainer** that waits for the IPs to be ready and discover them automatically.
+- Option A) Use random load balancer IPs using an **initContainer** that waits for the IPs to be ready and
+  discover them automatically.
 
 ```console
 externalAccess.enabled=true
@@ -626,7 +670,8 @@ externalAccess.service.ports.external=9094
 externalAccess.autoDiscovery.enabled=true
 serviceAccount.create=true
 rbac.create=true
-```
+
+```text
 
 Note: This option requires creating RBAC rules on clusters where RBAC policies are enabled.
 
@@ -638,13 +683,17 @@ externalAccess.service.type=LoadBalancer
 externalAccess.service.ports.external=9094
 externalAccess.service.loadBalancerIPs[0]='external-ip-1'
 externalAccess.service.loadBalancerIPs[1]='external-ip-2'}
-```
 
-Note: You need to know in advance the load balancer IPs so each Kafka broker advertised listener is configured with it.
+```text
 
-Following the aforementioned steps will also allow to connect the brokers from the outside using the cluster's default service (when `service.type` is `LoadBalancer` or `NodePort`). Use the property `service.externalPort` to specify the port used for external connections.
+Note: You need to know in advance the load balancer IPs so each Kafka broker advertised listener is configured
+with it.
 
-#### Using NodePort services
+Following the aforementioned steps will also allow to connect the brokers from the outside using the cluster's
+default service (when `service.type` is `LoadBalancer` or `NodePort`). Use the property `service.externalPort`
+to specify the port used for external connections.
+
+### # Using NodePort services
 
 You have two alternatives to use NodePort services:
 
@@ -656,7 +705,8 @@ externalAccess.service.type=NodePort
 externalAccess.autoDiscovery.enabled=true
 serviceAccount.create=true
 rbac.create=true
-```
+
+```text
 
 Note: This option requires creating RBAC rules on clusters where RBAC policies are enabled.
 
@@ -667,26 +717,32 @@ externalAccess.enabled=true
 externalAccess.service.type=NodePort
 externalAccess.service.nodePorts[0]='node-port-1'
 externalAccess.service.nodePorts[1]='node-port-2'
-```
 
-Note: You need to know in advance the node ports that will be exposed so each Kafka broker advertised listener is configured with it.
+```text
 
-The pod will try to get the external ip of the node using `curl -s https://ipinfo.io/ip` unless `externalAccess.service.domain` or `externalAccess.service.useHostIPs` is provided.
+Note: You need to know in advance the node ports that will be exposed so each Kafka broker advertised listener
+is configured with it.
 
-#### Name resolution with External-DNS
+The pod will try to get the external ip of the node using `curl -s https://ipinfo.io/ip` unless
+`externalAccess.service.domain` or `externalAccess.service.useHostIPs` is provided.
 
-You can use the following values to generate External-DNS annotations which automatically creates DNS records for each ReplicaSet pod:
+### # Name resolution with External-DNS
+
+You can use the following values to generate External-DNS annotations which automatically creates DNS records
+for each ReplicaSet pod:
 
 ```yaml
 externalAccess:
-  service:
-    annotations:
-      external-dns.alpha.kubernetes.io/hostname: "{{ .targetPod }}.example.com"
-```
+    service:
+        annotations:
+            external-dns.alpha.kubernetes.io/hostname: '{{ .targetPod }}.example.com'
+```text
 
-### Sidecars
+## # Sidecars
 
-If you have a need for additional containers to run within the same pod as Kafka (e.g. an additional metrics or logging exporter), you can do so via the `sidecars` config parameter. Simply define your container according to the Kubernetes container spec.
+If you have a need for additional containers to run within the same pod as Kafka (e.g. an additional metrics
+or logging exporter), you can do so via the `sidecars` config parameter. Simply define your container
+according to the Kubernetes container spec.
 
 ```yaml
 sidecars:
@@ -696,82 +752,91 @@ sidecars:
     ports:
       - name: portname
        containerPort: 1234
-```
 
-### Setting Pod's affinity
+```text
 
-This chart allows you to set your custom affinity using the `affinity` parameter. Find more information about Pod's affinity in the [kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
+## # Setting Pod's affinity
 
-As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/master/bitnami/common#affinities) chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
+This chart allows you to set your custom affinity using the `affinity` parameter. Find more information about
+Pod's affinity in the [kubernetes
+documentation](<https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity>).
 
-### Deploying extra resources
+As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node
+affinity available at the
+[bitnami/common](<https://github.com/bitnami/charts/tree/master/bitnami/common#affinities>) chart. To do so, set
+the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
 
-There are cases where you may want to deploy extra objects, such as Kafka Connect. For covering this case, the chart allows adding the full specification of other objects using the `extraDeploy` parameter. The following example would create a deployment including a Kafka Connect deployment so you can connect Kafka with MongoDB&reg;:
+## # Deploying extra resources
+
+There are cases where you may want to deploy extra objects, such as Kafka Connect. For covering this case, the
+chart allows adding the full specification of other objects using the `extraDeploy` parameter. The following
+example would create a deployment including a Kafka Connect deployment so you can connect Kafka with
+MongoDB&reg;:
 
 ```yaml
-## Extra objects to deploy (value evaluated as a template)
-##
+# # Extra objects to deploy (value evaluated as a template)
+# #
 extraDeploy:
-  - |
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: {{ include "kafka.fullname" . }}-connect
-      labels: {{- include "common.labels.standard" . | nindent 4 }}
-        app.kubernetes.io/component: connector
-    spec:
-      replicas: 1
-      selector:
-        matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
-          app.kubernetes.io/component: connector
-      template:
+    - |
+        apiVersion: apps/v1
+        kind: Deployment
         metadata:
-          labels: {{- include "common.labels.standard" . | nindent 8 }}
+          name: {{ include "kafka.fullname" . }}-connect
+          labels: {{- include "common.labels.standard" . | nindent 4 }}
             app.kubernetes.io/component: connector
         spec:
-          containers:
-            - name: connect
-              image: KAFKA-CONNECT-IMAGE
-              imagePullPolicy: IfNotPresent
-              ports:
-                - name: connector
-                  containerPort: 8083
-              volumeMounts:
+          replicas: 1
+          selector:
+            matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+              app.kubernetes.io/component: connector
+          template:
+            metadata:
+              labels: {{- include "common.labels.standard" . | nindent 8 }}
+                app.kubernetes.io/component: connector
+            spec:
+              containers:
+                - name: connect
+                  image: KAFKA-CONNECT-IMAGE
+                  imagePullPolicy: IfNotPresent
+                  ports:
+                    - name: connector
+                      containerPort: 8083
+                  volumeMounts:
+                    - name: configuration
+                      mountPath: /bitnami/kafka/config
+              volumes:
                 - name: configuration
-                  mountPath: /bitnami/kafka/config
-          volumes:
-            - name: configuration
-              configMap:
-                name: {{ include "kafka.fullname" . }}-connect
-  - |
-    apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: {{ include "kafka.fullname" . }}-connect
-      labels: {{- include "common.labels.standard" . | nindent 4 }}
-        app.kubernetes.io/component: connector
-    data:
-      connect-standalone.properties: |-
-        bootstrap.servers = {{ include "kafka.fullname" . }}-0.{{ include "kafka.fullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}:{{ .Values.service.port }}
-        ...
-      mongodb.properties: |-
-        connection.uri=mongodb://root:password@mongodb-hostname:27017
-        ...
-  - |
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: {{ include "kafka.fullname" . }}-connect
-      labels: {{- include "common.labels.standard" . | nindent 4 }}
-        app.kubernetes.io/component: connector
-    spec:
-      ports:
-        - protocol: TCP
-          port: 8083
-          targetPort: connector
-      selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
-        app.kubernetes.io/component: connector
-```
+                  configMap:
+                    name: {{ include "kafka.fullname" . }}-connect
+    - |
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: {{ include "kafka.fullname" . }}-connect
+          labels: {{- include "common.labels.standard" . | nindent 4 }}
+            app.kubernetes.io/component: connector
+        data:
+          connect-standalone.properties: |-
+            bootstrap.servers = {{ include "kafka.fullname" . }}-0.{{ include "kafka.fullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}:{{ .Values.service.port }}
+            ...
+          mongodb.properties: |-
+            connection.uri=mongodb://root:password@mongodb-hostname:27017
+            ...
+    - |
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: {{ include "kafka.fullname" . }}-connect
+          labels: {{- include "common.labels.standard" . | nindent 4 }}
+            app.kubernetes.io/component: connector
+        spec:
+          ports:
+            - protocol: TCP
+              port: 8083
+              targetPort: connector
+          selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+            app.kubernetes.io/component: connector
+```text
 
 You can create the Kafka Connect image using the Dockerfile below:
 
@@ -782,43 +847,57 @@ RUN mkdir -p /opt/bitnami/kafka/plugins && \
     cd /opt/bitnami/kafka/plugins && \
     curl --remote-name --location --silent https://search.maven.org/remotecontent?filepath=org/mongodb/kafka/mongo-kafka-connect/1.2.0/mongo-kafka-connect-1.2.0-all.jar
 CMD /opt/bitnami/kafka/bin/connect-standalone.sh /opt/bitnami/kafka/config/connect-standalone.properties /opt/bitnami/kafka/config/mongo.properties
-```
 
-## Persistence
+```text
 
-The [Bitnami Kafka](https://github.com/bitnami/containers/tree/main/bitnami/kafka) image stores the Kafka data at the `/bitnami/kafka` path of the container.
+## # Persistence
 
-Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and minikube. See the [Parameters](#persistence-parameters) section to configure the PVC or to disable persistence.
+The [Bitnami Kafka](<https://github.com/bitnami/containers/tree/main/bitnami/kafka>) image stores the Kafka data
+at the `/bitnami/kafka` path of the container.
 
-### Adjust permissions of persistent volume mountpoint
+Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and
+minikube. See the [Parameters](#persistence-parameters) section to configure the PVC or to disable
+persistence.
 
-As the image run as non-root by default, it is necessary to adjust the ownership of the persistent volume so that the container can write data into it.
+## # Adjust permissions of persistent volume mountpoint
 
-By default, the chart is configured to use Kubernetes Security Context to automatically change the ownership of the volume. However, this feature does not work in all Kubernetes distributions.
-As an alternative, this chart supports using an initContainer to change the ownership of the volume before mounting it in the final destination.
+As the image run as non-root by default, it is necessary to adjust the ownership of the persistent volume so
+that the container can write data into it.
+
+By default, the chart is configured to use Kubernetes Security Context to automatically change the ownership
+of the volume. However, this feature does not work in all Kubernetes distributions.
+As an alternative, this chart supports using an initContainer to change the ownership of the volume before
+mounting it in the final destination.
 
 You can enable this initContainer by setting `volumePermissions.enabled` to `true`.
 
-## Troubleshooting
+## # Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to Bitnami's Helm charts in [this
+troubleshooting guide](<https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues>).
 
-## Upgrading
+## # Upgrading
 
-### To 18.0.0
+## # To 18.0.0
 
-This major updates the Zookeeper subchart to it newest major, 10.0.0. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/bitnami/charts/tree/master/bitnami/zookeeper#to-1000).
+This major updates the Zookeeper subchart to it newest major, 10.0.0. For more information on this subchart's
+major, please refer to [zookeeper upgrade
+notes](<https://github.com/bitnami/charts/tree/master/bitnami/zookeeper#to-1000>).
 
-### To 16.0.0
+## # To 16.0.0
 
-This major updates the Zookeeper subchart to it newest major, 9.0.0. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/bitnami/charts/tree/master/bitnami/zookeeper#to-900).
+This major updates the Zookeeper subchart to it newest major, 9.0.0. For more information on this subchart's
+major, please refer to [zookeeper upgrade
+notes](<https://github.com/bitnami/charts/tree/master/bitnami/zookeeper#to-900>).
 
-### To 15.0.0
+## # To 15.0.0
 
 This major release bumps Kafka major version to `3.x` series.
-It also renames several values in this chart and adds missing features, in order to be inline with the rest of assets in the Bitnami charts repository. Some affected values are:
+It also renames several values in this chart and adds missing features, in order to be inline with the rest of
+assets in the Bitnami charts repository. Some affected values are:
 
-- `service.port`, `service.internalPort` and `service.externalPort` have been regrouped under the `service.ports` map.
+- `service.port`, `service.internalPort` and `service.externalPort` have been regrouped under the
+  `service.ports` map.
 - `metrics.kafka.service.port` has been regrouped under the `metrics.kafka.service.ports` map.
 - `metrics.jmx.service.port` has been regrouped under the `metrics.jmx.service.ports` map.
 - `updateStrategy` (string) and `rollingUpdatePartition` are regrouped under the `updateStrategy` map.
@@ -826,83 +905,106 @@ It also renames several values in this chart and adds missing features, in order
 
 Additionally updates the ZooKeeper subchart to it newest major, `8.0.0`, which contains similar changes.
 
-### To 14.0.0
+## # To 14.0.0
 
-In this version, the `image` block is defined once and is used in the different templates, while in the previous version, the `image` block was duplicated for the main container and the provisioning one
+In this version, the `image` block is defined once and is used in the different templates, while in the
+previous version, the `image` block was duplicated for the main container and the provisioning one
 
 ```yaml
 image:
-  registry: docker.io
-  repository: bitnami/kafka
-  tag: 2.8.0
-```
+    registry: docker.io
+    repository: bitnami/kafka
+    tag: 2.8.0
+```text
 
 VS
 
 ```yaml
 image:
-  registry: docker.io
-  repository: bitnami/kafka
-  tag: 2.8.0
-...
-provisioning:
-  image:
     registry: docker.io
     repository: bitnami/kafka
     tag: 2.8.0
-```
+---
+provisioning:
+    image:
+        registry: docker.io
+        repository: bitnami/kafka
+        tag: 2.8.0
+```text
 
-See [PR#7114](https://github.com/bitnami/charts/pull/7114) for more info about the implemented changes
+See [PR#7114](<https://github.com/bitnami/charts/pull/7114>) for more info about the implemented changes
 
-### To 13.0.0
+## # To 13.0.0
 
-This major updates the Zookeeper subchart to it newest major, 7.0.0, which renames all TLS-related settings. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/bitnami/charts/tree/master/bitnami/zookeeper#to-700).
+This major updates the Zookeeper subchart to it newest major, 7.0.0, which renames all TLS-related settings.
+For more information on this subchart's major, please refer to [zookeeper upgrade
+notes](<https://github.com/bitnami/charts/tree/master/bitnami/zookeeper#to-700>).
 
-### To 12.2.0
+## # To 12.2.0
 
-This version also introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/master/bitnami/common#bitnami-common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
+This version also introduces `bitnami/common`, a [library
+chart](<https://helm.sh/docs/topics/library_charts/#helm>) as a dependency. More documentation about this new
+utility could be found
+[here](<https://github.com/bitnami/charts/tree/master/bitnami/common#bitnami-common-library-chart>). Please,
+make sure that you have updated the chart dependencies before executing any upgrade.
 
-### To 12.0.0
+## # To 12.0.0
 
-[On November 13, 2020, Helm v2 support was formally finished](https://github.com/helm/charts#status-of-the-project), this major version is the result of the required changes applied to the Helm Chart to be able to incorporate the different features added in Helm v3 and to be consistent with the Helm project itself regarding the Helm v2 EOL.
+[On November 13, 2020, Helm v2 support was formally
+finished](<https://github.com/helm/charts#status-of-the-project>), this major version is the result of the
+required changes applied to the Helm Chart to be able to incorporate the different features added in Helm v3
+and to be consistent with the Helm project itself regarding the Helm v2 EOL.
 
-**What changes were introduced in this major version?**
+## What changes were introduced in this major version?
 
-- Previous versions of this Helm Chart use `apiVersion: v1` (installable by both Helm 2 and 3), this Helm Chart was updated to `apiVersion: v2` (installable by Helm 3 only). [Here](https://helm.sh/docs/topics/charts/#the-apiversion-field) you can find more information about the `apiVersion` field.
-- Move dependency information from the *requirements.yaml* to the *Chart.yaml*
-- After running `helm dependency update`, a *Chart.lock* file is generated containing the same structure used in the previous *requirements.lock*
-- The different fields present in the *Chart.yaml* file has been ordered alphabetically in a homogeneous way for all the Bitnami Helm Charts
+- Previous versions of this Helm Chart use `apiVersion: v1` (installable by both Helm 2 and 3), this Helm
+  Chart was updated to `apiVersion: v2` (installable by Helm 3 only).
+  [Here](<https://helm.sh/docs/topics/charts/#the-apiversion-field>) you can find more information about the
+  `apiVersion` field.
+- Move dependency information from the _requirements.yaml_ to the _Chart.yaml_
+- After running `helm dependency update`, a _Chart.lock_ file is generated containing the same structure used
+  in the previous _requirements.lock_
+- The different fields present in the _Chart.yaml_ file has been ordered alphabetically in a homogeneous way
+  for all the Bitnami Helm Charts
 
-**Considerations when upgrading to this version**
+## Considerations when upgrading to this version
 
-- If you want to upgrade to this version from a previous one installed with Helm v3, you shouldn't face any issues
-- If you want to upgrade to this version using Helm v2, this scenario is not supported as this version doesn't support Helm v2 anymore
-- If you installed the previous version with Helm v2 and wants to upgrade to this version with Helm v3, please refer to the [official Helm documentation](https://helm.sh/docs/topics/v2_v3_migration/#migration-use-cases) about migrating from Helm v2 to v3
+- If you want to upgrade to this version from a previous one installed with Helm v3, you shouldn't face any
+  issues
+- If you want to upgrade to this version using Helm v2, this scenario is not supported as this version doesn't
+  support Helm v2 anymore
+- If you installed the previous version with Helm v2 and wants to upgrade to this version with Helm v3, please
+  refer to the [official Helm documentation](<https://helm.sh/docs/topics/v2_v3_migration/#migration-use-cases>)
+  about migrating from Helm v2 to v3
 
-**Useful links**
+## Useful links
 
-- https://docs.bitnami.com/tutorials/resolve-helm2-helm3-post-migration-issues/
-- https://helm.sh/docs/topics/v2_v3_migration/
-- https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/
+- <https://docs.bitnami.com/tutorials/resolve-helm2-helm3-post-migration-issues/>
+- <https://helm.sh/docs/topics/v2_v3_migration/>
+- <https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/>
 
-### To 11.8.0
+## # To 11.8.0
 
 External access to brokers can now be achieved through the cluster's Kafka service.
 
-- `service.nodePort` -> deprecated  in favor of `service.nodePorts.client` and `service.nodePorts.external`
+- `service.nodePort` -> deprecated in favor of `service.nodePorts.client` and `service.nodePorts.external`
 
-### To 11.7.0
+## # To 11.7.0
 
-The way to configure the users and passwords changed. Now it is allowed to create multiple users during the installation by providing the list of users and passwords.
+The way to configure the users and passwords changed. Now it is allowed to create multiple users during the
+installation by providing the list of users and passwords.
 
-- `auth.jaas.clientUser` (string) -> deprecated  in favor of `auth.jaas.clientUsers` (array).
-- `auth.jaas.clientPassword` (string) -> deprecated  in favor of `auth.jaas.clientPasswords` (array).
+- `auth.jaas.clientUser` (string) -> deprecated in favor of `auth.jaas.clientUsers` (array).
+- `auth.jaas.clientPassword` (string) -> deprecated in favor of `auth.jaas.clientPasswords` (array).
 
-### To 11.0.0
+## # To 11.0.0
 
-The way to configure listeners and athentication on Kafka is totally refactored allowing users to configure different authentication protocols on different listeners. Please check the [Listeners Configuration](#listeners-configuration) section for more information.
+The way to configure listeners and athentication on Kafka is totally refactored allowing users to configure
+different authentication protocols on different listeners. Please check the [Listeners
+Configuration](#listeners-configuration) section for more information.
 
-Backwards compatibility is not guaranteed you adapt your values.yaml to the new format. Here you can find some parameters that were renamed or disappeared in favor of new ones on this major version:
+Backwards compatibility is not guaranteed you adapt your values.yaml to the new format. Here you can find some
+parameters that were renamed or disappeared in favor of new ones on this major version:
 
 - `auth.enabled` -> deprecated in favor of `auth.clientProtocol` and `auth.interBrokerProtocol` parameters.
 - `auth.ssl` -> deprecated in favor of `auth.clientProtocol` and `auth.interBrokerProtocol` parameters.
@@ -919,13 +1021,17 @@ Backwards compatibility is not guaranteed you adapt your values.yaml to the new 
 - `metrics.kafka.extraFlag` -> new parameter
 - `metrics.kafka.certificatesSecret` -> new parameter
 
-### To 10.0.0
+## # To 10.0.0
 
-If you are setting the `config` or `log4j` parameter, backwards compatibility is not guaranteed, because the `KAFKA_MOUNTED_CONFDIR` has moved from `/opt/bitnami/kafka/conf` to `/bitnami/kafka/config`. In order to continue using these parameters, you must also upgrade your image to `docker.io/bitnami/kafka:2.4.1-debian-10-r38` or later.
+If you are setting the `config` or `log4j` parameter, backwards compatibility is not guaranteed, because the
+`KAFKA_MOUNTED_CONFDIR` has moved from `/opt/bitnami/kafka/conf` to `/bitnami/kafka/config`. In order to
+continue using these parameters, you must also upgrade your image to
+`docker.io/bitnami/kafka:2.4.1-debian-10-r38` or later.
 
-### To 9.0.0
+## # To 9.0.0
 
-Backwards compatibility is not guaranteed you adapt your values.yaml to the new format. Here you can find some parameters that were renamed on this major version:
+Backwards compatibility is not guaranteed you adapt your values.yaml to the new format. Here you can find some
+parameters that were renamed on this major version:
 
 ```diff
 - securityContext.enabled
@@ -941,45 +1047,55 @@ Backwards compatibility is not guaranteed you adapt your values.yaml to the new 
 + metrics.jmx.config
 - metrics.jmx.configMap.overrideName
 + metrics.jmx.existingConfigmap
-```
 
-Ports names were prefixed with the protocol to comply with Istio (see https://istio.io/docs/ops/deployment/requirements/).
+```text
 
-### To 8.0.0
+Ports names were prefixed with the protocol to comply with Istio (see
+<https://istio.io/docs/ops/deployment/requirements/>).
 
-There is not backwards compatibility since the brokerID changes to the POD_NAME. For more information see [this PR](https://github.com/bitnami/charts/pull/2028).
+## # To 8.0.0
 
-### To 7.0.0
+There is not backwards compatibility since the brokerID changes to the POD_NAME. For more information see
+[this PR](<https://github.com/bitnami/charts/pull/2028>).
 
-Backwards compatibility is not guaranteed when Kafka metrics are enabled, unless you modify the labels used on the exporter deployments.
-Use the workaround below to upgrade from versions previous to 7.0.0. The following example assumes that the release name is kafka:
+## # To 7.0.0
+
+Backwards compatibility is not guaranteed when Kafka metrics are enabled, unless you modify the labels used on
+the exporter deployments.
+Use the workaround below to upgrade from versions previous to 7.0.0. The following example assumes that the
+release name is kafka:
 
 ```console
 helm upgrade kafka bitnami/kafka --version 6.1.8 --set metrics.kafka.enabled=false
 helm upgrade kafka bitnami/kafka --version 7.0.0 --set metrics.kafka.enabled=true
-```
 
-### To 2.0.0
+```text
+
+## # To 2.0.0
 
 Backwards compatibility is not guaranteed unless you modify the labels used on the chart's deployments.
-Use the workaround below to upgrade from versions previous to 2.0.0. The following example assumes that the release name is kafka:
+Use the workaround below to upgrade from versions previous to 2.0.0. The following example assumes that the
+release name is kafka:
 
 ```console
 kubectl delete statefulset kafka-kafka --cascade=false
 kubectl delete statefulset kafka-zookeeper --cascade=false
-```
 
-### To 1.0.0
+```text
+
+## # To 1.0.0
 
 Backwards compatibility is not guaranteed unless you modify the labels used on the chart's deployments.
-Use the workaround below to upgrade from versions previous to 1.0.0. The following example assumes that the release name is kafka:
+Use the workaround below to upgrade from versions previous to 1.0.0. The following example assumes that the
+release name is kafka:
 
 ```console
 kubectl delete statefulset kafka-kafka --cascade=false
 kubectl delete statefulset kafka-zookeeper --cascade=false
-```
 
-## License
+```text
+
+## # License
 
 Copyright &copy; 2022 Bitnami
 
@@ -987,10 +1103,11 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    <http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+````

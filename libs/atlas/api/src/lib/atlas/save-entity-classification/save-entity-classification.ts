@@ -7,16 +7,16 @@ import { getHttpClient } from '../atlas-api.module';
  * Adds the given `classifications` to the entity with the given `guid`.
  */
 export function saveEntityClassification(
-  /** The guid of the entity */
-  guid: string,
-  /** The classifications to add */
-  classifications: Classification[]
+    /** The guid of the entity */
+    guid: string,
+    /** The classifications to add */
+    classifications: Classification[],
 ): Observable<void> {
-  const http = getHttpClient();
+    const http = getHttpClient();
 
-  validateRequiredArguments(arguments, 'saveEntityClassification');
+    validateRequiredArguments(arguments, 'saveEntityClassification');
 
-  const path = `atlas/v2/entity/guid/${guid}/classifications`;
+    const path = `atlas/v2/entity/guid/${guid}/classifications`;
 
-  return http.post<void>(path, classifications);
+    return http.post<void>(path, classifications);
 }

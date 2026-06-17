@@ -1,6 +1,7 @@
 # Front end container
 
-This project uses Docker to configure and deploy the Aurelius Atlas web application alongside its landing page, using Apache HTTP Server (httpd).
+This project uses Docker to configure and deploy the Aurelius Atlas web
+application alongside its landing page, using Apache HTTP Server (httpd).
 
 ## Project Structure
 
@@ -10,7 +11,9 @@ This project uses Docker to configure and deploy the Aurelius Atlas web applicat
 
 - `conf/`: Holds the main Apache HTTP Server configuration file (httpd.conf).
 
-- `conf.d/`: Contains additional modular configuration files for Apache. These can include virtual host definitions, security settings, or other modular configurations.
+- `conf.d/`: Contains additional modular configuration files for Apache.
+  These can include virtual host definitions, security settings,
+  or other modular configurations.
 
 - `init/`: Contains initialization scripts. These scripts:
 

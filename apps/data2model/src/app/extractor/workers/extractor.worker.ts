@@ -6,19 +6,16 @@ import { bijacencyMap } from './bijacency-map';
 import { suggestions } from './suggestions';
 
 const tasks: Dictionary<(args: Dictionary<any>) => Promise<any>> = {
-  [ExtractorWorkerTask.SUGGESTIONS]: suggestions,
-  [ExtractorWorkerTask.BIJACENCY_MAP]: bijacencyMap
+    [ExtractorWorkerTask.SUGGESTIONS]: suggestions,
+    [ExtractorWorkerTask.BIJACENCY_MAP]: bijacencyMap,
 };
 
-addEventListener(
-  'message',
-  async ({ data }: { data: ExtractorWorkerContext }) => {
+addEventListener('message', async ({ data }: { data: ExtractorWorkerContext }) => {
     const task = tasks[data.task];
 
     if (!task) {
-      throw new TypeError(`Operation ${data.task} is not supported!`);
+        throw new TypeError(`Operation ${data.task} is not supported!`);
     }
 
     postMessage(await task(data.context));
-  }
-);
+});

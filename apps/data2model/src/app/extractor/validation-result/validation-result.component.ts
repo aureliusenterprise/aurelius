@@ -3,45 +3,45 @@ import { faCheck, faExclamationCircle, faExclamationTriangle, faInfoCircle } fro
 import { ValidationResult, ValidationSeverityType } from '../extractor-types';
 
 @Component({
-  selector: 'models4insight-validation-result',
-  templateUrl: 'validation-result.component.html',
-  styleUrls: ['validation-result.component.scss']
+    selector: 'models4insight-validation-result',
+    templateUrl: 'validation-result.component.html',
+    styleUrls: ['validation-result.component.scss'],
 })
 export class ValidationResultComponent {
-  readonly faCheck = faCheck;
-  readonly faExclamationCircle = faExclamationCircle;
-  readonly faExclamationTriangle = faExclamationTriangle;
-  readonly faInfoCircle = faInfoCircle;
+    readonly faCheck = faCheck;
+    readonly faExclamationCircle = faExclamationCircle;
+    readonly faExclamationTriangle = faExclamationTriangle;
+    readonly faInfoCircle = faInfoCircle;
 
-  readonly ValidationSeverityType = ValidationSeverityType;
+    readonly ValidationSeverityType = ValidationSeverityType;
 
-  maxSeverity: ValidationSeverityType;
-  tooltip: string;
+    maxSeverity: ValidationSeverityType;
+    tooltip: string;
 
-  @Input() set errors(errors: ValidationResult | ValidationResult[]) {
-    if (!Array.isArray(errors)) {
-      errors = [errors];
+    @Input() set errors(errors: ValidationResult | ValidationResult[]) {
+        if (!Array.isArray(errors)) {
+            errors = [errors];
+        }
+        this.maxSeverity = this.calculateMaxSeverity(errors);
+        this.tooltip = this.buildTooltip(errors);
     }
-    this.maxSeverity = this.calculateMaxSeverity(errors);
-    this.tooltip = this.buildTooltip(errors);
-  }
 
-  private calculateMaxSeverity(errors: ValidationResult[]) {
-    if (!errors.length) {
-      return null;
+    private calculateMaxSeverity(errors: ValidationResult[]) {
+        if (!errors.length) {
+            return null;
+        }
+        const severityMap = errors.map((error) => error.type);
+        if (severityMap.includes(ValidationSeverityType.ERROR)) {
+            return ValidationSeverityType.ERROR;
+        }
+        if (severityMap.includes(ValidationSeverityType.WARNING)) {
+            return ValidationSeverityType.WARNING;
+        } else {
+            return ValidationSeverityType.INFO;
+        }
     }
-    const severityMap = errors.map(error => error.type);
-    if (severityMap.includes(ValidationSeverityType.ERROR)) {
-      return ValidationSeverityType.ERROR;
-    }
-    if (severityMap.includes(ValidationSeverityType.WARNING)) {
-      return ValidationSeverityType.WARNING;
-    } else {
-      return ValidationSeverityType.INFO;
-    }
-  }
 
-  private buildTooltip(errors: ValidationResult[]) {
-    return errors.map((error, index) => `${index + 1}. ${error.description}`).join('\n');
-  }
+    private buildTooltip(errors: ValidationResult[]) {
+        return errors.map((error, index) => `${index + 1}. ${error.description}`).join('\n');
+    }
 }

@@ -1,30 +1,30 @@
 [
-  {
-    "id": 1,
-    "expressionVersion": 1,
-    "expression": "completeness('name')",
-    "qualifiedName": "m4i_system--name",
-    "qualityDimension": "completeness",
-    "ruleTitle": "System has a name",
-    "ruleDescription": "A system should have a name",
-    "compliantMessage": "This system has a name",
-    "noncompliantMessage": "This system should have a name",
-    "active": 1,
-    "type": "attribute",
-    "guid": "1ccb2110-d037-48d2-8e1c-087cb20c7470"
-  },
-  {
-    "id": 2,
-    "expressionVersion": 1,
-    "expression": "length('collections', 1)",
-    "qualifiedName": "m4i_system--collections",
-    "qualityDimension": "completeness",
-    "ruleTitle": "System has a collection",
-    "ruleDescription": "A system should have at least one collection",
-    "compliantMessage": "This system has at least one collection",
-    "noncompliantMessage": "This system should have at least one collection",
-    "active": 1,
-    "type": "relationship",
-    "guid": "1afbce14-aebe-4c3f-beba-562ee4aa86b1"
-  }
+    {
+        "active": 1,
+        "compliantMessage": "This system has a name",
+        "expression": "completeness('name')",
+        "expressionVersion": 1,
+        "guid": "1ccb2110-d037-48d2-8e1c-087cb20c7470",
+        "id": 1,
+        "noncompliantMessage": "This system should have a name",
+        "qualifiedName": "m4i_system--name",
+        "qualityDimension": "completeness",
+        "ruleDescription": "A system should have a name",
+        "ruleTitle": "System has a name",
+        "type": "attribute"
+    },
+    {
+        "active": 1,
+        "compliantMessage": "This system has at least one collection",
+        "expression": "length('collections', 1)",
+        "expressionVersion": 1,
+        "guid": "1afbce14-aebe-4c3f-beba-562ee4aa86b1",
+        "id": 2,
+        "noncompliantMessage": "This system should have at least one collection",
+        "qualifiedName": "m4i_system--collections",
+        "qualityDimension": "completeness",
+        "ruleDescription": "A system should have at least one collection",
+        "ruleTitle": "System has a collection",
+        "type": "relationship"
+    }
 ]

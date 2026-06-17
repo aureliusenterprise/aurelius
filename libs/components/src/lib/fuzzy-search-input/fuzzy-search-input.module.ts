@@ -5,8 +5,8 @@ import { ControlShellModule } from '../control-shell';
 import { FuzzySearchInputComponent } from './fuzzy-search-input.component';
 
 @NgModule({
-  imports: [CommonModule, ControlShellModule, FormsModule, ReactiveFormsModule],
-  declarations: [FuzzySearchInputComponent],
-  exports: [FuzzySearchInputComponent],
+    imports: [CommonModule, ControlShellModule, FormsModule, ReactiveFormsModule],
+    declarations: [FuzzySearchInputComponent],
+    exports: [FuzzySearchInputComponent],
 })
 export class FuzzySearchInputModule {}

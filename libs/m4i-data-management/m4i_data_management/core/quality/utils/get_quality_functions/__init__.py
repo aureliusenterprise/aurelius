@@ -1,1 +1,1 @@
-from .get_quality_functions import *
+from .get_quality_functions import get_quality_functions as get_quality_functions

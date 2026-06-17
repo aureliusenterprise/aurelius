@@ -5,19 +5,19 @@ import { BranchMergeComponent } from './branch-merge.component';
 import { BranchMergeGuard } from './branch-merge.guard';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: BranchMergeComponent,
-    data: {
-      title: extract('Move branches')
+    {
+        path: '',
+        component: BranchMergeComponent,
+        data: {
+            title: extract('Move branches'),
+        },
+        canActivate: [BranchMergeGuard],
     },
-    canActivate: [BranchMergeGuard]
-  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-  providers: []
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
+    providers: [],
 })
 export class BranchMergeRoutingModule {}

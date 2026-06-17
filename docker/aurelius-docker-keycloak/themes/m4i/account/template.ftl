@@ -62,9 +62,9 @@
             </div>
         </nav>
     </div>
-</section> 
+</section>
 
-<div class="container" style="min-height: 70vh;">  
+<div class="container" style="min-height: 70vh;">
     <#if message?has_content>
         <div class="section">
             <div class="alert alert-${message.type}">
@@ -73,21 +73,21 @@
                         <div class="message-body">
                             <span>${kcSanitize(message.summary)?no_esc}</span>
                         </div>
-                    </article>                            
+                    </article>
                 </#if>
                 <#if message.type = 'error'>
                     <article class="message is-danger">
                         <div class="message-body">
                             <span>${kcSanitize(message.summary)?no_esc}</span>
                         </div>
-                    </article>                            
+                    </article>
                 </#if>
             </div>
         </div>
     </#if>
     <div class="section">
         <#nested "content">
-    </div> 
+    </div>
 </div>
 
 <footer class="footer has-background-link">

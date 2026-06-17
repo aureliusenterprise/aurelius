@@ -68,10 +68,10 @@
             <div class="field">
                 <label class="label" for="user.attributes.phoneNumber">Phone Number</label>
                 <div class="control has-icons-left is-expanded">
-                    <input type="tel" 
-                           id="user.attributes.phoneNumber" 
-                           class="input" 
-                           name="user.attributes.phoneNumber" 
+                    <input type="tel"
+                           id="user.attributes.phoneNumber"
+                           class="input"
+                           name="user.attributes.phoneNumber"
                            value="${(register.formData['user.attributes.phoneNumber']!'')}"
                            placeholder="e.g., +1 (555) 123-4567"
                            pattern="[\+\d\s\(\)-]{5,20}"
@@ -120,7 +120,7 @@
                         <i class="fas fa-user-tie"></i>
                     </span>
                 </div>
-            </div>  
+            </div>
 
             <div class="field">
                 <div class="control">
@@ -1027,22 +1027,22 @@ style='font-size:10.0pt;font-family:"&amp;quot",serif;color:#3D464D'>. </span></
     const registrationForm = document.getElementById('kc-register-form');
     const termsCheckbox = document.getElementById('user.attributes.termsAgreement');
     const phoneInput = document.getElementById('user.attributes.phoneNumber');
-    
+
     if (registrationForm && termsCheckbox) {
         registrationForm.addEventListener('submit', function(e) {
             let isValid = true;
-            
+
             // Check terms agreement
             if (!termsCheckbox.checked) {
                 e.preventDefault();
                 alert('You must agree to the Terms of Service and Privacy Policy to register.');
                 return false;
             }
-            
+
             // Check phone number format if provided
             if (phoneInput && phoneInput.value.trim() !== '') {
                 const phoneValue = phoneInput.value.trim();
-                
+
                 // Check length (5-20 characters)
                 if (phoneValue.length < 5 || phoneValue.length > 20) {
                     e.preventDefault();
@@ -1050,7 +1050,7 @@ style='font-size:10.0pt;font-family:"&amp;quot",serif;color:#3D464D'>. </span></
                     phoneInput.focus();
                     return false;
                 }
-                
+
                 // Check allowed characters: +, (), spaces, and numbers only
                 const phonePattern = /^[\+\(\)\s\d]+$/;
                 if (!phonePattern.test(phoneValue)) {
@@ -1065,5 +1065,5 @@ style='font-size:10.0pt;font-family:"&amp;quot",serif;color:#3D464D'>. </span></
 </script>
 
 
-</#if>  
+</#if>
 </@layout.registrationLayout>

@@ -1,25 +1,22 @@
-import { CreateNodesResult, CreateNodes } from "@nx/devkit";
-import { dirname } from "path";
+import { CreateNodesResult, CreateNodes } from '@nx/devkit';
+import { dirname } from 'node:path';
 
 export interface SopsPluginOptions {
     readonly keygenTargetName?: string;
 }
 
-const glob = ".sops.yaml";
+const glob = '.sops.yaml';
 
 export const createNodes: CreateNodes<SopsPluginOptions> = [
     glob,
     async (configFilePath, options) => {
-        return createNodesInternal(
-            configFilePath,
-            options,
-        );
+        return createNodesInternal(configFilePath, options);
     },
 ];
 
 async function createNodesInternal(
     configFilePath: string,
-    { keygenTargetName = "keygen" }: SopsPluginOptions = {},
+    { keygenTargetName = 'keygen' }: SopsPluginOptions = {},
 ): Promise<CreateNodesResult> {
     const projectRoot = dirname(configFilePath);
 
@@ -30,7 +27,7 @@ async function createNodesInternal(
                     [keygenTargetName]: {
                         command: `age-keygen -o $SOPS_AGE_KEY_FILE`,
                         metadata: {
-                            description: "Generate a new SOPS key pair",
+                            description: 'Generate a new SOPS key pair',
                         },
                     },
                 },

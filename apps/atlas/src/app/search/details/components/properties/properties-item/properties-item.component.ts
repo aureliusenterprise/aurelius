@@ -5,16 +5,15 @@ import { Router } from '@angular/router';
     selector: 'models4insight-properties-item',
     templateUrl: './properties-item.component.html',
     styleUrls: ['./properties-item.component.scss'],
-    providers: []
+    providers: [],
 })
 export class PropertiesItemComponent implements OnInit {
-
     @Input() data: any;
 
     isObjectLike: Array<object>;
     isStringLike: string;
 
-    constructor(private readonly router: Router) { }
+    constructor(private readonly router: Router) {}
     ngOnInit() {
         this.defineTypes(this.data);
     }
@@ -22,16 +21,14 @@ export class PropertiesItemComponent implements OnInit {
     openDetails(guid: string) {
         this.router.navigate(['search/details', guid]);
     }
-    ngOnDestroy() {
-    }
+    ngOnDestroy() {}
     defineTypes(data: any) {
         if (typeof data === 'string') {
-            this.isStringLike = data
+            this.isStringLike = data;
         } else if (typeof data === 'boolean' || typeof data === 'number') {
             this.isStringLike = data.toString();
         } else {
-            this.isObjectLike = data
+            this.isObjectLike = data;
         }
     }
-
 }

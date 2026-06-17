@@ -6,51 +6,47 @@ import { fromEvent, Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
 @Component({
-  selector: 'models4insight-modeling',
-  templateUrl: './modeling.component.html',
-  styleUrls: ['./modeling.component.scss']
+    selector: 'models4insight-modeling',
+    templateUrl: './modeling.component.html',
+    styleUrls: ['./modeling.component.scss'],
 })
 export class ModelingComponent implements OnInit, AfterViewInit {
-  @ViewChild('credentialsDisplay', { static: false })
-  private readonly credentialsDisplay: ElementRef;
-  @ViewChild('credentialsDisplayCopy', { static: false })
-  private readonly credentialsDisplayCopy: ElementRef;
-  @ViewChild(CreateProjectModalComponent, { static: true })
-  private readonly createProjectModal: CreateProjectModalComponent;
+    @ViewChild('credentialsDisplay', { static: false })
+    private readonly credentialsDisplay: ElementRef;
+    @ViewChild('credentialsDisplayCopy', { static: false })
+    private readonly credentialsDisplayCopy: ElementRef;
+    @ViewChild(CreateProjectModalComponent, { static: true })
+    private readonly createProjectModal: CreateProjectModalComponent;
 
-  credentials$: Observable<Credentials>;
-  
-  faCopy = faCopy;
-  isLoading = false;
+    credentials$: Observable<Credentials>;
 
-  constructor(
-    private authenticationService: AuthenticationService
-  ) {}
+    faCopy = faCopy;
+    isLoading = false;
 
-  ngOnInit() {
-    this.credentials$ = this.authenticationService
-      .credentials()
-      .pipe(shareReplay());
-  }
+    constructor(private authenticationService: AuthenticationService) {}
 
-  ngAfterViewInit() {
-    fromEvent(this.credentialsDisplayCopy.nativeElement, 'click').subscribe(
-      () => this.copyCredentialsToClipboard()
-    );
-  }
+    ngOnInit() {
+        this.credentials$ = this.authenticationService.credentials().pipe(shareReplay());
+    }
 
-  accountManagement() {
-    this.authenticationService.accountManagement();
-  }
+    ngAfterViewInit() {
+        fromEvent(this.credentialsDisplayCopy.nativeElement, 'click').subscribe(() =>
+            this.copyCredentialsToClipboard(),
+        );
+    }
 
-  activateModal() {
-    this.createProjectModal.activate();
-  }
+    accountManagement() {
+        this.authenticationService.accountManagement();
+    }
 
-  copyCredentialsToClipboard() {
-    const input = this.credentialsDisplay.nativeElement;
-    input.select();
-    document.execCommand('copy');
-    input.blur();
-  }
+    activateModal() {
+        this.createProjectModal.activate();
+    }
+
+    copyCredentialsToClipboard() {
+        const input = this.credentialsDisplay.nativeElement;
+        input.select();
+        document.execCommand('copy');
+        input.blur();
+    }
 }

@@ -6,19 +6,17 @@ import { untilDestroyed } from '@models4insight/utils';
 // TODO: Add Angular decorator.
 @Injectable()
 export class TrackRecentProjectsService implements OnDestroy {
-  constructor(
-    private readonly projectService: ProjectService,
-    private readonly recentProjectsService: RecentProjectsService
-  ) {}
+    constructor(
+        private readonly projectService: ProjectService,
+        private readonly recentProjectsService: RecentProjectsService,
+    ) {}
 
-  ngOnDestroy() {}
+    ngOnDestroy() {}
 
-  init() {
-    this.projectService
-      .selectCurrentProject()
-      .pipe(untilDestroyed(this))
-      .subscribe(project =>
-        this.recentProjectsService.addRecentProject(project)
-      );
-  }
+    init() {
+        this.projectService
+            .selectCurrentProject()
+            .pipe(untilDestroyed(this))
+            .subscribe((project) => this.recentProjectsService.addRecentProject(project));
+    }
 }

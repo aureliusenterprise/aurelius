@@ -1,3 +1,3 @@
-from .calculate_hash_for_row import *
-from .find_changed_rows import *
-from .find_different_rows import *
+from .calculate_hash_for_row import calculate_hash_for_row as calculate_hash_for_row
+from .find_changed_rows import find_changed_rows as find_changed_rows
+from .find_different_rows import find_different_rows as find_different_rows

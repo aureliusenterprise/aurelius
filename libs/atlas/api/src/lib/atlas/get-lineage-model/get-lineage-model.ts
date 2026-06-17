@@ -6,10 +6,10 @@ import { createHttpParams } from '../../utils';
 export type LineageDirection = 'INPUT' | 'OUTPUT' | 'BOTH';
 
 export interface GetLineageModelOptions {
-  /** Specifies the maximum number of hops to traverse the lineage graph */
-  readonly depth?: number;
-  /** Specifies whether to retrieve input lineage, output lineage or both */
-  readonly direction?: LineageDirection;
+    /** Specifies the maximum number of hops to traverse the lineage graph */
+    readonly depth?: number;
+    /** Specifies whether to retrieve input lineage, output lineage or both */
+    readonly direction?: LineageDirection;
 }
 
 const PATH = 'lineage_model';
@@ -24,26 +24,22 @@ const PATH = 'lineage_model';
  * @param guid The unique atlas id of the enitity for which to retrieve the lineage
  */
 export function getLineageModel(
-  guid: string,
-  {
-    depth = 3,
-    direction = 'BOTH',
-    forceUpdate,
-  }: GetOptions & GetLineageModelOptions = {}
+    guid: string,
+    { depth = 3, direction = 'BOTH', forceUpdate }: GetOptions & GetLineageModelOptions = {},
 ) {
-  const http = getHttpClient();
+    const http = getHttpClient();
 
-  validateRequiredArguments(arguments, 'getEntityById');
+    validateRequiredArguments(arguments, 'getEntityById');
 
-  const queryParameters = createHttpParams({
-    guid,
-    depth,
-    direction,
-  });
+    const queryParameters = createHttpParams({
+        guid,
+        depth,
+        direction,
+    });
 
-  const requestOptions = {
-    params: queryParameters,
-  };
+    const requestOptions = {
+        params: queryParameters,
+    };
 
-  return http.cache(forceUpdate).get<any>(PATH, requestOptions);
+    return http.cache(forceUpdate).get<any>(PATH, requestOptions);
 }

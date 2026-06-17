@@ -3,9 +3,19 @@ from typing import Iterable, List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from ..core import (AttributeDef, Attributes, Cardinality, Entity, EntityBase,
-                    EntityDef, EntityDefaultsBase, ObjectId, RelationshipDef,
-                    RelationshipEndDef, TypeCategory)
+from ..core import (
+    AttributeDef,
+    Attributes,
+    Cardinality,
+    Entity,
+    EntityBase,
+    EntityDef,
+    EntityDefaultsBase,
+    ObjectId,
+    RelationshipDef,
+    RelationshipEndDef,
+    TypeCategory,
+)
 from ..m4i.M4IAttributes import M4IAttributesBase
 
 data_entity_attributes_def = [
@@ -13,13 +23,13 @@ data_entity_attributes_def = [
         name="name",
         type_name="string",
         description="The unique functional name of the data entity",
-        display_name="Name"
+        display_name="Name",
     ),
     AttributeDef(
         name="definition",
         type_name="string",
         description="The definition of the data entity determined by the data steward and data owner",
-        display_name="Definition"
+        display_name="Definition",
     ),
     AttributeDef(
         name="dataDomain",
@@ -27,7 +37,7 @@ data_entity_attributes_def = [
         is_indexable=False,
         description="The functional name of the data domain that the data entity belongs to",
         display_name="Data Domain",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="attributes",
@@ -35,7 +45,7 @@ data_entity_attributes_def = [
         is_indexable=False,
         description="The functional names of the data attributes that belong to the data entity",
         display_name="Data Attribute",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="parentEntity",
@@ -43,7 +53,7 @@ data_entity_attributes_def = [
         is_indexable=False,
         description="The functional names of the data entity that the data entity belongs to",
         display_name="Parent Data Entity",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="childEntity",
@@ -51,7 +61,7 @@ data_entity_attributes_def = [
         is_indexable=False,
         description="The functional names of the data entity that belong to the data entity",
         display_name="Child Data Entity",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="steward",
@@ -59,7 +69,7 @@ data_entity_attributes_def = [
         is_indexable=False,
         description="The business data steward of the data entity",
         display_name="Business Data Steward",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="businessOwner",
@@ -67,8 +77,8 @@ data_entity_attributes_def = [
         is_indexable=False,
         description="The business owner steward of the data entity",
         display_name="Business Data Owner",
-        cardinality=Cardinality.SET
-    )
+        cardinality=Cardinality.SET,
+    ),
 ]
 
 data_entity_super_type = ["m4i_referenceable"]
@@ -79,19 +89,13 @@ data_entity_def = EntityDef(
     name="m4i_data_entity",
     type_version="1.0",
     attribute_defs=data_entity_attributes_def,
-    super_types=data_entity_super_type
+    super_types=data_entity_super_type,
 )
 
 end_1_domain_entity = RelationshipEndDef(
-    type="m4i_data_domain",
-    name="dataEntity",
-    cardinality=Cardinality.SET
+    type="m4i_data_domain", name="dataEntity", cardinality=Cardinality.SET
 )
-end_2_data_entity = RelationshipEndDef(
-    type="m4i_data_entity",
-    name="dataDomain",
-    cardinality=Cardinality.SET
-)
+end_2_data_entity = RelationshipEndDef(type="m4i_data_entity", name="dataDomain", cardinality=Cardinality.SET)
 
 m4i_domain_entity_rel_def = RelationshipDef(
     end_def1=end_1_domain_entity,
@@ -99,17 +103,11 @@ m4i_domain_entity_rel_def = RelationshipDef(
     name="m4i_data_entity_assignment",
     category=TypeCategory.RELATIONSHIP,
     type_version="1.0",
-    description="The relationship between the data domain and the data entity"
+    description="The relationship between the data domain and the data entity",
 )
 
-end_1_business_owner_entity = RelationshipEndDef(
-    type="m4i_person",
-    name="businessOwnerEntity"
-)
-end_2_business_owner_entity = RelationshipEndDef(
-    type="m4i_data_entity",
-    name="businessOwner"
-)
+end_1_business_owner_entity = RelationshipEndDef(type="m4i_person", name="businessOwnerEntity")
+end_2_business_owner_entity = RelationshipEndDef(type="m4i_data_entity", name="businessOwner")
 
 m4i_business_owner_entity_rel_def = RelationshipDef(
     end_def1=end_1_business_owner_entity,
@@ -117,18 +115,11 @@ m4i_business_owner_entity_rel_def = RelationshipDef(
     name="m4i_data_entity_business_owner_assignment",
     category=TypeCategory.RELATIONSHIP,
     type_version="1.0",
-    description="The relationship between the data entity and its business data owner"
+    description="The relationship between the data entity and its business data owner",
 )
 
-end_1_steward_entity = RelationshipEndDef(
-    type="m4i_person",
-    name="stewardEntity"
-)
-end_2_steward_entity = RelationshipEndDef(
-    type="m4i_data_entity",
-    name="steward"
-
-)
+end_1_steward_entity = RelationshipEndDef(type="m4i_person", name="stewardEntity")
+end_2_steward_entity = RelationshipEndDef(type="m4i_data_entity", name="steward")
 
 m4i_steward_entity_rel_def = RelationshipDef(
     end_def1=end_1_steward_entity,
@@ -136,18 +127,11 @@ m4i_steward_entity_rel_def = RelationshipDef(
     name="m4i_data_entity_steward_assignment",
     category=TypeCategory.RELATIONSHIP,
     type_version="1.0",
-    description="The relationship between the data entity and its business data steward"
+    description="The relationship between the data entity and its business data steward",
 )
 
-end_1_pentity_centity = RelationshipEndDef(
-    type="m4i_data_entity",
-    name="parentEntity"
-)
-end_2_pentity_centity = RelationshipEndDef(
-    type="m4i_data_entity",
-    name="childEntity"
-
-)
+end_1_pentity_centity = RelationshipEndDef(type="m4i_data_entity", name="parentEntity")
+end_2_pentity_centity = RelationshipEndDef(type="m4i_data_entity", name="childEntity")
 
 m4i_pentity_centity_rel_def = RelationshipDef(
     end_def1=end_1_pentity_centity,
@@ -155,18 +139,20 @@ m4i_pentity_centity_rel_def = RelationshipDef(
     name="m4i_parent_entity_assignment",
     category=TypeCategory.RELATIONSHIP,
     type_version="1.0",
-    description="The relationship between the data entity to other data entities"
+    description="The relationship between the data entity to other data entities",
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDataEntityAttributesBase(M4IAttributesBase):
     name: str
+
+
 # END BusinessDataEntityAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDataEntityAttributesDefaultsBase(Attributes):
     attributes: List[ObjectId] = field(default_factory=list)
@@ -177,45 +163,59 @@ class BusinessDataEntityAttributesDefaultsBase(Attributes):
     source: List[ObjectId] = field(default_factory=list)
     parent_entity: List[ObjectId] = field(default_factory=list)
     steward: List[ObjectId] = field(default_factory=list)
+
+
 # END BusinessDataEntityAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessDataEntityAttributes(BusinessDataEntityAttributesDefaultsBase, BusinessDataEntityAttributesBase):
+class BusinessDataEntityAttributes(
+    BusinessDataEntityAttributesDefaultsBase, BusinessDataEntityAttributesBase
+):
     pass
+
+
 # END BusinessDataEntityAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDataEntityBase(EntityBase):
     attributes: BusinessDataEntityAttributes
+
+
 # END BusinessDataEntityBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDataEntityDefaultsBase(EntityDefaultsBase):
     pass
+
+
 # END BusinessDataEntityDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessDataEntity(BusinessDataEntityDefaultsBase, BusinessDataEntityBase, Entity):
+class BusinessDataEntity(  # type: ignore[reportGeneralTypeIssues]
+    BusinessDataEntityDefaultsBase, BusinessDataEntityBase, Entity
+):
     type_name: str = "m4i_data_entity"
 
     @classmethod
-    def get_type_def(cls):
+    def get_type_def(cls):  # type: ignore[reportIncompatibleMethodOverride]
         return data_entity_def
 
     def get_parents(self) -> Iterable[ObjectId]:
         return [*self.attributes.parent_entity, *self.attributes.data_domain]
+
     # END get_parents
 
     def get_children(self) -> Iterable[ObjectId]:
         return [*self.attributes.child_entity, *self.attributes.attributes]
+
     # END get_children
 
     def get_referred_entities(self) -> Iterable[ObjectId]:
@@ -235,10 +235,12 @@ class BusinessDataEntity(BusinessDataEntityDefaultsBase, BusinessDataEntityBase,
             *self.attributes.data_domain,
             *self.attributes.parent_entity,
             *self.attributes.child_entity,
-            *self.attributes.source
+            *self.attributes.source,
         ]
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END BusinessDataEntity

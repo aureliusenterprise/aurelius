@@ -1,16 +1,16 @@
 {
-  "name": "Data2Model",
-  "short_name": "D2M",
-  "theme_color": "#F7F7F7",
-  "background_color": "#F7F7F7",
-  "scope": "/data2model/",
-  "start_url": "/data2model/",
-  "display": "standalone",
-  "icons": [
-    {
-      "src": "assets/d2m-icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+    "background_color": "#F7F7F7",
+    "display": "standalone",
+    "icons": [
+        {
+            "sizes": "512x512",
+            "src": "assets/d2m-icon.png",
+            "type": "image/png"
+        }
+    ],
+    "name": "Data2Model",
+    "scope": "/data2model/",
+    "short_name": "D2M",
+    "start_url": "/data2model/",
+    "theme_color": "#F7F7F7"
 }

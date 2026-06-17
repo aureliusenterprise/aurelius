@@ -5,13 +5,12 @@ config = ConfigStore.get_instance()
 
 
 def make_confluent_consumer(enable_auto_commit: bool = True) -> Consumer:
-
     bootstrap_server_url, group_id, username, password = config.get_many(
         "confluent.kafka.bootstrap.servers",
         "confluent.kafka.group.id",
         "confluent.auth.sasl.username",
-        "confluent.auth.sasl.password"
-    )
+        "confluent.auth.sasl.password",
+    )  # type: ignore[assignment]
 
     consumer_config = {
         "auto.offset.reset": "earliest",
@@ -21,8 +20,10 @@ def make_confluent_consumer(enable_auto_commit: bool = True) -> Consumer:
         "sasl.mechanisms": "PLAIN",
         "sasl.password": password,
         "sasl.username": username,
-        "security.protocol": "SASL_SSL"
+        "security.protocol": "SASL_SSL",
     }
 
     return Consumer(consumer_config)
+
+
 # END make_confluent_consumer

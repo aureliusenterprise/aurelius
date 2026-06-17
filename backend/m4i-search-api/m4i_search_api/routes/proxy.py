@@ -22,9 +22,7 @@ def build_target_url(settings: Settings, path: str) -> str:
     return f"{clean_base}/{clean_path}"
 
 
-ALLOWED_ROUTES = [
-    ("POST", r"^api/as/v1/engines/[^/]+/search(?:\.json)?$"),
-]
+ALLOWED_ROUTES = [("POST", r"^api/as/v1/engines/[^/]+/search(?:\.json)?$")]
 
 FILTERED_HEADERS = {
     "connection",
@@ -53,29 +51,20 @@ def _build_proxy_headers(headers: Headers, api_key: str) -> dict:
     return result
 
 
-def _proxy_request(
-    settings: Settings,
-    path: str,
-    key_provider: KeyProvider,
-) -> Response:
+def _proxy_request(settings: Settings, path: str, key_provider: KeyProvider) -> Response:
     """Proxy the incoming request to the App Search instance."""
     api_key = key_provider.get_key()
     url = build_target_url(settings, path)
 
     clean_path = path.lstrip("/")
     is_allowed_route = any(
-        request.method == method and re.match(pattern, clean_path)
-        for method, pattern in ALLOWED_ROUTES
+        request.method == method and re.match(pattern, clean_path) for method, pattern in ALLOWED_ROUTES
     )
 
     if not is_allowed_route:
-        LOGGER.warning(
-            "Attempt to access disallowed route: %s %s", request.method, clean_path
-        )
+        LOGGER.warning("Attempt to access disallowed route: %s %s", request.method, clean_path)
         return Response(
-            response='{"error": "Route not allowed"}',
-            status=403,
-            content_type="application/json",
+            response='{"error": "Route not allowed"}', status=403, content_type="application/json"
         )
 
     response = requests.request(
@@ -96,9 +85,7 @@ def _proxy_request(
 
 
 def create_proxy_blueprint(
-    auth_provider: AuthProvider,
-    key_provider: KeyProvider,
-    settings: Settings,
+    auth_provider: AuthProvider, key_provider: KeyProvider, settings: Settings
 ) -> Blueprint:
     """Factory that returns a Blueprint wired with the current providers."""
     proxy_bp = Blueprint("proxy", __name__)

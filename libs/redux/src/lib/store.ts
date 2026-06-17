@@ -18,7 +18,7 @@ export type StoreSnapshot = Dictionary<StoreContext>;
  * Instead, users must dispatch `Actions` to the `Store`, which will update the state in the order in which the actions were dispatched. This helps keep the behavior of the application predictable.
  */
 export interface Store<CONTEXT extends StoreContext> {
-  readonly name: string;
-  readonly state: Observable<CONTEXT>;
-  readonly value: CONTEXT;
+    readonly name: string;
+    readonly state: Observable<CONTEXT>;
+    readonly value: CONTEXT;
 }

@@ -19,23 +19,24 @@ class TypeCategory(Enum):
     MAP = "MAP"
     RELATIONSHIP = "RELATIONSHIP"
     BUSINESS_METADATA = "BUSINESS_METADATA"
+
+
 # END TypeCategory
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BaseTypeDefBase(DataClassJsonMixin):
-
     category: TypeCategory
     name: str
+
 
 # END BaseTypeDefBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BaseTypeDefDefaultsBase(DataClassJsonMixin):
-
     create_time: Optional[int] = None
     created_by: Optional[str] = None
     date_formatter: Optional[DateFormat] = None
@@ -48,13 +49,14 @@ class BaseTypeDefDefaultsBase(DataClassJsonMixin):
     updated_by: Optional[str] = None
     version: Optional[int] = None
 
+
 # END BaseTypeDefDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BaseTypeDef(BaseTypeDefDefaultsBase, BaseTypeDefBase):
-
     pass
+
 
 # END BaseTypeDef

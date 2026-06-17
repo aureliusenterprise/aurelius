@@ -7,8 +7,8 @@ import { getHttpClient } from '../utils';
  * If the version string is unavailable for whatever reason, returns `unknown` instead.
  */
 export function repositoryVersion({ forceUpdate }: GetOptions = {}) {
-  const http = getHttpClient(),
-    path = `${repositoryLogBasePath}/version`;
+    const http = getHttpClient(),
+        path = `${repositoryLogBasePath}/version`;
 
-  return http.cache(forceUpdate).get<RepositoryVersion>(path);
+    return http.cache(forceUpdate).get<RepositoryVersion>(path);
 }

@@ -6,18 +6,14 @@ from pandas import DataFrame
 
 from .utils import make_elastic_connection
 
-QUERY = {
-    "query": {
-        "match_all": {}
-    }
-}
+QUERY = {"query": {"match_all": {}}}
 
 log = logging.getLogger(__name__)
 
 
 def retrieve_elastic_data(
     index_name: str,
-    query: str = QUERY,
+    query: str = QUERY,  # type: ignore[arg-type]
 ) -> DataFrame:
     """
     Retrieves the data from the given elastic index as a Pandas DataFrame.
@@ -29,13 +25,9 @@ def retrieve_elastic_data(
     result = DataFrame()
 
     try:
-        search_results = scan(
-            client=connection,
-            query=query,
-            index=index_name
-        )
+        search_results = scan(client=connection, query=query, index=index_name)  # type: ignore[arg-type]
 
-        documents = map(lambda hit: hit['_source'], search_results)
+        documents = map(lambda hit: hit["_source"], search_results)
 
         result = DataFrame(documents)
     except NotFoundError as e:
@@ -45,4 +37,6 @@ def retrieve_elastic_data(
     # END TRY
 
     return result
+
+
 # END retrieve_elastic_data

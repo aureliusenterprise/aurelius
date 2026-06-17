@@ -9,13 +9,13 @@ import { getHttpClient } from '../utils';
  * Whether a `UserGroup` is updated or created depends on whether or not the `group_id` property is set.
  */
 export function updateUserGroup(
-  /** The user group which to create or update */
-  userGroup: UserGroup
+    /** The user group which to create or update */
+    userGroup: UserGroup,
 ): Observable<UserGroup> {
-  const http = getHttpClient(),
-    path = `${repositoryApiBasePath}/project/group`;
+    const http = getHttpClient(),
+        path = `${repositoryApiBasePath}/project/group`;
 
-  validateRequiredArguments(arguments, 'updateUserGroup');
+    validateRequiredArguments(arguments, 'updateUserGroup');
 
-  return http.authorize().post<UserGroup>(path, userGroup);
+    return http.authorize().post<UserGroup>(path, userGroup);
 }

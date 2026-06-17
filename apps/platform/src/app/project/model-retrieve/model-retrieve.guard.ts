@@ -8,23 +8,21 @@ const log = new Logger('ModelRetrieveGuard');
 
 @Injectable()
 export class ModelRetrieveGuard implements CanActivate {
-  constructor(
-    private readonly projectPermissionService: ProjectPermissionService,
-    private readonly router: Router
-  ) {}
+    constructor(
+        private readonly projectPermissionService: ProjectPermissionService,
+        private readonly router: Router,
+    ) {}
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const hasPermission = await this.projectPermissionService.hasPermission(
-      PermissionLevel.BUSINESS_USER
-    );
+    async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const hasPermission = await this.projectPermissionService.hasPermission(PermissionLevel.BUSINESS_USER);
 
-    log.debug(`Can access model retrieve: ${hasPermission}`);
+        log.debug(`Can access model retrieve: ${hasPermission}`);
 
-    if (!hasPermission) {
-      const [parentRoute] = state.url.split('/retrieve');
-      return this.router.createUrlTree([parentRoute]);
+        if (!hasPermission) {
+            const [parentRoute] = state.url.split('/retrieve');
+            return this.router.createUrlTree([parentRoute]);
+        }
+
+        return hasPermission;
     }
-
-    return hasPermission;
-  }
 }

@@ -4,10 +4,10 @@ import { Mermaid } from 'mdx-mermaid/Mermaid';
 import { AppSearchResultsService } from '../app-search-results.service';
 
 <Meta
-  title="Apps/Atlas/Services/Search/AppSearchResults"
-  argTypes={{
-    pageSize: { control: 'number' },
-  }}
+    title="Apps/Atlas/Services/Search/AppSearchResults"
+    argTypes={{
+        pageSize: { control: 'number' },
+    }}
 />
 
 # AppSearchResultsService
@@ -47,7 +47,7 @@ The sections below explain the behaviour of the `AppSearchResultsService`.
 Whenever the search query is updated, the `AppSearchResultsService` automatically retrieves the first page of search results.
 
 <Mermaid
-  chart={`
+    chart={`
   sequenceDiagram
       SearchService ->> AppSearchResultsService: Query updated
       activate AppSearchResultsService
@@ -63,7 +63,7 @@ The loading of the next page is triggered by calling the `nextPage` method.
 Please see the diagram below.
 
 <Mermaid
-  chart={`
+    chart={`
   sequenceDiagram
       Consumer ->> AppSearchResultsService: nextPage()
       activate AppSearchResultsService
@@ -91,7 +91,7 @@ This `allResults$` stream automatically collects all available search results pa
 Use this stream when you want to trigger the loading of next pages automatically instead of incrementally.
 
 <Mermaid
-  chart={`
+    chart={`
   sequenceDiagram
     SearchService ->> AppSearchResultsService: Query updated
     activate AppSearchResultsService

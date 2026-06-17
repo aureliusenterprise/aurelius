@@ -1,1 +1,1 @@
-from .make_elastic_connection import *
+from .make_elastic_connection import make_elastic_connection as make_elastic_connection

@@ -5,8 +5,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SelectModule } from '../select';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule, SelectModule],
-  declarations: [PermissionSelectComponent],
-  exports: [PermissionSelectComponent],
+    imports: [CommonModule, FontAwesomeModule, SelectModule],
+    declarations: [PermissionSelectComponent],
+    exports: [PermissionSelectComponent],
 })
 export class PermissionSelectModule {}

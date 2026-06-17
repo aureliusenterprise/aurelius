@@ -21,9 +21,8 @@ class DetermineChangeFunction(MapFunction):
     handling.
     """
 
-    def map(
-        self,
-        value: Union[AtlasChangeMessageWithPreviousVersion, Exception],
+    def map(  # type: ignore[override]
+        self, value: Union[AtlasChangeMessageWithPreviousVersion, Exception]
     ) -> Union[List[EntityMessage], List[Exception]]:
         """
         Process the incoming message to determine changes using predefined event handlers.
@@ -95,5 +94,5 @@ class DetermineChange:
         self.changes = self.data_stream.map(DetermineChangeFunction()).name("determine_change")
 
         self.main = self.changes.flat_map(
-            lambda messages: (message for message in messages),
+            lambda messages: (message for message in messages)  # type: ignore[assignment]
         ).name("determine_change_results")

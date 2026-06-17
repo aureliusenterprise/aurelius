@@ -5,12 +5,7 @@ from typing import List, Tuple, TypedDict, Union
 from elastic_transport._models import DefaultType
 from elasticsearch import Elasticsearch
 from keycloak import KeycloakOpenID
-from m4i_flink_tasks import (
-    AppSearchDocument,
-    DetermineChange,
-    GetEntity,
-    SynchronizeAppSearch,
-)
+from m4i_flink_tasks import AppSearchDocument, DetermineChange, GetEntity, SynchronizeAppSearch
 from m4i_flink_tasks.operations.publish_state.operations import GetPreviousEntity
 from pyflink.common import Configuration, Types
 from pyflink.common.serialization import SimpleStringSchema
@@ -90,7 +85,9 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
     env.set_parallelism(1)
     env.add_jars(*jars_path)
 
-    kafka_bootstrap_server = f"{config['kafka_bootstrap_server_hostname']}:{config['kafka_bootstrap_server_port']}"
+    kafka_bootstrap_server = (
+        f"{config['kafka_bootstrap_server_hostname']}:{config['kafka_bootstrap_server_port']}"
+    )
 
     kafka_consumer = (
         FlinkKafkaConsumer(
@@ -112,13 +109,9 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
         .set_record_serializer(
             KafkaRecordSerializationSchema.builder()
             .set_topic(config["kafka_app_search_topic_name"])
-            .set_key_serialization_schema(
-                SimpleStringSchema(),
-            )
-            .set_value_serialization_schema(
-                SimpleStringSchema(),
-            )
-            .build(),
+            .set_key_serialization_schema(SimpleStringSchema())
+            .set_value_serialization_schema(SimpleStringSchema())
+            .build()
         )
         .set_delivery_guarantee(DeliveryGuarantee.AT_LEAST_ONCE)
         .set_property("batch.size", "1")
@@ -133,7 +126,7 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
             KafkaRecordSerializationSchema.builder()
             .set_topic(config["kafka_error_topic_name"])
             .set_value_serialization_schema(SimpleStringSchema())
-            .build(),
+            .build()
         )
         .set_delivery_guarantee(DeliveryGuarantee.AT_LEAST_ONCE)
         .build()
@@ -143,10 +136,7 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
         """Create an Elasticsearch client instance."""
         return Elasticsearch(
             hosts=[config["elasticsearch_endpoint"]],
-            basic_auth=(
-                config["elasticsearch_username"],
-                config["elasticsearch_password"],
-            ),
+            basic_auth=(config["elasticsearch_username"], config["elasticsearch_password"]),
             ca_certs=config["elasticsearch_certificate_path"],
         )
 
@@ -169,21 +159,17 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
     )
 
     previous_entity = GetPreviousEntity(
-        get_entity.main,
-        create_elasticsearch_client,
-        config["elasticsearch_publish_state_index_name"],
+        get_entity.main, create_elasticsearch_client, config["elasticsearch_publish_state_index_name"]
     )
 
     determine_change = DetermineChange(previous_entity.main)
 
     synchronize_app_search = SynchronizeAppSearch(
-        determine_change.main,
-        create_elasticsearch_client,
-        config["elasticsearch_app_search_index_name"],
+        determine_change.main, create_elasticsearch_client, config["elasticsearch_app_search_index_name"]
     )
 
     def waiting_mapper(
-        value: Tuple[str, Union[AppSearchDocument, None]]
+        value: Tuple[str, Union[AppSearchDocument, None]],
     ) -> Tuple[str, Union[AppSearchDocument, None]]:
         # To avoid racing condition, introduce a second sleep
         time.sleep(1)
@@ -191,10 +177,7 @@ def main(config: SynchronizeAppSearchConfig, jars_path: List[str]) -> None:
 
     synchronize_app_search.main.map(waiting_mapper).map(
         lambda document: json.dumps(
-            {
-                "id": document[0],
-                "value": document[1] if document[1] is None else document[1].to_dict(),
-            },
+            {"id": document[0], "value": document[1] if document[1] is None else document[1].to_dict()}
         ),
         Types.STRING(),
     ).sink_to(app_search_sink).name("App Search Sink")

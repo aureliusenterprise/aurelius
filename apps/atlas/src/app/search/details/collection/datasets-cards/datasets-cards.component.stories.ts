@@ -2,20 +2,18 @@ import { moduleMetadata, StoryFn, Meta } from '@storybook/angular';
 import { DatasetsCardsComponent } from './datasets-cards.component';
 
 export default {
-  title: 'Apps/Atlas/Components/Search/Details/Collection/DatasetsCardsComponent',
-  component: DatasetsCardsComponent,
-  decorators: [
-    moduleMetadata({
-      imports: [],
-    })
-  ],
+    title: 'Apps/Atlas/Components/Search/Details/Collection/DatasetsCardsComponent',
+    component: DatasetsCardsComponent,
+    decorators: [
+        moduleMetadata({
+            imports: [],
+        }),
+    ],
 } as Meta<DatasetsCardsComponent>;
 
 const Template: StoryFn<DatasetsCardsComponent> = (args: DatasetsCardsComponent) => ({
-  props: args,
+    props: args,
 });
 
-
 export const Primary = Template.bind({});
-Primary.args = {
-}
+Primary.args = {};

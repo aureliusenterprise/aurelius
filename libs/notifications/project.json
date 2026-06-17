@@ -1,27 +1,24 @@
 {
-  "name": "notifications",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
-  "sourceRoot": "libs/notifications/src",
-  "prefix": "models4insight",
-  "tags": [],
-  "targets": {
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/notifications"],
-      "options": {
-        "jestConfig": "libs/notifications/jest.config.ts",
-        "passWithNoTests": true
-      }
-    },
-    "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": [
-          "libs/notifications/**/*.ts",
-          "libs/notifications/**/*.html"
-        ]
-      }
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "name": "notifications",
+    "prefix": "models4insight",
+    "projectType": "library",
+    "sourceRoot": "libs/notifications/src",
+    "tags": [],
+    "targets": {
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "options": {
+                "lintFilePatterns": ["libs/notifications/**/*.ts", "libs/notifications/**/*.html"]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/notifications/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "outputs": ["{workspaceRoot}/coverage/libs/notifications"]
+        }
     }
-  }
 }

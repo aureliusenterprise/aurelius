@@ -3,9 +3,20 @@ from typing import Iterable, List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from ..core import (AttributeDef, Attributes, Cardinality, Entity, EntityBase,
-                    EntityDef, EntityDefaultsBase, ObjectId, PropagateTags,
-                    RelationshipDef, RelationshipEndDef, TypeCategory)
+from ..core import (
+    AttributeDef,
+    Attributes,
+    Cardinality,
+    Entity,
+    EntityBase,
+    EntityDef,
+    EntityDefaultsBase,
+    ObjectId,
+    PropagateTags,
+    RelationshipDef,
+    RelationshipEndDef,
+    TypeCategory,
+)
 from ..m4i.M4IAttributes import M4IAttributesBase
 
 atlas_dataset_attributes_def = [
@@ -13,7 +24,7 @@ atlas_dataset_attributes_def = [
         name="definition",
         type_name="string",
         description="The definition of the dataset",
-        display_name="Definition"
+        display_name="Definition",
     ),
     AttributeDef(
         name="fields",
@@ -21,7 +32,7 @@ atlas_dataset_attributes_def = [
         is_indexable=False,
         description="The functional names of the data fields that belong to this data set",
         display_name="Data Fields",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="collections",
@@ -29,7 +40,7 @@ atlas_dataset_attributes_def = [
         is_indexable=False,
         description="The functional name of the collection that the dataset belongs to",
         display_name="Collection",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="parentDataset",
@@ -37,7 +48,7 @@ atlas_dataset_attributes_def = [
         is_indexable=False,
         description="The functional names of the dataset that the dataset belongs to",
         display_name="Parent Dataset",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="childDataset",
@@ -45,8 +56,8 @@ atlas_dataset_attributes_def = [
         is_indexable=False,
         description="The functional names of the dataset that belong to the dataset",
         display_name="Child Dataset",
-        cardinality=Cardinality.SET
-    )
+        cardinality=Cardinality.SET,
+    ),
 ]
 
 dataset_super_type = ["m4i_referenceable", "DataSet"]
@@ -57,17 +68,11 @@ atlas_dataset_def = EntityDef(
     name="m4i_dataset",
     type_version="1.0",
     attribute_defs=atlas_dataset_attributes_def,
-    super_types=dataset_super_type
+    super_types=dataset_super_type,
 )
 
-end_1_pdataset_cdataset = RelationshipEndDef(
-    type="m4i_dataset",
-    name="parentDataset"
-)
-end_2_pdataset_cdataset = RelationshipEndDef(
-    type="m4i_dataset",
-    name="childDataset"
-)
+end_1_pdataset_cdataset = RelationshipEndDef(type="m4i_dataset", name="parentDataset")
+end_2_pdataset_cdataset = RelationshipEndDef(type="m4i_dataset", name="childDataset")
 
 m4i_pdataset_cdataset_rel_def = RelationshipDef(
     end_def1=end_1_pdataset_cdataset,
@@ -75,18 +80,14 @@ m4i_pdataset_cdataset_rel_def = RelationshipDef(
     name="m4i_dataset_parent_assignment",
     category=TypeCategory.RELATIONSHIP,
     type_version="1.0",
-    description="The relationship between the dataset to other datasets"
+    description="The relationship between the dataset to other datasets",
 )
 
 end_1_dataset_collection = RelationshipEndDef(
-    type="m4i_dataset",
-    name="collections",
-    cardinality=Cardinality.SET
+    type="m4i_dataset", name="collections", cardinality=Cardinality.SET
 )
 end_2_dataset_collection = RelationshipEndDef(
-    type="m4i_collection",
-    name="datasets",
-    cardinality=Cardinality.SET
+    type="m4i_collection", name="datasets", cardinality=Cardinality.SET
 )
 
 m4i_dataset_collection_rel_def = RelationshipDef(
@@ -96,18 +97,20 @@ m4i_dataset_collection_rel_def = RelationshipDef(
     category=TypeCategory.RELATIONSHIP,
     propagate_tags=PropagateTags.ONE_TO_TWO,
     type_version="1.0",
-    description="The relationship between the collection and the dataset"
+    description="The relationship between the collection and the dataset",
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDatasetAttributesBase(M4IAttributesBase):
     name: str
+
+
 # END BusinessDatasetsAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDatasetAttributesDefaultsBase(Attributes):
     definition: Optional[str] = None
@@ -116,45 +119,55 @@ class BusinessDatasetAttributesDefaultsBase(Attributes):
     child_dataset: List[ObjectId] = field(default_factory=list)
     fields: List[ObjectId] = field(default_factory=list)
     source: List[ObjectId] = field(default_factory=list)
+
+
 # END BusinessDatasetAttributesDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDatasetAttributes(BusinessDatasetAttributesDefaultsBase, BusinessDatasetAttributesBase):
     pass
+
+
 # END BusinessDatasetAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDatasetBase(EntityBase):
     attributes: BusinessDatasetAttributes
+
+
 # END BusinessDatasetBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDatasetDefaultsBase(EntityDefaultsBase):
     pass
+
+
 # END BusinessDatasetDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessDataset(BusinessDatasetDefaultsBase, BusinessDatasetBase, Entity):
+class BusinessDataset(BusinessDatasetDefaultsBase, BusinessDatasetBase, Entity):  # type: ignore[reportGeneralTypeIssues]
     type_name: str = "m4i_dataset"
 
     @classmethod
-    def get_type_def(cls):
+    def get_type_def(cls):  # type: ignore[reportIncompatibleMethodOverride]
         return atlas_dataset_def
 
     def get_parents(self) -> Iterable[ObjectId]:
         return [*self.attributes.parent_dataset, *self.attributes.collections]
+
     # END get_parents
 
     def get_children(self) -> Iterable[ObjectId]:
         return [*self.attributes.child_dataset, *self.attributes.fields]
+
     # END get_children
 
     def get_referred_entities(self) -> Iterable[ObjectId]:
@@ -182,5 +195,6 @@ class BusinessDataset(BusinessDatasetDefaultsBase, BusinessDatasetBase, Entity):
         return filter(None, references)
 
     # END get_referred_entities
+
 
 # END BusinessDataset

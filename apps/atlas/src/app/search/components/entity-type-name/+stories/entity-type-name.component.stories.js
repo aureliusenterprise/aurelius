@@ -7,42 +7,41 @@ import { EntityTypeNameModule } from '../entity-type-name.module';
 import { EntityDetailsService } from '../../../services/entity-details/entity-details.service';
 
 export default {
-  title:
-    'Apps/Atlas/Components/Search/Components/Type name/EntityTypeNameComponent',
+    title: 'Apps/Atlas/Components/Search/Components/Type name/EntityTypeNameComponent',
 
-  decorators: [
-    moduleMetadata({
-      imports: [EntityTypeNameModule, TranslateModule.forRoot()],
+    decorators: [
+        moduleMetadata({
+            imports: [EntityTypeNameModule, TranslateModule.forRoot()],
 
-      providers: [
-        {
-          provide: EntityDetailsService,
-          useClass: MockEntityDetailsService,
+            providers: [
+                {
+                    provide: EntityDetailsService,
+                    useClass: MockEntityDetailsService,
+                },
+            ],
+        }),
+    ],
+
+    argTypes: {
+        showBaseTypeName: {
+            control: 'boolean',
         },
-      ],
-    }),
-  ],
 
-  argTypes: {
-    showBaseTypeName: {
-      control: 'boolean',
-    },
+        showIcon: {
+            control: 'boolean',
+        },
 
-    showIcon: {
-      control: 'boolean',
+        showTypeName: {
+            control: 'boolean',
+        },
     },
-
-    showTypeName: {
-      control: 'boolean',
-    },
-  },
 };
 
 export const Primary = {
-  render: () => ({
-    component: EntityTypeNameComponent,
-  }),
+    render: () => ({
+        component: EntityTypeNameComponent,
+    }),
 
-  name: 'Primary',
-  height: '56px',
+    name: 'Primary',
+    height: '56px',
 };

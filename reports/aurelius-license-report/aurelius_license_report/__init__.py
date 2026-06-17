@@ -1,10 +1,6 @@
 """Workspace license report package."""
 
-from aurelius_license_report.models import (
-    ProjectSummary,
-    ReportGenerationSettings,
-    default_template_path,
-)
+from aurelius_license_report.models import ProjectSummary, ReportGenerationSettings, default_template_path
 from aurelius_license_report.report import (
     build_context,
     discover_report_paths,

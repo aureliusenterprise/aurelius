@@ -3,12 +3,13 @@ from pandas import Series
 
 
 def calculate_hash_for_row(row: Series) -> str:
-
-    cleaned = row.dropna().apply(str)
+    cleaned = row.dropna().apply(str)  # type: ignore[assignment]
 
     row_dict = cleaned.to_dict()
 
-    row_hash = sha256(row_dict)
+    row_hash = sha256(row_dict)  # type: ignore[arg-type]
 
     return str(row_hash)
+
+
 # END calculate_hash_for_row

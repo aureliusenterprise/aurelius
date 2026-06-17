@@ -17,46 +17,17 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
+
+            - name: Setup toolchain
+              uses: ./.github/actions/setup-toolchain
               with:
-                  fetch-depth: 0
-
-            - name: Install Node
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  cache: 'npm'
-
-            - name: Install dependencies
-              run: npm install
-              shell: bash
-
-            - name: Print Environment Info
-              run: npx nx report
-              shell: bash
-
-            - name: Setup Python, Poetry and Dependencies
-              uses: packetcoders/action-setup-cache-python-poetry@main
-              with:
-                  python-version: 3.8
-                  poetry-version: 1.8.4
-
-            - name: Log in to the Container registry
-              uses: docker/login-action@v3
-              with:
-                  registry: ghcr.io
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Install Cosign
-              uses: sigstore/cosign-installer@v4.1.1
-
-            - name: Install CycloneDX CLI
-              run: |
-                  curl -sSfL https://github.com/CycloneDX/cyclonedx-cli/releases/latest/download/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
-                  chmod +x /usr/local/bin/cyclonedx
-
-            - name: Install Trivy
-              uses: aquasecurity/setup-trivy@v0.2.6
+                  cleanup: 'true'
+                  cosign: 'true'
+                  cyclonedx: 'true'
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  node: 'true'
+                  python: 'true'
+                  trivy: 'true'
 
             - name: Publish containers
               run: npx nx run-many -t docker-publish -- --version ${{ github.ref_name }}

@@ -22,10 +22,9 @@ class QueryType(Enum):
 # END QueryType
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class SearchResultBase(DataClassJsonMixin):
-
     approximate_count: int
     query_type: QueryType
 
@@ -33,27 +32,26 @@ class SearchResultBase(DataClassJsonMixin):
 # END SearchResultBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class SearchResultDefaultsBase(DataClassJsonMixin):
-
     attributes: Optional[AttributeSearchResult] = None
     classification: Optional[str] = None
     entities: List[EntityHeader] = field(default_factory=list)
     full_text_result: List[FullTextResult] = field(default_factory=list)
     query_text: Optional[str] = None
     referred_entities: Dict[str, EntityHeader] = field(default_factory=dict)
-    search_parameters: SearchParameters = None
+    search_parameters: Optional[SearchParameters] = None
     type: Optional[str] = None
 
 
 # END SearchResultDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class SearchResult(SearchResultDefaultsBase, SearchResultBase):
-
     pass
+
 
 # END SearchResult

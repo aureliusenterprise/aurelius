@@ -3,9 +3,7 @@ from typing import List, TypedDict, Union
 
 from keycloak import KeycloakOpenID
 from m4i_flink_tasks import GetEntity
-from m4i_flink_tasks.operations.publish_state.operations import (
-    PrepareNotificationToIndex,
-)
+from m4i_flink_tasks.operations.publish_state.operations import PrepareNotificationToIndex
 from pyflink.common import Configuration, Types
 from pyflink.common.serialization import SimpleStringSchema
 from pyflink.datastream import StreamExecutionEnvironment
@@ -83,7 +81,9 @@ def main(config: PublishStateConfig, jars_path: List[str]) -> None:
     env.set_parallelism(1)
     env.add_jars(*jars_path)
 
-    kafka_bootstrap_server = f"{config['kafka_bootstrap_server_hostname']}:{config['kafka_bootstrap_server_port']}"
+    kafka_bootstrap_server = (
+        f"{config['kafka_bootstrap_server_hostname']}:{config['kafka_bootstrap_server_port']}"
+    )
 
     kafka_consumer = (
         FlinkKafkaConsumer(
@@ -104,13 +104,9 @@ def main(config: PublishStateConfig, jars_path: List[str]) -> None:
         .set_record_serializer(
             KafkaRecordSerializationSchema.builder()
             .set_topic(config["kafka_publish_state_topic_name"])
-            .set_key_serialization_schema(
-                SimpleStringSchema(),
-            )
-            .set_value_serialization_schema(
-                SimpleStringSchema(),
-            )
-            .build(),
+            .set_key_serialization_schema(SimpleStringSchema())
+            .set_value_serialization_schema(SimpleStringSchema())
+            .build()
         )
         .set_delivery_guarantee(DeliveryGuarantee.AT_LEAST_ONCE)
         .build()
@@ -123,7 +119,7 @@ def main(config: PublishStateConfig, jars_path: List[str]) -> None:
             KafkaRecordSerializationSchema.builder()
             .set_topic(config["kafka_error_topic_name"])
             .set_value_serialization_schema(SimpleStringSchema())
-            .build(),
+            .build()
         )
         .set_delivery_guarantee(DeliveryGuarantee.AT_LEAST_ONCE)
         .build()
@@ -148,17 +144,10 @@ def main(config: PublishStateConfig, jars_path: List[str]) -> None:
     )
 
     # Initialize the stage for preparing the validated notifications for indexing.
-    publish_state_notification = PrepareNotificationToIndex(
-        get_entity.main,
-    )
+    publish_state_notification = PrepareNotificationToIndex(get_entity.main)
 
     publish_state_notification.main.map(
-        lambda document: json.dumps(
-            {
-                "id": document.doc_id,
-                "value": json.loads(document.body.to_json()),
-            },
-        ),
+        lambda document: json.dumps({"id": document.doc_id, "value": json.loads(document.body.to_json())}),
         Types.STRING(),
     ).sink_to(publish_state_sink).name("Publish State Sink")
 

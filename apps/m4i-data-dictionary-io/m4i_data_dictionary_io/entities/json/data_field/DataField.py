@@ -2,26 +2,21 @@ from dataclasses import dataclass
 from typing import Optional
 
 from dataclasses_json import DataClassJsonMixin, LetterCase, dataclass_json
-from m4i_atlas_core import (
-    BusinessField,
-    BusinessFieldAttributes,
-    M4IAttributes,
-    ObjectId,
-)
+from m4i_atlas_core import BusinessField, BusinessFieldAttributes, M4IAttributes, ObjectId
 
 from ..base_object import BaseObject
 from ..ToAtlasConvertible import ToAtlasConvertible
 from ..utils import get_qualified_name
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class DataFieldBase(BaseObject):
     dataset: str
     name: str
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
 class DataFieldDefaultsBase(DataClassJsonMixin):
     attribute: Optional[str] = None
@@ -31,13 +26,9 @@ class DataFieldDefaultsBase(DataClassJsonMixin):
     source: Optional[str] = None
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore
 @dataclass
-class DataField(
-    DataFieldDefaultsBase,
-    DataFieldBase,
-    ToAtlasConvertible[BusinessField],
-):
+class DataField(DataFieldDefaultsBase, DataFieldBase, ToAtlasConvertible[BusinessField]):
     def convert_to_atlas(self) -> BusinessField:
         """
         Returns a corresponding Atlas `BusinessField` instance.
@@ -47,13 +38,13 @@ class DataField(
             attribute_unique_attributes = M4IAttributes(qualified_name=self.attribute)
 
             attribute = ObjectId(
-                type_name="m4i_data_attribute",
-                unique_attributes=attribute_unique_attributes,
+                type_name="m4i_data_attribute", unique_attributes=attribute_unique_attributes
             )
+        else:
+            attribute = None  # type: ignore
 
-       
         attributes = BusinessFieldAttributes(
-            attributes=[attribute] if bool(self.attribute) else [],
+            attributes=[attribute] if bool(self.attribute) else [],  # type: ignore
             definition=self.definition,
             field_type=self.field_type,
             name=self.name,
@@ -61,46 +52,33 @@ class DataField(
         )
 
         if bool(self.parent_field):
-            parent_field_unique_attributes = M4IAttributes(
-                qualified_name=self.parent_field
-            )
+            parent_field_unique_attributes = M4IAttributes(qualified_name=self.parent_field)
 
-            parent_field = ObjectId(
-                type_name="m4i_field",
-                unique_attributes=parent_field_unique_attributes,
-            )
+            parent_field = ObjectId(type_name="m4i_field", unique_attributes=parent_field_unique_attributes)
 
             attributes.parent_field = [parent_field]
-        
+
         else:
             dataset_unique_attributes = M4IAttributes(qualified_name=self.dataset)
 
-            dataset = ObjectId(
-                type_name="m4i_dataset", unique_attributes=dataset_unique_attributes
-            )
+            dataset = ObjectId(type_name="m4i_dataset", unique_attributes=dataset_unique_attributes)
 
             attributes.datasets = [dataset]
 
         if bool(self.source):
             unique_attributes = M4IAttributes(qualified_name=self.source)
 
-            source = ObjectId(
-                type_name="m4i_source", unique_attributes=unique_attributes
-            )
+            source = ObjectId(type_name="m4i_source", unique_attributes=unique_attributes)
 
             attributes.source = [source]
 
-        entity = BusinessField(
-            attributes=attributes,
-        )
+        entity = BusinessField(attributes=attributes)
 
         return entity
 
     def _qualified_name(self):
         """
-        Returns the qualified name of the field based on either the parent field or the dataset and the name of the field.
+        Returns the qualified name of the field based on either the parent field
+        or the dataset and the name of the field.
         """
-        return get_qualified_name(
-            self.name,
-            prefix=self.parent_field if self.parent_field else self.dataset,
-        )
+        return get_qualified_name(self.name, prefix=self.parent_field if self.parent_field else self.dataset)

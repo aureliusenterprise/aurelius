@@ -3,27 +3,27 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  name: 'm4i_consistency_metrics',
-  googleAnalyticsMeasurementID: 'G-1B9CJ1S11',
-  i18n: {
-    defaultLanguage: 'en-US',
-    languages: {}
-  },
-  keycloak: {
-    url: '/auth',
-    realm: 'm4i',
-    clientId: 'm4i_thijs'
-  },
-  notifications: {
-    badgePath: 'assets/m4i-icon.png',
-    iconPath: 'assets/m4i-icon.png'
-  },
-  production: false,
-  shell: {
-    appCopyright: 2020,
-    appLogoPath: 'assets/m4i-analytics-logo.png',
-    appName: 'Models4Insight Consistency Metrics',
-  }
+    name: 'm4i_consistency_metrics',
+    googleAnalyticsMeasurementID: 'G-1B9CJ1S11',
+    i18n: {
+        defaultLanguage: 'en-US',
+        languages: {},
+    },
+    keycloak: {
+        url: '/auth',
+        realm: 'm4i',
+        clientId: 'm4i_thijs',
+    },
+    notifications: {
+        badgePath: 'assets/m4i-icon.png',
+        iconPath: 'assets/m4i-icon.png',
+    },
+    production: false,
+    shell: {
+        appCopyright: 2020,
+        appLogoPath: 'assets/m4i-analytics-logo.png',
+        appName: 'Models4Insight Consistency Metrics',
+    },
 };
 
 /*
@@ -34,4 +34,3 @@ export const environment = {
  * on performance if an error is thrown.
  */
 import 'zone.js/plugins/zone-error'; // Included with Angular CLI.
-

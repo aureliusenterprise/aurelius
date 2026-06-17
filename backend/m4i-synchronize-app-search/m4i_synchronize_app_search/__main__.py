@@ -7,18 +7,12 @@ from m4i_synchronize_app_search import SynchronizeAppSearchConfig, main
 
 config: SynchronizeAppSearchConfig = {
     "atlas_server_url": os.environ["ATLAS_SERVER_URL"],
-    "elasticsearch_app_search_index_name": os.environ[
-        "ELASTICSEARCH_APP_SEARCH_INDEX_NAME"
-    ],
-    "elasticsearch_publish_state_index_name": os.environ[
-        "ELASTICSEARCH_STATE_INDEX_NAME"
-    ],
+    "elasticsearch_app_search_index_name": os.environ["ELASTICSEARCH_APP_SEARCH_INDEX_NAME"],
+    "elasticsearch_publish_state_index_name": os.environ["ELASTICSEARCH_STATE_INDEX_NAME"],
     "elasticsearch_endpoint": os.environ["ELASTICSEARCH_ENDPOINT"],
     "elasticsearch_username": os.environ["ELASTICSEARCH_USERNAME"],
     "elasticsearch_password": os.environ["ELASTICSEARCH_PASSWORD"],
-    "elasticsearch_certificate_path": os.environ.get(
-        "ELASTICSEARCH_CERTIFICATE_PATH", DefaultType(0)
-    ),
+    "elasticsearch_certificate_path": os.environ.get("ELASTICSEARCH_CERTIFICATE_PATH", DefaultType(0)),
     "kafka_app_search_topic_name": os.environ["KAFKA_APP_SEARCH_TOPIC_NAME"],
     "kafka_publish_state_topic_name": os.environ["KAFKA_PUBLISH_STATE_TOPIC_NAME"],
     "kafka_bootstrap_server_hostname": os.environ["KAFKA_BOOTSTRAP_SERVER_HOSTNAME"],

@@ -20,18 +20,18 @@ data:
     # Function to execute a command with retry logic
     retry_cmd() {
       local attempt=1
-      
+
       while [ $attempt -le $MAX_RETRIES ]; do
         echo "Attempt $attempt"
         if "$@"; then
           return 0
         fi
-        
+
         echo "Command failed. Retrying in ${RETRY_DELAY}s..."
         sleep $RETRY_DELAY
         attempt=$((attempt + 1))
       done
-      
+
       echo "Error: Command failed after $MAX_RETRIES attempts" >&2
       return 1
     }
@@ -48,12 +48,12 @@ data:
       local username=$1
       local password=$2
       local roles=$3
-      
+
       # Check if user already exists with retry
       local user_exists="false"
       local check_result=$(retry_cmd /opt/keycloak/bin/kcadm.sh get users -r "${KEYCLOAK_REALM_NAME}" \
         -q -a -f username="$username" 2>/dev/null) || true
-      
+
       if echo "$check_result" | grep -q "$username"; then
         user_exists="true"
       fi
@@ -68,13 +68,13 @@ data:
           -s "enabled=true"
 
         echo "Setting password for user: $username"
-        
+
         # Set password with retry
         retry_cmd /opt/keycloak/bin/kcadm.sh set-password \
           -r "${KEYCLOAK_REALM_NAME}" \
           --username "$username" \
           --new-password "$password"
-      
+
         # Add roles
         if [ ! -z "$roles" ]; then
           for role in $roles; do

@@ -6,12 +6,12 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    ...Core.imports(environment),
-    CoreModule,
-    AppRoutingModule // must be imported as the last module as it contains the fallback route
-  ],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent],
+    imports: [
+        ...Core.imports(environment),
+        CoreModule,
+        AppRoutingModule, // must be imported as the last module as it contains the fallback route
+    ],
+    bootstrap: [AppComponent],
 })
 export class AppModule {}

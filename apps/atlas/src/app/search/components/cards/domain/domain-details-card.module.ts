@@ -8,15 +8,15 @@ import { PeopleModule } from '../../people/people.module';
 import { DomainDetailsCardComponent } from './domain-details-card.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    PeopleModule,
-    DescriptionModule,
-    ClassificationsListModule,
-    BreadCrumbsModule,
-    DataQualityListModule
-  ],
-  declarations: [DomainDetailsCardComponent],
-  exports: [DomainDetailsCardComponent]
+    imports: [
+        CommonModule,
+        PeopleModule,
+        DescriptionModule,
+        ClassificationsListModule,
+        BreadCrumbsModule,
+        DataQualityListModule,
+    ],
+    declarations: [DomainDetailsCardComponent],
+    exports: [DomainDetailsCardComponent],
 })
 export class DomainDetailsCardModule {}

@@ -2,9 +2,16 @@ from dataclasses import dataclass
 from typing import Iterable, Optional, List
 
 from dataclasses_json import LetterCase, dataclass_json
-from m4i_atlas_core.entities.atlas.core import (AttributeDef, Attributes, Entity, EntityBase,
-                                                EntityDef, EntityDefaultsBase, ObjectId,
-                                                TypeCategory)
+from m4i_atlas_core.entities.atlas.core import (
+    AttributeDef,
+    Attributes,
+    Entity,
+    EntityBase,
+    EntityDef,
+    EntityDefaultsBase,
+    ObjectId,
+    TypeCategory,
+)
 
 from m4i_atlas_core.entities.atlas.m4i.M4IAttributes import M4IAttributesBase
 
@@ -15,59 +22,65 @@ data_quality_gov_attributes_def = [
         type_name="int",
         is_optional=False,
         description="The unique identifier of the data quality rule",
-        display_name="ID"
+        display_name="ID",
     ),
     AttributeDef(
         name="ruleDescription",
         type_name="string",
-        description="Functional description on what the data field needs to adhere to including the related data "
-                    "fields which can be used to program into a measurable rule.",
-        display_name="Rule Description"
+        description=(
+            "Functional description on what the data field needs to adhere "
+            "to including the related data fields which can be used to "
+            "program into a measurable rule."
+        ),
+        display_name="Rule Description",
     ),
     AttributeDef(
         name="expression",
         type_name="string",
-        description="The expression that is used by a Python script to apply the correct functionality for a data "
-                    "quality rule.",
-        display_name="Expression"
+        description=(
+            "The expression that is used by a Python script to apply the "
+            "correct functionality for a data quality rule."
+        ),
+        display_name="Expression",
     ),
     AttributeDef(
         name="active",
         type_name="boolean",
         description="Classification if a data quality rule is active or inactive.",
-        display_name="Active"
+        display_name="Active",
     ),
     AttributeDef(
         name="expressionVersion",
         type_name="string",
         description="The version of the expression that is used.",
-        display_name="Expression Version"
-
+        display_name="Expression Version",
     ),
     AttributeDef(
         name="qualityDimension",
         type_name="string",
         description="Classification of the type of data quality that needs to be measured.",
-        display_name="Quality Dimension"
+        display_name="Quality Dimension",
     ),
     AttributeDef(
         name="compliantMessage",
         type_name="string",
         description="Message displayed when data quality is Complaint",
-        display_name="Complaint Message"
+        display_name="Complaint Message",
     ),
     AttributeDef(
         name="nonCompliantMessage",
         type_name="string",
         description="Message displayed when data quality is not Complaint",
-        display_name="Non-complaint Message"
+        display_name="Non-complaint Message",
     ),
     AttributeDef(
         name="ruleType",
         type_name="string",
-        description="Rules are either applied on Attributes or relationship. This field captures this information.",
-        display_name="Rule Type"
-    )
+        description=(
+            "Rules are either applied on Attributes or relationship. This field captures this information."
+        ),
+        display_name="Rule Type",
+    ),
 ]
 
 data_quality_super_type = ["m4i_referenceable", "DataSet"]
@@ -84,7 +97,8 @@ data_quality_gov_def = EntityDef(
 
 # END TypeDef for Entity & Relationships
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessGovDataQualityAttributesBase(M4IAttributesBase):
     name: str
@@ -93,7 +107,7 @@ class BusinessGovDataQualityAttributesBase(M4IAttributesBase):
 # END BusinessGovDataQualityAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessGovDataQualityAttributesDefaultsBase(Attributes):
     id: Optional[str] = None
@@ -111,17 +125,18 @@ class BusinessGovDataQualityAttributesDefaultsBase(Attributes):
 # END BusinessGovDataQualityAttributesDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessGovDataQualityAttributes(BusinessGovDataQualityAttributesDefaultsBase,
-                                       BusinessGovDataQualityAttributesBase):
+class BusinessGovDataQualityAttributes(
+    BusinessGovDataQualityAttributesDefaultsBase, BusinessGovDataQualityAttributesBase
+):
     pass
 
 
 # END BusinessGovDataQualityAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessGovDataQualityBase(EntityBase):
     attributes: BusinessGovDataQualityAttributes
@@ -130,7 +145,7 @@ class BusinessGovDataQualityBase(EntityBase):
 # END BusinessGovDataQualityBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessGovDataQualityDefaultsBase(EntityDefaultsBase):
     pass
@@ -139,13 +154,15 @@ class BusinessGovDataQualityDefaultsBase(EntityDefaultsBase):
 # END BusinessGovDataQualityDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessGovDataQuality(BusinessGovDataQualityDefaultsBase, BusinessGovDataQualityBase, Entity):
+class BusinessGovDataQuality(  # type: ignore[reportGeneralTypeIssues]
+    BusinessGovDataQualityDefaultsBase, BusinessGovDataQualityBase, Entity
+):
     type_name: str = "m4i_gov_data_quality"
 
     @classmethod
-    def get_type_def(cls):
+    def get_type_def(cls):  # type: ignore[reportIncompatibleMethodOverride]
         return data_quality_gov_def
 
     def get_referred_entities(self) -> Iterable[ObjectId]:
@@ -160,6 +177,8 @@ class BusinessGovDataQuality(BusinessGovDataQualityDefaultsBase, BusinessGovData
         # END IF
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END BusinessGovDataQuality

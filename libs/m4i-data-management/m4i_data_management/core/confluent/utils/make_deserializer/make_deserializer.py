@@ -1,18 +1,22 @@
+from typing import Any, Optional, cast
+
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroDeserializer
 from confluent_kafka.schema_registry.json_schema import JSONDeserializer
-from confluent_kafka.serialization import (SerializationContext,
-                                           StringDeserializer)
+from confluent_kafka.serialization import StringDeserializer
 
 from ..make_schema_registry_client import make_schema_registry_client
 
+AvroDeserializerCtor = cast(Any, AvroDeserializer)
+JSONDeserializerCtor = cast(Any, JSONDeserializer)
+
 
 def make_deserializer(
-    schema_id: str = None,
+    schema_id: Optional[str] = None,
     schema_type: str = "string",
-    schema_registry_client: SchemaRegistryClient = None,
-    from_dict=None
-) -> SerializationContext:
+    schema_registry_client: Optional[SchemaRegistryClient] = None,
+    from_dict: Any = None,
+) -> Any:
     """
     Makes an deserializer for the given `schema type` and the given `schema_id`
     """
@@ -25,25 +29,17 @@ def make_deserializer(
         schema_registry_client = make_schema_registry_client()
     # END IF
 
-    schema = schema_registry_client.get_schema(schema_id)
+    schema = schema_registry_client.get_schema(cast(Any, schema_id))
 
     deserializers = {
-        "avro": lambda: AvroDeserializer(
-            schema_registry_client=schema_registry_client,
-            schema_str=schema.schema_str,
-            from_dict=from_dict
-        ),
-        "json": lambda: JSONDeserializer(
-            schema_str=schema.schema_str,
-            from_dict=from_dict
-        ),
-        "string": lambda: StringDeserializer("utf-8")
+        "avro": lambda: AvroDeserializerCtor(schema.schema_str, from_dict, schema_registry_client),
+        "json": lambda: JSONDeserializerCtor(schema.schema_str, from_dict),
+        "string": lambda: StringDeserializer("utf-8"),
     }
 
-    deserializer_factory = deserializers.get(
-        schema_type,
-        deserializers["string"]
-    )
+    deserializer_factory = deserializers.get(schema_type, deserializers["string"])
 
     return deserializer_factory()
+
+
 # END make_deserializer

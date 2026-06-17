@@ -7,14 +7,8 @@ import { TypeNameModule } from '../../type-name/type-name.module';
 import { ClassificationSourceComponent } from './classification-source.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    BreadCrumbsModule,
-    TranslateModule.forChild(),
-    TypeNameModule,
-  ],
-  declarations: [ClassificationSourceComponent],
-  exports: [ClassificationSourceComponent],
+    imports: [CommonModule, FontAwesomeModule, BreadCrumbsModule, TranslateModule.forChild(), TypeNameModule],
+    declarations: [ClassificationSourceComponent],
+    exports: [ClassificationSourceComponent],
 })
 export class ClassificationSourceModule {}

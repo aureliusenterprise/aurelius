@@ -4,4 +4,4 @@ metadata:
   name: keycloak-conf-configmap
 data:
   keycloak-conf.json: |
-{{ tpl ( .Files.Get "conf/keycloak-conf.json" ) . | indent 4}}
+{{ tpl ( .Files.Get "conf/keycloak-conf.json.tmpl" ) . | indent 4}}

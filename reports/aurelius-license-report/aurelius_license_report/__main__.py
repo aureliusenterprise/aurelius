@@ -1,7 +1,4 @@
-from aurelius_license_report.report import (
-    generate_project_reports,
-    generate_workspace_report,
-)
+from aurelius_license_report.report import generate_project_reports, generate_workspace_report
 from aurelius_license_report.settings import load_settings
 
 settings = load_settings()

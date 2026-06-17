@@ -76,4 +76,3 @@ This allows us to check if the registry of the image is specified or not.
 {{- printf "%s:%s" $repository $tag -}}
 {{- end }}
 {{- end -}}
-

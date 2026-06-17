@@ -6,14 +6,8 @@ import { SortingComponent } from './sorting.component';
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FontAwesomeModule,
-    TranslateModule.forChild()
-  ],
-  declarations: [SortingComponent],
-  exports: [SortingComponent]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, FontAwesomeModule, TranslateModule.forChild()],
+    declarations: [SortingComponent],
+    exports: [SortingComponent],
 })
 export class SortingModule {}

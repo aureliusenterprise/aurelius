@@ -8,26 +8,23 @@ import { createHttpParams, getHttpClient } from '../utils';
  * Retrieves all `UserGroup` for the project with the given `projectId`
  */
 export function getUserGroups(
-  /** The id of the project for which to retrieve the user groups */
-  projectId: Project['id'],
-  /** Additional parameters for the getUserGroups operation */
-  { forceUpdate }: GetOptions = {}
+    /** The id of the project for which to retrieve the user groups */
+    projectId: Project['id'],
+    /** Additional parameters for the getUserGroups operation */
+    { forceUpdate }: GetOptions = {},
 ): Observable<UserGroup[]> {
-  const http = getHttpClient(),
-    path = `${repositoryApiBasePath}/project/group`;
+    const http = getHttpClient(),
+        path = `${repositoryApiBasePath}/project/group`;
 
-  validateRequiredArguments(arguments, 'getUserGroups');
+    validateRequiredArguments(arguments, 'getUserGroups');
 
-  const queryParameters = createHttpParams({
-    project_id: projectId,
-  });
+    const queryParameters = createHttpParams({
+        project_id: projectId,
+    });
 
-  const requestOptions = {
-    params: queryParameters,
-  };
+    const requestOptions = {
+        params: queryParameters,
+    };
 
-  return http
-    .authorize()
-    .cache(forceUpdate)
-    .get<UserGroup[]>(path, requestOptions);
+    return http.authorize().cache(forceUpdate).get<UserGroup[]>(path, requestOptions);
 }

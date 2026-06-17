@@ -4,12 +4,7 @@ from dataclasses import dataclass
 from typing import Callable, Union
 
 from elasticsearch import ApiError, Elasticsearch
-from m4i_atlas_core import (
-    AtlasChangeMessage,
-    Entity,
-    EntityAuditAction,
-    get_entity_type_by_type_name,
-)
+from m4i_atlas_core import AtlasChangeMessage, Entity, EntityAuditAction, get_entity_type_by_type_name
 from pyflink.datastream import DataStream, MapFunction, RuntimeContext
 
 from m4i_flink_tasks import AtlasChangeMessageWithPreviousVersion
@@ -75,8 +70,7 @@ class GetPreviousEntityFunction(MapFunction):
         self.elasticsearch = self.elastic_factory()
 
     def map(  # type: ignore[return type override is valid]
-        self,
-        value: Union[AtlasChangeMessage, Exception],
+        self, value: Union[AtlasChangeMessage, Exception]
     ) -> Union[AtlasChangeMessageWithPreviousVersion, Exception]:
         """
         Map function to retrieve the previous version of an entity.
@@ -122,9 +116,7 @@ class GetPreviousEntityFunction(MapFunction):
         msg_creation_time = value.msg_creation_time
 
         try:
-            result.previous_version = self.get_previous_entity(
-                entity, msg_creation_time
-            )
+            result.previous_version = self.get_previous_entity(entity, msg_creation_time)
         except ApiError as e:
             return ValueError(str(e))
         except NoPreviousVersionError as e:
@@ -135,47 +127,21 @@ class GetPreviousEntityFunction(MapFunction):
         """Close the Elasticsearch client."""
         self.elasticsearch.close()
 
-    @retry(
-        retry_strategy=ExponentialBackoff(), catch=(ApiError, NoPreviousVersionError)
-    )
-    def get_previous_entity(
-        self,
-        current_version: Entity,
-        timestamp: int,
-    ) -> Entity:
+    @retry(retry_strategy=ExponentialBackoff(), catch=(ApiError, NoPreviousVersionError))
+    def get_previous_entity(self, current_version: Entity, timestamp: int) -> Entity:
         """Retrieve the previous version of an entity from ElasticSearch."""
         query = {
             "bool": {
                 "filter": [
-                    {
-                        "match": {
-                            "guid.keyword": {
-                                "query": current_version.guid,
-                                "operator": "and",
-                            },
-                        },
-                    },
-                    {
-                        "range": {
-                            "updateTime": {
-                                "lt": timestamp,
-                            },
-                        },
-                    },
-                ],
-            },
+                    {"match": {"guid.keyword": {"query": current_version.guid, "operator": "and"}}},
+                    {"range": {"updateTime": {"lt": timestamp}}},
+                ]
+            }
         }
 
-        sort = {
-            "updateTime": {"numeric_type": "long", "order": "desc"},
-        }
+        sort = {"updateTime": {"numeric_type": "long", "order": "desc"}}
 
-        search_result = self.elasticsearch.search(
-            index=self.index_name,
-            query=query,
-            sort=sort,
-            size=1,
-        )
+        search_result = self.elasticsearch.search(index=self.index_name, query=query, sort=sort, size=1)
 
         if search_result["hits"]["total"]["value"] == 0:
             logging.error(
@@ -210,10 +176,7 @@ class GetPreviousEntity:
     """
 
     def __init__(
-        self,
-        input_stream: DataStream,
-        elastic_factory: ElasticsearchFactory,
-        index_name: str,
+        self, input_stream: DataStream, elastic_factory: ElasticsearchFactory, index_name: str
     ) -> None:
         """
         Initialize `GetPreviousEntity` with an input data stream.
@@ -232,8 +195,6 @@ class GetPreviousEntity:
 
         self.main = (
             self.input_stream.map(DelayedMap())
-            .map(
-                GetPreviousEntityFunction(elastic_factory, index_name),
-            )
+            .map(GetPreviousEntityFunction(elastic_factory, index_name))
             .name("previous_entity_lookup")
         )

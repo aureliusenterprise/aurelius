@@ -1,1 +1,1 @@
-from .make_deserializing_consumer import *
+from .make_deserializing_consumer import make_deserializing_consumer as make_deserializing_consumer

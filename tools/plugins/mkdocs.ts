@@ -1,5 +1,5 @@
 import { CreateNodes, CreateNodesResult } from '@nx/devkit';
-import { dirname } from 'path';
+import { dirname } from 'node:path';
 
 export interface MkDocsPluginOptions {
     readonly docsTargetName?: string;

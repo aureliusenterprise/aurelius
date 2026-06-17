@@ -12,22 +12,22 @@ import { TechnicalContextInfoModalComponent } from './technical-context/info-mod
 import { TechnicalContextComponent } from './technical-context/technical-context.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    ModalModule,
-    SimpleSearchInputModule,
-    SortableTableShellModule,
-    TranslateModule
-  ],
-  declarations: [
-    BrowseComponent,
-    BusinessContextComponent,
-    BusinessContextInfoModalComponent,
-    GovernanceResponsibilitiesComponent,
-    GovernanceResponsibilitiesInfoModalComponent,
-    TechnicalContextComponent,
-    TechnicalContextInfoModalComponent
-  ]
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        ModalModule,
+        SimpleSearchInputModule,
+        SortableTableShellModule,
+        TranslateModule,
+    ],
+    declarations: [
+        BrowseComponent,
+        BusinessContextComponent,
+        BusinessContextInfoModalComponent,
+        GovernanceResponsibilitiesComponent,
+        GovernanceResponsibilitiesInfoModalComponent,
+        TechnicalContextComponent,
+        TechnicalContextInfoModalComponent,
+    ],
 })
 export class BrowseModule {}

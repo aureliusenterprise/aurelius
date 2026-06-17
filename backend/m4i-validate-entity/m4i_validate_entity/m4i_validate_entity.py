@@ -21,12 +21,12 @@ output = {
                 "_meta": {
                     "engine": "atlas-dev-gov-quality",
                     "score": 1,
-                    "id": "doc-6290d9e0dd895e02b897451f"
+                    "id": "doc-6290d9e0dd895e02b897451f",
                 },
-                "id": {"raw": "doc-6290d9e0dd895e02b897451f"}
+                "id": {"raw": "doc-6290d9e0dd895e02b897451f"},
             }
         ],
-        "isNonCompliant": True
+        "isNonCompliant": True,
     },
     "definition": {
         "items": [
@@ -39,12 +39,12 @@ output = {
                 "_meta": {
                     "engine": "atlas-dev-gov-quality",
                     "score": 1,
-                    "id": "doc-6290d9dedd895e197b974510"
+                    "id": "doc-6290d9dedd895e197b974510",
                 },
-                "id": {"raw": "doc-6290d9dedd895e197b974510"}
+                "id": {"raw": "doc-6290d9dedd895e197b974510"},
             }
         ],
-        "isNonCompliant": False
+        "isNonCompliant": False,
     },
     "domainLead": {
         "items": [
@@ -57,12 +57,12 @@ output = {
                 "_meta": {
                     "engine": "atlas-dev-gov-quality",
                     "score": 1,
-                    "id": "doc-6290d9e0dd895e02b8974528"
+                    "id": "doc-6290d9e0dd895e02b8974528",
                 },
-                "id": {"raw": "doc-6290d9e0dd895e02b8974528"}
+                "id": {"raw": "doc-6290d9e0dd895e02b8974528"},
             }
         ],
-        "isNonCompliant": True
+        "isNonCompliant": True,
     },
     "name": {
         "items": [
@@ -75,25 +75,22 @@ output = {
                 "_meta": {
                     "engine": "atlas-dev-gov-quality",
                     "score": 1,
-                    "id": "doc-6290d9dedd895e197b974507"
+                    "id": "doc-6290d9dedd895e197b974507",
                 },
-                "id": {"raw": "doc-6290d9dedd895e197b974507"}
+                "id": {"raw": "doc-6290d9dedd895e197b974507"},
             }
         ],
-        "isNonCompliant": False
-    }
+        "isNonCompliant": False,
+    },
 }
 
 
-@app.route('/', methods=['POST'])
+@app.route("/", methods=["POST"])
 @requires_auth(transparent=True)
 def mock_response(access_token=None):
-
-    response = app.response_class(
-        response=json.dumps(output),
-        status=200,
-        mimetype='application/json'
-    )
+    response = app.response_class(response=json.dumps(output), status=200, mimetype="application/json")
 
     return response
+
+
 # END mock_response

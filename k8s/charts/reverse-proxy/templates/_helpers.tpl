@@ -49,4 +49,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "reverse-proxy.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-

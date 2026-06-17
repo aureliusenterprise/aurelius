@@ -1,19 +1,12 @@
 import logging
 from typing import Union
 
-from confluent_kafka.schema_registry import (
-    Schema,
-    SchemaRegistryClient,
-    SchemaRegistryError,
-)
+from confluent_kafka.schema_registry import Schema, SchemaRegistryClient, SchemaRegistryError
 
 SCHEMA_REGISTRY_MAGIC_BYTE = b"\x00"
 
 
-def get_topic_schema(
-    topic: str,
-    schema_registry_client: SchemaRegistryClient,
-) -> Union[Schema, None]:
+def get_topic_schema(topic: str, schema_registry_client: SchemaRegistryClient) -> Union[Schema, None]:
     """Retrieve the schema for a Kafka topic using topic name strategy."""
     try:
         return schema_registry_client.get_latest_version(f"{topic}-value").schema
@@ -22,10 +15,7 @@ def get_topic_schema(
         return None
 
 
-def get_message_schema(
-    message: bytes,
-    schema_registry_client: SchemaRegistryClient,
-) -> Union[Schema, None]:
+def get_message_schema(message: bytes, schema_registry_client: SchemaRegistryClient) -> Union[Schema, None]:
     """Retrieve the schema for a Kafka message based on the schema registry header."""
     if not message.startswith(SCHEMA_REGISTRY_MAGIC_BYTE):
         logging.warning("Message is not schema-registered")

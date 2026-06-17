@@ -12,24 +12,17 @@ from m4i_atlas_post_install.get_enterprise_search_key import get_enterprise_sear
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--url", "-a", required=True, help="App Search url", type=str)
-    parser.add_argument(
-        "--username", "-u", default="elastic", help="ES username", type=str
-    )
+    parser.add_argument("--username", "-u", default="elastic", help="ES username", type=str)
     parser.add_argument("--password", "-p", required=True, help="ES password", type=str)
     parser.add_argument(
-        "--target-dir",
-        default=Path("data"),
-        type=Path,
-        help="Target directory for the output",
+        "--target-dir", default=Path("data"), type=Path, help="Target directory for the output"
     )
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-    app_search_api_key = get_enterprise_search_key(
-        args.url, args.username, args.password
-    )
+    app_search_api_key = get_enterprise_search_key(args.url, args.username, args.password)
 
     app_search_client = AppSearch(args.url, bearer_auth=app_search_api_key)
     for engine in engines:

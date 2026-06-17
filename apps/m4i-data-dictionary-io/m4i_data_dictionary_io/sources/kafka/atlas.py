@@ -1,28 +1,15 @@
 from typing import Union
 
-from m4i_data_dictionary_io.entities.json import (
-    Collection,
-    DataField,
-    Dataset,
-    System,
-    get_qualified_name,
-)
+from m4i_data_dictionary_io.entities.json import Collection, DataField, Dataset, System
+from m4i_data_dictionary_io.entities.json.utils.get_qualified_name import get_qualified_name
 
 
 def build_system(name: str) -> System:
     """Build a System instance with the provided name."""
-    return System.from_dict(
-        {
-            "name": name,
-            "qualifiedName": get_qualified_name(name),
-        }
-    )
+    return System.from_dict({"name": name, "qualifiedName": get_qualified_name(name)})
 
 
-def build_collection(
-    name: str,
-    system_qualified_name: str,
-) -> Collection:
+def build_collection(name: str, system_qualified_name: str) -> Collection:
     """Build a Collection instance with the provided name and system qualified name."""
     return Collection.from_dict(
         {
@@ -35,16 +22,10 @@ def build_collection(
 
 def build_dataset(topic: str, collection_qualified_name: str) -> Dataset:
     """Process each topic by creating dataset and field instances."""
-    dataset_qualified_name = (
-        collection_qualified_name + "--" + get_qualified_name(topic)
-    )
+    dataset_qualified_name = collection_qualified_name + "--" + get_qualified_name(topic)
 
     return Dataset.from_dict(
-        {
-            "name": topic,
-            "collection": collection_qualified_name,
-            "qualifiedName": dataset_qualified_name,
-        }
+        {"name": topic, "collection": collection_qualified_name, "qualifiedName": dataset_qualified_name}
     )
 
 
@@ -62,7 +43,9 @@ def build_field(
             "name": name,
             "dataset": dataset_qualified_name,
             "definition": definition,
-            "qualifiedName": f"{parent_field if parent_field else dataset_qualified_name}--{get_qualified_name(name)}",
+            "qualifiedName": (
+                f"{parent_field if parent_field else dataset_qualified_name}--{get_qualified_name(name)}"
+            ),
             "fieldType": type_name,
             "parentField": parent_field,
         }

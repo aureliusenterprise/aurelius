@@ -4,9 +4,9 @@ import { FeatureDirective } from './feature.directive';
 import { FeatureService } from './feature.service';
 
 @NgModule({
-  imports: [RepositoryModule],
-  declarations: [FeatureDirective],
-  providers: [FeatureService],
-  exports: [FeatureDirective],
+    imports: [RepositoryModule],
+    declarations: [FeatureDirective],
+    providers: [FeatureService],
+    exports: [FeatureDirective],
 })
 export class FeatureModule {}

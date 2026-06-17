@@ -1,1 +1,1 @@
-from .bidirectional_multmap import *
+from .bidirectional_multmap import BidirectionalMutliMap as BidirectionalMutliMap

@@ -7,41 +7,41 @@ import { Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
 @Component({
-  selector: 'models4insight-user-groups-settings',
-  templateUrl: 'user-groups.component.html',
-  styleUrls: ['user-groups.component.scss']
+    selector: 'models4insight-user-groups-settings',
+    templateUrl: 'user-groups.component.html',
+    styleUrls: ['user-groups.component.scss'],
 })
 export class UserGroupsSettingsComponent implements OnInit, OnDestroy {
-  userGroups$: Observable<UserGroup[]>;
-  usernames$: Observable<string[]>;
+    userGroups$: Observable<UserGroup[]>;
+    usernames$: Observable<string[]>;
 
-  @ViewChild(CreateUserGroupModalComponent, { static: true })
-  private readonly createUserGroupModal: CreateUserGroupModalComponent;
+    @ViewChild(CreateUserGroupModalComponent, { static: true })
+    private readonly createUserGroupModal: CreateUserGroupModalComponent;
 
-  constructor(
-    private readonly projectMembersService: ProjectMembersService,
-    private readonly userGroupsService: ProjectUserGroupsService
-  ) {}
+    constructor(
+        private readonly projectMembersService: ProjectMembersService,
+        private readonly userGroupsService: ProjectUserGroupsService,
+    ) {}
 
-  ngOnInit() {
-    // Whenever the user group modal is submitted, trigger an update of the repository
-    this.createUserGroupModal.submission
-      .pipe(untilDestroyed(this))
-      .subscribe(group => this.userGroupsService.updateUserGroup(group));
+    ngOnInit() {
+        // Whenever the user group modal is submitted, trigger an update of the repository
+        this.createUserGroupModal.submission
+            .pipe(untilDestroyed(this))
+            .subscribe((group) => this.userGroupsService.updateUserGroup(group));
 
-    this.userGroups$ = this.userGroupsService.userGroups.pipe(shareReplay());
+        this.userGroups$ = this.userGroupsService.userGroups.pipe(shareReplay());
 
-    this.usernames$ = this.projectMembersService.members;
-  }
+        this.usernames$ = this.projectMembersService.members;
+    }
 
-  ngOnDestroy() {}
+    ngOnDestroy() {}
 
-  activateModal() {
-    this.createUserGroupModal.activate();
-  }
+    activateModal() {
+        this.createUserGroupModal.activate();
+    }
 
-  editGroup(group: UserGroup) {
-    this.createUserGroupModal.subject = group;
-    this.activateModal();
-  }
+    editGroup(group: UserGroup) {
+        this.createUserGroupModal.subject = group;
+        this.activateModal();
+    }
 }

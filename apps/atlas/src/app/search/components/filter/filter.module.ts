@@ -7,8 +7,8 @@ import { FacetComponent } from './facet/facet.component';
 import { FilterComponent } from './filter.component';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule.forChild()],
-  declarations: [CheckBoxComponent, FacetComponent, FilterComponent],
-  exports: [FilterComponent]
+    imports: [CommonModule, ReactiveFormsModule, TranslateModule.forChild()],
+    declarations: [CheckBoxComponent, FacetComponent, FilterComponent],
+    exports: [FilterComponent],
 })
 export class FilterModule {}

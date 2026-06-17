@@ -5,15 +5,15 @@ import { ProjectPermissionDirective } from './project-permission.directive';
 import { ProjectPermissionService } from './project-permission.service';
 
 @NgModule({
-  imports: [RepositoryModule],
-  declarations: [ProjectPermissionDirective, HasProjectPermissionDirective],
-  exports: [ProjectPermissionDirective, HasProjectPermissionDirective],
+    imports: [RepositoryModule],
+    declarations: [ProjectPermissionDirective, HasProjectPermissionDirective],
+    exports: [ProjectPermissionDirective, HasProjectPermissionDirective],
 })
 export class ProjectPermissionModule {
-  static forRoot(): ModuleWithProviders<ProjectPermissionModule> {
-    return {
-      ngModule: ProjectPermissionModule,
-      providers: [ProjectPermissionService],
-    };
-  }
+    static forRoot(): ModuleWithProviders<ProjectPermissionModule> {
+        return {
+            ngModule: ProjectPermissionModule,
+            providers: [ProjectPermissionService],
+        };
+    }
 }

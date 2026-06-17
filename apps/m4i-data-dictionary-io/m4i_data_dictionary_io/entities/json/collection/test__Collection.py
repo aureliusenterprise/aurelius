@@ -14,7 +14,7 @@ def test__create_collection_from_dict():
         "definition": "definition",
         "name": "collection",
         "qualifiedName": "system--collection",
-        "source": "source"
+        "source": "source",
     }
 
     instance = Collection.from_dict(collection)
@@ -24,6 +24,8 @@ def test__create_collection_from_dict():
     assert instance.name == "collection"
     assert instance.qualified_name == "system--collection"
     assert instance.source == "source"
+
+
 # END test__create_collection_from_dict
 
 
@@ -32,8 +34,7 @@ def test__create_collection_from_json():
     Tests whether or not a `collection` can be created from a json string with its attributes
     """
 
-    collection = (
-        """
+    collection = """
         {
             "system": "system",
             "definition": "definition",
@@ -42,7 +43,6 @@ def test__create_collection_from_json():
             "source":"source"
         }
         """
-    )
 
     instance = Collection.from_json(collection)
 
@@ -51,6 +51,8 @@ def test__create_collection_from_json():
     assert instance.name == "collection"
     assert instance.qualified_name == "system--collection"
     assert instance.source == "source"
+
+
 # END test__create_collection_from_json
 
 
@@ -59,15 +61,13 @@ def test__collection_calculates_correct_qualified_name():
     Tests whether or not the generated qualified name matches the expected format
     """
 
-    collection = {
-        "system": "system",
-        "name": "collection",
-        "qualifiedName": "system--collection"
-    }
+    collection = {"system": "system", "name": "collection", "qualifiedName": "system--collection"}
 
     instance = Collection.from_dict(collection)
 
     assert instance._qualified_name() == "system--collection"
+
+
 # END test__collection_calculates_correct_qualified_name
 
 
@@ -76,15 +76,13 @@ def test__create_collection_with_wrong_qualified_name():
     Tests whether or not an exception is raised when the qualified name is not valid
     """
 
-    collection = {
-        "system": "system",
-        "name": "collection",
-        "qualifiedName": "test",
-    }
+    collection = {"system": "system", "name": "collection", "qualifiedName": "test"}
 
     with pytest.raises(QualifiedNameNotValidException):
         Collection.from_dict(collection)
     # END WITH
+
+
 # END test__create_collection_with_wrong_qualified_name
 
 
@@ -98,7 +96,7 @@ def test__collection_convert_to_atlas_entity():
         "definition": "definition",
         "name": "collection",
         "qualifiedName": "system--collection",
-        "source": "source"
+        "source": "source",
     }
 
     instance = Collection.from_dict(collection)
@@ -115,13 +113,13 @@ def test__collection_convert_to_atlas_entity():
 
     assert atlas_system is not None
     assert atlas_system.type_name == "m4i_system"
-    assert getattr(atlas_system.unique_attributes,
-                   "qualified_name") == instance.system
+    assert getattr(atlas_system.unique_attributes, "qualified_name") == instance.system
 
     atlas_source = atlas_attributes.source[0]
 
     assert atlas_source is not None
     assert atlas_source.type_name == "m4i_source"
-    assert getattr(atlas_source.unique_attributes,
-                   "qualified_name") == instance.source
+    assert getattr(atlas_source.unique_attributes, "qualified_name") == instance.source
+
+
 # END test__collection_convert_to_atlas_entity

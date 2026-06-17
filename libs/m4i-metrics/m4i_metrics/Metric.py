@@ -1,18 +1,22 @@
 from abc import ABC, abstractmethod
-from typing import Dict
-
-from .MetricConfig import MetricConfig
+from typing import Any, Dict
 
 
 class Metric(ABC):
-    metric_label: str = 'metric'
+    metric_label: str = "metric"
+    id: str = ""
+    label: str = ""
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self.metric_label
+
     # END get_name
 
     @abstractmethod
-    def calculate(model) -> Dict[str, Dict[str, MetricConfig]]:
+    def calculate(self, model: Any) -> Dict[str, Any]:
         pass
+
     # END calculate
+
+
 # END Metric

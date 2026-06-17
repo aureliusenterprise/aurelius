@@ -3,9 +3,19 @@ from typing import Iterable, List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
-from ..core import (AttributeDef, Attributes, Cardinality, Entity, EntityBase,
-                    EntityDef, EntityDefaultsBase, ObjectId, RelationshipDef,
-                    RelationshipEndDef, TypeCategory)
+from ..core import (
+    AttributeDef,
+    Attributes,
+    Cardinality,
+    Entity,
+    EntityBase,
+    EntityDef,
+    EntityDefaultsBase,
+    ObjectId,
+    RelationshipDef,
+    RelationshipEndDef,
+    TypeCategory,
+)
 from ..m4i.M4IAttributes import M4IAttributesBase
 
 atlas_system_attributes_def = [
@@ -13,13 +23,13 @@ atlas_system_attributes_def = [
         name="name",
         type_name="string",
         description="The unique functional name of the system",
-        display_name="Name"
+        display_name="Name",
     ),
     AttributeDef(
         name="definition",
         type_name="string",
         description="The definition of the system",
-        display_name="Definition"
+        display_name="Definition",
     ),
     AttributeDef(
         name="collections",
@@ -27,7 +37,7 @@ atlas_system_attributes_def = [
         is_indexable=False,
         description="The functional name of the collection that the dataset belongs to",
         display_name="Collection",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="parentSystem",
@@ -35,7 +45,7 @@ atlas_system_attributes_def = [
         is_indexable=False,
         description="The functional names of the System that the System belongs to",
         display_name="Parent System",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="childSystem",
@@ -43,7 +53,7 @@ atlas_system_attributes_def = [
         is_indexable=False,
         description="The functional names of the System that belong to the System",
         display_name="Child System",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="processes",
@@ -51,8 +61,8 @@ atlas_system_attributes_def = [
         is_indexable=False,
         description="The functional names of the Process that belong to the System",
         display_name="Child Process",
-        cardinality=Cardinality.SET
-    )
+        cardinality=Cardinality.SET,
+    ),
 ]
 
 atlas_system_super_type = ["m4i_referenceable"]
@@ -63,19 +73,13 @@ atlas_system_def = EntityDef(
     name="m4i_system",
     type_version="1.0",
     attribute_defs=atlas_system_attributes_def,
-    super_types=atlas_system_super_type
+    super_types=atlas_system_super_type,
 )
 
 end_1_psystem_csystem = RelationshipEndDef(
-    type="m4i_system",
-    name="parentSystem",
-    cardinality=Cardinality.SET
+    type="m4i_system", name="parentSystem", cardinality=Cardinality.SET
 )
-end_2_psystem_csystem = RelationshipEndDef(
-    type="m4i_system",
-    name="childSystem",
-    cardinality=Cardinality.SET
-)
+end_2_psystem_csystem = RelationshipEndDef(type="m4i_system", name="childSystem", cardinality=Cardinality.SET)
 
 m4i_psystem_csystem_rel_def = RelationshipDef(
     end_def1=end_1_psystem_csystem,
@@ -83,18 +87,20 @@ m4i_psystem_csystem_rel_def = RelationshipDef(
     name="m4i_system_parent_assignment",
     category=TypeCategory.RELATIONSHIP,
     type_version="1.0",
-    description="The relationship between the system to other systems"
+    description="The relationship between the system to other systems",
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessSystemAttributesBase(M4IAttributesBase):
     name: str
+
+
 # END BusinessSystemsAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessSystemAttributesDefaultsBase(Attributes):
     collections: List[ObjectId] = field(default_factory=list)
@@ -103,45 +109,55 @@ class BusinessSystemAttributesDefaultsBase(Attributes):
     child_system: List[ObjectId] = field(default_factory=list)
     processes: List[ObjectId] = field(default_factory=list)
     source: List[ObjectId] = field(default_factory=list)
+
+
 # END BusinessSystemAttributesDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessSystemAttributes(BusinessSystemAttributesDefaultsBase, BusinessSystemAttributesBase):
     pass
+
+
 # END BusinessSystemAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessSystemBase(EntityBase):
     attributes: BusinessSystemAttributes
+
+
 # END BusinessSystemBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessSystemDefaultsBase(EntityDefaultsBase):
     pass
+
+
 # END BusinessSystemDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessSystem(BusinessSystemDefaultsBase, BusinessSystemBase, Entity):
+class BusinessSystem(BusinessSystemDefaultsBase, BusinessSystemBase, Entity):  # type: ignore[reportGeneralTypeIssues]
     type_name: str = "m4i_system"
 
     @classmethod
-    def get_type_def(cls):
+    def get_type_def(cls):  # type: ignore[reportIncompatibleMethodOverride]
         return atlas_system_def
 
     def get_parents(self) -> Iterable[ObjectId]:
         return self.attributes.parent_system
+
     # END get_parents
 
     def get_children(self) -> Iterable[ObjectId]:
         return [*self.attributes.child_system, *self.attributes.collections]
+
     # END get_children
 
     def get_referred_entities(self) -> Iterable[ObjectId]:
@@ -153,8 +169,10 @@ class BusinessSystem(BusinessSystemDefaultsBase, BusinessSystemBase, Entity):
             *self.attributes.parent_system,
             *self.attributes.child_system,
             *self.attributes.processes,
-            *self.attributes.source
+            *self.attributes.source,
         ]
 
         return filter(None, references)
+
+
 # END BusinessSystem

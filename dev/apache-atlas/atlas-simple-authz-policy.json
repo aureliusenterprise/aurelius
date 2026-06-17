@@ -1,279 +1,138 @@
 {
-  "roles": {
-    "ROLE_ADMIN": {
-      "adminPermissions": [
-        {
-          "privileges": [
-            ".*"
-          ]
-        }
-      ],
-      "typePermissions": [
-        {
-          "privileges": [
-            ".*"
-          ],
-          "typeCategories": [
-            ".*"
-          ],
-          "typeNames": [
-            ".*"
-          ]
-        }
-      ],
-      "entityPermissions": [
-        {
-          "privileges": [
-            ".*"
-          ],
-          "entityTypes": [
-            ".*"
-          ],
-          "entityIds": [
-            ".*"
-          ],
-          "entityClassifications": [
-            ".*"
-          ],
-          "labels": [
-            ".*"
-          ],
-          "businessMetadata": [
-            ".*"
-          ],
-          "attributes": [
-            ".*"
-          ],
-          "classifications": [
-            ".*"
-          ]
-        }
-      ],
-      "relationshipPermissions": [
-        {
-          "privileges": [
-            ".*"
-          ],
-          "relationshipTypes": [
-            ".*"
-          ],
-          "end1EntityType": [
-            ".*"
-          ],
-          "end1EntityId": [
-            ".*"
-          ],
-          "end1EntityClassification": [
-            ".*"
-          ],
-          "end2EntityType": [
-            ".*"
-          ],
-          "end2EntityId": [
-            ".*"
-          ],
-          "end2EntityClassification": [
-            ".*"
-          ]
-        }
-      ]
+    "groupRoles": {
+        "DATA_SCIENTIST": ["DATA_SCIENTIST"],
+        "DATA_STEWARD": ["DATA_STEWARD"],
+        "RANGER_TAG_SYNC": ["DATA_SCIENTIST"],
+        "ROLE_ADMIN": ["ROLE_ADMIN"],
+        "hadoop": ["DATA_STEWARD"]
     },
-    "KEYCLOAK_ADMIN": {
-      "adminPermissions": [
-        {
-          "privileges": [
-            ".*"
-          ]
+    "roles": {
+        "DATA_SCIENTIST": {
+            "entityPermissions": [
+                {
+                    "attributes": [".*"],
+                    "businessMetadata": [".*"],
+                    "entityClassifications": [".*"],
+                    "entityIds": [".*"],
+                    "entityTypes": [".*"],
+                    "labels": [".*"],
+                    "privileges": ["entity-read", "entity-read-classification"]
+                }
+            ]
+        },
+        "DATA_STEWARD": {
+            "entityPermissions": [
+                {
+                    "attributes": [".*"],
+                    "businessMetadata": [".*"],
+                    "classifications": [".*"],
+                    "entityClassifications": [".*"],
+                    "entityIds": [".*"],
+                    "entityTypes": [".*"],
+                    "labels": [".*"],
+                    "privileges": [
+                        "entity-read",
+                        "entity-create",
+                        "entity-update",
+                        "entity-read-classification",
+                        "entity-add-classification",
+                        "entity-update-classification",
+                        "entity-remove-classification"
+                    ]
+                }
+            ],
+            "relationshipPermissions": [
+                {
+                    "end1EntityClassification": [".*"],
+                    "end1EntityId": [".*"],
+                    "end1EntityType": [".*"],
+                    "end2EntityClassification": [".*"],
+                    "end2EntityId": [".*"],
+                    "end2EntityType": [".*"],
+                    "privileges": ["add-relationship", "update-relationship", "remove-relationship"],
+                    "relationshipTypes": [".*"]
+                }
+            ]
+        },
+        "KEYCLOAK_ADMIN": {
+            "adminPermissions": [
+                {
+                    "privileges": [".*"]
+                }
+            ],
+            "entityPermissions": [
+                {
+                    "attributes": [".*"],
+                    "businessMetadata": [".*"],
+                    "classifications": [".*"],
+                    "entityClassifications": [".*"],
+                    "entityIds": [".*"],
+                    "entityTypes": [".*"],
+                    "labels": [".*"],
+                    "privileges": [".*"]
+                }
+            ],
+            "relationshipPermissions": [
+                {
+                    "end1EntityClassification": [".*"],
+                    "end1EntityId": [".*"],
+                    "end1EntityType": [".*"],
+                    "end2EntityClassification": [".*"],
+                    "end2EntityId": [".*"],
+                    "end2EntityType": [".*"],
+                    "privileges": [".*"],
+                    "relationshipTypes": [".*"]
+                }
+            ],
+            "typePermissions": [
+                {
+                    "privileges": [".*"],
+                    "typeCategories": [".*"],
+                    "typeNames": [".*"]
+                }
+            ]
+        },
+        "ROLE_ADMIN": {
+            "adminPermissions": [
+                {
+                    "privileges": [".*"]
+                }
+            ],
+            "entityPermissions": [
+                {
+                    "attributes": [".*"],
+                    "businessMetadata": [".*"],
+                    "classifications": [".*"],
+                    "entityClassifications": [".*"],
+                    "entityIds": [".*"],
+                    "entityTypes": [".*"],
+                    "labels": [".*"],
+                    "privileges": [".*"]
+                }
+            ],
+            "relationshipPermissions": [
+                {
+                    "end1EntityClassification": [".*"],
+                    "end1EntityId": [".*"],
+                    "end1EntityType": [".*"],
+                    "end2EntityClassification": [".*"],
+                    "end2EntityId": [".*"],
+                    "end2EntityType": [".*"],
+                    "privileges": [".*"],
+                    "relationshipTypes": [".*"]
+                }
+            ],
+            "typePermissions": [
+                {
+                    "privileges": [".*"],
+                    "typeCategories": [".*"],
+                    "typeNames": [".*"]
+                }
+            ]
         }
-      ],
-      "typePermissions": [
-        {
-          "privileges": [
-            ".*"
-          ],
-          "typeCategories": [
-            ".*"
-          ],
-          "typeNames": [
-            ".*"
-          ]
-        }
-      ],
-      "entityPermissions": [
-        {
-          "privileges": [
-            ".*"
-          ],
-          "entityTypes": [
-            ".*"
-          ],
-          "entityIds": [
-            ".*"
-          ],
-          "entityClassifications": [
-            ".*"
-          ],
-          "labels": [
-            ".*"
-          ],
-          "businessMetadata": [
-            ".*"
-          ],
-          "attributes": [
-            ".*"
-          ],
-          "classifications": [
-            ".*"
-          ]
-        }
-      ],
-      "relationshipPermissions": [
-        {
-          "privileges": [
-            ".*"
-          ],
-          "relationshipTypes": [
-            ".*"
-          ],
-          "end1EntityType": [
-            ".*"
-          ],
-          "end1EntityId": [
-            ".*"
-          ],
-          "end1EntityClassification": [
-            ".*"
-          ],
-          "end2EntityType": [
-            ".*"
-          ],
-          "end2EntityId": [
-            ".*"
-          ],
-          "end2EntityClassification": [
-            ".*"
-          ]
-        }
-      ]
     },
-    "DATA_SCIENTIST": {
-      "entityPermissions": [
-        {
-          "privileges": [
-            "entity-read",
-            "entity-read-classification"
-          ],
-          "entityTypes": [
-            ".*"
-          ],
-          "entityIds": [
-            ".*"
-          ],
-          "entityClassifications": [
-            ".*"
-          ],
-          "labels": [
-            ".*"
-          ],
-          "businessMetadata": [
-            ".*"
-          ],
-          "attributes": [
-            ".*"
-          ]
-        }
-      ]
-    },
-    "DATA_STEWARD": {
-      "entityPermissions": [
-        {
-          "privileges": [
-            "entity-read",
-            "entity-create",
-            "entity-update",
-            "entity-read-classification",
-            "entity-add-classification",
-            "entity-update-classification",
-            "entity-remove-classification"
-          ],
-          "entityTypes": [
-            ".*"
-          ],
-          "entityIds": [
-            ".*"
-          ],
-          "entityClassifications": [
-            ".*"
-          ],
-          "labels": [
-            ".*"
-          ],
-          "businessMetadata": [
-            ".*"
-          ],
-          "attributes": [
-            ".*"
-          ],
-          "classifications": [
-            ".*"
-          ]
-        }
-      ],
-      "relationshipPermissions": [
-        {
-          "privileges": [
-            "add-relationship",
-            "update-relationship",
-            "remove-relationship"
-          ],
-          "relationshipTypes": [
-            ".*"
-          ],
-          "end1EntityType": [
-            ".*"
-          ],
-          "end1EntityId": [
-            ".*"
-          ],
-          "end1EntityClassification": [
-            ".*"
-          ],
-          "end2EntityType": [
-            ".*"
-          ],
-          "end2EntityId": [
-            ".*"
-          ],
-          "end2EntityClassification": [
-            ".*"
-          ]
-        }
-      ]
+    "userRoles": {
+        "admin": ["ROLE_ADMIN"],
+        "rangertagsync": ["DATA_SCIENTIST"]
     }
-  },
-  "userRoles": {
-    "admin": [
-      "ROLE_ADMIN"
-    ],
-    "rangertagsync": [
-      "DATA_SCIENTIST"
-    ]
-  },
-  "groupRoles": {
-    "ROLE_ADMIN": [
-      "ROLE_ADMIN"
-    ],
-    "hadoop": [
-      "DATA_STEWARD"
-    ],
-    "DATA_STEWARD": [
-      "DATA_STEWARD"
-    ],
-    "DATA_SCIENTIST": [
-      "DATA_SCIENTIST"
-    ],
-    "RANGER_TAG_SYNC": [
-      "DATA_SCIENTIST"
-    ]
-  }
 }

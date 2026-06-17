@@ -2,17 +2,12 @@ import { Injector, NgModule, SkipSelf, Optional } from '@angular/core';
 
 @NgModule()
 export class TaskManagerModule {
-  static injector: Injector;
+    static injector: Injector;
 
-  constructor(
-    injector: Injector,
-    @Optional() @SkipSelf() parentModule: TaskManagerModule
-  ) {
-    if (parentModule) {
-      throw new Error(
-        'TaskManagerModule is already loaded. Import it in the AppModule only'
-      );
+    constructor(injector: Injector, @Optional() @SkipSelf() parentModule: TaskManagerModule) {
+        if (parentModule) {
+            throw new Error('TaskManagerModule is already loaded. Import it in the AppModule only');
+        }
+        TaskManagerModule.injector = injector;
     }
-    TaskManagerModule.injector = injector;
-  }
 }

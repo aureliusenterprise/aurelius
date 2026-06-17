@@ -4,19 +4,17 @@ import { Observable } from 'rxjs';
 import { ClassificationsListService } from './classifications-list.service';
 
 @Component({
-  selector: 'models4insight-classifications-list',
-  templateUrl: 'classifications-list.component.html',
-  styleUrls: ['classifications-list.component.scss'],
-  providers: [ClassificationsListService]
+    selector: 'models4insight-classifications-list',
+    templateUrl: 'classifications-list.component.html',
+    styleUrls: ['classifications-list.component.scss'],
+    providers: [ClassificationsListService],
 })
 export class ClassificationsListComponent implements OnInit {
-  classificationsByTypeName$: Observable<Dictionary<string[]>>;
+    classificationsByTypeName$: Observable<Dictionary<string[]>>;
 
-  constructor(
-    private readonly classificationsListService: ClassificationsListService
-  ) {}
+    constructor(private readonly classificationsListService: ClassificationsListService) {}
 
-  ngOnInit() {
-    this.classificationsByTypeName$ = this.classificationsListService.state;
-  }
+    ngOnInit() {
+        this.classificationsByTypeName$ = this.classificationsListService.state;
+    }
 }

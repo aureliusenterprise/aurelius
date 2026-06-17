@@ -2,9 +2,19 @@ from dataclasses import dataclass, field
 from typing import Iterable, Optional, List
 
 from dataclasses_json import LetterCase, dataclass_json
-from ..core import (AttributeDef, Attributes, Entity, EntityBase,
-                    EntityDef, EntityDefaultsBase, ObjectId,
-                    TypeCategory, RelationshipEndDef, Cardinality, RelationshipDef)
+from ..core import (
+    AttributeDef,
+    Attributes,
+    Entity,
+    EntityBase,
+    EntityDef,
+    EntityDefaultsBase,
+    ObjectId,
+    TypeCategory,
+    RelationshipEndDef,
+    Cardinality,
+    RelationshipDef,
+)
 
 from ..m4i.M4IAttributes import M4IAttributesBase
 
@@ -13,13 +23,13 @@ data_domain_attributes_def = [
         name="name",
         type_name="string",
         description="The unique functional name of the domain",
-        display_name="Name"
+        display_name="Name",
     ),
     AttributeDef(
         name="definition",
         type_name="string",
         description="The definition of the data domain determined by the data steward and data owner",
-        display_name="Definition"
+        display_name="Definition",
     ),
     AttributeDef(
         name="domainLead",
@@ -27,7 +37,7 @@ data_domain_attributes_def = [
         is_indexable=False,
         description="The owner of the data domain",
         display_name="Domain Lead",
-        cardinality=Cardinality.SET
+        cardinality=Cardinality.SET,
     ),
     AttributeDef(
         name="dataEntity",
@@ -35,8 +45,8 @@ data_domain_attributes_def = [
         is_indexable=False,
         description="The functional names of the data entities that belong to the data domain",
         display_name="Data Entity",
-        cardinality=Cardinality.SET
-    )
+        cardinality=Cardinality.SET,
+    ),
 ]
 
 data_domain_super_type = ["m4i_referenceable"]
@@ -47,17 +57,11 @@ data_domain_def = EntityDef(
     name="m4i_data_domain",
     type_version="1.0",
     attribute_defs=data_domain_attributes_def,
-    super_types=data_domain_super_type
+    super_types=data_domain_super_type,
 )
 
-end_1_lead_entity = RelationshipEndDef(
-    type="m4i_person",
-    name="domainLead"
-)
-end_2_lead_entity = RelationshipEndDef(
-    type="m4i_data_domain",
-    name="domainLead"
-)
+end_1_lead_entity = RelationshipEndDef(type="m4i_person", name="domainLead")
+end_2_lead_entity = RelationshipEndDef(type="m4i_data_domain", name="domainLead")
 
 m4i_lead_entity_rel_def = RelationshipDef(
     end_def1=end_1_lead_entity,
@@ -65,60 +69,74 @@ m4i_lead_entity_rel_def = RelationshipDef(
     name="m4i_domainLead_assignment",
     category=TypeCategory.RELATIONSHIP,
     type_version="1.0",
-    description="The relationship between the data domain and the domain lead"
-
+    description="The relationship between the data domain and the domain lead",
 )
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDataDomainAttributesBase(M4IAttributesBase):
     name: str
+
+
 # END BusinessDataDomainAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDataDomainAttributesDefaultsBase(Attributes):
     data_entity: List[ObjectId] = field(default_factory=list)
     definition: Optional[str] = None
     domain_lead: List[ObjectId] = field(default_factory=list)
     source: List[ObjectId] = field(default_factory=list)
+
+
 # END BusinessDataDomainAttributesBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessDataDomainAttributes(BusinessDataDomainAttributesDefaultsBase, BusinessDataDomainAttributesBase):
+class BusinessDataDomainAttributes(
+    BusinessDataDomainAttributesDefaultsBase, BusinessDataDomainAttributesBase
+):
     pass
+
+
 # END BusinessDataDomainAttributes
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDataDomainBase(EntityBase):
     attributes: BusinessDataDomainAttributes
+
+
 # END BusinessDataDomainBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
 class BusinessDataDomainDefaultsBase(EntityDefaultsBase):
     pass
+
+
 # END BusinessDataDomainDefaultsBase
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass_json(letter_case=LetterCase.CAMEL)  # type: ignore[argument-type]
 @dataclass
-class BusinessDataDomain(BusinessDataDomainDefaultsBase, BusinessDataDomainBase, Entity):
+class BusinessDataDomain(  # type: ignore[reportGeneralTypeIssues]
+    BusinessDataDomainDefaultsBase, BusinessDataDomainBase, Entity
+):
     type_name: str = "m4i_data_domain"
 
     @classmethod
-    def get_type_def(cls):
+    def get_type_def(cls):  # type: ignore[reportIncompatibleMethodOverride]
         return data_domain_def
-    
+
     def get_children(self) -> Iterable[ObjectId]:
         return self.attributes.data_entity
+
     # END get_children
 
     def get_referred_entities(self) -> Iterable[ObjectId]:
@@ -126,13 +144,11 @@ class BusinessDataDomain(BusinessDataDomainDefaultsBase, BusinessDataDomainBase,
         Returns the domain leads referenced by this data domain
         """
 
-        references = [
-            *self.attributes.domain_lead,
-            *self.attributes.source,
-            *self.attributes.data_entity
-        ]
+        references = [*self.attributes.domain_lead, *self.attributes.source, *self.attributes.data_entity]
 
         return filter(None, references)
+
     # END get_referred_entities
+
 
 # END BusinessDataDomain

@@ -6,21 +6,21 @@ import { ExtractorService } from '../extractor.service';
 import { DatasetService } from './dataset.service';
 
 @Component({
-  selector: 'models4insight-dataset',
-  templateUrl: 'dataset.component.html',
-  styleUrls: ['dataset.component.scss']
+    selector: 'models4insight-dataset',
+    templateUrl: 'dataset.component.html',
+    styleUrls: ['dataset.component.scss'],
 })
 export class DatasetComponent implements OnInit {
-  dataset$: Observable<ExtractorDatasetEntry[]>;
-  tableConfig$: Observable<SortableTableShellConfig>;
+    dataset$: Observable<ExtractorDatasetEntry[]>;
+    tableConfig$: Observable<SortableTableShellConfig>;
 
-  constructor(
-    private datasetService: DatasetService,
-    private extractorService: ExtractorService
-  ) {}
+    constructor(
+        private datasetService: DatasetService,
+        private extractorService: ExtractorService,
+    ) {}
 
-  ngOnInit() {
-    this.dataset$ = this.extractorService.select('currentDataset');
-    this.tableConfig$ = this.datasetService.select('tableConfig');
-  }
+    ngOnInit() {
+        this.dataset$ = this.extractorService.select('currentDataset');
+        this.tableConfig$ = this.datasetService.select('tableConfig');
+    }
 }

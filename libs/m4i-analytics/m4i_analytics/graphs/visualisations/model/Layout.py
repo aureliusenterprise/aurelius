@@ -1,18 +1,20 @@
-from abc import ABCMeta
+from abc import ABC, abstractmethod
 
 
-class Layout(object):
-
-    __metaclass__ = ABCMeta
-
+class Layout(ABC):
     @staticmethod
+    @abstractmethod
     def get_coordinates(graph, **kwargs):
-        raise TypeError('The get_coordinates method has not been implemented for this layout!')
+        raise NotImplementedError("The get_coordinates method has not been implemented for this layout!")
+
     # END get_coordinates
 
     @staticmethod
+    @abstractmethod
     def get_name():
-        raise TypeError('The name property has not been implemented for this layout!')
-    # END get_coordinates
+        raise NotImplementedError("The name property has not been implemented for this layout!")
+
+    # END get_name
+
 
 # END Layout

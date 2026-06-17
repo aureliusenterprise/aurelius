@@ -13,17 +13,17 @@ import { ProjectPermissionModule } from '@models4insight/permissions';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    TranslateModule,
-    ScrollingModule,
-    ConflictResolutionRoutingModule,
-    ReactiveFormsModule,
-    ProjectPermissionModule
-  ],
-  declarations: [ConflictResolutionComponent, ConflictListComponent, ConflictDetailsComponent],
-  providers: [ConflictResolutionGuard, ConflictResolutionService]
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        FormsModule,
+        TranslateModule,
+        ScrollingModule,
+        ConflictResolutionRoutingModule,
+        ReactiveFormsModule,
+        ProjectPermissionModule,
+    ],
+    declarations: [ConflictResolutionComponent, ConflictListComponent, ConflictDetailsComponent],
+    providers: [ConflictResolutionGuard, ConflictResolutionService],
 })
 export class ConflictResolutionModule {}

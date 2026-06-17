@@ -1,1 +1,1 @@
-from .completeness import *
+from .completeness import completeness as completeness

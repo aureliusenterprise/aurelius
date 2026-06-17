@@ -7,114 +7,73 @@ import { FilteredPropertiesService } from '../../services/filtered-properties/fi
 import { GovernanceRolesCardsComponent } from './governance-roles-cards/governance-roles-cards.component';
 
 @Component({
-  selector: 'models4insight-person-details',
-  templateUrl: 'person-details.component.html',
-  styleUrls: ['person-details.component.scss'],
+    selector: 'models4insight-person-details',
+    templateUrl: 'person-details.component.html',
+    styleUrls: ['person-details.component.scss'],
 })
 export class PersonDetailsComponent implements OnInit {
-  @ViewChild(GovernanceRolesCardsComponent, { static: true })
-  private readonly governanceRoles: GovernanceRolesCardsComponent;
+    @ViewChild(GovernanceRolesCardsComponent, { static: true })
+    private readonly governanceRoles: GovernanceRolesCardsComponent;
 
-  dataOwnerAttributeCount$: Observable<number>;
-  dataOwnerEntityCount$: Observable<number>;
-  dataStewardAttributeCount$: Observable<number>;
-  dataStewardEntityCount$: Observable<number>;
-  domainLeadCount$: Observable<number>;
-  propertyCount$: Observable<number>;
+    dataOwnerAttributeCount$: Observable<number>;
+    dataOwnerEntityCount$: Observable<number>;
+    dataStewardAttributeCount$: Observable<number>;
+    dataStewardEntityCount$: Observable<number>;
+    domainLeadCount$: Observable<number>;
+    propertyCount$: Observable<number>;
 
-  constructor(
-    private readonly entityDetailsService: EntityDetailsService,
-    private readonly filteredPropertiesService: FilteredPropertiesService
-  ) {}
+    constructor(
+        private readonly entityDetailsService: EntityDetailsService,
+        private readonly filteredPropertiesService: FilteredPropertiesService,
+    ) {}
 
-  ngOnInit() {
-    this.dataOwnerEntityCount$ = this.entityDetailsService
-      .select(
-        [
-          'entityDetails',
-          'entity',
-          'relationshipAttributes',
-          'businessOwnerEntity',
-          'length',
-        ],
-        { includeFalsy: true }
-      )
-      .pipe(defaultIfFalsy(0));
+    ngOnInit() {
+        this.dataOwnerEntityCount$ = this.entityDetailsService
+            .select(['entityDetails', 'entity', 'relationshipAttributes', 'businessOwnerEntity', 'length'], {
+                includeFalsy: true,
+            })
+            .pipe(defaultIfFalsy(0));
 
-    this.dataOwnerAttributeCount$ = this.entityDetailsService
-      .select(
-        [
-          'entityDetails',
-          'entity',
-          'relationshipAttributes',
-          'businessOwnerAttribute',
-          'length',
-        ],
-        { includeFalsy: true }
-      )
-      .pipe(defaultIfFalsy(0));
+        this.dataOwnerAttributeCount$ = this.entityDetailsService
+            .select(['entityDetails', 'entity', 'relationshipAttributes', 'businessOwnerAttribute', 'length'], {
+                includeFalsy: true,
+            })
+            .pipe(defaultIfFalsy(0));
 
-    this.dataStewardEntityCount$ = this.entityDetailsService
-      .select(
-        [
-          'entityDetails',
-          'entity',
-          'relationshipAttributes',
-          'stewardEntity',
-          'length',
-        ],
-        { includeFalsy: true }
-      )
-      .pipe(defaultIfFalsy(0));
+        this.dataStewardEntityCount$ = this.entityDetailsService
+            .select(['entityDetails', 'entity', 'relationshipAttributes', 'stewardEntity', 'length'], {
+                includeFalsy: true,
+            })
+            .pipe(defaultIfFalsy(0));
 
-    this.dataStewardAttributeCount$ = this.entityDetailsService
-      .select(
-        [
-          'entityDetails',
-          'entity',
-          'relationshipAttributes',
-          'stewardAttribute',
-          'length',
-        ],
-        { includeFalsy: true }
-      )
-      .pipe(defaultIfFalsy(0));
+        this.dataStewardAttributeCount$ = this.entityDetailsService
+            .select(['entityDetails', 'entity', 'relationshipAttributes', 'stewardAttribute', 'length'], {
+                includeFalsy: true,
+            })
+            .pipe(defaultIfFalsy(0));
 
-    this.domainLeadCount$ = this.entityDetailsService
-      .select(
-        [
-          'entityDetails',
-          'entity',
-          'relationshipAttributes',
-          'domainLead',
-          'length',
-        ],
-        { includeFalsy: true }
-      )
-      .pipe(defaultIfFalsy(0));
+        this.domainLeadCount$ = this.entityDetailsService
+            .select(['entityDetails', 'entity', 'relationshipAttributes', 'domainLead', 'length'], {
+                includeFalsy: true,
+            })
+            .pipe(defaultIfFalsy(0));
 
-    this.propertyCount$ = this.filteredPropertiesService.state.pipe(
-      map((properties) => Object.keys(properties).length)
-    );
-  }
+        this.propertyCount$ = this.filteredPropertiesService.state.pipe(
+            map((properties) => Object.keys(properties).length),
+        );
+    }
 
-  async filterResponsibilitiesByType(
-    typeName: string,
-    role: 'datasteward' | 'dataowner' | 'domainlead'
-  ) {
-    const [id, queryObject] = await Promise.all([
-      this.entityDetailsService.get('entityId'),
-      this.governanceRoles.searchService.get('queryObject'),
-    ]);
+    async filterResponsibilitiesByType(typeName: string, role: 'datasteward' | 'dataowner' | 'domainlead') {
+        const [id, queryObject] = await Promise.all([
+            this.entityDetailsService.get('entityId'),
+            this.governanceRoles.searchService.get('queryObject'),
+        ]);
 
-    const currentFilters = queryObject.filters;
+        const currentFilters = queryObject.filters;
 
-    this.governanceRoles.searchService.filters = {
-      ...currentFilters,
-      all: [
-        { typename: [typeName] },
-        { [`derived${role}guid`]: [id] },
-      ],
-    };
-  }
+        this.governanceRoles.searchService.filters = {
+            ...currentFilters,
+            all: [{ typename: [typeName] }, { [`derived${role}guid`]: [id] }],
+        };
+    }
 }

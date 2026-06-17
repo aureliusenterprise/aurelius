@@ -6,13 +6,7 @@ import { AuthorizationHeaderInterceptor } from 'libs/http/src/lib/authorization-
 
 @Injectable()
 export class GovQualityApiClient extends HttpService {
-  constructor(
-    httpHandler: HttpHandler,
-    injector: Injector,
-    authenticationService: AuthenticationService
-  ) {
-    super(httpHandler, injector, [
-      new AuthorizationHeaderInterceptor(authenticationService),
-    ]);
-  }
+    constructor(httpHandler: HttpHandler, injector: Injector, authenticationService: AuthenticationService) {
+        super(httpHandler, injector, [new AuthorizationHeaderInterceptor(authenticationService)]);
+    }
 }

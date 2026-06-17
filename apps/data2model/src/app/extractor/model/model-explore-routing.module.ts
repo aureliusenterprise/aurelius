@@ -8,14 +8,14 @@ const routes: Routes = [
         path: '',
         component: ModelExploreComponent,
         data: {
-            title: extract('Model Explorer')
-        }
-    }
+            title: extract('Model Explorer'),
+        },
+    },
 ];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule],
-    providers: []
+    providers: [],
 })
-export class ModelExploreRoutingModule { }
+export class ModelExploreRoutingModule {}

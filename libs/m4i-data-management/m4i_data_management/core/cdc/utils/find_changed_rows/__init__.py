@@ -1,1 +1,1 @@
-from .find_changed_rows import *
+from .find_changed_rows import find_changed_rows as find_changed_rows

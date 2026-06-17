@@ -7,33 +7,31 @@ import { ReportService } from '../report.service';
 import { ViolationsService } from '../violations.service';
 
 @Component({
-  selector: 'models4insight-report-metric',
-  templateUrl: 'report-metric.component.html',
-  styleUrls: ['report-metric.component.scss']
+    selector: 'models4insight-report-metric',
+    templateUrl: 'report-metric.component.html',
+    styleUrls: ['report-metric.component.scss'],
 })
 export class ReportMetricComponent implements OnInit {
-  readonly faDownload = faDownload;
+    readonly faDownload = faDownload;
 
-  @Input() metric: ReportMetric;
+    @Input() metric: ReportMetric;
 
-  bucketMapping$: Observable<Dictionary<string>>;
-  dataset$: Observable<string>;
-  filteredViolations$: Observable<Dictionary<any>[]>;
+    bucketMapping$: Observable<Dictionary<string>>;
+    dataset$: Observable<string>;
+    filteredViolations$: Observable<Dictionary<any>[]>;
 
-  constructor(
-    private readonly reportService: ReportService,
-    private readonly violationsService: ViolationsService
-  ) {}
+    constructor(
+        private readonly reportService: ReportService,
+        private readonly violationsService: ViolationsService,
+    ) {}
 
-  ngOnInit() {
-    this.bucketMapping$ = this.violationsService.select('bucketMapping');
-    this.dataset$ = this.reportService.select('dataset');
-    this.filteredViolations$ = this.violationsService.select(
-      'filteredViolations'
-    );
-  }
+    ngOnInit() {
+        this.bucketMapping$ = this.violationsService.select('bucketMapping');
+        this.dataset$ = this.reportService.select('dataset');
+        this.filteredViolations$ = this.violationsService.select('filteredViolations');
+    }
 
-  sortByKeyOrder() {
-    return 0;
-  }
+    sortByKeyOrder() {
+        return 0;
+    }
 }

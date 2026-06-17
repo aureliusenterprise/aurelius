@@ -1,17 +1,17 @@
 .details-navigation {
-  position: sticky;
-  bottom: 6rem;
-  z-index: 4;
+    position: sticky;
+    bottom: 6rem;
+    z-index: 4;
 
-  .box {
-    float: right;
-    height: auto;
-    border-radius: 100%;
-  }
+    .box {
+        float: right;
+        height: auto;
+        border-radius: 100%;
+    }
 
-  .button:focus,
-  .button:hover {
-    outline: none;
-    background-color: transparent;
-  }
+    .button:focus,
+    .button:hover {
+        outline: none;
+        background-color: transparent;
+    }
 }

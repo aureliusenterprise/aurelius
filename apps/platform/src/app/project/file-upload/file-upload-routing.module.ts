@@ -5,19 +5,19 @@ import { FileUploadComponent } from './file-upload.component';
 import { FileUploadGuard } from './file-upload.guard';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: FileUploadComponent,
-    data: {
-      title: extract('Upload a Model')
+    {
+        path: '',
+        component: FileUploadComponent,
+        data: {
+            title: extract('Upload a Model'),
+        },
+        canActivate: [FileUploadGuard],
     },
-    canActivate: [FileUploadGuard]
-  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-  providers: []
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
+    providers: [],
 })
 export class FileUploadRoutingModule {}

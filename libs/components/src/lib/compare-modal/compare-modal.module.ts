@@ -6,13 +6,8 @@ import { ProvenanceSelectModule } from '../provenance-select';
 import { CompareModalComponent } from './compare-modal.component';
 
 @NgModule({
-  declarations: [CompareModalComponent],
-  imports: [
-    CommonModule,
-    BranchSelectModule,
-    ModalModule,
-    ProvenanceSelectModule,
-  ],
-  exports: [CompareModalComponent],
+    declarations: [CompareModalComponent],
+    imports: [CommonModule, BranchSelectModule, ModalModule, ProvenanceSelectModule],
+    exports: [CompareModalComponent],
 })
 export class CompareModalModule {}

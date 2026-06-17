@@ -1,139 +1,125 @@
 import { Component } from '@angular/core';
-import {
-  UntypedFormControl,
-  UntypedFormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
-} from '@angular/forms';
-import {
-  AtlasEntityWithEXTInformation,
-  EntityValidationResponse
-} from '@models4insight/atlas/api';
+import { UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AtlasEntityWithEXTInformation, EntityValidationResponse } from '@models4insight/atlas/api';
 import { merge } from 'lodash';
 import { Observable } from 'rxjs';
 import {
-  EditorFormService,
-  EDITOR_FORM_FACTORY,
-  EDITOR_MERGE_STRATEGY,
-  EDITOR_UPDATE_STRATEGY
+    EditorFormService,
+    EDITOR_FORM_FACTORY,
+    EDITOR_MERGE_STRATEGY,
+    EDITOR_UPDATE_STRATEGY,
 } from '../services/editor-form.service';
 import { EntityValidateService } from '../services/entity-validate/entity-validate.service';
 
 function rightSingleQuotationMarkValidator(): ValidatorFn {
-  return (control): ValidationErrors | null => {
-    if (!control.value) {
-      return null;
-    }
-    // Check for right single quotation mark (U+2019)
-    const hasRightSingleQuotation = /[’]/.test(control.value);
-    return hasRightSingleQuotation ? { rightSingleQuotationMark: true } : null;
-  };
+    return (control): ValidationErrors | null => {
+        if (!control.value) {
+            return null;
+        }
+        // Check for right single quotation mark (U+2019)
+        const hasRightSingleQuotation = /[’]/.test(control.value);
+        return hasRightSingleQuotation ? { rightSingleQuotationMark: true } : null;
+    };
 }
 
 function createGovQualityEditorForm(): UntypedFormGroup {
-  const compliantMessage = new UntypedFormControl(null),
-    ruleDescription = new UntypedFormControl(null),
-    expression = new UntypedFormControl(null, [Validators.required]),
-    name = new UntypedFormControl(null, [Validators.required]),
-    nonCompliantMessage = new UntypedFormControl(null),
-    qualifiedName = new UntypedFormControl(null),
-    qualityDimension = new UntypedFormControl(null),
-    ruleType = new UntypedFormControl(null);
+    const compliantMessage = new UntypedFormControl(null),
+        ruleDescription = new UntypedFormControl(null),
+        expression = new UntypedFormControl(null, [Validators.required]),
+        name = new UntypedFormControl(null, [Validators.required]),
+        nonCompliantMessage = new UntypedFormControl(null),
+        qualifiedName = new UntypedFormControl(null),
+        qualityDimension = new UntypedFormControl(null),
+        ruleType = new UntypedFormControl(null);
 
-  const attributes = new UntypedFormGroup({
-    compliantMessage,
-    ruleDescription,
-    expression,
-    name,
-    nonCompliantMessage,
-    qualifiedName,
-    qualityDimension,
-    ruleType,
-  });
+    const attributes = new UntypedFormGroup({
+        compliantMessage,
+        ruleDescription,
+        expression,
+        name,
+        nonCompliantMessage,
+        qualifiedName,
+        qualityDimension,
+        ruleType,
+    });
 
-  return new UntypedFormGroup({ attributes });
+    return new UntypedFormGroup({ attributes });
 }
 
 function mergeGovQualityEditorForm(
-  entityDetails: AtlasEntityWithEXTInformation,
-  form: UntypedFormGroup
+    entityDetails: AtlasEntityWithEXTInformation,
+    form: UntypedFormGroup,
 ): AtlasEntityWithEXTInformation {
-  const entity = entityDetails.entity,
-    { attributes } = form.value;
+    const entity = entityDetails.entity,
+        { attributes } = form.value;
 
-  merge(entity.attributes, attributes);
-  
-  // Set id to -1 for rule creation without using form
-  if (entity.attributes.id === undefined) {
-    entity.attributes.id = -1;
-  }
-    
-  return entityDetails;
+    merge(entity.attributes, attributes);
+
+    // Set id to -1 for rule creation without using form
+    if (entity.attributes.id === undefined) {
+        entity.attributes.id = -1;
+    }
+
+    return entityDetails;
 }
 
-function updateGovQualityEditorForm(
-  entityDetails: AtlasEntityWithEXTInformation,
-  form: UntypedFormGroup
-) {
-  const attributes: UntypedFormGroup = form.get(
-    'attributes'
-  ) as UntypedFormGroup;
+function updateGovQualityEditorForm(entityDetails: AtlasEntityWithEXTInformation, form: UntypedFormGroup) {
+    const attributes: UntypedFormGroup = form.get('attributes') as UntypedFormGroup;
 
-  attributes.patchValue(entityDetails.entity.attributes);
+    attributes.patchValue(entityDetails.entity.attributes);
 }
 
 @Component({
-  selector: 'models4insight-qov-quality-editor',
-  templateUrl: 'gov-quality-editor.component.html',
-  styleUrls: ['gov-quality-editor.component.scss'],
-  providers: [
-    EditorFormService,
-    EntityValidateService,
-    { provide: EDITOR_FORM_FACTORY, useValue: createGovQualityEditorForm },
-    { provide: EDITOR_MERGE_STRATEGY, useValue: mergeGovQualityEditorForm },
-    { provide: EDITOR_UPDATE_STRATEGY, useValue: updateGovQualityEditorForm },
-  ],
+    selector: 'models4insight-qov-quality-editor',
+    templateUrl: 'gov-quality-editor.component.html',
+    styleUrls: ['gov-quality-editor.component.scss'],
+    providers: [
+        EditorFormService,
+        EntityValidateService,
+        { provide: EDITOR_FORM_FACTORY, useValue: createGovQualityEditorForm },
+        { provide: EDITOR_MERGE_STRATEGY, useValue: mergeGovQualityEditorForm },
+        { provide: EDITOR_UPDATE_STRATEGY, useValue: updateGovQualityEditorForm },
+    ],
 })
 export class GovernanceQualityEditorComponent {
-  readonly validationResults$: Observable<EntityValidationResponse>;
+    readonly validationResults$: Observable<EntityValidationResponse>;
 
-  constructor(
-    readonly editorFormService: EditorFormService,
-    private readonly entityValidateService: EntityValidateService
-  ) {
-    this.validationResults$ = this.entityValidateService.validationResults$;
-  }
+    constructor(
+        readonly editorFormService: EditorFormService,
+        private readonly entityValidateService: EntityValidateService,
+    ) {
+        this.validationResults$ = this.entityValidateService.validationResults$;
+    }
 
-  get attributes() {
-    return this.editorFormService.form.get('attributes');
-  }
+    get attributes() {
+        return this.editorFormService.form.get('attributes');
+    }
 
-  get compliantMessage() {
-    return this.editorFormService.form.get('attributes.compliantMessage');
-  }
+    get compliantMessage() {
+        return this.editorFormService.form.get('attributes.compliantMessage');
+    }
 
-  get ruleDescription() {
-    return this.editorFormService.form.get('attributes.ruleDescription');
-  }
+    get ruleDescription() {
+        return this.editorFormService.form.get('attributes.ruleDescription');
+    }
 
-  get expression() {
-    return this.editorFormService.form.get('attributes.expression');
-  }
+    get expression() {
+        return this.editorFormService.form.get('attributes.expression');
+    }
 
-  get name() {
-    return this.editorFormService.form.get('attributes.name');
-  }
+    get name() {
+        return this.editorFormService.form.get('attributes.name');
+    }
 
-  get nonCompliantMessage() {
-    return this.editorFormService.form.get('attributes.nonCompliantMessage');
-  }
+    get nonCompliantMessage() {
+        return this.editorFormService.form.get('attributes.nonCompliantMessage');
+    }
 
-  get qualityDimension() {
-    return this.editorFormService.form.get('attributes.qualityDimension');
-  }
+    get qualityDimension() {
+        return this.editorFormService.form.get('attributes.qualityDimension');
+    }
 
-  get ruleType() {
-    return this.editorFormService.form.get('attributes.ruleType');
-  }
+    get ruleType() {
+        return this.editorFormService.form.get('attributes.ruleType');
+    }
 }

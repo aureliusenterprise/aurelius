@@ -1,6 +1,8 @@
 # backend-validate-entity
 
-This application is a backend service that provides an API for calculating data governance quality metrics for a given enitity. It supports the Aurelius Atlas application.
+This application is a backend service that provides an API for calculating data
+governance quality metrics for a given entity. It supports the Aurelius Atlas
+application.
 
 ## Installation
 

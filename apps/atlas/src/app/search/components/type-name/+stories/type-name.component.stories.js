@@ -5,103 +5,103 @@ import { TypeNameComponent } from '../type-name.component';
 import { TypeNameModule } from '../type-name.module';
 
 export default {
-  title: 'Apps/Atlas/Components/Search/Components/Type name/TypeNameComponent',
+    title: 'Apps/Atlas/Components/Search/Components/Type name/TypeNameComponent',
 
-  decorators: [
-    moduleMetadata({
-      imports: [TypeNameModule, TranslateModule.forRoot()],
-    }),
-  ],
+    decorators: [
+        moduleMetadata({
+            imports: [TypeNameModule, TranslateModule.forRoot()],
+        }),
+    ],
 
-  argTypes: {
-    showBaseTypeName: {
-      control: 'boolean',
+    argTypes: {
+        showBaseTypeName: {
+            control: 'boolean',
+        },
+
+        showIcon: {
+            control: 'boolean',
+        },
+
+        showTypeName: {
+            control: 'boolean',
+        },
+
+        typeAlias: {
+            control: 'text',
+        },
+
+        typeName: {
+            control: 'text',
+        },
     },
-
-    showIcon: {
-      control: 'boolean',
-    },
-
-    showTypeName: {
-      control: 'boolean',
-    },
-
-    typeAlias: {
-      control: 'text',
-    },
-
-    typeName: {
-      control: 'text',
-    },
-  },
 };
 
 export const Primary = {
-  render: () => ({
-    component: TypeNameComponent,
+    render: () => ({
+        component: TypeNameComponent,
 
-    props: {
-      typeName: 'm4i_data_domain',
-    },
-  }),
+        props: {
+            typeName: 'm4i_data_domain',
+        },
+    }),
 
-  name: 'Primary',
-  height: '56px',
+    name: 'Primary',
+    height: '56px',
 };
 
 export const TypeAlias = {
-  render: () => ({
-    component: TypeNameComponent,
+    render: () => ({
+        component: TypeNameComponent,
 
-    props: {
-      typeAlias: 'Department',
-      typeName: 'm4i_data_domain',
-    },
-  }),
+        props: {
+            typeAlias: 'Department',
+            typeName: 'm4i_data_domain',
+        },
+    }),
 
-  name: 'Type alias',
-  height: '56px',
+    name: 'Type alias',
+    height: '56px',
 };
 
 export const ShowBaseType = {
-  render: () => ({
-    component: TypeNameComponent,
+    render: () => ({
+        component: TypeNameComponent,
 
-    props: {
-      showBaseTypeName: true,
-      typeAlias: 'Department',
-      typeName: 'm4i_data_domain',
-    },
-  }),
+        props: {
+            showBaseTypeName: true,
+            typeAlias: 'Department',
+            typeName: 'm4i_data_domain',
+        },
+    }),
 
-  name: 'Show base type',
-  height: '56px',
+    name: 'Show base type',
+    height: '56px',
 };
 
 export const HideIcon = {
-  render: () => ({
-    component: TypeNameComponent,
+    render: () => ({
+        component: TypeNameComponent,
 
-    props: {
-      showIcon: false,
-      typeName: 'm4i_data_domain',
-    },
-  }),
+        props: {
+            showIcon: false,
+            typeName: 'm4i_data_domain',
+        },
+    }),
 
-  name: 'Hide icon',
-  height: '56px',
+    name: 'Hide icon',
+    height: '56px',
 };
 
 export const HideTypeName = {
-  render: () => ({
-    component: TypeNameComponent,
+    render: () => ({
+        component: TypeNameComponent,
 
-    props: {
-      showTypeName: false,
-      typeName: 'm4i_data_domain',
-    },
-  }),
+        props: {
+            showTypeName: false,
+            typeName: 'm4i_data_domain',
+        },
+    }),
 
-  name: 'Hide type name',
-  height: '56px',
+    name: 'Hide type name',
+    height: '56px',
 };

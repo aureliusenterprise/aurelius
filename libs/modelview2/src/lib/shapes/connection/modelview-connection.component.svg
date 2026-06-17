@@ -1,12 +1,12 @@
 <ng-container *ngIf="path$ | async as path">
-    <svg:path 
-        *ngIf="style$ | async as style" 
-        class="connection-path" 
-        [attr.id]="pathId" 
-        [attr.d]="path" 
-        [attr.marker-start]="style['marker-start'] ? 'url(#' + style['marker-start'] + ')' : null" 
-        [attr.marker-end]= "style['marker-end'] ? 'url(#' + style['marker-end'] + ')' : null" 
-        [style.stroke-dasharray]="style['stroke-dasharray'] ? style['stroke-dasharray'] : null" 
+    <svg:path
+        *ngIf="style$ | async as style"
+        class="connection-path"
+        [attr.id]="pathId"
+        [attr.d]="path"
+        [attr.marker-start]="style['marker-start'] ? 'url(#' + style['marker-start'] + ')' : null"
+        [attr.marker-end]= "style['marker-end'] ? 'url(#' + style['marker-end'] + ')' : null"
+        [style.stroke-dasharray]="style['stroke-dasharray'] ? style['stroke-dasharray'] : null"
         [style.stroke]="color$ | async"
     >
     </svg:path>

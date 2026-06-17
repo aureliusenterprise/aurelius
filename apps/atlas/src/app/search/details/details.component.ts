@@ -1,10 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import {
-  AtlasEntitySearchObject,
-  EntityElementWithEXTInfo
-} from '@models4insight/atlas/api';
+import { AtlasEntitySearchObject, EntityElementWithEXTInfo } from '@models4insight/atlas/api';
 import { untilDestroyed } from '@models4insight/utils';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -30,74 +27,70 @@ import { ProcessDetailsComponent } from './process/process-details.component';
 import { SystemDetailsComponent } from './system/system-details.component';
 
 const componentsByType = {
-  m4i_data_domain: DomainDetailsComponent,
-  m4i_data_entity: EntityDetailsComponent,
-  m4i_data_attribute: AttributeDetailsComponent,
-  m4i_field: FieldDetailsComponent,
-  m4i_dataset: DatasetDetailsComponent,
-  m4i_collection: CollectionDetailsComponent,
-  m4i_system: SystemDetailsComponent,
-  m4i_person: PersonDetailsComponent,
-  m4i_generic_process: ProcessDetailsComponent,
-  m4i_gov_data_quality: GovQualityDetailsComponent,
+    m4i_data_domain: DomainDetailsComponent,
+    m4i_data_entity: EntityDetailsComponent,
+    m4i_data_attribute: AttributeDetailsComponent,
+    m4i_field: FieldDetailsComponent,
+    m4i_dataset: DatasetDetailsComponent,
+    m4i_collection: CollectionDetailsComponent,
+    m4i_system: SystemDetailsComponent,
+    m4i_person: PersonDetailsComponent,
+    m4i_generic_process: ProcessDetailsComponent,
+    m4i_gov_data_quality: GovQualityDetailsComponent,
 };
 
 @Component({
-  selector: 'models4insight-details',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss'],
-  providers: [
-    EntityDetailsService,
-    FilteredPropertiesService,
-    { provide: SearchService, useClass: EntitySearchService },
-    { provide: AppSearchResultsService, useClass: EntitySearchResultsService },
-    ElementSearchService,
-    AppSearchResultService,
-    {
-      provide: $APP_SEARCH_DOCUMENT_PROVIDER,
-      useExisting: AppSearchResultService,
-    },
-  ],
+    selector: 'models4insight-details',
+    templateUrl: './details.component.html',
+    styleUrls: ['./details.component.scss'],
+    providers: [
+        EntityDetailsService,
+        FilteredPropertiesService,
+        { provide: SearchService, useClass: EntitySearchService },
+        { provide: AppSearchResultsService, useClass: EntitySearchResultsService },
+        ElementSearchService,
+        AppSearchResultService,
+        {
+            provide: $APP_SEARCH_DOCUMENT_PROVIDER,
+            useExisting: AppSearchResultService,
+        },
+    ],
 })
 export class DetailsComponent implements OnDestroy {
-  readonly faEdit = faEdit;
+    readonly faEdit = faEdit;
 
-  readonly detailsComponent$: Observable<typeof Component>;
-  readonly entityDetails$: Observable<EntityElementWithEXTInfo>;
-  readonly isRetrievingDetails$: Observable<boolean>;
+    readonly detailsComponent$: Observable<typeof Component>;
+    readonly entityDetails$: Observable<EntityElementWithEXTInfo>;
+    readonly isRetrievingDetails$: Observable<boolean>;
 
-  constructor(
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly entityDetailsService: EntityDetailsService,
-    private readonly elementSearchService: ElementSearchService<AtlasEntitySearchObject>
-  ) {
-    this.activatedRoute.data
-      .pipe(
-        map((data) => data.entityId),
-        untilDestroyed(this)
-      )
-      .subscribe((entityId) => {
-        this.entityDetailsService.entityId = entityId;
-        this.elementSearchService.guid = entityId;
-      });
+    constructor(
+        private readonly router: Router,
+        private readonly activatedRoute: ActivatedRoute,
+        private readonly entityDetailsService: EntityDetailsService,
+        private readonly elementSearchService: ElementSearchService<AtlasEntitySearchObject>,
+    ) {
+        this.activatedRoute.data
+            .pipe(
+                map((data) => data.entityId),
+                untilDestroyed(this),
+            )
+            .subscribe((entityId) => {
+                this.entityDetailsService.entityId = entityId;
+                this.elementSearchService.guid = entityId;
+            });
 
-    this.detailsComponent$ = this.entityDetailsService.entityDetails$.pipe(
-      map(
-        (entity) => componentsByType[entity.typeName] ?? DefaultDetailsComponent
-      )
-    );
+        this.detailsComponent$ = this.entityDetailsService.entityDetails$.pipe(
+            map((entity) => componentsByType[entity.typeName] ?? DefaultDetailsComponent),
+        );
 
-    this.entityDetails$ = this.entityDetailsService.entityDetails$;
+        this.entityDetails$ = this.entityDetailsService.entityDetails$;
 
-    this.isRetrievingDetails$ = this.entityDetailsService.select(
-      'isRetrievingDetails'
-    );
-  }
+        this.isRetrievingDetails$ = this.entityDetailsService.select('isRetrievingDetails');
+    }
 
-  ngOnDestroy() {}
+    ngOnDestroy() {}
 
-  navigateToEditEntity(guid: string) {
-    this.router.navigate(['/search/edit-entity', guid]);
-  }
+    navigateToEditEntity(guid: string) {
+        this.router.navigate(['/search/edit-entity', guid]);
+    }
 }

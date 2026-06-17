@@ -9,37 +9,37 @@ import { HttpService } from './http.service';
 import { IECacheHeaderInterceptor } from './ie-cache-header-interceptor';
 
 @NgModule({
-  imports: [HttpClientModule],
+    imports: [HttpClientModule],
 })
 export class HttpModule {
-  constructor() {}
+    constructor() {}
 
-  static forRoot(config: HttpConfig = {}): ModuleWithProviders<HttpModule> {
-    return {
-      ngModule: HttpModule,
-      providers: [
-        {
-          provide: HttpConfigService,
-          useValue: config,
-        },
-      ],
-    };
-  }
+    static forRoot(config: HttpConfig = {}): ModuleWithProviders<HttpModule> {
+        return {
+            ngModule: HttpModule,
+            providers: [
+                {
+                    provide: HttpConfigService,
+                    useValue: config,
+                },
+            ],
+        };
+    }
 
-  static forChild(): ModuleWithProviders<HttpModule> {
-    return {
-      ngModule: HttpModule,
-      providers: [
-        AuthorizationHeaderInterceptor,
-        CacheInterceptor,
-        ErrorHandlerInterceptor,
-        IECacheHeaderInterceptor,
-        HttpCacheService,
-        {
-          provide: HttpClient,
-          useClass: HttpService,
-        },
-      ],
-    };
-  }
+    static forChild(): ModuleWithProviders<HttpModule> {
+        return {
+            ngModule: HttpModule,
+            providers: [
+                AuthorizationHeaderInterceptor,
+                CacheInterceptor,
+                ErrorHandlerInterceptor,
+                IECacheHeaderInterceptor,
+                HttpCacheService,
+                {
+                    provide: HttpClient,
+                    useClass: HttpService,
+                },
+            ],
+        };
+    }
 }

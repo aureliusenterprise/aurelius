@@ -80,16 +80,18 @@ def retry(  # noqa: ANN201
     max_retries: int = 5,
 ):
     """
-    Decorate a function to retry it upon exceptions, using a configurable retry strategy.
+    Decorate a function to retry it upon exceptions, using a configurable strategy.
 
-    This decorator allows for retrying a function call according to a specified retry strategy. It catches specified
-    exceptions and retries the function call, delaying subsequent retries based on the strategy provided. After
-    exceeding the maximum number of retries, reraises the last exception or raises a `RetryError`.
+    This decorator allows for retrying a function call according to a specified
+    retry strategy. It catches specified exceptions and retries the function call,
+    delaying subsequent retries based on the strategy provided. After exceeding the
+    maximum number of retries, reraises the last exception or raises a `RetryError`.
 
     The following retry strategies are available:
 
     - `FixedDelay`: A simple retry strategy with a fixed delay between retries.
-    - `ExponentialBackoff`: A retry strategy with an exponentially increasing delay between retries.
+    - `ExponentialBackoff`: A retry strategy with an exponentially increasing
+      delay between retries.
 
     Parameters
     ----------
@@ -120,8 +122,8 @@ def retry(  # noqa: ANN201
     ...         raise ValueError("Number is too small")
     ...     return "Success"
 
-    The `may_fail` function will be retried up to 3 times if a `ValueError` is raised, with a 2-second delay between
-    retries.
+    The `may_fail` function will be retried up to 3 times if a `ValueError` is
+    raised, with a 2-second delay between retries.
 
     Using the `retry` decorator with an exponential backoff strategy:
 
@@ -131,13 +133,14 @@ def retry(  # noqa: ANN201
     ...         raise ValueError("Number is too small")
     ...     return "Success"
 
-    The `may_fail` function will be retried up to 5 times if a `ValueError` is raised, with an exponentially increasing
-    delay between retries.
+    The `may_fail` function will be retried up to 5 times if a `ValueError` is
+    raised, with an exponentially increasing delay between retries.
 
     Notes
     -----
-    The retry decorator is useful in scenarios where operations are prone to transient failures, such as network
-    requests or accessing external resources that may temporarily be unavailable.
+    The retry decorator is useful in scenarios where operations are prone to
+    transient failures, such as network requests or accessing external resources
+    that may temporarily be unavailable.
     """
 
     def decorator(func: Callable[..., T]):  # noqa: ANN202

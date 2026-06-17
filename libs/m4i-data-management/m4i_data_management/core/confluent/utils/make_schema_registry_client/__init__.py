@@ -1,1 +1,1 @@
-from .make_schema_registry_client import *
+from .make_schema_registry_client import make_schema_registry_client as make_schema_registry_client

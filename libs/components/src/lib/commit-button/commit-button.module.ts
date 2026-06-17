@@ -9,16 +9,16 @@ import { TooltipModule } from '@models4insight/directives';
 import { ConflictResolutionTemplateSelectModule } from '../conflict-resolution-template-select';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ModalModule,
-    TooltipModule,
-    ConflictResolutionTemplateSelectModule,
-  ],
-  declarations: [CommitButtonComponent, CommitOptionsModalComponent],
-  exports: [CommitButtonComponent],
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ModalModule,
+        TooltipModule,
+        ConflictResolutionTemplateSelectModule,
+    ],
+    declarations: [CommitButtonComponent, CommitOptionsModalComponent],
+    exports: [CommitButtonComponent],
 })
 export class CommitButtonModule {}

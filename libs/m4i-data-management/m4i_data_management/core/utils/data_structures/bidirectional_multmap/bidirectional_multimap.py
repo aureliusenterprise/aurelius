@@ -12,6 +12,7 @@ class BidirectionalMutliMap(defaultdict):
     def __init__(self):
         super().__init__(set)
         self.inverse = defaultdict(set)
+
     # END __init__
 
     def add(self, key: str, *values: str):
@@ -20,6 +21,8 @@ class BidirectionalMutliMap(defaultdict):
             self.inverse[value].add(key)
         # END LOOP
         return self
+
     # END add
+
 
 # END BidirectionalMultiMap

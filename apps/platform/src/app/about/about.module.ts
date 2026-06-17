@@ -7,7 +7,7 @@ import { AboutComponent } from './about.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule, TranslateModule, AboutRoutingModule],
-  declarations: [AboutComponent]
+    imports: [CommonModule, FontAwesomeModule, TranslateModule, AboutRoutingModule],
+    declarations: [AboutComponent],
 })
 export class AboutModule {}
