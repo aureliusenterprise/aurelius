@@ -1,6 +1,7 @@
-import requests
 import argparse
-from urlpath import URL
+from urllib.parse import urljoin
+
+import requests
 
 
 def parse_args():
@@ -11,7 +12,7 @@ def parse_args():
         "-u",
         default="https://aureliusdev.westeurope.cloudapp.azure.com/demo/atlas2/",
         help="Apache Atlas base url",
-        type=URL,
+        type=str,
     )
     parser.add_argument("--output", "-o", default="out.zip", help="Output zip file", type=str)
     parser.add_argument(
@@ -24,8 +25,8 @@ def parse_args():
 
 
 def get_entity_types(base_url, base_headers={}):
-    url = base_url / "v2/types/typedefs"
-    response = requests.get(url.as_uri(), headers=base_headers)
+    url = urljoin(str(base_url), "v2/types/typedefs")
+    response = requests.get(url, headers=base_headers)
     data = response.json()
     return [entity["name"] for entity in data["entityDefs"] if entity["category"] == "ENTITY"]
 
@@ -39,9 +40,9 @@ def export(entity_types, base_url, output, base_headers={}):
     body["options"] = {"matchType": "matches"}  # type: ignore[reportGeneralTypeIssues]
     headers["Content-Type"] = "application/json"
     headers["Cache-Control"] = "no-cache"
-    url = base_url / "admin/export"
+    url = urljoin(str(base_url), "admin/export")
 
-    response = requests.post(url.as_uri(), json=body, headers=headers)
+    response = requests.post(url, json=body, headers=headers)
     with open(output, "wb") as handler:
         handler.write(response.content)
 
@@ -50,15 +51,15 @@ def import_data(base_url, export_output, base_headers):
     headers = base_headers.copy()
 
     headers["Cache-Control"] = "no-cache"
-    url = base_url / "admin/import"
+    url = urljoin(str(base_url), "admin/import")
     files = {"data": open(export_output, "rb")}
 
-    requests.post(url.as_uri(), files=files, headers=headers)
+    requests.post(url, files=files, headers=headers)
 
 
 def main():
     args = parse_args()
-    base_url = args.base_url / "api/atlas"
+    base_url = urljoin(args.base_url, "api/atlas")
     headers = {"Authorization": f"Bearer {args.token}"}
     if args.import_data:
         print("Importing entities")
