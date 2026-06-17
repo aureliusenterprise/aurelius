@@ -27,7 +27,7 @@ path = "../../libs/m4i-backend-core"
 pytest = "^8.0.0"
 pytest-mock = "^3.14.0"
 python-dotenv = "^1.0.0"
-responses = "^0.25.0"
+responses = "^0.26.0"
 tenacity = "^8.5.0"
 testcontainers = "^4.0.0"
 
