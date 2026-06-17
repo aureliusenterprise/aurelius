@@ -6,7 +6,7 @@ import { defaultSimpleSearchInputContext, SimpleSearchInputContext } from '@mode
 import { SearchService } from '../../services/search/search.service';
 import { BusinessContextInfoModalComponent } from './info-modal/business-context-info-modal.component';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
 const searchBarContext: SimpleSearchInputContext = {
     ...defaultSimpleSearchInputContext,
@@ -36,7 +36,7 @@ export class BusinessContextComponent {
         private readonly translateService: TranslateService,
     ) {
         this.searchBarContext = this.translateService
-            .get('search.browse.businessContext.searchPlaceholder')
+            .stream('search.browse.businessContext.searchPlaceholder')
             .pipe(map((translation) => ({ ...searchBarContext, placeholder: translation })));
     }
 

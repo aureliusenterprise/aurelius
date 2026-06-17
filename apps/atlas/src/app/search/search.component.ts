@@ -34,7 +34,7 @@ export class SearchComponent implements OnInit {
     ) {
         this.query$ = this.searchService.select(['queryObject', 'query']);
         this.searchBarContext = this.translateService
-            .get('search.browse.searchPlaceholder')
+            .stream('search.browse.searchPlaceholder')
             .pipe(map((translation) => ({ ...searchBarContext, placeholder: translation })));
     }
 
