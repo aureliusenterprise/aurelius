@@ -117,7 +117,7 @@ requires = ["poetry-core==1.1.0"]
 
 [tool.ruff]
 line-length = 110
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["F", "E", "W"]
@@ -128,5 +128,5 @@ quote-style = "double"
 skip-magic-trailing-comma = true
 
 [tool.pyright]
-pythonVersion = "3.11"
+pythonVersion = "3.12"
 typeCheckingMode = "standard"

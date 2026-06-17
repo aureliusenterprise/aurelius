@@ -31,7 +31,7 @@ inputs:
         default: 'false'
     python-version:
         description: Python version to set up
-        default: 3.11
+        default: 3.12
     sonar:
         description: Install SonarQube scanner
         default: 'false'

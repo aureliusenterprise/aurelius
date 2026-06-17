@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroDeserializer
@@ -6,6 +6,9 @@ from confluent_kafka.schema_registry.json_schema import JSONDeserializer
 from confluent_kafka.serialization import StringDeserializer
 
 from ..make_schema_registry_client import make_schema_registry_client
+
+AvroDeserializerCtor = cast(Any, AvroDeserializer)
+JSONDeserializerCtor = cast(Any, JSONDeserializer)
 
 
 def make_deserializer(
@@ -26,13 +29,11 @@ def make_deserializer(
         schema_registry_client = make_schema_registry_client()
     # END IF
 
-    schema = schema_registry_client.get_schema(schema_id)
+    schema = schema_registry_client.get_schema(cast(Any, schema_id))
 
     deserializers = {
-        "avro": lambda: AvroDeserializer(
-            schema_registry_client=schema_registry_client, schema_str=schema.schema_str, from_dict=from_dict
-        ),
-        "json": lambda: JSONDeserializer(schema_str=schema.schema_str, from_dict=from_dict),
+        "avro": lambda: AvroDeserializerCtor(schema.schema_str, from_dict, schema_registry_client),
+        "json": lambda: JSONDeserializerCtor(schema.schema_str, from_dict),
         "string": lambda: StringDeserializer("utf-8"),
     }
 

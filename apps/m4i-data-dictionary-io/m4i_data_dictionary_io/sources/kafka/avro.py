@@ -1,7 +1,7 @@
 from typing import Generator, Union
 
 from avro.schema import ArraySchema, MapSchema, RecordSchema, UnionSchema, PrimitiveSchema, NamedSchema
-from confluent_kafka.avro import loads
+from confluent_kafka.avro.load import loads
 
 from m4i_data_dictionary_io.entities.json import DataField
 

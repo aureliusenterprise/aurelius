@@ -1,4 +1,5 @@
 import logging
+import json
 
 from m4i_atlas_core.config.config_store import ConfigStore
 from .... import make_confluent_producer
@@ -44,7 +45,7 @@ def write_data_quality_results_to_kafka(results: DataFrame, compliant: DataFrame
 
     for id, row in results.iterrows():  # type: ignore[union-attr]
         row_data = row.to_dict()
-        producer.produce(topic=kafka_summary_topic_name, value=row_data)
+        producer.produce(topic=kafka_summary_topic_name, value=json.dumps(row_data, default=str))
 
     columns = [dataset_index_column] + [
         "business_rule_id",
@@ -86,7 +87,7 @@ def write_data_quality_results_to_kafka(results: DataFrame, compliant: DataFrame
 
     for id, row in details.iterrows():  # type: ignore[union-attr]
         row_data = row.to_dict()
-        producer.produce(topic=kafka_details_topic_name, value=row_data)
+        producer.produce(topic=kafka_details_topic_name, value=json.dumps(row_data, default=str))
     producer.flush()
 
 

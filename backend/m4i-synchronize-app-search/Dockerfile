@@ -7,17 +7,16 @@ ARG FLINK_VERSION=1.17.0
 FROM flink:${FLINK_VERSION}
 
 # Set build arguments
-ARG PYTHON_VERSION=3.11
+ARG PYTHON_VERSION=3.12
 
-# Install Python 3.10. Use cache mounts to speed up the process.
+# Install Python. Use cache mounts to speed up the process.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
     apt-get install -y --no-install-recommends software-properties-common && \
-    apt-get update && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update && \
-    apt-get install -y --no-install-recommends python${PYTHON_VERSION} python${PYTHON_VERSION}-distutils && \
+    apt-get install -y --no-install-recommends python${PYTHON_VERSION} && \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION} && \
     ln -sf /usr/bin/python${PYTHON_VERSION} /usr/bin/python
 
@@ -35,4 +34,4 @@ COPY --chown=flink:flink --chmod=0400 backend/m4i-synchronize-app-search/dist/*.
 
 # Install package dependencies, then clean up. Use a cache mount to speed up the process.
 RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
-    python -m pip install --upgrade --force-reinstall --ignore-installed ./*.whl
+    python -m pip install --break-system-packages --upgrade --force-reinstall --ignore-installed ./*.whl

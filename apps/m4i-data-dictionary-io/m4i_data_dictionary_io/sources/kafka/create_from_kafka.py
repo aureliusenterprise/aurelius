@@ -24,11 +24,16 @@ SCHEMA_PARSERS: Dict[str, Parser] = {"avro": parse_avro_schema, "json": parse_js
 
 def parse_schema(schema: Schema, dataset_qualified_name: str) -> Generator[DataField, None, None]:
     """Parse a schema and yield DataField instances."""
-    if schema.schema_type.lower() not in SCHEMA_PARSERS:
+    schema_type = (schema.schema_type or "").lower()
+    if schema_type not in SCHEMA_PARSERS:
         logging.error(f"No parser found for schema type: {schema.schema_type}")
         return
 
-    parser = SCHEMA_PARSERS[schema.schema_type.lower()]
+    if schema.schema_str is None:
+        logging.error("Schema does not contain schema_str")
+        return
+
+    parser = SCHEMA_PARSERS[schema_type]
     yield from parser(schema.schema_str, dataset_qualified_name)
 
 

@@ -8,7 +8,7 @@ from .utils import make_deserializing_consumer
 _SENTINEL = None
 
 
-MessageType = Tuple[str, Optional[str]]
+MessageType = Tuple[bytes | None, bytes | None]
 
 logger = logging.getLogger(__name__)
 

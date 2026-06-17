@@ -15,7 +15,7 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
     rm ./*.whl
 
 # Use a slim version of the base Python image to reduce the final image size
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # Add image metadata
 LABEL org.opencontainers.image.authors="Aurelius Enterprise"

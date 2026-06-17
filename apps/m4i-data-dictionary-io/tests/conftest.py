@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Generator
+from typing import Any, Generator, cast
 
 import dotenv
 import pytest
@@ -24,6 +24,9 @@ from tenacity import Retrying, stop_after_attempt, wait_exponential
 from testcontainers.compose import DockerCompose
 from testcontainers.core.waiting_utils import wait_container_is_ready
 import pytest_asyncio
+
+AvroSerializerCtor = cast(Any, AvroSerializer)
+JSONSerializerCtor = cast(Any, JSONSerializer)
 
 
 class Settings(BaseSettings):
@@ -137,19 +140,18 @@ def schema_registry_client(compose: DockerCompose) -> SchemaRegistryClient:
 @pytest.fixture(scope="session")
 def avro_serializer(schema_registry_client: SchemaRegistryClient) -> AvroSerializer:
     """Fixture to create an AvroSerializer."""
-    return AvroSerializer(
-        schema_registry_client=schema_registry_client,
-        schema_str=json.dumps(Envelope.avro_schema()),
-        conf={"subject.name.strategy": record_subject_name_strategy},
+    return AvroSerializerCtor(
+        schema_registry_client,
+        json.dumps(Envelope.avro_schema()),
+        None,
+        {"subject.name.strategy": record_subject_name_strategy},
     )
 
 
 @pytest.fixture(scope="session")
 def json_serializer(schema_registry_client: SchemaRegistryClient) -> JSONSerializer:
     """Fixture to create a JSONSerializer."""
-    return JSONSerializer(
-        schema_registry_client=schema_registry_client, schema_str=json.dumps(Envelope.model_json_schema())
-    )
+    return JSONSerializerCtor(json.dumps(Envelope.model_json_schema()), schema_registry_client, None)
 
 
 @pytest.fixture(scope="session")

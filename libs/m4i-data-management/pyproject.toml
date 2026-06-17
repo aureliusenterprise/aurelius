@@ -10,6 +10,8 @@ version = "1.0.0"
 include = "m4i_data_management"
 
 [tool.poetry.dependencies]
+authlib = ">=1.4,<2"
+cachetools = ">=5.0,<6"
 confluent-kafka = ">=2.6,<3"
 dataclasses-json = ">=0.6,<1"
 dict_hash = "~1.3"
