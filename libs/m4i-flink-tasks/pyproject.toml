@@ -11,7 +11,7 @@ include = "m4i_flink_tasks"
 
 [tool.poetry.dependencies]
 apache-flink = "^2.0"
-dataclasses-json = "~0.6"
+dataclasses-json = ">=0.6,<1"
 elasticsearch = "^8.9"
 python = ">=3.11,<3.14"
 
@@ -28,5 +28,5 @@ build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]
 
 [tool.pyright]
-pythonVersion = "3.10"
+pythonVersion = "3.11"
 typeCheckingMode = "strict"

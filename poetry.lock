@@ -2486,7 +2486,6 @@ requests = ">=2.32.0"
 requests-toolbelt = "^1.0.0"
 sqlalchemy = ">=2.0,<3.0"
 sqlparse = ">=0.5,<1"
-uuid = ">=1.30,<2"
 
 [package.source]
 type = "directory"
@@ -2612,8 +2611,8 @@ files = []
 develop = true
 
 [package.dependencies]
-confluent-kafka = "~2.6.0"
-dataclasses-json = "~0.6"
+confluent-kafka = ">=2.6,<3"
+dataclasses-json = ">=0.6,<1"
 dict_hash = "~1.3"
 elasticsearch = "^8.9"
 m4i-atlas-core = {path = "../m4i-atlas-core", develop = true}
@@ -2635,7 +2634,7 @@ develop = true
 
 [package.dependencies]
 apache-flink = "^2.0"
-dataclasses-json = "~0.6"
+dataclasses-json = ">=0.6,<1"
 elasticsearch = "^8.9"
 m4i-atlas-core = {path = "../../libs/m4i-atlas-core", develop = true}
 m4i-governance-data-quality = {path = "../../libs/m4i-governance-data-quality", develop = true}
@@ -2655,7 +2654,7 @@ files = []
 develop = true
 
 [package.dependencies]
-dataclasses-json = "~0.6"
+dataclasses-json = ">=0.6,<1"
 m4i-atlas-core = {path = "../m4i-atlas-core", develop = true}
 m4i-data-management = {path = "../m4i-data-management", develop = true}
 
@@ -5645,17 +5644,6 @@ requests = "*"
 [package.extras]
 json = ["jmespath"]
 test = ["WebOb", "jmespath"]
-
-[[package]]
-name = "uuid"
-version = "1.30"
-description = "UUID object and generation functions (Python 2.3 or higher)"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "uuid-1.30.tar.gz", hash = "sha256:1f87cc004ac5120466f36c5beae48b4c48cc411968eed0eaecd3da82aa96193f"},
-]
 
 [[package]]
 name = "virtualenv"
