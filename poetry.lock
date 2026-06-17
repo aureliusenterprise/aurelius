@@ -2480,6 +2480,7 @@ matplotlib = "^3.8"
 networkx = "^3.4"
 pandas = "^2.2"
 pydotplus = ">=2.0,<3"
+pymysql = "^1.2.0"
 python-keycloak = "^7.1.1"
 requests = ">=2.32.0"
 requests-toolbelt = "^1.0.0"
@@ -6084,4 +6085,4 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.14"
-content-hash = "66eb61c7ce872b0181aefd448ae552c55090268bcb308245aff2093f1660cb64"
+content-hash = "d10fa3475804e335c21d9df4c2cea81c369ce3d58ad1a43538ea8928ef9d95e2"
