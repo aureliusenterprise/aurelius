@@ -43,10 +43,17 @@ services:
             KC_HOSTNAME: keycloak.localhost
             KC_HTTP_PORT: ${KEYCLOAK_HTTP_PORT}
         healthcheck:
-            test:
-                [
+            test: [
                     'CMD-SHELL',
-                    "exec 3<>/dev/tcp/127.0.0.1/${KEYCLOAK_HTTP_PORT};echo -e \"GET /health/ready HTTP/1.1\r\nhost: http://localhost\r\nConnection: close\r\n\r\n\" >&3;grep \"HTTP/1.1 200 OK\" <&3",
+                    "exec 3<>/dev/tcp/127.0.0.1/${KEYCLOAK_HTTP_PORT};echo -e \"GET /health/ready HTTP/1.1\r
+
+                    host: http://localhost\r
+
+                    Connection: close\r
+
+                    \r
+
+                    \" >&3;grep \"HTTP/1.1 200 OK\" <&3",
                 ]
             interval: 30s
             timeout: 10s
@@ -89,7 +96,6 @@ services:
         env_file: .env
         extra_hosts:
             - keycloak.localhost:host-gateway
-        restart: on-failure
 
     # --- Kafka profile ---
     broker:
@@ -279,14 +285,13 @@ services:
               uid: '0'
               gid: '0'
               mode: 640
-        volumes:
-            - enterprisesearchdata:/usr/share/enterprise-search/config
         env_file: .env
         environment:
             - SERVERNAME=enterprisesearch
             - secret_management.encryption_keys=[${ENCRYPTION_KEYS}]
             - allow_es_settings_modification=true
             - app_search.engine.total_fields.limit=99
+            - ent_search.external_url=https://localhost:${ENTERPRISE_SEARCH_PORT}
             - elasticsearch.host=https://elasticsearch:${ELASTICSEARCH_PORT}
             - elasticsearch.username=${ELASTIC_USERNAME}
             - elasticsearch.password=${ELASTIC_PASSWORD}
@@ -294,11 +299,18 @@ services:
             - elasticsearch.ssl.certificate_authority=/usr/share/enterprise-search/config/certs/ca/ca.crt
             - kibana.host=http://kibana:${KIBANA_PORT}
             - kibana.external_url=http://localhost:${KIBANA_PORT}
+            - ent_search.ssl.enabled=true
+            - ent_search.ssl.keystore.path=/usr/share/enterprise-search/config/certs/certs/enterprisesearch.p12
+            - ent_search.ssl.keystore.password=${ENTERPRISE_SEARCH_SSL_KEYSTORE_PASSWORD}
         ports:
             - ${ENTERPRISE_SEARCH_PORT}:${ENTERPRISE_SEARCH_PORT}
         restart: unless-stopped
         healthcheck:
-            test: ['CMD-SHELL', "curl -s -I http://localhost:${ENTERPRISE_SEARCH_PORT} | grep -q 'HTTP/1.1 302 Found'"]
+            test:
+                [
+                    'CMD-SHELL',
+                    "curl -s -I --cacert /usr/share/enterprise-search/config/certs/ca/ca.crt https://localhost:${ENTERPRISE_SEARCH_PORT} | grep -q 'HTTP/1.1 302 Found'",
+                ]
             interval: 10s
             timeout: 10s
             retries: 120
@@ -329,4 +341,3 @@ volumes:
     kafka-data:
     keycloak-data:
     kibana-data:
-    enterprisesearchdata:
