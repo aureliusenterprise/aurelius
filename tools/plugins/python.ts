@@ -55,6 +55,10 @@ function buildTargets(
             cache: true,
             dependsOn: [
                 {
+                    target: 'generate-certs',
+                    projects: ['aurelius-atlas-dev'],
+                },
+                {
                     target: 'decrypt',
                 },
                 {
