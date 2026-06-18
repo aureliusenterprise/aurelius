@@ -101,10 +101,12 @@ services:
     broker:
         profiles: ['kafka']
         image: apache/kafka:latest
+        ports:
+            - 9092:9092
         environment:
             KAFKA_NODE_ID: 1
             KAFKA_PROCESS_ROLES: broker,controller
-            KAFKA_LISTENERS: PLAINTEXT://broker:9094,CONTROLLER://broker:9093,LOCAL://localhost:9092
+            KAFKA_LISTENERS: PLAINTEXT://broker:9094,CONTROLLER://broker:9093,LOCAL://broker:9092
             KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9094,LOCAL://localhost:9092
             KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
             KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,LOCAL:PLAINTEXT
