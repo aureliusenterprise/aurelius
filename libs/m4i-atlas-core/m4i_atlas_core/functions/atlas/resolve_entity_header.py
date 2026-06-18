@@ -1,9 +1,10 @@
 from ...api import get_entity_by_guid
 from ...entities import Entity, ObjectId
+from typing import Optional
 
 
-async def resolve_entity_header(header: ObjectId) -> Entity:
-    entity = await get_entity_by_guid(header.guid, header.type_name)
+async def resolve_entity_header(header: ObjectId, access_token: Optional[str] = None) -> Entity:
+    entity = await get_entity_by_guid(header.guid, header.type_name, access_token=access_token)
 
     # If the guid is a placeholder, it will start with a -.
     # In that case, set the attributes of the returned entity to the given unique attributes
