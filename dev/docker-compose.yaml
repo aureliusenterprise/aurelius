@@ -1,7 +1,9 @@
 name: aurelius-atlas-dev
 
 services:
+    # --- Atlas profile ---
     atlas:
+        profiles: ['atlas']
         image: ghcr.io/aureliusenterprise/aurelius-docker-apache-atlas:local
         depends_on:
             - broker
@@ -20,7 +22,9 @@ services:
             - source: atlas-keycloak-conf
               target: /apache-atlas/conf/keycloak-conf.json
 
+    # --- Keycloak profile ---
     keycloak:
+        profiles: ['keycloak']
         image: ghcr.io/aureliusenterprise/aurelius-docker-keycloak:local
         command: ['start-dev', '--import-realm']
         configs:
@@ -51,6 +55,7 @@ services:
             - ${KEYCLOAK_HTTP_PORT}:${KEYCLOAK_HTTP_PORT}
 
     keycloak-db:
+        profiles: ['keycloak']
         image: postgres:latest
         user: ${KEYCLOAK_DB_USERNAME}
         environment:
@@ -68,6 +73,7 @@ services:
             - keycloak-data:/var/lib/postgresql
 
     keycloak-setup:
+        profiles: ['keycloak']
         image: ghcr.io/aureliusenterprise/aurelius-docker-keycloak:local
         command: ['/aurelius/keycloak-setup.sh']
         configs:
@@ -85,7 +91,9 @@ services:
             - keycloak.localhost:host-gateway
         restart: on-failure
 
+    # --- Kafka profile ---
     broker:
+        profiles: ['kafka']
         image: apache/kafka:latest
         environment:
             KAFKA_NODE_ID: 1
@@ -111,6 +119,7 @@ services:
         restart: unless-stopped
 
     schema-registry:
+        profiles: ['kafka']
         image: confluentinc/cp-schema-registry:7.6.1
         depends_on:
             broker:
@@ -129,6 +138,7 @@ services:
             retries: 10
 
     kafka-ui:
+        profiles: ['kafka']
         image: kafbat/kafka-ui:latest
         depends_on:
             - broker
@@ -142,7 +152,9 @@ services:
             - ${KAFKA_UI_PORT}:${KAFKA_UI_PORT}
         restart: unless-stopped
 
+    # --- Elastic profile ---
     elasticsearch-setup:
+        profiles: ['elastic']
         image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
         user: '0'
         env_file: .env
@@ -174,6 +186,7 @@ services:
             retries: 120
 
     elasticsearch:
+        profiles: ['elastic']
         image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
         depends_on:
             elasticsearch-setup:
@@ -219,6 +232,7 @@ services:
             retries: 120
 
     kibana:
+        profiles: ['elastic']
         depends_on:
             elasticsearch:
                 condition: service_healthy
@@ -254,6 +268,7 @@ services:
             retries: 120
 
     enterprisesearch:
+        profiles: ['elastic']
         depends_on:
             kibana:
                 condition: service_healthy
