@@ -23,6 +23,7 @@ from tenacity import Retrying, stop_after_attempt, wait_exponential
 
 @pytest.mark.asyncio
 async def test__discover_cluster_with_empty_cluster(
+    auth_token: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
     kafka_consumer: Consumer,
@@ -39,6 +40,7 @@ async def test__discover_cluster_with_empty_cluster(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
+        access_token=auth_token,
     )
 
     expected = [entity.convert_to_atlas() for entity in [expected_system, expected_collection]]
@@ -50,7 +52,7 @@ async def test__discover_cluster_with_empty_cluster(
         ):
             with attempt:
                 actual = await get_entity_by_qualified_name(
-                    entity.attributes.qualified_name, entity.type_name
+                    entity.attributes.qualified_name, entity.type_name, access_token=auth_token
                 )
 
                 assert actual is not None, f"Entity {entity.attributes.qualified_name} not found"
@@ -85,6 +87,7 @@ def kafka_topic(
 
 @pytest.mark.asyncio
 async def test__discover_cluster_with_topic(
+    auth_token: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
     kafka_consumer: Consumer,
@@ -106,6 +109,7 @@ async def test__discover_cluster_with_topic(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
+        access_token=auth_token,
     )
 
     expected = [
@@ -119,7 +123,7 @@ async def test__discover_cluster_with_topic(
         ):
             with attempt:
                 actual = await get_entity_by_qualified_name(
-                    entity.attributes.qualified_name, entity.type_name
+                    entity.attributes.qualified_name, entity.type_name, access_token=auth_token
                 )
 
                 assert actual is not None, f"Entity {entity.attributes.qualified_name} not found"
@@ -137,6 +141,7 @@ def avro_name_strategy_topic(kafka_topic: str, schema_registry_client: SchemaReg
 
 @pytest.mark.asyncio
 async def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
+    auth_token: str,
     avro_name_strategy_topic: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
@@ -196,6 +201,7 @@ async def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
+        access_token=auth_token,
     )
 
     expected = [
@@ -210,7 +216,7 @@ async def test__discover_cluster_with_avro_schema_using_topic_name_strategy(
         ):
             with attempt:
                 actual = await get_entity_by_qualified_name(
-                    entity.attributes.qualified_name, entity.type_name
+                    entity.attributes.qualified_name, entity.type_name, access_token=auth_token
                 )
 
                 assert actual is not None, f"Entity {entity.attributes.qualified_name} not found"
@@ -228,6 +234,7 @@ def json_schema_name_strategy_topic(kafka_topic: str, schema_registry_client: Sc
 
 @pytest.mark.asyncio
 async def test__discover_cluster_with_json_schema_using_topic_name_strategy(
+    auth_token: str,
     json_schema_name_strategy_topic: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
@@ -287,6 +294,7 @@ async def test__discover_cluster_with_json_schema_using_topic_name_strategy(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
+        access_token=auth_token,
     )
 
     expected = [
@@ -301,7 +309,7 @@ async def test__discover_cluster_with_json_schema_using_topic_name_strategy(
         ):
             with attempt:
                 actual = await get_entity_by_qualified_name(
-                    entity.attributes.qualified_name, entity.type_name
+                    entity.attributes.qualified_name, entity.type_name, access_token=auth_token
                 )
 
                 assert actual is not None, f"Entity {entity.attributes.qualified_name} not found"
@@ -320,13 +328,9 @@ def avro_topic(
     avro_serializer: AvroSerializer, kafka_producer: Producer, kafka_topic: str, message: Envelope
 ) -> str:
     """Fixture to create a Kafka topic with an Avro message."""
-    # The tests may sometimes start before the schema registry is ready. Retry until it is.
-    value = None
-    for attempt in Retrying(stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=2, max=10)):
-        with attempt:
-            value = avro_serializer(
-                obj=message.model_dump(), ctx=SerializationContext(kafka_topic, MessageField.VALUE)
-            )
+    value = avro_serializer(
+        obj=message.model_dump(), ctx=SerializationContext(kafka_topic, MessageField.VALUE)
+    )
 
     kafka_producer.produce(topic=kafka_topic, value=value)
     kafka_producer.poll(0)
@@ -337,6 +341,7 @@ def avro_topic(
 
 @pytest.mark.asyncio
 async def test__discover_cluster_with_topic_and_avro_message(
+    auth_token: str,
     avro_topic: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
@@ -396,6 +401,7 @@ async def test__discover_cluster_with_topic_and_avro_message(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
+        access_token=auth_token,
     )
 
     expected = [
@@ -410,7 +416,7 @@ async def test__discover_cluster_with_topic_and_avro_message(
         ):
             with attempt:
                 actual = await get_entity_by_qualified_name(
-                    entity.attributes.qualified_name, entity.type_name
+                    entity.attributes.qualified_name, entity.type_name, access_token=auth_token
                 )
 
                 assert actual is not None, f"Entity {entity.attributes.qualified_name} not found"
@@ -421,13 +427,9 @@ def json_schema_topic(
     json_serializer: JSONSerializer, kafka_producer: Producer, kafka_topic: str, message: Envelope
 ) -> str:
     """Fixture to create a Kafka topic that has a JSON message with schema."""
-    # The tests may sometimes start before the schema registry is ready. Retry until it is.
-    value = None
-    for attempt in Retrying(stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=2, max=10)):
-        with attempt:
-            value = json_serializer(
-                obj=message.model_dump(mode="json"), ctx=SerializationContext(kafka_topic, MessageField.VALUE)
-            )
+    value = json_serializer(
+        obj=message.model_dump(mode="json"), ctx=SerializationContext(kafka_topic, MessageField.VALUE)
+    )
 
     kafka_producer.produce(topic=kafka_topic, value=value)
     kafka_producer.poll(0)
@@ -438,6 +440,7 @@ def json_schema_topic(
 
 @pytest.mark.asyncio
 async def test__discover_cluster_with_topic_and_json_schema_message(
+    auth_token: str,
     json_schema_topic: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
@@ -497,6 +500,7 @@ async def test__discover_cluster_with_topic_and_json_schema_message(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
+        access_token=auth_token,
     )
 
     expected = [
@@ -511,7 +515,7 @@ async def test__discover_cluster_with_topic_and_json_schema_message(
         ):
             with attempt:
                 actual = await get_entity_by_qualified_name(
-                    entity.attributes.qualified_name, entity.type_name
+                    entity.attributes.qualified_name, entity.type_name, access_token=auth_token
                 )
 
                 assert actual is not None, f"Entity {entity.attributes.qualified_name} not found"
@@ -535,6 +539,7 @@ def json_topic(
 
 @pytest.mark.asyncio
 async def test__discover_cluster_with_topic_and_json_message(
+    auth_token: str,
     json_topic: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
@@ -585,6 +590,7 @@ async def test__discover_cluster_with_topic_and_json_message(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
+        access_token=auth_token,
     )
 
     expected = [
@@ -599,7 +605,7 @@ async def test__discover_cluster_with_topic_and_json_message(
         ):
             with attempt:
                 actual = await get_entity_by_qualified_name(
-                    entity.attributes.qualified_name, entity.type_name
+                    entity.attributes.qualified_name, entity.type_name, access_token=auth_token
                 )
 
                 assert actual is not None, f"Entity {entity.attributes.qualified_name} not found"
@@ -619,6 +625,7 @@ def string_topic(kafka_producer: Producer, kafka_topic: str, string_serializer: 
 
 @pytest.mark.asyncio
 async def test__discover_cluster_with_topic_and_string_message(
+    auth_token: str,
     kafka_admin_client: AdminClient,
     kafka_cluster_id: str,
     kafka_consumer: Consumer,
@@ -640,6 +647,7 @@ async def test__discover_cluster_with_topic_and_string_message(
         admin_client=kafka_admin_client,
         consumer=kafka_consumer,
         schema_registry_client=schema_registry_client,
+        access_token=auth_token,
     )
 
     expected = [
@@ -653,7 +661,7 @@ async def test__discover_cluster_with_topic_and_string_message(
         ):
             with attempt:
                 actual = await get_entity_by_qualified_name(
-                    entity.attributes.qualified_name, entity.type_name
+                    entity.attributes.qualified_name, entity.type_name, access_token=auth_token
                 )
 
                 assert actual is not None, f"Entity {entity.attributes.qualified_name} not found"
