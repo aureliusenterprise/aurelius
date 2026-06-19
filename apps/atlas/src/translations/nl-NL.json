@@ -33,15 +33,15 @@
     "creatorIndexPattern": "Maker van Indexpatroon",
     "creatorVisualization": "Maker van Visualisatie",
     "dataAttribute": "Data Attribuut",
-    "dataDomain": "Datadomein",
+    "dataDomain": "Data Domein",
     "dataEntity": "Data Entiteit",
     "dataQuality": "Datakwaliteit",
-    "datadomainname": "Datadomein",
+    "datadomainname": "Data Domein",
     "dataqualityruledimension": "Dimensie",
     "dataqualitytype": "Regeltype",
     "datasets": "Datasets",
     "derivedcollection": "Collectie",
-    "deriveddatadomain": "Datadomein",
+    "deriveddatadomain": "Data Domein",
     "deriveddataentity": "Data Entiteit",
     "deriveddataset": "Dataset",
     "derivedperson": "Personen",
@@ -52,7 +52,7 @@
     "dqscore_accuracy": "Nauwkeurigheid",
     "dqscore_completeness": "Volledigheid",
     "dqscore_timeliness": "Tijdigheid",
-    "dqscore_uniqueness": "Uniciteit",
+    "dqscore_uniqueness": "Uniekheid",
     "dqscore_validity": "Validiteit",
     "elasticCluster": "Elastic cluster",
     "email": "Email",
@@ -70,7 +70,7 @@
     "low_risk": "Laag risico",
     "m4i_collection": "Collectie",
     "m4i_data_attribute": "Data Attribuut",
-    "m4i_data_domain": "Datadomein",
+    "m4i_data_domain": "Data Domein",
     "m4i_data_entity": "Data Entiteit",
     "m4i_data_field": "Dataveld",
     "m4i_data_quality": "Datakwaliteit",
@@ -98,52 +98,52 @@
     "search": {
         "browse": {
             "businessContext": {
-                "description": "Ik zoek naar de betekenis van data binnen een specifieke zakelijke context.",
-                "exploreButton": "Datadomeinen bekijken",
-                "exploringDescription": "Klik op de knop voor een overzicht van alle datadomeinen.",
-                "exploringTitle": "Ik verken de betekenis van data binnen een zakelijke context",
+                "description": "Ik zoek naar de betekenis van data binnen een specifieke business context.",
+                "exploreButton": "Data domeinen bekijken",
+                "exploringDescription": "Klik op de knop voor een overzicht van alle data domeinen.",
+                "exploringTitle": "Ik verken de betekenis van data binnen de business context",
                 "infoModal": {
-                    "dataAttributeDescription": "Vertegenwoordigt de betekenis en het eigenaarschap van een atomair datapunt dat onderdeel is van een specifieke data‑entiteit.",
+                    "dataAttributeDescription": "Vertegenwoordigt de betekenis en het eigenaarschap van een atomair datapunt dat onderdeel is van een specifieke data entiteit.",
                     "dataDomainDescription": "Vertegenwoordigt afdelingen, businessunits en proceseigenaren die binnen de organisatie verantwoordelijk zijn voor data.",
-                    "dataEntityDescription": "Vertegenwoordigt de betekenis en het eigenaarschap van businessproces‑data‑artefacten die binnen een specifiek datadomein worden gebruikt.",
-                    "description": "Het zakelijke deel van het data‑governancemodel legt datasemantiek en eigenaarschap vast voor de volgende typen entiteiten:",
+                    "dataEntityDescription": "Vertegenwoordigt de betekenis en het eigenaarschap van businessproces data artefacten die binnen een specifiek data domein worden gebruikt.",
+                    "description": "Het business deel van het data governance model legt datasemantiek en eigenaarschap vast voor de volgende typen entiteiten:",
                     "descriptionDescription": "De definitie van het entiteitstype",
                     "descriptionDisplayName": "Beschrijving",
                     "iconDescription": "Het icoon dat het entiteitstype weergeeft",
                     "iconDisplayName": "Icoon",
-                    "title": "Zakelijke context",
+                    "title": "Business context",
                     "typeNameDescription": "De naam van het entiteitstype",
                     "typeNameDisplayName": "Typenaam"
                 },
-                "searchInstructions": "Zoek op trefwoorden die betrekking hebben op het datadomein of de data‑entiteit die u zoekt.",
+                "searchInstructions": "Zoek op trefwoorden die betrekking hebben op het data domein of de data entiteit die u zoekt.",
                 "searchPlaceholder": "Zoek op trefwoorden",
-                "title": "Zakelijke context"
+                "title": "Business context"
             },
             "description": "Welkom bij Aurelius Atlas! We helpen je graag op weg. Kies hieronder je interessegebied.",
             "governanceContext": {
-                "description": "Ik zoek de data‑governance verantwoordelijkheden van een specifieke persoon",
+                "description": "Ik zoek de data governance verantwoordelijkheden van een specifieke persoon",
                 "exploreButton": "Personen bekijken",
-                "exploringDescription": "Klik op de knop voor een overzicht van alle personen met data‑governance verantwoordelijkheden.",
-                "exploringTitle": "Ik verken wie binnen mijn organisatie data‑governance verantwoordelijkheden heeft",
+                "exploringDescription": "Klik op de knop voor een overzicht van alle personen met data governance verantwoordelijkheden.",
+                "exploringTitle": "Ik verken wie binnen mijn organisatie data governance verantwoordelijkheden heeft",
                 "infoModal": {
-                    "dataOwnerDescription": "Verantwoordelijk voor het definiëren van data‑entiteiten binnen het datadomein en voor de effectiviteit van bijbehorende beheersmaatregelen.",
+                    "dataOwnerDescription": "Verantwoordelijk voor het definiëren van data entiteiten binnen het data domein en voor de effectiviteit van bijbehorende beheersmaatregelen.",
                     "dataOwnerTypeName": "Data eigenaar",
                     "dataStewardDescription": "Verantwoordelijk voor de uitvoering van beheersmaatregelen voor datamanagementn en bijbehorende initiatieven.",
                     "dataStewardTypeName": "Data steward",
                     "description": "Het data‑governancemodel onderscheidt verschillende typen organisatorische rollen met betrekking tot data governance:",
                     "descriptionDescription": "De definitie van de rol",
                     "descriptionDisplayName": "Beschrijving",
-                    "domainLeadDescription": "Verantwoordelijk voor de implementatie van datamanagement binnen een datadomein.",
+                    "domainLeadDescription": "Verantwoordelijk voor de implementatie van datamanagement binnen een data domein.",
                     "domainLeadTypeName": "Domein verantwoordelijke",
                     "iconDescription": "Het icoon van de rol",
                     "iconDisplayName": "Icoon",
-                    "title": "Data‑governanceorganisatie",
+                    "title": "Data governance organisatie",
                     "typeNameDescription": "De naam van de rol",
                     "typeNameDisplayName": "Typenaam"
                 },
                 "searchInstructions": "Zoek op de naam of het e‑mailadres van de persoon die u zoekt.",
                 "searchPlaceholder": "Zoek op trefwoorden",
-                "title": "Data‑governanceorganisatie"
+                "title": "Data governance organisatie"
             },
             "searchPlaceholder": "Typ uw zoekopdracht",
             "technicalContext": {
@@ -174,7 +174,7 @@
         "components": {
             "classification": {
                 "originates": "is afkomstig uit de volgende bronnen:",
-                "retrieve": "Classificatietypedefinitie wordt opgehaald",
+                "retrieve": "Classificatie type definitie wordt opgehaald",
                 "source": {
                     "loading": "Laden..."
                 }
@@ -543,7 +543,7 @@
             "loading": "Laden",
             "person": {
                 "dataAttributes": "Data Attributen",
-                "dataDomains": "Datadomeinen",
+                "dataDomains": "Data Domeinen",
                 "dataEntities": "Data Entiteiten",
                 "dataOwner": "Data Eigenaar",
                 "dataSteward": "Data Steward",
