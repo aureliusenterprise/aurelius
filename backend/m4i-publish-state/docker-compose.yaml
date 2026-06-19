@@ -14,20 +14,20 @@ services:
         environment:
             _python_worker_execution_mode: process
             FLINK_PROPERTIES: |
-                blob.server.port: ${FLINK_JOB_MANAGER_BLOB_SERVER_PORT}
+                blob.server.port: ${PUBLISH_STATE_JOB_MANAGER_BLOB_SERVER_PORT}
                 jobmanager.rpc.address: m4i-publish-state-jobmanager
-                jobmanager.rpc.port: ${FLINK_JOB_MANAGER_RPC_PORT}
+                jobmanager.rpc.port: ${PUBLISH_STATE_JOB_MANAGER_RPC_PORT}
                 rest.address: m4i-publish-state-jobmanager
-                rest.port: ${FLINK_JOB_MANAGER_REST_PORT}
+                rest.port: ${PUBLISH_STATE_JOB_MANAGER_REST_PORT}
         extra_hosts:
             - keycloak.localhost:host-gateway
         hostname: m4i-publish-state-jobmanager
         networks:
             - aurelius-atlas-dev-network
         ports:
-            - ${FLINK_JOB_MANAGER_REST_PORT}:${FLINK_JOB_MANAGER_REST_PORT}
-            - ${FLINK_JOB_MANAGER_RPC_PORT}
-            - ${FLINK_JOB_MANAGER_BLOB_SERVER_PORT}
+            - ${PUBLISH_STATE_JOB_MANAGER_REST_PORT}:${PUBLISH_STATE_JOB_MANAGER_REST_PORT}
+            - ${PUBLISH_STATE_JOB_MANAGER_RPC_PORT}
+            - ${PUBLISH_STATE_JOB_MANAGER_BLOB_SERVER_PORT}
         volumes:
             - checkpoints:/tmp/flink-checkpoints-directory
 
@@ -46,11 +46,11 @@ services:
         environment:
             _python_worker_execution_mode: process
             FLINK_PROPERTIES: |
-                blob.server.port: ${FLINK_JOB_MANAGER_BLOB_SERVER_PORT}
+                blob.server.port: ${PUBLISH_STATE_JOB_MANAGER_BLOB_SERVER_PORT}
                 jobmanager.rpc.address: m4i-publish-state-jobmanager
-                jobmanager.rpc.port: ${FLINK_JOB_MANAGER_RPC_PORT}
+                jobmanager.rpc.port: ${PUBLISH_STATE_JOB_MANAGER_RPC_PORT}
                 rest.address: m4i-publish-state-jobmanager
-                rest.port: ${FLINK_JOB_MANAGER_REST_PORT}
+                rest.port: ${PUBLISH_STATE_JOB_MANAGER_REST_PORT}
         extra_hosts:
             - keycloak.localhost:host-gateway
         hostname: m4i-publish-state-taskmanager
