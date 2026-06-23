@@ -7,7 +7,6 @@ export interface DockerPluginOptions {
     readonly licenseScanTargetName?: string;
     readonly publishTargetName?: string;
     readonly sbomTargetName?: string;
-    readonly setupBuilderTargetName?: string;
     readonly signTargetName?: string;
     readonly verifyTargetName?: string;
     readonly vulnScanTargetName?: string;
@@ -35,7 +34,6 @@ async function createNodesInternal(
         licenseScanTargetName = "docker-license-scan",
         publishTargetName = "docker-publish",
         sbomTargetName = "docker-sbom",
-        setupBuilderTargetName = "docker-setup-builder",
         signTargetName = "docker-sign",
         verifyTargetName = "docker-verify",
         vulnScanTargetName = "docker-vuln-scan",
@@ -45,23 +43,6 @@ async function createNodesInternal(
 
     return {
         projects: {
-            ["."]: {
-                targets: {
-                    [setupBuilderTargetName]: {
-                        command:
-                            "docker buildx create --name {args.builder} --node {args.builder} --driver docker-container",
-                        metadata: {
-                            description: "Set up the Docker Buildx builder instance",
-                        },
-                        options: {
-                            builder: "container",
-                            env: {
-                                DOCKER_BUILDKIT: "1",
-                            },
-                        },
-                    },
-                },
-            },
             [projectRoot]: {
                 tags: ["docker"],
                 targets: {
@@ -92,18 +73,16 @@ async function createNodesInternal(
                         },
                     },
                     [publishTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --builder {args.builder} --provenance=true --push`,
+                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --provenance=true --push`,
                         options: {
                             env: {
                                 DOCKER_BUILDKIT: "1",
                             },
-                            builder: "container",
                             namespace: "ghcr.io/aureliusenterprise",
                             version: "latest",
                         },
                         dependsOn: [
                             { target: "build" },
-                            { target: setupBuilderTargetName, projects: ["."], params: "forward" },
                             { target: publishTargetName, dependencies: true, params: "forward" },
                         ],
                         metadata: {
