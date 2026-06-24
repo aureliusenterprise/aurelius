@@ -1,4 +1,4 @@
-import { createNodesFromFiles, CreateNodesResult, CreateNodesV2 } from "@nx/devkit";
+import { createNodesFromFiles, CreateNodesResult, CreateNodes } from "@nx/devkit";
 import { dirname } from "node:path";
 
 export interface SonarQubePluginOptions {
@@ -7,7 +7,7 @@ export interface SonarQubePluginOptions {
 
 const glob = "**/sonar-project.properties";
 
-export const createNodesV2: CreateNodesV2<SonarQubePluginOptions> = [
+export const createNodes: CreateNodes<SonarQubePluginOptions> = [
     glob,
     async (configFiles, options, context) => {
         return await createNodesFromFiles(

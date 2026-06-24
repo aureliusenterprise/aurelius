@@ -1,4 +1,4 @@
-import { createNodesFromFiles, CreateNodesResult, CreateNodesV2 } from "@nx/devkit";
+import { createNodesFromFiles, CreateNodesResult, CreateNodes } from "@nx/devkit";
 import { dirname } from "node:path";
 
 export interface MkdocsPluginOptions {
@@ -7,7 +7,7 @@ export interface MkdocsPluginOptions {
 
 const glob = "mkdocs.yaml";
 
-export const createNodesV2: CreateNodesV2<MkdocsPluginOptions> = [
+export const createNodes: CreateNodes<MkdocsPluginOptions> = [
     glob,
     async (configFiles, options, context) => {
         return await createNodesFromFiles(

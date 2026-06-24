@@ -1,4 +1,4 @@
-import { createNodesFromFiles, CreateNodesResult, CreateNodesV2 } from "@nx/devkit";
+import { createNodesFromFiles, CreateNodesResult, CreateNodes } from "@nx/devkit";
 import { dirname } from "node:path";
 
 export interface SopsPluginOptions {
@@ -7,7 +7,7 @@ export interface SopsPluginOptions {
 
 const glob = ".sops.yaml";
 
-export const createNodesV2: CreateNodesV2<SopsPluginOptions> = [
+export const createNodes: CreateNodes<SopsPluginOptions> = [
     glob,
     async (configFiles, options, context) => {
         return await createNodesFromFiles(

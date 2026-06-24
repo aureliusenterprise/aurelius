@@ -1,4 +1,4 @@
-import { createNodesFromFiles, CreateNodesResult, CreateNodesV2 } from "@nx/devkit";
+import { createNodesFromFiles, CreateNodesResult, CreateNodes } from "@nx/devkit";
 import { dirname } from "node:path";
 
 export interface SopsDecryptPluginOptions {
@@ -9,7 +9,7 @@ export interface SopsDecryptPluginOptions {
 
 const glob = "**/.env.enc";
 
-export const createNodesV2: CreateNodesV2<SopsDecryptPluginOptions> = [
+export const createNodes: CreateNodes<SopsDecryptPluginOptions> = [
     glob,
     async (configFiles, options, context) => {
         return await createNodesFromFiles(

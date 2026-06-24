@@ -20,6 +20,7 @@
         "default": ["{projectRoot}/**/*"],
         "production": ["default", "!{projectRoot}/src/test/**/*"]
     },
+    "neverConnectToCloud": true,
     "plugins": [
         "./tools/plugins/alembic.ts",
         "./tools/plugins/docker.ts",

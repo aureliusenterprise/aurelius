@@ -1,4 +1,4 @@
-import { createNodesFromFiles, CreateNodesResult, CreateNodesV2 } from "@nx/devkit";
+import { createNodesFromFiles, CreateNodesResult, CreateNodes } from "@nx/devkit";
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 
@@ -8,7 +8,7 @@ export interface DockerComposePluginOptions {
 
 const glob = "**/docker-compose.{yml,yaml}";
 
-export const createNodesV2: CreateNodesV2<DockerComposePluginOptions> = [
+export const createNodes: CreateNodes<DockerComposePluginOptions> = [
     glob,
     async (configFiles, options, context) => {
         return await createNodesFromFiles(

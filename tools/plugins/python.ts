@@ -1,7 +1,7 @@
 import {
     createNodesFromFiles,
     CreateNodesResult,
-    CreateNodesV2,
+    CreateNodes,
     ProjectConfiguration,
     readJsonFile,
     TargetConfiguration,
@@ -21,7 +21,7 @@ export interface PythonPluginOptions {
 
 const glob = "**/pyproject.toml";
 
-export const createNodesV2: CreateNodesV2<PythonPluginOptions> = [
+export const createNodes: CreateNodes<PythonPluginOptions> = [
     glob,
     async (configFiles, options, context) => {
         return await createNodesFromFiles(
