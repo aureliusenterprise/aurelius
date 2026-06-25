@@ -1,7 +1,7 @@
 import subprocess
 import time
 from pathlib import Path
-from typing import Generator
+from typing import Generator, List
 
 import aiohttp
 import dotenv
@@ -15,6 +15,9 @@ from m4i_atlas_core import (
     data_dictionary_types_def,
     register_atlas_entity_types,
 )
+from m4i_atlas_core.api.atlas.create_entities import create_entities
+from m4i_atlas_core.api.atlas.delete_entity_hard import delete_entity_hard
+from m4i_atlas_core.api.atlas.delete_entity_soft import delete_entity_soft
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from requests_toolbelt.sessions import BaseUrlSession
@@ -62,7 +65,11 @@ def dev() -> DockerCompose:
     except subprocess.CalledProcessError as e:
         # The setup jobs for Keycloak and Elasticsearch exit after completing its one-time setup,
         # which causes docker compose to return a non-zero exit code.
-        if b"setup-1 exited" not in e.stderr:
+        # Docker Compose may report this in various ways depending on the version:
+        #   - "setup-1 exited" (older format)
+        #   - "dependency failed to start: container ...-setup-1 exited (0)" (newer format)
+        stderr = e.stderr.decode("utf-8", errors="replace") if isinstance(e.stderr, bytes) else str(e.stderr)
+        if "setup" not in stderr or "exited" not in stderr:
             raise
 
     return compose.waiting_for(
@@ -112,6 +119,26 @@ def wait_for_flink_job_running(flink_rest_url: str, timeout: float = 60, poll_in
     raise TimeoutError(f"No Flink jobs with running tasks found at {flink_rest_url} within {timeout}s.")
 
 
+def wait_for_atlas_ready(atlas_url: str, timeout: float = 120, poll_interval: float = 3.0) -> None:
+    """Poll the Atlas REST API until it responds to a health check."""
+    deadline = time.monotonic() + timeout
+    health_url = f"{atlas_url.rstrip('/')}/v2/healthcheck"
+
+    while time.monotonic() < deadline:
+        try:
+            response = requests.get(health_url, timeout=10)
+
+            if response.status_code == 200:
+                return
+
+        except requests.exceptions.RequestException:
+            pass
+
+        time.sleep(poll_interval)
+
+    raise TimeoutError(f"Atlas not ready at {atlas_url} within {timeout}s.")
+
+
 @pytest.fixture(scope="session")
 def keycloak_url(dev: DockerCompose) -> str:
     """Return the Keycloak base URL."""
@@ -142,8 +169,12 @@ async def _init_atlas(dev: DockerCompose, auth_token: str) -> None:
     store = ConfigStore.get_instance()
 
     atlas_port = dev.get_service_port("atlas", 21000)
+    atlas_url = f"http://localhost:{atlas_port}/api/atlas"
 
-    store.load({"atlas.server.url": f"http://localhost:{atlas_port}/api/atlas"})
+    # Wait for Atlas to be ready before attempting any API calls
+    wait_for_atlas_ready(atlas_url)
+
+    store.load({"atlas.server.url": atlas_url})
 
     register_atlas_entity_types(data_dictionary_entity_type_mapping)
 
@@ -219,3 +250,138 @@ def app_search_session(app_search_key: str, settings: Settings) -> BaseUrlSessio
     session.headers.update({"Authorization": f"Bearer {app_search_key}"})
     session.verify = False
     return session
+
+
+# ---------------------------------------------------------------------------
+# Helper fixtures for test cases
+# ---------------------------------------------------------------------------
+
+
+@pytest_asyncio.fixture(scope="session")
+async def create_atlas_entity():
+    """
+    Factory fixture to create Atlas entities and return their GUIDs.
+
+    Usage:
+        guid = await create_atlas_entity(BusinessDataDomain, attributes, auth_token)
+    """
+
+    async def _create(entity_class, attributes, access_token: str):
+        entity = entity_class(attributes=attributes)
+        response = await create_entities(entity, access_token=access_token)
+        return response.guid_assignments[entity.guid]
+
+    return _create
+
+
+@pytest_asyncio.fixture(scope="session")
+async def delete_atlas_entity():
+    """
+    Factory fixture to hard-delete Atlas entities by GUID.
+
+    Usage:
+        await delete_atlas_entity([guid], auth_token)
+    """
+
+    async def _delete(guids: List[str], access_token: str):
+        response = await delete_entity_hard(guids, access_token=access_token)
+        print(response)
+
+    return _delete
+
+
+@pytest_asyncio.fixture(scope="session")
+async def soft_delete_atlas_entity():
+    """
+    Factory fixture to soft-delete Atlas entities by GUID.
+
+    Usage:
+        await soft_delete_atlas_entity([guid], auth_token)
+    """
+
+    async def _soft_delete(guids: List[str], access_token: str):
+        for guid in guids:
+            await delete_entity_soft(guid, access_token=access_token)
+
+    return _soft_delete
+
+
+@pytest.fixture(scope="session")
+def get_app_search_document():
+    """
+    Factory fixture to fetch a single document from App Search by GUID.
+
+    Usage:
+        doc = get_app_search_document(app_search_session, guid)
+        Returns dict or None if not found.
+    """
+
+    def _get(session: BaseUrlSession, guid: str):
+        response = session.get("/api/as/v1/engines/atlas-dev/documents", json=[guid])
+
+        response.raise_for_status()
+
+        documents = response.json()
+
+        if not documents:
+            return None
+
+        matches = [doc for doc in documents if doc and doc.get("guid") == guid]
+
+        if not matches:
+            return None
+
+        return matches[0]
+
+    return _get
+
+
+@pytest.fixture(scope="session")
+def wait_for_sync():
+    """
+    Factory fixture to poll App Search until a document appears or disappears.
+
+    Usage:
+        doc = wait_for_sync(app_search_session, guid, expected_exists=True)
+        doc = wait_for_sync(app_search_session, guid, expected_exists=False)  # for deletion
+    """
+
+    def _wait(
+        session: BaseUrlSession,
+        guid: str,
+        expected_exists: bool = True,
+        max_attempts: int = 12,
+        wait_seconds: int = 5,
+    ):
+        for _ in range(1, max_attempts + 1):
+            response = session.get("/api/as/v1/engines/atlas-dev/documents", json=[guid])
+
+            response.raise_for_status()
+
+            documents = response.json()
+            matches = [doc for doc in documents if doc and doc.get("guid") == guid]
+
+            if not matches and not expected_exists:
+                return None
+
+            if not matches and expected_exists:
+                time.sleep(wait_seconds)
+                continue
+
+            document = matches[0]
+
+            if document and expected_exists:
+                return document
+
+            if document and not expected_exists:
+                time.sleep(wait_seconds)
+                continue
+
+            time.sleep(wait_seconds)
+
+        raise TimeoutError(
+            f"Document with GUID {guid} did not reach the expected state (exists={expected_exists}) after "
+            f"{max_attempts} attempts."
+        )
+
+    return _wait
