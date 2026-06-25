@@ -1,7 +1,6 @@
-<models4insight-markdown
-    *ngIf="description$ | async as description; else noDescription"
-    [markdown]="description"
-></models4insight-markdown>
+<div *ngIf="description$ | async as description; else noDescription" class="description">
+    <models4insight-markdown [markdown]="description"></models4insight-markdown>
+</div>
 <ng-template #noDescription>
     <p *ngIf="showPlaceholder" class="is-italic has-text-centered" translate>
         search.components.description.notavailable
