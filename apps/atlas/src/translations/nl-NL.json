@@ -236,6 +236,7 @@
                     "typeAlias": "Type alias",
                     "typeAliasPlaceholder": "Type alias"
                 },
+                "delete": "Verwijderen",
                 "domain": {
                     "classifications": "Classificaties",
                     "dataEntities": "Data Entiteiten",
@@ -271,6 +272,7 @@
                     "typeAlias": "Type alias",
                     "typeAliasPlaceholder": "Type alias"
                 },
+                "entityPlaceholder": "Entiteit",
                 "field": {
                     "childFields": "Onderliggende Datavelden",
                     "dataAttribute": "Data Attribuut",
@@ -313,6 +315,7 @@
                     "ruleType": "Regeltype",
                     "ruleTypePlaceholder": "Regeltype"
                 },
+                "historyPlaceholder": "Geschiedenis",
                 "person": {
                     "dataOwnerAttributes": "Data Eigenaar Attributen",
                     "dataOwnerEntities": "Data Eigenaar Entiteiten",
@@ -345,6 +348,7 @@
                     "outputs": "Uitvoer",
                     "system": "Systeem"
                 },
+                "save": "Opslaan",
                 "services": {
                     "entityValidate": {
                         "validate": "Datagovernance kwaliteit wordt gevalideerd"
@@ -597,6 +601,12 @@
                     "title": "Subsystemen"
                 },
                 "unavailable": "Niet beschikbaar"
+            },
+            "typeSelect": {
+                "label": "Entiteit type",
+                "noDataMessage": "Geen types beschikbaar",
+                "nullInputMessage": "Selecteer een type",
+                "requiredErrorMessage": "Een entiteit moet een type hebben"
             }
         },
         "editEntity": {

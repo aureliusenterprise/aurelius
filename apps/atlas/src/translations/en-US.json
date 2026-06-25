@@ -236,6 +236,7 @@
                     "typeAlias": "Type alias",
                     "typeAliasPlaceholder": "Type alias"
                 },
+                "delete": "Delete",
                 "domain": {
                     "classifications": "Classifications",
                     "dataEntities": "Data entities",
@@ -271,6 +272,7 @@
                     "typeAlias": "Type alias",
                     "typeAliasPlaceholder": "Type alias"
                 },
+                "entityPlaceholder": "Entity",
                 "field": {
                     "childFields": "Child fields",
                     "dataAttribute": "Data attribute",
@@ -313,6 +315,7 @@
                     "ruleType": "Rule type",
                     "ruleTypePlaceholder": "Rule type"
                 },
+                "historyPlaceholder": "History",
                 "person": {
                     "dataOwnerAttributes": "Data owner attributes",
                     "dataOwnerEntities": "Data owner entities",
@@ -345,6 +348,7 @@
                     "outputs": "Outputs",
                     "system": "System"
                 },
+                "save": "Save",
                 "services": {
                     "entityValidate": {
                         "validate": "Validating the data governance quality"
@@ -597,6 +601,12 @@
                     "title": "Subsystems"
                 },
                 "unavailable": "Unavailable"
+            },
+            "typeSelect": {
+                "label": "Entity type",
+                "noDataMessage": "No types available",
+                "nullInputMessage": "Please select a type",
+                "requiredErrorMessage": "An entity must have a type"
             }
         },
         "editEntity": {
