@@ -32,25 +32,25 @@ function filterReferenceableTypes(entityDefs: AtlasEntityDef[]) {
         .map((typeName) => defsByName[typeName]);
 }
 
-const searchModalContext: ModalContext = {
-    cancel: 'Close',
+const searchModalContext = (translateService: TranslateService): ModalContext => ({
+    cancel: translateService.instant('search.details.typeSelect.cancel'),
     confirm: null,
     closeOnConfirm: true,
-    title: 'Entity types',
-};
+    title: translateService.instant('search.details.typeSelect.title'),
+});
 
-const searchTableConfig: SortableTableShellConfig<TypeSelectRow> = {
+const searchTableConfig = (translateService: TranslateService): SortableTableShellConfig<TypeSelectRow> => ({
     translatedName: {
-        displayName: 'Type name',
-        description: 'The name of the entity type',
+        displayName: translateService.instant('search.details.typeSelect.translatedName.displayName'),
+        description: translateService.instant('search.details.typeSelect.translatedName.description'),
         isNarrow: true,
     },
     description: {
-        displayName: 'Description',
-        description: 'The meaning of the entity type',
+        displayName: translateService.instant('search.details.typeSelect.description.displayName'),
+        description: translateService.instant('search.details.typeSelect.description.description'),
         truncate: 'end',
     },
-};
+});
 
 interface TypeSelectRow extends AtlasEntityDef {
     readonly translatedName?: string;
@@ -72,8 +72,8 @@ export class TypeSelectComponent implements OnInit, OnDestroy {
             noDataMessage: this.translateService.instant('search.details.typeSelect.noDataMessage'),
             requiredErrorMessage: this.translateService.instant('search.details.typeSelect.requiredErrorMessage'),
             nullInputMessage: this.translateService.instant('search.details.typeSelect.nullInputMessage'),
-            searchModalContext,
-            searchTableConfig,
+            searchModalContext: searchModalContext(this.translateService),
+            searchTableConfig: searchTableConfig(this.translateService),
         };
     }
 

@@ -4,7 +4,7 @@
             <pagination-template #p="paginationApi" (pageChange)="currentPage = $event" [id]="paginationId">
                 <nav *ngIf="p.pages.length > 1" class="pagination" role="navigation" aria-label="pagination">
                     <a [attr.disabled]="p.isFirstPage() ? '' : null" class="pagination-previous" (click)="p.previous()">
-                        Previous
+                        {{ 'components.sortableTableShell.previous' | translate }}
                     </a>
                     <ul class="pagination-list">
                         <ng-container *ngFor="let page of p.pages">
@@ -20,7 +20,7 @@
                         </ng-container>
                     </ul>
                     <a [attr.disabled]="p.isLastPage() ? '' : null" class="pagination-next" (click)="p.next()">
-                        Next page
+                        {{ 'components.sortableTableShell.next' | translate }}
                     </a>
                 </nav>
             </pagination-template>
@@ -122,6 +122,8 @@
 
 <ng-template #noData>
     <p class="content has-text-centered">
-        <span><i>No data available</i></span>
+        <span
+            ><i>{{ 'components.sortableTableShell.noData' | translate }}</i></span
+        >
     </p>
 </ng-template>
