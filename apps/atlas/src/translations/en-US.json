@@ -217,6 +217,13 @@
                     "typeAlias": "Type alias",
                     "typeAliasPlaceholder": "Type alias"
                 },
+                "components": {
+                    "relationshipsInput": {
+                        "addPlaceholder": "Add a relationship...",
+                        "results": "results",
+                        "selectPlaceholder": "Select a relationship..."
+                    }
+                },
                 "dataset": {
                     "childDataset": "Child datasets",
                     "collection": "Collection",
@@ -544,7 +551,7 @@
                 },
                 "properties": "Properties"
             },
-            "loading": "Loading",
+            "loading": "Loading {{name}}...",
             "person": {
                 "dataAttributes": "Data Attributes",
                 "dataDomains": "Data Domains",
@@ -603,10 +610,20 @@
                 "unavailable": "Unavailable"
             },
             "typeSelect": {
+                "cancel": "Close",
+                "description": {
+                    "description": "The meaning of the entity type",
+                    "displayName": "Description"
+                },
                 "label": "Entity type",
                 "noDataMessage": "No types available",
                 "nullInputMessage": "Please select a type",
-                "requiredErrorMessage": "An entity must have a type"
+                "requiredErrorMessage": "An entity must have a type",
+                "title": "Entity types",
+                "translatedName": {
+                    "description": "The name of the entity type",
+                    "displayName": "Type name"
+                }
             }
         },
         "editEntity": {

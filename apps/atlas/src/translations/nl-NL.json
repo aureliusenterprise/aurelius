@@ -217,6 +217,13 @@
                     "typeAlias": "Type alias",
                     "typeAliasPlaceholder": "Type alias"
                 },
+                "components": {
+                    "relationshipsInput": {
+                        "addPlaceholder": "Relatie toevoegen...",
+                        "results": "resultaten",
+                        "selectPlaceholder": "Relatie selecteren..."
+                    }
+                },
                 "dataset": {
                     "childDataset": "Onderliggende Datasets",
                     "collection": "Collectie",
@@ -544,7 +551,7 @@
                 },
                 "properties": "Eigenschappen"
             },
-            "loading": "Laden",
+            "loading": "Laden {{name}}...",
             "person": {
                 "dataAttributes": "Data Attributen",
                 "dataDomains": "Data Domeinen",
@@ -603,10 +610,20 @@
                 "unavailable": "Niet beschikbaar"
             },
             "typeSelect": {
+                "cancel": "Sluiten",
+                "description": {
+                    "description": "De betekenis van het entiteittype",
+                    "displayName": "Beschrijving"
+                },
                 "label": "Entiteit type",
                 "noDataMessage": "Geen types beschikbaar",
                 "nullInputMessage": "Selecteer een type",
-                "requiredErrorMessage": "Een entiteit moet een type hebben"
+                "requiredErrorMessage": "Een entiteit moet een type hebben",
+                "title": "Entiteitstypen",
+                "translatedName": {
+                    "description": "De naam van het entiteittype",
+                    "displayName": "Typenaam"
+                }
             }
         },
         "editEntity": {
