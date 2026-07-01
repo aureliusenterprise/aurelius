@@ -1,0 +1,38 @@
+{
+    "modelview2": {
+        "browse": "Blader door het model",
+        "loading": "Model wordt geladen...",
+        "modelBrowser": {
+            "browse": {
+                "modelTree": "Modelboom"
+            },
+            "model": {
+                "elements": "Elementen",
+                "relationships": "Relaties"
+            },
+            "modelBrowserEntitiesTable": {},
+            "selection": {
+                "description": "Beschrijving",
+                "name": "Naam",
+                "openView": "Open deze weergave",
+                "properties": "Eigenschappen",
+                "referencedConcepts": "Gerefereerde concepten",
+                "referencingConcepts": "Refererende concepten",
+                "referencingViews": "Refererende weergaven",
+                "type": "Type"
+            },
+            "view": {
+                "colorLegend": "Kleurenlegenda",
+                "description": "Beschrijving",
+                "name": "Naam",
+                "properties": "Eigenschappen",
+                "referencedViews": "Gerefereerde weergaven",
+                "referencingViews": "Refererende weergaven"
+            }
+        },
+        "resetZoom": "Zoom en pan resetten",
+        "saveViewAsImage": "Sla weergave op als afbeelding",
+        "toggleFullscreen": "Schakel volledig scherm in",
+        "viewInfo": "Bekijk info"
+    }
+}

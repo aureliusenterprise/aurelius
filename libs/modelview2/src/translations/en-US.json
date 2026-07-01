@@ -1,0 +1,38 @@
+{
+    "modelview2": {
+        "browse": "Browse the model",
+        "loading": "Loading the model...",
+        "modelBrowser": {
+            "browse": {
+                "modelTree": "Model tree"
+            },
+            "model": {
+                "elements": "Elements",
+                "relationships": "Relationships"
+            },
+            "modelBrowserEntitiesTable": {},
+            "selection": {
+                "description": "Description",
+                "name": "Name",
+                "openView": "Open this view",
+                "properties": "Properties",
+                "referencedConcepts": "Referenced concepts",
+                "referencingConcepts": "Referencing concepts",
+                "referencingViews": "Referencing views",
+                "type": "Type"
+            },
+            "view": {
+                "colorLegend": "Color legend",
+                "description": "Description",
+                "name": "Name",
+                "properties": "Properties",
+                "referencedViews": "Referenced views",
+                "referencingViews": "Referencing views"
+            }
+        },
+        "resetZoom": "Reset zoom and pan",
+        "saveViewAsImage": "Save view as image",
+        "toggleFullscreen": "Toggle fullscreen",
+        "viewInfo": "View info"
+    }
+}
