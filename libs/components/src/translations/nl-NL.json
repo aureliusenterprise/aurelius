@@ -1,0 +1,9 @@
+{
+    "components": {
+        "sortableTableShell": {
+            "nextPage": "Volgende pagina",
+            "noData": "Geen gegevens beschikbaar",
+            "previous": "Vorige"
+        }
+    }
+}
