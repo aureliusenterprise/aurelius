@@ -27,6 +27,9 @@ import { ModelBrowserElementRowComponent } from './model-browser/model-browser-e
 import { ModelBrowserRelationshipRowComponent } from './model-browser/model-browser-entities-table/relationship/model-browser-relationship-row.component';
 import { PalletteSelectComponent } from './model-browser/view/pallette-select/pallette-select.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@models4insight/i18n';
+import enUS from '../translations/en-US.json';
+import nlNL from '../translations/nl-NL.json';
 
 @NgModule({
     imports: [
@@ -63,4 +66,9 @@ import { TranslateModule } from '@ngx-translate/core';
     ],
     exports: [ModelviewComponent],
 })
-export class Modelview2Module {}
+export class Modelview2Module {
+    constructor(private i18nService: I18nService) {
+        this.i18nService.setTranslation('en-US', enUS);
+        this.i18nService.setTranslation('nl-NL', nlNL);
+    }
+}

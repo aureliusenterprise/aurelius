@@ -4,13 +4,27 @@
         "loading": "Loading the model...",
         "modelBrowser": {
             "browse": {
-                "modelTree": "Model tree"
+                "modelTree": "Model tree",
+                "viewSelect": {
+                    "cancel": "Close",
+                    "descriptionDescription": "Documentation of the view",
+                    "descriptionDisplayName": "Description",
+                    "label": "View",
+                    "nameDescription": "The name of the view",
+                    "nameDisplayName": "View name",
+                    "noDataMessage": "No views available",
+                    "nullInputMessage": "No view selected",
+                    "title": "Choose a view"
+                }
             },
             "model": {
                 "elements": "Elements",
                 "relationships": "Relationships"
             },
-            "modelBrowserEntitiesTable": {},
+            "modelBrowserBrowse": "Browse",
+            "modelBrowserModel": "Model",
+            "modelBrowserSelection": "Selection",
+            "modelBrowserView": "View",
             "selection": {
                 "description": "Description",
                 "name": "Name",

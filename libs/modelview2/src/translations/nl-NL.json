@@ -4,13 +4,27 @@
         "loading": "Model wordt geladen...",
         "modelBrowser": {
             "browse": {
-                "modelTree": "Modelboom"
+                "modelTree": "Modelboom",
+                "viewSelect": {
+                    "cancel": "Sluiten",
+                    "descriptionDescription": "Documentatie van de weergave",
+                    "descriptionDisplayName": "Beschrijving",
+                    "label": "Weergave",
+                    "noDataMessage": "Geen weergaven beschikbaar",
+                    "nullInputMessage": "Geen weergave geselecteerd",
+                    "title": "Kies een weergave",
+                    "viewNameDescription": "De naam van de weergave",
+                    "viewNameDisplayName": "Weergavenaam"
+                }
             },
             "model": {
                 "elements": "Elementen",
                 "relationships": "Relaties"
             },
-            "modelBrowserEntitiesTable": {},
+            "modelBrowserBrowse": "Bladeren",
+            "modelBrowserModel": "Model",
+            "modelBrowserSelection": "Selectie",
+            "modelBrowserView": "Weergave",
             "selection": {
                 "description": "Beschrijving",
                 "name": "Naam",

@@ -1,5 +1,8 @@
 {
     "components": {
+        "fuzzySearchInput": {
+            "searchPlaceholder": "Search..."
+        },
         "sortableTableShell": {
             "nextPage": "Next page",
             "noData": "No data available",

@@ -218,6 +218,10 @@
                     "typeAliasPlaceholder": "Type alias"
                 },
                 "components": {
+                    "classificationsInput": {
+                        "addPlaceholder": "Add a classification...",
+                        "noClassificationsAvailable": "No classifications available"
+                    },
                     "relationshipsInput": {
                         "addPlaceholder": "Add a relationship...",
                         "results": "results",
@@ -451,6 +455,10 @@
                 },
                 "navigation": {
                     "details": "Details"
+                },
+                "properties": {
+                    "key": "Key",
+                    "value": "Value"
                 }
             },
             "dataset": {
