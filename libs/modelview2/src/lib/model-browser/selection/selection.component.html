@@ -1,11 +1,11 @@
 <ng-container *ngIf="selectedEntity$ | async as selectedEntity">
     <div *ngIf="selectedEntity.name as name" class="field">
-        <label class="label" translate>modelview2.selection.name</label>
+        <label class="label" translate>modelview2.modelBrowser.selection.name</label>
         <p>{{ name }}</p>
     </div>
     <ng-container *ngIf="selectedEntity['type'] as type">
         <div class="field">
-            <label class="label" translate>modelview2.selection.type</label>
+            <label class="label" translate>modelview2.modelBrowser.selection.type</label>
             <p>
                 <models4insight-archimate-icon class="type-icon" [type]="type"> </models4insight-archimate-icon>
                 <span>{{ selectedEntity['humanReadableType'] || type }}</span>
@@ -14,7 +14,7 @@
     </ng-container>
     <ng-container *ngIf="selectedEntity['description'] as description">
         <div class="field">
-            <label class="label" translate>modelview2.selection.description</label>
+            <label class="label" translate>modelview2.modelBrowser.selection.description</label>
             <p>{{ description }}</p>
         </div>
     </ng-container>
@@ -29,7 +29,7 @@
                 <span class="icon">
                     <fa-icon [icon]="faArrowRight"></fa-icon>
                 </span>
-                <span translate>modelview2.selection.openView</span>
+                <span translate>modelview2.modelBrowser.selection.openView</span>
             </a>
         </div>
     </ng-container>
@@ -41,7 +41,7 @@
 
     <ng-container *ngIf="properties$ | async | keyvalue as selectionProperties">
         <div *ngIf="selectionProperties['length']" class="field">
-            <label class="label" translate>modelview2.selection.properties</label>
+            <label class="label" translate>modelview2.modelBrowser.selection.properties</label>
             <models4insight-sortable-table
                 [config]="propertiesTableConfig"
                 [data]="selectionProperties"
@@ -55,7 +55,7 @@
     <ng-container *ngIf="referencedConcepts$ | async as referencedConcepts">
         <ng-container *ngIf="referencedConcepts.length">
             <div class="field">
-                <label class="label" translate>modelview2.selection.referencedConcepts</label>
+                <label class="label" translate>modelview2.modelBrowser.selection.referencedConcepts</label>
                 <models4insight-model-browser-entities-table
                     [data]="referencedConcepts"
                 ></models4insight-model-browser-entities-table>
@@ -66,7 +66,7 @@
     <ng-container *ngIf="referencingConcepts$ | async as referencingConcepts">
         <ng-container *ngIf="referencingConcepts.length">
             <div class="field">
-                <label class="label" translate>modelview2.selection.referencingConcepts</label>
+                <label class="label" translate>modelview2.modelBrowser.selection.referencingConcepts</label>
                 <models4insight-model-browser-entities-table
                     [data]="referencingConcepts"
                 ></models4insight-model-browser-entities-table>
@@ -77,7 +77,7 @@
     <ng-container *ngIf="referencingViews$ | async as referencingViews">
         <ng-container *ngIf="referencingViews.length">
             <div class="field">
-                <label class="label" translate>modelview2.selection.referencingViews</label>
+                <label class="label" translate>modelview2.modelBrowser.selection.referencingViews</label>
                 <models4insight-sortable-table-shell
                     [config]="viewsTableConfig"
                     [data]="referencingViews"

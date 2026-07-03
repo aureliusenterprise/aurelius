@@ -1,16 +1,16 @@
 <ng-container *ngIf="selectedView$ | async as selectedView">
     <div *ngIf="selectedView?.name as name" class="field">
-        <label class="label" translate>modelview2.view.name</label>
+        <label class="label" translate>modelview2.modelBrowser.view.name</label>
         <p>{{ name }}</p>
     </div>
     <div *ngIf="selectedView?.description as description" class="field">
-        <label class="label" translate>modelview2.view.description</label>
+        <label class="label" translate>modelview2.modelBrowser.view.description</label>
         <p>{{ description }}</p>
     </div>
 
     <ng-container *ngIf="selectedView?.properties | keyvalue as viewProperties">
         <div *ngIf="viewProperties['length']" class="field">
-            <label class="label" translate>modelview2.view.properties</label>
+            <label class="label" translate>modelview2.modelBrowser.view.properties</label>
             <models4insight-sortable-table
                 [config]="propertiesTableConfig"
                 [data]="viewProperties"
@@ -27,7 +27,7 @@
                 <models4insight-pallette-select></models4insight-pallette-select>
             </div>
             <div class="field">
-                <label class="label" translate>modelview2.view.colorLegend</label>
+                <label class="label" translate>modelview2.modelBrowser.view.colorLegend</label>
                 <models4insight-sortable-table-shell
                     [config]="legendTableConfig"
                     [data]="legend | keyvalue"
@@ -51,7 +51,7 @@
     <ng-container *ngIf="referencedViews$ | async as referencedViews">
         <ng-container *ngIf="referencedViews.length > 0">
             <div class="field">
-                <label class="label" translate>modelview2.view.referencedViews</label>
+                <label class="label" translate>modelview2.modelBrowser.view.referencedViews</label>
                 <models4insight-sortable-table-shell
                     [config]="viewsTableConfig"
                     [data]="referencedViews"
@@ -77,7 +77,7 @@
     <ng-container *ngIf="referencingViews$ | async as referencingViews">
         <ng-container *ngIf="referencingViews.length > 0">
             <div class="field">
-                <label class="label" translate>modelview2.view.referencingViews</label>
+                <label class="label" translate>modelview2.modelBrowser.view.referencingViews</label>
                 <models4insight-sortable-table-shell
                     [config]="viewsTableConfig"
                     [data]="referencingViews"
