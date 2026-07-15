@@ -439,6 +439,7 @@
             "components": {
                 "detailsCardsList": {
                     "filter": "Filter",
+                    "placeholder": "Zoek naar trefwoorden",
                     "results": "resultaten",
                     "showAllDescendants": "Onderliggende objecten tonen"
                 },

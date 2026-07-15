@@ -1,13 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SortableTableShellConfig } from '@models4insight/components';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { DataForTable, PropertiesService } from './properties.service';
-
-const createTableConfigProperties = (translateService: TranslateService): SortableTableShellConfig<DataForTable> => ({
-    name: { displayName: translateService.instant('search.details.properties.name'), isNarrow: true },
-    value: { displayName: translateService.instant('search.details.properties.value'), isNarrow: true },
-});
 
 @Component({
     selector: 'models4insight-properties',
@@ -16,15 +10,13 @@ const createTableConfigProperties = (translateService: TranslateService): Sortab
     providers: [PropertiesService],
 })
 export class PropertiesComponent implements OnInit {
-    readonly tableConfigProperties: SortableTableShellConfig<DataForTable>;
+    readonly tableConfigProperties: SortableTableShellConfig<DataForTable> = {
+        name: { displayName: 'search.details.properties.name', isNarrow: true },
+        value: { displayName: 'search.details.properties.value', isNarrow: true },
+    };
 
     dataForTable$: Observable<DataForTable[]>;
-    constructor(
-        private readonly propertiesService: PropertiesService,
-        private readonly translateService: TranslateService,
-    ) {
-        this.tableConfigProperties = createTableConfigProperties(translateService);
-    }
+    constructor(private readonly propertiesService: PropertiesService) {}
 
     ngOnInit() {
         this.dataForTable$ = this.propertiesService.select('propertiesList');

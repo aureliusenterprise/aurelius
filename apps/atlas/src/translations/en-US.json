@@ -439,6 +439,7 @@
             "components": {
                 "detailsCardsList": {
                     "filter": "Filter",
+                    "placeholder": "Search for keywords",
                     "results": "result(s)",
                     "showAllDescendants": "Show all descendants"
                 },

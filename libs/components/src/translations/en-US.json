@@ -3,8 +3,12 @@
         "fuzzySearchInput": {
             "searchPlaceholder": "Search..."
         },
+        "quickview": {
+            "pinTooltip": "Pin to side",
+            "unpinTooltip": "Unpin from side"
+        },
         "sortableTableShell": {
-            "nextPage": "Next page",
+            "next": "Next page",
             "noData": "No data available",
             "previous": "Previous"
         }

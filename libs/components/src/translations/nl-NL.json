@@ -1,7 +1,14 @@
 {
     "components": {
+        "fuzzySearchInput": {
+            "searchPlaceholder": "Zoeken..."
+        },
+        "quickview": {
+            "pinTooltip": "Vastmaken aan zijkant",
+            "unpinTooltip": "Losmaken van zijkant"
+        },
         "sortableTableShell": {
-            "nextPage": "Volgende pagina",
+            "next": "Volgende pagina",
             "noData": "Geen gegevens beschikbaar",
             "previous": "Vorige"
         }
