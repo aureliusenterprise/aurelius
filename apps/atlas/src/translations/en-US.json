@@ -173,6 +173,7 @@
         },
         "components": {
             "classification": {
+                "isPropagated": "Is propagated",
                 "originates": "originates from the following sources:",
                 "retrieve": "Retrieving the classification type definition",
                 "source": {

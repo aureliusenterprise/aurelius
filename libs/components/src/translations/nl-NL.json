@@ -1,5 +1,8 @@
 {
     "components": {
+        "accordion": {
+            "toggleContent": "Inhoud weergeven"
+        },
         "fuzzySearchInput": {
             "searchPlaceholder": "Zoeken..."
         },
