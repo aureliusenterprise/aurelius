@@ -3,63 +3,60 @@ import { faUser, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { AbstractModal, defaultModalContext, ModalContext, SortableTableShellConfig } from '@models4insight/components';
 
 interface TableData {
-  readonly description: string;
-  readonly icon: IconDefinition;
-  readonly typeName: string;
+    readonly description: string;
+    readonly icon: IconDefinition;
+    readonly typeName: string;
 }
 
 const modalContext: ModalContext = {
-  ...defaultModalContext,
-  title: 'Data governance organization',
-  confirm: null
+    ...defaultModalContext,
+    title: 'search.browse.governanceContext.infoModal.title',
+    confirm: null,
 };
 
 const tableConfig: SortableTableShellConfig<TableData> = {
-  icon: {
-    displayName: 'Icon',
-    description: 'The icon representing the role',
-    isNarrow: true,
-    isStatic: true
-  },
-  typeName: {
-    displayName: 'Type name',
-    description: 'The name of the role',
-    isNarrow: true
-  },
-  description: {
-    displayName: 'Description',
-    description: 'The definition of the role'
-  }
+    icon: {
+        displayName: 'search.browse.governanceContext.infoModal.iconDisplayName',
+        description: 'search.browse.governanceContext.infoModal.iconDescription',
+        isNarrow: true,
+        isStatic: true,
+    },
+    typeName: {
+        displayName: 'search.browse.governanceContext.infoModal.typeNameDisplayName',
+        description: 'search.browse.governanceContext.infoModal.typeNameDescription',
+        isNarrow: true,
+    },
+    description: {
+        displayName: 'search.browse.governanceContext.infoModal.descriptionDisplayName',
+        description: 'search.browse.governanceContext.infoModal.descriptionDescription',
+    },
 };
 
 const tableData: TableData[] = [
-  {
-    description:
-      'Accountable for the implementation of data management within a data domain.',
-    icon: faUser,
-    typeName: 'Domain lead'
-  },
-  {
-    description:
-      'Responsible for defining data entities within his or her data domain and the effectiveness of related control measures.',
-    icon: faUser,
-    typeName: 'Data owner'
-  },
-  {
-    description:
-      'Responsible for the implementation of data management controls and related initiatives.',
-    icon: faUser,
-    typeName: 'Data steward'
-  }
+    {
+        description: 'search.browse.governanceContext.infoModal.domainLeadDescription',
+        icon: faUser,
+        typeName: 'search.browse.governanceContext.infoModal.domainLeadTypeName',
+    },
+    {
+        description: 'search.browse.governanceContext.infoModal.dataOwnerDescription',
+        icon: faUser,
+        typeName: 'search.browse.governanceContext.infoModal.dataOwnerTypeName',
+    },
+    {
+        description: 'search.browse.governanceContext.infoModal.dataStewardDescription',
+        icon: faUser,
+        typeName: 'search.browse.governanceContext.infoModal.dataStewardTypeName',
+    },
 ];
 
 @Component({
-  selector: 'models4insight-governance-responsibilities-info-modal',
-  templateUrl: 'governance-responsibilities-info-modal.component.html',
-  styleUrls: ['governance-responsibilities-info-modal.component.scss']
+    selector: 'models4insight-governance-responsibilities-info-modal',
+    templateUrl: 'governance-responsibilities-info-modal.component.html',
+    styleUrls: ['governance-responsibilities-info-modal.component.scss'],
 })
 export class GovernanceResponsibilitiesInfoModalComponent extends AbstractModal {
-  readonly modalContext = modalContext;
-  readonly tableConfig = tableConfig;
-  readonly tableData = tableData;
+    readonly modalContext = modalContext;
+    readonly tableConfig = tableConfig;
+    readonly tableData = tableData;
 }

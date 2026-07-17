@@ -1,0 +1,24 @@
+{
+    "shell": {
+        "footer": {
+            "copyright": "Copyright"
+        },
+        "header": {
+            "documentation": "Documentatie",
+            "install": "App installeren",
+            "language": "Geselecteerde taal",
+            "login": "Inloggen",
+            "logout": "Uitloggen",
+            "security": "Accountbeveiliging",
+            "services": "Models4Insight diensten",
+            "update": "Update beschikbaar",
+            "welcome": "Ingelogd als"
+        },
+        "pipeline": {
+            "error": "Er is iets misgegaan tijden",
+            "oops": "Oeps!",
+            "report": "Meld deze fout",
+            "thanks": "Bedankt!"
+        }
+    }
+}

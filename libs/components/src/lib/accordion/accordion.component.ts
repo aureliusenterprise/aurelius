@@ -8,13 +8,18 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
     selector: 'models4insight-accordion',
     templateUrl: 'accordion.component.html',
     styleUrls: ['accordion.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccordionComponent {
     /**
      * Whether the accordion is expanded or not.
      */
     @Input() expanded = false;
+
+    /**
+     * The aria-label for the toggle button. Supports translation keys.
+     */
+    @Input() ariaLabel = 'components.accordion.toggleContent';
 
     /**
      * The FontAwesome icons used in the accordion.

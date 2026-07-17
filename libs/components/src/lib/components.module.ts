@@ -7,26 +7,34 @@ import { DescriptionInputModule } from './description-input';
 import { FileDropzoneModule } from './file-dropzone';
 import { ModalModule } from './modal';
 import { SortableTableModule } from './sortable-table/sortable-table.module';
+import { I18nService } from '@models4insight/i18n';
+import enUS from '../translations/en-US.json';
+import nlNL from '../translations/nl-NL.json';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SortableTableModule,
-    BranchNameInputModule,
-    BranchSelectModule,
-    CreateBranchModalModule,
-    ModalModule,
-    FileDropzoneModule,
-    DescriptionInputModule,
-  ],
-  exports: [
-    SortableTableModule,
-    BranchNameInputModule,
-    BranchSelectModule,
-    CreateBranchModalModule,
-    ModalModule,
-    FileDropzoneModule,
-    DescriptionInputModule,
-  ],
+    imports: [
+        CommonModule,
+        SortableTableModule,
+        BranchNameInputModule,
+        BranchSelectModule,
+        CreateBranchModalModule,
+        ModalModule,
+        FileDropzoneModule,
+        DescriptionInputModule,
+    ],
+    exports: [
+        SortableTableModule,
+        BranchNameInputModule,
+        BranchSelectModule,
+        CreateBranchModalModule,
+        ModalModule,
+        FileDropzoneModule,
+        DescriptionInputModule,
+    ],
 })
-export class ComponentsModule {}
+export class ComponentsModule {
+    constructor(private i18nService: I18nService) {
+        this.i18nService.setTranslation('en-US', enUS);
+        this.i18nService.setTranslation('nl-NL', nlNL);
+    }
+}

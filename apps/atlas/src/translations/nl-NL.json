@@ -33,15 +33,15 @@
     "creatorIndexPattern": "Maker van Indexpatroon",
     "creatorVisualization": "Maker van Visualisatie",
     "dataAttribute": "Data Attribuut",
-    "dataDomain": "Datadomein",
+    "dataDomain": "Data Domein",
     "dataEntity": "Data Entiteit",
     "dataQuality": "Datakwaliteit",
-    "datadomainname": "Datadomein",
+    "datadomainname": "Data Domein",
     "dataqualityruledimension": "Dimensie",
     "dataqualitytype": "Regeltype",
     "datasets": "Datasets",
     "derivedcollection": "Collectie",
-    "deriveddatadomain": "Datadomein",
+    "deriveddatadomain": "Data Domein",
     "deriveddataentity": "Data Entiteit",
     "deriveddataset": "Dataset",
     "derivedperson": "Personen",
@@ -52,7 +52,7 @@
     "dqscore_accuracy": "Nauwkeurigheid",
     "dqscore_completeness": "Volledigheid",
     "dqscore_timeliness": "Tijdigheid",
-    "dqscore_uniqueness": "Uniciteit",
+    "dqscore_uniqueness": "Uniekheid",
     "dqscore_validity": "Validiteit",
     "elasticCluster": "Elastic cluster",
     "email": "Email",
@@ -70,7 +70,7 @@
     "low_risk": "Laag risico",
     "m4i_collection": "Collectie",
     "m4i_data_attribute": "Data Attribuut",
-    "m4i_data_domain": "Datadomein",
+    "m4i_data_domain": "Data Domein",
     "m4i_data_entity": "Data Entiteit",
     "m4i_data_field": "Dataveld",
     "m4i_data_quality": "Datakwaliteit",
@@ -98,29 +98,52 @@
     "search": {
         "browse": {
             "businessContext": {
-                "description": "Ik zoek naar de betekenis van data binnen een specifieke zakelijke context.",
-                "exploreButton": "Datadomeinen bekijken",
-                "exploringDescription": "Klik op de knop voor een overzicht van alle datadomeinen.",
-                "exploringTitle": "Ik verken de betekenis van data binnen een zakelijke context",
+                "description": "Ik zoek naar de betekenis van data binnen een specifieke business context.",
+                "exploreButton": "Data domeinen bekijken",
+                "exploringDescription": "Klik op de knop voor een overzicht van alle data domeinen.",
+                "exploringTitle": "Ik verken de betekenis van data binnen de business context",
                 "infoModal": {
-                    "description": "Het zakelijke deel van het data‑governancemodel legt datasemantiek en eigenaarschap vast voor de volgende typen entiteiten:"
+                    "dataAttributeDescription": "Vertegenwoordigt de betekenis en het eigenaarschap van een atomair datapunt dat onderdeel is van een specifieke data entiteit.",
+                    "dataDomainDescription": "Vertegenwoordigt afdelingen, businessunits en proceseigenaren die binnen de organisatie verantwoordelijk zijn voor data.",
+                    "dataEntityDescription": "Vertegenwoordigt de betekenis en het eigenaarschap van businessproces data artefacten die binnen een specifiek data domein worden gebruikt.",
+                    "description": "Het business deel van het data governance model legt datasemantiek en eigenaarschap vast voor de volgende typen entiteiten:",
+                    "descriptionDescription": "De definitie van het entiteitstype",
+                    "descriptionDisplayName": "Beschrijving",
+                    "iconDescription": "Het icoon dat het entiteitstype weergeeft",
+                    "iconDisplayName": "Icoon",
+                    "title": "Business context",
+                    "typeNameDescription": "De naam van het entiteitstype",
+                    "typeNameDisplayName": "Typenaam"
                 },
-                "searchInstructions": "Zoek op trefwoorden die betrekking hebben op het datadomein of de data‑entiteit die u zoekt.",
-                "searchPlaceholder": "Zoek op trefwoorde",
-                "title": "Zakelijke context"
+                "searchInstructions": "Zoek op trefwoorden die betrekking hebben op het data domein of de data entiteit die u zoekt.",
+                "searchPlaceholder": "Zoek op trefwoorden",
+                "title": "Business context"
             },
-            "description": "Welkom bij Aurelius Atlas! We helpen je graag op weg. Kies hieronder je interessegebied.",
+            "description": "Welkom bij Aurelius Atlas! We helpen u graag op weg. Kies hieronder uw interessegebied.",
             "governanceContext": {
-                "description": "Ik zoek de data‑governance verantwoordelijkheden van een specifieke persoon",
+                "description": "Ik zoek de data governance verantwoordelijkheden van een specifieke persoon",
                 "exploreButton": "Personen bekijken",
-                "exploringDescription": "Klik op de knop voor een overzicht van alle personen met data‑governance verantwoordelijkheden.",
-                "exploringTitle": "Ik verken wie binnen mijn organisatie data‑governance verantwoordelijkheden heeft",
+                "exploringDescription": "Klik op de knop voor een overzicht van alle personen met data governance verantwoordelijkheden.",
+                "exploringTitle": "Ik verken wie binnen mijn organisatie data governance verantwoordelijkheden heeft",
                 "infoModal": {
-                    "description": "Het data‑governancemodel onderscheidt verschillende typen organisatorische rollen met betrekking tot data governance:"
+                    "dataOwnerDescription": "Verantwoordelijk voor het definiëren van data entiteiten binnen het data domein en voor de effectiviteit van bijbehorende beheersmaatregelen.",
+                    "dataOwnerTypeName": "Data eigenaar",
+                    "dataStewardDescription": "Verantwoordelijk voor de uitvoering van beheersmaatregelen voor datamanagementn en bijbehorende initiatieven.",
+                    "dataStewardTypeName": "Data steward",
+                    "description": "Het data‑governancemodel onderscheidt verschillende typen organisatorische rollen met betrekking tot data governance:",
+                    "descriptionDescription": "De definitie van de rol",
+                    "descriptionDisplayName": "Beschrijving",
+                    "domainLeadDescription": "Verantwoordelijk voor de implementatie van datamanagement binnen een data domein.",
+                    "domainLeadTypeName": "Domein verantwoordelijke",
+                    "iconDescription": "Het icoon van de rol",
+                    "iconDisplayName": "Icoon",
+                    "title": "Data governance organisatie",
+                    "typeNameDescription": "De naam van de rol",
+                    "typeNameDisplayName": "Typenaam"
                 },
                 "searchInstructions": "Zoek op de naam of het e‑mailadres van de persoon die u zoekt.",
-                "searchPlaceholder": "Zoek op trefwoorde",
-                "title": "Data‑governanceorganisatie"
+                "searchPlaceholder": "Zoek op trefwoorden",
+                "title": "Data governance organisatie"
             },
             "searchPlaceholder": "Typ uw zoekopdracht",
             "technicalContext": {
@@ -129,27 +152,39 @@
                 "exploringDescription": "Klik op de knop voor een overzicht van alle systemen.",
                 "exploringTitle": "Ik verken de technische omgevingen waarin data is opgeslagen",
                 "infoModal": {
-                    "description": "Het technische deel van het data‑governancemodel legt de technische implementatie van data vast, zoals waar data is opgeslagen en het niveau van datakwaliteit. \n Het technische data‑governancemodel bestaat uit de volgende typen entiteiten:"
+                    "collectionDescription": "Vertegenwoordigt een verzameling datasets, bijvoorbeeld een database die doorgaans meerdere tabellen bevat.",
+                    "datasetDescription": "Vertegenwoordigt een verzameling datavelden. Het meest voorkomende voorbeeld van een dataset is een tabel.",
+                    "description": "Het technische deel van het data‑governancemodel legt de technische implementatie van data vast, zoals waar data is opgeslagen en het niveau van datakwaliteit. \n Het technische data‑governancemodel bestaat uit de volgende typen entiteiten:",
+                    "descriptionDescription": "De definitie van het entiteitstype",
+                    "descriptionDisplayName": "Beschrijving",
+                    "fieldDescription": "Vertegenwoordigt een enkele, ondeelbare data‑eenheid. Het meest voorkomende voorbeeld van een dataveld is een kolom in een tabel.",
+                    "iconDescription": "Het icoon dat het entiteitstype weergeeft",
+                    "iconDisplayName": "Icoon",
+                    "systemDescription": "Vertegenwoordigt de technische omgeving waarin meerdere datacollecties kunnen worden opgeslagen en waarin applicatieprocessen worden uitgevoerd.",
+                    "title": "Technische context",
+                    "typeNameDescription": "De naam van het entiteitstype",
+                    "typeNameDisplayName": "Typenaam"
                 },
                 "searchInstructions": "Zoek op trefwoorden die gerelateerd zijn aan het systeem, de collectie of de dataset die u zoekt.",
-                "searchPlaceholder": "Zoek op trefwoorde",
+                "searchPlaceholder": "Zoek op trefwoorden",
                 "title": "Technische context"
             },
             "title": "Aan de slag"
         },
         "components": {
             "classification": {
+                "isPropagated": "Wordt doorgegeven",
                 "originates": "is afkomstig uit de volgende bronnen:",
-                "retrieve": "Classificatietypedefinitie wordt opgehaald",
+                "retrieve": "Classificatie type definitie wordt opgehaald",
                 "source": {
                     "loading": "Laden..."
                 }
             },
             "dataqualitylist": {
-                "notavailable": "Geen datakwaliteitsresultaten beschikbaar"
+                "notAvailable": "Geen datakwaliteitsresultaten beschikbaar"
             },
             "description": {
-                "notavailable": "Geen beschrijving beschikbaar."
+                "notAvailable": "Geen beschrijving beschikbaar."
             },
             "editor": {
                 "attribute": {
@@ -183,8 +218,20 @@
                     "typeAlias": "Type alias",
                     "typeAliasPlaceholder": "Type alias"
                 },
+                "components": {
+                    "classificationsInput": {
+                        "addPlaceholder": "Classificatie toevoegen...",
+                        "noClassificationsAvailable": "Geen classificaties beschikbaar"
+                    },
+                    "relationshipsInput": {
+                        "addPlaceholder": "Relatie toevoegen...",
+                        "results": "resultaten",
+                        "selectPlaceholder": "Relatie selecteren..."
+                    }
+                },
                 "dataset": {
                     "childDataset": "Onderliggende Datasets",
+                    "collection": "Collectie",
                     "consumers": "Afnemers ",
                     "datasets": "Datasets",
                     "definition": "Definitie",
@@ -201,7 +248,9 @@
                     "typeAlias": "Type alias",
                     "typeAliasPlaceholder": "Type alias"
                 },
+                "delete": "Verwijderen",
                 "domain": {
+                    "classifications": "Classificaties",
                     "dataEntities": "Data Entiteiten",
                     "definition": "Definitie",
                     "definitionPlaceholder": "Definitie",
@@ -235,8 +284,10 @@
                     "typeAlias": "Type alias",
                     "typeAliasPlaceholder": "Type alias"
                 },
+                "entityPlaceholder": "Entiteit",
                 "field": {
                     "childFields": "Onderliggende Datavelden",
+                    "dataAttribute": "Data Attribuut",
                     "dataset": "Dataset",
                     "definition": "Definitie",
                     "definitionPlaceholder": "Definitie",
@@ -258,7 +309,7 @@
                     "compliantMessageWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
                     "dimension": "Dimensie",
                     "dimensionPlaceholder": "Dimensie",
-                    "expression": "Expressie",
+                    "expression": "Expressie*",
                     "expressionPlaceholder": "Expressie",
                     "expressionRequired": "Expressie is verplicht.",
                     "name": "Naam*",
@@ -276,6 +327,7 @@
                     "ruleType": "Regeltype",
                     "ruleTypePlaceholder": "Regeltype"
                 },
+                "historyPlaceholder": "Geschiedenis",
                 "person": {
                     "dataOwnerAttributes": "Data Eigenaar Attributen",
                     "dataOwnerEntities": "Data Eigenaar Entiteiten",
@@ -289,6 +341,7 @@
                     "nameRequired": "Naam is verplicht.",
                     "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
                     "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
+                    "properties": "Eigenschappen",
                     "stewardAttribute": "Data Steward Attributen",
                     "stewardEntity": "Data Steward Entiteiten",
                     "typeAlias": "Type alias",
@@ -307,6 +360,7 @@
                     "outputs": "Uitvoer",
                     "system": "Systeem"
                 },
+                "save": "Opslaan",
                 "services": {
                     "entityValidate": {
                         "validate": "Datagovernance kwaliteit wordt gevalideerd"
@@ -330,6 +384,10 @@
                 }
             },
             "filter": {
+                "facet": {
+                    "showLess": "Minder weergeven",
+                    "showMore": "Meer weergeven"
+                },
                 "notAvailable": "Geen filters beschikbaar."
             },
             "infiniteScrollContainer": {
@@ -363,10 +421,11 @@
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "people": "Personen",
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "collection": {
                 "dataQuality": "Datakwaliteit",
+                "dataQualityUnavailable": "Niet van toepassing",
                 "datasets": "Datasets",
                 "datasetsCards": {
                     "title": "Datasets"
@@ -376,11 +435,12 @@
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "people": "Personen",
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "components": {
                 "detailsCardsList": {
                     "filter": "Filter",
+                    "placeholder": "Zoek naar trefwoorden",
                     "results": "resultaten",
                     "showAllDescendants": "Onderliggende objecten tonen"
                 },
@@ -397,9 +457,14 @@
                 },
                 "navigation": {
                     "details": "Details"
+                },
+                "properties": {
+                    "key": "Sleutel",
+                    "value": "Waarde"
                 }
             },
             "dataset": {
+                "available": "Beschikbaar",
                 "childDatasets": "Onderliggende Datasets",
                 "consumers": "Afnemers",
                 "consumersCards": {
@@ -419,13 +484,13 @@
                     "title": "Datavelden"
                 },
                 "governanceQualityRules": "Governance Kwaliteitsregels",
-                "lineageModel": "Linemodel",
+                "lineageModel": "Line model",
                 "producers": "Producenten",
                 "producersCards": {
                     "title": "Producenten"
                 },
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "default": {
                 "description": "Beschrijving",
@@ -441,7 +506,7 @@
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "people": "Personen",
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "entity": {
                 "attributesCards": {
@@ -462,7 +527,7 @@
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "people": "Personen",
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "field": {
                 "attributesCards": {
@@ -481,7 +546,7 @@
                 },
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "govQuality": {
                 "complianceChart": "Compliance overzicht",
@@ -496,19 +561,21 @@
                 },
                 "properties": "Eigenschappen"
             },
+            "loading": "Bezig met laden van {{name}}...",
             "person": {
                 "dataAttributes": "Data Attributen",
-                "dataDomains": "Datadomeinen",
+                "dataDomains": "Data Domeinen",
                 "dataEntities": "Data Entiteiten",
                 "dataOwner": "Data Eigenaar",
                 "dataSteward": "Data Steward",
-                "domainLead": "Domeinverantwoordelijke",
+                "domainLead": "Domein Verantwoordelijke",
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "governanceResponsibilities": "Governance Verantwoordelijkheden",
                 "governanceRolesCards": {
                     "title": "Governance Verantwoordelijkheden"
                 },
-                "other": "Ander"
+                "other": "Ander",
+                "properties": "Eigenschappen"
             },
             "process": {
                 "available": "Beschikbaar",
@@ -529,7 +596,7 @@
                 "systemsCards": {
                     "title": "Systemen"
                 },
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "system": {
                 "collections": "Collecties",
@@ -550,7 +617,23 @@
                 "systemsCards": {
                     "title": "Subsystemen"
                 },
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
+            },
+            "typeSelect": {
+                "cancel": "Sluiten",
+                "description": {
+                    "description": "De betekenis van het entiteittype",
+                    "displayName": "Beschrijving"
+                },
+                "label": "Entiteit type",
+                "noDataMessage": "Geen types beschikbaar",
+                "nullInputMessage": "Selecteer een type",
+                "requiredErrorMessage": "Een entiteit moet een type hebben",
+                "title": "Entiteitstypen",
+                "translatedName": {
+                    "description": "De naam van het entiteittype",
+                    "displayName": "Typenaam"
+                }
             }
         },
         "editEntity": {
