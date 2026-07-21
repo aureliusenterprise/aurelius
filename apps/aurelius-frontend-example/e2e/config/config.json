@@ -2,6 +2,6 @@
     "keycloak": {
         "clientId": "aurelius",
         "realm": "master",
-        "url": "http://keycloak.localhost:8181"
+        "url": "http://keycloak.localhost:8080"
     }
 }

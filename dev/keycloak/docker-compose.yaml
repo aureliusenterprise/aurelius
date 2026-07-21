@@ -5,13 +5,13 @@ services:
         image: keycloak/keycloak:latest
         command: ["start-dev", "--import-realm"]
         depends_on:
-            postgres:
+            postgres-keycloak:
                 condition: service_healthy
         environment:
             KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
             KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME}
             KC_DB: postgres
-            KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+            KC_DB_URL: jdbc:postgresql://postgres-keycloak:5432/keycloak
             KC_DB_USERNAME: ${DATABASE_USERNAME}
             KC_DB_PASSWORD: ${DATABASE_PASSWORD}
             KC_HEALTH_ENABLED: true
@@ -30,7 +30,7 @@ services:
         volumes:
             - ./import:/opt/keycloak/data/import:ro
 
-    postgres:
+    postgres-keycloak:
         image: postgres:latest
         user: ${DATABASE_USERNAME}
         environment:

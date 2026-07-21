@@ -5,14 +5,13 @@ from typing import cast
 
 import dotenv
 import pytest
-from aurelius_sdk.testing import capture_docker_compose_logs
 from playwright.sync_api import Page
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL, Engine
 from sqlmodel import Session, SQLModel, create_engine
 from testcontainers.compose import DockerCompose
-from testcontainers.core.wait_strategies import HttpWaitStrategy
+from testcontainers.core.wait_strategies import HealthcheckWaitStrategy, HttpWaitStrategy
 
 
 class Settings(BaseSettings):
@@ -44,6 +43,27 @@ def _environment() -> None:
     dotenv.load_dotenv(dotenv.find_dotenv())
 
 
+@pytest.fixture(scope="session", autouse=True)
+def keycloak() -> DockerCompose:
+    """
+    Return a Docker Compose instance for the Keycloak service.
+
+    Note: This fixture starts the Keycloak service if it's not already running, but does not stop it after the tests.
+    This allows the service to be reused across multiple test sessions, but may require manual cleanup if the service is
+    no longer needed.
+    """
+    context = Path(__file__).parents[3].absolute() / "dev" / "keycloak"
+    compose = DockerCompose(context=context)
+
+    compose.start()
+
+    return compose.waiting_for(
+        {
+            "keycloak": HealthcheckWaitStrategy(),
+        },
+    )
+
+
 @pytest.fixture(scope="session")
 def compose() -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
@@ -60,7 +80,6 @@ def compose() -> Generator[DockerCompose]:
                 "aurelius-frontend-example": HttpWaitStrategy(port=port, path="/").for_status_code(200),
             },
         )
-        capture_docker_compose_logs(compose)
 
 
 @pytest.fixture(scope="session")

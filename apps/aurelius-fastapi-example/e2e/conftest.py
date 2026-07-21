@@ -5,7 +5,6 @@ from pathlib import Path
 import dotenv
 import pytest
 from aurelius_example import Entity
-from aurelius_sdk.testing import capture_docker_compose_logs
 from keycloak import KeycloakOpenID
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -24,7 +23,6 @@ class Settings(BaseSettings):
     database_password: SecretStr
     database_port: int
     database_username: str
-    keycloak_port: int
     password: SecretStr
     username: str
 
@@ -47,8 +45,29 @@ def _environment() -> None:
 
 
 @pytest.fixture(scope="session")
+def keycloak() -> DockerCompose:
+    """
+    Return a Docker Compose instance for the Keycloak service.
+
+    Note: This fixture starts the Keycloak service if it's not already running, but does not stop it after the tests.
+    This allows the service to be reused across multiple test sessions, but may require manual cleanup if the service is
+    no longer needed.
+    """
+    context = Path(__file__).parents[3].absolute() / "dev" / "keycloak"
+    compose = DockerCompose(context=context)
+
+    compose.start()
+
+    return compose.waiting_for(
+        {
+            "keycloak": HealthcheckWaitStrategy(),
+        },
+    )
+
+
+@pytest.fixture(scope="session")
 def compose() -> Generator[DockerCompose]:
-    """Return a Docker Compose instance."""
+    """Return a Docker Compose instance for the e2e environment."""
     context = Path(__file__).parent.absolute()
     with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
         yield compose.waiting_for(
@@ -56,10 +75,9 @@ def compose() -> Generator[DockerCompose]:
                 "aurelius-fastapi-example": HealthcheckWaitStrategy(),
             },
         )
-        capture_docker_compose_logs(compose)
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session")
 def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
     """Setup and teardown the database."""
     hostname, port = compose.get_service_host_and_port("postgres-app", settings.database_port)
@@ -149,10 +167,11 @@ def connection(compose: DockerCompose) -> Generator[http.client.HTTPConnection]:
 
 
 @pytest.fixture(scope="session")
-def keycloak_client(settings: Settings) -> KeycloakOpenID:
+def keycloak_client(keycloak: DockerCompose, settings: Settings) -> KeycloakOpenID:
     """Return a Keycloak client."""
+    port = keycloak.get_service_port("keycloak", 8080)
     return KeycloakOpenID(
-        server_url=f"http://keycloak.localhost:{settings.keycloak_port}",
+        server_url=f"http://keycloak.localhost:{port}",
         client_id=settings.auth_client_id,
         realm_name=settings.auth_realm_name,
     )

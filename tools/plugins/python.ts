@@ -70,6 +70,10 @@ function buildTargets(
                     target: "decrypt",
                 },
                 {
+                    target: "decrypt",
+                    dependencies: true,
+                },
+                {
                     target: "docker-build",
                 },
             ],

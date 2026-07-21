@@ -1,4 +1,5 @@
 import json
+import os
 from collections.abc import Generator
 from pathlib import Path
 from typing import cast
@@ -7,7 +8,6 @@ import dotenv
 import pytest
 from aurelius_example import Entity
 from aurelius_kafka import KafkaAdminClient
-from aurelius_sdk.testing import capture_docker_compose_logs
 from confluent_kafka import Producer
 from confluent_kafka.admin import AdminClient
 from confluent_kafka.cimpl import NewTopic
@@ -24,14 +24,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL, Engine, create_engine
 from sqlmodel import Session, SQLModel
 from testcontainers.compose import DockerCompose
-from testcontainers.core.wait_strategies import HttpWaitStrategy
+from testcontainers.core.wait_strategies import HealthcheckWaitStrategy, HttpWaitStrategy
 
 
 class Settings(BaseSettings):
     """Test configuration."""
 
-    kafka_topic_name: str
-    kafka_port: int
     postgres_db: str
     postgres_password: SecretStr
     postgres_user: str
@@ -42,12 +40,6 @@ class Settings(BaseSettings):
     )
 
 
-@pytest.fixture(scope="session")
-def settings() -> Settings:
-    """Return the test configuration."""
-    return Settings()  # type: ignore[values are loaded from the environment]
-
-
 @pytest.fixture(scope="session", autouse=True)
 def _environment() -> None:
     """Set the environment variables."""
@@ -55,9 +47,96 @@ def _environment() -> None:
 
 
 @pytest.fixture(scope="session")
-def compose() -> Generator[DockerCompose]:
+def settings() -> Settings:
+    """Return the test configuration."""
+    return Settings()  # type: ignore[values are loaded from the environment]
+
+
+@pytest.fixture(scope="session")
+def kafka() -> DockerCompose:
+    """
+    Return a Docker Compose instance for the Kafka service.
+
+    Note: This fixture starts the Kafka service if it's not already running, but does not stop it after the tests.
+    This allows the service to be reused across multiple test sessions, but may require manual cleanup if the service is
+    no longer needed.
+    """
+    context = Path(__file__).parents[3].absolute() / "dev" / "kafka"
+    compose = DockerCompose(context=context)
+
+    compose.start()
+
+    return compose.waiting_for(
+        {
+            "broker": HealthcheckWaitStrategy(),
+            "schema-registry": HealthcheckWaitStrategy(),
+        },
+    )
+
+
+@pytest.fixture(scope="session")
+def kafka_bootstrap_servers(kafka: DockerCompose) -> str:
+    """Return the Kafka bootstrap servers."""
+    hostname, port = kafka.get_service_host_and_port("broker", 9092)
+    return f"{hostname}:{port}"
+
+
+@pytest.fixture(scope="session")
+def kafka_admin_client(kafka_bootstrap_servers: str) -> KafkaAdminClient:
+    """Return a KafkaAdminClient instance."""
+    return KafkaAdminClient(
+        admin_client=AdminClient(
+            {
+                "bootstrap.servers": kafka_bootstrap_servers,
+            },
+        ),
+    )
+
+
+@pytest.fixture(scope="session")
+def kafka_topic(kafka_admin_client: KafkaAdminClient) -> Generator[str]:
+    """Create the Kafka topic and return its name."""
+    kafka_topic_name = "aurelius-kafka-connect-jdbc-sink-example-e2e"
+
+    kafka_topic = NewTopic(
+        kafka_topic_name,
+        num_partitions=1,
+        replication_factor=1,
+    )
+
+    kafka_admin_client.create_topics(kafka_topic)
+
+    yield kafka_topic_name
+
+    kafka_admin_client.delete_topics(kafka_topic_name)
+
+
+@pytest.fixture(scope="session")
+def dlq_topic(kafka_admin_client: KafkaAdminClient) -> Generator[str]:
+    """Create the Kafka topic and return its name."""
+    kafka_topic_name = "aurelius-kafka-connect-jdbc-sink-example-dlq"
+
+    kafka_topic = NewTopic(
+        kafka_topic_name,
+        num_partitions=1,
+        replication_factor=1,
+    )
+
+    kafka_admin_client.create_topics(kafka_topic)
+
+    yield kafka_topic_name
+
+    kafka_admin_client.delete_topics(kafka_topic_name)
+
+
+@pytest.fixture(scope="session")
+def compose(dlq_topic: str, kafka_topic: str) -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
+    os.environ["DLQ_TOPIC_NAME"] = dlq_topic
+    os.environ["KAFKA_TOPIC_NAME"] = kafka_topic
+
     context = Path(__file__).parent.absolute()
+
     with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
         port = compose.get_service_port("kafka-connect", 8083)
 
@@ -70,8 +149,6 @@ def compose() -> Generator[DockerCompose]:
                 "kafka-connect": HttpWaitStrategy(port=port, path="/connectors").for_status_code(200),
             },
         )
-
-        capture_docker_compose_logs(compose)
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -111,50 +188,15 @@ def session(database: Engine) -> Generator[Session]:
 
 
 @pytest.fixture(scope="session")
-def kafka_bootstrap_servers(compose: DockerCompose, settings: Settings) -> str:
-    """Return the Kafka bootstrap servers."""
-    hostname, port = compose.get_service_host_and_port("broker", settings.kafka_port)
-    return f"{hostname}:{port}"
-
-
-@pytest.fixture(scope="session")
-def kafka_admin_client(kafka_bootstrap_servers: str) -> KafkaAdminClient:
-    """Return a KafkaAdminClient instance."""
-    return KafkaAdminClient(
-        admin_client=AdminClient(
-            {
-                "bootstrap.servers": kafka_bootstrap_servers,
-            },
-        ),
-    )
-
-
-@pytest.fixture(scope="session")
-def kafka_topic(kafka_admin_client: KafkaAdminClient, settings: Settings) -> str:
-    """Create a Kafka topic and return its name."""
-    kafka_topic_name = settings.kafka_topic_name
-
-    kafka_topic = NewTopic(
-        kafka_topic_name,
-        num_partitions=1,
-        replication_factor=1,
-    )
-
-    kafka_admin_client.create_topics(kafka_topic)
-
-    return kafka_topic_name
-
-
-@pytest.fixture(scope="session")
 def key_serializer() -> Serializer:
     """Return the key serializer."""
     return StringSerializer()
 
 
 @pytest.fixture(scope="session")
-def schema_registry_client(compose: DockerCompose) -> SchemaRegistryClient:
+def schema_registry_client(kafka: DockerCompose) -> SchemaRegistryClient:
     """Return a Schema Registry client instance."""
-    hostname, port = compose.get_service_host_and_port("schema-registry", 8081)
+    hostname, port = kafka.get_service_host_and_port("schema-registry", 8081)
     return SchemaRegistryClient({"url": f"http://{hostname}:{port}"})
 
 

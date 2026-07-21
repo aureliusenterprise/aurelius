@@ -1,32 +1,6 @@
 name: aurelius-kafka-connect-jdbc-sink-example-e2e
-services:
-    broker:
-        image: apache/kafka:latest
-        environment:
-            KAFKA_NODE_ID: 1
-            KAFKA_PROCESS_ROLES: broker,controller
-            KAFKA_LISTENERS: PLAINTEXT://broker:9094,CONTROLLER://broker:9093,LOCAL://broker:${KAFKA_PORT}
-            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9094,LOCAL://localhost:${KAFKA_PORT}
-            KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,LOCAL:PLAINTEXT
-            KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
-            KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker:9093
-            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-            KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-            KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-            KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-            KAFKA_NUM_PARTITIONS: 3
-            KAFKA_MESSAGE_MAX_BYTES: 10000000
-            KAFKA_SOCKET_REQUEST_MAX_BYTES: 100001200
-        ports:
-            - ${KAFKA_PORT}:${KAFKA_PORT}
-        healthcheck:
-            test: /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server broker:9094 || exit 1
-            interval: 1s
-            timeout: 60s
-            retries: 60
-        restart: unless-stopped
 
+services:
     kafka-connect:
         image: ghcr.io/aureliusenterprise/aurelius-kafka-connect-jdbc-sink-example:local
         entrypoint: ["/opt/kafka/bin/connect-standalone.sh"]
@@ -35,11 +9,7 @@ services:
             - connect-worker
             - connect-connector
         depends_on:
-            broker:
-                condition: service_healthy
             postgres:
-                condition: service_healthy
-            schema-registry:
                 condition: service_healthy
         environment:
             CONSUMER_GROUP_NAME: ${CONSUMER_GROUP_NAME}
@@ -57,6 +27,9 @@ services:
             REST_ADVERTISED_HOST_NAME: localhost
             REST_PORT: 8083
             STATUS_STORAGE_TOPIC: aurelius-kafka-connect-jdbc-sink-example.connect-status
+        networks:
+            - aurelius-dev-kafka-network
+            - default
         ports:
             - 8083
 
@@ -74,35 +47,12 @@ services:
         ports:
             - 5432
 
-    schema-registry:
-        image: confluentinc/cp-schema-registry:8.2.1
-        depends_on:
-            broker:
-                condition: service_healthy
-        environment:
-            SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://broker:9094"
-            SCHEMA_REGISTRY_HOST_NAME: "schema-registry"
-        restart: unless-stopped
-        ports:
-            - 8081
-        healthcheck:
-            test:
-                [
-                    "CMD",
-                    "curl",
-                    "--output",
-                    "/dev/null",
-                    "--silent",
-                    "--head",
-                    "--fail",
-                    "http://schema-registry:8081/subjects",
-                ]
-            interval: 30s
-            timeout: 10s
-            retries: 10
-
 configs:
     connect-worker:
         file: ../workers/worker.properties
     connect-connector:
         file: ../workers/connector.properties
+
+networks:
+    aurelius-dev-kafka-network:
+        external: true

@@ -1,4 +1,5 @@
 import json
+import os
 from collections.abc import Generator
 from pathlib import Path
 
@@ -6,7 +7,6 @@ import dotenv
 import pytest
 from aurelius_example import Entity
 from aurelius_kafka import KafkaAdminClient
-from aurelius_sdk.testing import capture_docker_compose_logs
 from confluent_kafka import Consumer
 from confluent_kafka.admin import AdminClient
 from confluent_kafka.cimpl import NewTopic
@@ -16,58 +16,36 @@ from confluent_kafka.schema_registry import (
 )
 from confluent_kafka.schema_registry.avro import AvroDeserializer
 from confluent_kafka.serialization import StringDeserializer
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from testcontainers.compose import DockerCompose
 from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
 
 
-class Settings(BaseSettings):
-    """Test configuration."""
+@pytest.fixture(scope="session")
+def kafka() -> DockerCompose:
+    """
+    Return a Docker Compose instance for the Kafka service.
 
-    kafka_port: int
-    kafka_topic_name: str
+    Note: This fixture starts the Kafka service if it's not already running, but does not stop it after the tests.
+    This allows the service to be reused across multiple test sessions, but may require manual cleanup if the service is
+    no longer needed.
+    """
+    context = Path(__file__).parents[3].absolute() / "dev" / "kafka"
+    compose = DockerCompose(context=context)
 
-    model_config = SettingsConfigDict(
-        env_file=dotenv.find_dotenv(),
-        extra="ignore",
+    compose.start()
+
+    return compose.waiting_for(
+        {
+            "broker": HealthcheckWaitStrategy(),
+            "schema-registry": HealthcheckWaitStrategy(),
+        },
     )
 
 
 @pytest.fixture(scope="session")
-def settings() -> Settings:
-    """Return the test configuration."""
-    return Settings()  # type: ignore[values are loaded from the environment]
-
-
-@pytest.fixture(scope="session", autouse=True)
-def _environment() -> None:
-    """Load the environment variables from the .env file."""
-    dotenv.load_dotenv(dotenv.find_dotenv())
-
-
-@pytest.fixture(scope="session", autouse=True)
-def compose() -> Generator[DockerCompose]:
-    """Return a Docker Compose instance."""
-    context = Path(__file__).parent.absolute()
-    with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
-        yield compose.waiting_for(
-            {
-                "aurelius-java-producer-example": HealthcheckWaitStrategy(),
-            },
-        )
-
-
-@pytest.fixture(scope="session", autouse=True)
-def _capture_docker_compose_logs(compose: DockerCompose) -> Generator[None]:
-    """Capture logs from the Docker Compose services."""
-    yield
-    capture_docker_compose_logs(compose)
-
-
-@pytest.fixture(scope="session")
-def kafka_bootstrap_servers(compose: DockerCompose, settings: Settings) -> str:
+def kafka_bootstrap_servers(kafka: DockerCompose) -> str:
     """Return the Kafka bootstrap servers."""
-    hostname, port = compose.get_service_host_and_port("broker", settings.kafka_port)
+    hostname, port = kafka.get_service_host_and_port("broker", 9092)
     return f"{hostname}:{port}"
 
 
@@ -84,9 +62,9 @@ def kafka_admin_client(kafka_bootstrap_servers: str) -> KafkaAdminClient:
 
 
 @pytest.fixture(scope="session")
-def kafka_topic(kafka_admin_client: KafkaAdminClient, settings: Settings) -> str:
-    """Create a Kafka topic and return its name."""
-    kafka_topic_name = settings.kafka_topic_name
+def kafka_topic(kafka_admin_client: KafkaAdminClient) -> Generator[str]:
+    """Create the Kafka topic and return its name."""
+    kafka_topic_name = "aurelius-java-producer-example-e2e"
 
     kafka_topic = NewTopic(
         kafka_topic_name,
@@ -96,13 +74,15 @@ def kafka_topic(kafka_admin_client: KafkaAdminClient, settings: Settings) -> str
 
     kafka_admin_client.create_topics(kafka_topic)
 
-    return kafka_topic_name
+    yield kafka_topic_name
+
+    kafka_admin_client.delete_topics(kafka_topic_name)
 
 
 @pytest.fixture(scope="session")
-def schema_registry_client(compose: DockerCompose) -> SchemaRegistryClient:
+def schema_registry_client(kafka: DockerCompose) -> SchemaRegistryClient:
     """Return a Schema Registry client instance."""
-    hostname, port = compose.get_service_host_and_port("schema-registry", 8081)
+    hostname, port = kafka.get_service_host_and_port("schema-registry", 8081)
     return SchemaRegistryClient({"url": f"http://{hostname}:{port}"})
 
 
@@ -134,7 +114,7 @@ def consumer(kafka_bootstrap_servers: str) -> Generator[Consumer]:
     consumer = Consumer(
         {
             "bootstrap.servers": kafka_bootstrap_servers,
-            "group.id": "test-group",
+            "group.id": "aurelius-java-producer-example-e2e",
             "auto.offset.reset": "earliest",
         },
     )
@@ -142,3 +122,18 @@ def consumer(kafka_bootstrap_servers: str) -> Generator[Consumer]:
     yield consumer
 
     consumer.close()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def compose(kafka_topic: str) -> Generator[DockerCompose]:
+    """Return a Docker Compose instance."""
+    os.environ["KAFKA_TOPIC_NAME"] = kafka_topic
+
+    context = Path(__file__).parent.absolute()
+
+    with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
+        yield compose.waiting_for(
+            {
+                "aurelius-java-producer-example": HealthcheckWaitStrategy(),
+            },
+        )

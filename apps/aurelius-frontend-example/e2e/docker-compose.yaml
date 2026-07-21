@@ -6,8 +6,6 @@ services:
         depends_on:
             aurelius-fastapi-example:
                 condition: service_healthy
-            keycloak:
-                condition: service_healthy
         configs:
             - source: frontend_config
               target: /usr/share/nginx/html/config.json
@@ -22,8 +20,6 @@ services:
         image: ghcr.io/aureliusenterprise/aurelius-fastapi-example:local
         depends_on:
             postgres-app:
-                condition: service_healthy
-            keycloak:
                 condition: service_healthy
         environment:
             AUTH_REALM_NAME: ${AUTH_REALM_NAME}
@@ -40,35 +36,6 @@ services:
         ports:
             - 8000
 
-    keycloak:
-        image: keycloak/keycloak:latest
-        command: ["start-dev", "--http-port=${KEYCLOAK_PORT}", "--import-realm"]
-        depends_on:
-            postgres-keycloak:
-                condition: service_healthy
-        environment:
-            KC_BOOTSTRAP_ADMIN_PASSWORD: ${PASSWORD}
-            KC_BOOTSTRAP_ADMIN_USERNAME: ${USERNAME}
-            KC_DB: postgres
-            KC_DB_URL: jdbc:postgresql://postgres-keycloak:5432/keycloak
-            KC_DB_USERNAME: ${DATABASE_USERNAME}
-            KC_DB_PASSWORD: ${DATABASE_PASSWORD}
-            KC_HEALTH_ENABLED: true
-            KC_HOSTNAME: keycloak.localhost
-        healthcheck:
-            test:
-                [
-                    "CMD-SHELL",
-                    "exec 3<>/dev/tcp/localhost/9000 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'",
-                ]
-            interval: 30s
-            timeout: 5s
-            retries: 10
-        ports:
-            - ${KEYCLOAK_PORT}:${KEYCLOAK_PORT}
-        volumes:
-            - ../../../dev/keycloak/import:/opt/keycloak/data/import:ro
-
     postgres-app:
         image: postgres:latest
         user: ${DATABASE_USERNAME}
@@ -78,21 +45,6 @@ services:
             POSTGRES_DB: ${DATABASE_NAME}
         healthcheck:
             test: ["CMD-SHELL", "pg_isready", "-d", "${DATABASE_NAME}"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
-        ports:
-            - 5432
-
-    postgres-keycloak:
-        image: postgres:latest
-        user: ${DATABASE_USERNAME}
-        environment:
-            POSTGRES_USER: ${DATABASE_USERNAME}
-            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-            POSTGRES_DB: keycloak
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready", "-d", "keycloak"]
             interval: 10s
             timeout: 5s
             retries: 5

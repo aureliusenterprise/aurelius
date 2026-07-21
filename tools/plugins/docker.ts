@@ -1,4 +1,5 @@
 import { createNodesFromFiles, CreateNodesResult, CreateNodes } from "@nx/devkit";
+import { execSync } from "node:child_process";
 import { dirname } from "node:path";
 
 export interface DockerPluginOptions {
@@ -26,6 +27,11 @@ export const createNodes: CreateNodes<DockerPluginOptions> = [
     },
 ];
 
+function getBranchName(): string {
+    const branchName = process.env.GITHUB_REF_NAME || execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
+    return branchName.replaceAll("/", "-");
+}
+
 async function createNodesInternal(
     configFilePath: string,
     {
@@ -40,6 +46,7 @@ async function createNodesInternal(
     }: DockerPluginOptions = {},
 ): Promise<CreateNodesResult> {
     const projectRoot = dirname(configFilePath);
+    const branchName = getBranchName();
 
     return {
         projects: {
@@ -59,8 +66,17 @@ async function createNodesInternal(
                         },
                     },
                     [buildTargetName]: {
-                        command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version}`,
+                        configurations: {
+                            local: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version}`,
+                            },
+                            ci: {
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --cache-from="type=gha,key={projectName}-cache-main" --cache-from="type=gha,key={projectName}-cache-${branchName}" --cache-to="type=gha,key={projectName}-cache-${branchName},mode=max,scope={projectName}"`,
+                            },
+                        },
+                        defaultConfiguration: "local",
                         dependsOn: [{ target: "build" }, { target: buildTargetName, dependencies: true }],
+                        executor: "nx:run-commands",
                         metadata: {
                             description: "Build the Docker image for the application",
                         },

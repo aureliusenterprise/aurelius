@@ -39,3 +39,20 @@ class KafkaAdminClient:
                 else:
                     LOGGER.exception("Topic %s could not be created", topic_name)
                     raise
+
+    def delete_topics(self, *topics: str) -> None:
+        """
+        Delete the given Kafka topics.
+
+        Args:
+            topics (str): The names of the topics to delete.
+        """
+        operation = self.admin_client.delete_topics(list(topics))
+
+        for topic_name, future in operation.items():
+            try:
+                future.result()
+                LOGGER.info("Topic %s deleted successfully", topic_name)
+            except KafkaException:
+                LOGGER.exception("Topic %s could not be deleted", topic_name)
+                raise
