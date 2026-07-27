@@ -10,7 +10,7 @@ service:
     internalPort: 6970
 
 appSearch:
-    baseUrl: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002
+    baseUrl: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc:3002
     timeoutSeconds: 15
     engines:
         atlas: atlas-dev
@@ -21,7 +21,7 @@ elastic:
     username: elastic
     passwordSecret: elastic-search-es-elastic-user
     passwordKey: elastic
-    caCertSecretName: elastic-search-es-http-certs-public
+    caCertSecretName: enterprise-search-ent-http-certs-public
     caCertMountPath: /app/certs
     caCertPath: /app/certs/ca.crt
 
