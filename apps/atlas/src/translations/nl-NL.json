@@ -396,7 +396,7 @@
             "people": {
                 "dataOwner": "Data Eigenaar(s)",
                 "dataSteward": "Data Steward(s)",
-                "domainLead": "Domein Verantwoordelijke",
+                "domainLead": "Domein Verantwoordelijke(n)",
                 "empty": "Geen personen toegewezen."
             },
             "sorting": {
@@ -522,7 +522,7 @@
                 },
                 "description": "Beschrijving",
                 "entitiesCards": {
-                    "title": "Data Entiteiten"
+                    "title": "Onderliggende Entiteiten"
                 },
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "people": "Personen",
