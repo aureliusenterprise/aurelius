@@ -448,12 +448,12 @@
                     "title": "Governance Kwaliteitsregels"
                 },
                 "lineageModel": {
-                    "loading": "Linemodel laden…",
+                    "loading": "Lineage Model laden…",
                     "modelExplorerDataGovernance": {
                         "noDataGovernanceDetails": "Geen data‑governancedetails beschikbaar"
                     },
-                    "noLineageModelAvailable": "Geen linemodel beschikbaar",
-                    "retrieve": "Linemodel ophalen"
+                    "noLineageModelAvailable": "Geen Lineage Model beschikbaar",
+                    "retrieve": "Lineage Model ophalen"
                 },
                 "navigation": {
                     "details": "Details"
@@ -484,7 +484,7 @@
                     "title": "Datavelden"
                 },
                 "governanceQualityRules": "Governance Kwaliteitsregels",
-                "lineageModel": "Line model",
+                "lineageModel": "Lineage Model",
                 "producers": "Producenten",
                 "producersCards": {
                     "title": "Producenten"
@@ -586,7 +586,7 @@
                     "title": "Invoer"
                 },
                 "inputs": "Invoer",
-                "lineageModel": "Linemodel",
+                "lineageModel": "Lineage Model",
                 "outputCards": {
                     "title": "Uitvoer"
                 },
@@ -607,7 +607,7 @@
                 "dataQualityRules": "Datakwaliteitsregels",
                 "description": "Beschrijving",
                 "governanceQualityRules": "Governance Kwaliteitsregels",
-                "lineageModel": "Linemodel",
+                "lineageModel": "Lineage Model",
                 "processes": "Processen",
                 "processesCards": {
                     "title": "Processen"

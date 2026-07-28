@@ -11,8 +11,8 @@ import { DataForTable, PropertiesService } from './properties.service';
 })
 export class PropertiesComponent implements OnInit {
     readonly tableConfigProperties: SortableTableShellConfig<DataForTable> = {
-        name: { displayName: 'search.details.properties.name', isNarrow: true },
-        value: { displayName: 'search.details.properties.value', isNarrow: true },
+        name: { displayName: 'search.details.components.properties.key', isNarrow: true },
+        value: { displayName: 'search.details.components.properties.value', isNarrow: true },
     };
 
     dataForTable$: Observable<DataForTable[]>;
