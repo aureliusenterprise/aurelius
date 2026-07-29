@@ -396,7 +396,7 @@
             "people": {
                 "dataOwner": "Data Owner(s)",
                 "dataSteward": "Data Steward(s)",
-                "domainLead": "Domain lead",
+                "domainLead": "Domain Lead(s)",
                 "empty": "No people assigned."
             },
             "sorting": {
@@ -522,7 +522,7 @@
                 },
                 "description": "Description",
                 "entitiesCards": {
-                    "title": "Data Entities"
+                    "title": "Child Entities"
                 },
                 "governanceQualityRules": "Governance Quality Rules",
                 "people": "People",
