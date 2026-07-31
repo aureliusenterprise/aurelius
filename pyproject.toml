@@ -80,6 +80,10 @@ path = "backend/m4i-lineage-model"
 develop = true
 path = "libs/m4i-metrics"
 
+[tool.poetry.dependencies.m4i-search-api]
+develop = true
+path = "backend/m4i-search-api"
+
 [tool.poetry.dependencies.m4i-validate-entity]
 develop = true
 path = "backend/m4i-validate-entity"
@@ -103,6 +107,7 @@ pytest = "7.3.1"
 pytest-asyncio = "0.23.7"
 pytest-cov = "5.0.0"
 pytest-sugar = "0.9.7"
+responses = "0.22.0"
 ruff = "0.1.5"
 tenacity = "8.5.0"
 testcontainers = "3.7.1"

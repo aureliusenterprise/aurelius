@@ -38,7 +38,7 @@ export class GovernanceResponsibilitiesComponent {
         private readonly translateService: TranslateService,
     ) {
         this.searchBarContext = this.translateService
-            .get('search.browse.governanceContext.searchPlaceholder')
+            .stream('search.browse.governanceContext.searchPlaceholder')
             .pipe(map((translation) => ({ ...searchBarContext, placeholder: translation })));
     }
 

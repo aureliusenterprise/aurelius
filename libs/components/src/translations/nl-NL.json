@@ -1,0 +1,19 @@
+{
+    "components": {
+        "accordion": {
+            "toggleContent": "Inhoud weergeven"
+        },
+        "fuzzySearchInput": {
+            "searchPlaceholder": "Zoeken..."
+        },
+        "quickview": {
+            "pinTooltip": "Vastmaken aan zijkant",
+            "unpinTooltip": "Losmaken van zijkant"
+        },
+        "sortableTableShell": {
+            "next": "Volgende pagina",
+            "noData": "Geen gegevens beschikbaar",
+            "previous": "Vorige"
+        }
+    }
+}

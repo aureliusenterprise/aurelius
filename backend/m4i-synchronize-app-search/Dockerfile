@@ -33,6 +33,10 @@ COPY --chown=flink:flink --chmod=0500 backend/m4i-synchronize-app-search/jars/*.
 # Copy the wheel file into the container
 COPY --chown=flink:flink --chmod=0400 backend/m4i-synchronize-app-search/dist/*.whl ./
 
-# Install package dependencies, then clean up. Use a cache mount to speed up the process.
-RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
-    python -m pip install --upgrade --force-reinstall --ignore-installed ./*.whl
+# Install package dependencies with a locked cache.
+# If cached artifacts are corrupted, retry once without using the cache.
+RUN --mount=type=cache,mode=0755,target=/root/.cache/pip,sharing=locked \
+    set -eux; \
+    python -m pip install --upgrade pip setuptools wheel; \
+    python -m pip install --upgrade --force-reinstall --ignore-installed ./*.whl || \
+    (python -m pip cache purge && python -m pip install --no-cache-dir --upgrade --force-reinstall --ignore-installed ./*.whl)

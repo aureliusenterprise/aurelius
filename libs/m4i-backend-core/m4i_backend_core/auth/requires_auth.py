@@ -1,15 +1,84 @@
 from functools import partial, wraps
-from traceback import print_exc
+from typing import Dict, cast
 
-from flask import _request_ctx_stack, session
-from jose import jwt
+import jwt
+import requests
+from cachetools import TTLCache, cached
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
+from flask import _request_ctx_stack
+from jwt.algorithms import RSAAlgorithm
+from tenacity import retry, retry_if_exception_type, stop_after_attempt
 
-from ..config import AUTH_ISSUER, AUTH_PUBLIC_KEY
+from ..config import AUTH_ISSUER
 from .get_token_auth_header import get_token_auth_header
 from .model import AuthError
 
 
-def requires_auth(f = None, transparent: bool = False):
+class KidNotFoundError(AuthError):
+    """Raised when the 'kid' from the token header is not found in the JWKS keys."""
+
+    def __init__(self):
+        super().__init__(
+            {
+                "code": "invalid_header",
+                "description": "Authorization token 'kid' header does not match any known keys.",
+            },
+            401,
+        )
+
+
+class JwksFetchError(requests.RequestException):
+    """Raised when there is an error fetching the JWKS keys"""
+
+    def __init__(self, original_exception: Exception):
+        super().__init__(
+            f"Unable to fetch JWKS keys for token verification: {str(original_exception)}"
+        )
+        self.original_exception = original_exception
+
+
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
+def openid_configuration() -> Dict:
+    """Return the OpenID configuration for the configured issuer."""
+    well_known_url = f"{AUTH_ISSUER}/.well-known/openid-configuration"
+
+    response = requests.get(well_known_url, timeout=10)
+    response.raise_for_status()
+
+    return response.json()
+
+
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
+@retry(
+    stop=stop_after_attempt(2),
+    retry=retry_if_exception_type(JwksFetchError),
+    reraise=True,
+)
+def jwks() -> Dict[str, RSAPublicKey]:
+    """Return the JWKS configuration for the JWT authentication."""
+    openid = openid_configuration()
+
+    try:
+        response = requests.get(openid["jwks_uri"], timeout=10)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        if e.response and e.response.status_code == 404:
+            openid_configuration.cache_clear()  # type: ignore
+            raise JwksFetchError(e)
+        else:
+            raise
+
+    response_json = response.json()
+
+    result = {
+        key["kid"]: cast("RSAPublicKey", RSAAlgorithm.from_jwk(key))
+        for key in response_json["keys"]
+    }
+
+    return result
+
+
+def requires_auth(f=None, transparent: bool = False):
     """
     Provides a wrapper for functions which handle requests.
     Determines whether the access token provided with the request is valid.
@@ -22,54 +91,103 @@ def requires_auth(f = None, transparent: bool = False):
 
     if f is None:
         return partial(requires_auth, transparent=transparent)
-    # END IF
 
     @wraps(f)
+    @retry(
+        stop=stop_after_attempt(2),
+        retry=retry_if_exception_type(KidNotFoundError),
+        reraise=True,
+    )
     def decorated(*args, **kwargs):
         token = get_token_auth_header()
 
         if transparent:
             return f(access_token=token, *args, **kwargs)
-        # END IF
 
         try:
+            headers = jwt.get_unverified_header(token)
+            alg = headers.get("alg", "RS256")
+
+            if alg != "RS256":
+                raise AuthError(
+                    {
+                        "code": "invalid_algorithm",
+                        "description": f"Unsupported signing algorithm: {alg}",
+                    },
+                    401,
+                )
+
+            kid = headers.get("kid")
+
+            if not kid:
+                raise AuthError(
+                    {
+                        "code": "invalid_header",
+                        "description": "Authorization token is missing 'kid' header.",
+                    },
+                    401,
+                )
+
+            try:
+                keys = jwks()
+            except requests.RequestException:
+                raise AuthError(
+                    {
+                        "code": "jwks_fetch_error",
+                        "description": "Unable to fetch JWKS keys for token verification.",
+                    },
+                    500,
+                )
+
+            if kid not in keys:
+                openid_configuration.cache_clear()  # type: ignore
+                jwks.cache_clear()  # type: ignore
+                raise KidNotFoundError()
+
             payload = jwt.decode(
                 token,
-                AUTH_PUBLIC_KEY,
-                algorithms='RS256',
+                key=keys[kid],
+                algorithms=["RS256"],
                 issuer=AUTH_ISSUER,
-                options={
-                    'verify_aud': False
-                }
+                options={"verify_aud": False},
             )
 
         except jwt.ExpiredSignatureError:
-            raise AuthError({
-                'code': 'token_expired',
-                'description': 'Token expired.'
-            }, 401)
+            raise AuthError(
+                {
+                    "code": "token_expired",
+                    "description": "Token expired.",
+                },
+                401,
+            )
 
-        except jwt.JWTClaimsError:
-            raise AuthError({
-                'code': 'invalid_claims',
-                'description': 'Incorrect claims. Please, check the issuer.'
-            }, 401)
-        except jwt.JWTError:
-            raise AuthError({
-                'code': 'invalid_signature',
-                'description': 'Signature verification failed.'
-            }, 401)
-        except Exception:
-            print_exc()
-            raise AuthError({
-                'code': 'invalid_header',
-                'description': 'Unable to parse authentication token.'
-            }, 401)
+        except jwt.InvalidIssuerError:
+            raise AuthError(
+                {
+                    "code": "invalid_claims",
+                    "description": "Incorrect claims. Please, check the issuer.",
+                },
+                401,
+            )
+        except jwt.InvalidSignatureError:
+            raise AuthError(
+                {
+                    "code": "invalid_signature",
+                    "description": "Signature verification failed.",
+                },
+                401,
+            )
+        except jwt.PyJWTError:
+            raise AuthError(
+                {
+                    "code": "invalid_header",
+                    "description": "Unable to parse authentication token.",
+                },
+                401,
+            )
 
         _request_ctx_stack.top.current_user = payload
 
         return f(access_token=token, *args, **kwargs)
-    # END decorated
 
     return decorated
-# END requires_auth

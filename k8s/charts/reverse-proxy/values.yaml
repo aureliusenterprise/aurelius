@@ -14,3 +14,11 @@ service:
 enterprise_search_internal_url: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/
 env:
   ELASTIC_USERNAME: elastic
+
+search_api:
+  serviceName: "{{ .Release.Name }}-search-api"
+  port: 6970
+  engines:
+    atlas: atlas-dev
+    dataQuality: atlas-dev-quality
+    govQuality: atlas-dev-gov-quality

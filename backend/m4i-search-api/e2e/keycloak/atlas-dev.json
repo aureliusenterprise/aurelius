@@ -1,0 +1,21 @@
+{
+    "accessTokenLifespan": 10800,
+    "attributes": {
+        "frontendUrl": "http://keycloak:8180"
+    },
+    "clients": [
+        {
+            "clientId": "m4i_atlas",
+            "directAccessGrantsEnabled": true,
+            "enabled": true,
+            "publicClient": true
+        },
+        {
+            "clientId": "admin-cli",
+            "enabled": true,
+            "publicClient": true
+        }
+    ],
+    "enabled": true,
+    "realm": "atlas-dev"
+}

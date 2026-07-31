@@ -34,7 +34,7 @@ export class TechnicalContextComponent {
         private readonly translateService: TranslateService,
     ) {
         this.searchBarContext = this.translateService
-            .get('search.browse.technicalContext.searchPlaceholder')
+            .stream('search.browse.technicalContext.searchPlaceholder')
             .pipe(map((translation) => ({ ...searchBarContext, placeholder: translation })));
     }
 
