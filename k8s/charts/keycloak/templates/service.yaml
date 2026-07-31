@@ -11,4 +11,6 @@ spec:
       targetPort: {{ .Values.service.externalPort }}
       protocol: TCP
       name: {{ .Values.service.name }}
-  selector: {{ include "keycloak.selectorLabels" . | nindent 4 }}
+  selector:
+    {{- include "keycloak.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: keycloak
