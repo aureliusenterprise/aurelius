@@ -33,6 +33,11 @@ export class EntityDetailsService extends BasicStore<EntityDetailsStoreContext> 
     }
 
     set entityId(entityId: string) {
+        this.delete({
+            description: 'Clear previous entity details',
+            path: ['entityDetails'],
+        });
+
         this.update({
             description: 'New entity id available',
             payload: { entityId },
@@ -45,6 +50,12 @@ export class EntityDetailsService extends BasicStore<EntityDetailsStoreContext> 
             payload: {
                 entityDetails,
             },
+        });
+    }
+
+    clear() {
+        this.delete({
+            description: 'Clear entity details state',
         });
     }
 

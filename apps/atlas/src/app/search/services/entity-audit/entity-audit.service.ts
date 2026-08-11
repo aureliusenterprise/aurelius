@@ -35,9 +35,9 @@ export class EntityAuditService extends BasicStore<EntityAuditStoreContext> {
     private init() {
         // Whenever the entity changes, update the audit log
         this.entityDetailsService
-            .select(['entityDetails', 'entity'])
+            .select('entityId')
             .pipe(
-                switchMap((entity) => this.handleRetrieveEntityAudits(entity.guid)),
+                switchMap((guid) => this.handleRetrieveEntityAudits(guid)),
                 untilDestroyed(this),
             )
             .subscribe();
@@ -46,6 +46,11 @@ export class EntityAuditService extends BasicStore<EntityAuditStoreContext> {
     @ManagedTask('search.services.entityAudit.retrieve', { isQuiet: true })
     @MonitorAsync('isRetrievingAudits')
     private async handleRetrieveEntityAudits(guid: string) {
+        this.update({
+            description: 'Reset entity audits',
+            payload: { audits: undefined },
+        });
+
         if (guid.startsWith('-')) return;
 
         const audits = await retrieveAuditsPaged(guid);

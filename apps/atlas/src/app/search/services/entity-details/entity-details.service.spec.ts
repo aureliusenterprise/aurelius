@@ -14,6 +14,8 @@ describe('EntityDetailsService', () => {
     service.entityDetails = previousEntityDetails;
     service.entityId = 'new-guid';
 
-    await expect(service.get('entityDetails')).resolves.toBeUndefined();
+    await expect(
+      service.get('entityDetails', { includeFalsy: true })
+    ).resolves.toBeUndefined();
   });
 });

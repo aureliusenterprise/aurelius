@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { clearEntityByIdCache } from '@models4insight/atlas/api';
 import { EntityDetailsService } from '../services/entity-details/entity-details.service';
 
@@ -16,6 +16,7 @@ export class EditEntityResolver implements Resolve<string> {
     // Ensures that the latest version of the entity will be shown on the page
     clearEntityByIdCache(entityId);
 
+    this.entityDetailsService.clear();
     this.entityDetailsService.entityId = entityId;
 
     return entityId;
