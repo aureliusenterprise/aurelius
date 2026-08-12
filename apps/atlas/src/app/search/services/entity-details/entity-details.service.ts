@@ -38,6 +38,11 @@ export class EntityDetailsService extends BasicStore<EntityDetailsStoreContext> 
             path: ['entityDetails'],
         });
 
+        this.delete({
+            description: 'Clear previous entity id',
+            path: ['entityId'],
+        });
+
         this.update({
             description: 'New entity id available',
             payload: { entityId },
@@ -62,6 +67,11 @@ export class EntityDetailsService extends BasicStore<EntityDetailsStoreContext> 
     @ManagedTask('search.services.entityDetails.retrieve', { isQuiet: true })
     @MonitorAsync('isRetrievingDetails')
     private async handleGetEntityDetails(entityId: string) {
-        this.entityDetails = await this.entityApiService.getEntityById(entityId).toPromise();
+        const entityDetails = await this.entityApiService.getEntityById(entityId).toPromise();
+
+        // Ignore stale fetches from a previous edit/details route if the GUID has already changed.
+        if ((await this.get('entityId')) !== entityId) return;
+
+        this.entityDetails = entityDetails;
     }
 }

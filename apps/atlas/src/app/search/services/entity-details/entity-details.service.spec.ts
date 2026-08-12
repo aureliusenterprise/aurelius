@@ -1,21 +1,18 @@
-import { EntityDetailsService } from './entity-details.service';
+import { EditEntityResolver } from '../../edit-entity/edit-entity-resolver';
 
-describe('EntityDetailsService', () => {
-  it('clears previous entity details when a new entity id is set', async () => {
-    const entityApiService = {
-      getEntityById: jest.fn().mockReturnValue({
-        toPromise: jest.fn().mockResolvedValue({ entity: { guid: 'new-guid' } }),
-      }),
+describe('EditEntityResolver', () => {
+  it('clears previous entity state before setting the next edit guid', () => {
+    const entityDetailsService = {
+      clear: jest.fn(),
+      entityId: undefined as string | undefined,
     } as any;
 
-    const service = new EntityDetailsService(entityApiService, undefined as any);
-    const previousEntityDetails = { entity: { guid: 'old-guid' } } as any;
+    const resolver = new EditEntityResolver(entityDetailsService);
+    const route = { paramMap: { get: jest.fn().mockReturnValue('new-guid') } } as any;
 
-    service.entityDetails = previousEntityDetails;
-    service.entityId = 'new-guid';
+    resolver.resolve(route);
 
-    await expect(
-      service.get('entityDetails', { includeFalsy: true })
-    ).resolves.toBeUndefined();
+    expect(entityDetailsService.clear).toHaveBeenCalledTimes(1);
+    expect(entityDetailsService.entityId).toBe('new-guid');
   });
 });

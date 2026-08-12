@@ -45,19 +45,31 @@ export class EntityAuditService extends BasicStore<EntityAuditStoreContext> {
 
     @ManagedTask('search.services.entityAudit.retrieve', { isQuiet: true })
     @MonitorAsync('isRetrievingAudits')
-    private async handleRetrieveEntityAudits(guid: string) {
+    private async handleRetrieveEntityAudits(guid?: string) {
         this.update({
             description: 'Reset entity audits',
             payload: { audits: undefined },
         });
 
-        if (guid.startsWith('-')) return;
+        if (!guid || !guid.trim() || guid.startsWith('-')) return;
 
-        const audits = await retrieveAuditsPaged(guid);
+        try {
+            const currentGuid = await this.entityDetailsService.get('entityId');
+            if (currentGuid !== guid) return;
 
-        this.update({
-            description: 'New entity audits available',
-            payload: { audits },
-        });
+            const audits = await retrieveAuditsPaged(guid);
+
+            this.update({
+                description: 'New entity audits available',
+                payload: { audits },
+            });
+        } catch (error) {
+            // A stale or deleted GUID can still be requested while a previous edit flow is torn down.
+            // Ignore it and wait for the new edit target to publish its own GUID.
+            this.update({
+                description: 'Ignored stale entity audit lookup',
+                payload: { audits: undefined },
+            });
+        }
     }
 }
