@@ -11,7 +11,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL, Engine, create_engine
 from sqlmodel import Session, SQLModel
 from testcontainers.compose import DockerCompose
-from testcontainers.core.wait_strategies import HealthcheckWaitStrategy
+from testcontainers.core.wait_strategies import HealthcheckWaitStrategy, HttpWaitStrategy
 
 
 class Settings(BaseSettings):
@@ -45,7 +45,24 @@ def _environment() -> None:
 
 
 @pytest.fixture(scope="session")
-def keycloak() -> DockerCompose:
+def observability() -> DockerCompose:
+    """
+    Return a Docker Compose instance for the observability services.
+
+    Note: This fixture starts the observability services if they're not already running, but does not stop them after
+    the tests. This allows the services to be reused across multiple test sessions, but may require manual cleanup if
+    the services are no longer needed.
+    """
+    context = Path(__file__).parents[3].absolute() / "dev" / "observability"
+    compose = DockerCompose(context=context)
+
+    compose.start()
+
+    return compose
+
+
+@pytest.fixture(scope="session")
+def keycloak(observability: DockerCompose) -> DockerCompose:
     """
     Return a Docker Compose instance for the Keycloak service.
 
@@ -53,6 +70,8 @@ def keycloak() -> DockerCompose:
     This allows the service to be reused across multiple test sessions, but may require manual cleanup if the service is
     no longer needed.
     """
+    _ = observability  # Ensure that the observability services are started before starting Keycloak
+
     context = Path(__file__).parents[3].absolute() / "dev" / "keycloak"
     compose = DockerCompose(context=context)
 
@@ -66,21 +85,52 @@ def keycloak() -> DockerCompose:
 
 
 @pytest.fixture(scope="session")
-def compose() -> Generator[DockerCompose]:
-    """Return a Docker Compose instance for the e2e environment."""
+def postgres() -> DockerCompose:
+    """
+    Return a Docker Compose instance for the Postgres service.
+
+    Note: This fixture starts the Postgres service if it's not already running, but does not stop it after the tests.
+    This allows the service to be reused across multiple test sessions, but may require manual cleanup if the service is
+    no longer needed.
+    """
+    context = Path(__file__).parents[3].absolute() / "dev" / "postgres"
+    compose = DockerCompose(context=context)
+
+    compose.start()
+
+    return compose.waiting_for(
+        {
+            "postgres": HealthcheckWaitStrategy(),
+        },
+    )
+
+
+@pytest.fixture(scope="session")
+def compose(database: Engine, keycloak: DockerCompose, observability: DockerCompose) -> Generator[DockerCompose]:
+    """Return a Docker Compose instance."""
+    # Ensure that the auth and observability services are started, and the database is set up before starting the app
+    _ = database, keycloak, observability
+
     context = Path(__file__).parent.absolute()
+
     with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
+        port = compose.get_service_port("aurelius-fastapi-example", 8000)
+
+        if not port:
+            message = "aurelius-fastapi-example service not found in Docker Compose"
+            raise ValueError(message)
+
         yield compose.waiting_for(
             {
-                "aurelius-fastapi-example": HealthcheckWaitStrategy(),
+                "aurelius-fastapi-example": HttpWaitStrategy(port=port, path="/health/ready").for_status_code(200),
             },
         )
 
 
 @pytest.fixture(scope="session")
-def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
+def database(postgres: DockerCompose, settings: Settings) -> Generator[Engine]:
     """Setup and teardown the database."""
-    hostname, port = compose.get_service_host_and_port("postgres-app", settings.database_port)
+    hostname, port = postgres.get_service_host_and_port("postgres", settings.database_port)
 
     if not (hostname and port):
         message = "PostgreSQL service not found in Docker Compose"

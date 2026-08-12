@@ -30,6 +30,8 @@ from testcontainers.core.wait_strategies import HealthcheckWaitStrategy, HttpWai
 class Settings(BaseSettings):
     """Test configuration."""
 
+    dlq_topic_name: str
+    kafka_topic_name: str
     postgres_db: str
     postgres_password: SecretStr
     postgres_user: str
@@ -75,6 +77,27 @@ def kafka() -> DockerCompose:
 
 
 @pytest.fixture(scope="session")
+def postgres() -> DockerCompose:
+    """
+    Return a Docker Compose instance for the Postgres service.
+
+    Note: This fixture starts the Postgres service if it's not already running, but does not stop it after the tests.
+    This allows the service to be reused across multiple test sessions, but may require manual cleanup if the service is
+    no longer needed.
+    """
+    context = Path(__file__).parents[3].absolute() / "dev" / "postgres"
+    compose = DockerCompose(context=context)
+
+    compose.start()
+
+    return compose.waiting_for(
+        {
+            "postgres": HealthcheckWaitStrategy(),
+        },
+    )
+
+
+@pytest.fixture(scope="session")
 def kafka_bootstrap_servers(kafka: DockerCompose) -> str:
     """Return the Kafka bootstrap servers."""
     hostname, port = kafka.get_service_host_and_port("broker", 9092)
@@ -94,9 +117,9 @@ def kafka_admin_client(kafka_bootstrap_servers: str) -> KafkaAdminClient:
 
 
 @pytest.fixture(scope="session")
-def kafka_topic(kafka_admin_client: KafkaAdminClient) -> Generator[str]:
+def kafka_topic(kafka_admin_client: KafkaAdminClient, settings: Settings) -> Generator[str]:
     """Create the Kafka topic and return its name."""
-    kafka_topic_name = "aurelius-kafka-connect-jdbc-sink-example-e2e"
+    kafka_topic_name = settings.kafka_topic_name
 
     kafka_topic = NewTopic(
         kafka_topic_name,
@@ -112,9 +135,9 @@ def kafka_topic(kafka_admin_client: KafkaAdminClient) -> Generator[str]:
 
 
 @pytest.fixture(scope="session")
-def dlq_topic(kafka_admin_client: KafkaAdminClient) -> Generator[str]:
+def dlq_topic(kafka_admin_client: KafkaAdminClient, settings: Settings) -> Generator[str]:
     """Create the Kafka topic and return its name."""
-    kafka_topic_name = "aurelius-kafka-connect-jdbc-sink-example-dlq"
+    kafka_topic_name = settings.dlq_topic_name
 
     kafka_topic = NewTopic(
         kafka_topic_name,
@@ -130,31 +153,9 @@ def dlq_topic(kafka_admin_client: KafkaAdminClient) -> Generator[str]:
 
 
 @pytest.fixture(scope="session")
-def compose(dlq_topic: str, kafka_topic: str) -> Generator[DockerCompose]:
-    """Return a Docker Compose instance."""
-    os.environ["DLQ_TOPIC_NAME"] = dlq_topic
-    os.environ["KAFKA_TOPIC_NAME"] = kafka_topic
-
-    context = Path(__file__).parent.absolute()
-
-    with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
-        port = compose.get_service_port("kafka-connect", 8083)
-
-        if not port:
-            message = "Kafka Connect service not found in Docker Compose"
-            raise ValueError(message)
-
-        yield compose.waiting_for(
-            {
-                "kafka-connect": HttpWaitStrategy(port=port, path="/connectors").for_status_code(200),
-            },
-        )
-
-
-@pytest.fixture(scope="session", autouse=True)
-def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
+def database(postgres: DockerCompose, settings: Settings) -> Generator[Engine]:
     """Setup and teardown the database."""
-    hostname, port = compose.get_service_host_and_port("postgres", 5432)
+    hostname, port = postgres.get_service_host_and_port("postgres", 5432)
 
     if not (hostname and port):
         message = "PostgreSQL service not found in Docker Compose"
@@ -243,3 +244,26 @@ def value_serializer_with_prefix_schema_id(
 def kafka_producer(kafka_bootstrap_servers: str) -> Producer:
     """Return a Kafka producer instance."""
     return Producer({"bootstrap.servers": kafka_bootstrap_servers})
+
+
+@pytest.fixture(scope="session", autouse=True)
+def compose(database: Engine, dlq_topic: str, kafka_topic: str) -> Generator[DockerCompose]:
+    """Return a Docker Compose instance."""
+    _ = database  # Ensure the database is set up before starting Kafka Connect
+    os.environ["DLQ_TOPIC_NAME"] = dlq_topic
+    os.environ["KAFKA_TOPIC_NAME"] = kafka_topic
+
+    context = Path(__file__).parents[1].absolute()
+
+    with DockerCompose(context=context) as compose:
+        port = compose.get_service_port("kafka-connect", 8083)
+
+        if not port:
+            message = "Kafka Connect service not found in Docker Compose"
+            raise ValueError(message)
+
+        yield compose.waiting_for(
+            {
+                "kafka-connect": HttpWaitStrategy(port=port, path="/connectors").for_status_code(200),
+            },
+        )

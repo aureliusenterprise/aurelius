@@ -2,7 +2,7 @@ name: aurelius-dev-observability
 
 services:
     otel-collector:
-        image: otel/opentelemetry-collector-contrib:latest
+        image: dhi.io/opentelemetry-collector:0-debian13-contrib
         command: ["--config=/etc/otelcol-contrib/config.yaml"]
         depends_on:
             loki:
@@ -17,13 +17,18 @@ services:
             - ./config/otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro
 
     prometheus:
-        image: prom/prometheus:latest
+        image: dhi.io/prometheus:3.13-debian13
+        user: "65532"
+        ulimits:
+            nofile:
+                soft: 65536
+                hard: 65536
         command:
             - "--config.file=/etc/prometheus/prometheus.yaml"
-            - "--storage.tsdb.path=/prometheus"
+            - "--storage.tsdb.path=/var/prometheus"
             - "--web.enable-otlp-receiver"
         healthcheck:
-            test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/ready"]
+            test: ["CMD", "promtool", "check", "ready"]
             interval: 10s
             timeout: 5s
             retries: 5
@@ -31,10 +36,15 @@ services:
             - "9090:9090"
         volumes:
             - ./config/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
-            - prometheus-data:/prometheus
+            - prometheus-data:/var/prometheus
 
     loki:
-        image: grafana/loki:latest
+        image: dhi.io/loki:3-debian13
+        user: "65532"
+        ulimits:
+            nofile:
+                soft: 65536
+                hard: 65536
         command: ["-config.file=/etc/loki/config.yaml"]
         ports:
             - "3100:3100"
@@ -43,10 +53,15 @@ services:
             - loki-data:/loki
 
     tempo:
-        image: grafana/tempo:latest
+        image: dhi.io/tempo:3-debian13
+        user: "65532"
+        ulimits:
+            nofile:
+                soft: 65536
+                hard: 65536
         command: ["-config.file=/etc/tempo/config.yaml"]
         healthcheck:
-            test: ["CMD", "/tempo", "-health"]
+            test: ["CMD", "/opt/tempo/tempo", "-health"]
             interval: 10s
             timeout: 5s
             retries: 5
@@ -57,7 +72,8 @@ services:
             - tempo-data:/var/tempo
 
     grafana:
-        image: grafana/grafana:latest
+        image: dhi.io/grafana:13-debian13
+        user: "65532"
         depends_on:
             loki:
                 condition: service_started
@@ -66,9 +82,13 @@ services:
             tempo:
                 condition: service_healthy
         environment:
-            GF_AUTH_ANONYMOUS_ENABLED: "true"
-            GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
-            GF_AUTH_DISABLE_LOGIN_FORM: "true"
+            - GF_AUTH_ANONYMOUS_ENABLED=true
+            - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+            - GF_AUTH_DISABLE_LOGIN_FORM=true
+            - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+            - GF_PATHS_DATA=/var/lib/grafana/data
+            - GF_PATHS_LOGS=/var/lib/grafana/logs
+            - GF_PATHS_PLUGINS=/var/lib/grafana/plugins
         ports:
             - "127.0.0.1:3000:3000"
         volumes:

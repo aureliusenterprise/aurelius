@@ -43,8 +43,25 @@ def _environment() -> None:
     dotenv.load_dotenv(dotenv.find_dotenv())
 
 
-@pytest.fixture(scope="session", autouse=True)
-def keycloak() -> DockerCompose:
+@pytest.fixture(scope="session")
+def observability() -> DockerCompose:
+    """
+    Return a Docker Compose instance for the observability services.
+
+    Note: This fixture starts the observability services if they're not already running, but does not stop them after
+    the tests. This allows the services to be reused across multiple test sessions, but may require manual cleanup if
+    the services are no longer needed.
+    """
+    context = Path(__file__).parents[3].absolute() / "dev" / "observability"
+    compose = DockerCompose(context=context)
+
+    compose.start()
+
+    return compose
+
+
+@pytest.fixture(scope="session")
+def keycloak(observability: DockerCompose) -> DockerCompose:
     """
     Return a Docker Compose instance for the Keycloak service.
 
@@ -52,6 +69,8 @@ def keycloak() -> DockerCompose:
     This allows the service to be reused across multiple test sessions, but may require manual cleanup if the service is
     no longer needed.
     """
+    _ = observability  # Ensure that the observability services are started before starting Keycloak
+
     context = Path(__file__).parents[3].absolute() / "dev" / "keycloak"
     compose = DockerCompose(context=context)
 
@@ -65,9 +84,12 @@ def keycloak() -> DockerCompose:
 
 
 @pytest.fixture(scope="session")
-def compose() -> Generator[DockerCompose]:
+def compose(keycloak: DockerCompose, observability: DockerCompose) -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
+    _ = keycloak, observability  # Ensure that the auth and observability services are started before starting the app
+
     context = Path(__file__).parent.absolute()
+
     with DockerCompose(context=context, env_file=dotenv.find_dotenv()) as compose:
         port = compose.get_service_port("aurelius-frontend-example", 8080)
 

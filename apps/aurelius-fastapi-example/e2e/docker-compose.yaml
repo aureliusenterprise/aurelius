@@ -3,35 +3,28 @@ name: aurelius-fastapi-example-e2e
 services:
     aurelius-fastapi-example:
         image: ghcr.io/aureliusenterprise/aurelius-fastapi-example:local
-        depends_on:
-            postgres-app:
-                condition: service_healthy
         environment:
             AUTH_REALM_NAME: ${AUTH_REALM_NAME}
             AUTH_SERVER_URL: ${AUTH_SERVER_URL}
             ENVIRONMENT: ${ENVIRONMENT}
             DATABASE_NAME: ${DATABASE_NAME}
-            DATABASE_HOST: postgres-app
+            DATABASE_HOST: postgres
             DATABASE_PASSWORD: ${DATABASE_PASSWORD}
             DATABASE_PORT: ${DATABASE_PORT}
             DATABASE_USERNAME: ${DATABASE_USERNAME}
             LOG_LEVEL: ${LOG_LEVEL}
+            OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+        networks:
+            - aurelius-dev-observability-network
+            - aurelius-dev-postgres-network
         extra_hosts:
             - keycloak.localhost:host-gateway
+            - otel-collector:host-gateway
         ports:
             - 8000
 
-    postgres-app:
-        image: postgres:latest
-        user: ${DATABASE_USERNAME}
-        environment:
-            POSTGRES_USER: ${DATABASE_USERNAME}
-            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-            POSTGRES_DB: ${DATABASE_NAME}
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready", "-d", "${DATABASE_NAME}"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
-        ports:
-            - 5432
+networks:
+    aurelius-dev-observability-network:
+        external: true
+    aurelius-dev-postgres-network:
+        external: true

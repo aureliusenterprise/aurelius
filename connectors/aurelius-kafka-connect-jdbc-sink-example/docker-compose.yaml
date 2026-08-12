@@ -24,6 +24,8 @@ services:
             REST_ADVERTISED_HOST_NAME: localhost
             REST_PORT: 8083
             STATUS_STORAGE_TOPIC: aurelius-kafka-connect-jdbc-sink-example.connect-status
+        ports:
+            - 8083:8083
         networks:
             - aurelius-dev-kafka-network
             - aurelius-dev-postgres-network

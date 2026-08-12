@@ -1,11 +1,60 @@
 import http.client
 import json
+from collections.abc import Iterator
 from unittest.mock import ANY
 
 from aurelius_example import Entity
 from aurelius_fastapi_example.models import Envelope, PaginatedResponse
 from sqlmodel import Session
 from tenacity import Retrying, stop_after_attempt, stop_after_delay, wait_fixed
+
+
+def _fetch_entities_page(
+    connection: http.client.HTTPConnection,
+    token: str,
+    *,
+    skip: int,
+    limit: int,
+    search: str | None = None,
+) -> PaginatedResponse[Entity]:
+    """Fetch a single paginated entities response."""
+    query = f"skip={skip}&limit={limit}"
+    if search:
+        query = f"{query}&search={search}"
+
+    connection.request(
+        "GET",
+        f"/entities/?{query}",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    response = connection.getresponse()
+
+    assert response.status == 200
+
+    return PaginatedResponse[Entity].model_validate(json.loads(response.read()))
+
+
+def _iter_entities(
+    connection: http.client.HTTPConnection,
+    token: str,
+    *,
+    limit: int = 100,
+    search: str | None = None,
+) -> Iterator[Entity]:
+    """Iterate entities across pages, fetching the next page only when needed."""
+    skip = 0
+    total = 1
+
+    while skip < total:
+        page = _fetch_entities_page(connection, token, skip=skip, limit=limit, search=search)
+        total = page.total
+
+        if not page.data:
+            break
+
+        yield from page.data
+
+        skip += len(page.data)
 
 
 def test__aurelius_fastapi_example_has_swagger_docs(connection: http.client.HTTPConnection) -> None:
@@ -69,21 +118,19 @@ def test__aurelius_fastapi_example_find_many(
         - All expected entities are returned in the response.
         - The response contains data and total fields.
     """
-    connection.request(
-        "GET",
-        "/entities/",
-        headers={"Authorization": f"Bearer {token}"},
-    )
-    response = connection.getresponse()
+    expected_by_guid = {str(entity.guid): entity.model_dump(mode="json") for entity in entities}
+    found_by_guid: dict[str, dict] = {}
 
-    assert response.status == 200
+    for item in _iter_entities(connection, token, limit=100):
+        found_by_guid[str(item.guid)] = item.model_dump(mode="json")
+        if all(guid in found_by_guid for guid in expected_by_guid):
+            break
 
-    page = PaginatedResponse[Entity].model_validate(json.loads(response.read()))
-    actual = [entity.model_dump(mode="json") for entity in page.data]
-    expected = [entity.model_dump(mode="json") for entity in entities]
+    missing = [guid for guid in expected_by_guid if guid not in found_by_guid]
+    assert not missing, "Not all fixture entities were returned in the paginated response"
 
-    assert actual == expected, "Not all entities were returned in the response"
-    assert page.total == len(entities), "Total count does not match number of entities"
+    for guid, expected in expected_by_guid.items():
+        assert found_by_guid[guid] == expected, "An entity in the response does not match the expected payload"
 
 
 def test__aurelius_fastapi_example_find_many_search_query(
@@ -92,44 +139,50 @@ def test__aurelius_fastapi_example_find_many_search_query(
     token: str,
 ) -> None:
     """The list endpoint should filter results by search query."""
-    connection.request(
-        "GET",
-        "/entities/?search=alpha",
-        headers={"Authorization": f"Bearer {token}"},
-    )
-    response = connection.getresponse()
+    expected_by_guid = {
+        str(entities[0].guid): entities[0].model_dump(mode="json"),
+        str(entities[1].guid): entities[1].model_dump(mode="json"),
+    }
+    found_by_guid: dict[str, dict] = {}
 
-    assert response.status == 200
+    for item in _iter_entities(connection, token, search="alpha", limit=100):
+        guid = str(item.guid)
+        if guid in expected_by_guid:
+            found_by_guid[guid] = item.model_dump(mode="json")
 
-    page = PaginatedResponse[Entity].model_validate(json.loads(response.read()))
-    actual = [entity.model_dump(mode="json") for entity in page.data]
-    expected = [entities[0].model_dump(mode="json"), entities[1].model_dump(mode="json")]
+        if all(guid in found_by_guid for guid in expected_by_guid):
+            break
 
-    assert actual == expected, "The search query did not return the expected entities"
-    assert page.total == 2, "Total count does not match number of expected entities"
+    missing = [guid for guid in expected_by_guid if guid not in found_by_guid]
+    assert not missing, "The search query did not return all expected fixture entities"
+
+    for guid, expected in expected_by_guid.items():
+        assert found_by_guid[guid] == expected, "A filtered entity payload does not match expected data"
 
 
 def test__aurelius_fastapi_example_find_many_search_with_pagination(
     connection: http.client.HTTPConnection,
-    entities: list[Entity],
+    entities: list[Entity],  # noqa: ARG001
     token: str,
 ) -> None:
     """Filtered total count should remain correct when pagination is applied."""
-    connection.request(
-        "GET",
-        "/entities/?search=alpha&skip=1&limit=1",
-        headers={"Authorization": f"Bearer {token}"},
-    )
-    response = connection.getresponse()
+    filtered_items: list[Entity] = []
 
-    assert response.status == 200
+    for item in _iter_entities(connection, token, search="alpha", limit=1):
+        filtered_items.append(item)
+        if len(filtered_items) == 2:
+            break
 
-    page = PaginatedResponse[Entity].model_validate(json.loads(response.read()))
-    actual = [entity.model_dump(mode="json") for entity in page.data]
-    expected = [entities[1].model_dump(mode="json")]
+    assert len(filtered_items) == 2, "Expected at least two filtered entities for pagination validation"
 
-    assert actual == expected, "The search query did not return the expected entities"
-    assert page.total == 2, "Total count does not match number of expected entities"
+    page = _fetch_entities_page(connection, token, skip=1, limit=1, search="alpha")
+    assert len(page.data) == 1, "Expected exactly one entity on the second paginated filtered page"
+    assert page.total >= 2, "Filtered total count should include at least two entities"
+
+    actual = page.data[0].model_dump(mode="json")
+    expected = filtered_items[1].model_dump(mode="json")
+
+    assert actual == expected, "Pagination skip/limit did not return the expected filtered entity"
 
 
 def test__aurelius_fastapi_example_find_many_requires_auth(

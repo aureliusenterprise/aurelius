@@ -71,7 +71,7 @@ async function createNodesInternal(
                                 command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version}`,
                             },
                             ci: {
-                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --cache-from="type=gha,key={projectName}-cache-main" --cache-from="type=gha,key={projectName}-cache-${branchName}" --cache-to="type=gha,key={projectName}-cache-${branchName},mode=max,scope={projectName}"`,
+                                command: `docker buildx build . -f ${configFilePath} -t {args.namespace}/{projectName}:{args.version} --build-arg VERSION={args.version} --load --cache-from="type=gha,key={projectName}-cache-main" --cache-from="type=gha,key={projectName}-cache-${branchName}" --cache-to="type=gha,key={projectName}-cache-${branchName},mode=max,scope={projectName}"`,
                             },
                         },
                         defaultConfiguration: "local",

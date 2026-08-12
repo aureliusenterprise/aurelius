@@ -37,12 +37,13 @@ services:
             - 8000
 
     postgres-app:
-        image: postgres:latest
-        user: ${DATABASE_USERNAME}
+        image: dhi.io/postgres:18-alpine3.23
         environment:
             POSTGRES_USER: ${DATABASE_USERNAME}
             POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
             POSTGRES_DB: ${DATABASE_NAME}
+            POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+        stop_signal: SIGINT
         healthcheck:
             test: ["CMD-SHELL", "pg_isready", "-d", "${DATABASE_NAME}"]
             interval: 10s

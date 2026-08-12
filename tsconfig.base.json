@@ -8,22 +8,13 @@
         "declaration": false,
         "experimentalDecorators": true,
         "importHelpers": true,
-        "lib": [
-            "es2022",
-            "dom"
-        ],
+        "lib": ["es2022", "dom"],
         "module": "esnext",
         "moduleResolution": "bundler",
         "paths": {
-            "aurelius-data-access": [
-                "./libs/angular/aurelius-data-access/src/index.ts"
-            ],
-            "aurelius-observability": [
-                "./libs/angular/aurelius-observability/src/index.ts"
-            ],
-            "aurelius-ui": [
-                "./libs/angular/aurelius-ui/src/index.ts"
-            ]
+            "aurelius-data-access": ["./libs/angular/aurelius-data-access/src/index.ts"],
+            "aurelius-observability": ["./libs/angular/aurelius-observability/src/index.ts"],
+            "aurelius-ui": ["./libs/angular/aurelius-ui/src/index.ts"]
         },
         "rootDir": ".",
         "skipDefaultLibCheck": true,
@@ -31,8 +22,5 @@
         "sourceMap": true,
         "target": "es2015"
     },
-    "exclude": [
-        "node_modules",
-        "tmp"
-    ]
+    "exclude": ["node_modules", "tmp"]
 }

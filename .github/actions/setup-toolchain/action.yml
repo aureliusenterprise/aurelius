@@ -109,6 +109,16 @@ runs:
               docker builder prune -af || true
               df -h
 
+        - name: Set up Docker with containerd snapshotter
+          uses: docker/setup-docker-action@v5
+          with:
+              daemon-config: |
+                  {
+                    "features": {
+                      "containerd-snapshotter": true
+                    }
+                  }
+
         - name: Cache SOPS
           id: cache-sops
           if: inputs.sops == 'true'
@@ -188,6 +198,14 @@ runs:
           uses: docker/login-action@v4
           with:
               registry: docker.io
+              username: ${{ inputs.dockerhub-username }}
+              password: ${{ inputs.dockerhub-token }}
+
+        - name: Log in to Docker Hardened Images registry
+          if: inputs.dockerhub-username != ''
+          uses: docker/login-action@v4
+          with:
+              registry: dhi.io
               username: ${{ inputs.dockerhub-username }}
               password: ${{ inputs.dockerhub-token }}
 
