@@ -389,6 +389,18 @@
       "subject": "feat: harden dev infrastructure images and extend e2e shared services (#123)"
     },
     "targetVersion": "latest",
-    "confirmedPackageUpdates": true
+    "confirmedPackageUpdates": true,
+    "runningMigrations": [
+      "23-0-0-consolidate-release-tag-config"
+    ],
+    "completedMigrations": {
+      "23-0-0-consolidate-release-tag-config": {
+        "type": "successful",
+        "name": "23-0-0-consolidate-release-tag-config",
+        "changedFiles": [],
+        "ref": "e916b5348c7172f38210bb0aee84a893d0c66fad",
+        "nextSteps": []
+      }
+    }
   }
 }
