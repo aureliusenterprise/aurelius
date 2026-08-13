@@ -391,7 +391,7 @@
     "targetVersion": "latest",
     "confirmedPackageUpdates": true,
     "runningMigrations": [
-      "23-0-0-rewrite-internal-subpath-imports"
+      "update-23-0-0-migrate-create-nodes-v2-import-2"
     ],
     "completedMigrations": {
       "23-0-0-consolidate-release-tag-config": {
@@ -440,7 +440,14 @@
         "type": "successful",
         "name": "23-0-0-rewrite-internal-subpath-imports",
         "changedFiles": [],
-        "ref": "8a0e9ce0552020ab688d8f19714d8f2f87e3069d",
+        "ref": "eb9c083f1029f8f7a68bbef082e16a66946deaae",
+        "nextSteps": []
+      },
+      "update-23-0-0-migrate-create-nodes-v2-import-2": {
+        "type": "successful",
+        "name": "update-23-0-0-migrate-create-nodes-v2-import-2",
+        "changedFiles": [],
+        "ref": "184b4be0ab9727ee0da7923ce8a90fd0c313151c",
         "nextSteps": []
       }
     }
