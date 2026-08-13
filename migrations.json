@@ -391,7 +391,7 @@
     "targetVersion": "latest",
     "confirmedPackageUpdates": true,
     "runningMigrations": [
-      "23-1-0-set-tsconfig-root-dir-for-ts6"
+      "rewrite-eslint-internal-subpath-imports"
     ],
     "completedMigrations": {
       "23-0-0-consolidate-release-tag-config": {
@@ -486,7 +486,14 @@
         "type": "successful",
         "name": "23-1-0-set-tsconfig-root-dir-for-ts6",
         "changedFiles": [],
-        "ref": "c9392d4014926ee23ab078b991dd1d17c8336919",
+        "ref": "9168d322bd4d24a8e50f600ad039dc185803e72d",
+        "nextSteps": []
+      },
+      "rewrite-eslint-internal-subpath-imports": {
+        "type": "successful",
+        "name": "rewrite-eslint-internal-subpath-imports",
+        "changedFiles": [],
+        "ref": "494c2cc9ea53905dc8c7001246695ea851029a16",
         "nextSteps": []
       }
     }
