@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "search-api.fullname" . }}
+  labels:
+    {{- include "search-api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "search-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "search-api.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.repository }}:{{ .Values.tag | default .Values.global.version | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.internalPort }}
+              protocol: TCP
+          env:
+            - name: APP_SEARCH_BASE_URL
+              value: {{ tpl .Values.appSearch.baseUrl . | quote }}
+            - name: APP_SEARCH_TIMEOUT_SECONDS
+              value: "{{ .Values.appSearch.timeoutSeconds }}"
+            - name: APP_SEARCH_CA_CERT_PATH
+              value: {{ .Values.elastic.caCertPath | quote }}
+            - name: APP_SEARCH_USERNAME
+              value: {{ .Values.elastic.username | quote }}
+            - name: APP_SEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.elastic.passwordSecret | quote }}
+                  key: {{ .Values.elastic.passwordKey | default "elastic" | quote }}
+            - name: AUTH_ISSUER
+              value: {{ tpl .Values.auth.issuer . | quote }}
+            {{- range .Values.extraEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          volumeMounts:
+            - name: v-elastic-certs
+              mountPath: {{ .Values.elastic.caCertMountPath }}
+              readOnly: true
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: v-elastic-certs
+          secret:
+            secretName: {{ .Values.elastic.caCertSecretName }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

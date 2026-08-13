@@ -18,6 +18,7 @@ spec:
       {{- end }}
       labels:
         {{- include "keycloak.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: keycloak
     spec:
       securityContext:
         runAsUser: 1000
@@ -81,6 +82,22 @@ spec:
               value: edge
             - name: KC_HOSTNAME_STRICT
               value: "false"
+          readinessProbe:
+            httpGet:
+              path: /{{ .Release.Namespace }}/auth/health/ready
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /{{ .Release.Namespace }}/auth/health/live
+              port: 8080
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
           envFrom:
             - secretRef:
                 name: keycloak-secret-user-admin

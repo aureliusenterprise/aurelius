@@ -1,349 +1,149 @@
 {
-    "ArchimateReference": "ArchiMate Reference",
-    "BUSINESS_ATTRIBUTE_UPDATE": "Business attribute updated",
-    "CLASSIFICATION_ADD": "Classification added",
-    "CLASSIFICATION_DELETE": "Classification deleted",
-    "CLASSIFICATION_UDATE": "Classification updated",
-    "CUSTOM_ATTRIBUTE_UPDATE": "Custom attribute updated",
-    "ENTITY_CREATE": "Entity created",
-    "ENTITY_DELETE": "Entity deleted",
-    "ENTITY_IMPORT_CREATE": "Entity created by import",
-    "ENTITY_IMPORT_DELETE": "Entity deleted by import",
-    "ENTITY_IMPORT_UPDATE": "Entity updated by import",
-    "ENTITY_PURGE": "Entity purged",
-    "ENTITY_UPDATE": "Entity updated",
-    "LABEL_ADD": "Label added",
-    "LABEL_DELETE": "Label deleted",
-    "PII": "Has PII",
-    "PROPAGATED_CLASSIFICATION_ADD": "Propagated classification added",
-    "PROPAGATED_CLASSIFICATION_DELETE": "Propagated classification deleted",
-    "PROPAGATED_CLASSIFICATION_UPDATE": "Propagated classification updated",
-    "TERM_ADD": "Term added",
-    "TERM_DELETE": "Term deleted",
-    "attributeType": "Attribute Type",
-    "attributes": "Attributes",
-    "businessOwnerAttribute": "Data owner for Attribute",
-    "businessOwnerEntity": "Data owner for Entity",
-    "childDataset": "Child Dataset",
-    "childEntity": " Child Entity",
-    "childField": "Child Field",
-    "collections": "Collections",
-    "components": {
-        "classification": {
-            "originates": "is afkomstig uit de volgende bronnen:",
-            "retrieve": "Classificatietypedefinitie wordt opgehaald",
-            "source": {
-                "loading": "Laden..."
-            }
-        },
-        "dataqualitylist": {
-            "notavailable": "Geen datakwaliteitsresultaten beschikbaar"
-        },
-        "description": {
-            "notavailable": "Geen beschrijving beschikbaar."
-        },
-        "editor": {
-            "attribute": {
-                "classifications": "Classificaties",
-                "dataentity": "Data Entiteit",
-                "dataowners": "Data Eigenaren",
-                "datastewards": "Data Stewards",
-                "definition": "Definitie",
-                "definitionPlaceholder": "Definitie",
-                "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "fields": "Datavelden",
-                "name": "Naam*",
-                "namePlaceholder": "Naam",
-                "nameRequired": "Naam is verplicht.",
-                "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
-                "typeAlias": "Type alias",
-                "typeAliasPlaceholder": "Type alias"
-            },
-            "collection": {
-                "datasets": "Datasets",
-                "definition": "Definitie",
-                "definitionPlaceholder": "Definitie",
-                "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "name": "Naam*",
-                "namePlaceholder": "Naam",
-                "nameRequired": "Naam is verplicht.",
-                "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
-                "system": "Systeem",
-                "typeAlias": "Type alias",
-                "typeAliasPlaceholder": "Type alias"
-            },
-            "dataset": {
-                "childDataset": "Onderliggende Datasets",
-                "consumers": "Afnemers ",
-                "datasets": "Datasets",
-                "definition": "Definitie",
-                "definitionPlaceholder": "Definitie",
-                "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "fields": "Datavelden",
-                "name": "Naam*",
-                "namePlaceholder": "Naam",
-                "nameRequired": "Naam is verplicht.",
-                "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
-                "parentDataset": "Bovenliggende Dataset",
-                "producers": "Producenten",
-                "typeAlias": "Type alias",
-                "typeAliasPlaceholder": "Type alias"
-            },
-            "domain": {
-                "dataEntities": "Data Entiteiten",
-                "definition": "Definitie",
-                "definitionPlaceholder": "Definitie",
-                "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "domainLeads": "Domein Verantwoordelijken",
-                "fields": "Datavelden",
-                "name": "Naam*",
-                "namePlaceholder": "Naam",
-                "nameRequired": "Naam is verplicht.",
-                "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
-                "typeAlias": "Type alias",
-                "typeAliasPlaceholder": "Type alias"
-            },
-            "entity": {
-                "childEntities": "Onderliggende Entiteiten",
-                "classifications": "Classificaties",
-                "dataAttributes": "Data Attributen",
-                "dataDomain": "Data Domein",
-                "dataOwners": "Data Eigenaren",
-                "dataStewards": "Data Stewards",
-                "definition": "Definitie",
-                "definitionPlaceholder": "Definitie",
-                "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "name": "Naam*",
-                "namePlaceholder": "Naam",
-                "nameRequired": "Naam is verplicht.",
-                "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
-                "parentEntity": "Bovenliggende Entiteit",
-                "typeAlias": "Type alias",
-                "typeAliasPlaceholder": "Type alias"
-            },
-            "field": {
-                "childFields": "Onderliggende Datavelden",
-                "dataset": "Dataset",
-                "definition": "Definitie",
-                "definitionPlaceholder": "Definitie",
-                "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "fields": "Datavelden",
-                "name": "Naam*",
-                "namePlaceholder": "Naam",
-                "nameRequired": "Naam is verplicht.",
-                "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
-                "parentField": "Bovenliggende Dataveld",
-                "typeAlias": "Type alias",
-                "typeAliasPlaceholder": "Type alias"
-            },
-            "govQuality": {
-                "compliantMessage": "Conformbericht",
-                "compliantMessagePlaceholder": "Conformbericht",
-                "compliantMessageRequired": "Conformbericht is verplicht.",
-                "compliantMessageWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "dimension": "Dimensie",
-                "dimensionPlaceholder": "Dimensie",
-                "expression": "Expressie",
-                "expressionPlaceholder": "Expressie",
-                "expressionRequired": "Expressie is verplicht.",
-                "name": "Naam*",
-                "namePlaceholder": "Naam",
-                "nameRequired": "Naam is verplicht.",
-                "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "nonCompliantMessage": "Niet‑conformbericht",
-                "nonCompliantMessagePlaceholder": "Niet‑conformbericht",
-                "nonCompliantMessageRequired": "Niet‑conformbericht is verplicht.",
-                "nonCompliantMessageWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
-                "ruleDescription": "Regelbeschrijving",
-                "ruleDescriptionPlaceholder": "Regelbeschrijving",
-                "ruleDescriptionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "ruleType": "Regeltype",
-                "ruleTypePlaceholder": "Regeltype"
-            },
-            "person": {
-                "dataOwnerAttributes": "Data Eigenaar Attributen",
-                "dataOwnerEntities": "Data Eigenaar Entiteiten",
-                "domainLead": "Domein Verantwoordelijke ",
-                "email": "Email*",
-                "emailInvalid": "Dit e‑mailadres heeft een onjuiste indeling.",
-                "emailPlaceholder": "Email",
-                "emailRequired": "Email is verplicht.",
-                "name": "Naam*",
-                "namePlaceholder": "Naam",
-                "nameRequired": "Naam is verplicht.",
-                "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
-                "stewardAttribute": "Data Steward Attributen",
-                "stewardEntity": "Data Steward Entiteiten",
-                "typeAlias": "Type alias",
-                "typeAliasPlaceholder": "Type alias"
-            },
-            "process": {
-                "definition": "Definitie",
-                "definitionPlaceholder": "Definitie",
-                "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "inputs": "Invoer",
-                "name": "Naam*",
-                "namePlaceholder": "Naam",
-                "nameRequired": "Naam is verplicht.",
-                "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
-                "outputs": "Uitvoer",
-                "system": "Systeem"
-            },
-            "services": {
-                "entityValidate": {
-                    "validate": "Datagovernance kwaliteit wordt gevalideerd"
-                },
-                "submit": "Formulier wordt verzonden"
-            },
-            "system": {
-                "collections": "Collecties",
-                "definition": "Definitie",
-                "definitionPlaceholder": "Definitie",
-                "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "name": "Naam*",
-                "namePlaceholder": "Naam",
-                "nameRequired": "Naam is verplicht.",
-                "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
-                "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
-                "parentSystem": "Bovenliggende Systeem",
-                "subSystems": "Subsystemen",
-                "typeAlias": "Type alias",
-                "typeAliasPlaceholder": "Type alias"
-            }
-        },
-        "filter": {
-            "notAvailable": "Geen filters beschikbaar."
-        },
-        "infiniteScrollContainer": {
-            "loadNextPage": "Volgende pagina laden..."
-        },
-        "people": {
-            "dataOwner": "Data Eigenaar(s)",
-            "dataSteward": "Data Steward(s)",
-            "domainLead": "Domein Verantwoordelijke",
-            "empty": "Geen personen toegewezen."
-        },
-        "sorting": {
-            "relevance": "Relevantie"
-        },
-        "term": {
-            "retrieve": "Termdefinitie wordt opgehaald",
-            "term": "Term"
-        }
-    },
-    "createEntity": {
-        "newEntity": "Nieuwe entiteit aanmaken"
-    },
-    "creator": "Creator",
-    "creatorDashboard": "Creator of Dashboard",
-    "creatorIndexPattern": "Creator of Index pattern",
-    "creatorVisualization": "Creator of Visualization",
-    "dataAttribute": "Data Attribute",
-    "dataDomain": "Data Domain",
-    "dataEntity": "Data Entity",
-    "dataQuality": "Data Quality",
-    "datadomainname": "Data Domain",
-    "dataqualityruledimension": "Dimension",
-    "dataqualitytype": "Rule Type",
+    "ArchimateReference": "ArchiMate Referentie",
+    "BUSINESS_ATTRIBUTE_UPDATE": "Bedrijfsattribuut bijgewerkt",
+    "CLASSIFICATION_ADD": "Classificatie toegevoegd",
+    "CLASSIFICATION_DELETE": "Classificatie verwijderd",
+    "CLASSIFICATION_UDATE": "Classificatie bijgewerkt",
+    "CUSTOM_ATTRIBUTE_UPDATE": "Aangepast attribuut bijgewerkt",
+    "ENTITY_CREATE": "Entiteit aangemaakt",
+    "ENTITY_DELETE": "Entiteit verwijderd",
+    "ENTITY_IMPORT_CREATE": "Entiteit aangemaakt via import",
+    "ENTITY_IMPORT_DELETE": "Entiteit verwijderd via import",
+    "ENTITY_IMPORT_UPDATE": "Entiteit bijgewerkt via import",
+    "ENTITY_PURGE": "Entiteit definitief verwijderd",
+    "ENTITY_UPDATE": "Entiteit bijgewerkt",
+    "LABEL_ADD": "Label toegevoegd",
+    "LABEL_DELETE": "Label verwijderd",
+    "PII": "Bevat PII",
+    "PROPAGATED_CLASSIFICATION_ADD": "Doorgegeven classificatie toegevoegd",
+    "PROPAGATED_CLASSIFICATION_DELETE": "Doorgegeven classificatie verwijderd",
+    "PROPAGATED_CLASSIFICATION_UPDATE": "Doorgegeven classificatie bijgewerkt",
+    "TERM_ADD": "Term toegevoegd",
+    "TERM_DELETE": "Term verwijderd",
+    "attributeType": "Attribuuttype",
+    "attributes": "Attributen",
+    "businessOwnerAttribute": "Data eigenaar voor Data Attribuut",
+    "businessOwnerEntity": "Data eigenaar voor Data Entiteit",
+    "childDataset": "Onderliggende Dataset",
+    "childEntity": "Onderliggende Data Entiteit",
+    "childField": "Onderliggende Dataveld",
+    "collections": "Collecties",
+    "creator": "Maker",
+    "creatorDashboard": "Maker van dashboard",
+    "creatorIndexPattern": "Maker van Indexpatroon",
+    "creatorVisualization": "Maker van Visualisatie",
+    "dataAttribute": "Data Attribuut",
+    "dataDomain": "Data Domein",
+    "dataEntity": "Data Entiteit",
+    "dataQuality": "Datakwaliteit",
+    "datadomainname": "Data Domein",
+    "dataqualityruledimension": "Dimensie",
+    "dataqualitytype": "Regeltype",
     "datasets": "Datasets",
-    "derivedcollection": "Collection",
-    "deriveddatadomain": "Data Domain",
-    "deriveddataentity": "Data Entity",
+    "derivedcollection": "Collectie",
+    "deriveddatadomain": "Data Domein",
+    "deriveddataentity": "Data Entiteit",
     "deriveddataset": "Dataset",
-    "derivedperson": "People",
-    "derivedsystem": "System",
-    "displayName": "Display Name",
-    "domainLead": "Domain lead",
-    "dqscore": "Quality Score",
-    "dqscore_accuracy": "Accuracy",
-    "dqscore_completeness": "Completeness",
-    "dqscore_timeliness": "Timeliness",
-    "dqscore_uniqueness": "Uniqueness",
-    "dqscore_validity": "Validity",
-    "editEntity": {
-        "editEntity": "Entiteit bewerken"
-    },
+    "derivedperson": "Personen",
+    "derivedsystem": "Systeem",
+    "displayName": "Weergavenaam",
+    "domainLead": "Domein Verantwoordelijke",
+    "dqscore": "Kwaliteitsscore",
+    "dqscore_accuracy": "Nauwkeurigheid",
+    "dqscore_completeness": "Volledigheid",
+    "dqscore_timeliness": "Tijdigheid",
+    "dqscore_uniqueness": "Uniekheid",
+    "dqscore_validity": "Validiteit",
     "elasticCluster": "Elastic cluster",
     "email": "Email",
-    "fieldType": "Data Type",
-    "fields": "Fields",
-    "hasContent": "Has Content",
-    "hasParent": "Has Parent",
-    "high_risk": "High risk",
-    "input": "Input",
-    "inputToProcesses": "Input to Processes",
-    "isIncomplete": "Is Incomplete",
-    "isKeyData": "Is Keydata",
-    "key_data": "Is key",
+    "fieldType": "Datatype",
+    "fields": "Datavelden",
+    "hasContent": "Bevat Inhoud",
+    "hasParent": "Heeft Bovenliggend Object",
+    "high_risk": "Hoog risico",
+    "input": "Invoer",
+    "inputToProcesses": "Invoer voor Processen",
+    "isIncomplete": "Is Onvolledig",
+    "isKeyData": "Is Sleuteldata",
+    "key_data": "Is Sleutel",
     "kibanaSpace": "Kibana space",
-    "low_risk": "Low risk",
-    "m4i_collection": "Collection",
-    "m4i_data_attribute": "Data Attribute",
-    "m4i_data_domain": "Data Domain",
-    "m4i_data_entity": "Data Entity",
-    "m4i_data_field": "Data Field",
-    "m4i_data_quality": "Data Quality",
+    "low_risk": "Laag risico",
+    "m4i_collection": "Collectie",
+    "m4i_data_attribute": "Data Attribuut",
+    "m4i_data_domain": "Data Domein",
+    "m4i_data_entity": "Data Entiteit",
+    "m4i_data_field": "Dataveld",
+    "m4i_data_quality": "Datakwaliteit",
     "m4i_dataset": "Dataset",
-    "m4i_field": "Data Field",
-    "m4i_generic_process": "Generic Process",
-    "m4i_gov_data_quality": "Gov. Quality",
-    "m4i_person": "Person",
-    "m4i_referenceable": "Referenceable",
-    "m4i_source": "Source",
-    "m4i_system": "System",
-    "meanings": "Meanings",
-    "medium_risk": "Medium risk",
-    "optionalField": "Optional Field",
-    "output": "Output",
-    "outputFromProcesses": "Output from Processes",
-    "parentDataset": "Parent Dataset",
-    "parentEntity": "Parent Entity",
-    "parentField": "Parent Field",
-    "processOwner": "Process owner",
-    "qualifiedName": "Qualified Name",
-    "replicatedFrom": "Replicated from",
-    "replicatedTo": "Replicated to",
-    "results": {
-        "anotherQuery": "Probeer een andere zoekopdracht.",
-        "noResults": "Geen resultaten gevonden",
-        "results": "resultaten"
-    },
-    "riskClassification": "Risk Classification",
+    "m4i_field": "Dataveld",
+    "m4i_generic_process": "Generiek proces",
+    "m4i_gov_data_quality": "Gov. Kwaliteit",
+    "m4i_person": "Persoon",
+    "m4i_referenceable": "Referentieerbaar",
+    "m4i_source": "Bron",
+    "m4i_system": "Systeem",
+    "meanings": "Betekenissen",
+    "medium_risk": "Middelgroot risico",
+    "optionalField": "Optioneel veld",
+    "output": "Uitvoer",
+    "outputFromProcesses": "Uitvoer van Processen",
+    "parentDataset": "Bovenliggende Dataset",
+    "parentEntity": "Bovenliggende Data Entiteit",
+    "parentField": "Bovenliggende Dataveld",
+    "processOwner": "Procesverantwoordelijke",
+    "qualifiedName": "Gekwalificeerde Naam",
+    "replicatedFrom": "Gerepliceerd van",
+    "replicatedTo": "Gerepliceerd naar",
+    "riskClassification": "Risicoclassificatie",
     "search": {
         "browse": {
             "businessContext": {
-                "description": "Ik zoek naar de betekenis van data binnen een specifieke zakelijke context.",
-                "exploreButton": "Datadomeinen bekijken",
-                "exploringDescription": "Klik op de knop voor een overzicht van alle datadomeinen.",
-                "exploringTitle": "Ik verken de betekenis van data binnen een zakelijke context",
+                "description": "Ik zoek naar de betekenis van data binnen een specifieke business context.",
+                "exploreButton": "Data domeinen bekijken",
+                "exploringDescription": "Klik op de knop voor een overzicht van alle data domeinen.",
+                "exploringTitle": "Ik verken de betekenis van data binnen de business context",
                 "infoModal": {
-                    "description": "Het zakelijke deel van het data‑governancemodel legt datasemantiek en eigenaarschap vast voor de volgende typen entiteiten:"
+                    "dataAttributeDescription": "Vertegenwoordigt de betekenis en het eigenaarschap van een atomair datapunt dat onderdeel is van een specifieke data entiteit.",
+                    "dataDomainDescription": "Vertegenwoordigt afdelingen, businessunits en proceseigenaren die binnen de organisatie verantwoordelijk zijn voor data.",
+                    "dataEntityDescription": "Vertegenwoordigt de betekenis en het eigenaarschap van businessproces data artefacten die binnen een specifiek data domein worden gebruikt.",
+                    "description": "Het business deel van het data governance model legt datasemantiek en eigenaarschap vast voor de volgende typen entiteiten:",
+                    "descriptionDescription": "De definitie van het entiteitstype",
+                    "descriptionDisplayName": "Beschrijving",
+                    "iconDescription": "Het icoon dat het entiteitstype weergeeft",
+                    "iconDisplayName": "Icoon",
+                    "title": "Business context",
+                    "typeNameDescription": "De naam van het entiteitstype",
+                    "typeNameDisplayName": "Typenaam"
                 },
-                "searchInstructions": "Zoek op trefwoorden die betrekking hebben op het datadomein of de data‑entiteit die u zoekt.",
-                "searchPlaceholder": "Zoek op trefwoorde",
-                "title": "Zakelijke context"
+                "searchInstructions": "Zoek op trefwoorden die betrekking hebben op het data domein of de data entiteit die u zoekt.",
+                "searchPlaceholder": "Zoek op trefwoorden",
+                "title": "Business context"
             },
-            "description": "Welkom bij Aurelius Atlas! We helpen je graag op weg. Kies hieronder je interessegebied.",
+            "description": "Welkom bij Aurelius Atlas! We helpen u graag op weg. Kies hieronder uw interessegebied.",
             "governanceContext": {
-                "description": "Ik zoek de data‑governance verantwoordelijkheden van een specifieke persoon",
+                "description": "Ik zoek de data governance verantwoordelijkheden van een specifieke persoon",
                 "exploreButton": "Personen bekijken",
-                "exploringDescription": "Klik op de knop voor een overzicht van alle personen met data‑governance verantwoordelijkheden.",
-                "exploringTitle": "Ik verken wie binnen mijn organisatie data‑governance verantwoordelijkheden heeft",
+                "exploringDescription": "Klik op de knop voor een overzicht van alle personen met data governance verantwoordelijkheden.",
+                "exploringTitle": "Ik verken wie binnen mijn organisatie data governance verantwoordelijkheden heeft",
                 "infoModal": {
-                    "description": "Het data‑governancemodel onderscheidt verschillende typen organisatorische rollen met betrekking tot data governance:"
+                    "dataOwnerDescription": "Verantwoordelijk voor het definiëren van data entiteiten binnen het data domein en voor de effectiviteit van bijbehorende beheersmaatregelen.",
+                    "dataOwnerTypeName": "Data eigenaar",
+                    "dataStewardDescription": "Verantwoordelijk voor de uitvoering van beheersmaatregelen voor datamanagementn en bijbehorende initiatieven.",
+                    "dataStewardTypeName": "Data steward",
+                    "description": "Het data‑governancemodel onderscheidt verschillende typen organisatorische rollen met betrekking tot data governance:",
+                    "descriptionDescription": "De definitie van de rol",
+                    "descriptionDisplayName": "Beschrijving",
+                    "domainLeadDescription": "Verantwoordelijk voor de implementatie van datamanagement binnen een data domein.",
+                    "domainLeadTypeName": "Domein verantwoordelijke",
+                    "iconDescription": "Het icoon van de rol",
+                    "iconDisplayName": "Icoon",
+                    "title": "Data governance organisatie",
+                    "typeNameDescription": "De naam van de rol",
+                    "typeNameDisplayName": "Typenaam"
                 },
                 "searchInstructions": "Zoek op de naam of het e‑mailadres van de persoon die u zoekt.",
-                "searchPlaceholder": "Zoek op trefwoorde",
-                "title": "Data‑governanceorganisatie"
+                "searchPlaceholder": "Zoek op trefwoorden",
+                "title": "Data governance organisatie"
             },
             "searchPlaceholder": "Typ uw zoekopdracht",
             "technicalContext": {
@@ -352,13 +152,260 @@
                 "exploringDescription": "Klik op de knop voor een overzicht van alle systemen.",
                 "exploringTitle": "Ik verken de technische omgevingen waarin data is opgeslagen",
                 "infoModal": {
-                    "description": "Het technische deel van het data‑governancemodel legt de technische implementatie van data vast, zoals waar data is opgeslagen en het niveau van datakwaliteit. \n Het technische data‑governancemodel bestaat uit de volgende typen entiteiten:"
+                    "collectionDescription": "Vertegenwoordigt een verzameling datasets, bijvoorbeeld een database die doorgaans meerdere tabellen bevat.",
+                    "datasetDescription": "Vertegenwoordigt een verzameling datavelden. Het meest voorkomende voorbeeld van een dataset is een tabel.",
+                    "description": "Het technische deel van het data‑governancemodel legt de technische implementatie van data vast, zoals waar data is opgeslagen en het niveau van datakwaliteit. \n Het technische data‑governancemodel bestaat uit de volgende typen entiteiten:",
+                    "descriptionDescription": "De definitie van het entiteitstype",
+                    "descriptionDisplayName": "Beschrijving",
+                    "fieldDescription": "Vertegenwoordigt een enkele, ondeelbare data‑eenheid. Het meest voorkomende voorbeeld van een dataveld is een kolom in een tabel.",
+                    "iconDescription": "Het icoon dat het entiteitstype weergeeft",
+                    "iconDisplayName": "Icoon",
+                    "systemDescription": "Vertegenwoordigt de technische omgeving waarin meerdere datacollecties kunnen worden opgeslagen en waarin applicatieprocessen worden uitgevoerd.",
+                    "title": "Technische context",
+                    "typeNameDescription": "De naam van het entiteitstype",
+                    "typeNameDisplayName": "Typenaam"
                 },
                 "searchInstructions": "Zoek op trefwoorden die gerelateerd zijn aan het systeem, de collectie of de dataset die u zoekt.",
-                "searchPlaceholder": "Zoek op trefwoorde",
+                "searchPlaceholder": "Zoek op trefwoorden",
                 "title": "Technische context"
             },
             "title": "Aan de slag"
+        },
+        "components": {
+            "classification": {
+                "isPropagated": "Wordt doorgegeven",
+                "originates": "is afkomstig uit de volgende bronnen:",
+                "retrieve": "Classificatie type definitie wordt opgehaald",
+                "source": {
+                    "loading": "Laden..."
+                }
+            },
+            "dataqualitylist": {
+                "notAvailable": "Geen datakwaliteitsresultaten beschikbaar"
+            },
+            "description": {
+                "notAvailable": "Geen beschrijving beschikbaar."
+            },
+            "editor": {
+                "attribute": {
+                    "classifications": "Classificaties",
+                    "dataentity": "Data Entiteit",
+                    "dataowners": "Data Eigenaren",
+                    "datastewards": "Data Stewards",
+                    "definition": "Definitie",
+                    "definitionPlaceholder": "Definitie",
+                    "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "fields": "Datavelden",
+                    "name": "Naam*",
+                    "namePlaceholder": "Naam",
+                    "nameRequired": "Naam is verplicht.",
+                    "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
+                    "typeAlias": "Type alias",
+                    "typeAliasPlaceholder": "Type alias"
+                },
+                "collection": {
+                    "datasets": "Datasets",
+                    "definition": "Definitie",
+                    "definitionPlaceholder": "Definitie",
+                    "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "name": "Naam*",
+                    "namePlaceholder": "Naam",
+                    "nameRequired": "Naam is verplicht.",
+                    "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
+                    "system": "Systeem",
+                    "typeAlias": "Type alias",
+                    "typeAliasPlaceholder": "Type alias"
+                },
+                "components": {
+                    "classificationsInput": {
+                        "addPlaceholder": "Classificatie toevoegen...",
+                        "noClassificationsAvailable": "Geen classificaties beschikbaar"
+                    },
+                    "relationshipsInput": {
+                        "addPlaceholder": "Relatie toevoegen...",
+                        "results": "resultaten",
+                        "selectPlaceholder": "Relatie selecteren..."
+                    }
+                },
+                "dataset": {
+                    "childDataset": "Onderliggende Datasets",
+                    "collection": "Collectie",
+                    "consumers": "Afnemers ",
+                    "datasets": "Datasets",
+                    "definition": "Definitie",
+                    "definitionPlaceholder": "Definitie",
+                    "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "fields": "Datavelden",
+                    "name": "Naam*",
+                    "namePlaceholder": "Naam",
+                    "nameRequired": "Naam is verplicht.",
+                    "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
+                    "parentDataset": "Bovenliggende Dataset",
+                    "producers": "Producenten",
+                    "typeAlias": "Type alias",
+                    "typeAliasPlaceholder": "Type alias"
+                },
+                "delete": "Verwijderen",
+                "domain": {
+                    "classifications": "Classificaties",
+                    "dataEntities": "Data Entiteiten",
+                    "definition": "Definitie",
+                    "definitionPlaceholder": "Definitie",
+                    "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "domainLeads": "Domein Verantwoordelijken",
+                    "fields": "Datavelden",
+                    "name": "Naam*",
+                    "namePlaceholder": "Naam",
+                    "nameRequired": "Naam is verplicht.",
+                    "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
+                    "typeAlias": "Type alias",
+                    "typeAliasPlaceholder": "Type alias"
+                },
+                "entity": {
+                    "childEntities": "Onderliggende Entiteiten",
+                    "classifications": "Classificaties",
+                    "dataAttributes": "Data Attributen",
+                    "dataDomain": "Data Domein",
+                    "dataOwners": "Data Eigenaren",
+                    "dataStewards": "Data Stewards",
+                    "definition": "Definitie",
+                    "definitionPlaceholder": "Definitie",
+                    "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "name": "Naam*",
+                    "namePlaceholder": "Naam",
+                    "nameRequired": "Naam is verplicht.",
+                    "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
+                    "parentEntity": "Bovenliggende Entiteit",
+                    "typeAlias": "Type alias",
+                    "typeAliasPlaceholder": "Type alias"
+                },
+                "entityPlaceholder": "Entiteit",
+                "field": {
+                    "childFields": "Onderliggende Datavelden",
+                    "dataAttribute": "Data Attribuut",
+                    "dataset": "Dataset",
+                    "definition": "Definitie",
+                    "definitionPlaceholder": "Definitie",
+                    "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "fields": "Datavelden",
+                    "name": "Naam*",
+                    "namePlaceholder": "Naam",
+                    "nameRequired": "Naam is verplicht.",
+                    "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
+                    "parentField": "Bovenliggende Dataveld",
+                    "typeAlias": "Type alias",
+                    "typeAliasPlaceholder": "Type alias"
+                },
+                "govQuality": {
+                    "compliantMessage": "Conformbericht",
+                    "compliantMessagePlaceholder": "Conformbericht",
+                    "compliantMessageRequired": "Conformbericht is verplicht.",
+                    "compliantMessageWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "dimension": "Dimensie",
+                    "dimensionPlaceholder": "Dimensie",
+                    "expression": "Expressie*",
+                    "expressionPlaceholder": "Expressie",
+                    "expressionRequired": "Expressie is verplicht.",
+                    "name": "Naam*",
+                    "namePlaceholder": "Naam",
+                    "nameRequired": "Naam is verplicht.",
+                    "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "nonCompliantMessage": "Niet‑conformbericht",
+                    "nonCompliantMessagePlaceholder": "Niet‑conformbericht",
+                    "nonCompliantMessageRequired": "Niet‑conformbericht is verplicht.",
+                    "nonCompliantMessageWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
+                    "ruleDescription": "Regelbeschrijving",
+                    "ruleDescriptionPlaceholder": "Regelbeschrijving",
+                    "ruleDescriptionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "ruleType": "Regeltype",
+                    "ruleTypePlaceholder": "Regeltype"
+                },
+                "historyPlaceholder": "Geschiedenis",
+                "person": {
+                    "dataOwnerAttributes": "Data Eigenaar Attributen",
+                    "dataOwnerEntities": "Data Eigenaar Entiteiten",
+                    "domainLead": "Domein Verantwoordelijke ",
+                    "email": "Email*",
+                    "emailInvalid": "Dit e‑mailadres heeft een onjuiste indeling.",
+                    "emailPlaceholder": "Email",
+                    "emailRequired": "Email is verplicht.",
+                    "name": "Naam*",
+                    "namePlaceholder": "Naam",
+                    "nameRequired": "Naam is verplicht.",
+                    "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
+                    "properties": "Eigenschappen",
+                    "stewardAttribute": "Data Steward Attributen",
+                    "stewardEntity": "Data Steward Entiteiten",
+                    "typeAlias": "Type alias",
+                    "typeAliasPlaceholder": "Type alias"
+                },
+                "process": {
+                    "definition": "Definitie",
+                    "definitionPlaceholder": "Definitie",
+                    "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "inputs": "Invoer",
+                    "name": "Naam*",
+                    "namePlaceholder": "Naam",
+                    "nameRequired": "Naam is verplicht.",
+                    "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
+                    "outputs": "Uitvoer",
+                    "system": "Systeem"
+                },
+                "save": "Opslaan",
+                "services": {
+                    "entityValidate": {
+                        "validate": "Datagovernance kwaliteit wordt gevalideerd"
+                    },
+                    "submit": "Formulier wordt verzonden"
+                },
+                "system": {
+                    "collections": "Collecties",
+                    "definition": "Definitie",
+                    "definitionPlaceholder": "Definitie",
+                    "definitionWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "name": "Naam*",
+                    "namePlaceholder": "Naam",
+                    "nameRequired": "Naam is verplicht.",
+                    "nameWarning": "Het teken ’ (Unicode U+2019, Right Single Quotation Mark) kan weergaveproblemen veroorzaken. \n Vervang het vóór import door een standaardapostrof (').",
+                    "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
+                    "parentSystem": "Bovenliggende Systeem",
+                    "subSystems": "Subsystemen",
+                    "typeAlias": "Type alias",
+                    "typeAliasPlaceholder": "Type alias"
+                }
+            },
+            "filter": {
+                "facet": {
+                    "showLess": "Minder weergeven",
+                    "showMore": "Meer weergeven"
+                },
+                "notAvailable": "Geen filters beschikbaar."
+            },
+            "infiniteScrollContainer": {
+                "loadNextPage": "Volgende pagina laden..."
+            },
+            "people": {
+                "dataOwner": "Data Eigenaar(s)",
+                "dataSteward": "Data Steward(s)",
+                "domainLead": "Domein Verantwoordelijke(n)",
+                "empty": "Geen personen toegewezen."
+            },
+            "sorting": {
+                "relevance": "Relevantie"
+            },
+            "term": {
+                "retrieve": "Termdefinitie wordt opgehaald",
+                "term": "Term"
+            }
         },
         "createEntity": {
             "newEntity": "Nieuwe entiteit aanmaken"
@@ -374,10 +421,12 @@
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "people": "Personen",
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "collection": {
                 "dataQuality": "Datakwaliteit",
+                "dataQualityUnavailable": "Niet van toepassing",
+                "datasets": "Datasets",
                 "datasetsCards": {
                     "title": "Datasets"
                 },
@@ -386,11 +435,12 @@
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "people": "Personen",
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "components": {
                 "detailsCardsList": {
                     "filter": "Filter",
+                    "placeholder": "Zoek naar trefwoorden",
                     "results": "resultaten",
                     "showAllDescendants": "Onderliggende objecten tonen"
                 },
@@ -398,18 +448,23 @@
                     "title": "Governance Kwaliteitsregels"
                 },
                 "lineageModel": {
-                    "loading": "Linemodel laden…",
+                    "loading": "Lineage Model laden…",
                     "modelExplorerDataGovernance": {
                         "noDataGovernanceDetails": "Geen data‑governancedetails beschikbaar"
                     },
-                    "noLineageModelAvailable": "Geen linemodel beschikbaar",
-                    "retrieve": "Linemodel ophalen"
+                    "noLineageModelAvailable": "Geen Lineage Model beschikbaar",
+                    "retrieve": "Lineage Model ophalen"
                 },
                 "navigation": {
                     "details": "Details"
+                },
+                "properties": {
+                    "key": "Sleutel",
+                    "value": "Waarde"
                 }
             },
             "dataset": {
+                "available": "Beschikbaar",
                 "childDatasets": "Onderliggende Datasets",
                 "consumers": "Afnemers",
                 "consumersCards": {
@@ -429,13 +484,13 @@
                     "title": "Datavelden"
                 },
                 "governanceQualityRules": "Governance Kwaliteitsregels",
-                "lineageModel": "Linemodel",
+                "lineageModel": "Lineage Model",
                 "producers": "Producenten",
                 "producersCards": {
                     "title": "Producenten"
                 },
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "default": {
                 "description": "Beschrijving",
@@ -451,7 +506,7 @@
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "people": "Personen",
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "entity": {
                 "attributesCards": {
@@ -467,12 +522,12 @@
                 },
                 "description": "Beschrijving",
                 "entitiesCards": {
-                    "title": "Data Entiteiten"
+                    "title": "Onderliggende Entiteiten"
                 },
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "people": "Personen",
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "field": {
                 "attributesCards": {
@@ -491,7 +546,7 @@
                 },
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "properties": "Eigenschappen",
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "govQuality": {
                 "complianceChart": "Compliance overzicht",
@@ -506,19 +561,21 @@
                 },
                 "properties": "Eigenschappen"
             },
+            "loading": "Bezig met laden van {{name}}...",
             "person": {
                 "dataAttributes": "Data Attributen",
-                "dataDomains": "Datadomeinen",
+                "dataDomains": "Data Domeinen",
                 "dataEntities": "Data Entiteiten",
                 "dataOwner": "Data Eigenaar",
                 "dataSteward": "Data Steward",
-                "domainLead": "Domeinverantwoordelijke",
+                "domainLead": "Domein Verantwoordelijke",
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "governanceResponsibilities": "Governance Verantwoordelijkheden",
                 "governanceRolesCards": {
                     "title": "Governance Verantwoordelijkheden"
                 },
-                "other": "Ander"
+                "other": "Ander",
+                "properties": "Eigenschappen"
             },
             "process": {
                 "available": "Beschikbaar",
@@ -529,7 +586,7 @@
                     "title": "Invoer"
                 },
                 "inputs": "Invoer",
-                "lineageModel": "Linemodel",
+                "lineageModel": "Lineage Model",
                 "outputCards": {
                     "title": "Uitvoer"
                 },
@@ -539,7 +596,7 @@
                 "systemsCards": {
                     "title": "Systemen"
                 },
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
             },
             "system": {
                 "collections": "Collecties",
@@ -550,7 +607,7 @@
                 "dataQualityRules": "Datakwaliteitsregels",
                 "description": "Beschrijving",
                 "governanceQualityRules": "Governance Kwaliteitsregels",
-                "lineageModel": "Linemodel",
+                "lineageModel": "Lineage Model",
                 "processes": "Processen",
                 "processesCards": {
                     "title": "Processen"
@@ -560,7 +617,23 @@
                 "systemsCards": {
                     "title": "Subsystemen"
                 },
-                "unavailable": "Niet beschikbaar"
+                "unavailable": "Niet van toepassing"
+            },
+            "typeSelect": {
+                "cancel": "Sluiten",
+                "description": {
+                    "description": "De betekenis van het entiteittype",
+                    "displayName": "Beschrijving"
+                },
+                "label": "Entiteit type",
+                "noDataMessage": "Geen types beschikbaar",
+                "nullInputMessage": "Selecteer een type",
+                "requiredErrorMessage": "Een entiteit moet een type hebben",
+                "title": "Entiteitstypen",
+                "translatedName": {
+                    "description": "De naam van het entiteittype",
+                    "displayName": "Typenaam"
+                }
             }
         },
         "editEntity": {
@@ -570,14 +643,37 @@
             "anotherQuery": "Probeer een andere zoekopdracht.",
             "noResults": "Geen resultaten gevonden",
             "results": "resultaten"
+        },
+        "services": {
+            "appSearchResults": {
+                "loading": "Zoekresultaten pagina wordt geladen"
+            },
+            "entityAudit": {
+                "retrieve": "Auditlog wordt opgehaald"
+            },
+            "entityDelete": {
+                "delete": "Entiteit wordt verwijderd"
+            },
+            "entityDetails": {
+                "retrieve": "Details van entiteit worden opgehaald"
+            },
+            "entityUpdate": {
+                "save": "Entiteit wordt opgeslagen"
+            },
+            "searchResult": {
+                "retrieve": "Zoekresultaat wordt opgehaald"
+            },
+            "typeDefs": {
+                "retrieve": "Typedefinities worden opgehaald"
+            }
         }
     },
-    "sourcetype": "Source",
-    "stewardAttribute": "Data Steward for Attribute",
-    "stewardEntity": "Data Steward for Entities",
-    "supertypenames": "Type Name",
-    "systems": "Systems",
-    "typename": "Type Name",
-    "updatedAt": "Updated at",
-    "version": "Version"
+    "sourcetype": "Bron",
+    "stewardAttribute": "Data Steward voor Data Attributen",
+    "stewardEntity": "Data Steward voor Data Entiteiten",
+    "supertypenames": "Typenaam",
+    "systems": "Systemen",
+    "typename": "Typenaam",
+    "updatedAt": "Bijgewerkt op",
+    "version": "Versie"
 }

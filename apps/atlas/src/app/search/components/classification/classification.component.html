@@ -12,7 +12,11 @@
                 tooltipDirection="bottom"
                 >{{ classificationType.name | translate }}
             </span>
-            <div *ngIf="isPropagated$ | async" class="tag is-primary dropdown is-hoverable" title="Is propagated">
+            <div
+                *ngIf="isPropagated$ | async"
+                class="tag is-primary dropdown is-hoverable"
+                [title]="'search.components.classification.isPropagated' | translate"
+            >
                 <div class="dropdown-trigger">
                     <span class="icon is-small">
                         <fa-icon [icon]="faAngleDoubleRight"></fa-icon>

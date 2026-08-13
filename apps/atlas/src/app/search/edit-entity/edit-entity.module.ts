@@ -4,10 +4,11 @@ import { EntityDetailsService } from '../services/entity-details/entity-details.
 import { EditEntityResolver } from './edit-entity-resolver';
 import { EditEntityRoutingModule } from './edit-entity-routing.module';
 import { EditEntityComponent } from './edit-entity.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  declarations: [EditEntityComponent],
-  imports: [EditorModule, EditEntityRoutingModule],
-  providers: [EditEntityResolver, EntityDetailsService],
+    declarations: [EditEntityComponent],
+    imports: [EditorModule, EditEntityRoutingModule, TranslateModule],
+    providers: [EditEntityResolver, EntityDetailsService],
 })
 export class EditEntityModule {}

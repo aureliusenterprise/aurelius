@@ -1,0 +1,13 @@
+:host {
+	display: block;
+}
+
+.description {
+	overflow: visible;
+}
+
+.description ::ng-deep .content {
+	margin-bottom: 0;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
