@@ -391,7 +391,7 @@
     "targetVersion": "latest",
     "confirmedPackageUpdates": true,
     "runningMigrations": [
-      "rewrite-web-internal-subpath-imports"
+      "23-0-0-move-typescript-compilation-import"
     ],
     "completedMigrations": {
       "23-0-0-consolidate-release-tag-config": {
@@ -419,7 +419,14 @@
         "type": "successful",
         "name": "rewrite-web-internal-subpath-imports",
         "changedFiles": [],
-        "ref": "f8cad6a8c5b8e0ab3dba4339dbcbfc61f10b153d",
+        "ref": "8eacb6f06ef4c5cfdef6f76cf522fd4e04b51c5c",
+        "nextSteps": []
+      },
+      "23-0-0-move-typescript-compilation-import": {
+        "type": "successful",
+        "name": "23-0-0-move-typescript-compilation-import",
+        "changedFiles": [],
+        "ref": "0f9cc99b376d7f16f1e858270ff6d225dc3ed5e0",
         "nextSteps": []
       }
     }
