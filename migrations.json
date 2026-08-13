@@ -391,7 +391,7 @@
     "targetVersion": "latest",
     "confirmedPackageUpdates": true,
     "runningMigrations": [
-      "update-23-0-0-migrate-create-nodes-v2-import-2"
+      "23-1-0-add-ignore-deprecations-for-ts6"
     ],
     "completedMigrations": {
       "23-0-0-consolidate-release-tag-config": {
@@ -447,7 +447,39 @@
         "type": "successful",
         "name": "update-23-0-0-migrate-create-nodes-v2-import-2",
         "changedFiles": [],
-        "ref": "184b4be0ab9727ee0da7923ce8a90fd0c313151c",
+        "ref": "c66dccce04808bd0ce819ac65eaddbae741cbc51",
+        "nextSteps": []
+      },
+      "23-1-0-add-ignore-deprecations-for-ts6": {
+        "type": "successful",
+        "name": "23-1-0-add-ignore-deprecations-for-ts6",
+        "changedFiles": [
+          {
+            "path": "apps/aurelius-frontend-example/tsconfig.json",
+            "type": "UPDATE"
+          },
+          {
+            "path": "libs/angular/aurelius-data-access/tsconfig.json",
+            "type": "UPDATE"
+          },
+          {
+            "path": "libs/angular/aurelius-observability/tsconfig.json",
+            "type": "UPDATE"
+          },
+          {
+            "path": "libs/angular/aurelius-ui/.storybook/tsconfig.json",
+            "type": "UPDATE"
+          },
+          {
+            "path": "libs/angular/aurelius-ui/tsconfig.json",
+            "type": "UPDATE"
+          },
+          {
+            "path": "tsconfig.base.json",
+            "type": "UPDATE"
+          }
+        ],
+        "ref": "c449b4560577c8d633a5df8c6b62f73d39dbf54d",
         "nextSteps": []
       }
     }
