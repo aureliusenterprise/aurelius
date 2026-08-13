@@ -391,7 +391,7 @@
     "targetVersion": "latest",
     "confirmedPackageUpdates": true,
     "runningMigrations": [
-      "23-1-0-add-ignore-deprecations-for-ts6"
+      "23-1-0-set-tsconfig-root-dir-for-ts6"
     ],
     "completedMigrations": {
       "23-0-0-consolidate-release-tag-config": {
@@ -479,7 +479,14 @@
             "type": "UPDATE"
           }
         ],
-        "ref": "c449b4560577c8d633a5df8c6b62f73d39dbf54d",
+        "ref": "1153c060f480e58b2e5b5c1585a3b83ef6d7568f",
+        "nextSteps": []
+      },
+      "23-1-0-set-tsconfig-root-dir-for-ts6": {
+        "type": "successful",
+        "name": "23-1-0-set-tsconfig-root-dir-for-ts6",
+        "changedFiles": [],
+        "ref": "c9392d4014926ee23ab078b991dd1d17c8336919",
         "nextSteps": []
       }
     }
