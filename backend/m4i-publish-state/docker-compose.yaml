@@ -2,7 +2,7 @@ name: m4i-publish-state
 
 services:
     jobmanager:
-        image: m4i-publish-state:local
+        image: ghcr.io/aureliusenterprise/m4i-publish-state:local
         command: standalone-job -pym m4i_publish_state
         configs:
             - source: certs
@@ -33,7 +33,7 @@ services:
             - checkpoints:/tmp/flink-checkpoints-directory
 
     taskmanager:
-        image: m4i-publish-state:local
+        image: ghcr.io/aureliusenterprise/m4i-publish-state:local
         command: taskmanager
         configs:
             - source: certs
