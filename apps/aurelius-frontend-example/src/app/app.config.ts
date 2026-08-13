@@ -1,4 +1,4 @@
-import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import { provideHttpClient, withInterceptors, withXhr } from "@angular/common/http";
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from "@angular/core";
 import { provideRouter } from "@angular/router";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
@@ -38,7 +38,10 @@ export async function initialize(): Promise<ApplicationConfig> {
                 useValue: [{ urlPattern: /^.*\/api\/.*$/ }],
             },
             provideRouter(routes),
-            provideHttpClient(withInterceptors([aureliusOpenTelemetryHttpInterceptor, includeBearerTokenInterceptor])),
+            provideHttpClient(
+                withXhr(),
+                withInterceptors([aureliusOpenTelemetryHttpInterceptor, includeBearerTokenInterceptor]),
+            ),
             provideZonelessChangeDetection(),
         ],
     };

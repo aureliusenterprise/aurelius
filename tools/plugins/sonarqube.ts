@@ -1,5 +1,5 @@
 import { createNodesFromFiles, CreateNodesResult, CreateNodes } from "@nx/devkit";
-import { dirname } from "node:path";
+import { basename, dirname } from "node:path";
 
 export interface SonarQubePluginOptions {
     readonly sonarTargetName?: string;
@@ -28,6 +28,7 @@ async function createNodesInternal(
     return {
         projects: {
             [projectRoot]: {
+                name: basename(projectRoot),
                 targets: {
                     [sonarTargetName]: {
                         dependsOn: ["decrypt"],

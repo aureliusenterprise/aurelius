@@ -122,7 +122,11 @@ function buildTargets(
             description: "Lint the Python code",
         },
         options: {
-            lintFilePatterns: [moduleName, testPath, e2ePath],
+            lintFilePatterns: [
+                moduleName,
+                ...(existsSync(join(projectRoot, testPath)) ? [testPath] : []),
+                ...(existsSync(join(projectRoot, e2ePath)) ? [e2ePath] : []),
+            ],
         },
     };
 
