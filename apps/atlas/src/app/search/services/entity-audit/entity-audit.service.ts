@@ -35,9 +35,9 @@ export class EntityAuditService extends BasicStore<EntityAuditStoreContext> {
     private init() {
         // Whenever the entity changes, update the audit log
         this.entityDetailsService
-            .select(['entityDetails', 'entity'])
+            .select('entityId')
             .pipe(
-                switchMap((entity) => this.handleRetrieveEntityAudits(entity.guid)),
+                switchMap((guid) => this.handleRetrieveEntityAudits(guid)),
                 untilDestroyed(this),
             )
             .subscribe();
@@ -45,14 +45,31 @@ export class EntityAuditService extends BasicStore<EntityAuditStoreContext> {
 
     @ManagedTask('search.services.entityAudit.retrieve', { isQuiet: true })
     @MonitorAsync('isRetrievingAudits')
-    private async handleRetrieveEntityAudits(guid: string) {
-        if (guid.startsWith('-')) return;
-
-        const audits = await retrieveAuditsPaged(guid);
-
+    private async handleRetrieveEntityAudits(guid?: string) {
         this.update({
-            description: 'New entity audits available',
-            payload: { audits },
+            description: 'Reset entity audits',
+            payload: { audits: undefined },
         });
+
+        if (!guid || !guid.trim() || guid.startsWith('-')) return;
+
+        try {
+            const currentGuid = await this.entityDetailsService.get('entityId');
+            if (currentGuid !== guid) return;
+
+            const audits = await retrieveAuditsPaged(guid);
+
+            this.update({
+                description: 'New entity audits available',
+                payload: { audits },
+            });
+        } catch (error) {
+            // A stale or deleted GUID can still be requested while a previous edit flow is torn down.
+            // Ignore it and wait for the new edit target to publish its own GUID.
+            this.update({
+                description: 'Ignored stale entity audit lookup',
+                payload: { audits: undefined },
+            });
+        }
     }
 }
