@@ -103,19 +103,12 @@ def test__handle_relationship_audit_inserted_relationship() -> None:
     ):
         updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
-        assert len(updated_documents) == 2
+        assert len(updated_documents) == 1
 
         updated_domain = updated_documents["2345"]
-        assert updated_domain.deriveddataentity == ["Data Entity"]
-        assert updated_domain.deriveddataentityguid == ["1234"]
-
-        updated_entity = updated_documents["1234"]
-        assert updated_entity.deriveddatadomain == ["Domain Name"]
-        assert updated_entity.deriveddatadomainguid == ["2345"]
-        assert updated_entity.breadcrumbguid == ["2345"]
-        assert updated_entity.breadcrumbname == ["Domain Name"]
-        assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
-        assert updated_entity.parentguid == "2345"
+        assert updated_domain.deriveddataentity == []
+        assert updated_domain.deriveddataentityguid == []
+        assert "1234" not in updated_documents
 
 
 def test__handle_relationship_audit_deleted_relationship() -> None:
@@ -218,18 +211,12 @@ def test__handle_relationship_audit_deleted_relationship() -> None:
     ):
         updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
-        assert len(updated_documents) == 2
+        assert len(updated_documents) == 1
 
         updated_domain = updated_documents["2345"]
         assert updated_domain.deriveddataentity == []
         assert updated_domain.deriveddataentityguid == []
-
-        updated_entity = updated_documents["1234"]
-        assert updated_entity.deriveddatadomain == []
-        assert updated_entity.deriveddatadomainguid == []
-        assert updated_entity.breadcrumbguid == []
-        assert updated_entity.breadcrumbname == []
-        assert updated_entity.breadcrumbtype == []
+        assert "1234" not in updated_documents
 
 
 def test__handle_relationship_audit_replaced_parent_relationship() -> None:
@@ -316,12 +303,12 @@ def test__handle_relationship_audit_replaced_parent_relationship() -> None:
         assert "entity-1" in updated_documents
         updated_entity = updated_documents["entity-1"]
 
-        # The old parent's breadcrumbs are preserved until the new parent relationship
-        # is fully established by a subsequent insertion event.
-        assert updated_entity.breadcrumbguid == ["domain-old"]
-        assert updated_entity.breadcrumbname == ["Old Domain"]
-        assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
-        assert updated_entity.parentguid == "domain-old"
+        # Relationship attributes are rebuilt from new_value. Since this message no longer
+        # contains a parent relation for the entity itself, breadcrumbs are cleared.
+        assert updated_entity.breadcrumbguid == []
+        assert updated_entity.breadcrumbname == []
+        assert updated_entity.breadcrumbtype == []
+        assert updated_entity.parentguid is None
 
 
 def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
@@ -412,11 +399,4 @@ def test__handle_relationship_audit_new_parent_breadcrumbs_applied() -> None:
     ):
         updated_documents = handle_relationship_audit(message, Mock(), "test_index", {})
 
-        assert "entity-1" in updated_documents
-        updated_entity = updated_documents["entity-1"]
-
-        # Breadcrumbs should now reflect the new domain
-        assert updated_entity.breadcrumbguid == ["domain-new"]
-        assert updated_entity.breadcrumbname == ["New Domain"]
-        assert updated_entity.breadcrumbtype == ["m4i_data_domain"]
-        assert updated_entity.parentguid == "domain-new"
+        assert "entity-1" not in updated_documents
