@@ -12,6 +12,10 @@ from sqlmodel import Field, SQLModel, func
 class Entity(AvroBase, SQLModel, table=True):
     """A model that represents an simple entity that can be serialized to Avro and stored in a SQL database."""
 
+    # Deletes may legitimately match 0 rows (e.g. idempotent test teardown or
+    # CDC-triggered deletes where the row is already gone), so suppress the
+    # "expected to delete N row(s); 0 were matched" warning.
+    __mapper_args__ = {"confirm_deleted_rows": False}
     description: str | None = Field(
         default=None,
         description="A description of the entity",
