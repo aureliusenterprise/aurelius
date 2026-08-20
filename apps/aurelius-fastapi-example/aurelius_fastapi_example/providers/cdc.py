@@ -168,7 +168,7 @@ class EntityNotificationBroadcaster(Broadcaster[Envelope[Entity]]):
             )
 
             self.broadcast(envelope)
-        except (SQLAlchemyError, ValidationError):
+        except SQLAlchemyError, ValidationError:
             LOGGER.exception("Error broadcasting envelope for notification: %s", notify)
 
     def __enter__(self) -> Self:

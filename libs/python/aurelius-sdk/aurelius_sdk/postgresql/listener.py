@@ -64,7 +64,7 @@ class PostgresListener:
         try:
             if self._notifies:
                 self._notifies.close()
-        except (psycopg.Error, RuntimeError):
+        except psycopg.Error, RuntimeError:
             LOGGER.exception("Failed to close PostgreSQL notification generator for channel '%s'", self._channel)
         finally:
             self._notifies = None
