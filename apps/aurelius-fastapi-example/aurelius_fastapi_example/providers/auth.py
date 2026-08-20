@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordBearer
 from jwt.algorithms import RSAAlgorithm
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, ConfigDict, HttpUrl
 
 from aurelius_fastapi_example.globals import LOGGER
 
@@ -22,12 +22,9 @@ auth_scheme = HTTPBearer(auto_error=True)
 class OpenIdConfig(BaseModel):
     """OpenID configuration settings."""
 
+    model_config = ConfigDict(frozen=True)
+
     jwks_uri: HttpUrl
-
-    class Config:
-        """Model configuration."""
-
-        frozen = True
 
 
 @cache
