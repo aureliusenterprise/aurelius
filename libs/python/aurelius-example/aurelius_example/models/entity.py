@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from functools import total_ordering
 from typing import Literal
 from uuid import UUID, uuid4
 
@@ -9,6 +10,7 @@ from sqlalchemy.schema import MetaData
 from sqlmodel import Field, SQLModel, func
 
 
+@total_ordering
 class Entity(AvroBase, SQLModel, table=True):
     """A model that represents an simple entity that can be serialized to Avro and stored in a SQL database."""
 

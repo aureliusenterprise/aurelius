@@ -1,5 +1,8 @@
+from collections.abc import Callable
 from datetime import UTC, datetime
+from operator import ge, gt, le
 from unittest.mock import ANY
+from uuid import uuid4
 
 import psycopg
 import pytest
@@ -282,6 +285,88 @@ def test__example_entity_time_modified_updates_on_change(
 def test__example_entity_comparator(a: Entity, b: Entity, *, expected: bool) -> None:
     """Test the comparison operator for the Entity class."""
     assert (a < b) == expected
+
+
+@pytest.mark.parametrize(
+    ("operator", "expected"),
+    [
+        (le, True),
+        (gt, False),
+        (ge, False),
+    ],
+    ids=["less_equal_earlier", "greater_than_earlier", "greater_equal_earlier"],
+)
+def test__example_entity_derived_operators_earlier_timestamp(
+    operator: Callable[[Entity, Entity], bool], *, expected: bool
+) -> None:
+    """Test the operators derived from __lt__ via functools.total_ordering for an earlier timestamp."""
+    a = Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC))
+    b = Entity(time_created=datetime(2024, 1, 2, tzinfo=UTC))
+    assert operator(a, b) == expected
+
+
+@pytest.mark.parametrize(
+    ("operator", "expected"),
+    [
+        (le, False),
+        (gt, True),
+        (ge, True),
+    ],
+    ids=["less_equal_later", "greater_than_later", "greater_equal_later"],
+)
+def test__example_entity_derived_operators_later_timestamp(
+    operator: Callable[[Entity, Entity], bool], *, expected: bool
+) -> None:
+    """Test the operators derived from __lt__ via functools.total_ordering for a later timestamp."""
+    a = Entity(time_created=datetime(2024, 1, 2, tzinfo=UTC))
+    b = Entity(time_created=datetime(2024, 1, 1, tzinfo=UTC))
+    assert operator(a, b) == expected
+
+
+@pytest.mark.parametrize(
+    ("operator", "expected"),
+    [
+        (le, True),
+        (gt, False),
+        (ge, True),
+    ],
+    ids=["less_equal_equal_timestamps", "greater_than_equal_timestamps", "greater_equal_equal_timestamps"],
+)
+def test__example_entity_derived_operators_equal_timestamps(
+    operator: Callable[[Entity, Entity], bool], *, expected: bool
+) -> None:
+    """Test the operators derived from __lt__ via functools.total_ordering for equal timestamps.
+
+    Note: ``<=`` and ``>=`` fall back to field-based equality (inherited from Pydantic), so two
+    entities with identical timestamps but different guids are not considered equal by them.
+    """
+    guid = uuid4()
+    a = Entity(guid=guid, time_created=datetime(2024, 1, 1, tzinfo=UTC))
+    b = Entity(guid=guid, time_created=datetime(2024, 1, 1, tzinfo=UTC))
+    assert operator(a, b) == expected
+
+
+@pytest.mark.parametrize(
+    ("operator", "expected"),
+    [
+        (le, False),
+        (gt, True),
+        (ge, True),
+    ],
+    ids=["less_equal_no_timestamps", "greater_than_no_timestamps", "greater_equal_no_timestamps"],
+)
+def test__example_entity_derived_operators_without_timestamps(
+    operator: Callable[[Entity, Entity], bool], *, expected: bool
+) -> None:
+    """Test the operators derived from __lt__ via functools.total_ordering when no timestamps are set.
+
+    Both entities fall back to ``datetime.min`` for ordering and differ in guid (field-based
+    equality is false). Since neither entity is "less than" the other, total_ordering derives
+    ``>``/``>=`` as negations of ``<=``/``<``, so both directions compare as greater. This pins
+    down that degenerate behavior; persisted entities always have ``time_created`` set, so it only
+    affects freshly constructed unsaved objects.
+    """
+    assert operator(Entity(), Entity()) == expected
 
 
 def test__example_entity_trigger_cleanup_on_drop(db_engine: Engine, db_connection: Connection) -> None:
