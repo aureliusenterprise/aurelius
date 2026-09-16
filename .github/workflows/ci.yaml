@@ -65,10 +65,7 @@ jobs:
               uses: nrwl/nx-set-shas@v5
 
             - name: Test affected projects
-              run: npx nx affected -t test -c ci
-
-            - name: E2E test affected projects
-              run: npx nx affected -t e2e -c ci
+              run: npx nx affected -t test e2e -c ci
 
             - name: Upload coverage reports
               uses: actions/upload-artifact@v7
@@ -79,6 +76,26 @@ jobs:
                       **/jacocoTestReport.xml
                       **/lcov.info
                   if-no-files-found: ignore
+
+            - name: Collect failure diagnostics
+              if: failure()
+              run: |
+                  mkdir -p reports/failure-diagnostics
+                  docker ps --all --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" \
+                    > reports/failure-diagnostics/container-status.txt 2>&1 || true
+                  for project in $(docker compose ls --all -q); do
+                    echo "Collecting logs for project: $project"
+                    docker compose --project-name "$project" logs --no-color \
+                      > "reports/failure-diagnostics/${project}-logs.txt" 2>&1 || true
+                  done
+
+            - name: Upload failure diagnostics
+              if: failure()
+              uses: actions/upload-artifact@v7
+              with:
+                  name: e2e-failure-diagnostics
+                  path: reports/failure-diagnostics/
+                  retention-days: 30
 
     build-and-scan:
         runs-on: ubuntu-latest

@@ -45,6 +45,26 @@ jobs:
                       **/jacocoTestReport.xml
                       **/lcov.info
 
+            - name: Collect failure diagnostics
+              if: failure()
+              run: |
+                  mkdir -p reports/failure-diagnostics
+                  docker ps --all --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" \
+                    > reports/failure-diagnostics/container-status.txt 2>&1 || true
+                  for project in $(docker compose ls --all -q); do
+                    echo "Collecting logs for project: $project"
+                    docker compose --project-name "$project" logs --no-color \
+                      > "reports/failure-diagnostics/${project}-logs.txt" 2>&1 || true
+                  done
+
+            - name: Upload failure diagnostics
+              if: failure()
+              uses: actions/upload-artifact@v7
+              with:
+                  name: e2e-failure-diagnostics
+                  path: reports/failure-diagnostics/
+                  retention-days: 30
+
     build-and-scan:
         runs-on: ubuntu-latest
 
