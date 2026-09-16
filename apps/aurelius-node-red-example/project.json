@@ -12,6 +12,10 @@
                 },
                 {
                     "target": "docker-build"
+                },
+                {
+                    "dependencies": true,
+                    "target": "up"
                 }
             ],
             "executor": "@nxlv/python:run-commands",

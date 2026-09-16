@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 
 export interface DockerComposePluginOptions {
     readonly serveTargetName?: string;
+    readonly upTargetName?: string;
 }
 
 const glob = "**/docker-compose.{yml,yaml}";
@@ -22,7 +23,7 @@ export const createNodes: CreateNodes<DockerComposePluginOptions> = [
 
 async function createNodesInternal(
     configFilePath: string,
-    { serveTargetName = "serve" }: DockerComposePluginOptions = {},
+    { serveTargetName = "serve", upTargetName = "up" }: DockerComposePluginOptions = {},
 ): Promise<CreateNodesResult> {
     const projectRoot = dirname(configFilePath);
 
@@ -47,6 +48,21 @@ async function createNodesInternal(
                         ],
                         metadata: {
                             description: "Run the service locally.",
+                        },
+                        options: {
+                            cwd: projectRoot,
+                        },
+                    },
+                    [upTargetName]: {
+                        command: "docker compose up -d --wait",
+                        dependsOn: [
+                            { target: "decrypt" },
+                            { target: "docker-build" },
+                            { target: "docker-build", dependencies: true },
+                            { target: upTargetName, dependencies: true },
+                        ],
+                        metadata: {
+                            description: "Start the service in the background and wait for it to become healthy.",
                         },
                         options: {
                             cwd: projectRoot,

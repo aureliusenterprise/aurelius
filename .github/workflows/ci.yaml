@@ -65,7 +65,10 @@ jobs:
               uses: nrwl/nx-set-shas@v5
 
             - name: Test affected projects
-              run: npx nx affected -t test e2e -c ci
+              run: npx nx affected -t test -c ci
+
+            - name: E2E test affected projects
+              run: npx nx affected -t e2e -c ci
 
             - name: Upload coverage reports
               uses: actions/upload-artifact@v7

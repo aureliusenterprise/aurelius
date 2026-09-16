@@ -76,6 +76,10 @@ function buildTargets(
                 {
                     target: "docker-build",
                 },
+                {
+                    target: "up",
+                    dependencies: true,
+                },
             ],
             executor: "@nxlv/python:run-commands",
             metadata: {

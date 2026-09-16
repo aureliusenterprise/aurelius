@@ -1,6 +1,6 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "implicitDependencies": ["aurelius-dev-keycloak", "aurelius-fastapi-example"],
+    "implicitDependencies": ["aurelius-dev-keycloak", "aurelius-dev-observability", "aurelius-fastapi-example"],
     "name": "aurelius-frontend-example",
     "prefix": "aurelius-frontend-example",
     "projectType": "application",
@@ -79,6 +79,10 @@
                 },
                 {
                     "target": "docker-build"
+                },
+                {
+                    "dependencies": true,
+                    "target": "up"
                 }
             ],
             "executor": "@nxlv/python:run-commands",

@@ -3,6 +3,7 @@ import java.io.File
 
 nx {
     set("name", "aurelius-java-producer-example")
+    array("implicitDependencies", "aurelius-dev-kafka")
 }
 
 plugins {
@@ -105,7 +106,14 @@ tasks.register("projectReportAll") {
 tasks.register("e2e") {
     group = "verification"
     nx {
-        array("dependsOn", "decrypt", "docker-build")
+        array("dependsOn") {
+            add("decrypt")
+            add("docker-build")
+            obj {
+                set("target", "up")
+                set("dependencies", true)
+            }
+        }
         set("executor", "@nxlv/python:run-commands")
         set("metadata") {
             set("description", "Run the end-to-end tests for this application")
