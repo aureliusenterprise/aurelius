@@ -1,7 +1,15 @@
 {
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["aurelius-dev-observability"],
     "name": "aurelius-dev-keycloak",
     "projectType": "application",
     "tags": [],
-    "targets": {}
+    "targets": {
+        "serve": {
+            "dependsOn": ["decrypt", "docker-build", "^docker-build", "^serve"]
+        },
+        "up": {
+            "dependsOn": ["decrypt", "docker-build", "^docker-build", "^up"]
+        }
+    }
 }
