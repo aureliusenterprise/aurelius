@@ -3,7 +3,6 @@ name: aurelius-dev-kafka
 services:
     broker:
         image: dhi.io/kafka:4.3-debian13
-        env_file: .env
         ports:
             - "9092:9092"
             - "9094:9094"
@@ -15,7 +14,7 @@ services:
             start_period: 30s
         restart: unless-stopped
         volumes:
-            - ./server.properties:/opt/kafka/config/server.properties:ro
+            - ./server.properties:/opt/kafka/config/server.properties
             - kafka-data:/opt/kafka/logs
             - kafka-kraft:/tmp/kraft-combined-logs
 
