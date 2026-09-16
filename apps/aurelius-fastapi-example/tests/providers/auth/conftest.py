@@ -25,7 +25,7 @@ def keycloak_admin_credentials() -> dict[str, str]:
 def keycloak_container(keycloak_admin_credentials: dict[str, str]) -> Generator[DockerContainer]:
     """Start a Keycloak container to act as a real OIDC provider for auth tests."""
     with (
-        DockerContainer("keycloak/keycloak:latest")
+        DockerContainer("dhi.io/keycloak:26-debian13")
         .with_env("KEYCLOAK_ADMIN", keycloak_admin_credentials["username"])
         .with_env("KEYCLOAK_ADMIN_PASSWORD", keycloak_admin_credentials["password"])
         .with_env("KC_HEALTH_ENABLED", "true")
@@ -56,14 +56,14 @@ def auth_base_url(auth_settings: Settings) -> str:
     return f"{auth_settings.auth_server_url}realms/{auth_settings.auth_realm_name}"
 
 
-@pytest.fixture()
+@pytest.fixture
 def http_client() -> Generator[httpx.Client]:
     """Provide a shared HTTP client for auth provider tests."""
     with httpx.Client(timeout=5.0) as client:
         yield client
 
 
-@pytest.fixture()
+@pytest.fixture
 def keycloak_access_token(
     auth_base_url: str,
     keycloak_admin_credentials: dict[str, str],
