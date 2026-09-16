@@ -617,9 +617,8 @@ public class Entity
     }
 
     @SuppressWarnings("unchecked")
-    private static final org.apache.avro.io.DatumWriter<Entity> WRITER$ = (org.apache.avro.io.DatumWriter<
-        Entity
-    >) MODEL$.createDatumWriter(SCHEMA$);
+    private static final org.apache.avro.io.DatumWriter<Entity> WRITER$ =
+        (org.apache.avro.io.DatumWriter<Entity>) MODEL$.createDatumWriter(SCHEMA$);
 
     @Override
     public void writeExternal(java.io.ObjectOutput out) throws java.io.IOException {
@@ -627,9 +626,8 @@ public class Entity
     }
 
     @SuppressWarnings("unchecked")
-    private static final org.apache.avro.io.DatumReader<Entity> READER$ = (org.apache.avro.io.DatumReader<
-        Entity
-    >) MODEL$.createDatumReader(SCHEMA$);
+    private static final org.apache.avro.io.DatumReader<Entity> READER$ =
+        (org.apache.avro.io.DatumReader<Entity>) MODEL$.createDatumReader(SCHEMA$);
 
     @Override
     public void readExternal(java.io.ObjectInput in) throws java.io.IOException {
