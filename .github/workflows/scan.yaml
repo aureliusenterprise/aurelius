@@ -73,7 +73,7 @@ jobs:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Build all docker images
-              run: npx nx run-many -t docker-build
+              run: npx nx run-many -t docker-build -c ci
 
             - name: Generate vulnerability reports
               run: npx nx run-many -t docker-vuln-scan -c sarif
