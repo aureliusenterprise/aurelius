@@ -2,7 +2,6 @@ import json
 import os
 from collections.abc import Generator
 from pathlib import Path
-from typing import cast
 
 import dotenv
 import pytest
@@ -153,7 +152,7 @@ def dlq_topic(kafka_admin_client: KafkaAdminClient, settings: Settings) -> Gener
 
 
 @pytest.fixture(scope="session")
-def database(postgres: DockerCompose, settings: Settings) -> Generator[Engine]:
+def database(postgres: DockerCompose, settings: Settings) -> Engine:
     """Setup and teardown the database."""
     hostname, port = postgres.get_service_host_and_port("postgres", 5432)
 
@@ -166,7 +165,7 @@ def database(postgres: DockerCompose, settings: Settings) -> Generator[Engine]:
         username=settings.postgres_user,
         password=settings.postgres_password.get_secret_value(),
         host=hostname,
-        port=cast("int", port),
+        port=port,
         database=settings.postgres_db,
     )
 
@@ -175,13 +174,10 @@ def database(postgres: DockerCompose, settings: Settings) -> Generator[Engine]:
     # Create the database schema
     SQLModel.metadata.create_all(engine)
 
-    yield engine
-
-    # Drop the database schema
-    SQLModel.metadata.drop_all(engine)
+    return engine
 
 
-@pytest.fixture()
+@pytest.fixture
 def session(database: Engine) -> Generator[Session]:
     """Return a SQLModel session."""
     with Session(database) as session:

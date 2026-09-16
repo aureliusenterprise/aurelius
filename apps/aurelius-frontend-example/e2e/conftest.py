@@ -1,7 +1,6 @@
 import re
 from collections.abc import Generator
 from pathlib import Path
-from typing import cast
 
 import dotenv
 import pytest
@@ -128,7 +127,7 @@ def authenticated(page: Page, base_url: str, settings: Settings) -> Page:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
+def database(compose: DockerCompose, settings: Settings) -> Engine:
     """Setup and teardown the database."""
     hostname, port = compose.get_service_host_and_port("postgres-app", settings.database_port)
 
@@ -141,7 +140,7 @@ def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
         username=settings.database_username,
         password=settings.database_password.get_secret_value(),
         host=hostname,
-        port=cast("int", port),
+        port=port,
         database=settings.database_name,
     )
 
@@ -150,13 +149,10 @@ def database(compose: DockerCompose, settings: Settings) -> Generator[Engine]:
     # Create the database schema
     SQLModel.metadata.create_all(engine)
 
-    yield engine
-
-    # Drop the database schema
-    SQLModel.metadata.drop_all(engine)
+    return engine
 
 
-@pytest.fixture()
+@pytest.fixture
 def session(database: Engine) -> Generator[Session]:
     """Return a SQLModel session."""
     with Session(database, expire_on_commit=False) as session:

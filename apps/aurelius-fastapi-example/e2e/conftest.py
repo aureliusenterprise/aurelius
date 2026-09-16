@@ -128,7 +128,7 @@ def compose(database: Engine, keycloak: DockerCompose, observability: DockerComp
 
 
 @pytest.fixture(scope="session")
-def database(postgres: DockerCompose, settings: Settings) -> Generator[Engine]:
+def database(postgres: DockerCompose, settings: Settings) -> Engine:
     """Setup and teardown the database."""
     hostname, port = postgres.get_service_host_and_port("postgres", settings.database_port)
 
@@ -150,20 +150,17 @@ def database(postgres: DockerCompose, settings: Settings) -> Generator[Engine]:
     # Create the database schema
     SQLModel.metadata.create_all(engine)
 
-    yield engine
-
-    # Drop the database schema
-    SQLModel.metadata.drop_all(engine)
+    return engine
 
 
-@pytest.fixture()
+@pytest.fixture
 def session(database: Engine) -> Generator[Session]:
     """Return a SQLModel session."""
     with Session(database, expire_on_commit=False) as session:
         yield session
 
 
-@pytest.fixture()
+@pytest.fixture
 def entities(session: Session) -> Generator[list[Entity]]:
     """Create and return a list of test entities."""
     test_entities = [
@@ -185,7 +182,7 @@ def entities(session: Session) -> Generator[list[Entity]]:
     session.commit()
 
 
-@pytest.fixture()
+@pytest.fixture
 def entity(session: Session) -> Generator[Entity]:
     """Create and return a single test entity."""
     entity = Entity(name="Test Widget", description="A test widget")
@@ -200,7 +197,7 @@ def entity(session: Session) -> Generator[Entity]:
     session.commit()
 
 
-@pytest.fixture()
+@pytest.fixture
 def connection(compose: DockerCompose) -> Generator[http.client.HTTPConnection]:
     """Return an HTTP connection to the API."""
     host, port = compose.get_service_host_and_port("aurelius-fastapi-example", 8000)
@@ -227,7 +224,7 @@ def keycloak_client(keycloak: DockerCompose, settings: Settings) -> KeycloakOpen
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def token(keycloak_client: KeycloakOpenID, settings: Settings) -> str:
     """Return a valid access token."""
     return keycloak_client.token(
