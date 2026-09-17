@@ -12,7 +12,7 @@ def clear_database_cache() -> Generator[None]:
     db.database.cache_clear()
 
 
-@pytest.fixture()
+@pytest.fixture
 def broadcaster(db_settings: db.Settings) -> Generator[EntityNotificationBroadcaster]:
     """Provide a started Broadcaster instance for tests that need it."""
     get_broadcaster.cache_clear()

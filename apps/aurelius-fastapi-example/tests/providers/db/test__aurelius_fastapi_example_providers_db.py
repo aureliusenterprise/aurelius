@@ -91,8 +91,9 @@ def test__session_rolls_back_when_exception_is_raised(db_settings: Settings) -> 
     session.flush()
     pending_guid = pending.guid
 
+    rollback_error = RuntimeError("boom")
     with pytest.raises(RuntimeError, match="boom"):
-        session_generator.throw(RuntimeError("boom"))
+        session_generator.throw(rollback_error)
 
     with Session(engine) as verification_session:
         stored = verification_session.get(Entity, pending_guid)

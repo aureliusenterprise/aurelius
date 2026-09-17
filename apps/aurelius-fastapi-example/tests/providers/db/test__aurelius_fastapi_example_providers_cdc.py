@@ -61,8 +61,9 @@ async def test__entity_notification_broadcaster_unsubscribe_removes_queue(
     db_session.add(entity)
     db_session.commit()
 
+    get_notification = partial(subscriber_queue.get, timeout=2.0)
     with pytest.raises(queue.Empty):
-        await asyncio.to_thread(partial(subscriber_queue.get, timeout=2.0))
+        await asyncio.to_thread(get_notification)
 
 
 def _request_with_disconnect_checks(max_connected_checks: int) -> MagicMock:

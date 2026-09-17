@@ -49,7 +49,7 @@ def app(db_settings: Settings) -> FastAPI:
     return create_app(db_settings)
 
 
-@pytest.fixture()
+@pytest.fixture
 def unauthenticated_client(app: FastAPI, db_session: Session, db_settings: Settings) -> Generator[TestClient]:
     """Provide a TestClient that forces authentication failure with a 401 response."""
 
@@ -59,13 +59,13 @@ def unauthenticated_client(app: FastAPI, db_session: Session, db_settings: Setti
     yield from _client_with_overrides(app, db_settings, db_session, override_user_info)
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_user() -> dict:
     """Return a minimal decoded JWT payload for use in tests."""
     return {"sub": "test-user-id", "preferred_username": "testuser"}
 
 
-@pytest.fixture()
+@pytest.fixture
 def authenticated_client(
     app: FastAPI,
     mock_user: dict,
@@ -80,7 +80,7 @@ def authenticated_client(
     yield from _client_with_overrides(app, db_settings, db_session, override_user_info)
 
 
-@pytest.fixture()
+@pytest.fixture
 def entities(db_session: Session) -> Generator[list[Entity]]:
     """Create and return a list of test entities."""
     test_entities = [
@@ -103,7 +103,7 @@ def entities(db_session: Session) -> Generator[list[Entity]]:
     db_session.commit()
 
 
-@pytest.fixture()
+@pytest.fixture
 def entity(db_session: Session) -> Generator[Entity]:
     """Create and return a single test entity."""
     entity = Entity(name="Test Entity", description="A test entity")

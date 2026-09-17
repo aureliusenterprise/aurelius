@@ -60,7 +60,7 @@ def db_engine(db_settings: Settings) -> Generator[Engine]:
     engine.dispose()
 
 
-@pytest.fixture()
+@pytest.fixture
 def db_session(db_engine: Engine) -> Generator[Session]:
     """Provide a clean SQLModel session for each test."""
     with Session(db_engine, expire_on_commit=False) as session:
