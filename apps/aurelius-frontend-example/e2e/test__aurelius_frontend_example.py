@@ -33,7 +33,7 @@ def test__search_results_with_no_data(authenticated: Page) -> None:
     expect(authenticated.locator(".search-result-card")).to_have_count(0)
 
 
-@pytest.fixture()
+@pytest.fixture
 def entities(session: Session) -> Generator[list[Entity]]:
     """Fixture to create sample entities in the database."""
     entities = [
@@ -195,7 +195,7 @@ def test__delete_entity_via_ui(authenticated: Page, entities: list[Entity]) -> N
     expect(search_result).not_to_be_visible()
 
 
-@pytest.fixture()
+@pytest.fixture
 def new_entity(session: Session) -> Generator[Entity]:
     """Fixture to create a new entity for testing."""
     entity = Entity(name="New Entity", description="This is a new entity.")
