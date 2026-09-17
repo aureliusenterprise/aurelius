@@ -8,7 +8,7 @@ from sqlmodel import Session
 from tenacity import retry, stop_after_attempt, wait_fixed
 
 
-def produce_message(
+def produce_message(  # noqa: PLR0917
     entity: Entity | None,
     guid: UUID,
     kafka_producer: Producer,
@@ -76,7 +76,7 @@ def assert_entity_not_in_database(
         (Entity(name="Hello World", description="This is a test"), "value_serializer_with_prefix_schema_id"),
     ],
 )
-def test__aurelius_kafka_connect_jdbc_sink_example_handles_messages(
+def test__aurelius_kafka_connect_jdbc_sink_example_handles_messages(  # noqa: PLR0917
     entity: Entity,
     kafka_producer: Producer,
     kafka_topic: str,
@@ -112,7 +112,7 @@ def test__aurelius_kafka_connect_jdbc_sink_example_handles_messages(
         (Entity(name="To Be Deleted"), "value_serializer_with_prefix_schema_id"),
     ],
 )
-def test__aurelius_kafka_connect_jdbc_sink_example_handles_tombstone_messages(
+def test__aurelius_kafka_connect_jdbc_sink_example_handles_tombstone_messages(  # noqa: PLR0917
     entity: Entity,
     kafka_producer: Producer,
     kafka_topic: str,

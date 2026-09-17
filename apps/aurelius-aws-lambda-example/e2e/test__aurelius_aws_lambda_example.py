@@ -80,7 +80,7 @@ def serialize(
         (Entity(name="Hello World", description="This is a test"), "value_serializer_with_prefix_schema_id"),
     ],
 )
-def test__aurelius_aws_lambda_example(
+def test__aurelius_aws_lambda_example(  # noqa: PLR0917
     connection: http.client.HTTPConnection,
     consumer: Consumer,
     entity: Entity,

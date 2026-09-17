@@ -158,12 +158,14 @@ Unit and integration tests use [`pytest`](https://docs.pytest.org/en/stable/).
     Use `@pytest.mark.parametrize` to test multiple input and expected output combinations without duplicating test code:
 
     ```python
-    @pytest.mark.parametrize("input_value,expected_output", [
-        ("valid", "result1"),
-        ("invalid", "error"),
-    ])
-    def test_function(input_value, expected_output):
-        ...
+    @pytest.mark.parametrize(
+        "input_value,expected_output",
+        [
+            ("valid", "result1"),
+            ("invalid", "error"),
+        ],
+    )
+    def test_function(input_value, expected_output): ...
     ```
 
 ### Angular
@@ -274,6 +276,7 @@ approach for provisioning dependent services.
     from pathlib import Path
     from testcontainers.compose import DockerCompose
 
+
     @pytest.fixture(scope="session")
     def compose() -> Generator[DockerCompose]:
         """Return a Docker Compose instance."""
@@ -290,6 +293,7 @@ approach for provisioning dependent services.
     ```python
     from pathlib import Path
     from testcontainers.compose import DockerCompose
+
 
     @pytest.fixture(scope="session")
     def compose() -> Generator[DockerCompose]:
@@ -338,6 +342,7 @@ critical user flows. The codebase uses Playwright with pytest integration via `p
 
     ```python
     from playwright.sync_api import Page, expect
+
 
     def test_main_page_has_welcome_message(authenticated: Page) -> None:
         expect(authenticated.get_by_text(re.compile("Welcome"))).to_be_visible()
@@ -390,9 +395,7 @@ critical user flows. The codebase uses Playwright with pytest integration via `p
     expect(authenticated.locator(".search-result-card")).to_have_count(len(entities))
 
     # Text content check
-    expect(
-        authenticated.get_by_text(re.compile(f"I have found {len(entities)} entities"))
-    ).to_be_visible()
+    expect(authenticated.get_by_text(re.compile(f"I have found {len(entities)} entities"))).to_be_visible()
     ```
 
 ??? TIP "Test isolation"
