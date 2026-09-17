@@ -2,7 +2,7 @@ name: Scan
 
 on:
     schedule:
-        - cron: "0 2 * * *"
+        - cron: "0 2 * * 3"
 
 env:
     SOPS_AGE_KEY: ${{ secrets.AGE_SECRET_KEY }}
