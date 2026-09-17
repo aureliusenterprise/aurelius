@@ -65,6 +65,7 @@ def test__aurelius_java_producer_example(
         guid=UUID(deserialized_key),
         description=unittest.mock.ANY,
         name=unittest.mock.ANY,
+        time_created=unittest.mock.ANY,
     )
 
     actual = Entity.model_validate(deserialized_value)

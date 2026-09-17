@@ -4,6 +4,7 @@ import com.aureliusenterprise.example.Entity;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import io.confluent.kafka.serializers.schema.id.HeaderSchemaIdSerializer;
 import io.confluent.kafka.serializers.subject.RecordNameStrategy;
+import java.time.Instant;
 import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -29,6 +30,11 @@ public class App {
      * Logger instance for the application.
      */
     private static final Logger logger = LoggerFactory.getLogger(App.class);
+
+    /**
+     * Package containing the generated Avro records produced by this application.
+     */
+    private static final String AVRO_SERIALIZABLE_PACKAGE = "com.aureliusenterprise.example";
 
     /**
      * Entry point for the Kafka producer application.
@@ -60,6 +66,9 @@ public class App {
         props.put("value.subject.name.strategy", RecordNameStrategy.class);
         props.put("value.schema.id.serializer", HeaderSchemaIdSerializer.class);
 
+        // Avro 1.12.2 requires generated record packages to be explicitly trusted.
+        System.setProperty("org.apache.avro.SERIALIZABLE_PACKAGES", AVRO_SERIALIZABLE_PACKAGE);
+
         // Create the Kafka producer instance
         KafkaProducer<String, Entity> kafkaProducer = new KafkaProducer<>(props);
 
@@ -88,6 +97,7 @@ public class App {
                     .setGuid(key)
                     .setName("Example")
                     .setDescription("This is an example message")
+                    .setTimeCreated(Instant.now())
                     .build();
 
                 // Produce the message to Kafka
