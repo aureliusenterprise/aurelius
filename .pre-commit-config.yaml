@@ -42,7 +42,7 @@ repos:
                 - jsonc-eslint-parser@^3.1.0
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.12.3
+      rev: v0.16.8
       hooks:
           - id: ruff
             name: Check for Python linting errors
