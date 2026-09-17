@@ -1,5 +1,5 @@
 # Use a hardened base image with Java 21 and Alpine Linux for the build stage
-FROM dhi.io/eclipse-temurin:21-alpine3.22-dev AS builder
+FROM dhi.io/eclipse-temurin:21-alpine3.24-dev AS builder
 
 # Set the working directory
 WORKDIR /build
@@ -12,7 +12,7 @@ RUN tar -xvf aurelius-java-producer-example.tar --strip-components=1 && rm aurel
 
 # Use a hardened base image with Java 21 and Alpine Linux for the runtime stage
 # Note: the hardened image does not have a shell or package manager
-FROM dhi.io/eclipse-temurin:21-alpine3.22 AS runtime
+FROM dhi.io/eclipse-temurin:21-alpine3.24 AS runtime
 
 ARG VERSION=local
 

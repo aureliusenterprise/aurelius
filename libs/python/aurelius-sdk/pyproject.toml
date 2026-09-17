@@ -6,19 +6,19 @@ requires-python = ">=3.14"
 version = "0.6.0"
 
 [project.optional-dependencies]
-aws = ["boto3>=1.43", "types-boto3[full]>=1.43"]
-azure = ["msal>=1.36"]
+aws = ["boto3>=1.43.96", "types-boto3[full]>=1.43.96"]
+azure = ["msal>=1.38.0"]
 full = [
-    "boto3>=1.43",
+    "boto3>=1.43.96",
     "coloredlogs>=15.0.1",
-    "msal>=1.36",
-    "psycopg[binary]>=3.3.3",
-    "testcontainers>=4.14",
-    "types-boto3[full]>=1.43",
+    "msal>=1.38.0",
+    "psycopg[binary]>=3.3.5",
+    "testcontainers>=4.15.0",
+    "types-boto3[full]>=1.43.96",
 ]
 logging = ["coloredlogs>=15.0.1"]
-postgresql = ["psycopg[binary]>=3.3.3"]
-testing = ["testcontainers>=4.14"]
+postgresql = ["psycopg[binary]>=3.3.5"]
+testing = ["testcontainers>=4.15.0"]
 
 [[project.authors]]
 name = "Aurelius Enterprise"

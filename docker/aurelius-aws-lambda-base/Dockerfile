@@ -26,7 +26,7 @@ RUN mkdir -p /tmp/insights && \
     rm -rf /tmp/insights /tmp/lambda-insights-extension.rpm
 
 # Install AWS Lambda dependencies for Python. Use a cache mount to speed up repeated builds.
-ARG AWS_LAMBDA_RIC_VERSION=4.0.0
+ARG AWS_LAMBDA_RIC_VERSION=4.0.4
 
 RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
     pip install --only-binary=":all:" --target="./" awslambdaric=="${AWS_LAMBDA_RIC_VERSION}"

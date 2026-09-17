@@ -1,5 +1,5 @@
 [project]
-dependencies = ["pydantic>=2.11.7", "pydantic-avro>=0.9.0", "sqlmodel>=0.0.24"]
+dependencies = ["pydantic>=2.13.5", "pydantic-avro>=0.13.0", "sqlmodel>=0.0.42"]
 description = "This library provides common utilities for example projects."
 name = "aurelius-example"
 requires-python = ">=3.14"

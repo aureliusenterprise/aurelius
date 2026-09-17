@@ -1,5 +1,5 @@
 ARG CONNECT_VERSION=8.2.0
-ARG KAFKA_VERSION=4.2-debian13
+ARG KAFKA_VERSION=4.3-debian13
 
 # Use a Confluent image for the build stage
 FROM confluentinc/cp-kafka-connect:${CONNECT_VERSION} AS builder

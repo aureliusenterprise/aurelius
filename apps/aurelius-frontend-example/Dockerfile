@@ -1,4 +1,4 @@
-FROM dhi.io/nginx:1.30-alpine3.22
+FROM dhi.io/nginx:1.30-alpine3.24
 
 ARG VERSION=local
 

@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Use a hardened base image with Node.js and build tools for the builder stage.
-FROM dhi.io/node:24-alpine3.22-dev AS builder
+FROM dhi.io/node:24-alpine3.24-dev AS builder
 
 # Install required build dependencies, using cache mounts to speed up the process
 RUN --mount=type=cache,target=/var/cache/apk,sharing=locked \
@@ -26,7 +26,7 @@ RUN --mount=type=cache,mode=0755,target=/root/.npm \
 
 # Use a hardened runtime image for the final image.
 # Note that the runtime image does not include a shell or package manager.
-FROM dhi.io/node:24-alpine3.22 AS runtime
+FROM dhi.io/node:24-alpine3.24 AS runtime
 
 ARG VERSION=local
 

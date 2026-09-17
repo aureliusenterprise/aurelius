@@ -2,16 +2,16 @@
 dependencies = [
     "aurelius-example",
     "aurelius-sdk[postgresql]",
-    "cachetools>=6.2.2",
-    "cryptography>=46.0.7",
-    "fastapi>=0.136",
-    "httpx>=0.28",
-    "logfire[fastapi,httpx,psycopg]>=4.35",
-    "psycopg[binary]>=3.3",
-    "pydantic>=2.13",
-    "pydantic-settings>=2.14",
-    "pyjwt>=2.13.0",
-    "uvicorn[standard]>=0.46",
+    "cachetools>=7.2.0",
+    "cryptography>=50.0.1",
+    "fastapi>=0.141.1",
+    "httpx>=0.28.1",
+    "logfire[fastapi,httpx,psycopg]>=5.1.0",
+    "psycopg[binary]>=3.3.5",
+    "pydantic>=2.13.5",
+    "pydantic-settings>=2.15.0",
+    "pyjwt>=2.14.0",
+    "uvicorn[standard]>=0.53.0",
 ]
 description = "This is an example FastAPI application."
 name = "aurelius-fastapi-example"

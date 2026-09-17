@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Use a hardened Python image with dev tools for the build stage.
-FROM dhi.io/python:3.14-alpine3.22-dev AS build-image
+FROM dhi.io/python:3.14-alpine3.24-dev AS build-image
 
 # Set the working directory
 WORKDIR /build
@@ -16,7 +16,7 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
 
 # Use a hardened Python image for the final application image.
 # Note: the hardened image does not include a shell or package manager.
-FROM dhi.io/python:3.14-alpine3.22
+FROM dhi.io/python:3.14-alpine3.24
 
 ARG VERSION=local
 
