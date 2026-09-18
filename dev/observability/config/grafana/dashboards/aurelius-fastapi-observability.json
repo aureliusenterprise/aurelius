@@ -106,9 +106,13 @@
             },
             "targets": [
                 {
+                    "datasource": {
+                        "type": "tempo",
+                        "uid": "tempo"
+                    },
                     "limit": 20,
                     "query": "{resource.service.name = \"aurelius-fastapi-example\"}",
-                    "queryType": "traceqlSearch",
+                    "queryType": "traceql",
                     "refId": "A"
                 }
             ],

@@ -85,6 +85,7 @@ services:
             - GF_AUTH_ANONYMOUS_ENABLED=true
             - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
             - GF_AUTH_DISABLE_LOGIN_FORM=true
+            - GF_USERS_VIEWERS_CAN_EDIT=true
             - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
             - GF_PATHS_DATA=/var/lib/grafana/data
             - GF_PATHS_LOGS=/var/lib/grafana/logs
