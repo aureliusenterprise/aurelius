@@ -91,8 +91,23 @@ class Settings(BaseSettings, Hashable):
         description="The environment in which the application is running. Set to 'development' for local testing.",
     )
 
+    auth_fail_max: int = Field(
+        default=5,
+        description="The maximum number of failed authentication attempts before triggering the circuit breaker.",
+    )
+
     auth_realm_name: str = Field(
         description="The name of the authentication realm.",
+    )
+
+    auth_reset_timeout: int = Field(
+        default=60,
+        description="The timeout in seconds to wait before resetting the authentication circuit breaker.",
+    )
+
+    db_fail_max: int = Field(
+        default=5,
+        description="The maximum number of failed database operations before triggering the circuit breaker.",
     )
 
     auth_server_url: HttpUrl = Field(
@@ -120,6 +135,11 @@ class Settings(BaseSettings, Hashable):
     cdc_subscriber_queue_maxsize: int = Field(
         default=1000,
         description="The maximum number of buffered CDC notifications per SSE subscriber queue.",
+    )
+
+    db_reset_timeout: int = Field(
+        default=60,
+        description="The timeout in seconds to wait before resetting the database circuit breaker.",
     )
 
     database_driver: str = Field(

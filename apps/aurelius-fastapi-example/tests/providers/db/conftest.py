@@ -5,11 +5,13 @@ from aurelius_fastapi_example.providers import EntityNotificationBroadcaster, db
 
 
 @pytest.fixture(autouse=True)
-def clear_database_cache() -> Generator[None]:
-    """Clear the cached database engine before and after each test."""
+def clear_database_caches() -> Generator[None]:
+    """Clear the cached database engine and circuit breaker before and after each test."""
     db.database.cache_clear()
+    db.db_circuit_breaker.cache_clear()
     yield
     db.database.cache_clear()
+    db.db_circuit_breaker.cache_clear()
 
 
 @pytest.fixture

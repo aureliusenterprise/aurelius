@@ -2,6 +2,8 @@ import pytest
 from aurelius_example import Entity
 from aurelius_fastapi_example.models import Settings
 from aurelius_fastapi_example.providers import db
+from fastapi import HTTPException
+from pybreaker import CircuitBreaker
 from sqlalchemy import Engine, text
 from sqlmodel import Session, select
 
@@ -36,7 +38,8 @@ def test__database_returns_cached_engine_for_same_settings(db_settings: Settings
 def test__session_yields_sqlmodel_session(db_settings: Settings) -> None:
     """Session provider should yield a usable SQLModel Session bound to the given engine."""
     engine = get_engine(db_settings)
-    session_generator = db.session(engine)
+    cb = db.db_circuit_breaker(settings=db_settings)
+    session_generator = db.session(cb, engine)
     session = next(session_generator)
 
     try:
@@ -52,7 +55,8 @@ def test__session_yields_sqlmodel_session(db_settings: Settings) -> None:
 def test__session_persists_changes_without_error(db_settings: Settings) -> None:
     """Session provider should persist committed changes when no error occurs."""
     engine = get_engine(db_settings)
-    session_generator = db.session(engine)
+    cb = db.db_circuit_breaker(settings=db_settings)
+    session_generator = db.session(cb, engine)
     session = next(session_generator)
 
     created = Entity(name="DB Provider", description="Persisted row")
@@ -83,7 +87,8 @@ def test__session_persists_changes_without_error(db_settings: Settings) -> None:
 def test__session_rolls_back_when_exception_is_raised(db_settings: Settings) -> None:
     """Session provider should rollback uncommitted changes when an exception is thrown into the generator."""
     engine = get_engine(db_settings)
-    session_generator = db.session(engine)
+    cb = db.db_circuit_breaker(settings=db_settings)
+    session_generator = db.session(cb, engine)
     session = next(session_generator)
 
     pending = Entity(name="Rollback Row", description="Should be rolled back")
@@ -99,5 +104,32 @@ def test__session_rolls_back_when_exception_is_raised(db_settings: Settings) -> 
         stored = verification_session.get(Entity, pending_guid)
 
     assert stored is None
+
+    engine.dispose()
+
+
+def test__db_circuit_breaker_configuration(db_settings: Settings) -> None:
+    """Circuit breaker should be configured with settings values."""
+    cb = db.db_circuit_breaker(settings=db_settings)
+
+    assert cb.name == "db_circuit_breaker"
+    assert cb.fail_max == 5
+    assert cb.reset_timeout == 60.0
+
+
+def test__session_returns_503_when_circuit_open(db_settings: Settings) -> None:
+    """Session provider should return 503 when circuit breaker is open."""
+    engine = get_engine(db_settings)
+    cb = CircuitBreaker(fail_max=1, reset_timeout=60.0)
+    cb.open()
+
+    session_generator = db.session(cb, engine)
+
+    with pytest.raises(
+        HTTPException,
+        check=lambda e: e.status_code == 503,
+        match="temporarily unavailable",
+    ):
+        next(session_generator)
 
     engine.dispose()

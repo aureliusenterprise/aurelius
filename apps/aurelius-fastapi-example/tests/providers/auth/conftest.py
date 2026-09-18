@@ -6,6 +6,7 @@ import httpx
 import pytest
 from aurelius_fastapi_example.models import Settings
 from aurelius_fastapi_example.providers import auth
+from pybreaker import CircuitBreaker
 from testcontainers.core.container import DockerContainer
 from testcontainers.core.wait_strategies import HttpWaitStrategy
 
@@ -44,7 +45,9 @@ def auth_settings(keycloak_container: DockerContainer) -> Mock:
     port = keycloak_container.get_exposed_port(8080)
 
     return Mock(
+        auth_fail_max=5,
         auth_realm_name=KEYCLOAK_REALM,
+        auth_reset_timeout=60.0,
         auth_server_url=f"http://{host}:{port}/",
         spec=Settings,
     )
@@ -54,6 +57,12 @@ def auth_settings(keycloak_container: DockerContainer) -> Mock:
 def auth_base_url(auth_settings: Settings) -> str:
     """Return the base URL for the authentication server."""
     return f"{auth_settings.auth_server_url}realms/{auth_settings.auth_realm_name}"
+
+
+@pytest.fixture(scope="session")
+def auth_circuit_breaker(auth_settings: Settings) -> CircuitBreaker:
+    """Return a circuit breaker instance for authentication tests."""
+    return auth.auth_circuit_breaker(settings=auth_settings)
 
 
 @pytest.fixture

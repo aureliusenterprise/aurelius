@@ -9,6 +9,7 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordBearer
 from jwt.algorithms import RSAAlgorithm
+from pybreaker import CircuitBreaker, CircuitBreakerError, CircuitBreakerListener, CircuitBreakerState
 from pydantic import BaseModel, ConfigDict, HttpUrl
 
 from aurelius_fastapi_example.globals import LOGGER
@@ -34,6 +35,30 @@ def auth_base_url(*, settings: Settings) -> str:
 
 
 @cache
+def auth_circuit_breaker(*, settings: Settings) -> CircuitBreaker:
+    """Return a circuit breaker instance for requests to the authentication server."""
+
+    class AuthCircuitBreakerListener(CircuitBreakerListener):
+        def state_change(
+            self,
+            cb: CircuitBreaker,
+            old_state: CircuitBreakerState | None,
+            new_state: CircuitBreakerState | None,
+        ) -> None:
+            LOGGER.debug("Circuit breaker %s state changed from %s to %s", cb.name, old_state, new_state)
+
+    return CircuitBreaker(
+        exclude=[
+            lambda e: type(e) is httpx.HTTPStatusError and e.response.status_code < httpx.codes.INTERNAL_SERVER_ERROR
+        ],
+        fail_max=settings.auth_fail_max,
+        listeners=[AuthCircuitBreakerListener()],
+        name="auth_circuit_breaker",
+        reset_timeout=settings.auth_reset_timeout,
+    )
+
+
+@cache
 def auth_provider(*, auth_base_url: Annotated[str, Depends(auth_base_url)]) -> OAuth2PasswordBearer:
     """Return the OAuth2PasswordBearer instance for the authentication configuration."""
     return OAuth2PasswordBearer(
@@ -48,13 +73,19 @@ def auth_provider(*, auth_base_url: Annotated[str, Depends(auth_base_url)]) -> O
 )
 def openid_configuration(
     auth_base_url: Annotated[str, Depends(auth_base_url)],
+    auth_circuit_breaker: Annotated[CircuitBreaker, Depends(auth_circuit_breaker)],
     http_client: Annotated[httpx.Client, Depends(http_client)],
 ) -> OpenIdConfig:
     """Return the OpenID configuration for the configured issuer."""
     well_known_url = f"{auth_base_url}/.well-known/openid-configuration"
 
-    response = http_client.get(well_known_url)
-    response.raise_for_status()
+    try:
+        with auth_circuit_breaker.calling():
+            response = http_client.get(well_known_url)
+            response.raise_for_status()
+    except CircuitBreakerError as e:
+        LOGGER.error("Circuit breaker is open for authentication service")
+        raise HTTPException(status_code=503, detail="Authentication service temporarily unavailable") from e
 
     LOGGER.info("Loaded OpenID configuration from %s", well_known_url)
 
@@ -66,12 +97,18 @@ def openid_configuration(
     key=lambda **kwargs: hashkey(kwargs["openid"]),
 )
 def jwks(
+    auth_circuit_breaker: Annotated[CircuitBreaker, Depends(auth_circuit_breaker)],
     http_client: Annotated[httpx.Client, Depends(http_client)],
     openid: Annotated[OpenIdConfig, Depends(openid_configuration)],
 ) -> dict[str, RSAPublicKey]:
     """Return the JWKS configuration for the JWT authentication."""
-    response = http_client.get(str(openid.jwks_uri))
-    response.raise_for_status()
+    try:
+        with auth_circuit_breaker.calling():
+            response = http_client.get(str(openid.jwks_uri))
+            response.raise_for_status()
+    except CircuitBreakerError as e:
+        LOGGER.error("Circuit breaker is open for authentication service")
+        raise HTTPException(status_code=503, detail="Authentication service temporarily unavailable") from e
 
     response_json = response.json()
 

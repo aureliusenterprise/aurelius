@@ -8,6 +8,7 @@ dependencies = [
     "httpx>=0.28.1",
     "logfire[fastapi,httpx,psycopg]>=5.1.0",
     "psycopg[binary]>=3.3.5",
+    "pybreaker>=1.4.1",
     "pydantic>=2.13.5",
     "pydantic-settings>=2.15.0",
     "pyjwt>=2.14.0",
