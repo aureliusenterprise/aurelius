@@ -9,9 +9,9 @@ docker compose -f dev/pyatlas/docker-compose.yml up --build -d      # Windows: d
 
 | What | URL | Login |
 | --- | --- | --- |
-| Aurelius Atlas frontend | http://localhost:8080/aurelius/atlas/ | `atlas` (admin + steward), `steward`, `scientist`; password = user name |
-| Keycloak admin console | http://localhost:8080/aurelius/auth/admin/ | `admin` / `admin` (`KEYCLOAK_ADMIN_PASSWORD`) |
-| pyatlas (Atlas UIs, `api/docs`) | http://localhost:8080/aurelius/atlas2/ | pyatlas file users (`admin` / `admin`) |
+| Aurelius Atlas frontend | http://localhost:9090/aurelius/atlas/ | `atlas` (admin + steward), `steward`, `scientist`; password = user name |
+| Keycloak admin console | http://localhost:9090/aurelius/auth/admin/ | `admin` / `admin` (`KEYCLOAK_ADMIN_PASSWORD`) |
+| pyatlas (Atlas UIs, `api/docs`) | http://localhost:9090/aurelius/atlas2/ | pyatlas file users (`admin` / `admin`) |
 | Elasticsearch | http://localhost:9200 | - |
 | Kibana (`--profile kibana`) | http://localhost:5601 | - |
 
@@ -27,7 +27,7 @@ can be set on the first start with `AURELIUS_ATLAS_PASSWORD`, `AURELIUS_STEWARD_
 - The frontend logs in with Keycloak (realm `m4i`, client `m4i_atlas`) and sends the access token to pyatlas.
   pyatlas validates it (`PYATLAS_OIDC_*`, `backend/pyatlas/pyatlas/oidc.py`) and maps the realm roles
   `ROLE_ADMIN`, `DATA_STEWARD`, `DATA_SCIENTIST` onto the groups of its authorization policy.
-- `AURELIUS_PUBLIC_URL` (default `http://localhost:8080`) must be the URL the browser uses: it is the token
+- `AURELIUS_PUBLIC_URL` (default `http://localhost:9090`) must be the URL the browser uses: it is the token
   issuer pyatlas accepts and the redirect URL Keycloak allows.
 
 ## Status (phase 1)

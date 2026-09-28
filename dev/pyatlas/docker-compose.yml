@@ -1,14 +1,14 @@
 # Aurelius on pyatlas (phase 1): reverse proxy with the Angular frontend, Keycloak, pyatlas, Elasticsearch.
 #   docker compose -f dev/pyatlas/docker-compose.yml up --build        (or start.bat in this folder)
-# Frontend: http://localhost:8080/aurelius/atlas/   users atlas / steward / scientist (password = user name,
+# Frontend: http://localhost:9090/aurelius/atlas/   users atlas / steward / scientist (password = user name,
 #           change with AURELIUS_ATLAS_PASSWORD, AURELIUS_STEWARD_PASSWORD, AURELIUS_SCIENTIST_PASSWORD on first start)
-# Keycloak admin console: http://localhost:8080/aurelius/auth/admin/   (KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD)
-# pyatlas directly (Atlas UIs, Swagger): http://localhost:8080/aurelius/atlas2/   Kibana: http://localhost:5601
-# Everything is reached through http://localhost:8080; to use another host name set AURELIUS_PUBLIC_URL
+# Keycloak admin console: http://localhost:9090/aurelius/auth/admin/   (KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD)
+# pyatlas directly (Atlas UIs, Swagger): http://localhost:9090/aurelius/atlas2/   Kibana: http://localhost:5601
+# Everything is reached through http://localhost:9090; to use another host name set AURELIUS_PUBLIC_URL
 # (e.g. https://aurelius.example.com) - it must be the URL the browser uses.
 name: aurelius-pyatlas
 
-x-public-url: &public ${AURELIUS_PUBLIC_URL:-http://localhost:8080}
+x-public-url: &public ${AURELIUS_PUBLIC_URL:-http://localhost:9090}
 
 services:
   elasticsearch:
@@ -50,8 +50,8 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
       KC_HTTP_PORT: "8080"
       KC_HTTP_RELATIVE_PATH: /aurelius/auth
-      KC_HOSTNAME_URL: ${AURELIUS_PUBLIC_URL:-http://localhost:8080}/aurelius/auth
-      KC_HOSTNAME_ADMIN_URL: ${AURELIUS_PUBLIC_URL:-http://localhost:8080}/aurelius/auth
+      KC_HOSTNAME_URL: ${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/auth
+      KC_HOSTNAME_ADMIN_URL: ${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/auth
       KC_PROXY: edge
       KC_HEALTH_ENABLED: "true"
       # read by the realm file on its first import
@@ -81,7 +81,7 @@ services:
       - PYATLAS_SESSION_SECRET=${PYATLAS_SESSION_SECRET:-}
       # Keycloak tokens of the frontend: the issuer is the public URL, the keys are fetched inside the network
       - PYATLAS_OIDC_ENABLED=true
-      - PYATLAS_OIDC_ISSUERS=${AURELIUS_PUBLIC_URL:-http://localhost:8080}/aurelius/auth/realms/m4i
+      - PYATLAS_OIDC_ISSUERS=${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/auth/realms/m4i
       - PYATLAS_OIDC_JWKS_URL=http://keycloak:8080/aurelius/auth/realms/m4i/protocol/openid-connect/certs
       # the Aurelius sample data on the first start (set PYATLAS_IMPORT_ON_START= to start empty)
       - PYATLAS_IMPORT_ON_START=${PYATLAS_IMPORT_ON_START-/aurelius-data/sample_data.zip}
@@ -102,7 +102,7 @@ services:
       - PYATLAS_URL=http://pyatlas:21000
       - KEYCLOAK_URL=http://keycloak:8080
     ports:
-      - "8080:8080"
+      - "9090:8080"            # browser port 9090 -> proxy port 8080 in the container
 
 volumes:
   esdata:

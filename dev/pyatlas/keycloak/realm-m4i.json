@@ -59,9 +59,9 @@
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": true,
-      "rootUrl": "${AURELIUS_PUBLIC_URL:http://localhost:8080}/aurelius/atlas/",
+      "rootUrl": "${AURELIUS_PUBLIC_URL:http://localhost:9090}/aurelius/atlas/",
       "redirectUris": [
-        "${AURELIUS_PUBLIC_URL:http://localhost:8080}/aurelius/atlas/*"
+        "${AURELIUS_PUBLIC_URL:http://localhost:9090}/aurelius/atlas/*"
       ],
       "webOrigins": [
         "+"
