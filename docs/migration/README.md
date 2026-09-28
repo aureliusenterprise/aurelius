@@ -23,6 +23,24 @@ in scope, the Kafka data dictionary harvester switched off.
 Every check writes `report.md` + `report.json` to `parity-reports/` and exits with 1 on differences, so it can
 gate CI. The comparison rules (accepted differences) are in `backend/pyatlas/parity/allowlists/`.
 
+## Phase 1 - Keycloak and the frontend on pyatlas
+
+| Deliverable | Where | Status |
+| --- | --- | --- |
+| Keycloak access tokens in pyatlas (JWKS, issuer, expiry, optional client check; realm roles -> groups) | `backend/pyatlas/pyatlas/oidc.py`, `PYATLAS_OIDC_*` | done, 14 tests |
+| Realm `m4i` for development (client `m4i_atlas`, 3 roles, 3 demo users) | `dev/pyatlas/keycloak/realm-m4i.json` | done |
+| Reverse proxy image with the frontend built from this repo | `dev/pyatlas/reverse-proxy` | done |
+| Local stack: proxy, Keycloak 22, pyatlas, Elasticsearch | `dev/pyatlas/docker-compose.yml`, `start.bat` | done |
+| Clickstream and error reports of the frontend | `/api/aurelius/repository/{log,error}` | done (logged as JSON lines) |
+
+Verified end to end with the built frontend, Keycloak 22.0.5, Apache httpd and pyatlas: login through the Aurelius
+login page, token validation, entity editing by a data steward (saved as that user). The pages built on search
+need phase 2.
+
+Found on the way: a client that requires PKCE breaks the frontend's keycloak-js setup (the realm leaves PKCE
+optional), and a server-wide `ProxyPassReverseCookiePath` rewrote Keycloak's session cookies (now scoped to
+`/aurelius/atlas2/`).
+
 ## What phase 0 found
 
 1. **Entity `attributes` lacked relationship-backed references** (fixed in pyatlas). Atlas also returns

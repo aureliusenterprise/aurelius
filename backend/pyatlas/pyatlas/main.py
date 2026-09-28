@@ -13,6 +13,8 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
 from .auth import AuthMiddleware, FileAuthenticator, LoginThrottle
+from .aurelius import api as aurelius_api
+from .oidc import from_settings as oidc_from_settings
 from .config import Settings, get_settings
 from .errors import AtlasBaseException
 from .services import Services
@@ -187,7 +189,8 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
         return await call_next(request)
 
     for r in (types_api.router, entity_api.router, other_api.relationship_router, other_api.search_router,
-              other_api.lineage_router, glossary_api.router, admin_api.router, admin_api.recovery_router):
+              other_api.lineage_router, glossary_api.router, admin_api.router, admin_api.recovery_router,
+              aurelius_api.router):
         app.include_router(r)
 
     authenticators = [FileAuthenticator(settings.users_file)]
@@ -195,7 +198,8 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
         log.warning("SECURITY: authentication is DISABLED (PYATLAS_AUTH_ENABLED=false) - everybody is admin")
     app.add_middleware(AuthMiddleware, authenticators=authenticators, enabled=settings.auth_enabled,
                        csrf_enabled=settings.csrf_enabled, csrf_browser_useragents=settings.csrf_browser_useragents,
-                       throttle=LoginThrottle(settings.login_max_failures, settings.login_lockout_secs))
+                       throttle=LoginThrottle(settings.login_max_failures, settings.login_lockout_secs),
+                       oidc=oidc_from_settings(settings))
     secret = settings.session_secret
     if not secret or secret in KNOWN_DEFAULT_SECRETS or len(secret) < 16:
         if secret:

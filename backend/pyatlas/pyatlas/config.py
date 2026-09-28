@@ -70,6 +70,20 @@ class Settings(BaseSettings):
     security_headers: bool = True
     hsts: bool = False
 
+    # OpenID Connect (Keycloak) bearer tokens, used by the Aurelius frontend; see pyatlas/oidc.py
+    oidc_enabled: bool = False
+    # accepted "iss" values, comma separated (the URL the browser uses, e.g. https://host/aurelius/auth/realms/m4i)
+    oidc_issuers: str = ""
+    # where pyatlas fetches the signing keys (default: <first issuer>/protocol/openid-connect/certs); set it when
+    # pyatlas reaches Keycloak under another name, e.g. http://keycloak:8080/aurelius/auth/realms/m4i/protocol/...
+    oidc_jwks_url: Optional[str] = None
+    # accepted clients (azp or aud), comma separated; empty = any client of the realm (as Atlas' Keycloak adapter)
+    oidc_clients: str = ""
+    oidc_username_claim: str = "preferred_username"
+    # clients whose client roles are added to the realm roles as groups (comma separated)
+    oidc_client_roles: str = ""
+    oidc_leeway_secs: int = 30
+
     # --- Authorization -------------------------------------------------------
     # "simple" = Atlas' AtlasSimpleAuthorizer (JSON policy file), "none" = allow everything
     authorizer: str = "simple"

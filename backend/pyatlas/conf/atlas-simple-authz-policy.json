@@ -225,6 +225,9 @@
     ],
     "RANGER_TAG_SYNC": [
       "DATA_SCIENTIST"
+    ],
+    "DATA_SCIENTIST": [
+      "DATA_SCIENTIST"
     ]
   }
 }

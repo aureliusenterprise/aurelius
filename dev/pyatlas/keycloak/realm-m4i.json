@@ -1,0 +1,144 @@
+{
+  "realm": "m4i",
+  "enabled": true,
+  "displayName": "Aurelius Atlas",
+  "loginTheme": "m4i",
+  "accountTheme": "m4i",
+  "emailTheme": "m4i",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "accessTokenLifespan": 900,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "bruteForceProtected": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "offline_access",
+        "description": "${role_offline-access}"
+      },
+      {
+        "name": "uma_authorization",
+        "description": "${role_uma_authorization}"
+      },
+      {
+        "name": "ROLE_ADMIN",
+        "description": "Aurelius Atlas administrator"
+      },
+      {
+        "name": "DATA_STEWARD",
+        "description": "Maintains the data governance model"
+      },
+      {
+        "name": "DATA_SCIENTIST",
+        "description": "Reads the data governance model"
+      },
+      {
+        "name": "default-roles-m4i",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "offline_access",
+            "uma_authorization"
+          ]
+        }
+      }
+    ]
+  },
+  "defaultRole": {
+    "name": "default-roles-m4i"
+  },
+  "clients": [
+    {
+      "clientId": "m4i_atlas",
+      "name": "Aurelius Atlas",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "rootUrl": "${AURELIUS_PUBLIC_URL:http://localhost:8080}/aurelius/atlas/",
+      "redirectUris": [
+        "${AURELIUS_PUBLIC_URL:http://localhost:8080}/aurelius/atlas/*"
+      ],
+      "webOrigins": [
+        "+"
+      ],
+      "attributes": {
+        "post.logout.redirect.uris": "+"
+      },
+      "fullScopeAllowed": true,
+      "defaultClientScopes": [
+        "web-origins",
+        "roles",
+        "profile",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "offline_access"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "atlas",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Atlas",
+      "lastName": "Administrator",
+      "email": "atlas@aurelius.localhost",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${AURELIUS_ATLAS_PASSWORD:atlas}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "default-roles-m4i",
+        "ROLE_ADMIN",
+        "DATA_STEWARD"
+      ]
+    },
+    {
+      "username": "steward",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Data",
+      "lastName": "Steward",
+      "email": "steward@aurelius.localhost",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${AURELIUS_STEWARD_PASSWORD:steward}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "default-roles-m4i",
+        "DATA_STEWARD"
+      ]
+    },
+    {
+      "username": "scientist",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Data",
+      "lastName": "Scientist",
+      "email": "scientist@aurelius.localhost",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${AURELIUS_SCIENTIST_PASSWORD:scientist}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "default-roles-m4i",
+        "DATA_SCIENTIST"
+      ]
+    }
+  ]
+}

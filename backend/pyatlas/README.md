@@ -24,6 +24,9 @@ repository root as context (`docker build -f backend/pyatlas/Dockerfile .`), lik
 * `parity/` holds the migration checks (`python -m parity --help`, on Windows `run_parity.bat`): stored data,
   search/quality indices, same-changes-same-results, recorded API responses and the quality-rule grammar;
   the browser journeys are in `apps/atlas-e2e`.
+* Keycloak (OIDC) access tokens are accepted next to the file users when `PYATLAS_OIDC_ENABLED=true`
+  (`PYATLAS_OIDC_ISSUERS`, `PYATLAS_OIDC_JWKS_URL`, `PYATLAS_OIDC_CLIENTS`, `PYATLAS_OIDC_CLIENT_ROLES`); the realm
+  roles become the groups of the authorization policy. `dev/pyatlas` runs the whole Aurelius stack on pyatlas.
 * `docker-compose.parity.yml` runs pyatlas with the Aurelius sample data next to an old stack
   (ports 21100 / 9201 / 5602).
 

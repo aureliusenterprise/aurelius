@@ -1,0 +1,109 @@
+# Aurelius on pyatlas (phase 1): reverse proxy with the Angular frontend, Keycloak, pyatlas, Elasticsearch.
+#   docker compose -f dev/pyatlas/docker-compose.yml up --build        (or start.bat in this folder)
+# Frontend: http://localhost:8080/aurelius/atlas/   users atlas / steward / scientist (password = user name,
+#           change with AURELIUS_ATLAS_PASSWORD, AURELIUS_STEWARD_PASSWORD, AURELIUS_SCIENTIST_PASSWORD on first start)
+# Keycloak admin console: http://localhost:8080/aurelius/auth/admin/   (KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD)
+# pyatlas directly (Atlas UIs, Swagger): http://localhost:8080/aurelius/atlas2/   Kibana: http://localhost:5601
+# Everything is reached through http://localhost:8080; to use another host name set AURELIUS_PUBLIC_URL
+# (e.g. https://aurelius.example.com) - it must be the URL the browser uses.
+name: aurelius-pyatlas
+
+x-public-url: &public ${AURELIUS_PUBLIC_URL:-http://localhost:8080}
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -qE '\"status\":\"(green|yellow)\"'"]
+      interval: 10s
+      retries: 30
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.3
+    profiles: ["kibana"]            # docker compose --profile kibana up
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - TELEMETRY_OPTIN=false
+    ports:
+      - "5601:5601"
+
+  keycloak:
+    build:
+      context: ../..
+      dockerfile: docker/aurelius-docker-keycloak/Dockerfile      # Keycloak 22.0.5 with the Aurelius theme
+    image: aurelius-keycloak:local
+    pull_policy: build
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_HTTP_PORT: "8080"
+      KC_HTTP_RELATIVE_PATH: /aurelius/auth
+      KC_HOSTNAME_URL: ${AURELIUS_PUBLIC_URL:-http://localhost:8080}/aurelius/auth
+      KC_HOSTNAME_ADMIN_URL: ${AURELIUS_PUBLIC_URL:-http://localhost:8080}/aurelius/auth
+      KC_PROXY: edge
+      KC_HEALTH_ENABLED: "true"
+      # read by the realm file on its first import
+      AURELIUS_PUBLIC_URL: *public
+      AURELIUS_ATLAS_PASSWORD: ${AURELIUS_ATLAS_PASSWORD:-atlas}
+      AURELIUS_STEWARD_PASSWORD: ${AURELIUS_STEWARD_PASSWORD:-steward}
+      AURELIUS_SCIENTIST_PASSWORD: ${AURELIUS_SCIENTIST_PASSWORD:-scientist}
+    volumes:
+      - ./keycloak/realm-m4i.json:/opt/keycloak/data/import/realm-m4i.json:ro
+      - keycloak-data:/opt/keycloak/data
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080 && printf 'GET /aurelius/auth/health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q '200 OK' <&3"]
+      interval: 10s
+      retries: 30
+
+  pyatlas:
+    build:
+      context: ../..
+      dockerfile: backend/pyatlas/Dockerfile
+    image: pyatlas:local
+    pull_policy: build
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - PYATLAS_ES_HOSTS=http://elasticsearch:9200
+      - PYATLAS_SESSION_SECRET=${PYATLAS_SESSION_SECRET:-}
+      # Keycloak tokens of the frontend: the issuer is the public URL, the keys are fetched inside the network
+      - PYATLAS_OIDC_ENABLED=true
+      - PYATLAS_OIDC_ISSUERS=${AURELIUS_PUBLIC_URL:-http://localhost:8080}/aurelius/auth/realms/m4i
+      - PYATLAS_OIDC_JWKS_URL=http://keycloak:8080/aurelius/auth/realms/m4i/protocol/openid-connect/certs
+      # the Aurelius sample data on the first start (set PYATLAS_IMPORT_ON_START= to start empty)
+      - PYATLAS_IMPORT_ON_START=${PYATLAS_IMPORT_ON_START-/aurelius-data/sample_data.zip}
+      - PYATLAS_IMPORT_ON_START_MODE=once
+    volumes:
+      - ../../backend/m4i-atlas-post-install/data:/aurelius-data:ro
+
+  reverse-proxy:
+    build:
+      context: ../..
+      dockerfile: dev/pyatlas/reverse-proxy/Dockerfile
+    image: aurelius-reverse-proxy:local
+    pull_policy: build
+    depends_on:
+      - pyatlas
+      - keycloak
+    environment:
+      - PYATLAS_URL=http://pyatlas:21000
+      - KEYCLOAK_URL=http://keycloak:8080
+    ports:
+      - "8080:8080"
+
+volumes:
+  esdata:
+  keycloak-data:

@@ -174,8 +174,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, authenticators: List[Authenticator], enabled: bool = True, csrf_enabled: bool = True,
                  csrf_header: str = "X-XSRF-HEADER", csrf_methods_to_ignore: str = "GET,OPTIONS,HEAD,TRACE",
                  csrf_browser_useragents: str = "^Mozilla.*,^Opera.*,^Chrome.*",
-                 throttle: Optional[LoginThrottle] = None):
+                 throttle: Optional[LoginThrottle] = None, oidc=None):
         super().__init__(app)
+        self.oidc = oidc
         self.authenticators = authenticators
         self.enabled = enabled
         self.csrf_enabled = csrf_enabled
@@ -239,6 +240,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
             request.state.user = User("admin", {"ADMIN"})
             set_current_user(request.state.user)
             return await call_next(request)
+        header = request.headers.get("authorization", "")
+        if header[:7].lower() == "bearer ":
+            return await self._dispatch_bearer(request, call_next, header[7:].strip())
         sess = request.session if "session" in request.scope else {}
         user = None
         if sess.get("user"):
@@ -285,6 +289,27 @@ class AuthMiddleware(BaseHTTPMiddleware):
         set_current_user(user)
         response: Response = await call_next(request)
         return response
+
+
+    async def _dispatch_bearer(self, request: Request, call_next, token: str):
+        """OIDC access token (Keycloak): no session, no CSRF check (browsers never attach it on their own)."""
+        import asyncio
+        from .oidc import InvalidToken
+        if self.oidc is None:
+            return _bearer_error("Bearer tokens are not accepted (OIDC is not configured)")
+        try:
+            user = await asyncio.to_thread(self.oidc.authenticate, token)
+        except InvalidToken as e:
+            return _bearer_error(str(e))
+        request.state.user = user
+        request.state.auth_method = "oidc"
+        set_current_user(user)
+        return await call_next(request)
+
+
+def _bearer_error(message: str) -> JSONResponse:
+    return JSONResponse({"errorCode": "ATLAS-401-00-001", "errorMessage": f"Authentication failed: {message}"},
+                        status_code=401, headers={"WWW-Authenticate": 'Bearer realm="atlas", error="invalid_token"'})
 
 
 def _client(request: Request) -> str:
