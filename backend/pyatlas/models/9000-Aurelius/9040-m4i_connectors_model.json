@@ -1,0 +1,710 @@
+{
+    "entityDefs": [
+        {
+            "category": "ENTITY",
+            "name": "m4i_confluent_environment",
+            "description": "A type definition for a generic Confluent Environment in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "schemaRegistry",
+                    "typeName": "boolean",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "confluentCloud",
+                    "typeName": "array<m4i_confluent_cloud>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kafkaClusters",
+                    "typeName": "array<m4i_kafka_cluster>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_system"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_elastic_cluster",
+            "description": "A type definition for a generic Elastic Cluster in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "shardCount",
+                    "typeName": "int",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "replicaCount",
+                    "typeName": "int",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kibanaSpace",
+                    "typeName": "array<m4i_kibana_space>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_system"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_elastic_field",
+            "description": "A type definition for a generic Elastic Field in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [],
+            "superTypes": [
+                "m4i_field"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_elastic_index",
+            "description": "A type definition for a generic Kafka Index in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [],
+            "superTypes": [
+                "m4i_dataset"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_kafka_field",
+            "description": "A type definition for a generic Kafka Field in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [],
+            "superTypes": [
+                "m4i_field"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_kafka_topic",
+            "description": "A type definition for a generic Kafka Topic in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "partitions",
+                    "typeName": "int",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "replicas",
+                    "typeName": "int",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_dataset"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_kafka_cluster",
+            "description": "a type definition for a generic confluent_environment in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "kafkaPartitions",
+                    "typeName": "int",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kafkaReplicas",
+                    "typeName": "int",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "confluentEnvironment",
+                    "typeName": "array<m4i_confluent_environment>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_system"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_kibana_space",
+            "description": "A type definition for a generic Kibana Space in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "avatarInitials",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "avatarColor",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "elasticCluster",
+                    "typeName": "array<m4i_elastic_cluster>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_collection"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_ksql",
+            "description": "A type definition for a generic Kafka Sql in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "name",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "valueFormat",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "query",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "properties",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kafkaTopic",
+                    "typeName": "array<m4i_kafka_topic>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_confluent_cloud",
+            "description": "A type definition for a generic Confluent Cloud in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "confluentEnvironment",
+                    "typeName": "array<m4i_confluent_environment>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_system"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_dashboard",
+            "description": "A type definition for a generic Dashboard in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "updatedAt",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "version",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "creator",
+                    "typeName": "array<m4i_person>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "elasticCluster",
+                    "typeName": "array<m4i_elastic_cluster>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kibanaSpace",
+                    "typeName": "array<m4i_kibana_space>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_dataset"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_visualization",
+            "description": "A type definition for a generic Virtualization in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "type",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "updatedAt",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "version",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "creator",
+                    "typeName": "array<m4i_person>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "visualizationType",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_dataset"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_index_pattern",
+            "description": "A type definition for a generic Index Pattern in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "creator",
+                    "typeName": "array<m4i_person>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "indexPattern",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "updatedAt",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "version",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_dataset",
+                "m4i_collection"
+            ]
+        }
+    ],
+    "relationshipDefs": [
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_kafka_cluster_assignment",
+            "endDef1": {
+                "name": "kafkaClusters",
+                "type": "m4i_confluent_environment",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "confluentEnvironment",
+                "type": "m4i_kafka_cluster",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_kibana_space_assignment",
+            "endDef1": {
+                "name": "kibanaSpace",
+                "type": "m4i_elastic_cluster",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "elasticCluster",
+                "type": "m4i_kibana_space",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_kafkatopic_ksql_assignment",
+            "endDef1": {
+                "name": "ksqlApps",
+                "type": "m4i_kafka_topic",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "kafkaTopic",
+                "type": "m4i_ksql",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_confluent_environment_assignment",
+            "endDef1": {
+                "name": "confluentCloud",
+                "type": "m4i_confluent_environment",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "confluentEnvironment",
+                "type": "m4i_confluent_cloud",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_kibana_space_dashboard_assignment",
+            "endDef1": {
+                "name": "dashboards",
+                "type": "m4i_kibana_space",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "kibanaSpace",
+                "type": "m4i_dashboard",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_person_dashboard_assignment",
+            "endDef1": {
+                "name": "dashboards",
+                "type": "m4i_person",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "creator",
+                "type": "m4i_dashboard",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_person_index_pattern_assignment",
+            "endDef1": {
+                "name": "indexPatterns",
+                "type": "m4i_person",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "creator",
+                "type": "m4i_index_pattern",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_person_visualization_assignment",
+            "endDef1": {
+                "name": "visualizations",
+                "type": "m4i_person",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "creator",
+                "type": "m4i_visualization",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_elasticCluster_dashboard_assignment",
+            "endDef1": {
+                "name": "dashboards",
+                "type": "m4i_elastic_cluster",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "elasticCluster",
+                "type": "m4i_dashboard",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        }
+    ]
+}

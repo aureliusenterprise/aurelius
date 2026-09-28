@@ -1,0 +1,12 @@
+{
+    "name": "atlas-e2e",
+    "private": true,
+    "description": "Browser journeys for apps/atlas, run against the old (Apache Atlas) and the new (pyatlas) stack",
+    "scripts": {
+        "test": "playwright test",
+        "report": "playwright show-report"
+    },
+    "devDependencies": {
+        "@playwright/test": "1.47.2"
+    }
+}

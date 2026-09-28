@@ -1,0 +1,7 @@
+{
+    "_comment": "Accepted differences for the atlas-dev-quality engine (data quality results).",
+    "ignore": ["_meta"],
+    "unordered": [],
+    "empty_equals_missing": true,
+    "float_tolerance": 0.0001
+}

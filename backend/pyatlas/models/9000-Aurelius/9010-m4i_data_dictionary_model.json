@@ -1,0 +1,1725 @@
+{
+    "classificationDefs": [
+        {
+            "category": "CLASSIFICATION",
+            "name": "PII",
+            "attributeDefs": [],
+            "entityTypes": [
+                "m4i_data_entity",
+                "m4i_data_attribute",
+                "m4i_field",
+                "m4i_dataset",
+                "m4i_collection"
+            ],
+            "superTypes": []
+        },
+        {
+            "category": "CLASSIFICATION",
+            "name": "key_data",
+            "attributeDefs": [],
+            "entityTypes": [
+                "m4i_data_attribute",
+                "m4i_field"
+            ],
+            "superTypes": []
+        },
+        {
+            "category": "CLASSIFICATION",
+            "name": "low_risk",
+            "attributeDefs": [],
+            "entityTypes": [
+                "m4i_data_attribute",
+                "m4i_field"
+            ],
+            "superTypes": []
+        },
+        {
+            "category": "CLASSIFICATION",
+            "name": "medium_risk",
+            "attributeDefs": [],
+            "entityTypes": [
+                "m4i_data_attribute",
+                "m4i_field"
+            ],
+            "superTypes": []
+        },
+        {
+            "category": "CLASSIFICATION",
+            "name": "high_risk",
+            "attributeDefs": [],
+            "entityTypes": [
+                "m4i_data_entity",
+                "m4i_data_attribute",
+                "m4i_field",
+                "m4i_dataset"
+            ],
+            "superTypes": []
+        }
+    ],
+    "entityDefs": [
+        {
+            "category": "ENTITY",
+            "name": "m4i_referenceable",
+            "description": "A type definition for a generic m4i Referenceable in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "archimateReference",
+                    "typeName": "array<m4i_archimate_project>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "source",
+                    "typeName": "array<m4i_source>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "typeAlias",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "Type name to display in the UI instead of the base type name.",
+                    "displayName": "Type alias",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "Referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_archimate_project",
+            "description": "Representation for a generic Archimate Project",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "name",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The name of the archimate project",
+                    "displayName": "Name",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "branch",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The branch in the archimate project",
+                    "displayName": "Branch",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "ArchiMateReference",
+                    "typeName": "array<m4i_referenceable>",
+                    "cardinality": "SET",
+                    "description": "A list of references to the archimate project",
+                    "displayName": "Archimate References",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "Referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_source",
+            "description": "A type definition for a generic Business Source in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "name",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The unique functional name of the source",
+                    "displayName": "Name",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "hashCode",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The unique hash code of the source",
+                    "displayName": "Hash Code",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "branch",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The branch of the source",
+                    "displayName": "Branch",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "changeLog",
+                    "typeName": "array<m4i_referenceable>",
+                    "cardinality": "SET",
+                    "description": "A list of the most recent added/updated relationships with the source",
+                    "displayName": "Change Log",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_person",
+            "description": "Represents a specific actor in the organization",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "email",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The email address of the actor in the organization",
+                    "displayName": "Email",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": true,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "name",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The name of the actor in the organization",
+                    "displayName": "Name",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_data_domain",
+            "description": "A type definition for a generic data domain",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "name",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The unique functional name of the domain",
+                    "displayName": "Name",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "definition",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The definition of the data domain determined by the data steward and data owner",
+                    "displayName": "Definition",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "domainLead",
+                    "typeName": "array<m4i_person>",
+                    "cardinality": "SET",
+                    "description": "The owner of the data domain",
+                    "displayName": "Domain Lead",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "dataEntity",
+                    "typeName": "array<m4i_data_entity>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the data entities that belong to the data domain",
+                    "displayName": "Data Entity",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_data_entity",
+            "description": "A type definition for a generic data entity",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "name",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The unique functional name of the data entity",
+                    "displayName": "Name",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "definition",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The definition of the data entity determined by the data steward and data owner",
+                    "displayName": "Definition",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "dataDomain",
+                    "typeName": "array<m4i_data_domain>",
+                    "cardinality": "SET",
+                    "description": "The functional name of the data domain that the data entity belongs to",
+                    "displayName": "Data Domain",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "attributes",
+                    "typeName": "array<m4i_data_attribute>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the data attributes that belong to the data entity",
+                    "displayName": "Data Attribute",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "parentEntity",
+                    "typeName": "array<m4i_data_entity>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the data entity that the data entity belongs to",
+                    "displayName": "Parent Data Entity",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "childEntity",
+                    "typeName": "array<m4i_data_entity>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the data entity that belong to the data entity",
+                    "displayName": "Child Data Entity",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "steward",
+                    "typeName": "array<m4i_person>",
+                    "cardinality": "SET",
+                    "description": "The business data steward of the data entity",
+                    "displayName": "Business Data Steward",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "businessOwner",
+                    "typeName": "array<m4i_person>",
+                    "cardinality": "SET",
+                    "description": "The business owner steward of the data entity",
+                    "displayName": "Business Data Owner",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_data_attribute",
+            "description": "A type definition for a generic data attribute",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "name",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The unique functional name of the data attribute",
+                    "displayName": "Name",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "definition",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The definition of the data attribute determined by the data steward and data owner",
+                    "displayName": "Definition",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "attributeType",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The data type of the data attribute",
+                    "displayName": "Attribute Type",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "isKeyData",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "If this attribute represents any key",
+                    "displayName": "isKeyData",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "dataEntity",
+                    "typeName": "array<m4i_data_entity>",
+                    "cardinality": "SET",
+                    "description": "The functional name of the data entity that the data attribute belongs to",
+                    "displayName": "Data Entity",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "steward",
+                    "typeName": "array<m4i_person>",
+                    "cardinality": "SET",
+                    "description": "The business data steward of the data attribute",
+                    "displayName": "Business Data Steward",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "businessOwner",
+                    "typeName": "array<m4i_person>",
+                    "cardinality": "SET",
+                    "description": "The business owner steward of the data attribute",
+                    "displayName": "Business Data Owner",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "riskClassification",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The risk classification of the data attribute determined by the data steward and data owner",
+                    "displayName": "Risk Classification",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "hasPII",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The classification if this attribute holds information about a person",
+                    "displayName": "hasPII",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "fields",
+                    "typeName": "array<m4i_field>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the data fields that belong to the data attribute",
+                    "displayName": "Data Fields",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_system",
+            "description": "Represents a generic system",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "name",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The unique functional name of the system",
+                    "displayName": "Name",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "definition",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The definition of the system",
+                    "displayName": "Definition",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "collections",
+                    "typeName": "array<m4i_collection>",
+                    "cardinality": "SET",
+                    "description": "The functional name of the collection that the dataset belongs to",
+                    "displayName": "Collection",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "parentSystem",
+                    "typeName": "array<m4i_system>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the System that the System belongs to",
+                    "displayName": "Parent System",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "childSystem",
+                    "typeName": "array<m4i_system>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the System that belong to the System",
+                    "displayName": "Child System",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "processes",
+                    "typeName": "array<m4i_generic_process>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the Process that belong to the System",
+                    "displayName": "Child Process",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_collection",
+            "description": "Represents a specific collection in the organization",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "name",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The unique functional name of the  collection",
+                    "displayName": "Name",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "definition",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The definition of the collection",
+                    "displayName": "Definition",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "systems",
+                    "typeName": "array<m4i_system>",
+                    "cardinality": "SET",
+                    "description": "The functional name of the system that the collection belongs to",
+                    "displayName": "System",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "datasets",
+                    "typeName": "array<m4i_dataset>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the datasets that belong to the collection",
+                    "displayName": "Datasets",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_dataset",
+            "description": "A type definition for a generic dataset",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "definition",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The definition of the dataset",
+                    "displayName": "Definition",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "fields",
+                    "typeName": "array<m4i_field>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the data fields that belong to this data set",
+                    "displayName": "Data Fields",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "collections",
+                    "typeName": "array<m4i_collection>",
+                    "cardinality": "SET",
+                    "description": "The functional name of the collection that the dataset belongs to",
+                    "displayName": "Collection",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "parentDataset",
+                    "typeName": "array<m4i_dataset>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the dataset that the dataset belongs to",
+                    "displayName": "Parent Dataset",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "childDataset",
+                    "typeName": "array<m4i_dataset>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the dataset that belong to the dataset",
+                    "displayName": "Child Dataset",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable",
+                "DataSet"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_field",
+            "description": "A type definition for a generic data field",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "name",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The unique functional name of the data field",
+                    "displayName": "Name",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "definition",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The definition of the data field determined by the data steward and data owner",
+                    "displayName": "Definition",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "fieldType",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The classification of the data type of the field",
+                    "displayName": "Field Type",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "hasContent",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "Content Structure for a Field",
+                    "displayName": "hasContent",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "optionalField",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "Optional field for additional value",
+                    "displayName": "optionalField",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "datasets",
+                    "typeName": "array<m4i_dataset>",
+                    "cardinality": "SET",
+                    "description": "The name of the dataset to which the field belongs to",
+                    "displayName": "Dataset",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "attributes",
+                    "typeName": "array<m4i_data_attribute>",
+                    "cardinality": "SET",
+                    "description": "The functional name of the data attribute that the data field belongs to",
+                    "displayName": "Data Attribute",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "steward",
+                    "typeName": "array<m4i_person>",
+                    "cardinality": "SET",
+                    "description": "The business data steward of the data field",
+                    "displayName": "Business Data Steward",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "parentField",
+                    "typeName": "array<m4i_field>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the field that this field belongs to",
+                    "displayName": "Parent Field",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "childField",
+                    "typeName": "array<m4i_field>",
+                    "cardinality": "SET",
+                    "description": "The functional names of the field that this field belongs to",
+                    "displayName": "Child Field",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": false,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_data_quality",
+            "description": "A type definition for a generic Data Quality Rule",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "id",
+                    "typeName": "int",
+                    "cardinality": "SINGLE",
+                    "description": "The unique identifier of the data quality rule",
+                    "displayName": "ID",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": false,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "ruleDescription",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "Functional description on what the data field needs to adhere to including the related data fields which can be used to program into a measurable rule.",
+                    "displayName": "Rule Description",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "expression",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The expression that is used by a Python script to apply the correct functionality for a data quality rule.",
+                    "displayName": "Expression",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "active",
+                    "typeName": "boolean",
+                    "cardinality": "SINGLE",
+                    "description": "Classification if a data quality rule is active or inactive.",
+                    "displayName": "Active",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "expressionVersion",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The version of the expression that is used.",
+                    "displayName": "Expression Version",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "businessRuleDescription",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "Functional description on what the data field needs to adhere to.",
+                    "displayName": "Business Rule Description",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "filterRequired",
+                    "typeName": "boolean",
+                    "cardinality": "SINGLE",
+                    "description": "Classification if a filter is required for a data quality rule (this is required in case a field contains a content structure).",
+                    "displayName": "Filter Required",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "qualityDimension",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "Classification of the type of data quality that needs to be measured.",
+                    "displayName": "Quality Dimension",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "fields",
+                    "typeName": "array<m4i_field>",
+                    "cardinality": "SET",
+                    "description": "The unique technical name of a field, for which a data quality rule needs to be applied",
+                    "displayName": "Fields",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable",
+                "DataSet"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_generic_process",
+            "description": "A type definition for a generic process in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "typeName": "string",
+                    "isOptional": true,
+                    "cardinality": "SINGLE",
+                    "valuesMinCount": 0,
+                    "valuesMaxCount": 1,
+                    "isUnique": false,
+                    "isIndexable": true,
+                    "includeInNotification": true,
+                    "searchWeight": 1,
+                    "indexType": "DEFAULT",
+                    "options": {},
+                    "name": "definition",
+                    "displayName": "Definition",
+                    "description": "The definition of the process determined by the process owner"
+                },
+                {
+                    "name": "processOwner",
+                    "typeName": "array<m4i_person>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "system",
+                    "typeName": "array<m4i_system>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "Process",
+                "m4i_referenceable"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_gov_data_quality",
+            "description": "A type definition for a Governance Data Quality Rule",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "id",
+                    "typeName": "int",
+                    "cardinality": "SINGLE",
+                    "description": "The unique identifier of the data quality rule",
+                    "displayName": "ID",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": false,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "ruleDescription",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "Functional description on what the data field needs to adhere to including the related data fields which can be used to program into a measurable rule.",
+                    "displayName": "Rule Description",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "expression",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The expression that is used by a Python script to apply the correct functionality for a data quality rule.",
+                    "displayName": "Expression",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "active",
+                    "typeName": "boolean",
+                    "cardinality": "SINGLE",
+                    "description": "Classification if a data quality rule is active or inactive.",
+                    "displayName": "Active",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "expressionVersion",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "The version of the expression that is used.",
+                    "displayName": "Expression Version",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "qualityDimension",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "Classification of the type of data quality that needs to be measured.",
+                    "displayName": "Quality Dimension",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "compliantMessage",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "Message displayed when data quality is Complaint",
+                    "displayName": "Complaint Message",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "nonCompliantMessage",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "Message displayed when data quality is not Complaint",
+                    "displayName": "Non-complaint Message",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "ruleType",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "description": "Rules are either applied on Attributes or relationship. This field captures this information.",
+                    "displayName": "Rule Type",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_referenceable",
+                "DataSet"
+            ]
+        }
+    ],
+    "relationshipDefs": [
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_system_parent_assignment",
+            "endDef1": {
+                "name": "parentSystem",
+                "type": "m4i_system",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "childSystem",
+                "type": "m4i_system",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the system to other systems",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_collection_assignment",
+            "endDef1": {
+                "name": "systems",
+                "type": "m4i_collection",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "collections",
+                "type": "m4i_system",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the system and the collection",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_dataset_parent_assignment",
+            "endDef1": {
+                "name": "parentDataset",
+                "type": "m4i_dataset",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "childDataset",
+                "type": "m4i_dataset",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the dataset to other datasets",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_field_assignment",
+            "endDef1": {
+                "name": "fields",
+                "type": "m4i_dataset",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "datasets",
+                "type": "m4i_field",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data field and the dataset",
+            "typeVersion": "1.0",
+            "propagateTags": "TWO_TO_ONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": [
+                {
+                    "name": "typeInformation",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "displayName": "Type Information",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ]
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_data_entity_attribute_assignment",
+            "endDef1": {
+                "name": "attributes",
+                "type": "m4i_data_entity",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "dataEntity",
+                "type": "m4i_data_attribute",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data entity and the data attribute",
+            "typeVersion": "1.0",
+            "propagateTags": "TWO_TO_ONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_data_attribute_business_owner_assignment",
+            "endDef1": {
+                "name": "businessOwnerAttribute",
+                "type": "m4i_person",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "businessOwner",
+                "type": "m4i_data_attribute",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data attribute and its business data owner",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_data_attribute_steward_assignment",
+            "endDef1": {
+                "name": "stewardAttribute",
+                "type": "m4i_person",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "steward",
+                "type": "m4i_data_attribute",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data attribute and its business data steward",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_data_attribute_field_assignment",
+            "endDef1": {
+                "name": "attributes",
+                "type": "m4i_field",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "fields",
+                "type": "m4i_data_attribute",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data attribute and the data field",
+            "typeVersion": "1.0",
+            "propagateTags": "TWO_TO_ONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_dataset_assignment",
+            "endDef1": {
+                "name": "collections",
+                "type": "m4i_dataset",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "datasets",
+                "type": "m4i_collection",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the collection and the dataset",
+            "typeVersion": "1.0",
+            "propagateTags": "ONE_TO_TWO",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_data_entity_assignment",
+            "endDef1": {
+                "name": "dataEntity",
+                "type": "m4i_data_domain",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "dataDomain",
+                "type": "m4i_data_entity",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data domain and the data entity",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_data_entity_business_owner_assignment",
+            "endDef1": {
+                "name": "businessOwnerEntity",
+                "type": "m4i_person",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "businessOwner",
+                "type": "m4i_data_entity",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data entity and its business data owner",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_data_entity_steward_assignment",
+            "endDef1": {
+                "name": "stewardEntity",
+                "type": "m4i_person",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "steward",
+                "type": "m4i_data_entity",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data entity and its business data steward",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_parent_entity_assignment",
+            "endDef1": {
+                "name": "parentEntity",
+                "type": "m4i_data_entity",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "childEntity",
+                "type": "m4i_data_entity",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data entity to other data entities",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_data_quality_field_assignment",
+            "endDef1": {
+                "name": "fields",
+                "type": "m4i_data_quality",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "dataQuality",
+                "type": "m4i_field",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data field and the data quality rule",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_referenceable_archimate_reference_assignment",
+            "endDef1": {
+                "name": "ArchiMateReference",
+                "type": "m4i_referenceable",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "ArchiMateReference",
+                "type": "m4i_archimate_project",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "This relationship demonstrates the connection between the referenced objects on Atlas to those in Archimate",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_referenceable_source_assignment",
+            "endDef1": {
+                "name": "changeLog",
+                "type": "m4i_source",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "source",
+                "type": "m4i_referenceable",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "A list of the most recent added/updated relationships with the source",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_field_parent_assignment",
+            "endDef1": {
+                "name": "parentField",
+                "type": "m4i_field",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "childField",
+                "type": "m4i_field",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data field to other data entities",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_domainLead_assignment",
+            "endDef1": {
+                "name": "domainLead",
+                "type": "m4i_person",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "domainLead",
+                "type": "m4i_data_domain",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "The relationship between the data domain and the domain lead",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_process_owner_assignment",
+            "endDef1": {
+                "name": "ProcessOwner",
+                "type": "m4i_person",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "processOwner",
+                "type": "m4i_generic_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_system_process_assignment",
+            "endDef1": {
+                "name": "processes",
+                "type": "m4i_system",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "system",
+                "type": "m4i_generic_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        }
+    ]
+}

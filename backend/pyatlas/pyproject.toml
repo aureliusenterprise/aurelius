@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyatlas"
+version = "0.1.0"
+description = "Python re-implementation of the Apache Atlas metadata server on Elasticsearch"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "elasticsearch[async]>=8.11,<9",
+    "pydantic>=2.5",
+    "pydantic-settings>=2.1",
+    "itsdangerous>=2.1",
+    "python-multipart>=0.0.9",
+    "openpyxl>=3.1",
+    "defusedxml>=0.7",   # openpyxl uses it automatically: protects XLSX uploads against XML bombs / XXE
+    "bcrypt>=4.0",       # BCrypt password hashes in users-credentials.properties (as Atlas)
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-asyncio>=0.23", "httpx>=0.26"]
+
+[project.scripts]
+pyatlas = "pyatlas.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["pyatlas*", "parity*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

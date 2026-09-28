@@ -1,0 +1,36 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "name": "pyatlas",
+    "projectType": "application",
+    "tags": ["python", "pyatlas"],
+    "targets": {
+        "test": {
+            "executor": "nx:run-commands",
+            "metadata": { "description": "Run the pyatlas tests (Python 3.12 in Docker, in-memory Elasticsearch fake)" },
+            "options": {
+                "cwd": "backend/pyatlas",
+                "command": "docker run --rm -v \"$(pwd):/src:ro\" python:3.12-slim sh -c \"cp -r /src /app && cd /app && pip install -q --root-user-action=ignore --disable-pip-version-check -e '.[dev]' && python -B -m pytest -q -p no:cacheprovider\""
+            }
+        },
+        "test-local": {
+            "executor": "nx:run-commands",
+            "metadata": { "description": "Run the pyatlas tests with a local Python >= 3.10 (pip install -e '.[dev]' first)" },
+            "options": { "cwd": "backend/pyatlas", "command": "python -m pytest -q" }
+        },
+        "typecheck": {
+            "executor": "nx:run-commands",
+            "metadata": { "description": "Byte-compile pyatlas (pyatlas has its own Python 3.12 environment, not the workspace Poetry 3.8 one)" },
+            "options": { "cwd": "backend/pyatlas", "command": "python -m compileall -q pyatlas parity scripts" }
+        },
+        "serve": {
+            "executor": "nx:run-commands",
+            "metadata": { "description": "Elasticsearch + Kibana + pyatlas with the sample data (docker compose)" },
+            "options": { "cwd": "backend/pyatlas", "command": "docker compose up --build" }
+        },
+        "parity": {
+            "executor": "nx:run-commands",
+            "metadata": { "description": "Run a parity comparison, e.g. nx run pyatlas:parity --args=\"store --zip export.zip --pyatlas http://localhost:21000\"" },
+            "options": { "cwd": "backend/pyatlas", "command": "python -m parity" }
+        }
+    }
+}

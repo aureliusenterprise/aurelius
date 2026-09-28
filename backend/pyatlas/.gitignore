@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+.env
+build/
+dist/
+data/
+run_tests.log
+run_sample_test.log
+diagnose.log
+*.log
+sample_data.zip
+parity-reports/
+parity.env

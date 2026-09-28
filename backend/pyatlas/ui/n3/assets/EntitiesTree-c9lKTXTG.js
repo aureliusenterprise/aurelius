@@ -1,0 +1,17 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import{R as N,a as o,j as V}from"./mui-BfQyULi0.js";import{B as G}from"./SideBarTree-BhRV-trs.js";import{u as H,f as E,aJ as w,i as D,aj as l,M as J,v as A,a6 as K,o as Y}from"./index-BpDEq3xb.js";import"./Router-Bbhl_1y6.js";import"./router-D-5TF13k.js";import"./utils-vGcjcrS1.js";import"./redux-BhQjujQg.js";import"./AddUpdateGlossaryForm-M_do7PtM.js";import"./DetailPageAttributes-GnblffY8.js";import"./EditOutlined-B-2hySUn.js";import"./index-CTgKUtoL.js";import"./ShowMoreView-ByhJWQxk.js";import"./Search-BzH4AsqA.js";import"./EntityStatus-Cmv0MvKm.js";import"./AddCircleOutline-DkL39vz6.js";import"./AssignCategory-CsYLzbX9.js";import"./Refresh-2ij1WC0q.js";const q=({sideBarOpen:b,searchTerm:O})=>{const m=H(),{typeHeaderData:c,loading:_}=E(t=>t.typeHeader),{allEntityTypesData:u}=E(t=>t.allEntityTypes),{metricsData:y}=E(t=>t.metrics),[h,j]=o.useState(!1),[n,C]=o.useState(!0),[M,B]=o.useState([]),[I,R]=o.useState([]);o.useEffect(()=>{m(w())},[]);const $=async()=>{await m(K()),await m(w()),await m(Y())};o.useEffect(()=>{if(!D(c)){const t=[],e=[];c==null||c.forEach(a=>{let{serviceType:s="other_types",category:r,name:i,guid:x}=a,p=0,v="",f={gType:"",guid:"",id:"",name:"",type:"",text:""};r==="ENTITY"&&y&&!D(y.data)&&(p=(y.data.entity.entityActive[i]||0)+(y.data.entity.entityDeleted[i]||0),v=p?`${i} (${p})`:i,f={text:v,name:i,type:r,gType:"Entity",guid:x,id:x},T(t,s,f,p),p>0&&T(e,s,f,p))}),B(S(t)),R(S(e))}},[c,y]);const T=(t,e,a,s)=>{if(n){const r=t.find(i=>typeof i=="object"&&i!==null&&e in i);if(r)r[e].children.push(a),r[e].totalCount+=s;else{const i={[e]:{children:[a],name:e,totalCount:s}};t.push(i)}}else t.push(a)},S=t=>{const e={gType:"Entity",guid:l[0],id:l[0],name:l[0],type:u==null?void 0:u.category,text:l[0]};if(n)if(t.some(s=>s.other_types!==void 0)){const s=t.findIndex(r=>"other_types"in r);t[s].other_types.children.push(e)}else t.push({other_types:{name:"other_types",children:[e],totalCount:0}});else t.push(e);return t},g=o.useMemo(()=>{const t=e=>!e||e.length===0?[]:A(e.map(a=>({id:a.name,label:a.text,types:"child"})),["label"]);return n?e=>e.map(a=>{const s=Object.keys(a)[0],r=a[s];return{id:r.name,label:r.totalCount===0?r.name:`${r.name} (${r.totalCount})`,children:t(r.children),types:"parent"}}):e=>e.flatMap(a=>{var s;return(s=a[Object.keys(a)[0]].children)==null?void 0:s.map(r=>({id:r.name,label:r.text}))})},[n]),d=h?M:I,k=o.useMemo(()=>{if(n){const t=J(d);return g(t)}else{const t=g(d);return A(t,["label"])}},[n,h,d]);return V.jsx(G,{treeData:k,treeName:"Entities",setisEmptyServicetype:j,isEmptyServicetype:h,refreshData:$,isGroupView:n,setisGroupView:C,sideBarOpen:b,loader:_,searchTerm:O})},pt=N.memo(q);export{pt as default};

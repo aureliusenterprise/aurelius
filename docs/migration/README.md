@@ -1,0 +1,63 @@
+# Aurelius on pyatlas: migration
+
+Apache Atlas, Kafka, the three Flink jobs and the Python back ends are replaced by pyatlas
+(`backend/pyatlas`), a Python port of Atlas on Elasticsearch. The frontend (`apps/atlas`), Keycloak and the
+reverse proxy stay. Decisions (28 Sep 2026): big-bang cutover, pyatlas inside this monorepo, only `apps/atlas`
+in scope, the Kafka data dictionary harvester switched off.
+
+## Phase 0 - foundation (this branch: `pyatlas-migration`)
+
+| Deliverable | Where | Status |
+| --- | --- | --- |
+| pyatlas in the monorepo, Nx project, repo-root Docker context | `backend/pyatlas`, `project.json` | done |
+| m4i type definitions as pyatlas models | `backend/pyatlas/models/9000-Aurelius`, `scripts/gen_m4i_models.py` | done, all 39 Aurelius types equal to the deployed ones |
+| Check 1 - stored data | `python -m parity store` | done |
+| Check 2 - search and quality indices | `python -m parity dump` / `indices` | done (used from phase 2) |
+| Check 3 - same changes, same results | `python -m parity mutate` / `compare-mutations` | done |
+| Check 4 - API responses | `python -m parity replay` (HAR, JSONL, access log) | done |
+| Check 5 - user journeys | `apps/atlas-e2e` (Playwright) | written; to be validated against the current stack in phase 1 |
+| Quality rules without `eval` | `python -m parity rules` | done: grammar fixed, all usable rules fit |
+| Kafka inventory | [kafka-inventory.md](kafka-inventory.md) | done; 4 items to confirm with owners |
+| Staging next to the old stack | `backend/pyatlas/docker-compose.parity.yml` | done |
+
+Every check writes `report.md` + `report.json` to `parity-reports/` and exits with 1 on differences, so it can
+gate CI. The comparison rules (accepted differences) are in `backend/pyatlas/parity/allowlists/`.
+
+## What phase 0 found
+
+1. **Entity `attributes` lacked relationship-backed references** (fixed in pyatlas). Atlas also returns
+   reference attributes that are stored as relationships, such as `steward`, `dataEntity`, `fields`, in
+   `attributes`, not only in `relationshipAttributes`. For attributes inherited from a supertype it returns them
+   empty (`source` on every m4i type). pyatlas now does the same; found by check 1 on the sample export.
+2. **Attribute multiplicity defaults** (fixed in pyatlas). A SET/LIST attribute without `valuesMaxCount` gets
+   `2147483647` as in Atlas (it was 1). Attribute definitions also drop the properties Atlas does not store
+   (`relationshipTypeName`, `isLegacyAttribute`).
+3. **m4i-atlas-core differs from the deployed types** in two places: `m4i_generic_process.definition` exists
+   only in the deployed type, and `m4i_field` labels `definition` as "Data Type" in m4i-atlas-core. The model
+   files follow the deployed types (`DEPLOYED_OVERRIDES` in the generator); m4i-atlas-core should be corrected.
+4. **Code injection in today's quality rules.** `validate_function_string` only checks the names of the
+   outermost code object, so an expression such as `completeness((lambda: ...)())` passes and `eval` then runs
+   arbitrary Python (reachable via `object.__subclasses__()` although builtins are removed). Anyone who can
+   write an `expression` attribute of a data quality entity can run code in the quality jobs. pyatlas (phase 3)
+   parses expressions with a fixed grammar instead. Of 1,842 expressions in the repository and sample data,
+   1,812 fit it. The other 30 (15 distinct) use capitalised names such as `Completeness(...)` and are rejected
+   by today's validator as well.
+5. **The golden App Search documents belong to the sample export**: every document of `atlas-dev.json` is an
+   entity of `sample_data.zip`, so the pair is the regression oracle for phase 2.
+
+## Running the checks
+
+```bash
+cd backend/pyatlas
+python -m parity rules --repo-defaults
+python -m parity store --zip ../m4i-atlas-post-install/data/sample_data.zip \
+    --right http://localhost:21100 --right-user admin --right-password admin
+python -m parity dump --source es:https://old-es:9200#.ent-search-engine-documents-atlas-dev --out old-atlas-dev.json
+python -m parity mutate --right https://old/aurelius/atlas2 --right-token "$TOKEN" --out old.json
+python -m parity mutate --right http://localhost:21100 --right-user admin --right-password admin --out new.json
+python -m parity compare-mutations old.json new.json
+python -m parity replay --recording session.har --right http://localhost:21100 --rewrite aurelius
+```
+
+On Windows without Python: `backend\pyatlas\run_parity.bat <same arguments>` (URLs of services on the same
+machine: `http://host.docker.internal:<port>`).

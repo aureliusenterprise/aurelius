@@ -1,0 +1,70 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -qE '\"status\":\"(green|yellow)\"'"]
+      interval: 10s
+      retries: 30
+
+  # Kibana to inspect the indices pyatlas writes (atlas_entities, atlas_relationships, ...):
+  # http://localhost:5601 -> Dev Tools (queries) or Stack Management -> Data Views (Discover)
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.3
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - TELEMETRY_OPTIN=false
+    ports:
+      - "5601:5601"
+
+  # one-off job: creates the Kibana data views for the pyatlas indices (Atlas entities, relationships,
+  # entity audits, type definitions, server state, all) once Kibana is up; see docker/kibana-setup.sh
+  kibana-setup:
+    image: curlimages/curl:8.10.1
+    depends_on:
+      - kibana
+    environment:
+      - KIBANA_URL=http://kibana:5601
+      - INDEX_PREFIX=atlas
+    volumes:
+      - ./docker/kibana-setup.sh:/kibana-setup.sh:ro
+    entrypoint: ["sh", "-c", "tr -d '\\r' < /kibana-setup.sh | sh"]
+    restart: "no"
+
+  pyatlas:
+    build:
+      context: ../..                      # repository root (monorepo convention)
+      dockerfile: backend/pyatlas/Dockerfile
+    image: pyatlas:local
+    # rebuild on every "docker compose up" so code changes in this folder are always used
+    pull_policy: build
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - PYATLAS_ES_HOSTS=http://elasticsearch:9200
+      # key signing the UI session cookie: set PYATLAS_SESSION_SECRET in your shell or an .env file next to this
+      # file (e.g. python -c "import secrets;print(secrets.token_urlsafe(48))"); unset = random key per start
+      - PYATLAS_SESSION_SECRET=${PYATLAS_SESSION_SECRET:-}
+      # Atlas export ZIPs from this folder imported at every start (missing files are skipped).
+      # "always": the sample entities are reset to the ZIP's content on each start, other data is kept;
+      # use "once" to import only on the very first start.
+      - PYATLAS_IMPORT_ON_START=/import/sample_data.zip
+      - PYATLAS_IMPORT_ON_START_MODE=always
+    volumes:
+      - ./:/import:ro
+    ports:
+      - "21000:21000"
+
+volumes:
+  esdata:

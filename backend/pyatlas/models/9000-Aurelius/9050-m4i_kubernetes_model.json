@@ -1,0 +1,707 @@
+{
+    "entityDefs": [
+        {
+            "category": "ENTITY",
+            "name": "m4i_kubernetes_environment",
+            "description": "A type definition for a generic Kubernetes Environment in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "kubernetesClusters",
+                    "typeName": "array<m4i_kubernetes_cluster>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_system"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_kubernetes_cluster",
+            "description": "A type definition for a generic Kubernetes Cluster in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "kubernetesEnvironment",
+                    "typeName": "array<m4i_kubernetes_environment>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kubernetesNamespace",
+                    "typeName": "array<m4i_kubernetes_namespace>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_system"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_kubernetes_namespace",
+            "description": "A type definition for a generic Kubernetes Namespace in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "kubernetesCluster",
+                    "typeName": "array<m4i_kubernetes_cluster>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kubernetesCronjob",
+                    "typeName": "array<m4i_kubernetes_cronjob>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kubernetesDeployment",
+                    "typeName": "array<m4i_kubernetes_deployment>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_system"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_kubernetes_deployment",
+            "description": "A type definition for a generic Kubernetes Deployment in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "kubernetesNamespace",
+                    "typeName": "array<m4i_kubernetes_namespace>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kubernetesPod",
+                    "typeName": "array<m4i_kubernetes_pod>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "tags",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_system"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_kubernetes_cronjob",
+            "description": "A type definition for a generic Kubernetes CronJob in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "kubernetesNamespace",
+                    "typeName": "array<m4i_kubernetes_namespace>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kubernetesPod",
+                    "typeName": "array<m4i_kubernetes_pod>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "schedule",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "tags",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_system"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_kubernetes_pod",
+            "description": "A type definition for a generic Kubernetes Pod in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "kubernetesCronjob",
+                    "typeName": "array<m4i_kubernetes_cronjob>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kubernetesDeployment",
+                    "typeName": "array<m4i_kubernetes_deployment>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "replicas",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "microservice",
+                    "typeName": "array<m4i_microservice_process>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_system"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_microservice_process",
+            "description": "A type definition for a microservice process in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "system",
+                    "typeName": "array<m4i_kubernetes_pod>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "service",
+                    "typeName": "array<m4i_kubernetes_service_process>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "operation",
+                    "typeName": "array<m4i_api_operation_process>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_generic_process"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_api_operation_process",
+            "description": "A type definition for a API Operation process in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "microservice",
+                    "typeName": "array<m4i_microservice_process>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_generic_process"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_ingress_controller_process",
+            "description": "A type definition for a microservice process in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "ingressObject",
+                    "typeName": "array<m4i_ingress_object_process>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_generic_process"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_ingress_object_process",
+            "description": "A type definition for a kubernetes ingress object process in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "ingressController",
+                    "typeName": "array<m4i_ingress_controller_process>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "kubernetesService",
+                    "typeName": "array<m4i_kubernetes_service_process>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_generic_process"
+            ]
+        },
+        {
+            "category": "ENTITY",
+            "name": "m4i_kubernetes_service_process",
+            "description": "A type definition for a kubernetes ingress object process in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "ingressObject",
+                    "typeName": "array<m4i_ingress_object_process>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "microservice",
+                    "typeName": "array<m4i_microservice_process>",
+                    "cardinality": "SET",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_generic_process"
+            ]
+        }
+    ],
+    "relationshipDefs": [
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_kubernetes_environment_cluster_assignment",
+            "endDef1": {
+                "name": "kubernetesClusters",
+                "type": "m4i_kubernetes_environment",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "kubernetesEnvironment",
+                "type": "m4i_kubernetes_cluster",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_kubernetes_cluster_namespace_assignment",
+            "endDef1": {
+                "name": "kubernetesNamespace",
+                "type": "m4i_kubernetes_cluster",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "kubernetesCluster",
+                "type": "m4i_kubernetes_namespace",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_kubernetes_namespace_deployment_assignment",
+            "endDef1": {
+                "name": "kubernetesDeployment",
+                "type": "m4i_kubernetes_namespace",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "kubernetesNamespace",
+                "type": "m4i_kubernetes_deployment",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_kubernetes_namespace_cronjob_assignment",
+            "endDef1": {
+                "name": "kubernetesCronjob",
+                "type": "m4i_kubernetes_namespace",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "kubernetesNamespace",
+                "type": "m4i_kubernetes_cronjob",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_kubernetes_cronjob_pod_assignment",
+            "endDef1": {
+                "name": "kubernetesPod",
+                "type": "m4i_kubernetes_cronjob",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "kubernetesCronjob",
+                "type": "m4i_kubernetes_pod",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_kubernetes_deployment_pod_assignment",
+            "endDef1": {
+                "name": "kubernetesPod",
+                "type": "m4i_kubernetes_deployment",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "kubernetesDeployment",
+                "type": "m4i_kubernetes_pod",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_microservice_api_operation_assignment",
+            "endDef1": {
+                "name": "operation",
+                "type": "m4i_microservice_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "microservice",
+                "type": "m4i_api_operation_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_cluster_ingress_controller_assignment",
+            "endDef1": {
+                "name": "ingressController",
+                "type": "m4i_kubernetes_cluster",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "cluster",
+                "type": "m4i_ingress_controller_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_namespace_ingress_object_assignment",
+            "endDef1": {
+                "name": "ingressObject",
+                "type": "m4i_kubernetes_namespace",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "namespace",
+                "type": "m4i_ingress_object_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_ingress_controller_ingress_object_assignment",
+            "endDef1": {
+                "name": "ingressObject",
+                "type": "m4i_ingress_controller_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "ingressController",
+                "type": "m4i_ingress_object_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_namespace_kubernetes_service_assignment",
+            "endDef1": {
+                "name": "service",
+                "type": "m4i_kubernetes_namespace",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "namespace",
+                "type": "m4i_kubernetes_service_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_ingress_object_kubernetes_service_assignment",
+            "endDef1": {
+                "name": "kubernetesService",
+                "type": "m4i_ingress_object_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "ingressObject",
+                "type": "m4i_kubernetes_service_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_kubernetes_service_microservice_assignment",
+            "endDef1": {
+                "name": "microservice",
+                "type": "m4i_kubernetes_service_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "service",
+                "type": "m4i_microservice_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
+            "name": "m4i_system_microservice_assignment",
+            "endDef1": {
+                "name": "microservice",
+                "type": "m4i_kubernetes_pod",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "system",
+                "type": "m4i_microservice_process",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        }
+    ]
+}

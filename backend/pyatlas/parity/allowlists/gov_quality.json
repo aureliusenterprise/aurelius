@@ -1,0 +1,7 @@
+{
+    "_comment": "Accepted differences for the atlas-dev-gov-quality engine (governance quality rule results per entity).",
+    "ignore": ["_meta", "result_id"],
+    "unordered": ["usedattributes"],
+    "empty_equals_missing": true,
+    "float_tolerance": 0.0001
+}

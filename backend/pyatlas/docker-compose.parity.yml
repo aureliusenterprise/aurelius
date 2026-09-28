@@ -1,0 +1,22 @@
+# pyatlas next to an old Aurelius stack on the same machine (phases 0-5, "staging"):
+#   docker compose -p pyatlas-parity -f docker-compose.yml -f docker-compose.parity.yml up --build
+# Ports are moved so they do not clash with dev/docker-compose.yaml (Atlas 21000, Elasticsearch 9200,
+# Kibana 5601):  pyatlas http://localhost:21100, Elasticsearch http://localhost:9201, Kibana http://localhost:5602.
+# The Aurelius sample data of the monorepo is imported at start, so both stacks hold the same data.
+services:
+  elasticsearch:
+    ports: !override
+      - "9201:9200"
+  kibana:
+    ports: !override
+      - "5602:5601"
+  pyatlas:
+    environment:
+      - PYATLAS_ES_HOSTS=http://elasticsearch:9200
+      - PYATLAS_SESSION_SECRET=${PYATLAS_SESSION_SECRET:-}
+      - PYATLAS_IMPORT_ON_START=/aurelius-data/sample_data.zip
+      - PYATLAS_IMPORT_ON_START_MODE=once
+    volumes:
+      - ../m4i-atlas-post-install/data:/aurelius-data:ro
+    ports: !override
+      - "21100:21000"

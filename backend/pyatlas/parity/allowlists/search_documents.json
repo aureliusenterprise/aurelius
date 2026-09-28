@@ -1,0 +1,7 @@
+{
+    "_comment": "Accepted differences for the atlas-dev engine (AppSearchDocument). Breadcrumbs are ordered (root first) and compared in order; derived lists are sets.",
+    "ignore": ["_meta"],
+    "unordered": ["derived*", "classificationstext", "supertypenames", "qualityguid_*"],
+    "empty_equals_missing": true,
+    "float_tolerance": 0.0001
+}

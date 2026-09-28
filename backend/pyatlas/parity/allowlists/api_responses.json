@@ -1,0 +1,9 @@
+{
+    "_comment": "Accepted differences when replaying recorded frontend requests: server timestamps, versions and timing fields.",
+    "ignore": ["**.updateTime", "**.createTime", "**.version", "**.queryTime", "**.took", "**.request_id",
+               "**.lastModifiedTS", "**.timestamp", "**.startTime", "**.endTime", "meta.request_id",
+               "meta.alerts", "meta.warnings", "**.approximateCount"],
+    "unordered": ["**.classifications", "**.labels", "**.classificationNames", "**.meaningNames"],
+    "empty_equals_missing": true,
+    "float_tolerance": 0.001
+}

@@ -1,0 +1,13 @@
+pyatlas
+Copyright 2026 the pyatlas authors
+
+This product is a Python re-implementation of the Apache Atlas server and bundles
+material from Apache Atlas (https://atlas.apache.org/), licensed under the
+Apache License, Version 2.0:
+
+  * models/  - Atlas type definition models (addons/models)
+  * ui/      - the pre-built Atlas web UIs (dashboardv2 classic UI and the React UI "dashboard")
+  * ui/login.jsp - Atlas login page template
+
+See NOTICE-apache-atlas and ui/LICENSE-apache-atlas for the Apache Atlas notices
+and the licenses of third-party components bundled in the UI.
