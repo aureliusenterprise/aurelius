@@ -125,8 +125,9 @@ services:
       # the Aurelius sample data on the first start (set PYATLAS_IMPORT_ON_START= to start empty)
       - PYATLAS_IMPORT_ON_START=${PYATLAS_IMPORT_ON_START-/aurelius-data/sample_data.zip}
       - PYATLAS_IMPORT_ON_START_MODE=once
-      # sample data quality and governance quality results (the golden files of the Aurelius post-install job)
-      - PYATLAS_AURELIUS_QUALITY_SEED=${PYATLAS_AURELIUS_QUALITY_SEED-/aurelius-data/atlas-dev-quality.json,/aurelius-data/atlas-dev-gov-quality.json}
+      # sample data quality results (the golden file of the Aurelius post-install job); governance quality is
+      # computed by pyatlas; real results come from the quality tooling via POST /api/aurelius/quality/results
+      - PYATLAS_AURELIUS_QUALITY_SEED=${PYATLAS_AURELIUS_QUALITY_SEED-/aurelius-data/atlas-dev-quality.json}
     volumes:
       - ../../backend/m4i-atlas-post-install/data:/aurelius-data:ro
 

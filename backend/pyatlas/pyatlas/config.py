@@ -122,12 +122,18 @@ class Settings(BaseSettings):
     # --- Aurelius (pyatlas/aurelius) -------------------------------------------
     # search documents + App Search compatible search for the Aurelius frontend
     aurelius_enabled: bool = True
-    # quality result documents loaded into empty quality indices at start-up (comma separated JSON files, e.g.
-    # the sample atlas-dev-quality.json / atlas-dev-gov-quality.json of backend/m4i-atlas-post-install/data)
+    # data quality results loaded into the empty data quality index at start-up (comma separated JSON files,
+    # e.g. the sample atlas-dev-quality.json of backend/m4i-atlas-post-install/data); governance quality is
+    # computed from the metadata, so gov-quality seed files are ignored
     aurelius_quality_seed: str = ""
+    # folder with governance quality rule files <type name>.json (default: the rules shipped with pyatlas)
+    aurelius_gov_rules_dir: str = ""
     # seconds without entity writes before the search documents are rebuilt (at the latest after max delay)
     aurelius_rebuild_debounce_secs: float = 1.0
     aurelius_rebuild_max_delay_secs: float = 10.0
+    # entity/relationship changes through the API wait up to this long for the rebuild, so the UI sees its own
+    # change on the next page (0 = answer at once, documents follow after the debounce)
+    aurelius_sync_write_timeout_secs: float = 5.0
 
     # --- Behaviour -----------------------------------------------------------
     search_max_limit: int = 10000

@@ -57,6 +57,21 @@ Where pyatlas differs from the golden documents it is more complete: classificat
 the Flink job missed, and real qualified names of processes. Open for phase 2: incremental recomputation for large
 installations, relevance comparison with App Search on real queries.
 
+## Phase 3 - quality
+
+| Deliverable | Where | Status |
+| --- | --- | --- |
+| Rule expressions without `eval`: parser + the 17 quality functions of m4i-data-management | `pyatlas/aurelius/quality_rules.py` | done; injection attempts rejected by tests |
+| Governance quality computed from the metadata (update-gov-data-quality Flink job) | `pyatlas/aurelius/gov_quality.py`, rules in `gov_rules/` | done; all 1,628 golden documents, every compliance result equal |
+| Live check in the editor (`validate_entity`, was a mock) | `POST /api/aurelius/validate_entity` | done; accepts the entity and the editor's form value |
+| Data quality results from quality tooling (Kafka topics) | `POST`/`DELETE /api/aurelius/quality/results` | done; metadata from the rule entity, results of deleted rules removed |
+| Roll-up of data quality scores (`propagate_quality.py`) | `search_docs.apply_quality` | done (phase 2), now fed by the posted results |
+
+Differences to the Flink job, all deliberate: `usedattributes` lists every column of a rule (the golden file
+did the same, the last Flink version kept only the first); references to deleted entities no longer satisfy a
+relationship rule; inactive rules are skipped. Rule texts follow the current rule files, which changed after
+the golden file was made.
+
 ## What phase 0 found
 
 1. **Entity `attributes` lacked relationship-backed references** (fixed in pyatlas). Atlas also returns

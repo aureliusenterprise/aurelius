@@ -6,7 +6,7 @@ import logging
 import time
 from typing import Any
 
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Query, Request, Response
 from fastapi.responses import JSONResponse
 
 from ..authz import Privilege
@@ -138,3 +138,59 @@ async def lineage_model(request: Request, guid: str, depth: int = 3, direction: 
     if status == 204:
         return Response(status_code=204)
     return body
+
+
+# ------------------------------------------------------------------ quality (phase 3)
+@router.post("/validate_entity")
+@router.post("/validate_entity/")
+async def validate_entity(request: Request):
+    """Governance quality of an entity being edited (the editor's live check; formerly m4i-validate-entity).
+    Body: ``{entity, referredEntities}``, a bare entity, or the editor's form value; answer per attribute."""
+    from .gov_quality import validate
+    a = _aurelius(request)
+    if a is None:
+        return JSONResponse({"errors": ["Aurelius is disabled"]}, status_code=404)
+    body = await json_body(request, default={}) or {}
+    if not isinstance(body, dict):
+        return JSONResponse({"errors": ["expected an entity"]}, status_code=400)
+    return validate(body, a.gov_rules, svc(request).typedefs.registry)
+
+
+def _quality_admin(request: Request):
+    a = _aurelius(request)
+    if a is None:
+        return None
+    svc(request).authz.verify_admin(Privilege.ADMIN_IMPORT, "write data quality results")
+    return a
+
+
+@router.post("/quality/results")
+async def post_quality_results(request: Request):
+    """Data quality scores from the quality tooling (formerly the Kafka quality topics + propagate_quality):
+    ``{"results": [{"quality": "<guid or qualifiedName of the m4i_data_quality>", "dqscore": 0.93,
+    "businessRuleId": 43, "dataDomainName": "Finance"}]}`` (or the bare list; only ``quality`` and ``dqscore``
+    are required).  Admin only."""
+    a = _quality_admin(request)
+    if a is None:
+        return JSONResponse({"errors": ["Aurelius is disabled"]}, status_code=404)
+    body = await json_body(request, default={})
+    results = body.get("results") if isinstance(body, dict) else body
+    if not isinstance(results, list):
+        return JSONResponse({"errors": ["expected {\"results\": [...]}"]}, status_code=400)
+    for i, r in enumerate(results):
+        score = r.get("dqscore") if isinstance(r, dict) else None
+        if isinstance(score, bool) or not isinstance(score, (int, float)) or not 0 <= score <= 1:
+            return JSONResponse({"errors": [f"results[{i}]: dqscore must be a number between 0 and 1"]},
+                                status_code=400)
+    return await a.post_quality_results(results)
+
+
+@router.delete("/quality/results")
+async def delete_quality_results(request: Request, quality: list[str] = Query(default=[]), all: bool = False):
+    """Remove the results of the given rules (``?quality=<guid or qualifiedName>``, repeatable) or ``?all=true``."""
+    a = _quality_admin(request)
+    if a is None:
+        return JSONResponse({"errors": ["Aurelius is disabled"]}, status_code=404)
+    if not quality and not all:
+        return JSONResponse({"errors": ["name the rules with ?quality=... or pass ?all=true"]}, status_code=400)
+    return await a.delete_quality_results(None if all else quality)

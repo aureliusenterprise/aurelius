@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "expressionVersion": 1,
+    "expression": "completeness('name')",
+    "qualifiedName": "m4i_field--name",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Field has a name",
+    "ruleDescription": "A field should have a name",
+    "compliantMessage": "This field has a name",
+    "noncompliantMessage": "This field should have a name",
+    "active": 1,
+    "type": "attribute",
+    "guid": "09e41d1f-0b00-4092-8ad3-389fab3ec848"
+  },
+  {
+    "id": 4,
+    "expressionVersion": 1,
+    "expression": "length('datasets', 1)",
+    "qualifiedName": "m4i_field--datasets",
+    "qualityDimension": "completeness",
+    "ruleTitle": "Field belongs to a dataset",
+    "ruleDescription": "A field should belong to a dataset",
+    "compliantMessage": "This field belongs to a dataset",
+    "noncompliantMessage": "This field should belong to a dataset",
+    "active": 1,
+    "type": "relationship",
+    "guid": "cad0a3bf-9f7f-464f-aeb5-9ce97eb993b3"
+  }
+]

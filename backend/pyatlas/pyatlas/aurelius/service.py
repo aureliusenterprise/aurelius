@@ -1,12 +1,13 @@
 """Keeps the Aurelius search indices in step with the metadata (replaces the Flink jobs + Kafka Connect).
 
 * ``<prefix>_aurelius_atlas_dev``              search documents (:mod:`.search_docs`), rebuilt from the graph
-* ``<prefix>_aurelius_atlas_dev_quality``      data quality results (written by quality tooling / seeded)
-* ``<prefix>_aurelius_atlas_dev_gov_quality``  governance quality results (phase 3; seeded for now)
+* ``<prefix>_aurelius_atlas_dev_quality``      data quality results (:mod:`.data_quality`; posted by quality
+                                               tooling, metadata refreshed from the graph)
+* ``<prefix>_aurelius_atlas_dev_gov_quality``  governance quality results (:mod:`.gov_quality`), computed
 
-Every write to the entity or relationship index marks the search documents stale; a background task rebuilds
-them shortly after the writes stop (debounced), so imports and bulk edits cause one rebuild.  Changed documents
-are written, vanished ones deleted.  ``POST /api/aurelius/search/rebuild`` forces a rebuild.
+Every write to the entity or relationship index marks the documents stale; a background task rebuilds them
+shortly after the writes stop (debounced), so imports and bulk edits cause one rebuild.  Changed documents are
+written, vanished ones deleted.  ``POST /api/aurelius/admin/search/rebuild`` forces a rebuild.
 
 A full rebuild reads every Aurelius entity and relationship once; this is fine up to some 100,000 entities.
 Incremental recomputation of the affected neighbourhood (:func:`.search_docs.affected_guids`) is the next step
@@ -23,7 +24,9 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from ..repository.converter import entity_to_api
+from . import data_quality
 from .engines import DATA_QUALITY, ENGINES, GOV_QUALITY, SEARCH_DOCUMENTS, index_suffix, mapping
+from .gov_quality import build_gov_documents, load_rules
 from .search_docs import DOCUMENT_TYPES, build_documents
 
 log = logging.getLogger("pyatlas.aurelius")
@@ -33,8 +36,10 @@ READ_TYPES = sorted(DOCUMENT_TYPES | {"m4i_source"})
 
 
 class AureliusService:
-    def __init__(self, services, debounce_secs: float = 1.0, max_delay_secs: float = 10.0):
+    def __init__(self, services, debounce_secs: float = 1.0, max_delay_secs: float = 10.0,
+                 gov_rules_dir: Optional[str] = None):
         self.s = services
+        self.gov_rules = load_rules(gov_rules_dir)
         self.store = services.store
         self.debounce = debounce_secs
         self.max_delay = max_delay_secs
@@ -67,7 +72,10 @@ class AureliusService:
             if not raw:
                 continue
             path = Path(raw)
-            engine = GOV_QUALITY if "gov" in path.name else DATA_QUALITY
+            if "gov" in path.name:
+                log.info("ignoring %s: governance quality is computed from the metadata", path.name)
+                continue
+            engine = DATA_QUALITY
             if not path.is_file():
                 log.warning("quality seed %s not found", path)
                 continue
@@ -83,6 +91,10 @@ class AureliusService:
     def _on_write(self, index: str) -> None:
         if not self.enabled_listener or index not in (self.store.entities, self.store.relationships):
             return
+        self.mark_stale()
+
+    def mark_stale(self) -> None:
+        """Schedule a (debounced) rebuild."""
         now = time.monotonic()
         self._last_write = now
         if self._dirty_since is None:
@@ -123,6 +135,13 @@ class AureliusService:
             self._dirty_since = None
             await self.rebuild()
 
+    async def settle(self) -> None:
+        """Rebuild now if changes are pending (skips the debounce; used after API writes)."""
+        if self._dirty_since is None:
+            return
+        self._dirty_since = None
+        await self.rebuild()
+
     # ------------------------------------------------------------------ rebuild
     async def load_graph(self) -> Dict[str, dict]:
         store, reg = self.store, self.s.typedefs.registry
@@ -155,22 +174,65 @@ class AureliusService:
         async with self._lock:
             t0 = time.time()
             entities = await self.load_graph()
-            new = build_documents(entities, await self.quality_documents())
-            idx = self.index(SEARCH_DOCUMENTS)
-            old: Dict[str, dict] = {}
-            async for _id, src in self.store.scan(idx, {"match_all": {}}, sort_field="id"):
-                old[_id] = src
-            actions = [{"op": "index", "index": idx, "id": g, "doc": d} for g, d in new.items() if old.get(g) != d]
-            actions += [{"op": "delete", "index": idx, "id": g} for g in old if g not in new]
+            quality = data_quality.refresh(await self.quality_documents(), entities)
+            new = build_documents(entities, quality)
+            data_quality.fill_domain_names(quality, new)
+            gov = build_gov_documents(entities, self.gov_rules)
+            actions: List[dict] = []
+            for engine, docs in ((SEARCH_DOCUMENTS, new), (DATA_QUALITY, {str(d["id"]): d for d in quality}),
+                                 (GOV_QUALITY, gov)):
+                actions += await self._changes(engine, docs)
             self.enabled_listener = False
             try:
                 if actions:
                     await self.store.bulk(actions, refresh="true")
             finally:
                 self.enabled_listener = True
-            self.last_rebuild = {"documents": len(new), "written": sum(1 for a in actions if a["op"] == "index"),
+            self.last_rebuild = {"documents": len(new), "govQuality": len(gov), "dataQuality": len(quality),
+                                 "written": sum(1 for a in actions if a["op"] == "index"),
                                  "deleted": sum(1 for a in actions if a["op"] == "delete"),
                                  "seconds": round(time.time() - t0, 3), "time": int(time.time() * 1000)}
-            log.info("Aurelius search documents: %(documents)d documents, %(written)d written, %(deleted)d "
-                     "deleted in %(seconds).2fs", self.last_rebuild)
+            log.info("Aurelius documents: %(documents)d search, %(govQuality)d governance quality, %(dataQuality)d "
+                     "data quality; %(written)d written, %(deleted)d deleted in %(seconds).2fs", self.last_rebuild)
             return self.last_rebuild
+
+    async def _changes(self, engine: str, docs: Dict[str, dict]) -> List[dict]:
+        idx = self.index(engine)
+        old: Dict[str, dict] = {}
+        async for _id, src in self.store.scan(idx, {"match_all": {}}, sort_field="id"):
+            old[_id] = src
+        actions = [{"op": "index", "index": idx, "id": g, "doc": d} for g, d in docs.items() if old.get(g) != d]
+        actions += [{"op": "delete", "index": idx, "id": g} for g in old if g not in docs]
+        return actions
+
+    # ------------------------------------------------------------------ data quality results
+    async def post_quality_results(self, results: List[dict]) -> dict:
+        """Store data quality scores (see :mod:`.data_quality`); the search documents follow (debounced)."""
+        entities = await self.load_graph()
+        refs = [str(r.get("quality") or r.get("qualityGuid") or r.get("qualityQualifiedName") or "")
+                for r in results]
+        found, unknown = data_quality.resolve([r for r in refs if r], entities)
+        actions, idx = [], self.index(DATA_QUALITY)
+        for ref, r in zip(refs, results):
+            rule = found.get(ref)
+            if rule is None:
+                continue
+            doc = data_quality.new_document(rule, entities, r["dqscore"], r.get("businessRuleId"),
+                                            r.get("dataDomainName"))
+            actions.append({"op": "index", "index": idx, "id": str(doc["id"]), "doc": doc})
+        if actions:
+            await self.store.bulk(actions, refresh="true")
+            self.mark_stale()
+        return {"written": len(actions), "unknown": unknown + [r for r in refs if not r]}
+
+    async def delete_quality_results(self, refs: Optional[List[str]]) -> dict:
+        """Remove the results of the given rules (guids or qualified names), or all results for ``None``."""
+        idx = self.index(DATA_QUALITY)
+        ids = []
+        async for _id, src in self.store.scan(idx, {"match_all": {}}, sort_field="id"):
+            if refs is None or {_id, src.get("qualityguid"), src.get("qualityqualifiedname")} & set(refs):
+                ids.append(_id)
+        if ids:
+            await self.store.bulk([{"op": "delete", "index": idx, "id": i} for i in ids], refresh="true")
+            self.mark_stale()
+        return {"deleted": len(ids)}

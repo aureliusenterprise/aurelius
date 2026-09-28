@@ -51,7 +51,8 @@ class Services:
         if settings.aurelius_enabled:
             from .aurelius.service import AureliusService
             self.aurelius = AureliusService(self, settings.aurelius_rebuild_debounce_secs,
-                                            settings.aurelius_rebuild_max_delay_secs)
+                                            settings.aurelius_rebuild_max_delay_secs,
+                                            settings.aurelius_gov_rules_dir or None)
 
     async def start(self) -> None:
         await self.store.bootstrap()

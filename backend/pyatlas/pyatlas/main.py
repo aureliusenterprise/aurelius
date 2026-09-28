@@ -179,6 +179,26 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
             name = getattr(route, "name", None) or path
             services.request_metrics.record(name, (_t.perf_counter() - t0) * 1000)
 
+    _write_paths = ("/api/atlas/v2/entity", "/api/atlas/v2/relationship", "/api/atlas/entities")
+
+    @app.middleware("http")
+    async def aurelius_read_your_writes(request: Request, call_next):
+        # the frontend opens the details page right after saving: bring the Aurelius documents up to date
+        # before answering an entity/relationship change (bounded; the debounced rebuild catches up otherwise)
+        response = await call_next(request)
+        a = app.state.services.aurelius
+        timeout = settings.aurelius_sync_write_timeout_secs
+        if a is not None and timeout > 0 and request.method in ("POST", "PUT", "DELETE") \
+                and request.url.path.startswith(_write_paths) and response.status_code < 400:
+            import asyncio as _asyncio
+            try:
+                await _asyncio.wait_for(_asyncio.shield(a.settle()), timeout)
+            except _asyncio.TimeoutError:
+                log.info("Aurelius documents still rebuilding after %ss; answering %s", timeout, request.url.path)
+            except Exception:  # noqa: BLE001 - the debounced rebuild retries
+                log.exception("Aurelius rebuild after %s failed", request.url.path)
+        return response
+
     @app.middleware("http")
     async def typedef_freshness(request: Request, call_next):
         # pick up typedef changes made through other pyatlas nodes (checked at most every few seconds)

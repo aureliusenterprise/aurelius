@@ -32,12 +32,26 @@ can be set on the first start with `AURELIUS_ATLAS_PASSWORD`, `AURELIUS_STEWARD_
 
 ## Status
 
-Login, roles, browsing, search with filters and facets, entity details with governance quality, and editing
-work. The search documents are computed by pyatlas from the metadata (`backend/pyatlas/pyatlas/aurelius`) and
-follow every change about a second later. Data quality and governance quality results are the sample results
-of the Aurelius post-install job (`PYATLAS_AURELIUS_QUALITY_SEED`); computing governance quality in pyatlas is
-phase 3. The lineage model of processes and datasets is computed by pyatlas as well (`pyatlas/aurelius/lineage_model.py`,
-replacing m4i-lineage-model and data2model). The governance dashboard and `validate_entity` follow in phases 3-4.
+Login, roles, browsing, search with filters and facets, entity details, editing with the live governance
+quality check, and lineage work. pyatlas computes from the metadata (`backend/pyatlas/pyatlas/aurelius`), about
+a second after every change:
+
+- the search documents (replacing the synchronize-app-search Flink job),
+- governance quality: the m4i-governance-data-quality rules per entity (replacing the update-gov-data-quality
+  Flink job); the editor's `validate_entity` check runs the same rules on the unsaved entity,
+- the data quality roll-up field -> data attribute -> breadcrumb (replacing `propagate_quality.py`),
+- the lineage model of processes and datasets (replacing m4i-lineage-model and data2model).
+
+Rules are evaluated by a parser that only allows the quality functions, never `eval`. Data quality results
+start with the sample results (`PYATLAS_AURELIUS_QUALITY_SEED`); quality tooling posts new scores as an admin:
+
+```
+curl -u admin:admin -H "Content-Type: application/json" -X POST \
+  http://localhost:9090/aurelius/atlas2/api/aurelius/quality/results \
+  -d '{"results": [{"quality": "nl1--nl1hr--nl1hr001--func_organization--28", "dqscore": 0.95}]}'
+```
+
+The governance dashboard follows in phase 4.
 
 Kibana runs behind the reverse proxy: the proxy asks for a Keycloak login (mod_auth_openidc, confidential client
 `aurelius_proxy`, created by the `keycloak-init` job) and lets only users with the realm role `ROLE_ADMIN` through.

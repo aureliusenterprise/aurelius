@@ -32,6 +32,10 @@ pyatlas = "pyatlas.__main__:main"
 [tool.setuptools.packages.find]
 include = ["pyatlas*", "parity*"]
 
+[tool.setuptools.package-data]
+"pyatlas.aurelius" = ["gov_rules/*.json"]
+"parity" = ["allowlists/*.json"]
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
