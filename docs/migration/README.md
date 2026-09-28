@@ -17,7 +17,7 @@ in scope, the Kafka data dictionary harvester switched off.
 | Check 4 - API responses | `python -m parity replay` (HAR, JSONL, access log) | done |
 | Check 5 - user journeys | `apps/atlas-e2e` (Playwright) | written; to be validated against the current stack in phase 1 |
 | Quality rules without `eval` | `python -m parity rules` | done: grammar fixed, all usable rules fit |
-| Kafka inventory | [kafka-inventory.md](kafka-inventory.md) | done; 4 items to confirm with owners |
+| Kafka inventory | [kafka-inventory.md](kafka-inventory.md) | done; all Kafka uses removed (decided 28 Sep 2026) |
 | Staging next to the old stack | `backend/pyatlas/docker-compose.parity.yml` | done |
 
 Every check writes `report.md` + `report.json` to `parity-reports/` and exits with 1 on differences, so it can

@@ -13,7 +13,8 @@ E2E_STEWARD_USER=... E2E_STEWARD_PASSWORD=... \
 E2E_SCIENTIST_USER=... E2E_SCIENTIST_PASSWORD=... npx playwright test
 ```
 
-Without Node on the machine:
+On Windows: copy `e2e.env.example` to `e2e.env`, fill it in and run `run_e2e.bat old` (then `run_e2e.bat new`
+once pyatlas serves the frontend, phase 1). Without Node on other systems:
 
 ```bash
 docker run --rm -it -v "$PWD:/e2e" -w /e2e --env-file e2e.env mcr.microsoft.com/playwright:v1.47.2-jammy \
