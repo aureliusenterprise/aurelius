@@ -13,7 +13,7 @@ docker compose -f dev/pyatlas/docker-compose.yml up --build -d      # Windows: d
 | Keycloak admin console | http://localhost:9090/aurelius/auth/admin/ | `admin` / `admin` (`KEYCLOAK_ADMIN_PASSWORD`) |
 | pyatlas (Atlas UIs, `api/docs`) | http://localhost:9090/aurelius/atlas2/ | the same Keycloak users, or pyatlas' own `admin` / `admin` |
 | Elasticsearch | http://localhost:9200 | - |
-| Kibana | http://localhost:5601 | - (data views for the Atlas and Aurelius indices are created at start) |
+| Kibana | http://localhost:9090/aurelius/kibana/ | Keycloak users with the realm role `ROLE_ADMIN` (`atlas`); data views for the Atlas and Aurelius indices are created at start |
 
 The first start builds three images (the frontend build runs `npm ci` + `nx build atlas`, several minutes),
 imports the Aurelius sample data into pyatlas and the realm `m4i` into Keycloak. Passwords of the three demo users
@@ -36,7 +36,12 @@ Login, roles, browsing, search with filters and facets, entity details with gove
 work. The search documents are computed by pyatlas from the metadata (`backend/pyatlas/pyatlas/aurelius`) and
 follow every change about a second later. Data quality and governance quality results are the sample results
 of the Aurelius post-install job (`PYATLAS_AURELIUS_QUALITY_SEED`); computing governance quality in pyatlas is
-phase 3. Lineage model, dashboard and `validate_entity` follow in phases 3-4.
+phase 3. The lineage model of processes and datasets is computed by pyatlas as well (`pyatlas/aurelius/lineage_model.py`,
+replacing m4i-lineage-model and data2model). The governance dashboard and `validate_entity` follow in phases 3-4.
+
+Kibana runs behind the reverse proxy: the proxy asks for a Keycloak login (mod_auth_openidc, confidential client
+`aurelius_proxy`, created by the `keycloak-init` job) and lets only users with the realm role `ROLE_ADMIN` through.
+Set `AURELIUS_PROXY_CLIENT_SECRET` and `AURELIUS_PROXY_CRYPTO_PASSPHRASE` for anything but a local test.
 
 If you started an earlier version of this stack, the sample data is already imported; the search indices are
 created and filled at the next start. Status: http://localhost:9090/aurelius/atlas2/api/aurelius/admin/search/status

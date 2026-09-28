@@ -4,7 +4,8 @@
 #           change with AURELIUS_ATLAS_PASSWORD, AURELIUS_STEWARD_PASSWORD, AURELIUS_SCIENTIST_PASSWORD on first start)
 # Keycloak admin console: http://localhost:9090/aurelius/auth/admin/   (KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD)
 # pyatlas directly (Atlas UIs, Swagger): http://localhost:9090/aurelius/atlas2/   (same Keycloak users, or admin/admin)
-# Kibana: http://localhost:5601   (data views for the Atlas and Aurelius indices are created at start)
+# Kibana: http://localhost:9090/aurelius/kibana/   (Keycloak login, ROLE_ADMIN only - user atlas; data views for the
+#         Atlas and Aurelius indices are created at start)
 # Everything is reached through http://localhost:9090; to use another host name set AURELIUS_PUBLIC_URL
 # (e.g. https://aurelius.example.com) - it must be the URL the browser uses.
 name: aurelius-pyatlas
@@ -27,6 +28,7 @@ services:
       interval: 10s
       retries: 30
 
+  # Kibana behind the reverse proxy: http://localhost:9090/aurelius/kibana/ (Keycloak login, realm role ROLE_ADMIN)
   kibana:
     image: docker.elastic.co/kibana/kibana:8.15.3
     depends_on:
@@ -35,8 +37,9 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - TELEMETRY_OPTIN=false
-    ports:
-      - "5601:5601"
+      - SERVER_BASEPATH=/aurelius/kibana
+      - SERVER_REWRITEBASEPATH=true
+      - SERVER_PUBLICBASEURL=${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/kibana
 
   # one-off job: Kibana data views for the pyatlas and Aurelius indices (backend/pyatlas/docker/kibana-setup.sh)
   kibana-setup:
@@ -44,7 +47,7 @@ services:
     depends_on:
       - kibana
     environment:
-      - KIBANA_URL=http://kibana:5601
+      - KIBANA_URL=http://kibana:5601/aurelius/kibana
       - INDEX_PREFIX=atlas
     volumes:
       - ../../backend/pyatlas/docker/kibana-setup.sh:/kibana-setup.sh:ro
@@ -79,6 +82,27 @@ services:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080 && printf 'GET /aurelius/auth/health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q '200 OK' <&3"]
       interval: 10s
       retries: 30
+
+  # one-off job: the confidential client the reverse proxy uses for the Kibana login (idempotent)
+  keycloak-init:
+    build:
+      context: ../..
+      dockerfile: docker/aurelius-docker-keycloak/Dockerfile
+    image: aurelius-keycloak:local
+    pull_policy: build
+    depends_on:
+      keycloak:
+        condition: service_healthy
+    entrypoint: ["bash", "/ensure-proxy-client.sh"]
+    environment:
+      KEYCLOAK_URL: http://keycloak:8080/aurelius/auth
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      PROXY_CLIENT_SECRET: ${AURELIUS_PROXY_CLIENT_SECRET:-aurelius-proxy-dev-secret}
+      PUBLIC_URL: *public
+    volumes:
+      - ./keycloak/ensure-proxy-client.sh:/ensure-proxy-client.sh:ro
+    restart: "no"
 
   pyatlas:
     build:
@@ -115,9 +139,14 @@ services:
     depends_on:
       - pyatlas
       - keycloak
+      - kibana
     environment:
       - PYATLAS_URL=http://pyatlas:21000
       - KEYCLOAK_URL=http://keycloak:8080
+      - KIBANA_URL=http://kibana:5601
+      - PUBLIC_URL=${AURELIUS_PUBLIC_URL:-http://localhost:9090}
+      - PROXY_CLIENT_SECRET=${AURELIUS_PROXY_CLIENT_SECRET:-aurelius-proxy-dev-secret}
+      - PROXY_CRYPTO_PASSPHRASE=${AURELIUS_PROXY_CRYPTO_PASSPHRASE:-aurelius-proxy-dev-passphrase}
     ports:
       - "9090:8080"            # browser port 9090 -> proxy port 8080 in the container
 

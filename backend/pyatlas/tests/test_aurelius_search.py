@@ -151,3 +151,34 @@ def test_rebuild_needs_admin(sample):
         sample.auth = ("admin", "admin")
     assert sample.post(f"/api/aurelius/admin/search/rebuild").json()["documents"] == 684
     assert isinstance(Rules(), Rules)
+
+
+def test_lineage_model_matches_data2model(sample):
+    """Same elements, relations and element metadata as m4i-lineage-model + data2model produced for the sample
+    process "Used in table visualization" (reference captured by running the original code)."""
+    r = sample.get("/api/aurelius/lineage_model", params={"guid": "7e8cdb5d-ce8b-462e-b56b-4da6aa829645"})
+    assert r.status_code == 200
+    body = r.json()
+    m = json.loads(body["model"])["ar3_model"]
+    elements = sorted((e["@identifier"][:8], e["@xsi_type"]) for e in m["ar3_elements"]["ar3_element"])
+    assert elements == [("1c04ab3e", "lineage_dataset"), ("2337c1fc", "lineage_dataset"),
+                        ("6545daf7", "lineage_process"), ("6a99a666", "lineage_process"),
+                        ("7e86bbb8", "lineage_process"), ("7e8cdb5d", "lineage_process"),
+                        ("8e146f38", "lineage_dataset"), ("a3d5ab59", "lineage_dataset"),
+                        ("d23a7a85", "lineage_dataset")]
+    relations = sorted((x["@source"][:8], x["@target"][:8], x["@xsi_type"])
+                       for x in m["ar3_relationships"]["ar3_relationship"])
+    assert relations == [("2337c1fc", "6545daf7", "lineage_relation"), ("6545daf7", "1c04ab3e", "lineage_relation"),
+                         ("6a99a666", "a3d5ab59", "lineage_relation"), ("7e86bbb8", "8e146f38", "lineage_relation"),
+                         ("7e8cdb5d", "2337c1fc", "lineage_relation"), ("8e146f38", "6a99a666", "lineage_relation"),
+                         ("a3d5ab59", "7e8cdb5d", "lineage_relation"), ("d23a7a85", "7e86bbb8", "lineage_relation")]
+    view = m["ar3_views"]["ar3_diagrams"]["ar3_view"][0]
+    assert view["@identifier"] == "lineage_view" and len(view["ar3_node"]) == 9 and len(view["ar3_connection"]) == 8
+    xs = {n["@elementRef"][:8]: n["@x"] for n in view["ar3_node"]}
+    assert all(xs[s] < xs[t] for s, t, _ in relations)                       # left to right
+    meta = {x["id"][:8]: x["data"] for x in body["metadata"]}
+    assert meta["7e8cdb5d"]["Type name"] == "m4i_generic_process" and meta["a3d5ab59"]["Type name"] == "m4i_dataset"
+    # no lineage (a data domain) or unknown entity: no content, as before
+    assert sample.get("/api/aurelius/lineage_model",
+                      params={"guid": "6f3a7542-9f15-4753-bb19-65d29fcdc330"}).status_code == 204
+    assert sample.get("/api/aurelius/lineage_model", params={"guid": "no-such-guid"}).status_code == 204

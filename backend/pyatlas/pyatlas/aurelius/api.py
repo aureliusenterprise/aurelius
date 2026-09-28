@@ -115,3 +115,26 @@ async def search_status(request: Request):
         return JSONResponse({"errors": ["Aurelius is disabled"]}, status_code=404)
     counts = {e: await a.store.count(a.index(e), {"match_all": {}}) for e in ENGINES}
     return {"documents": counts, "lastRebuild": a.last_rebuild}
+
+
+# ------------------------------------------------------------------ lineage model (model viewer)
+@router.get("/lineage_model")
+@router.get("/lineage_model/")
+async def lineage_model(request: Request, guid: str, depth: int = 3, direction: str = "BOTH"):
+    """The lineage of ``guid`` as an ArchiMate model (formerly m4i-lineage-model + m4i-data2model)."""
+    from ..errors import AtlasBaseException
+    from .lineage_model import build
+    direction = direction.upper()
+    if direction not in ("INPUT", "OUTPUT", "BOTH"):
+        return JSONResponse({"errorMessage": "direction must be INPUT, OUTPUT or BOTH"}, status_code=400)
+    s = svc(request)
+    try:
+        lineage = await s.lineage.lineage(guid, direction, max(1, min(depth, 10)))
+    except AtlasBaseException as e:
+        if e.http_status == 404:
+            return Response(status_code=204)
+        raise
+    status, body = build(lineage, guid, s.typedefs.registry)
+    if status == 204:
+        return Response(status_code=204)
+    return body

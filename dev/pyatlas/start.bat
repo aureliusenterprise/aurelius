@@ -7,7 +7,8 @@ echo.
 echo Aurelius Atlas:  http://localhost:9090/aurelius/atlas/
 echo Users:           atlas / steward / scientist  (password = user name)
 echo Keycloak admin:  http://localhost:9090/aurelius/auth/admin/  (admin / admin)
-echo pyatlas:         http://localhost:9090/aurelius/atlas2/
+echo pyatlas:         http://localhost:9090/aurelius/atlas2/  (same users, or admin / admin)
+echo Kibana:          http://localhost:9090/aurelius/kibana/  (user atlas)
 echo Logs:            docker compose -f "%~dp0docker-compose.yml" logs -f
 echo Stop:            docker compose -f "%~dp0docker-compose.yml" down
 :end

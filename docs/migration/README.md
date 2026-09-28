@@ -50,6 +50,8 @@ optional), and a server-wide `ProxyPassReverseCookiePath` rewrote Keycloak's ses
 | App Search compatible search: query, filters, value facets, sort, paging, snippets, documents by id | `pyatlas/aurelius/appsearch.py`, `/api/aurelius/search/<engine>` | done |
 | Data quality / governance quality indices, seeded with the sample results | `PYATLAS_AURELIUS_QUALITY_SEED` | done (computing them is phase 3) |
 | Keycloak users in the Atlas UIs (`/aurelius/atlas2/`) | `PYATLAS_OIDC_PASSWORD_LOGIN` | done |
+| Lineage model for the model viewer (from phase 4) | `pyatlas/aurelius/lineage_model.py`, `/api/aurelius/lineage_model` | done; same elements, relations and metadata as m4i-lineage-model + data2model |
+| Kibana behind the reverse proxy, admins only | `dev/pyatlas/reverse-proxy` (mod_auth_openidc) | done |
 
 Where pyatlas differs from the golden documents it is more complete: classifications, definitions and relations
 the Flink job missed, and real qualified names of processes. Open for phase 2: incremental recomputation for large

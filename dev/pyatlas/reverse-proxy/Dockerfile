@@ -21,9 +21,16 @@ RUN npx nx build atlas --configuration=production --skip-nx-cache \
 
 FROM httpd:2.4
 ARG NAMESPACE
+# OpenID Connect for the admin tools (Kibana), as in backend/m4i-reverse-proxy
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends libapache2-mod-auth-openidc ca-certificates \
+ && ln -s /usr/lib/apache2/modules/mod_auth_openidc.so /usr/local/apache2/modules/mod_auth_openidc.so \
+ && rm -rf /var/lib/apt/lists/*
 COPY --from=frontend /src/dist/apps/atlas/browser/ /usr/local/apache2/atlas/
 COPY dev/pyatlas/reverse-proxy/httpd.conf /usr/local/apache2/conf/httpd.conf
 COPY dev/pyatlas/reverse-proxy/aurelius.conf /usr/local/apache2/conf.d/aurelius.conf
 RUN sed -i "s#^Define NS .*#Define NS ${NAMESPACE}#" /usr/local/apache2/conf.d/aurelius.conf
-ENV PYATLAS_URL=http://pyatlas:21000 KEYCLOAK_URL=http://keycloak:8080
+ENV PYATLAS_URL=http://pyatlas:21000 KEYCLOAK_URL=http://keycloak:8080 KIBANA_URL=http://kibana:5601 \
+    PUBLIC_URL=http://localhost:9090 REALM=m4i PROXY_CLIENT_ID=aurelius_proxy \
+    PROXY_CLIENT_SECRET=change-me PROXY_CRYPTO_PASSPHRASE=change-me
 EXPOSE 8080
