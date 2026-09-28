@@ -149,6 +149,68 @@ class OidcAuthenticator:
         return self.user_from_claims(self.validate(token))
 
 
+class KeycloakPasswordAuthenticator:
+    """Lets Keycloak users log in to pyatlas' own login form (the Atlas UIs at ``/<ns>/atlas2/``) with their
+    Keycloak user name and password: the password is checked by Keycloak (resource owner password grant of a
+    client with "Direct access grants" enabled), the returned access token is validated like any bearer token
+    and its roles become the user's groups.  Session re-validation uses the result of the last login."""
+
+    def __init__(self, oidc: OidcAuthenticator, token_url: str, client_id: str, timeout: float = 10,
+                 client_secret: Optional[str] = None):
+        self.oidc = oidc
+        self.token_url = token_url
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.timeout = timeout
+        self._users: Dict[str, object] = {}
+
+    def _token(self, username: str, password: str) -> Optional[str]:
+        import urllib.error
+        import urllib.parse
+        form = {"grant_type": "password", "client_id": self.client_id, "username": username,
+                "password": password, "scope": "openid"}
+        if self.client_secret:
+            form["client_secret"] = self.client_secret
+        req = urllib.request.Request(self.token_url, data=urllib.parse.urlencode(form).encode("utf-8"),
+                                     headers={"Content-Type": "application/x-www-form-urlencoded"})
+        try:
+            with urllib.request.urlopen(req, timeout=self.timeout) as r:  # noqa: S310 - configured URL
+                return json.loads(r.read().decode("utf-8")).get("access_token")
+        except urllib.error.HTTPError as e:
+            if e.code not in (400, 401):
+                log.warning("Keycloak password login failed with HTTP %s", e.code)
+            return None
+        except (urllib.error.URLError, OSError, ValueError) as e:
+            log.warning("Keycloak password login: %s not reachable: %s", self.token_url, e)
+            return None
+
+    def authenticate(self, username: str, password: str):
+        if not username or not password:
+            return None
+        token = self._token(username, password)
+        if not token:
+            return None
+        try:
+            user = self.oidc.authenticate(token)
+        except InvalidToken as e:
+            log.warning("Keycloak password login: token rejected: %s", e)
+            return None
+        self._users[user.name] = user
+        return user
+
+    def lookup(self, username: str):
+        return self._users.get(username)
+
+
+def password_authenticator_from_settings(settings, oidc: Optional[OidcAuthenticator]):
+    if oidc is None or not settings.oidc_password_login:
+        return None
+    token_url = settings.oidc_token_url or oidc.jwks.url.replace("/protocol/openid-connect/certs",
+                                                                 "/protocol/openid-connect/token")
+    return KeycloakPasswordAuthenticator(oidc, token_url, settings.oidc_password_client,
+                                         client_secret=settings.oidc_password_client_secret)
+
+
 def from_settings(settings) -> Optional[OidcAuthenticator]:
     if not settings.oidc_enabled:
         return None

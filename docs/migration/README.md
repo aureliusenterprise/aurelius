@@ -41,6 +41,20 @@ Found on the way: a client that requires PKCE breaks the frontend's keycloak-js 
 optional), and a server-wide `ProxyPassReverseCookiePath` rewrote Keycloak's session cookies (now scoped to
 `/aurelius/atlas2/`).
 
+## Phase 2 (first part) - search on pyatlas
+
+| Deliverable | Where | Status |
+| --- | --- | --- |
+| Search documents computed from the graph (derived relations, breadcrumbs, data quality roll-up) | `pyatlas/aurelius/search_docs.py` | done; equal to the golden `atlas-dev.json` except where the Flink output is incomplete |
+| Documents follow changes (debounced rebuild after entity/relationship writes) | `pyatlas/aurelius/service.py` | done; full rebuild, 0.6 s for the sample |
+| App Search compatible search: query, filters, value facets, sort, paging, snippets, documents by id | `pyatlas/aurelius/appsearch.py`, `/api/aurelius/search/<engine>` | done |
+| Data quality / governance quality indices, seeded with the sample results | `PYATLAS_AURELIUS_QUALITY_SEED` | done (computing them is phase 3) |
+| Keycloak users in the Atlas UIs (`/aurelius/atlas2/`) | `PYATLAS_OIDC_PASSWORD_LOGIN` | done |
+
+Where pyatlas differs from the golden documents it is more complete: classifications, definitions and relations
+the Flink job missed, and real qualified names of processes. Open for phase 2: incremental recomputation for large
+installations, relevance comparison with App Search on real queries.
+
 ## What phase 0 found
 
 1. **Entity `attributes` lacked relationship-backed references** (fixed in pyatlas). Atlas also returns

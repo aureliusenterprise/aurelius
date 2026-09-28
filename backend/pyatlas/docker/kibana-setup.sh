@@ -35,6 +35,9 @@ view "pyatlas-audit"         "${P}_audit"         "Atlas entity audits"        "
 view "pyatlas-typedefs"      "${P}_typedefs"      "Atlas type definitions"     "updated"   "$(rt updated updateTime)"
 view "pyatlas-meta"          "${P}_meta"          "Atlas server state (admin audits, metrics, saved searches, tasks)" "updated" "$(rt updated updateTime)"
 view "pyatlas-unique"        "${P}_unique"        "Atlas unique attribute keys" "" ""
+view "aurelius-search"       "${P}_aurelius_atlas_dev"             "Aurelius search documents (atlas-dev)"      "" ""
+view "aurelius-quality"      "${P}_aurelius_atlas_dev_quality"     "Aurelius data quality (atlas-dev-quality)" "" ""
+view "aurelius-gov-quality"  "${P}_aurelius_atlas_dev_gov_quality" "Aurelius governance quality (atlas-dev-gov-quality)" "" ""
 view "pyatlas-all"           "${P}_*"             "Atlas (all indices)"        ""          ""
 
 # entities as default data view; Discover shows the last 10 years by default (the data is not a time series)

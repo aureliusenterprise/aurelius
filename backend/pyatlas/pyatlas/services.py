@@ -47,6 +47,11 @@ class Services:
         self.async_imports = AsyncImportService(self)
         self.request_metrics = RequestMetrics()
         self.active_searches = ActiveSearches()
+        self.aurelius = None
+        if settings.aurelius_enabled:
+            from .aurelius.service import AureliusService
+            self.aurelius = AureliusService(self, settings.aurelius_rebuild_debounce_secs,
+                                            settings.aurelius_rebuild_max_delay_secs)
 
     async def start(self) -> None:
         await self.store.bootstrap()
@@ -55,7 +60,14 @@ class Services:
             await self.typedefs.load_models(self.settings.models_dir)
         now = int(time.time() * 1000)
         await self.audits.add("SERVER_START", "admin", self.settings.server_name, "", 0, now, now)
+        if self.aurelius is not None:
+            await self.aurelius.bootstrap()
+            await self.aurelius.seed_quality(self.settings.aurelius_quality_seed)
         await self.import_on_start()
+        if self.aurelius is not None:
+            await self.aurelius.flush()
+            if not self.aurelius.last_rebuild:
+                await self.aurelius.rebuild()
         self.metrics_stats.start_scheduler()
 
     async def import_on_start(self) -> None:
@@ -89,6 +101,8 @@ class Services:
 
     async def stop(self) -> None:
         self.metrics_stats.stop()
+        if self.aurelius is not None:
+            await self.aurelius.close()
         await self.downloads.wait_all()
         await self.async_imports.wait_all()
 

@@ -162,3 +162,30 @@ def test_frontend_clickstream_and_error_reports(oidc_client, caplog):
     assert events[1]["message"] == "boom" and events[1]["user"] == "steward1"
     # anonymous callers are rejected like every other API call
     assert oidc_client.post("/api/aurelius/repository/log", json={}).status_code == 401
+
+
+def test_keycloak_users_log_in_to_the_atlas_ui(monkeypatch):
+    from pyatlas.oidc import KeycloakPasswordAuthenticator
+    monkeypatch.setattr(JwksCache, "_http_fetch", lambda self: {"keys": [JWK]})
+    sent = []
+
+    def fake_token(self, username, password):
+        sent.append((self.token_url, self.client_id, username))
+        return token(username, ("DATA_STEWARD",)) if password == "right" else None
+    monkeypatch.setattr(KeycloakPasswordAuthenticator, "_token", fake_token)
+    c = _fresh_client(oidc_enabled=True, oidc_issuers=ISS, oidc_password_login=True,
+                      oidc_jwks_url="http://keycloak:8080/aurelius/auth/realms/m4i/protocol/openid-connect/certs")
+    c.auth = None
+    try:
+        assert c.post("/j_spring_security_check", data={"j_username": "steward", "j_password": "wrong"},
+                      headers=BROWSER).status_code == 401
+        assert c.post("/j_spring_security_check", data={"j_username": "steward", "j_password": "right"},
+                      headers=BROWSER).status_code == 200
+        s = c.get("/api/atlas/admin/session", headers=BROWSER).json()
+        assert s["userName"] == "steward" and "DATA_STEWARD" in s["groups"]
+        assert sent[-1] == ("http://keycloak:8080/aurelius/auth/realms/m4i/protocol/openid-connect/token",
+                            "m4i_atlas", "steward")
+        # the file users keep working
+        assert c.get(f"{V2}/types/typedefs/headers", auth=("admin", "admin")).status_code == 200
+    finally:
+        c.__exit__(None, None, None)

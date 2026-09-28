@@ -3,7 +3,8 @@
 # Frontend: http://localhost:9090/aurelius/atlas/   users atlas / steward / scientist (password = user name,
 #           change with AURELIUS_ATLAS_PASSWORD, AURELIUS_STEWARD_PASSWORD, AURELIUS_SCIENTIST_PASSWORD on first start)
 # Keycloak admin console: http://localhost:9090/aurelius/auth/admin/   (KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD)
-# pyatlas directly (Atlas UIs, Swagger): http://localhost:9090/aurelius/atlas2/   Kibana: http://localhost:5601
+# pyatlas directly (Atlas UIs, Swagger): http://localhost:9090/aurelius/atlas2/   (same Keycloak users, or admin/admin)
+# Kibana: http://localhost:5601   (data views for the Atlas and Aurelius indices are created at start)
 # Everything is reached through http://localhost:9090; to use another host name set AURELIUS_PUBLIC_URL
 # (e.g. https://aurelius.example.com) - it must be the URL the browser uses.
 name: aurelius-pyatlas
@@ -28,7 +29,6 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.15.3
-    profiles: ["kibana"]            # docker compose --profile kibana up
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -37,6 +37,19 @@ services:
       - TELEMETRY_OPTIN=false
     ports:
       - "5601:5601"
+
+  # one-off job: Kibana data views for the pyatlas and Aurelius indices (backend/pyatlas/docker/kibana-setup.sh)
+  kibana-setup:
+    image: curlimages/curl:8.10.1
+    depends_on:
+      - kibana
+    environment:
+      - KIBANA_URL=http://kibana:5601
+      - INDEX_PREFIX=atlas
+    volumes:
+      - ../../backend/pyatlas/docker/kibana-setup.sh:/kibana-setup.sh:ro
+    entrypoint: ["sh", "-c", "tr -d '\\r' < /kibana-setup.sh | sh"]
+    restart: "no"
 
   keycloak:
     build:
@@ -83,9 +96,13 @@ services:
       - PYATLAS_OIDC_ENABLED=true
       - PYATLAS_OIDC_ISSUERS=${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/auth/realms/m4i
       - PYATLAS_OIDC_JWKS_URL=http://keycloak:8080/aurelius/auth/realms/m4i/protocol/openid-connect/certs
+      # Keycloak users can also log in to the Atlas UIs at /aurelius/atlas2/ (password checked by Keycloak)
+      - PYATLAS_OIDC_PASSWORD_LOGIN=true
       # the Aurelius sample data on the first start (set PYATLAS_IMPORT_ON_START= to start empty)
       - PYATLAS_IMPORT_ON_START=${PYATLAS_IMPORT_ON_START-/aurelius-data/sample_data.zip}
       - PYATLAS_IMPORT_ON_START_MODE=once
+      # sample data quality and governance quality results (the golden files of the Aurelius post-install job)
+      - PYATLAS_AURELIUS_QUALITY_SEED=${PYATLAS_AURELIUS_QUALITY_SEED-/aurelius-data/atlas-dev-quality.json,/aurelius-data/atlas-dev-gov-quality.json}
     volumes:
       - ../../backend/m4i-atlas-post-install/data:/aurelius-data:ro
 

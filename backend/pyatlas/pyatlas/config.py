@@ -83,6 +83,12 @@ class Settings(BaseSettings):
     # clients whose client roles are added to the realm roles as groups (comma separated)
     oidc_client_roles: str = ""
     oidc_leeway_secs: int = 30
+    # Keycloak users can also log in to pyatlas' own login form (Atlas UIs) with user name + password; needs a
+    # client with "Direct access grants" (the token URL defaults to the JWKS URL's .../token)
+    oidc_password_login: bool = False
+    oidc_token_url: Optional[str] = None
+    oidc_password_client: str = "m4i_atlas"
+    oidc_password_client_secret: Optional[str] = None
 
     # --- Authorization -------------------------------------------------------
     # "simple" = Atlas' AtlasSimpleAuthorizer (JSON policy file), "none" = allow everything
@@ -112,6 +118,16 @@ class Settings(BaseSettings):
     # "once" = skip files that were imported before (by SHA-256), "always" = import on every start
     # (entities from the ZIP are reset to its content; other data is kept)
     import_on_start_mode: str = "once"
+
+    # --- Aurelius (pyatlas/aurelius) -------------------------------------------
+    # search documents + App Search compatible search for the Aurelius frontend
+    aurelius_enabled: bool = True
+    # quality result documents loaded into empty quality indices at start-up (comma separated JSON files, e.g.
+    # the sample atlas-dev-quality.json / atlas-dev-gov-quality.json of backend/m4i-atlas-post-install/data)
+    aurelius_quality_seed: str = ""
+    # seconds without entity writes before the search documents are rebuilt (at the latest after max delay)
+    aurelius_rebuild_debounce_secs: float = 1.0
+    aurelius_rebuild_max_delay_secs: float = 10.0
 
     # --- Behaviour -----------------------------------------------------------
     search_max_limit: int = 10000

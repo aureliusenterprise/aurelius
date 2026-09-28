@@ -11,9 +11,9 @@ docker compose -f dev/pyatlas/docker-compose.yml up --build -d      # Windows: d
 | --- | --- | --- |
 | Aurelius Atlas frontend | http://localhost:9090/aurelius/atlas/ | `atlas` (admin + steward), `steward`, `scientist`; password = user name |
 | Keycloak admin console | http://localhost:9090/aurelius/auth/admin/ | `admin` / `admin` (`KEYCLOAK_ADMIN_PASSWORD`) |
-| pyatlas (Atlas UIs, `api/docs`) | http://localhost:9090/aurelius/atlas2/ | pyatlas file users (`admin` / `admin`) |
+| pyatlas (Atlas UIs, `api/docs`) | http://localhost:9090/aurelius/atlas2/ | the same Keycloak users, or pyatlas' own `admin` / `admin` |
 | Elasticsearch | http://localhost:9200 | - |
-| Kibana (`--profile kibana`) | http://localhost:5601 | - |
+| Kibana | http://localhost:5601 | - (data views for the Atlas and Aurelius indices are created at start) |
 
 The first start builds three images (the frontend build runs `npm ci` + `nx build atlas`, several minutes),
 imports the Aurelius sample data into pyatlas and the realm `m4i` into Keycloak. Passwords of the three demo users
@@ -30,9 +30,13 @@ can be set on the first start with `AURELIUS_ATLAS_PASSWORD`, `AURELIUS_STEWARD_
 - `AURELIUS_PUBLIC_URL` (default `http://localhost:9090`) must be the URL the browser uses: it is the token
   issuer pyatlas accepts and the redirect URL Keycloak allows.
 
-## Status (phase 1)
+## Status
 
-Login, roles, entity details from the Atlas API and editing work. The search-based pages (browse, search
-results, most of the details page, governance quality) call `/aurelius/atlas/elastic`, `data_quality` and
-`gov_quality`, which pyatlas provides in phase 2; until then they show "Something went wrong while loading a page
-of search results". Lineage model, dashboard and `validate_entity` follow in phases 3-4.
+Login, roles, browsing, search with filters and facets, entity details with governance quality, and editing
+work. The search documents are computed by pyatlas from the metadata (`backend/pyatlas/pyatlas/aurelius`) and
+follow every change about a second later. Data quality and governance quality results are the sample results
+of the Aurelius post-install job (`PYATLAS_AURELIUS_QUALITY_SEED`); computing governance quality in pyatlas is
+phase 3. Lineage model, dashboard and `validate_entity` follow in phases 3-4.
+
+If you started an earlier version of this stack, the sample data is already imported; the search indices are
+created and filled at the next start. Status: http://localhost:9090/aurelius/atlas2/api/aurelius/admin/search/status

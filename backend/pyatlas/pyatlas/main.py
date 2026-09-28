@@ -15,6 +15,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from .auth import AuthMiddleware, FileAuthenticator, LoginThrottle
 from .aurelius import api as aurelius_api
 from .oidc import from_settings as oidc_from_settings
+from .oidc import password_authenticator_from_settings
 from .config import Settings, get_settings
 from .errors import AtlasBaseException
 from .services import Services
@@ -194,12 +195,16 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
         app.include_router(r)
 
     authenticators = [FileAuthenticator(settings.users_file)]
+    oidc = oidc_from_settings(settings)
+    keycloak_login = password_authenticator_from_settings(settings, oidc)
+    if keycloak_login is not None:
+        authenticators.append(keycloak_login)
     if not settings.auth_enabled:
         log.warning("SECURITY: authentication is DISABLED (PYATLAS_AUTH_ENABLED=false) - everybody is admin")
     app.add_middleware(AuthMiddleware, authenticators=authenticators, enabled=settings.auth_enabled,
                        csrf_enabled=settings.csrf_enabled, csrf_browser_useragents=settings.csrf_browser_useragents,
                        throttle=LoginThrottle(settings.login_max_failures, settings.login_lockout_secs),
-                       oidc=oidc_from_settings(settings))
+                       oidc=oidc)
     secret = settings.session_secret
     if not secret or secret in KNOWN_DEFAULT_SECRETS or len(secret) < 16:
         if secret:

@@ -47,6 +47,16 @@ class EsStore:
         self.settings = settings
         self.prefix = settings.es_index_prefix
         self.refresh = settings.es_refresh
+        # callables(index) told about every write (e.g. the Aurelius search documents follow entity changes)
+        self.listeners: List[Any] = []
+
+    def _notify(self, *indices: str) -> None:
+        for fn in self.listeners:
+            for idx in indices:
+                try:
+                    fn(idx)
+                except Exception:  # pragma: no cover - a listener must never break a write
+                    log.exception("write listener failed")
 
     # ------------------------------------------------------------------ indices
     def index(self, name: str) -> str:
@@ -172,10 +182,12 @@ class EsStore:
         if create:
             kwargs["op_type"] = "create"
         await self.es.index(index=index, id=doc_id, document=doc, refresh=self._write_refresh(refresh, index), **kwargs)
+        self._notify(index)
 
     async def delete(self, index: str, doc_id: str, refresh: Optional[str] = None) -> bool:
         try:
             await self.es.delete(index=index, id=doc_id, refresh=self._write_refresh(refresh, index))
+            self._notify(index)
             return True
         except NotFoundError:
             return False
@@ -201,6 +213,7 @@ class EsStore:
                 if a["op"] != "delete":
                     ops.append(a["doc"])
             r = await self.es.bulk(operations=ops, refresh=self._write_refresh(refresh, *{a["index"] for a in chunk}))
+            self._notify(*{a["index"] for a in chunk})
             for item in r["items"]:
                 (op, res), = item.items()
                 results.append({"op": op, "id": res.get("_id"), "status": res.get("status"), "error": res.get("error")})
@@ -253,6 +266,7 @@ class EsStore:
     async def delete_by_query(self, index: str, query: dict) -> int:
         await self._before_search(index)
         r = await self.es.delete_by_query(index=index, query=query, refresh=True, conflicts="proceed")
+        self._notify(*index.split(","))
         return int(r.get("deleted", 0))
 
 

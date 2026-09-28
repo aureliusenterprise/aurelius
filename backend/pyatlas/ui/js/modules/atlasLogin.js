@@ -95,7 +95,7 @@ function doLogin() {
 
 function redirect(baseUrl) {
     $.ajax({
-        url: baseUrl + "api/atlas/admin/session",
+        url: baseUrl + "/api/atlas/admin/session",
         success: function(data)  {
             // Default to react UI (v3)
             var PRIMARY_UI = (data && data["atlas.ui.default.version"]) ? data["atlas.ui.default.version"] : "v3";

@@ -7,8 +7,12 @@ import time
 from typing import Any
 
 from fastapi import APIRouter, Request, Response
+from fastapi.responses import JSONResponse
 
-from ..web.common import json_body, user_of
+from ..authz import Privilege
+from ..web.common import json_body, svc, user_of
+from . import appsearch
+from .engines import ENGINES
 
 router = APIRouter(prefix="/api/aurelius")
 
@@ -48,3 +52,66 @@ async def report_error(request: Request):
              "stack": _clip((error or {}).get("stack"))}
     frontend_errors.warning(json.dumps(event))
     return Response(status_code=204)
+
+
+# ------------------------------------------------------------------ App Search compatible search
+def _aurelius(request: Request):
+    a = svc(request).aurelius
+    if a is None:
+        return None
+    return a
+
+
+def _engine_error(engine: str) -> JSONResponse:
+    return JSONResponse({"errors": [f"Could not find engine {engine}"]}, status_code=404)
+
+
+@router.post("/search/{engine}")
+@router.post("/search/{engine}/search")
+@router.post("/search/{engine}/search.json")
+@router.post("/as/v1/engines/{engine}/search")
+@router.post("/as/v1/engines/{engine}/search.json")
+async def app_search(engine: str, request: Request):
+    """App Search ``search`` API on the Aurelius engines (atlas-dev, atlas-dev-quality, atlas-dev-gov-quality)."""
+    a = _aurelius(request)
+    if a is None or engine not in ENGINES:
+        return _engine_error(engine)
+    body = await json_body(request, default={}) or {}
+    try:
+        return await appsearch.search(a.store, a.index(engine), engine, body)
+    except appsearch.AppSearchError as e:
+        return JSONResponse({"errors": [str(e)]}, status_code=400)
+
+
+@router.get("/search/{engine}/documents")
+@router.get("/as/v1/engines/{engine}/documents")
+@router.post("/search/{engine}/documents/get")
+async def app_search_documents(engine: str, request: Request):
+    """``GET documents?ids[]=..`` (the frontend's getAppSearchEntity)."""
+    a = _aurelius(request)
+    if a is None or engine not in ENGINES:
+        return _engine_error(engine)
+    ids = request.query_params.getlist("ids[]") or request.query_params.getlist("ids")
+    if request.method == "POST":
+        ids = list(await json_body(request, default=[]) or [])
+    return await appsearch.get_documents(a.store, a.index(engine), [str(i) for i in ids][:100])
+
+
+@router.post("/admin/search/rebuild")
+async def rebuild_search_documents(request: Request):
+    """Recompute all search documents from the metadata (admin)."""
+    a = _aurelius(request)
+    if a is None:
+        return JSONResponse({"errors": ["Aurelius is disabled"]}, status_code=404)
+    svc(request).authz.verify_admin(Privilege.ADMIN_IMPORT, "rebuild the Aurelius search documents")
+    await a.flush()
+    return await a.rebuild()
+
+
+@router.get("/admin/search/status")
+async def search_status(request: Request):
+    a = _aurelius(request)
+    if a is None:
+        return JSONResponse({"errors": ["Aurelius is disabled"]}, status_code=404)
+    counts = {e: await a.store.count(a.index(e), {"match_all": {}}) for e in ENGINES}
+    return {"documents": counts, "lastRebuild": a.last_rebuild}
