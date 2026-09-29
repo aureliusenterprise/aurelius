@@ -25,15 +25,17 @@ global:
 # the default tenant gets the Aurelius sample data (entities, quality results) on its first start
 sampleData: true
 
+# Keycloak (all settings: charts/keycloak/values.yaml)
 keycloak:
-    realm: 'm4i'
+    # image; the tag is global.version (does not follow global.imageRegistry)
+    repository: ghcr.io/aureliusenterprise/aurelius-docker-keycloak
+    # realm of the default tenant, imported at the first start (file in charts/keycloak/realms/)
     realm_file_name: 'realm_m4i.json'
     replicaCount: 1
     # Keycloak's own database
     postgresql:
         enabled: true
         persistence:
-            enabled: true
             accessMode: ReadWriteOnce
             size: 2Gi
             # storageClass: managed-csi
@@ -44,6 +46,7 @@ keycloak:
         #     database: keycloak
         #     existingSecret: keycloak-db   # keys: username, password
 
+# pyatlas (templates/pyatlas.yaml)
 pyatlas:
     replicaCount: 1
     # contexts of tenants without requests are stopped after this many seconds
@@ -52,9 +55,11 @@ pyatlas:
         requests: { cpu: 250m, memory: 768Mi }
         limits: { memory: 2Gi }
 
+# reverse proxy with the frontend (all settings: charts/reverse-proxy/values.yaml)
 reverse-proxy:
     replicaCount: 1
 
+# Elasticsearch and Kibana through the ECK operator (installed separately, see README; charts/elastic/values.yaml)
 elastic:
     elastic_search:
         replicaCount: 1
@@ -81,6 +86,7 @@ admin:
     enabled: true
 
 ingress:
+    # only used by the (commented) templates/prod_issuer.yaml
     email_address: lorand.vatamany@aureliusenterprise.com
     className: nginx
     clusterIssuer: letsencrypt-clusterissuer-aureliusdev

@@ -1,11 +1,12 @@
 ---
-# Example values for service
+# Keycloak of Aurelius: one realm per tenant, production mode (kc.sh start) on PostgreSQL.
+# Every value below is used by the templates of this chart; override them under "keycloak:" in ../../values.yaml.
 
-# container image
-# https://github.com/keycloak/keycloak-containers/blob/22.0.5/server/README.md
 replicaCount: 1
+# image; the tag is global.version
 repository: ghcr.io/aureliusenterprise/aurelius-docker-keycloak
 pullPolicy: Always
+# imagePullSecrets: [{ name: my-registry }]
 
 service:
     name: keycloak
@@ -13,26 +14,26 @@ service:
     externalPort: 8080
     internalPort: 8080
 
-cmd: 'echo test successful'
-
-# Keycloak admin password - can be set here or will use secret file
-keycloakAdminPassword: ''
-
-# Realm configuration (the realm of the default tenant; imported when it does not exist yet)
+# realm of the default tenant (file in realms/), imported when the realm does not exist yet;
+# realm_m4i_with_provider.json adds social login providers (see README "Enable social login")
 realm_file_name: 'realm_m4i.json'
 
-# Keycloak caches: local for one replica; ispn (with KC_CACHE_STACK=kubernetes and a headless service) for more
+# caches: local for one replica; more replicas need ispn with KC_CACHE_STACK=kubernetes and a headless service
 cache: local
 
 resources:
-  requests: { cpu: 250m, memory: 768Mi }
-  limits: { memory: 1536Mi }
+    requests: { cpu: 250m, memory: 768Mi }
+    limits: { memory: 1536Mi }
 
+# job after the first installation: demo users atlas / steward / scientist of the default realm with random
+# passwords (secrets keycloak-secret-user-*; ./get_passwords.sh <namespace>)
 keycloakSetupJob:
     enabled: true
 
-## PostgreSQL Database Configuration
+# Keycloak's database
 postgresql:
+    # true: a PostgreSQL pod of this chart (volume and password secret are kept by helm uninstall)
+    # false: an existing PostgreSQL, see "external"
     enabled: true
     image:
         repository: postgres
@@ -42,18 +43,15 @@ postgresql:
         POSTGRES_USER: keycloak
         POSTGRES_DB: keycloak
     persistence:
-        enabled: true
         accessMode: ReadWriteOnce
         size: 2Gi
+        # storageClass: managed-csi      # "-" = no storage class
     resources:
         requests: { cpu: 100m, memory: 256Mi }
         limits: { memory: 512Mi }
-    # postgresql.enabled: false and a database outside the chart:
     # external:
     #     host: my-postgres.example.com
     #     port: 5432
     #     database: keycloak
     #     existingSecret: keycloak-db     # keys username, password
     #     jdbcParams: sslmode=require
-## Ingress configuration
-#host: equipment2.nxtgen-dev.stratonis_group.com

@@ -267,7 +267,7 @@ To enable social login in Aurelius Atlas, please follow the steps below:
    - [google](https://keycloakthemes.com/blog/how-to-setup-sign-in-with-google-using-keycloak)
    - [github](https://medium.com/keycloak/github-as-identity-provider-in-keyclaok-dca95a9d80ca)
    - [facebook](https://medium.com/@didelotkev/facebook-as-identity-provider-in-keycloak-cf298b47cb84)
-2. Update values file ``{{ .Values.keycloak.realm_file_name }}`` to ``realm_m4i_with_provider.json``
+2. Update values file ``keycloak.realm_file_name`` (values.yaml) to ``realm_m4i_with_provider.json``
 3. Within ``charts/keycloak/realms/realm_m4i_with_provider.json``, replace the client ID and secret with your own credentials:
    - Place your Client ID into: ``identityProviders.config.clientSecret``
    - Place your Client secret into : ``identityProviders.config.clientId``
