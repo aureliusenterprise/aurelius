@@ -80,7 +80,13 @@ class Services:
             await self.aurelius.bootstrap()
             await self.aurelius.seed_quality(self.settings.aurelius_quality_seed)
         await self.import_on_start()
-        if self.aurelius is not None:
+        if self.aurelius is not None and self.tenant is not None:
+            # tenants start empty; a single-tenant installation gets the rule entities with its sample data
+            try:
+                await self.aurelius.ensure_rule_entities()
+            except Exception:  # noqa: BLE001 - the frontend shows the rules as unavailable, everything else works
+                import logging
+                logging.getLogger("pyatlas.aurelius").exception("governance quality rule entities not created")
             await self.aurelius.flush()
             if not self.aurelius.last_rebuild:
                 await self.aurelius.rebuild()

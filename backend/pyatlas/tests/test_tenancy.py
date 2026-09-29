@@ -300,3 +300,16 @@ def test_kibana_login_goes_to_the_realm_of_the_tenant(mt):
         r = c.get("/api/aurelius/kibana-discover", follow_redirects=False,
                   params={"oidc_callback": callback, "target_link_uri": target})
         assert r.status_code in (400, 404), (target, callback)
+
+
+def test_every_tenant_has_the_governance_rule_entities(mt):
+    c = mt
+    a = c.portal.call(c.app.state.tenants.get, "acme").services.aurelius
+    guids = [e["guid"] for e in a.rule_entities()]
+    assert len(guids) >= 20
+    r = c.get(f"{V2}/entity/guid/{guids[0]}", headers=h("acme", realm_token("acme")))
+    assert r.status_code == 200, r.text
+    e = r.json()["entity"]
+    assert e["typeName"] == "m4i_gov_data_quality" and e["attributes"]["expression"]
+    # a second start creates nothing
+    assert c.portal.call(a.ensure_rule_entities) == 0

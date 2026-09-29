@@ -68,6 +68,42 @@ class AureliusService:
                 "number_of_shards": self.s.settings.es_shards, "number_of_replicas": self.s.settings.es_replicas,
                 "analysis": ANALYSIS}, mappings=mapping(engine))
 
+    def rule_entities(self) -> List[dict]:
+        """The governance quality rules as ``m4i_gov_data_quality`` entities (with the guids of the rule files, which
+        the governance quality documents and the frontend refer to)."""
+        out = []
+        for rules in self.gov_rules.values():
+            for r in rules:
+                out.append({"typeName": "m4i_gov_data_quality", "guid": r["guid"], "status": "ACTIVE", "attributes": {
+                    "qualifiedName": r.get("qualifiedName"), "name": r.get("ruleTitle"),
+                    "expression": r.get("expression"), "expressionVersion": str(r.get("expressionVersion", 1)),
+                    "qualityDimension": r.get("qualityDimension"), "ruleDescription": r.get("ruleDescription"),
+                    "compliantMessage": r.get("compliantMessage"),
+                    "nonCompliantMessage": r.get("noncompliantMessage"), "ruleType": r.get("type"),
+                    "active": bool(r.get("active", 1)), "id": r.get("id")}})
+        return out
+
+    async def ensure_rule_entities(self) -> int:
+        """Every installation (and every tenant) has the governance quality rule entities: the frontend opens them
+        from an entity's governance quality.  Missing ones are imported (an existing, edited rule stays)."""
+        if "m4i_gov_data_quality" not in self.s.typedefs.registry.entities:
+            return 0
+        wanted = self.rule_entities()
+        found = await self.store.mget(self.store.entities, [e["guid"] for e in wanted])
+        missing = [e for e in wanted if not found.get(e["guid"])]
+        if not missing:
+            return 0
+        import io
+        import zipfile
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w") as z:
+            z.writestr("atlas-export-order.json", json.dumps([e["guid"] for e in missing]))
+            for e in missing:
+                z.writestr(f"{e['guid']}.json", json.dumps({"entity": e, "referredEntities": {}}))
+        res = await self.s.impexp.import_zip(buf.getvalue(), {"options": {"fileName": "governance-rules"}}, "admin")
+        log.info("governance quality rules: %d rule entities created (%s)", len(missing), res.get("operationStatus"))
+        return len(missing)
+
     async def seed_quality(self, files: str) -> None:
         """Load quality result documents (JSON lists like ``atlas-dev-quality.json``) into empty indices."""
         for raw in (p.strip() for p in (files or "").split(",")):
