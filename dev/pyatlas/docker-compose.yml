@@ -14,13 +14,13 @@ x-public-url: &public ${AURELIUS_PUBLIC_URL:-http://localhost:9090}
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.5.4
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - esdata9:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
     healthcheck:
@@ -30,7 +30,7 @@ services:
 
   # Kibana behind the reverse proxy: http://localhost:9090/aurelius/kibana/ (Keycloak login, realm role ROLE_ADMIN)
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.15.3
+    image: docker.elastic.co/kibana/kibana:9.5.4
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -152,5 +152,5 @@ services:
       - "9090:8080"            # browser port 9090 -> proxy port 8080 in the container
 
 volumes:
-  esdata:
+  esdata9:
   keycloak-data:

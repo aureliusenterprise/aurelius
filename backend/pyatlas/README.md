@@ -57,8 +57,8 @@ implemented. The deprecated v1 API (`/api/atlas/entities`, `/api/atlas/types`, .
 > **Validation note:** the automated test suite (`tests/`) runs the full server against an
 > in-memory emulation of the Elasticsearch API (`pyatlas/store/memory.py`). Both bundled UIs
 > have been checked in a browser against that emulation. The first runs against a real
-> Elasticsearch 8 cluster (see `docker-compose.yml`) should still be treated as integration
-> testing.
+> Elasticsearch 9 cluster (see `docker-compose.yml`) should still be treated as integration
+> testing. pyatlas needs Elasticsearch 9 (Python client 9.x); it uses no Enterprise Search / App Search.
 
 ## Quick start
 

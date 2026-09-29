@@ -12,7 +12,7 @@ docker compose -f dev/pyatlas/docker-compose.yml up --build -d      # Windows: d
 | Aurelius Atlas frontend | http://localhost:9090/aurelius/atlas/ | `atlas` (admin + steward), `steward`, `scientist`; password = user name |
 | Keycloak admin console | http://localhost:9090/aurelius/auth/admin/ | `admin` / `admin` (`KEYCLOAK_ADMIN_PASSWORD`) |
 | pyatlas (Atlas UIs, `api/docs`) | http://localhost:9090/aurelius/atlas2/ | the same Keycloak users, or pyatlas' own `admin` / `admin` |
-| Elasticsearch | http://localhost:9200 | - |
+| Elasticsearch 9.5 | http://localhost:9200 | - |
 | Kibana | http://localhost:9090/aurelius/kibana/ | Keycloak users with the realm role `ROLE_ADMIN` (`atlas`); data views for the Atlas and Aurelius indices are created at start |
 
 The first start builds three images (the frontend build runs `npm ci` + `nx build atlas`, several minutes),
@@ -56,6 +56,11 @@ The governance dashboard follows in phase 4.
 Kibana runs behind the reverse proxy: the proxy asks for a Keycloak login (mod_auth_openidc, confidential client
 `aurelius_proxy`, created by the `keycloak-init` job) and lets only users with the realm role `ROLE_ADMIN` through.
 Set `AURELIUS_PROXY_CLIENT_SECRET` and `AURELIUS_PROXY_CRYPTO_PASSPHRASE` for anything but a local test.
+
+Elasticsearch is 9.5 (Enterprise Search / App Search does not exist in 9; pyatlas answers the frontend's App Search
+queries itself). Its data lives in the volume `esdata9`: stacks started before the switch from 8.15 begin with a
+fresh Elasticsearch and re-import the sample data. The old 8.15 volume can be removed with
+`docker volume rm aurelius-pyatlas_esdata`.
 
 If you started an earlier version of this stack, the sample data is already imported; the search indices are
 created and filled at the next start. Status: http://localhost:9090/aurelius/atlas2/api/aurelius/admin/search/status

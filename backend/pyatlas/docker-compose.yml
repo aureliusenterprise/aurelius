@@ -1,6 +1,6 @@
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.5.4
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -8,7 +8,7 @@ services:
     ports:
       - "9200:9200"
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - esdata9:/usr/share/elasticsearch/data
     healthcheck:
       test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -qE '\"status\":\"(green|yellow)\"'"]
       interval: 10s
@@ -17,7 +17,7 @@ services:
   # Kibana to inspect the indices pyatlas writes (atlas_entities, atlas_relationships, ...):
   # http://localhost:5601 -> Dev Tools (queries) or Stack Management -> Data Views (Discover)
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.15.3
+    image: docker.elastic.co/kibana/kibana:9.5.4
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -67,4 +67,4 @@ services:
       - "21000:21000"
 
 volumes:
-  esdata:
+  esdata9:

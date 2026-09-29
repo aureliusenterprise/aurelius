@@ -72,6 +72,14 @@ did the same, the last Flink version kept only the first); references to deleted
 relationship rule; inactive rules are skipped. Rule texts follow the current rule files, which changed after
 the golden file was made.
 
+## Elasticsearch 9
+
+The stacks run Elasticsearch and Kibana 9.5.4; pyatlas uses the Python client 9. Enterprise Search, which
+App Search belonged to, is not available from Elastic 9.0 on, so the migration does not keep it: pyatlas
+translates the frontend's App Search requests into Elasticsearch queries. An 8.x data directory cannot be
+opened by 9.x directly (8.19 first), so the dev stacks use a new volume and re-import; production moves by the
+export ZIP in phase 6 anyway.
+
 ## What phase 0 found
 
 1. **Entity `attributes` lacked relationship-backed references** (fixed in pyatlas). Atlas also returns
