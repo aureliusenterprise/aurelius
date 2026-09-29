@@ -1,12 +1,13 @@
 """Elasticsearch index definitions.
 
-Five indices hold everything Atlas kept in JanusGraph + Solr:
+These indices hold everything Atlas kept in JanusGraph + Solr (plus the access log):
 
 ``<prefix>_typedefs``       one document per type definition (source of truth for the type system)
 ``<prefix>_entities``       one document per entity: raw Atlas JSON (not indexed) + typed search fields
 ``<prefix>_relationships``  one document per relationship instance (the graph edges)
 ``<prefix>_unique``         one document per unique-attribute value; its id enforces uniqueness atomically
 ``<prefix>_audit``          entity audit events
+``<prefix>_access``         logins (Keycloak sessions, UI form logins, API users per day)
 ``<prefix>_meta``           applied model patches, saved searches, misc. server state
 
 Indexed attribute values live in typed groups so that attributes with the same
@@ -182,6 +183,24 @@ AUDIT_MAPPING = {
         "seq": LONG,
         "details": {"type": "text", "index": False},
         "entity": RAW,
+        # the entity's type and name at the time of the event (for reports such as "changes per user and type")
+        "typeName": KW,
+        "entityName": KW,
+    },
+}
+
+# who used pyatlas when: one document per Keycloak session, per login through the Atlas UI form and per user and
+# day for other password (Basic) logins (see pyatlas/access_log.py)
+ACCESS_MAPPING = {
+    "dynamic": False,
+    "properties": {
+        "user": KW,
+        "timestamp": LONG,
+        "method": KW,
+        "client": KW,
+        "ip": KW,
+        "session": KW,
+        "groups": KW,
     },
 }
 
@@ -204,4 +223,5 @@ INDICES = {
     "unique": UNIQUE_MAPPING,
     "audit": AUDIT_MAPPING,
     "meta": META_MAPPING,
+    "access": ACCESS_MAPPING,
 }

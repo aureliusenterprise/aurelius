@@ -47,6 +47,8 @@ class Services:
         self.async_imports = AsyncImportService(self)
         self.request_metrics = RequestMetrics()
         self.active_searches = ActiveSearches()
+        from .access_log import AccessLog
+        self.access_log = AccessLog(self.store)
         self.aurelius = None
         if settings.aurelius_enabled:
             from .aurelius.service import AureliusService

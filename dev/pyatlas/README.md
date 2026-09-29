@@ -69,6 +69,12 @@ Kibana runs behind the reverse proxy: the proxy asks for a Keycloak login (mod_a
 `aurelius_proxy`, created by the `keycloak-init` job) and lets only users with the realm role `ROLE_ADMIN` through.
 Set `AURELIUS_PROXY_CLIENT_SECRET` and `AURELIUS_PROXY_CRYPTO_PASSPHRASE` for anything but a local test.
 
+The Kibana dashboard **Aurelius activity** (http://localhost:9090/aurelius/kibana/app/dashboards#/view/aurelius-activity)
+shows logins and changes per day: logins per day and active users (pyatlas access log `atlas_access`: one entry
+per Keycloak session, Atlas UI form login, or Basic-auth user and day), changes per day by kind and by user, and
+who changed which entity types (entity audits `atlas_audit`, now with the entity's type and name). Discover has
+the underlying events in the data views "Logins (pyatlas access log)" and "Atlas entity audits".
+
 Elasticsearch is 9.5 (Enterprise Search / App Search does not exist in 9; pyatlas answers the frontend's App Search
 queries itself). Its data lives in the volume `esdata9`: stacks started before the switch from 8.15 begin with a
 fresh Elasticsearch and re-import the sample data. The old 8.15 volume can be removed with

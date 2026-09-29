@@ -51,6 +51,7 @@ services:
       - INDEX_PREFIX=atlas
     volumes:
       - ../../backend/pyatlas/docker/kibana-setup.sh:/kibana-setup.sh:ro
+      - ../../backend/pyatlas/docker/kibana-dashboards.ndjson:/kibana-dashboards.ndjson:ro
     entrypoint: ["sh", "-c", "tr -d '\\r' < /kibana-setup.sh | sh"]
     restart: "no"
 

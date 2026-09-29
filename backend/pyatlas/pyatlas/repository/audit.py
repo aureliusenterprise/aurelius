@@ -36,8 +36,25 @@ class AuditRepository:
     async def write(self, events: List[dict]) -> None:
         if not events:
             return
+        await self._add_entity_names(events)
         await self.store.bulk([{"op": "index", "index": self.store.audit, "id": e["eventKey"], "doc": e} for e in events],
                               )
+
+    async def _add_entity_names(self, events: List[dict]) -> None:
+        """Type and display name of the entity with every event, so reports can group changes by type or name
+        (the Atlas API output of audits is unchanged).  Purged entities are gone: their events keep neither."""
+        missing = sorted({e["entityId"] for e in events if "typeName" not in e and e.get("entityId")})
+        if not missing:
+            return
+        try:
+            docs = await self.store.mget(self.store.entities, missing, source_includes=["typeName", "displayText"])
+        except Exception:  # noqa: BLE001 - never fail a mutation for report fields
+            return
+        for e in events:
+            d = docs.get(e.get("entityId"))
+            if d is not None and "typeName" not in e:
+                e["typeName"] = d.get("typeName")
+                e["entityName"] = d.get("displayText")
 
     async def list_events(self, guid: str, start_key: Optional[str] = None, count: int = 100,
                           action: Optional[str] = None, sort_by: str = "timestamp", sort_order: str = "desc",

@@ -86,6 +86,10 @@ class EsStore:
     def meta(self) -> str:
         return self.index("meta")
 
+    @property
+    def access(self) -> str:
+        return self.index("access")
+
     async def bootstrap(self) -> None:
         """Create the indices if they do not exist yet."""
         for name, mapping in INDICES.items():

@@ -251,6 +251,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 sess.clear()
         if user is None:
             user, basic_name = self._basic(request)
+            if user is not None and _access_log(request) is not None:
+                await _access_log(request).record(user.name, "basic", ip=_remote_ip(request), groups=user.groups)
             if user is None and basic_name is not None and path.startswith("/api/"):
                 msg = "Too many failed logins, try again later" \
                     if self.throttle.locked(f"{basic_name}|{_client(request)}") \
@@ -269,6 +271,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
             request.session["user"] = user.name
             request.session["login"] = int(time.time())
             request.session[CSRF_SESSION_KEY] = secrets.token_urlsafe(32)
+            if _access_log(request) is not None:
+                await _access_log(request).record(user.name, "form", ip=_remote_ip(request), groups=user.groups)
             return JSONResponse({"msgDesc": "Login Successful"})
         if path == "/logout.html":
             if "session" in request.scope:
@@ -298,9 +302,14 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if self.oidc is None:
             return _bearer_error("Bearer tokens are not accepted (OIDC is not configured)")
         try:
-            user = await asyncio.to_thread(self.oidc.authenticate, token)
+            claims = await asyncio.to_thread(self.oidc.validate, token)
+            user = self.oidc.user_from_claims(claims)
         except InvalidToken as e:
             return _bearer_error(str(e))
+        access = _access_log(request)
+        if access is not None:
+            await access.record(user.name, "keycloak", access.key_for_token(claims, user.name),
+                                client=claims.get("azp"), ip=_remote_ip(request), groups=user.groups)
         request.state.user = user
         request.state.auth_method = "oidc"
         set_current_user(user)
@@ -310,6 +319,17 @@ class AuthMiddleware(BaseHTTPMiddleware):
 def _bearer_error(message: str) -> JSONResponse:
     return JSONResponse({"errorCode": "ATLAS-401-00-001", "errorMessage": f"Authentication failed: {message}"},
                         status_code=401, headers={"WWW-Authenticate": 'Bearer realm="atlas", error="invalid_token"'})
+
+
+def _remote_ip(request: Request) -> str:
+    """The browser's address: behind the reverse proxy the first X-Forwarded-For entry."""
+    fwd = request.headers.get("x-forwarded-for", "")
+    return fwd.split(",")[0].strip() if fwd else _client(request)
+
+
+def _access_log(request: Request):
+    services = getattr(request.app.state, "services", None)
+    return getattr(services, "access_log", None)
 
 
 def _client(request: Request) -> str:
