@@ -18,16 +18,18 @@ spec:
         {{- include "reverse-proxy.selectorLabels" . | nindent 8 }}
         aurelius/pyatlas-client: "true"
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- with (.Values.global.imagePullSecrets | default .Values.imagePullSecrets) }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+        {{- range . }}
+        - name: {{ . | quote }}
+        {{- end }}
       {{- end }}
       # the proxy's tenant files (Kibana login providers per realm, Kibana keys) come from the tenant registry:
       # written once before the proxy starts, then kept up to date by the tenant-sync sidecar
       initContainers:
         - name: tenant-sync-init
           image: {{ $pyatlasImage }}
-          imagePullPolicy: {{ .Values.pullPolicy }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default .Values.pullPolicy }}
           # before the platform exists (first installation) the proxy starts without tenants
           command: ["sh", "-c", "aurelius-admin proxy sync || echo 'tenant registry not available yet'"]
           env:
@@ -37,7 +39,7 @@ spec:
       containers:
         - name: reverse-proxy
           image: "{{ .Values.global.imageRegistry }}/{{ .Values.image }}:{{ .Values.global.version }}"
-          imagePullPolicy: {{ .Values.pullPolicy }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default .Values.pullPolicy }}
           ports:
             - name: http
               containerPort: 8080
@@ -75,7 +77,7 @@ spec:
             - { name: tenants, mountPath: /usr/local/apache2/tenants, readOnly: true }
         - name: tenant-sync
           image: {{ $pyatlasImage }}
-          imagePullPolicy: {{ .Values.pullPolicy }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default .Values.pullPolicy }}
           command: ["aurelius-admin", "proxy", "sync", "--loop", {{ .Values.tenantSyncSecs | quote }}]
           env:
             {{- include "reverse-proxy.syncEnv" . | nindent 12 }}

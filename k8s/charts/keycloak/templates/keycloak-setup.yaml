@@ -21,10 +21,16 @@ spec:
         app.kubernetes.io/component: setup
     spec:
       restartPolicy: Never
+      {{- with (.Values.global.imagePullSecrets | default .Values.imagePullSecrets) }}
+      imagePullSecrets:
+        {{- range . }}
+        - name: {{ . | quote }}
+        {{- end }}
+      {{- end }}
       containers:
         - name: keycloak-setup
           image: "{{ .Values.repository }}:{{ .Values.global.version }}"
-          imagePullPolicy: {{ .Values.pullPolicy }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default .Values.pullPolicy }}
           command: ['/bin/bash', '/scripts/keycloak-setup.sh']
           env:
             - name: KEYCLOAK_SERVER_URL
