@@ -72,6 +72,19 @@ did the same, the last Flink version kept only the first); references to deleted
 relationship rule; inactive rules are skipped. Rule texts follow the current rule files, which changed after
 the golden file was made.
 
+## Phase 4 - lineage and dashboard
+
+| Deliverable | Where | Status |
+| --- | --- | --- |
+| Lineage registration API (m4i-lineage-rest-api): 24 namespaces, same paths, payloads, validation and answers | `pyatlas/aurelius/lineage_api.py`, `/api/lin_api/`, proxy `/<ns>/lin_api/` | done; contract test: for 51 payloads the same Atlas entities as the old code (`tests/data/lineage_api_*.json`, `scripts/gen_lineage_api_spec.py`) |
+| `m4i_connector_process` type (defined in m4i-atlas-core, never deployed) | `models/9000-Aurelius/9030-m4i_process_model.json` | done; the connector endpoint failed on Atlas without it |
+| Lineage model for the model viewer | `pyatlas/aurelius/lineage_model.py` | done (see phase 2 table) |
+| Governance dashboard figures (python-rest `data_governance/dashboard`) | `/api/aurelius/data_governance_dashboard` | done; contract taken from the frontend's types; the page is not routed in `apps/atlas` |
+
+Where the old lineage API failed, pyatlas works instead of copying the failure: Kafka topics with a record
+value schema (the old code raised a TypeError for most schemas), Avro types outside its enum (`boolean`,
+`bytes`, ...), missing required values (400 instead of 500), Atlas errors passed on with their status. The listing (`GET`) leaves out deleted entities.
+
 ## Elasticsearch 9
 
 The stacks run Elasticsearch and Kibana 9.5.4; pyatlas uses the Python client 9. Enterprise Search, which

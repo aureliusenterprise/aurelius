@@ -51,7 +51,19 @@ curl -u admin:admin -H "Content-Type: application/json" -X POST \
   -d '{"results": [{"quality": "nl1--nl1hr--nl1hr001--func_organization--28", "dqscore": 0.95}]}'
 ```
 
-The governance dashboard follows in phase 4.
+Deployment pipelines register technical lineage (processes, Kubernetes objects, Kafka topics, Elastic indices,
+Kibana objects) with the lineage registration API, which pyatlas now serves with the paths and payloads of the
+old m4i-lineage-rest-api under `/aurelius/lin_api/` (e.g. `POST /aurelius/lin_api/process/generic_process/`,
+Keycloak token or pyatlas user with write access; Swagger: http://localhost:9090/aurelius/atlas2/api/docs):
+
+```
+curl -u admin:admin -H "Content-Type: application/json" -X POST \
+  http://localhost:9090/aurelius/lin_api/kubernetes/kubernetes_environment/ \
+  -d '{"qualifiedName": "prod", "name": "Production", "kubernetesClusters": []}'
+```
+
+The governance dashboard figures are served at `/aurelius/atlas/api/data_governance_dashboard` (the dashboard
+page in `apps/atlas` exists but is not linked in the frontend's routes).
 
 Kibana runs behind the reverse proxy: the proxy asks for a Keycloak login (mod_auth_openidc, confidential client
 `aurelius_proxy`, created by the `keycloak-init` job) and lets only users with the realm role `ROLE_ADMIN` through.

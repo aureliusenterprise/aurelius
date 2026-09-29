@@ -92,7 +92,12 @@ def load_sources() -> dict:
     from m4i_atlas_core.entities.atlas.data_dictionary import data_dictionary_types_def
     from m4i_atlas_core.entities.atlas.kubernetes import kubernetes_types_def
     from m4i_atlas_core.entities.atlas.m4i import m4i_types_def
-    from m4i_atlas_core.entities.atlas.processes import process_types_def
+    from m4i_atlas_core.entities.atlas.core import TypesDef
+    from m4i_atlas_core.entities.atlas.processes import connector_process_def, process_types_def
+    # m4i_connector_process is defined in m4i-atlas-core but was never part of process_types_def, so Atlas never had
+    # it and the lineage API's connector_process endpoint always failed; pyatlas ships it (phase 4)
+    process_types_def = TypesDef(entity_defs=[*process_types_def.entity_defs, connector_process_def],
+                                 relationship_defs=process_types_def.relationship_defs)
 
     ordered = [("9010-m4i_data_dictionary_model", data_dictionary_types_def),
                ("9020-m4i_governance_model", m4i_types_def),

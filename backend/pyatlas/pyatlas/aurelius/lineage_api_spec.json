@@ -1,0 +1,1407 @@
+{
+ "_generated_by": "backend/pyatlas/scripts/gen_lineage_api_spec.py",
+ "endpoints": {
+  "entity/confluentCloud_entity": {
+   "$ref": "#/definitions/model_m4i_confluentCloud_entity",
+   "validate": true
+  },
+  "entity/confluentEnvironment_entity": {
+   "$ref": "#/definitions/model_m4i_confluentEnvironment_entity",
+   "validate": true
+  },
+  "entity/dashboard_entity": {
+   "$ref": "#/definitions/model_m4i_dashboard_entity",
+   "validate": true
+  },
+  "entity/elasticCluster_entity": {
+   "$ref": "#/definitions/model_m4i_elasticCluster_entity",
+   "validate": true
+  },
+  "entity/elasticIndex_entity": {
+   "$ref": "#/definitions/model_m4i_elasticIndex_entity",
+   "validate": false
+  },
+  "entity/indexPattern_entity": {
+   "$ref": "#/definitions/model_m4i_indexPattern_entity",
+   "validate": true
+  },
+  "entity/kafkaCluster_entity": {
+   "$ref": "#/definitions/model_m4i_kafkaCluster_entity",
+   "validate": true
+  },
+  "entity/kafkaTopic_entity": {
+   "$ref": "#/definitions/model_m4i_kafkaTopic_entity",
+   "validate": false
+  },
+  "entity/kibanaSpace_entity": {
+   "$ref": "#/definitions/model_m4i_kibanaSpace_entity",
+   "validate": true
+  },
+  "entity/ksql_entity": {
+   "$ref": "#/definitions/model_m4i_ksql_entity",
+   "validate": true
+  },
+  "entity/visualization_entity": {
+   "$ref": "#/definitions/model_m4i_visualization_entity",
+   "validate": true
+  },
+  "kubernetes/kubernetes_cluster": {
+   "$ref": "#/definitions/model_m4i_kubernetes_cluster",
+   "validate": true
+  },
+  "kubernetes/kubernetes_cronjob": {
+   "$ref": "#/definitions/model_m4i_kubernetes_cronjob",
+   "validate": true
+  },
+  "kubernetes/kubernetes_deployment": {
+   "$ref": "#/definitions/model_m4i_kubernetes_deployment",
+   "validate": true
+  },
+  "kubernetes/kubernetes_environment": {
+   "$ref": "#/definitions/model_m4i_kubernetes_environment",
+   "validate": true
+  },
+  "kubernetes/kubernetes_namespace": {
+   "$ref": "#/definitions/model_m4i_kubernetes_namespace",
+   "validate": true
+  },
+  "kubernetes/kubernetes_pod": {
+   "$ref": "#/definitions/model_m4i_kubernetes_pod",
+   "validate": true
+  },
+  "process/api_operation_process": {
+   "$ref": "#/definitions/model_m4i_api_operation_process",
+   "validate": true
+  },
+  "process/connector_process": {
+   "$ref": "#/definitions/attributes_m4i_connector_process",
+   "validate": true
+  },
+  "process/generic_process": {
+   "$ref": "#/definitions/model_m4i_generic_process",
+   "validate": true
+  },
+  "process/ingress_controller_process": {
+   "$ref": "#/definitions/model_m4i_ingress_controller_process",
+   "validate": true
+  },
+  "process/ingress_object_process": {
+   "$ref": "#/definitions/model_m4i_ingress_object_process",
+   "validate": true
+  },
+  "process/kubernetes_service_process": {
+   "$ref": "#/definitions/model_m4i_kubernetes_service_process",
+   "validate": true
+  },
+  "process/microservice_process": {
+   "$ref": "#/definitions/model_m4i_microservice_process",
+   "validate": true
+  }
+ },
+ "definitions": {
+  "model_m4i_microservice_process": {
+   "required": [
+    "inputs",
+    "name",
+    "outputs",
+    "qualifiedName",
+    "system"
+   ],
+   "properties": {
+    "qualifiedName": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "description": {
+     "type": "string"
+    },
+    "processOwner": {
+     "type": "string",
+     "description": "Qualified Name of processOwner of Process Entity"
+    },
+    "inputs": {
+     "type": "array",
+     "description": "List Qualified Name Inputs  of Microservice Process Entity",
+     "items": {
+      "type": "string"
+     }
+    },
+    "outputs": {
+     "type": "array",
+     "description": "List Qualified Name Outputs of Microservice Entity",
+     "items": {
+      "type": "string"
+     }
+    },
+    "source": {
+     "type": "array",
+     "description": "List Qualified Name Source of Process Entity",
+     "minItems": 1,
+     "items": {
+      "type": "string"
+     }
+    },
+    "system": {
+     "type": "string",
+     "description": "The system that the microservice runs on"
+    }
+   },
+   "type": "object"
+  },
+  "model_m4i_generic_process": {
+   "required": [
+    "inputs",
+    "name",
+    "outputs",
+    "qualifiedName"
+   ],
+   "properties": {
+    "qualifiedName": {
+     "type": "string",
+     "description": "The qualifiedName of the process"
+    },
+    "name": {
+     "type": "string",
+     "description": "The name of the process"
+    },
+    "description": {
+     "type": "string",
+     "description": "The description of the process"
+    },
+    "processOwner": {
+     "type": "string",
+     "description": "Qualified Name of processOwner of Process Entity"
+    },
+    "inputs": {
+     "type": "array",
+     "description": "List Qualified Name Inputs  of Process Entity",
+     "minItems": 1,
+     "items": {
+      "type": "string"
+     }
+    },
+    "outputs": {
+     "type": "array",
+     "description": "List Qualified Name Outputs of Process Entity",
+     "minItems": 1,
+     "items": {
+      "type": "string"
+     }
+    },
+    "source": {
+     "type": "array",
+     "description": "List Qualified Name Source of Process Entity",
+     "minItems": 1,
+     "items": {
+      "type": "string"
+     }
+    }
+   },
+   "type": "object"
+  },
+  "attributes_m4i_connector_process": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_process"
+    },
+    {
+     "required": [
+      "connectorType",
+      "server"
+     ],
+     "properties": {
+      "connectorType": {
+       "type": "string",
+       "description": "ConnectorType of process Entity"
+      },
+      "server": {
+       "type": "string",
+       "description": "Server to which this connector runs"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_confluentCloud_entity": {
+   "required": [
+    "name"
+   ],
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "The Name of the Confluent Cloud"
+    }
+   },
+   "type": "object"
+  },
+  "model_m4i_dashboard_entity": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "child_dataset",
+      "kibanaSpace",
+      "updatedAt",
+      "version"
+     ],
+     "properties": {
+      "updatedAt": {
+       "type": "string",
+       "description": "The updatedAt in the saved object artifact of the dashboard"
+      },
+      "version": {
+       "type": "string",
+       "description": "The version in the saved object artifact of the dashboard"
+      },
+      "kibanaSpace": {
+       "type": "string",
+       "description": "The qualifiedNmae of the kibana Space the dashboard is on"
+      },
+      "creator": {
+       "type": "array",
+       "description": "List of qualifiedName for creators of the dashboard",
+       "items": {
+        "type": "string"
+       }
+      },
+      "child_dataset": {
+       "type": "array",
+       "description": "List of qualifiedNames of childDataset (visualizations) in the dashboard",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_generic_entity": {
+   "required": [
+    "name",
+    "qualifiedName"
+   ],
+   "properties": {
+    "qualifiedName": {
+     "type": "string",
+     "description": "qualifiedName of Entity"
+    },
+    "name": {
+     "type": "string",
+     "description": "Name of Entity"
+    },
+    "description": {
+     "type": "string",
+     "description": "Description of Entity"
+    }
+   },
+   "type": "object"
+  },
+  "model_m4i_indexPattern_entity": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "indexPattern",
+      "updatedAt",
+      "version"
+     ],
+     "properties": {
+      "indexPattern": {
+       "type": "string",
+       "description": "The indexPattern used by the save object index-pattern"
+      },
+      "updatedAt": {
+       "type": "string",
+       "description": "The updatedAt in the saved object artifact of the index-pattern"
+      },
+      "version": {
+       "type": "string",
+       "description": "The version in the saved object artifact of the index-pattern"
+      },
+      "creator": {
+       "type": "array",
+       "description": "List of qualifiedName for creators of the index-pattern",
+       "items": {
+        "type": "string"
+       }
+      },
+      "parentDataset": {
+       "type": "array",
+       "description": "List of qualifiedNames of parent dataset (visualization) that the index-pattern is used",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_visualization_entity": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "childDataset",
+      "type",
+      "updatedAt",
+      "version"
+     ],
+     "properties": {
+      "updatedAt": {
+       "type": "string",
+       "description": "The updatedAt in the saved object artifact of the visualization"
+      },
+      "version": {
+       "type": "string",
+       "description": "The version in the saved object artifact of the visualization"
+      },
+      "creator": {
+       "type": "array",
+       "description": "List of qualifiedName for creators of the visualization",
+       "items": {
+        "type": "string"
+       }
+      },
+      "parentDataset": {
+       "type": "array",
+       "description": "List of qualifiedNames of parentDataset (dashboard) in the visualization",
+       "items": {
+        "type": "string"
+       }
+      },
+      "childDataset": {
+       "type": "array",
+       "description": "List of qualifiedNames of childDataset (index-pattern) in the visualization",
+       "items": {
+        "type": "string"
+       }
+      },
+      "type": {
+       "type": "string",
+       "description": "The type of the visualization"
+      },
+      "visualizationType": {
+       "type": "string",
+       "description": "The visualizationType of the visualization lens"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_kafkaTopic_entity": {
+   "required": [
+    "cluster",
+    "environment",
+    "key_schema",
+    "name",
+    "partitions",
+    "replicas",
+    "value_schema"
+   ],
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "The name of hte kafka topic"
+    },
+    "environment": {
+     "type": "string",
+     "description": "The name of the confluent environment the kafka topic is on"
+    },
+    "cluster": {
+     "type": "string",
+     "description": "The name of kafka cluster the kafka topic is on"
+    },
+    "partitions": {
+     "type": "integer",
+     "description": "The partitions configured for the kafka topic"
+    },
+    "replicas": {
+     "type": "integer",
+     "description": "The replicas configured for the kafka topic"
+    },
+    "key_schema": {
+     "type": "string",
+     "description": "The key schema configured for the kafka topic"
+    },
+    "value_schema": {
+     "description": "The value schema configured for the kafka topic",
+     "allOf": [
+      {}
+     ],
+     "oneOf": [
+      {
+       "type": "string"
+      },
+      {
+       "$ref": "#/definitions/fields_m4i_kafkaTopic_entity"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "fields_m4i_kafkaTopic_entity": {
+   "required": [
+    "doc",
+    "fields",
+    "name",
+    "type"
+   ],
+   "properties": {
+    "fields": {
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/field_m4i_kafkaTopic_entity"
+     }
+    },
+    "name": {
+     "type": "string"
+    },
+    "doc": {
+     "type": [
+      "string",
+      "null",
+      "array"
+     ]
+    },
+    "type": {
+     "type": [
+      "string",
+      "object",
+      "array"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "field_m4i_kafkaTopic_entity": {
+   "required": [
+    "doc",
+    "type"
+   ],
+   "properties": {
+    "name": {
+     "type": "string"
+    },
+    "doc": {
+     "type": [
+      "string",
+      "null",
+      "array"
+     ]
+    },
+    "type": {
+     "type": [
+      "string",
+      "object",
+      "array"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "model_m4i_elasticIndex_entity": {
+   "required": [
+    "cluster",
+    "environment",
+    "indexTemplate",
+    "name",
+    "qualifiedName"
+   ],
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "Name of elastic index"
+    },
+    "qualifiedName": {
+     "type": "string",
+     "description": "The qualifiedName of the elastic index"
+    },
+    "cluster": {
+     "type": "string",
+     "description": "The qualifiedName of elastic cluster the elastic index is on"
+    },
+    "environment": {
+     "type": "string",
+     "description": "Name of environment the elastic index is on"
+    },
+    "indexTemplate": {
+     "description": "The template used by the elastic index",
+     "allOf": [
+      {
+       "$ref": "#/definitions/maps"
+      }
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "maps": {
+   "properties": {
+    "mappings": {
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "model_m4i_confluentEnvironment_entity": {
+   "required": [
+    "confluent_cloud",
+    "name",
+    "schema_registry"
+   ],
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "Name of the Confluent Environment"
+    },
+    "confluent_cloud": {
+     "type": "string",
+     "description": "The Qualified name of m4i_confluentCloud entity to which it belongs"
+    },
+    "schema_registry": {
+     "type": "boolean",
+     "description": "A boolean indicating if there is a schemaRegistry required"
+    }
+   },
+   "type": "object"
+  },
+  "model_m4i_kafkaCluster_entity": {
+   "required": [
+    "confluent_environment",
+    "kafka_partitions",
+    "kafka_replicas",
+    "name"
+   ],
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "The name of the kafka cluster"
+    },
+    "confluent_environment": {
+     "type": "string",
+     "description": "The name of the confluent environment the kafka cluster is on"
+    },
+    "kafka_partitions": {
+     "type": "integer",
+     "description": "The partitions configured for the kafka cluster"
+    },
+    "kafka_replicas": {
+     "type": "integer",
+     "description": "The replica_count configured for the kafka cluster"
+    }
+   },
+   "type": "object"
+  },
+  "model_output": {
+   "required": [
+    "CREATE",
+    "DELETE",
+    "UPDATE"
+   ],
+   "properties": {
+    "CREATE": {
+     "type": "integer"
+    },
+    "UPDATE": {
+     "type": "integer"
+    },
+    "DELETE": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "model_m4i_elasticCluster_entity": {
+   "required": [
+    "name",
+    "replica_count",
+    "shard_count"
+   ],
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "Name of elastic cluster"
+    },
+    "replica_count": {
+     "type": "integer",
+     "description": "The replica_count configured for the elastic cluster"
+    },
+    "shard_count": {
+     "type": "integer",
+     "description": "The shard_count configured for the elastic cluster"
+    }
+   },
+   "type": "object"
+  },
+  "model_m4i_kibanaSpace_entity": {
+   "required": [
+    "avatar_color",
+    "avatar_initials",
+    "elastic_cluster",
+    "name"
+   ],
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "The name of the kibana space"
+    },
+    "avatar_color": {
+     "type": "string",
+     "description": "The avatar_color of the kibana space"
+    },
+    "avatar_initials": {
+     "type": "string",
+     "description": "The avatar_initials of the kibana space"
+    },
+    "elastic_cluster": {
+     "type": "string",
+     "description": "The qualifiedName of the elastic cluster the kibana space is on"
+    },
+    "description": {
+     "type": "string",
+     "description": "The description of the kibana space"
+    }
+   },
+   "type": "object"
+  },
+  "model_m4i_kubernetes_environment": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "kubernetesClusters"
+     ],
+     "properties": {
+      "kubernetesClusters": {
+       "type": "array",
+       "description": "List of Qualified Names of kubernetes clusters on this kubernetes environment",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_kubernetes_cluster": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "kubernetesEnvironment",
+      "kubernetesNamespace"
+     ],
+     "properties": {
+      "kubernetesNamespace": {
+       "type": "array",
+       "description": "List of Qualified Names of kubernetes Namespace on this kubernetes cluster",
+       "items": {
+        "type": "string"
+       }
+      },
+      "kubernetesEnvironment": {
+       "type": "string",
+       "description": "The Qualified Names of kubernetes environment this kubernetes cluster is on"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_kubernetes_namespace": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "kubernetesCluster",
+      "kubernetesCronjob",
+      "kubernetesDeployment"
+     ],
+     "properties": {
+      "kubernetesCronjob": {
+       "type": "array",
+       "description": "List of Qualified Names of kubernetes Cronjob on this kubernetes namespace",
+       "items": {
+        "type": "string"
+       }
+      },
+      "kubernetesDeployment": {
+       "type": "array",
+       "description": "List of Qualified Names of kubernetes Deployment on this kubernetes namespace",
+       "items": {
+        "type": "string"
+       }
+      },
+      "kubernetesCluster": {
+       "type": "string",
+       "description": "The Qualified Names of kubernetes cluster this kubernetes namespace is on"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_kubernetes_deployment": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "kubernetesNamespace",
+      "kubernetesPod"
+     ],
+     "properties": {
+      "kubernetesPod": {
+       "type": "array",
+       "description": "List of Qualified Names of kubernetes pods on this kubernetes deployment",
+       "items": {
+        "type": "string"
+       }
+      },
+      "tags": {
+       "type": "string",
+       "description": "The tags of the deployment"
+      },
+      "kubernetesNamespace": {
+       "type": "string",
+       "description": "The Qualified Names of kubernetes namespace this kubernetes deployment is on"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_kubernetes_cronjob": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "kubernetesNamespace",
+      "kubernetesPod"
+     ],
+     "properties": {
+      "kubernetesPod": {
+       "type": "array",
+       "description": "List of Qualified Names of kubernetes pods on this kubernetes cronjob",
+       "items": {
+        "type": "string"
+       }
+      },
+      "tags": {
+       "type": "string",
+       "description": "The tags of the cronjob"
+      },
+      "schedule": {
+       "type": "string",
+       "description": "The schedule of the cronjob"
+      },
+      "kubernetesNamespace": {
+       "type": "string",
+       "description": "The Qualified Names of kubernetes namespace this kubernetes cronjob is on"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_kubernetes_pod": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "properties": {
+      "kubernetesCronjob": {
+       "type": "string",
+       "description": "Qualified Name of kubernetes Cronjob this pod is based off"
+      },
+      "kubernetesDeployment": {
+       "type": "string",
+       "description": " Qualified Name of kubernetes Deployment this pod is based off"
+      },
+      "replicas": {
+       "type": "string",
+       "description": "The number of relicas pods"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_api_operation_process": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "inputs",
+      "microservice",
+      "outputs"
+     ],
+     "properties": {
+      "processOwner": {
+       "type": "string",
+       "description": "Qualified Name of processOwner of Process Entity"
+      },
+      "inputs": {
+       "type": "array",
+       "description": "List Qualified Name Inputs  of Api Operation Process Entity",
+       "items": {
+        "type": "string"
+       }
+      },
+      "outputs": {
+       "type": "array",
+       "description": "List Qualified Name Outputs of API Operation Entity",
+       "items": {
+        "type": "string"
+       }
+      },
+      "microservice": {
+       "type": "string",
+       "description": "The microservice that the api operation is on"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_ingress_controller_process": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "cluster",
+      "ingressObject",
+      "inputs",
+      "outputs"
+     ],
+     "properties": {
+      "processOwner": {
+       "type": "string",
+       "description": "Qualified Name of processOwner of Process Entity"
+      },
+      "inputs": {
+       "type": "array",
+       "description": "List Qualified Name Inputs  of Ingress Controller Process Entity",
+       "items": {
+        "type": "string"
+       }
+      },
+      "outputs": {
+       "type": "array",
+       "description": "List Qualified Name Outputs of Ingress Controller Entity",
+       "items": {
+        "type": "string"
+       }
+      },
+      "ingressObject": {
+       "type": "array",
+       "description": "List Qualified Name ingress Objects known by the Ingress Controller Entity",
+       "items": {
+        "type": "string"
+       }
+      },
+      "cluster": {
+       "type": "string",
+       "description": "The cluster that the Ingress Controller is on"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_ingress_object_process": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "inputs",
+      "kubernetesService",
+      "namespace",
+      "outputs"
+     ],
+     "properties": {
+      "processOwner": {
+       "type": "string",
+       "description": "Qualified Name of processOwner of Process Entity"
+      },
+      "inputs": {
+       "type": "array",
+       "description": "List Qualified Name Inputs  of Ingress Controller Process Entity",
+       "items": {
+        "type": "string"
+       }
+      },
+      "outputs": {
+       "type": "array",
+       "description": "List Qualified Name Outputs of Ingress Controller Entity",
+       "items": {
+        "type": "string"
+       }
+      },
+      "kubernetesService": {
+       "type": "array",
+       "description": "List Qualified Name kubernetes services known by the Ingress object Entity",
+       "items": {
+        "type": "string"
+       }
+      },
+      "namespace": {
+       "type": "string",
+       "description": "The namespace that the Ingress object is on"
+      },
+      "ingressController": {
+       "type": "string",
+       "description": "The qualified name of the Ingress Controller that know the ingress object"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_kubernetes_service_process": {
+   "allOf": [
+    {
+     "$ref": "#/definitions/model_m4i_generic_entity"
+    },
+    {
+     "required": [
+      "inputs",
+      "microservice",
+      "namespace",
+      "outputs"
+     ],
+     "properties": {
+      "processOwner": {
+       "type": "string",
+       "description": "Qualified Name of processOwner of Process Entity"
+      },
+      "inputs": {
+       "type": "array",
+       "description": "List Qualified Name Inputs  of Kubernetes Service Process Entity",
+       "items": {
+        "type": "string"
+       }
+      },
+      "outputs": {
+       "type": "array",
+       "description": "List Qualified Name Outputs of Kubernetes Service Entity",
+       "items": {
+        "type": "string"
+       }
+      },
+      "microservice": {
+       "type": "array",
+       "description": "List Qualified Name microservices known by the Kubernetes Service Entity",
+       "items": {
+        "type": "string"
+       }
+      },
+      "namespace": {
+       "type": "string",
+       "description": "The namespace that the Kubernetes Service is on"
+      },
+      "ingressObject": {
+       "type": "string",
+       "description": "The ingress object that knows the Kubernetes Service"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "model_m4i_ksql_entity": {
+   "required": [
+    "cluster",
+    "env",
+    "kafka_topic",
+    "name",
+    "properties",
+    "query",
+    "value_format"
+   ],
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "The name of ksql"
+    },
+    "env": {
+     "type": "string",
+     "description": "The confluent environment  ksql is run on"
+    },
+    "cluster": {
+     "type": "string",
+     "description": "The kafka cluster ksql is on"
+    },
+    "kafka_topic": {
+     "type": "string",
+     "description": "The kafka_topic ksql queries"
+    },
+    "value_format": {
+     "type": "string",
+     "description": "The value_format of the ksql"
+    },
+    "query": {
+     "type": "string",
+     "description": "The query of the ksql"
+    },
+    "properties": {
+     "type": "string",
+     "description": "The properties of the ksql"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "defaults": {
+  "m4i_api_operation_process": {
+   "description": null,
+   "inputs": [],
+   "microservice": [],
+   "name": null,
+   "outputs": [],
+   "processOwner": [],
+   "qualifiedName": null,
+   "system": []
+  },
+  "m4i_confluent_cloud": {
+   "childSystem": [],
+   "collections": [],
+   "confluentEnvironment": [],
+   "definition": null,
+   "name": null,
+   "parentSystem": [],
+   "processes": [],
+   "qualifiedName": null,
+   "source": []
+  },
+  "m4i_confluent_environment": {
+   "childSystem": [],
+   "collections": [],
+   "confluentCloud": null,
+   "definition": null,
+   "kafkaClusters": [],
+   "name": null,
+   "parentSystem": [],
+   "processes": [],
+   "qualifiedName": null,
+   "schemaRegistry": null,
+   "source": []
+  },
+  "m4i_connector_process": {
+   "connectorType": null,
+   "description": null,
+   "inputs": [],
+   "name": null,
+   "outputs": [],
+   "processOwner": [],
+   "qualifiedName": null,
+   "server": null,
+   "system": []
+  },
+  "m4i_dashboard": {
+   "childDataset": [],
+   "collections": [],
+   "creator": [],
+   "definition": null,
+   "elasticCluster": [],
+   "fields": [],
+   "kibanaSpace": [],
+   "name": null,
+   "parentDataset": [],
+   "qualifiedName": null,
+   "source": [],
+   "updatedAt": null,
+   "version": null
+  },
+  "m4i_elastic_cluster": {
+   "childSystem": [],
+   "collections": [],
+   "definition": null,
+   "name": null,
+   "parentSystem": [],
+   "processes": [],
+   "qualifiedName": null,
+   "replicaCount": null,
+   "shardCount": null,
+   "source": []
+  },
+  "m4i_elastic_field": {
+   "attributes": [],
+   "childField": [],
+   "dataQuality": [],
+   "datasets": [],
+   "definition": null,
+   "fieldType": null,
+   "hasContent": null,
+   "name": null,
+   "optionalField": null,
+   "parentField": [],
+   "qualifiedName": null,
+   "source": [],
+   "steward": []
+  },
+  "m4i_elastic_index": {
+   "childDataset": [],
+   "collections": [],
+   "definition": null,
+   "fields": [],
+   "name": null,
+   "parentDataset": [],
+   "qualifiedName": null,
+   "source": []
+  },
+  "m4i_generic_process": {
+   "description": null,
+   "inputs": [],
+   "name": null,
+   "outputs": [],
+   "processOwner": [],
+   "qualifiedName": null,
+   "system": []
+  },
+  "m4i_index_pattern": {
+   "childDataset": [],
+   "collections": [],
+   "creator": null,
+   "datasets": [],
+   "definition": null,
+   "description": null,
+   "fields": [],
+   "indexPattern": null,
+   "name": null,
+   "parentDataset": [],
+   "qualifiedName": null,
+   "source": [],
+   "systems": [],
+   "updatedAt": null,
+   "version": null
+  },
+  "m4i_ingress_controller_process": {
+   "description": null,
+   "ingressObject": [],
+   "inputs": [],
+   "name": null,
+   "outputs": [],
+   "processOwner": [],
+   "qualifiedName": null,
+   "system": []
+  },
+  "m4i_ingress_object_process": {
+   "description": null,
+   "ingressController": [],
+   "inputs": [],
+   "kubernetesService": [],
+   "name": null,
+   "outputs": [],
+   "processOwner": [],
+   "qualifiedName": null,
+   "system": []
+  },
+  "m4i_kafka_cluster": {
+   "childSystem": [],
+   "collections": [],
+   "confluentEnvironment": null,
+   "definition": null,
+   "kafkaPartitions": null,
+   "kafkaReplicas": null,
+   "name": null,
+   "parentSystem": [],
+   "processes": [],
+   "qualifiedName": null,
+   "source": []
+  },
+  "m4i_kafka_field": {
+   "attributes": [],
+   "childField": [],
+   "dataQuality": [],
+   "datasets": [],
+   "definition": null,
+   "fieldType": null,
+   "hasContent": null,
+   "name": null,
+   "optionalField": null,
+   "parentField": [],
+   "qualifiedName": null,
+   "source": [],
+   "steward": []
+  },
+  "m4i_kafka_topic": {
+   "childDataset": [],
+   "collections": [],
+   "definition": null,
+   "fields": [],
+   "name": null,
+   "parentDataset": [],
+   "partitions": null,
+   "qualifiedName": null,
+   "replicas": null,
+   "source": []
+  },
+  "m4i_kibana_space": {
+   "avatarColor": null,
+   "avatarInitials": null,
+   "datasets": [],
+   "definition": null,
+   "elasticCluster": null,
+   "name": null,
+   "qualifiedName": null,
+   "source": [],
+   "systems": []
+  },
+  "m4i_ksql": {
+   "archimateReference": [],
+   "kafkaTopic": null,
+   "name": null,
+   "properties": null,
+   "qualifiedName": null,
+   "query": null,
+   "source": [],
+   "typeAlias": null,
+   "valueFormat": null
+  },
+  "m4i_kubernetes_cluster": {
+   "childSystem": [],
+   "collections": [],
+   "definition": null,
+   "kubernetesEnvironment": [],
+   "kubernetesNamespace": [],
+   "name": null,
+   "parentSystem": [],
+   "processes": [],
+   "qualifiedName": null,
+   "source": []
+  },
+  "m4i_kubernetes_cronjob": {
+   "childSystem": [],
+   "collections": [],
+   "definition": null,
+   "kubernetesNamespace": [],
+   "kubernetesPod": [],
+   "name": null,
+   "parentSystem": [],
+   "processes": [],
+   "qualifiedName": null,
+   "schedule": null,
+   "source": [],
+   "tags": null
+  },
+  "m4i_kubernetes_deployment": {
+   "childSystem": [],
+   "collections": [],
+   "definition": null,
+   "kubernetesNamespace": [],
+   "kubernetesPod": [],
+   "name": null,
+   "parentSystem": [],
+   "processes": [],
+   "qualifiedName": null,
+   "source": [],
+   "tags": null
+  },
+  "m4i_kubernetes_environment": {
+   "childSystem": [],
+   "collections": [],
+   "definition": null,
+   "kubernetesClusters": [],
+   "name": null,
+   "parentSystem": [],
+   "processes": [],
+   "qualifiedName": null,
+   "source": []
+  },
+  "m4i_kubernetes_namespace": {
+   "childSystem": [],
+   "collections": [],
+   "definition": null,
+   "kubernetesCluster": [],
+   "kubernetesCronjob": [],
+   "kubernetesDeployment": [],
+   "name": null,
+   "parentSystem": [],
+   "processes": [],
+   "qualifiedName": null,
+   "source": []
+  },
+  "m4i_kubernetes_pod": {
+   "childSystem": [],
+   "collections": [],
+   "definition": null,
+   "kubernetesCronjob": [],
+   "kubernetesDeployment": [],
+   "microservice": [],
+   "name": null,
+   "parentSystem": [],
+   "processes": [],
+   "qualifiedName": null,
+   "replicas": null,
+   "source": []
+  },
+  "m4i_kubernetes_service_process": {
+   "description": null,
+   "ingressObject": [],
+   "inputs": [],
+   "microservice": [],
+   "name": null,
+   "outputs": [],
+   "processOwner": [],
+   "qualifiedName": null,
+   "system": []
+  },
+  "m4i_microservice_process": {
+   "apiOperation": [],
+   "description": null,
+   "inputs": [],
+   "name": null,
+   "outputs": [],
+   "processOwner": [],
+   "qualifiedName": null,
+   "service": [],
+   "system": []
+  },
+  "m4i_visualization": {
+   "childDataset": [],
+   "collections": [],
+   "creator": [],
+   "definition": null,
+   "fields": [],
+   "name": null,
+   "parentDataset": [],
+   "qualifiedName": null,
+   "source": [],
+   "type": null,
+   "updatedAt": null,
+   "version": null,
+   "visualizationType": null
+  }
+ }
+}

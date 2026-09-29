@@ -179,7 +179,7 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
             name = getattr(route, "name", None) or path
             services.request_metrics.record(name, (_t.perf_counter() - t0) * 1000)
 
-    _write_paths = ("/api/atlas/v2/entity", "/api/atlas/v2/relationship", "/api/atlas/entities")
+    _write_paths = ("/api/atlas/v2/entity", "/api/atlas/v2/relationship", "/api/atlas/entities", "/api/lin_api/")
 
     @app.middleware("http")
     async def aurelius_read_your_writes(request: Request, call_next):
@@ -211,7 +211,7 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
 
     for r in (types_api.router, entity_api.router, other_api.relationship_router, other_api.search_router,
               other_api.lineage_router, glossary_api.router, admin_api.router, admin_api.recovery_router,
-              aurelius_api.router):
+              aurelius_api.router, aurelius_api.lineage_router):
         app.include_router(r)
 
     authenticators = [FileAuthenticator(settings.users_file)]

@@ -194,3 +194,79 @@ async def delete_quality_results(request: Request, quality: list[str] = Query(de
     if not quality and not all:
         return JSONResponse({"errors": ["name the rules with ?quality=... or pass ?all=true"]}, status_code=400)
     return await a.delete_quality_results(None if all else quality)
+
+
+# ------------------------------------------------------------------ governance dashboard (phase 4)
+@router.get("/data_governance_dashboard")
+@router.get("/data_governance_dashboard/")
+async def data_governance_dashboard(request: Request):
+    """Data domains and whether they have a data dictionary (the frontend's ``getDashboard``; formerly the
+    python-rest ``data_governance/dashboard``): ``{totalNumberOfDomains, totalNumberOfActiveDomains,
+    domains: {<name>: {name, guid, isActive, totalNumberOfEntities}}}``; a domain is active once it has a data
+    entity."""
+    from .engines import SEARCH_DOCUMENTS
+    a = _aurelius(request)
+    if a is None:
+        return JSONResponse({"errors": ["Aurelius is disabled"]}, status_code=404)
+    domains = {}
+    async for _id, d in a.store.scan(a.index(SEARCH_DOCUMENTS), {"term": {"typename": "m4i_data_domain"}},
+                                     sort_field="id"):
+        n = len(d.get("deriveddataentityguid") or [])
+        domains[d.get("name") or d["guid"]] = {"name": d.get("name"), "guid": d["guid"], "isActive": n > 0,
+                                               "totalNumberOfEntities": n}
+    return {"totalNumberOfDomains": len(domains),
+            "totalNumberOfActiveDomains": sum(1 for x in domains.values() if x["isActive"]),
+            "domains": dict(sorted(domains.items()))}
+
+
+# ------------------------------------------------------------------ lineage registration API (phase 4)
+lineage_router = APIRouter(prefix="/api/lin_api")
+
+
+def _lin_namespace(namespace: str):
+    from .lineage_api import NAMESPACES
+    ns = namespace.strip("/")
+    return ns if ns in NAMESPACES else None
+
+
+def _unknown_namespace(namespace: str) -> JSONResponse:
+    return JSONResponse({"message": f"The requested URL was not found on the server: {namespace}"}, status_code=404)
+
+
+@lineage_router.get("/{namespace:path}")
+async def lineage_api_get(namespace: str, request: Request):
+    """Qualified names of all (active) entities of the namespace's type, subtypes included."""
+    from .lineage_api import NAMESPACES
+    ns = _lin_namespace(namespace)
+    if ns is None:
+        return _unknown_namespace(namespace)
+    type_name = NAMESPACES[ns][0]
+    s = svc(request)
+    names, offset = [], 0
+    while True:
+        page = await s.search.basic({"typeName": type_name, "excludeDeletedEntities": True, "limit": 1000,
+                                     "offset": offset})
+        ents = page.get("entities") or []
+        names += [(e.get("attributes") or {}).get("qualifiedName") for e in ents]
+        if len(ents) < 1000:
+            break
+        offset += 1000
+    return {"entities": len(names), "qualifiedNames": names}
+
+
+@lineage_router.post("/{namespace:path}")
+async def lineage_api_post(namespace: str, request: Request):
+    """Registers one entity (see :mod:`.lineage_api`); ``{"CREATE": n, "UPDATE": n, "DELETE": n}``."""
+    from .lineage_api import PayloadError, convert, mutation_counts
+    ns = _lin_namespace(namespace)
+    if ns is None:
+        return _unknown_namespace(namespace)
+    body = await json_body(request, default=None)
+    try:
+        entities, referred = convert(ns, body)
+    except PayloadError as e:
+        return JSONResponse({"errors": e.errors, "message": "Input payload validation failed"}, status_code=400)
+    s = svc(request)
+    result = await s.entities.create_or_update({"entities": entities, "referredEntities": referred},
+                                               user_of(request))
+    return mutation_counts(result)

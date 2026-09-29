@@ -1,0 +1,37 @@
+{
+    "entityDefs": [
+        {
+            "category": "ENTITY",
+            "name": "m4i_connector_process",
+            "description": "A type definition for a connector process in the context of models4insight.com",
+            "typeVersion": "1.0",
+            "attributeDefs": [
+                {
+                    "name": "connectorType",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                },
+                {
+                    "name": "server",
+                    "typeName": "string",
+                    "cardinality": "SINGLE",
+                    "includeInNotification": true,
+                    "indexType": "DEFAULT",
+                    "isIndexable": true,
+                    "isOptional": true,
+                    "isUnique": false,
+                    "searchWeight": 1
+                }
+            ],
+            "superTypes": [
+                "m4i_generic_process"
+            ]
+        }
+    ]
+}

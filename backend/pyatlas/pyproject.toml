@@ -21,6 +21,7 @@ dependencies = [
     "defusedxml>=0.7",   # openpyxl uses it automatically: protects XLSX uploads against XML bombs / XXE
     "bcrypt>=4.0",       # BCrypt password hashes in users-credentials.properties (as Atlas)
     "PyJWT[crypto]>=2.8", # Keycloak (OIDC) bearer tokens
+    "jsonschema>=4.17",  # request validation of the lineage registration API (as flask-restx did)
 ]
 
 [project.optional-dependencies]
@@ -33,7 +34,7 @@ pyatlas = "pyatlas.__main__:main"
 include = ["pyatlas*", "parity*"]
 
 [tool.setuptools.package-data]
-"pyatlas.aurelius" = ["gov_rules/*.json"]
+"pyatlas.aurelius" = ["gov_rules/*.json", "lineage_api_spec.json"]
 "parity" = ["allowlists/*.json"]
 
 [tool.pytest.ini_options]
