@@ -8,6 +8,7 @@ These indices hold everything Atlas kept in JanusGraph + Solr (plus the access l
 ``<prefix>_unique``         one document per unique-attribute value; its id enforces uniqueness atomically
 ``<prefix>_audit``          entity audit events
 ``<prefix>_access``         logins (Keycloak sessions, UI form logins, API users per day)
+``<prefix>_clickstream``    navigation events of the Aurelius frontend
 ``<prefix>_meta``           applied model patches, saved searches, misc. server state
 
 Indexed attribute values live in typed groups so that attributes with the same
@@ -216,6 +217,17 @@ META_MAPPING = {
     },
 }
 
+# navigation events of the Aurelius frontend (see pyatlas/aurelius/clickstream.py)
+CLICKSTREAM_MAPPING = {
+    "dynamic": False,
+    "properties": {
+        "user": KW, "app": KW, "timestamp": LONG, "clientTimestamp": LONG,
+        "url": {"type": "keyword", "ignore_above": 2000}, "path": KW, "page": KW, "query": KW,
+        "session": KW, "step": {"type": "integer"}, "entry": BOOL, "previousPage": KW, "previousPath": KW,
+        "secondsOnPreviousPage": {"type": "double"}, "entityGuid": KW, "entityType": KW, "entityName": KW,
+    },
+}
+
 INDICES = {
     "typedefs": TYPEDEF_MAPPING,
     "entities": ENTITY_MAPPING,
@@ -224,4 +236,5 @@ INDICES = {
     "audit": AUDIT_MAPPING,
     "meta": META_MAPPING,
     "access": ACCESS_MAPPING,
+    "clickstream": CLICKSTREAM_MAPPING,
 }

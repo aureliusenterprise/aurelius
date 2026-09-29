@@ -39,6 +39,13 @@ async def log_clickstream(request: Request):
     event = {"type": "clickstream", "user": user_of(request), "app": _clip(body.get("app")),
              "url": _clip(body.get("url")), "timestamp": body.get("timestamp") or int(time.time() * 1000)}
     clickstream_log.info(json.dumps(event))
+    a = _aurelius(request)
+    if a is not None and isinstance(event["url"], str):
+        ts = body.get("timestamp") if isinstance(body.get("timestamp"), int) else None
+        try:
+            await a.clickstream.record(event["user"], event["app"], event["url"], ts)
+        except Exception:  # noqa: BLE001 - never bother the frontend with analytics problems
+            logging.getLogger("pyatlas.aurelius").exception("could not store a clickstream event")
     return Response(status_code=204)
 
 

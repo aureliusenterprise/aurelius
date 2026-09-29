@@ -33,6 +33,7 @@ view "pyatlas-entities"      "${P}_entities"      "Atlas entities"             "
 view "pyatlas-relationships" "${P}_relationships" "Atlas relationships"        "updated"   "$(rt updated updateTime), $(rt created createTime)"
 view "pyatlas-audit"         "${P}_audit"         "Atlas entity audits"        "eventTime" "$(rt eventTime timestamp)"
 view "pyatlas-access"        "${P}_access"        "Logins (pyatlas access log)" "loginTime" "$(rt loginTime timestamp)"
+view "aurelius-clickstream"  "${P}_clickstream"   "Aurelius clickstream (page views)" "viewTime" "$(rt viewTime timestamp)"
 view "pyatlas-typedefs"      "${P}_typedefs"      "Atlas type definitions"     "updated"   "$(rt updated updateTime)"
 view "pyatlas-meta"          "${P}_meta"          "Atlas server state (admin audits, metrics, saved searches, tasks)" "updated" "$(rt updated updateTime)"
 view "pyatlas-unique"        "${P}_unique"        "Atlas unique attribute keys" "" ""
@@ -52,7 +53,7 @@ if [ -f /kibana-dashboards.ndjson ]; then
   code=$(curl -s -o /tmp/resp.json -w '%{http_code}' -X POST "$KIBANA_URL/api/saved_objects/_import?overwrite=true" \
          -H 'kbn-xsrf: pyatlas' -F file=@/tmp/dashboards.ndjson)
   if [ "$code" = "200" ] && grep -q '"success":true' /tmp/resp.json; then
-    echo "kibana-setup: dashboards imported ($KIBANA_URL/app/dashboards#/view/aurelius-activity)"
+    echo "kibana-setup: dashboards imported: $KIBANA_URL/app/dashboards#/view/aurelius-activity and #/view/aurelius-usage"
   else
     echo "kibana-setup: dashboard import failed ($code): $(cat /tmp/resp.json)"
   fi

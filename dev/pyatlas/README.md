@@ -75,6 +75,12 @@ per Keycloak session, Atlas UI form login, or Basic-auth user and day), changes 
 who changed which entity types (entity audits `atlas_audit`, now with the entity's type and name). Discover has
 the underlying events in the data views "Logins (pyatlas access log)" and "Atlas entity audits".
 
+The dashboard **Aurelius usage** (`.../app/dashboards#/view/aurelius-usage`) shows how the frontend is used and how
+people move through it, from the frontend's clickstream (every page a logged-in user opens, `atlas_clickstream`):
+page views and visits per day, the most used pages, where people go next, where visits start, time on page,
+search texts, the most viewed entities and entity types, and usage per user. A visit is a run of page views of
+one user without a pause of 30 minutes.
+
 Elasticsearch is 9.5 (Enterprise Search / App Search does not exist in 9; pyatlas answers the frontend's App Search
 queries itself). Its data lives in the volume `esdata9`: stacks started before the switch from 8.15 begin with a
 fresh Elasticsearch and re-import the sample data. The old 8.15 volume can be removed with
