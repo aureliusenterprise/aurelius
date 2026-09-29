@@ -61,9 +61,8 @@ export class KeycloakService {
 
   logout(): Promise<void> {
     // keycloak-js v22 maps redirectUri → post_logout_redirect_uri and adds id_token_hint automatically.
-    // Derive app root from current path: /<namespace>/atlas/...
-    const namespace = window.location.pathname.split('/').filter(Boolean)[0];
-    const redirectUri = `${window.location.origin}/${namespace}/atlas/`;
+    // The app root is the document's base (/<namespace>/<tenant>/atlas/, set in index.html)
+    const redirectUri = new URL('.', document.baseURI).href;
     return this.keycloakAuth.logout({ redirectUri });
   }
 

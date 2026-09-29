@@ -28,9 +28,12 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 COPY --from=frontend /src/dist/apps/atlas/browser/ /usr/local/apache2/atlas/
 COPY dev/pyatlas/reverse-proxy/httpd.conf /usr/local/apache2/conf/httpd.conf
-COPY dev/pyatlas/reverse-proxy/aurelius.conf /usr/local/apache2/conf.d/aurelius.conf
-RUN sed -i "s#^Define NS .*#Define NS ${NAMESPACE}#" /usr/local/apache2/conf.d/aurelius.conf
+COPY dev/pyatlas/reverse-proxy/aurelius.conf dev/pyatlas/reverse-proxy/kibana-tenants.conf /usr/local/apache2/conf.d/
+RUN sed -i "s#^Define NS .*#Define NS ${NAMESPACE}#" /usr/local/apache2/conf.d/aurelius.conf \
+ && mkdir -p /usr/local/apache2/tenants/oidc \
+ && echo "# tenant  Kibana API key (written by aurelius-admin)" > /usr/local/apache2/tenants/kibana-keys.txt
+# TENANTS_DIR: files of aurelius-admin (the realms as Kibana login providers, the tenants' Kibana keys)
 ENV PYATLAS_URL=http://pyatlas:21000 KEYCLOAK_URL=http://keycloak:8080 KIBANA_URL=http://kibana:5601 \
-    PUBLIC_URL=http://localhost:9090 REALM=m4i PROXY_CLIENT_ID=aurelius_proxy
-# PROXY_CLIENT_SECRET and PROXY_CRYPTO_PASSPHRASE have no defaults: they must be passed (docker-compose, .env)
+    PUBLIC_URL=http://localhost:9090 DEFAULT_TENANT=m4i TENANTS_DIR=/usr/local/apache2/tenants
+# PROXY_CRYPTO_PASSPHRASE has no default: it must be passed (docker-compose, .env)
 EXPOSE 8080

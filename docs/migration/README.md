@@ -98,6 +98,35 @@ headers, blocked Keycloak metrics, container restart/log rotation/health checks,
 glossary export. Left for phase 6: Keycloak production mode with a database and TLS (and Keycloak 26),
 Elasticsearch security, TLS and secure cookies, removing the demo users, pinned image digests, resource limits.
 
+## Multi-tenancy (29 Sep 2026)
+
+One set of containers for several tenants; plan and design decisions in the plan document "Multi-tenant Aurelius on
+pyatlas". Built:
+
+- pyatlas `tenancy.py`: tenant registry (`aurelius_platform_tenants`), a tenant context (complete `Services` with
+  prefix `aurelius_<tenant>`, own Elasticsearch API key, own download/import folders) per tenant, started on first
+  use, stopped after `PYATLAS_TENANT_IDLE_SECS`; tenant from the proxy's `X-Aurelius-Tenant` (trusted proxies only);
+  tokens only from the tenant's realm (`PYATLAS_TENANT_OIDC_ISSUERS`); a session cookie per tenant; retention for all
+  tenants; `PYATLAS_TENANCY_ENABLED=false` keeps the single-tenant behaviour (all earlier tests unchanged).
+- Logging `logctx.py`: tenant in every log line, JSON lines (`PYATLAS_LOG_FORMAT=json`), one line per API call
+  (`pyatlas.request`: tenant, user, path, status, duration).
+- `GET /api/aurelius/frontend-config` (`config.json` of the frontend) and `GET /api/aurelius/kibana-discover` (realm
+  choice of the proxy's Kibana login).
+- `aurelius-admin` (`tenant_admin.py`): `platform init`; `tenant create|list|show|suspend|resume|entra|export|delete`
+  across Keycloak (realm template, Entra ID broker and role mappers), Elasticsearch (API keys, log templates, routing
+  pipeline with enrich policies), Kibana (spaces, data views, dashboards from `kibana_objects.py`) and the proxy files.
+- Frontend: base path from the URL (`libs/core/src/index.html`), realm from `config.json` (`apps/atlas/src/main.ts`),
+  logout back to the tenant's address.
+- Proxy: pattern routes `/aurelius/<tenant>/(atlas|atlas2|lin_api|kibana)/`, old URLs to tenant `m4i`, JSON access
+  log with tenant; Kibana per tenant (`kibana-tenants.conf`).
+- Stack: Elasticsearch security on, Filebeat, jobs `aurelius-init` and `aurelius-admin`, new secrets in `.env`.
+
+Tested: 195 tests (tenancy isolation: data, searches, audits, tokens, sessions, headers, logs, retention; admin
+flows against recorded Keycloak/Elasticsearch/Kibana), and locally with Keycloak 22, the proxy and the built
+frontend: logins at two realms, cross-realm tokens rejected, per-tenant API paths, the Kibana login per realm
+(with a stand-in for Kibana). Elasticsearch security, Kibana spaces with API keys and Filebeat routing run only in
+the Docker stack.
+
 ## Elasticsearch 9
 
 The stacks run Elasticsearch and Kibana 9.5.4; pyatlas uses the Python client 9. Enterprise Search, which

@@ -19,10 +19,23 @@ from .typesystem.registry import BUSINESS_METADATA, CLASSIFICATION, ENTITY, RELA
 START = int(time.time() * 1000)
 
 
+async def apply_retention(store, settings: Settings) -> dict:
+    """Delete logins and page views older than their retention period (personal data)."""
+    now = int(time.time() * 1000)
+    out = {}
+    for index, days in ((store.access, settings.access_log_retention_days),
+                        (store.index("clickstream"), settings.clickstream_retention_days)):
+        if days and days > 0:
+            out[index] = await store.delete_by_query(
+                index, {"range": {"timestamp": {"lt": now - int(days) * 86400 * 1000}}})
+    return out
+
+
 class Services:
-    def __init__(self, es_client, settings: Settings):
+    def __init__(self, es_client, settings: Settings, tenant: Optional[str] = None):
         from .typesystem.typedef_store import TypeDefStore
         self.settings = settings
+        self.tenant = tenant          # None = single-tenant installation
         self.store = EsStore(es_client, settings)
         self.typedefs = TypeDefStore(self.store, settings.typedef_cache_check_secs)
         from .authz import AuthzService, build_authorizer
@@ -56,7 +69,7 @@ class Services:
                                             settings.aurelius_rebuild_max_delay_secs,
                                             settings.aurelius_gov_rules_dir or None)
 
-    async def start(self) -> None:
+    async def start(self, retention: bool = True) -> None:
         await self.store.bootstrap()
         await self.typedefs.load()
         if self.settings.load_models:
@@ -72,19 +85,12 @@ class Services:
             if not self.aurelius.last_rebuild:
                 await self.aurelius.rebuild()
         self.metrics_stats.start_scheduler()
-        import asyncio
-        self._retention_task = asyncio.get_running_loop().create_task(self._retention_loop())
+        if retention:        # multi-tenant: the tenant manager runs retention for all tenants
+            import asyncio
+            self._retention_task = asyncio.get_running_loop().create_task(self._retention_loop())
 
     async def apply_retention(self) -> dict:
-        """Delete logins and page views older than their retention period (personal data)."""
-        now = int(time.time() * 1000)
-        out = {}
-        for index, days in ((self.store.access, self.settings.access_log_retention_days),
-                            (self.store.index("clickstream"), self.settings.clickstream_retention_days)):
-            if days and days > 0:
-                out[index] = await self.store.delete_by_query(
-                    index, {"range": {"timestamp": {"lt": now - int(days) * 86400 * 1000}}})
-        return out
+        return await apply_retention(self.store, self.settings)
 
     async def _retention_loop(self) -> None:
         import asyncio

@@ -1,46 +1,76 @@
-# Aurelius on pyatlas (phase 1): reverse proxy with the Angular frontend, Keycloak, pyatlas, Elasticsearch.
+# Aurelius on pyatlas, one set of containers for several tenants (organisations): reverse proxy with the Angular
+# frontend, Keycloak (a realm per tenant), pyatlas (a tenant context per tenant), Elasticsearch with security (an API
+# key per tenant), Kibana (a space per tenant) and the log shipper (log lines routed to the tenant's data streams).
 #   docker compose -f dev/pyatlas/docker-compose.yml up --build        (or start.bat in this folder)
-# Frontend: http://localhost:9090/aurelius/atlas/   users atlas / steward / scientist (password = user name,
-#           change with AURELIUS_ATLAS_PASSWORD, AURELIUS_STEWARD_PASSWORD, AURELIUS_SCIENTIST_PASSWORD on first start)
+#
+# Tenant m4i (the former single-tenant installation, with the sample data) is created at the first start:
+#   Frontend:  http://localhost:9090/aurelius/m4i/atlas/    (old address http://localhost:9090/aurelius/atlas/ redirects)
+#              users atlas / steward / scientist (password = user name unless set on the first start)
+#   Kibana:    http://localhost:9090/aurelius/m4i/kibana/   (users of the tenant's realm with ROLE_ADMIN)
+#   pyatlas:   http://localhost:9090/aurelius/m4i/atlas2/   (Atlas UIs, Swagger at .../atlas2/api/docs)
+# More tenants:
+#   docker compose -f dev/pyatlas/docker-compose.yml run --rm aurelius-admin tenant create acme --name "ACME" \
+#       --admin-user anna --admin-email anna@acme.example          -> http://localhost:9090/aurelius/acme/atlas/
+#   ... tenant list | suspend acme | resume acme | export acme --out /tenants/acme.zip | delete acme --yes
+#   ... tenant entra acme --directory-id <Entra tenant id> --client-id <app id> --client-secret <secret>
+# Operators: Kibana space "platform" with all tenants: http://localhost:9090/aurelius/platform/kibana/ (realm
+#   "platform", user operator / AURELIUS_OPERATOR_PASSWORD from .env)
 # Keycloak admin console: http://localhost:9090/aurelius/auth/admin/   (KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD)
-# pyatlas directly (Atlas UIs, Swagger): http://localhost:9090/aurelius/atlas2/   (the same Keycloak users)
-# Secrets: start.bat / init-env.sh write random ones to .env on the first start (KEYCLOAK_ADMIN_PASSWORD,
-# PYATLAS_SESSION_SECRET, AURELIUS_PROXY_CLIENT_SECRET, AURELIUS_PROXY_CRYPTO_PASSPHRASE); compose refuses to
-# start without them.
-# Kibana: http://localhost:9090/aurelius/kibana/   (Keycloak login, ROLE_ADMIN only - user atlas; data views for the
-#         Atlas and Aurelius indices are created at start)
-# Everything is reached through http://localhost:9090; to use another host name set AURELIUS_PUBLIC_URL
-# (e.g. https://aurelius.example.com) - it must be the URL the browser uses.
+# Secrets: start.bat / init-env.sh write random ones to .env on the first start; compose refuses to start without.
+# Everything is reached through http://localhost:9090; for another host name set AURELIUS_PUBLIC_URL (the URL the
+# browser uses).
 name: aurelius-pyatlas
 
 x-public-url: &public ${AURELIUS_PUBLIC_URL:-http://localhost:9090}
-# container logs are rotated (default json-file driver grows without limit)
+# container logs are rotated (default json-file driver grows without limit); the log shipper reads these files
 x-logging: &logging
   driver: json-file
   options:
     max-size: "10m"
     max-file: "5"
+# settings of the tenant administration (one-off jobs aurelius-init and aurelius-admin)
+x-admin-env: &admin-env
+  AURELIUS_PUBLIC_URL: *public
+  AURELIUS_NS: aurelius
+  KEYCLOAK_URL: http://keycloak:8080/aurelius/auth
+  KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+  KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?run start.bat or init-env.sh to create .env}
+  KEYCLOAK_THEME: m4i
+  ES_URL: http://elasticsearch:9200
+  ES_USERNAME: elastic
+  ES_PASSWORD: ${ELASTIC_PASSWORD:?run start.bat or init-env.sh to create .env (new secrets were added)}
+  KIBANA_URL: http://kibana:5601/aurelius/kibana
+  TENANTS_DIR: /tenants
+  KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:?run start.bat or init-env.sh}
+  PYATLAS_ES_PASSWORD: ${PYATLAS_ES_PASSWORD:?run start.bat or init-env.sh}
+  FILEBEAT_PASSWORD: ${FILEBEAT_PASSWORD:?run start.bat or init-env.sh}
+  AURELIUS_OPERATOR_PASSWORD: ${AURELIUS_OPERATOR_PASSWORD:?run start.bat or init-env.sh}
+  LOG_RETENTION_DAYS: ${LOG_RETENTION_DAYS:-180}
 
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:9.5.4
     environment:
       - discovery.type=single-node
-      - xpack.security.enabled=false
+      # security on: every tenant reaches only its own indices with its own API key
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:?run start.bat or init-env.sh to create .env (new secrets were added)}
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
     volumes:
       - esdata9:/usr/share/elasticsearch/data
-    # without security: reachable from this machine only (Kibana and pyatlas use the internal network)
     ports:
       - "127.0.0.1:9200:9200"
     restart: unless-stopped
     logging: *logging
     healthcheck:
-      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -qE '\"status\":\"(green|yellow)\"'"]
+      test: ["CMD-SHELL", "curl -s -u \"elastic:$${ELASTIC_PASSWORD}\" http://localhost:9200/_cluster/health | grep -qE '\"status\":\"(green|yellow)\"'"]
       interval: 10s
       retries: 30
 
-  # Kibana behind the reverse proxy: http://localhost:9090/aurelius/kibana/ (Keycloak login, realm role ROLE_ADMIN)
+  # one Kibana, a space per tenant; reached only through the reverse proxy, which logs the user in at the tenant's
+  # realm and forwards the request with the tenant's Kibana API key
   kibana:
     image: docker.elastic.co/kibana/kibana:9.5.4
     depends_on:
@@ -48,26 +78,17 @@ services:
         condition: service_healthy
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_SYSTEM_PASSWORD:?run start.bat or init-env.sh}
+      - XPACK_SECURITY_ENCRYPTIONKEY=${KIBANA_ENCRYPTION_KEY:?run start.bat or init-env.sh}
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${KIBANA_ENCRYPTION_KEY:?run start.bat or init-env.sh}
+      - XPACK_REPORTING_ENCRYPTIONKEY=${KIBANA_ENCRYPTION_KEY:?run start.bat or init-env.sh}
       - TELEMETRY_OPTIN=false
       - SERVER_BASEPATH=/aurelius/kibana
       - SERVER_REWRITEBASEPATH=true
       - SERVER_PUBLICBASEURL=${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/kibana
     restart: unless-stopped
     logging: *logging
-
-  # one-off job: Kibana data views for the pyatlas and Aurelius indices (backend/pyatlas/docker/kibana-setup.sh)
-  kibana-setup:
-    image: curlimages/curl:8.10.1
-    depends_on:
-      - kibana
-    environment:
-      - KIBANA_URL=http://kibana:5601/aurelius/kibana
-      - INDEX_PREFIX=atlas
-    volumes:
-      - ../../backend/pyatlas/docker/kibana-setup.sh:/kibana-setup.sh:ro
-      - ../../backend/pyatlas/docker/kibana-dashboards.ndjson:/kibana-dashboards.ndjson:ro
-    entrypoint: ["sh", "-c", "tr -d '\\r' < /kibana-setup.sh | sh"]
-    restart: "no"
 
   keycloak:
     build:
@@ -85,7 +106,10 @@ services:
       KC_HOSTNAME_ADMIN_URL: ${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/auth
       KC_PROXY: edge
       KC_HEALTH_ENABLED: "true"
-      # read by the realm file on its first import
+      # JSON log lines; login events (also successful ones) are logged for the tenant's Kibana
+      KC_LOG_CONSOLE_OUTPUT: json
+      KC_SPI_EVENTS_LISTENER_JBOSS_LOGGING_SUCCESS_LEVEL: info
+      # read by the realm file of tenant m4i on its first import
       AURELIUS_PUBLIC_URL: *public
       AURELIUS_ATLAS_PASSWORD: ${AURELIUS_ATLAS_PASSWORD:-atlas}
       AURELIUS_STEWARD_PASSWORD: ${AURELIUS_STEWARD_PASSWORD:-steward}
@@ -100,7 +124,7 @@ services:
     restart: unless-stopped
     logging: *logging
 
-  # one-off job: the confidential client the reverse proxy uses for the Kibana login (idempotent)
+  # one-off job: replaces a default Keycloak admin password (idempotent)
   keycloak-init:
     build:
       context: ../..
@@ -115,42 +139,91 @@ services:
       KEYCLOAK_URL: http://keycloak:8080/aurelius/auth
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?run start.bat or init-env.sh to create .env}
-      PROXY_CLIENT_SECRET: ${AURELIUS_PROXY_CLIENT_SECRET:?run start.bat or init-env.sh to create .env}
-      PUBLIC_URL: *public
     volumes:
       - ./keycloak/ensure-proxy-client.sh:/ensure-proxy-client.sh:ro
     restart: "no"
 
-  pyatlas:
+  # one-off job at every start (idempotent): platform (tenant registry, Elasticsearch users, log routing, operators'
+  # realm and Kibana space) and tenant m4i (the indices of the former single-tenant installation, atlas_*, are
+  # copied once to aurelius_m4i_*)
+  aurelius-init:
+    image: pyatlas:local
+    pull_policy: never
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      keycloak-init:
+        condition: service_completed_successfully
+      kibana:
+        condition: service_started
+      pyatlas-image:
+        condition: service_completed_successfully
+    user: root
+    entrypoint: ["sh", "-c"]
+    command:
+      - >-
+        python -m pyatlas.tenant_admin platform init &&
+        python -m pyatlas.tenant_admin tenant create m4i --name "${AURELIUS_DEFAULT_TENANT_NAME:-M4I}"
+        --legacy-urls --migrate-from atlas
+    environment: *admin-env
+    volumes:
+      - tenants:/tenants
+    restart: "no"
+    logging: *logging
+
+  # tenant administration: docker compose run --rm aurelius-admin tenant ...
+  aurelius-admin:
+    image: pyatlas:local
+    pull_policy: never
+    profiles: ["tools"]
+    user: root
+    entrypoint: ["python", "-m", "pyatlas.tenant_admin"]
+    environment: *admin-env
+    volumes:
+      - tenants:/tenants
+      - ../../backend/m4i-atlas-post-install/data:/aurelius-data:ro
+
+  # builds the pyatlas image once for pyatlas, aurelius-init and aurelius-admin
+  pyatlas-image:
     build:
       context: ../..
       dockerfile: backend/pyatlas/Dockerfile
     image: pyatlas:local
     pull_policy: build
+    entrypoint: ["true"]
+    restart: "no"
+
+  pyatlas:
+    image: pyatlas:local
+    pull_policy: never
     depends_on:
-      elasticsearch:
-        condition: service_healthy
+      aurelius-init:
+        condition: service_completed_successfully
     environment:
+      # platform credentials: read the tenant registry only; every tenant context uses its own API key
       - PYATLAS_ES_HOSTS=http://elasticsearch:9200
+      - PYATLAS_ES_USERNAME=aurelius_pyatlas
+      - PYATLAS_ES_PASSWORD=${PYATLAS_ES_PASSWORD:?run start.bat or init-env.sh}
+      - PYATLAS_TENANCY_ENABLED=true
+      - PYATLAS_TENANT_REQUIRE_ES_KEY=true
+      # requests without tenant (old URLs of scripts) belong to m4i
+      - PYATLAS_TENANT_DEFAULT=m4i
       - PYATLAS_SESSION_SECRET=${PYATLAS_SESSION_SECRET:?run start.bat or init-env.sh to create .env}
-      # only Keycloak users (the image's users file with admin/admin is not used); scripts log in with a Keycloak
-      # user (Basic auth, checked by Keycloak) or a Keycloak token
-      - PYATLAS_FILE_USERS_ENABLED=false
       # tokens of the frontend's client only (add the clients of service accounts, comma separated)
       - PYATLAS_OIDC_CLIENTS=${PYATLAS_OIDC_CLIENTS:-m4i_atlas}
-      # the reverse proxy in the compose network: its X-Forwarded-For gives the browser's address
+      # the reverse proxy in the compose network: tenant header and X-Forwarded-For only from there
       - PYATLAS_TRUSTED_PROXIES=172.16.0.0/12,10.0.0.0/8,192.168.0.0/16
-      # Keycloak tokens of the frontend: the issuer is the public URL, the keys are fetched inside the network
+      # a token is accepted only from the realm of the tenant in the URL; keys fetched inside the network
       - PYATLAS_OIDC_ENABLED=true
-      - PYATLAS_OIDC_ISSUERS=${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/auth/realms/m4i
-      - PYATLAS_OIDC_JWKS_URL=http://keycloak:8080/aurelius/auth/realms/m4i/protocol/openid-connect/certs
-      # Keycloak users can also log in to the Atlas UIs at /aurelius/atlas2/ (password checked by Keycloak)
+      - PYATLAS_TENANT_OIDC_ISSUERS=${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/auth/realms/{tenant}
+      - PYATLAS_TENANT_OIDC_JWKS_URL=http://keycloak:8080/aurelius/auth/realms/{tenant}/protocol/openid-connect/certs
       - PYATLAS_OIDC_PASSWORD_LOGIN=true
-      # the Aurelius sample data on the first start (set PYATLAS_IMPORT_ON_START= to start empty)
+      - PYATLAS_FRONTEND_KEYCLOAK_URL=/aurelius/auth
+      # one JSON object per log line, with the tenant (routed by the log shipper)
+      - PYATLAS_LOG_FORMAT=json
+      # sample data and quality results for tenant m4i on its first start (PYATLAS_IMPORT_ON_START= to start empty)
       - PYATLAS_IMPORT_ON_START=${PYATLAS_IMPORT_ON_START-/aurelius-data/sample_data.zip}
       - PYATLAS_IMPORT_ON_START_MODE=once
-      # sample data quality results (the golden file of the Aurelius post-install job); governance quality is
-      # computed by pyatlas; real results come from the quality tooling via POST /api/aurelius/quality/results
       - PYATLAS_AURELIUS_QUALITY_SEED=${PYATLAS_AURELIUS_QUALITY_SEED-/aurelius-data/atlas-dev-quality.json}
     volumes:
       - ../../backend/m4i-atlas-post-install/data:/aurelius-data:ro
@@ -168,21 +241,51 @@ services:
     image: aurelius-reverse-proxy:local
     pull_policy: build
     depends_on:
-      - pyatlas
-      - keycloak
-      - kibana
+      aurelius-init:
+        condition: service_completed_successfully
+      pyatlas:
+        condition: service_started
+      keycloak:
+        condition: service_started
+      kibana:
+        condition: service_started
     environment:
       - PYATLAS_URL=http://pyatlas:21000
       - KEYCLOAK_URL=http://keycloak:8080
       - KIBANA_URL=http://kibana:5601
       - PUBLIC_URL=${AURELIUS_PUBLIC_URL:-http://localhost:9090}
-      - PROXY_CLIENT_SECRET=${AURELIUS_PROXY_CLIENT_SECRET:?run start.bat or init-env.sh to create .env}
+      - DEFAULT_TENANT=m4i
+      - TENANTS_DIR=/usr/local/apache2/tenants
       - PROXY_CRYPTO_PASSPHRASE=${AURELIUS_PROXY_CRYPTO_PASSPHRASE:?run start.bat or init-env.sh to create .env}
+    volumes:
+      # written by aurelius-admin: the realms as login providers of Kibana, the tenants' Kibana keys
+      - tenants:/usr/local/apache2/tenants:ro
     ports:
       - "9090:8080"            # browser port 9090 -> proxy port 8080 in the container
+    restart: unless-stopped
+    logging: *logging
+
+  # log shipper: reads the container logs of pyatlas, proxy and Keycloak; Elasticsearch routes every line to the data
+  # stream of its tenant (pipeline aurelius-logs: logs-aurelius.<pyatlas|proxy|keycloak>-<tenant>)
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:9.5.4
+    depends_on:
+      aurelius-init:
+        condition: service_completed_successfully
+    user: root
+    command: ["filebeat", "-e", "--strict.perms=false"]
+    environment:
+      - FILEBEAT_PASSWORD=${FILEBEAT_PASSWORD:?run start.bat or init-env.sh}
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - filebeat-data:/usr/share/filebeat/data
     restart: unless-stopped
     logging: *logging
 
 volumes:
   esdata9:
   keycloak-data:
+  tenants:
+  filebeat-data:

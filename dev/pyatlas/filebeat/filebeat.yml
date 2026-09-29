@@ -1,0 +1,61 @@
+# Log shipper of Aurelius: the container logs of pyatlas, the reverse proxy and Keycloak go to Elasticsearch, where
+# the ingest pipeline "aurelius-logs" (backend/pyatlas/pyatlas/tenant_admin.py) checks the tenant of every line
+# against the tenant registry and routes it to logs-aurelius.<pyatlas|proxy|keycloak>-<tenant>; lines without a
+# known tenant go to logs-aurelius.*-platform (operators only).
+filebeat.inputs:
+  - type: filestream
+    id: aurelius-containers
+    paths:
+      - /var/lib/docker/containers/*/*.log
+    parsers:
+      - container:
+          stream: all
+          format: docker
+    prospector.scanner.symlinks: true
+
+processors:
+  - add_docker_metadata:
+      host: "unix:///var/run/docker.sock"
+  # only this stack's pyatlas, proxy and Keycloak
+  - drop_event:
+      when:
+        not:
+          and:
+            - equals:
+                container.labels.com_docker_compose_project: "aurelius-pyatlas"
+            - or:
+                - equals:
+                    container.labels.com_docker_compose_service: "pyatlas"
+                - equals:
+                    container.labels.com_docker_compose_service: "reverse-proxy"
+                - equals:
+                    container.labels.com_docker_compose_service: "keycloak"
+  - copy_fields:
+      fields:
+        - from: container.labels.com_docker_compose_service
+          to: aurelius.service
+      fail_on_error: false
+      ignore_missing: true
+  # pyatlas, proxy and Keycloak write one JSON object per line
+  - decode_json_fields:
+      fields: ["message"]
+      target: ""
+      overwrite_keys: true
+      expand_keys: true
+      add_error_key: true
+  - drop_fields:
+      fields: ["container.labels", "agent", "ecs", "input", "log.offset", "log.file", "host"]
+      ignore_missing: true
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  username: "aurelius_filebeat"
+  password: "${FILEBEAT_PASSWORD}"
+  # a data stream every line passes; the pipeline reroutes it to the tenant's data stream
+  index: "logs-aurelius.unrouted-platform"
+  pipeline: "aurelius-logs"
+
+setup.template.enabled: false
+setup.ilm.enabled: false
+logging.level: warning
+logging.metrics.enabled: false

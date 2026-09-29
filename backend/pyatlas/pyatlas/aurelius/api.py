@@ -31,6 +31,54 @@ def _clip(v: Any) -> Any:
     return json.dumps(v, default=str)[:_MAX_FIELD]
 
 
+@router.get("/frontend-config")
+async def frontend_config(request: Request):
+    """``config.json`` of the frontend (served by the proxy as ``/<ns>/<tenant>/atlas/config.json``): the Keycloak
+    realm and client of the request's tenant, so one frontend build serves every tenant.  Public (needed before
+    the login); tells nothing beyond what the login page shows."""
+    s = request.app.state.settings
+    tenant = getattr(request.state, "tenant", None)
+    realm = (tenant.record.get("realm") or tenant.id) if tenant is not None else s.frontend_realm
+    body = {"keycloak": {"url": s.frontend_keycloak_url, "realm": realm, "clientId": s.frontend_client_id}}
+    if tenant is not None:
+        body["tenant"] = {"id": tenant.id, "name": tenant.name}
+    return JSONResponse(body, headers={"Cache-Control": "no-cache"})
+
+
+@router.get("/kibana-discover")
+async def kibana_discover(request: Request, oidc_callback: str = "", target_link_uri: str = "",
+                          method: str = "get", x_csrf: str = ""):
+    """Discovery page of the proxy's Kibana login (mod_auth_openidc ``OIDCDiscoverURL``): chooses the Keycloak
+    realm of the tenant in ``target_link_uri`` (``/<ns>/kibana/s/<tenant>/...`` or ``/<ns>/<tenant>/kibana/``) and
+    sends the browser back to the callback with that realm's issuer.  Answers only relative redirects to the
+    proxy's own callback path, so it cannot be used to send users elsewhere."""
+    import re
+    from urllib.parse import urlencode, urlsplit
+    tenants = request.app.state.tenants
+    s = request.app.state.settings
+    target = urlsplit(target_link_uri or "")
+    callback = urlsplit(oidc_callback or "")
+    if tenants is None or not callback.path.endswith("/kibana-oidc/callback") or ".." in callback.path:
+        return JSONResponse({"errorMessage": "bad request"}, status_code=400)
+    if callback.netloc and target.netloc and callback.netloc != target.netloc:
+        return JSONResponse({"errorMessage": "bad request"}, status_code=400)
+    m = re.search(r"/kibana/s/([a-z0-9-]+)(?:/|$)", target.path) or re.search(r"/([a-z0-9-]+)/kibana(?:/|$)",
+                                                                                 target.path)
+    rec = await tenants.registry.get(m.group(1)) if m else None
+    if m and m.group(1) == s.tenant_platform_realm:           # the operators' space
+        rec = {"id": m.group(1), "realm": m.group(1), "status": "active"}
+    if rec is None or rec.get("status") != "active":
+        return JSONResponse({"errorMessage": "Open Kibana through the address of your organisation: "
+                                             "/<namespace>/<organisation>/kibana/"}, status_code=404)
+    realm = rec.get("realm") or rec["id"]
+    issuers = [x.strip() for x in (s.tenant_oidc_issuers or "").split(",") if x.strip()]
+    if not issuers:
+        return JSONResponse({"errorMessage": "no issuer configured"}, status_code=500)
+    query = urlencode({"iss": issuers[0].format(tenant=realm, realm=realm), "target_link_uri": target_link_uri,
+                       "method": method, "x_csrf": x_csrf})
+    return Response(status_code=302, headers={"Location": f"{callback.path}?{query}", "Cache-Control": "no-store"})
+
+
 @router.post("/repository/log")
 async def log_clickstream(request: Request):
     """Frontend clickstream event (``libs/repository`` ``logClickstreamEvent``: app, timestamp, url, userid).

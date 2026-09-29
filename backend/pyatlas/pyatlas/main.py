@@ -18,11 +18,14 @@ from .oidc import from_settings as oidc_from_settings
 from .oidc import password_authenticator_from_settings
 from .config import Settings, get_settings
 from .errors import AtlasBaseException
+from .logctx import TenantFilter
+from .logctx import configure as configure_logging
 from .services import Services
 from .store.es import make_client
 from .web import admin_api, entity_api, glossary_api, other_api, types_api
 
 log = logging.getLogger("pyatlas")
+request_log = logging.getLogger("pyatlas.request")
 
 # secrets that were shipped in earlier versions / examples and must never be used
 KNOWN_DEFAULT_SECRETS = {"change-me-please-change-me-please", "please-change-this-secret-value"}
@@ -127,10 +130,17 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
-        await app.state.services.start()
-        log.info("pyatlas started: %d types loaded", len(app.state.services.typedefs.registry.defs))
+        if app.state.tenants is not None:
+            await app.state.tenants.start()
+            log.info("pyatlas started for several tenants (loaded: %s)", ", ".join(app.state.tenants.loaded) or "-")
+        else:
+            await app.state.services.start()
+            log.info("pyatlas started: %d types loaded", len(app.state.services.typedefs.registry.defs))
         yield
-        await app.state.services.stop()
+        if app.state.tenants is not None:
+            await app.state.tenants.stop()
+        else:
+            await app.state.services.stop()
         if es_client is None:
             await client.close()
 
@@ -139,7 +149,13 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
                   docs_url="/api/docs", openapi_url="/api/openapi.json", redoc_url=None)
     app.state.settings = settings
     app.state.es = client
-    app.state.services = Services(client, settings)
+    app.state.tenants = None
+    if settings.tenancy_enabled:
+        from .tenancy import TenantManager
+        app.state.tenants = TenantManager(client, settings)
+        app.state.services = None           # every request gets the services of its tenant (request.state)
+    else:
+        app.state.services = Services(client, settings)
 
     @app.exception_handler(AtlasBaseException)
     async def atlas_error(request: Request, exc: AtlasBaseException):
@@ -158,26 +174,40 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
         return JSONResponse({"errorCode": "ATLAS-500-00-001", "errorMessage": f"Internal server error (id {err_id})"},
                             status_code=500)
 
+    # one line per API call with tenant, user, status and duration (Kibana "Aurelius health"); DEBUG in text mode,
+    # where uvicorn's access log already shows the requests
+    request_log_level = logging.INFO if (settings.log_format or "").lower() == "json" else logging.DEBUG
+
     @app.middleware("http")
     async def request_timing(request: Request, call_next):
         import time as _t
         path = request.url.path
         if not path.startswith("/api/"):
             return await call_next(request)
-        services = app.state.services
+        services = getattr(request.state, "services", None) or app.state.services
+        if services is None:
+            return await call_next(request)
         sid = None
         if path.startswith("/api/atlas/v2/search/"):
             user = getattr(getattr(request.state, "user", None), "name", None) or "anonymous"
             sid = services.active_searches.register(user)
         t0 = _t.perf_counter()
+        status = 500
         try:
-            return await call_next(request)
+            response = await call_next(request)
+            status = response.status_code
+            return response
         finally:
             if sid:
                 services.active_searches.unregister(sid)
             route = request.scope.get("route")
             name = getattr(route, "name", None) or path
-            services.request_metrics.record(name, (_t.perf_counter() - t0) * 1000)
+            ms = (_t.perf_counter() - t0) * 1000
+            services.request_metrics.record(name, ms)
+            request_log.log(request_log_level, "%s %s %s %.0fms", request.method, path, status, ms,
+                             extra={"method": request.method, "path": path, "status": status,
+                                    "duration_ms": round(ms, 1),
+                                    "user": getattr(getattr(request.state, "user", None), "name", None)})
 
     _write_paths = ("/api/atlas/v2/entity", "/api/atlas/v2/relationship", "/api/atlas/entities", "/api/lin_api/")
 
@@ -186,7 +216,8 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
         # the frontend opens the details page right after saving: bring the Aurelius documents up to date
         # before answering an entity/relationship change (bounded; the debounced rebuild catches up otherwise)
         response = await call_next(request)
-        a = app.state.services.aurelius
+        services = getattr(request.state, "services", None) or app.state.services
+        a = services.aurelius if services is not None else None
         timeout = settings.aurelius_sync_write_timeout_secs
         if a is not None and timeout > 0 and request.method in ("POST", "PUT", "DELETE") \
                 and request.url.path.startswith(_write_paths) and response.status_code < 400:
@@ -202,9 +233,10 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
     @app.middleware("http")
     async def typedef_freshness(request: Request, call_next):
         # pick up typedef changes made through other pyatlas nodes (checked at most every few seconds)
-        if request.url.path.startswith("/api/"):
+        services = getattr(request.state, "services", None) or app.state.services
+        if services is not None and request.url.path.startswith("/api/"):
             try:
-                await app.state.services.typedefs.ensure_fresh()
+                await services.typedefs.ensure_fresh()
             except Exception:  # pragma: no cover - never fail a request because of this check
                 log.debug("typedef freshness check failed", exc_info=True)
         return await call_next(request)
@@ -214,10 +246,13 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
               aurelius_api.router, aurelius_api.lineage_router):
         app.include_router(r)
 
-    authenticators = [FileAuthenticator(settings.users_file)] if settings.file_users_enabled else []
-    if not settings.file_users_enabled:
+    file_users = settings.file_users_enabled and not settings.tenancy_enabled
+    authenticators = [FileAuthenticator(settings.users_file)] if file_users else []
+    if settings.tenancy_enabled:
+        log.info("multi-tenant: users log in through the Keycloak realm of their tenant (users file not used)")
+    elif not settings.file_users_enabled:
         log.info("users file disabled (PYATLAS_FILE_USERS_ENABLED=false): only Keycloak users can log in")
-    oidc = oidc_from_settings(settings)
+    oidc = oidc_from_settings(settings) if not settings.tenancy_enabled else None
     keycloak_login = password_authenticator_from_settings(settings, oidc)
     if keycloak_login is not None:
         authenticators.append(keycloak_login)
@@ -234,9 +269,16 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
         log.warning("PYATLAS_SESSION_SECRET is not set: using a random key (UI sessions end on restart and do not "
                     "work across several pyatlas nodes)")
         secret = secrets.token_urlsafe(48)
-    app.add_middleware(SessionMiddleware, secret_key=secret, session_cookie="ATLASSESSIONID",
-                       same_site="lax", https_only=settings.session_cookie_secure,
-                       max_age=settings.session_max_age_secs if settings.session_max_age_secs > 0 else None)
+    session_kwargs = dict(secret_key=secret, same_site="lax", https_only=settings.session_cookie_secure,
+                          max_age=settings.session_max_age_secs if settings.session_max_age_secs > 0 else None)
+    if settings.tenancy_enabled:
+        from .tenancy import TenantMiddleware, TenantSessions
+        app.add_middleware(TenantSessions, **session_kwargs)
+        # outside the sessions: the tenant decides which session cookie is read
+        app.add_middleware(TenantMiddleware, manager=app.state.tenants, header=settings.tenant_header,
+                           trusted_proxies=settings.trusted_proxies)
+    else:
+        app.add_middleware(SessionMiddleware, session_cookie="ATLASSESSIONID", **session_kwargs)
     if settings.security_headers:
         app.add_middleware(SecurityHeaders, hsts=settings.hsts)
     app.add_middleware(BodySizeLimit, max_bytes=settings.max_upload_mb * 1024 * 1024)
@@ -257,9 +299,9 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
 
 
 def app_factory() -> FastAPI:  # for `uvicorn pyatlas.main:app_factory --factory`
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    logging.getLogger("elastic_transport").setLevel(logging.WARNING)
     settings = get_settings()
+    if not any(isinstance(f, TenantFilter) for h in logging.getLogger().handlers for f in h.filters):
+        configure_logging(settings.log_format)
     if settings.in_memory:
         from .store.memory import FakeElasticsearch
         log.warning("running with the IN-MEMORY store: data is lost on restart (demo/development only)")

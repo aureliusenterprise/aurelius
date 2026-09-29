@@ -19,9 +19,11 @@ def main() -> None:
     parser.add_argument("--import-zip", action="append", default=[], metavar="ZIP",
                         help="import an Atlas export ZIP at start-up (once; may be repeated)")
     args = parser.parse_args()
-    logging.basicConfig(level=args.log_level.upper(), format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    if args.log_level.lower() != "debug":
-        logging.getLogger("elastic_transport").setLevel(logging.WARNING)   # one line per ES request otherwise
+    from .logctx import configure
+    fmt = os.environ.get("PYATLAS_LOG_FORMAT", "text")
+    configure(fmt, args.log_level.upper())
+    if args.log_level.lower() == "debug":
+        logging.getLogger("elastic_transport").setLevel(logging.DEBUG)
     if args.in_memory:
         os.environ["PYATLAS_IN_MEMORY"] = "true"
     if args.import_zip:
@@ -30,7 +32,9 @@ def main() -> None:
     # proxy_headers off: uvicorn would take the client address from X-Forwarded-For of any local peer; pyatlas
     # evaluates X-Forwarded-For itself, only from PYATLAS_TRUSTED_PROXIES (pyatlas/auth.py client_ip)
     uvicorn.run("pyatlas.main:app_factory", factory=True, host=args.host, port=args.port, reload=args.reload,
-                log_level=args.log_level, proxy_headers=False)
+                log_level=args.log_level, proxy_headers=False, log_config=None,
+                # pyatlas logs every API request itself, with tenant and user (pyatlas.request)
+                access_log=fmt.lower() != "json")
 
 
 if __name__ == "__main__":

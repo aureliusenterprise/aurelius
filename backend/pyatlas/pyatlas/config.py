@@ -148,6 +148,38 @@ class Settings(BaseSettings):
     # page views stored per user and minute at most (the frontend sends one per navigation)
     clickstream_max_per_minute: int = 120
 
+    # --- Multi-tenancy (pyatlas/tenancy.py) -------------------------------------
+    # one pyatlas for several tenants: data, realm and background jobs per tenant
+    tenancy_enabled: bool = False
+    # header with the tenant id, set by the reverse proxy from the URL path; only believed from PYATLAS_TRUSTED_PROXIES
+    tenant_header: str = "X-Aurelius-Tenant"
+    # tenant of requests without the header (scripts inside the network, old URLs); empty = such requests get 404
+    tenant_default: str = ""
+    # tenants registered at start-up when missing (comma separated), e.g. "m4i" for a fresh installation
+    tenant_bootstrap: str = ""
+    # index names of a tenant: <prefix>_entities, ...; the registry lives in <platform prefix>_tenants
+    tenant_index_prefix: str = "aurelius_{tenant}"
+    tenant_platform_prefix: str = "aurelius_platform"
+    # Keycloak realm of the platform operators (their Kibana space "platform" shows all tenants); not a tenant
+    tenant_platform_realm: str = "platform"
+    # accepted token issuers of a tenant ({tenant} = its realm), comma separated, and where its keys are fetched
+    tenant_oidc_issuers: str = ""
+    tenant_oidc_jwks_url: str = ""
+    # contexts without requests for this long are stopped (0 = keep all loaded); the default tenant stays
+    tenant_idle_secs: int = 1800
+    # true = a tenant without its own Elasticsearch API key is refused (production: Elasticsearch security on)
+    tenant_require_es_key: bool = False
+
+    # config.json of the Aurelius frontend: Keycloak URL as the browser sees it, client id, realm (single tenant;
+    # multi-tenant: the realm of the tenant)
+    frontend_keycloak_url: str = "/aurelius/auth"
+    frontend_client_id: str = "m4i_atlas"
+    frontend_realm: str = "m4i"
+
+    # --- Logging -------------------------------------------------------------
+    # "text" or "json" (one JSON object per line with the tenant, for the log shipper)
+    log_format: str = "text"
+
     # --- Behaviour -----------------------------------------------------------
     search_max_limit: int = 10000
     search_default_limit: int = 100

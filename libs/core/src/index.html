@@ -4,6 +4,15 @@
     <meta charset="utf-8"/>
     <title>Models4Insight</title>
     <base href="/"/>
+    <script>
+      // Aurelius: one build for every tenant - the app lives at /<namespace>/<tenant>/atlas/ (or /<namespace>/atlas/)
+      (function () {
+        var m = window.location.pathname.match(/^(\/(?:[^/]+\/)*?atlas\/)/);
+        if (m) {
+          document.getElementsByTagName('base')[0].setAttribute('href', m[1]);
+        }
+      })();
+    </script>
     <meta http-equiv="X-UA-Compatible" content="IE=11"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="theme-color" content="#4e8ef7"/>

@@ -18,7 +18,14 @@ def user_of(request: Request) -> str:
 
 
 def svc(request: Request):
-    return request.app.state.services
+    """The services of the request's tenant context (multi-tenant) or of the installation."""
+    services = getattr(request.state, "services", None)
+    if services is not None:
+        return services
+    services = request.app.state.services
+    if services is None:        # multi-tenant, but no tenant resolved: never fall back to some tenant
+        raise AtlasBaseException(AtlasErrorCode.BAD_REQUEST, "No tenant in the request")
+    return services
 
 
 def qbool(v: Any, default: bool = False) -> bool:

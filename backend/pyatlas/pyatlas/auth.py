@@ -169,7 +169,8 @@ class LoginThrottle:
 
 
 PUBLIC_PREFIXES = ("/login.jsp", "/login.html", "/j_spring_security_check", "/css/", "/img/", "/js/",
-                   "/ieerror.html", "/api/atlas/admin/liveness", "/api/atlas/admin/readiness", "/favicon.ico")
+                   "/ieerror.html", "/api/atlas/admin/liveness", "/api/atlas/admin/readiness", "/favicon.ico",
+                   "/api/aurelius/frontend-config", "/api/aurelius/kibana-discover")
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
@@ -189,6 +190,18 @@ class AuthMiddleware(BaseHTTPMiddleware):
         self.throttle = throttle or LoginThrottle()
 
     # ------------------------------------------------------------------ helpers
+    def _auth_for(self, request: Request):
+        """(token validator, password authenticators) of the request's tenant, or of the installation."""
+        tenant = getattr(request.state, "tenant", None)
+        if tenant is None:
+            return self.oidc, self.authenticators
+        return tenant.oidc, [tenant.password_auth] if tenant.password_auth is not None else []
+
+    @staticmethod
+    def _tenant_id(request: Request) -> str:
+        tenant = getattr(request.state, "tenant", None)
+        return tenant.id if tenant is not None else ""
+
     def _basic(self, request: Request) -> Tuple[Optional[User], Optional[str]]:
         header = request.headers.get("authorization", "")
         if not header.lower().startswith("basic "):
@@ -200,7 +213,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if ":" not in raw:
             return None, None
         u, p = raw.split(":", 1)
-        return self.check(u, p, self.client_ip(request)), u
+        return self.check(u, p, self.client_ip(request), self._auth_for(request)[1], self._tenant_id(request)), u
 
     def client_ip(self, request: Request) -> str:
         """The client's address; behind a trusted proxy the last X-Forwarded-For entry (the address the proxy
@@ -211,11 +224,12 @@ class AuthMiddleware(BaseHTTPMiddleware):
             return fwd.split(",")[-1].strip() or peer
         return peer
 
-    def check(self, username: str, password: str, client: str = "") -> Optional[User]:
-        key = f"{username}|{client}"
+    def check(self, username: str, password: str, client: str = "", authenticators=None,
+              tenant: str = "") -> Optional[User]:
+        key = f"{username}|{client}|{tenant}" if tenant else f"{username}|{client}"
         if self.throttle.locked(key):
             return None
-        for a in self.authenticators:
+        for a in self.authenticators if authenticators is None else authenticators:
             user = a.authenticate(username, password)
             if user is not None:
                 self.throttle.succeeded(key)
@@ -223,8 +237,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
         self.throttle.failed(key)
         return None
 
-    def _lookup(self, username: str, source: Optional[str] = None) -> Optional[User]:
-        for a in self.authenticators:
+    def _lookup(self, username: str, source: Optional[str] = None, authenticators=None) -> Optional[User]:
+        for a in self.authenticators if authenticators is None else authenticators:
             if source is not None and getattr(a, "source", "file") != source:
                 continue
             try:
@@ -256,12 +270,16 @@ class AuthMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
         header = request.headers.get("authorization", "")
         if header[:7].lower() == "bearer ":
-            return await self._dispatch_bearer(request, call_next, header[7:].strip())
+            return await self._dispatch_bearer(request, call_next, header[7:].strip(), self._auth_for(request)[0])
         sess = request.session if "session" in request.scope else {}
         user = None
+        tenant_id = self._tenant_id(request)
+        oidc, authenticators = self._auth_for(request)
+        if sess.get("user") and sess.get("tenant", "") != tenant_id:
+            sess.clear()                             # a session belongs to the tenant it logged in to
         if sess.get("user"):
             # user removed from the users file -> session is dead; a Keycloak login is looked up in Keycloak's cache
-            user = self._lookup(sess["user"], sess.get("src", "file"))
+            user = self._lookup(sess["user"], sess.get("src", "file"), authenticators)
             if user is None:
                 sess.clear()
         if user is None:
@@ -271,23 +289,26 @@ class AuthMiddleware(BaseHTTPMiddleware):
             if user is not None and _access_log(request) is not None:
                 await _access_log(request).record(user.name, "basic", ip=self.client_ip(request), groups=user.groups)
             if user is None and basic_name is not None and path.startswith("/api/"):
+                throttle_key = f"{basic_name}|{self.client_ip(request)}" + (f"|{tenant_id}" if tenant_id else "")
                 msg = "Too many failed logins, try again later" \
-                    if self.throttle.locked(f"{basic_name}|{self.client_ip(request)}") \
+                    if self.throttle.locked(throttle_key) \
                     else "Authentication required"
                 return JSONResponse({"errorCode": "ATLAS-401-00-001", "errorMessage": msg}, status_code=401,
                                     headers={"WWW-Authenticate": 'Basic realm="atlas"'})
         if path == "/j_spring_security_check" and request.method == "POST":
             form = await request.form()
             name = str(form.get("j_username", ""))
-            if self.throttle.locked(f"{name}|{self.client_ip(request)}"):
+            if self.throttle.locked(f"{name}|{self.client_ip(request)}" + (f"|{tenant_id}" if tenant_id else "")):
                 return JSONResponse({"msgDesc": "Too many failed logins, try again later"}, status_code=401)
             import asyncio
-            user = await asyncio.to_thread(self.check, name, str(form.get("j_password", "")), self.client_ip(request))
+            user = await asyncio.to_thread(self.check, name, str(form.get("j_password", "")), self.client_ip(request),
+                                           authenticators, tenant_id)
             if user is None:
                 return JSONResponse({"msgDesc": "Invalid User credentials"}, status_code=401)
             sess.clear()                             # no session fixation: a fresh session per login
             request.session["user"] = user.name
             request.session["src"] = user.source
+            request.session["tenant"] = tenant_id
             request.session["login"] = int(time.time())
             request.session[CSRF_SESSION_KEY] = secrets.token_urlsafe(32)
             if _access_log(request) is not None:
@@ -314,15 +335,16 @@ class AuthMiddleware(BaseHTTPMiddleware):
         return response
 
 
-    async def _dispatch_bearer(self, request: Request, call_next, token: str):
-        """OIDC access token (Keycloak): no session, no CSRF check (browsers never attach it on their own)."""
+    async def _dispatch_bearer(self, request: Request, call_next, token: str, oidc):
+        """OIDC access token (Keycloak): no session, no CSRF check (browsers never attach it on their own).
+        Multi-tenant: only tokens issued by the realm of the request's tenant are accepted."""
         import asyncio
         from .oidc import InvalidToken
-        if self.oidc is None:
+        if oidc is None:
             return _bearer_error("Bearer tokens are not accepted (OIDC is not configured)")
         try:
-            claims = await asyncio.to_thread(self.oidc.validate, token)
-            user = self.oidc.user_from_claims(claims)
+            claims = await asyncio.to_thread(oidc.validate, token)
+            user = oidc.user_from_claims(claims)
         except InvalidToken as e:
             return _bearer_error(str(e))
         access = _access_log(request)
@@ -363,7 +385,7 @@ def _in_networks(address: str, networks) -> bool:
 
 
 def _access_log(request: Request):
-    services = getattr(request.app.state, "services", None)
+    services = getattr(request.state, "services", None) or getattr(request.app.state, "services", None)
     return getattr(services, "access_log", None)
 
 
