@@ -12,6 +12,7 @@ import { AttributesCardsComponent } from './attributes-cards/attributes-cards.co
 import { DatasetsCardsComponent } from './datasets-cards/datasets-cards.component';
 import { EntitiesCardsComponent } from './entities-cards/entities-cards.component';
 import { EntityDetailsComponent } from './entity-details.component';
+import { UsedByCardsComponent, UsesCardsComponent } from './usage-cards/usage-cards.component';
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
@@ -27,6 +28,13 @@ import { TranslateModule } from '@ngx-translate/core';
         AccordionModule,
         TranslateModule,
     ],
-    declarations: [AttributesCardsComponent, DatasetsCardsComponent, EntitiesCardsComponent, EntityDetailsComponent],
+    declarations: [
+        AttributesCardsComponent,
+        DatasetsCardsComponent,
+        EntitiesCardsComponent,
+        EntityDetailsComponent,
+        UsesCardsComponent,
+        UsedByCardsComponent,
+    ],
 })
 export class EntityDetailsModule {}

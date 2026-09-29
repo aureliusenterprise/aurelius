@@ -37,6 +37,26 @@
         <div class="level-item has-text-centered">
             <div>
                 <p class="heading">
+                    <a models4insightDetailsNavigationItem="#uses-entities" translate>
+                        search.details.entity.uses
+                    </a>
+                </p>
+                <p class="title">{{ usesCount$ | async }}</p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">
+                    <a models4insightDetailsNavigationItem="#used-by-entities" translate>
+                        search.details.entity.usedBy
+                    </a>
+                </p>
+                <p class="title">{{ usedByCount$ | async }}</p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">
                     <a models4insightDetailsNavigationItem="#data-quality" translate>
                         search.details.entity.dataQuality
                     </a>
@@ -79,6 +99,14 @@
     <models4insight-entities-cards></models4insight-entities-cards>
 </div>
 
+<div id="uses-entities" class="box">
+    <models4insight-uses-cards></models4insight-uses-cards>
+</div>
+
+<div id="used-by-entities" class="box">
+    <models4insight-used-by-cards></models4insight-used-by-cards>
+</div>
+
 <div id="related-datasets" class="box">
     <models4insight-datasets-cards></models4insight-datasets-cards>
 </div>
@@ -117,6 +145,12 @@
     </li>
     <li>
         <a models4insightDetailsNavigationItem="#related-entities" translate> search.details.entity.dataEntities </a>
+    </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#uses-entities" translate> search.details.entity.uses </a>
+    </li>
+    <li>
+        <a models4insightDetailsNavigationItem="#used-by-entities" translate> search.details.entity.usedBy </a>
     </li>
     <li>
         <a models4insightDetailsNavigationItem="#related-datasets" translate> search.details.entity.datasets </a>

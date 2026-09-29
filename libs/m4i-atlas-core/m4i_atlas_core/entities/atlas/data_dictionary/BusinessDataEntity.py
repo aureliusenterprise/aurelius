@@ -158,6 +158,24 @@ m4i_pentity_centity_rel_def = RelationshipDef(
     description="The relationship between the data entity to other data entities"
 )
 
+end_1_entity_usage = RelationshipEndDef(
+    type="m4i_data_entity",
+    name="uses"
+)
+end_2_entity_usage = RelationshipEndDef(
+    type="m4i_data_entity",
+    name="usedBy"
+)
+
+m4i_entity_usage_rel_def = RelationshipDef(
+    end_def1=end_1_entity_usage,
+    end_def2=end_2_entity_usage,
+    name="m4i_data_entity_usage",
+    category=TypeCategory.RELATIONSHIP,
+    type_version="1.0",
+    description="A data entity uses other data entities (many to many; the other side is usedBy)"
+)
+
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
@@ -177,6 +195,8 @@ class BusinessDataEntityAttributesDefaultsBase(Attributes):
     source: List[ObjectId] = field(default_factory=list)
     parent_entity: List[ObjectId] = field(default_factory=list)
     steward: List[ObjectId] = field(default_factory=list)
+    used_by: List[ObjectId] = field(default_factory=list)
+    uses: List[ObjectId] = field(default_factory=list)
 # END BusinessDataEntityAttributesBase
 
 
@@ -226,6 +246,7 @@ class BusinessDataEntity(BusinessDataEntityDefaultsBase, BusinessDataEntityBase,
         * Parent Entity
         * Child Entity
         * Data Domain
+        * Used and using data entities
         """
 
         references = [
@@ -235,6 +256,8 @@ class BusinessDataEntity(BusinessDataEntityDefaultsBase, BusinessDataEntityBase,
             *self.attributes.data_domain,
             *self.attributes.parent_entity,
             *self.attributes.child_entity,
+            *self.attributes.uses,
+            *self.attributes.used_by,
             *self.attributes.source
         ]
 

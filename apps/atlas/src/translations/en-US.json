@@ -282,7 +282,9 @@
                     "notification": "This entity can't be saved because one or more required fields are missing.",
                     "parentEntity": "Parent entity",
                     "typeAlias": "Type alias",
-                    "typeAliasPlaceholder": "Type alias"
+                    "typeAliasPlaceholder": "Type alias",
+                    "usedBy": "Used by",
+                    "uses": "Uses"
                 },
                 "entityPlaceholder": "Entity",
                 "field": {
@@ -527,7 +529,15 @@
                 "governanceQualityRules": "Governance Quality Rules",
                 "people": "People",
                 "properties": "Properties",
-                "unavailable": "Unavailable"
+                "unavailable": "Unavailable",
+                "usedBy": "Used by",
+                "usedByCards": {
+                    "title": "Used by"
+                },
+                "uses": "Uses",
+                "usesCards": {
+                    "title": "Uses"
+                }
             },
             "field": {
                 "attributesCards": {
@@ -675,5 +685,7 @@
     "systems": "Systems",
     "typename": "Type Name",
     "updatedAt": "Updated at",
+    "usedBy": "Used by",
+    "uses": "Uses",
     "version": "Version"
 }

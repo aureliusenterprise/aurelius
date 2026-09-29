@@ -146,6 +146,44 @@
     </div>
 
     <div class="field">
+        <label class="label" translate> search.components.editor.entity.uses </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="uses"
+                    typeName="m4i_data_entity"
+                    [rule]="rules.uses"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.uses as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" translate> search.components.editor.entity.usedBy </label>
+        <div class="grid">
+            <div class="control">
+                <models4insight-relationships-input
+                    [tags]="usedBy"
+                    typeName="m4i_data_entity"
+                    [rule]="rules.usedBy"
+                ></models4insight-relationships-input>
+            </div>
+            <ng-container *ngIf="rules.usedBy as rules">
+                <models4insight-gov-quality-display
+                    [rules]="rules"
+                    class="is-size-7"
+                ></models4insight-gov-quality-display
+            ></ng-container>
+        </div>
+    </div>
+
+    <div class="field">
         <label class="label" translate> search.components.editor.entity.dataAttributes </label>
         <div class="grid">
             <div class="control">

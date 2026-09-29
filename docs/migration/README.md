@@ -127,6 +127,14 @@ frontend: logins at two realms, cross-realm tokens rejected, per-tenant API path
 (with a stand-in for Kibana). Elasticsearch security, Kibana spaces with API keys and Filebeat routing run only in
 the Docker stack.
 
+## Data entity "uses" data entity (29 Sep 2026)
+
+New relationship `m4i_data_entity_usage` (many to many between data entities, next to the parent/child hierarchy):
+attribute `uses` (the entities this entity uses) and, on the other side, `usedBy`. Defined in m4i-atlas-core
+(`BusinessDataEntity.py`), generated into `backend/pyatlas/models/9000-Aurelius/9010-m4i_data_dictionary_model.json`
+and added to existing installations (every tenant) at the next start of pyatlas. The frontend's entity editor has the
+fields "Uses" and "Used by"; the entity details page shows both counts and cards of the related entities.
+
 ## Elasticsearch 9
 
 The stacks run Elasticsearch and Kibana 9.5.4; pyatlas uses the Python client 9. Enterprise Search, which

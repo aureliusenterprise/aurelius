@@ -47,6 +47,7 @@ data_dictionary_types_def = TypesDef(
         m4i_business_owner_entity_rel_def,
         m4i_steward_entity_rel_def,
         m4i_pentity_centity_rel_def,
+        m4i_entity_usage_rel_def,
         m4i_dataQuality_fields_rel_def,
         m4i_archimate_project_rel_def,
         m4i_business_source_rel_def,

@@ -282,7 +282,9 @@
                     "notification": "Deze entiteit kan niet worden opgeslagen omdat één of meer verplichte velden ontbreken.",
                     "parentEntity": "Bovenliggende Entiteit",
                     "typeAlias": "Type alias",
-                    "typeAliasPlaceholder": "Type alias"
+                    "typeAliasPlaceholder": "Type alias",
+                    "usedBy": "Gebruikt door",
+                    "uses": "Gebruikt"
                 },
                 "entityPlaceholder": "Entiteit",
                 "field": {
@@ -527,7 +529,15 @@
                 "governanceQualityRules": "Governance Kwaliteitsregels",
                 "people": "Personen",
                 "properties": "Eigenschappen",
-                "unavailable": "Niet van toepassing"
+                "unavailable": "Niet van toepassing",
+                "usedBy": "Gebruikt door",
+                "usedByCards": {
+                    "title": "Gebruikt door"
+                },
+                "uses": "Gebruikt",
+                "usesCards": {
+                    "title": "Gebruikt"
+                }
             },
             "field": {
                 "attributesCards": {
@@ -675,5 +685,7 @@
     "systems": "Systemen",
     "typename": "Typenaam",
     "updatedAt": "Bijgewerkt op",
+    "usedBy": "Gebruikt door",
+    "uses": "Gebruikt",
     "version": "Versie"
 }

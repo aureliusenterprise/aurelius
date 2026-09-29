@@ -1566,6 +1566,29 @@
         },
         {
             "category": "RELATIONSHIP",
+            "name": "m4i_data_entity_usage",
+            "endDef1": {
+                "name": "uses",
+                "type": "m4i_data_entity",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "endDef2": {
+                "name": "usedBy",
+                "type": "m4i_data_entity",
+                "cardinality": "SET",
+                "isContainer": false,
+                "isLegacyAttribute": false
+            },
+            "description": "A data entity uses other data entities (many to many; the other side is usedBy)",
+            "typeVersion": "1.0",
+            "propagateTags": "NONE",
+            "relationshipCategory": "ASSOCIATION",
+            "attributeDefs": []
+        },
+        {
+            "category": "RELATIONSHIP",
             "name": "m4i_data_quality_field_assignment",
             "endDef1": {
                 "name": "fields",

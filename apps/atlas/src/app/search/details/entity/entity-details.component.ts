@@ -22,6 +22,8 @@ export class EntityDetailsComponent {
   readonly dataQualityScore$: Observable<number>;
   readonly datasetCount$: Observable<number>;
   readonly propertyCount$: Observable<number>;
+  readonly usedByCount$: Observable<number>;
+  readonly usesCount$: Observable<number>;
 
   constructor(
     private readonly entityDetailsService: EntityDetailsService,
@@ -57,6 +59,17 @@ export class EntityDetailsComponent {
       'childEntity',
       'length',
     ]);
+
+    const activeCount = (related: { relationshipStatus?: string }[]) =>
+      (related ?? []).filter((r) => r?.relationshipStatus !== 'DELETED').length;
+
+    this.usesCount$ = this.entityDetailsService
+      .select(['entityDetails', 'entity', 'relationshipAttributes', 'uses'] as any)
+      .pipe(map(activeCount));
+
+    this.usedByCount$ = this.entityDetailsService
+      .select(['entityDetails', 'entity', 'relationshipAttributes', 'usedBy'] as any)
+      .pipe(map(activeCount));
 
     this.propertyCount$ = this.filteredPropertiesService.state.pipe(
       map((properties) => Object.keys(properties).length)

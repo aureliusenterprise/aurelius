@@ -53,7 +53,9 @@ function createEntityEditorForm(): UntypedFormGroup {
     dataAttributes = new UntypedFormArray([]),
     dataDomain = new UntypedFormArray([]),
     parentEntity = new UntypedFormArray([]),
-    steward = new UntypedFormArray([]);
+    steward = new UntypedFormArray([]),
+    usedBy = new UntypedFormArray([]),
+    uses = new UntypedFormArray([]);
 
   const relationshipAttributes = new UntypedFormGroup({
     attributes: dataAttributes,
@@ -62,6 +64,8 @@ function createEntityEditorForm(): UntypedFormGroup {
     dataDomain,
     parentEntity,
     steward,
+    usedBy,
+    uses,
   });
 
   return new UntypedFormGroup({
@@ -166,6 +170,15 @@ function updateEntityEditorForm(
   entityDetails.entity.relationshipAttributes.steward?.forEach((person) =>
     stewards.push(new UntypedFormControl(person))
   );
+
+  // the "uses" relationship between data entities (m4i_data_entity_usage), in both directions
+  for (const name of ['uses', 'usedBy']) {
+    const control = relationshipAttributes.get(name) as UntypedFormArray;
+    control.clear();
+    (entityDetails.entity.relationshipAttributes[name] as any[])
+      ?.filter((related) => related?.relationshipStatus !== 'DELETED')
+      .forEach((related) => control.push(new UntypedFormControl(related)));
+  }
 }
 @Component({
   selector: 'models4insight-entity-editor',
@@ -261,6 +274,14 @@ export class EntityEditorComponent {
     return this.editorFormService.form.get(
       'relationshipAttributes.parentEntity'
     );
+  }
+
+  get usedBy() {
+    return this.editorFormService.form.get('relationshipAttributes.usedBy');
+  }
+
+  get uses() {
+    return this.editorFormService.form.get('relationshipAttributes.uses');
   }
 
   get typeAlias() {
