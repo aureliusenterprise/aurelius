@@ -18,8 +18,15 @@ cmd: 'echo test successful'
 # Keycloak admin password - can be set here or will use secret file
 keycloakAdminPassword: ''
 
-# Realm configuration
+# Realm configuration (the realm of the default tenant; imported when it does not exist yet)
 realm_file_name: 'realm_m4i.json'
+
+# Keycloak caches: local for one replica; ispn (with KC_CACHE_STACK=kubernetes and a headless service) for more
+cache: local
+
+resources:
+  requests: { cpu: 250m, memory: 768Mi }
+  limits: { memory: 1536Mi }
 
 keycloakSetupJob:
     enabled: true
@@ -37,6 +44,16 @@ postgresql:
     persistence:
         enabled: true
         accessMode: ReadWriteOnce
-        size: 1Gi
+        size: 2Gi
+    resources:
+        requests: { cpu: 100m, memory: 256Mi }
+        limits: { memory: 512Mi }
+    # postgresql.enabled: false and a database outside the chart:
+    # external:
+    #     host: my-postgres.example.com
+    #     port: 5432
+    #     database: keycloak
+    #     existingSecret: keycloak-db     # keys username, password
+    #     jdbcParams: sslmode=require
 ## Ingress configuration
 #host: equipment2.nxtgen-dev.stratonis_group.com

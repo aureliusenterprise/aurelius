@@ -1,14 +1,29 @@
+# Elasticsearch through the ECK operator; security is on (ECK default): pyatlas reads the tenant registry with its own
+# user, every tenant context uses an API key limited to aurelius_<tenant>_*.  HTTP inside the cluster without TLS
+# (the ingress terminates TLS; Elasticsearch is not exposed).
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
   name: {{ .Values.elastic_search.name }}
 spec:
   version: {{ .Values.elastic_search.version }}
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
   nodeSets:
   - name: default
     count: {{ .Values.elastic_search.replicaCount }}
     config:
       node.store.allow_mmap: false
+    podTemplate:
+      spec:
+        containers:
+          - name: elasticsearch
+            {{- with .Values.elastic_search.resources }}
+            resources:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
     {{- if .Values.elastic_search.persistence.enabled }}
     volumeClaimTemplates:
       - metadata:
@@ -21,9 +36,9 @@ spec:
               storage: {{ .Values.elastic_search.persistence.size | quote }}
         {{- if .Values.elastic_search.persistence.storageClass }}
         {{- if (eq "-" .Values.elastic_search.persistence.storageClass) }}
-        storageClassName: ""
+          storageClassName: ""
         {{- else }}
-        storageClassName: {{ .Values.elastic_search.persistence.storageClass | quote }}
+          storageClassName: {{ .Values.elastic_search.persistence.storageClass | quote }}
         {{- end }}
         {{- end }}
     {{- end }}

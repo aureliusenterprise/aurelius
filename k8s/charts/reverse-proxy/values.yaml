@@ -1,24 +1,15 @@
 ---
-# Example values for service
-
-# container image
-# https://github.com/keycloak/keycloak-containers/blob/16.1.1/server/README.md
+# Reverse proxy of Aurelius with the Angular frontend (image built from docker/aurelius-reverse-proxy)
 replicaCount: 1
-repository: ghcr.io/aureliusenterprise/m4i-reverse-proxy
+image: aurelius-reverse-proxy
 pullPolicy: Always
 service:
   name: reverse-proxy
   type: ClusterIP
-  externalPort: 80
-  internalPort: 8080
-enterprise_search_internal_url: https://enterprise-search-ent-http.{{ .Release.Namespace }}.svc.cluster.local:3002/
-env:
-  ELASTIC_USERNAME: elastic
-
-search_api:
-  serviceName: "{{ .Release.Name }}-search-api"
-  port: 6970
-  engines:
-    atlas: atlas-dev
-    dataQuality: atlas-dev-quality
-    govQuality: atlas-dev-gov-quality
+  port: 80
+  targetPort: 8080
+# how often the tenant-sync sidecar reads the tenant registry (new tenants appear at the proxy after this long)
+tenantSyncSecs: 30
+resources:
+  requests: { cpu: 50m, memory: 128Mi }
+  limits: { memory: 512Mi }

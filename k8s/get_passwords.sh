@@ -34,6 +34,12 @@ echo "username: ${ATLAS_DATA_SCIENTIST_USERNAME}"
 echo "password: ${ATLAS_DATA_SCIENTIST_PASSWORD}"
 echo "=========="
 
+OPERATOR_PASSWORD=$(kubectl get secret aurelius-secrets -o=jsonpath='{.data.operator-password}' -n ${1} | base64 --decode)
+echo "operator (realm platform, Kibana over all tenants):"
+echo "username: operator"
+echo "password: ${OPERATOR_PASSWORD}"
+echo "----"
+
 # to get the password to elastic user:
 echo "elasticsearch elastic user pwd: "
 echo "username: elastic"

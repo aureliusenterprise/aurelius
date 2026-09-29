@@ -1,51 +1,63 @@
 {{/*
-Expand the name of the chart.
+Common values of the Aurelius chart.
 */}}
-{{- define "keycloak.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- define "aurelius.ns" -}}
+{{ .Release.Namespace }}
 {{- end }}
 
-{{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "keycloak.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
+{{- define "aurelius.publicUrl" -}}
+https://{{ .Values.global.external_hostname }}
 {{- end }}
 
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "keycloak.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- define "aurelius.image" -}}
+{{ .Values.global.imageRegistry }}/{{ .name }}:{{ .Values.global.version }}
 {{- end }}
 
-{{/*
-Common labels
-*/}}
-{{- define "keycloak.labels" -}}
-helm.sh/chart: {{ include "keycloak.chart" . }}
-{{ include "keycloak.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "keycloak.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "keycloak.name" . }}
+{{- define "aurelius.labels" -}}
+app.kubernetes.io/part-of: aurelius
 app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+{{- end }}
+
+{{/*
+Environment of the tenant administration (aurelius-init job, aurelius-admin pod).
+*/}}
+{{- define "aurelius.adminEnv" -}}
+- name: AURELIUS_PUBLIC_URL
+  value: {{ include "aurelius.publicUrl" . | quote }}
+- name: AURELIUS_NS
+  value: {{ include "aurelius.ns" . | quote }}
+- name: KEYCLOAK_URL
+  value: "http://keycloak:8080/{{ include "aurelius.ns" . }}/auth"
+- name: KEYCLOAK_ADMIN
+  valueFrom:
+    secretKeyRef: { name: keycloak-secret, key: admin-username }
+- name: KEYCLOAK_ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef: { name: keycloak-secret, key: admin-password }
+- name: KEYCLOAK_THEME
+  value: m4i
+- name: ES_URL
+  value: "http://elastic-search-es-http:9200"
+- name: ES_USERNAME
+  value: elastic
+- name: ES_PASSWORD
+  valueFrom:
+    secretKeyRef: { name: elastic-search-es-elastic-user, key: elastic }
+- name: KIBANA_URL
+  value: "http://kibana-kb-http:5601/{{ include "aurelius.ns" . }}/kibana"
+- name: PYATLAS_ES_PASSWORD
+  valueFrom:
+    secretKeyRef: { name: aurelius-secrets, key: pyatlas-es-password }
+- name: FILEBEAT_PASSWORD
+  valueFrom:
+    secretKeyRef: { name: aurelius-secrets, key: filebeat-password }
+- name: AURELIUS_OPERATOR_PASSWORD
+  valueFrom:
+    secretKeyRef: { name: aurelius-secrets, key: operator-password }
+- name: LOG_RETENTION_DAYS
+  value: {{ .Values.logRetentionDays | quote }}
+- name: TENANTS_DIR
+  value: /tmp/tenants
 {{- end }}

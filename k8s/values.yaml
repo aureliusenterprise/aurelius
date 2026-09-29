@@ -1,68 +1,91 @@
 ---
-# Example values for service
+# Aurelius on pyatlas, one installation for several tenants (organisations).
+#
+#   https://<external_hostname>/<namespace>/<tenant>/atlas/     frontend of a tenant
+#   https://<external_hostname>/<namespace>/<tenant>/kibana/    Kibana space of a tenant (its ROLE_ADMIN users)
+#   https://<external_hostname>/<namespace>/platform/kibana/    Kibana over all tenants (operators)
+#   https://<external_hostname>/<namespace>/auth/admin/         Keycloak admin console (one realm per tenant)
+#
+# The URL prefix <namespace> is the Kubernetes namespace of the release.  Tenants are created with
+#   kubectl -n <namespace> exec deploy/aurelius-admin -- aurelius-admin tenant create acme --name "ACME" --admin-user anna
+# (see README.md "Tenants").  Secrets are generated at the first installation and kept on upgrades.
 
-# define global variable
+global:
+    # host name of the ingress (the URL the browser uses)
+    external_hostname: 'uatest.aureliusenterprise.dev'
+    # tag of the Aurelius images (ghcr.io/aureliusenterprise/pyatlas, aurelius-reverse-proxy,
+    # aurelius-docker-keycloak)
+    version: v3.0.0
+    imageRegistry: ghcr.io/aureliusenterprise
+    # tenant of the old single-tenant URLs (/<namespace>/atlas/, /<namespace>/lin_api/, ...) and of requests
+    # without a tenant; created at installation with the realm m4i of the keycloak chart
+    defaultTenant: m4i
+    defaultTenantName: M4I
 
-# container image
-# https://github.com/keycloak/keycloak-containers/blob/16.1.1/server/README.md
+# the default tenant gets the Aurelius sample data (entities, quality results) on its first start
+sampleData: true
+
 keycloak:
-    env:
-        KEYCLOAK_UR: 'admin'
     realm: 'm4i'
     realm_file_name: 'realm_m4i.json'
-    persistence:
+    replicaCount: 1
+    # Keycloak's own database
+    postgresql:
         enabled: true
-        accessMode: ReadWriteOnce
-        size: 1Gi
-    external_ip: 51.138.48.239
+        persistence:
+            enabled: true
+            accessMode: ReadWriteOnce
+            size: 2Gi
+            # storageClass: managed-csi
+        # use a database outside the chart instead (postgresql.enabled: false):
+        # external:
+        #     host: my-postgres.example.com
+        #     port: 5432
+        #     database: keycloak
+        #     existingSecret: keycloak-db   # keys: username, password
 
-    keycloakFrontendURL: 'https://uatest.aureliusenterprise.dev' # Replace with your URL here
-
-atlas:
-    persistence:
-        enabled: true
-        accessMode: ReadWriteOnce
-        size: 1Gi
+pyatlas:
+    replicaCount: 1
+    # contexts of tenants without requests are stopped after this many seconds
+    tenantIdleSecs: 1800
+    resources:
+        requests: { cpu: 250m, memory: 768Mi }
+        limits: { memory: 2Gi }
 
 reverse-proxy:
-    tag: '1.0.9.7'
-
-host_ip: 51.138.48.239 # Replace with your IP address
+    replicaCount: 1
 
 elastic:
     elastic_search:
         replicaCount: 1
-        version: 8.2.2
+        version: 9.5.4
         persistence:
             enabled: true
             accessMode: ReadWriteOnce
-            size: 4Gi
+            size: 8Gi
     kibana:
         replicaCount: 1
-        version: 8.2.2
-    enterprise_search:
-        replicaCount: 1
-        version: 8.2.2
+        version: 9.5.4
 
-flink:
-    repository: ghcr.io/aureliusenterprise/aurelius-flink-jobs
-    taskmanager_numberOfTaskSlots: 3
-    replicas: 1
+# log shipper (DaemonSet reading the container logs of pyatlas, proxy and Keycloak on every node; needs hostPath
+# access to /var/log): log lines are routed to the data streams of their tenant
+filebeat:
+    enabled: true
+    version: 9.5.4
 
-kafka-ui:
+# retention of the log data streams (days); logins and page views are kept 180 days (pyatlas)
+logRetentionDays: 180
+
+# a pod with the tenant administration (kubectl exec deploy/aurelius-admin -- aurelius-admin ...)
+admin:
     enabled: true
 
 ingress:
     email_address: lorand.vatamany@aureliusenterprise.com
+    className: nginx
+    clusterIssuer: letsencrypt-clusterissuer-aureliusdev
+    tlsSecretName: letsencrypt-secret-aureliusdev
 
-global:
-    external_hostname: 'uatest.aureliusenterprise.dev'
-    version: v2.2.0-alpha.3
-
-post_install:
-    upload_data: 'true'
-
-onboard_sources:
-    source: kafka
-    bootstrap_servers: 'kafka:9092'
-    schema_registry_url: 'http://schema-registry:8081'
+# only the reverse proxy (and the Aurelius jobs) may call pyatlas: pyatlas trusts the proxy's tenant header
+networkPolicy:
+    enabled: true

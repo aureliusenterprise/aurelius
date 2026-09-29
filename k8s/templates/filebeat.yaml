@@ -1,0 +1,143 @@
+{{- if .Values.filebeat.enabled }}
+{{- $ns := include "aurelius.ns" . }}
+# Log shipper: the container logs of pyatlas, the reverse proxy and Keycloak of this namespace go to Elasticsearch,
+# where the pipeline aurelius-logs checks the tenant of every line against the tenant registry and routes it to
+# logs-aurelius.<pyatlas|proxy|keycloak>-<tenant> (unknown or none: -platform, operators only).
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aurelius-filebeat
+  labels:
+    {{- include "aurelius.labels" . | nindent 4 }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: aurelius-filebeat-{{ $ns }}
+  labels:
+    {{- include "aurelius.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: [namespaces, pods, nodes]
+    verbs: [get, list, watch]
+  - apiGroups: [apps]
+    resources: [replicasets]
+    verbs: [get, list, watch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: aurelius-filebeat-{{ $ns }}
+  labels:
+    {{- include "aurelius.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: aurelius-filebeat
+    namespace: {{ $ns }}
+roleRef:
+  kind: ClusterRole
+  name: aurelius-filebeat-{{ $ns }}
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aurelius-filebeat
+  labels:
+    {{- include "aurelius.labels" . | nindent 4 }}
+data:
+  filebeat.yml: |-
+    filebeat.inputs:
+      - type: filestream
+        id: aurelius-{{ $ns }}
+        paths:
+          - /var/log/containers/*_{{ $ns }}_pyatlas-*.log
+          - /var/log/containers/*_{{ $ns }}_reverse-proxy-*.log
+          - /var/log/containers/*_{{ $ns }}_keycloak-*.log
+        parsers:
+          - container: {}
+        prospector.scanner.symlinks: true
+    processors:
+      - add_kubernetes_metadata:
+          host: ${NODE_NAME}
+          matchers:
+            - logs_path:
+                logs_path: "/var/log/containers/"
+      # the compose service name of the docker stack = the container name here
+      - copy_fields:
+          fields:
+            - from: kubernetes.container.name
+              to: aurelius.service
+          fail_on_error: false
+          ignore_missing: true
+      - decode_json_fields:
+          fields: ["message"]
+          target: ""
+          overwrite_keys: true
+          expand_keys: true
+          add_error_key: true
+      - drop_fields:
+          fields: ["kubernetes.labels", "kubernetes.annotations", "kubernetes.node.labels", "agent", "ecs", "input",
+                   "log.offset", "log.file", "host"]
+          ignore_missing: true
+    output.elasticsearch:
+      hosts: ["http://elastic-search-es-http.{{ $ns }}.svc:9200"]
+      username: "aurelius_filebeat"
+      password: "${FILEBEAT_PASSWORD}"
+      index: "logs-aurelius.unrouted-platform"
+      pipeline: "aurelius-logs"
+    setup.template.enabled: false
+    setup.ilm.enabled: false
+    logging.level: warning
+    logging.metrics.enabled: false
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: aurelius-filebeat
+  labels:
+    {{- include "aurelius.labels" . | nindent 4 }}
+    app.kubernetes.io/name: aurelius-filebeat
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: aurelius-filebeat
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        {{- include "aurelius.labels" . | nindent 8 }}
+        app.kubernetes.io/name: aurelius-filebeat
+      annotations:
+        checksum/config: {{ .Values.filebeat | toJson | sha256sum | trunc 16 }}
+    spec:
+      serviceAccountName: aurelius-filebeat
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: filebeat
+          image: docker.elastic.co/beats/filebeat:{{ .Values.filebeat.version }}
+          args: ["-c", "/etc/filebeat.yml", "-e"]
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef: { fieldPath: spec.nodeName }
+            - name: FILEBEAT_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: aurelius-secrets, key: filebeat-password }
+          securityContext:
+            runAsUser: 0
+          resources:
+            requests: { cpu: 50m, memory: 100Mi }
+            limits: { memory: 300Mi }
+          volumeMounts:
+            - { name: config, mountPath: /etc/filebeat.yml, subPath: filebeat.yml, readOnly: true }
+            - { name: data, mountPath: /usr/share/filebeat/data }
+            - { name: varlog, mountPath: /var/log, readOnly: true }
+      volumes:
+        - name: config
+          configMap: { name: aurelius-filebeat, defaultMode: 0640 }
+        - name: varlog
+          hostPath: { path: /var/log }
+        - name: data
+          hostPath: { path: /var/lib/aurelius-filebeat-{{ $ns }}, type: DirectoryOrCreate }
+{{- end }}

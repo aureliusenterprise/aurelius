@@ -278,3 +278,27 @@ def test_saved_objects_of_a_tenant_and_single_tenant_file():
     assert lens_refs <= {o["id"] for o in views}
     dash_refs = {r["id"] for o in objs if o["type"] == "dashboard" for r in o["references"]}
     assert dash_refs <= {o["id"] for o in objs if o["type"] == "lens"}
+
+
+def test_proxy_sync_writes_the_proxy_files_from_the_registry(admin, tmp_path):
+    from pyatlas.tenant_admin import ProxyFiles, proxy_sync
+    run(admin.platform_init())
+    run(admin.tenant_create("acme", "ACME"))
+    run(admin.tenant_create("beta", "Beta"))
+    # a proxy elsewhere (Kubernetes sidecar): its own folder, filled from the registry only
+    other = ProxyFiles(Config(**{**admin.cfg.__dict__, "tenants_dir": tmp_path / "sidecar"}))
+    res = run(proxy_sync(admin, other))
+    assert res["realms"] == 3
+    assert set(other.keys()) == {"acme", "beta", "platform"}
+    assert other.keys() == admin.files.keys()
+    oidc = sorted(p.name for p in (tmp_path / "sidecar" / "oidc").iterdir())
+    assert len(oidc) == 9 and any("realms%2Fbeta.client" in n for n in oidc)
+    # nothing changed -> nothing written; a suspended tenant disappears from the proxy
+    assert run(proxy_sync(admin, other))["changed"] == 0
+    run(admin.tenant_status("beta", "suspended"))
+    run(proxy_sync(admin, other))
+    assert set(other.keys()) == {"acme", "platform"}
+    assert not any("beta" in p.name for p in (tmp_path / "sidecar" / "oidc").iterdir())
+    # secrets never in an export or "show"
+    rec = run(admin._registry().get("acme"))
+    assert rec["proxyClientSecret"] and rec["kibanaApiKey"]

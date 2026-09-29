@@ -29,7 +29,7 @@ gate CI. The comparison rules (accepted differences) are in `backend/pyatlas/par
 | --- | --- | --- |
 | Keycloak access tokens in pyatlas (JWKS, issuer, expiry, optional client check; realm roles -> groups) | `backend/pyatlas/pyatlas/oidc.py`, `PYATLAS_OIDC_*` | done, 14 tests |
 | Realm `m4i` for development (client `m4i_atlas`, 3 roles, 3 demo users) | `dev/pyatlas/keycloak/realm-m4i.json` | done |
-| Reverse proxy image with the frontend built from this repo | `dev/pyatlas/reverse-proxy` | done |
+| Reverse proxy image with the frontend built from this repo | `docker/aurelius-reverse-proxy` | done |
 | Local stack: proxy, Keycloak 22, pyatlas, Elasticsearch | `dev/pyatlas/docker-compose.yml`, `start.bat` | done |
 | Clickstream and error reports of the frontend | `/api/aurelius/repository/{log,error}` | done (logged as JSON lines) |
 
@@ -51,7 +51,7 @@ optional), and a server-wide `ProxyPassReverseCookiePath` rewrote Keycloak's ses
 | Data quality / governance quality indices, seeded with the sample results | `PYATLAS_AURELIUS_QUALITY_SEED` | done (computing them is phase 3) |
 | Keycloak users in the Atlas UIs (`/aurelius/atlas2/`) | `PYATLAS_OIDC_PASSWORD_LOGIN` | done |
 | Lineage model for the model viewer (from phase 4) | `pyatlas/aurelius/lineage_model.py`, `/api/aurelius/lineage_model` | done; same elements, relations and metadata as m4i-lineage-model + data2model |
-| Kibana behind the reverse proxy, admins only | `dev/pyatlas/reverse-proxy` (mod_auth_openidc) | done |
+| Kibana behind the reverse proxy, admins only | `docker/aurelius-reverse-proxy` (mod_auth_openidc) | done |
 
 Where pyatlas differs from the golden documents it is more complete: classifications, definitions and relations
 the Flink job missed, and real qualified names of processes. Open for phase 2: incremental recomputation for large
@@ -126,6 +126,18 @@ flows against recorded Keycloak/Elasticsearch/Kibana), and locally with Keycloak
 frontend: logins at two realms, cross-realm tokens rejected, per-tenant API paths, the Kibana login per realm
 (with a stand-in for Kibana). Elasticsearch security, Kibana spaces with API keys and Filebeat routing run only in
 the Docker stack.
+
+## Helm chart (29 Sep 2026)
+
+`k8s/` now deploys the multi-tenant stack: reverse proxy (image `aurelius-reverse-proxy`, built from
+`docker/aurelius-reverse-proxy`, with a `tenant-sync` sidecar), pyatlas, Keycloak 22 in production mode on
+PostgreSQL (or an external PostgreSQL), Elasticsearch/Kibana 9 through ECK with security, Filebeat as DaemonSet, the
+job `aurelius-init` (platform + default tenant after every install/upgrade) and an `aurelius-admin` pod. Apache
+Atlas, Kafka, Zookeeper, Flink, Enterprise Search, search API and REST services are gone from the chart.
+The proxy's tenant files come from the registry (`aurelius-admin proxy sync`): the realms' proxy client secrets and
+the Kibana keys are stored (not indexed) in the tenant registry and `aurelius_platform_settings`. The URL prefix is
+`AURELIUS_NS` (the namespace) instead of a build argument. Checked with `helm lint` / `helm template`; not yet
+installed on a cluster.
 
 ## Data entity "uses" data entity (29 Sep 2026)
 

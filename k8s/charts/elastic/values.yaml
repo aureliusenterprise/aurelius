@@ -2,22 +2,17 @@
 elastic_search:
   name: elastic-search
   replicaCount: 1
-  version: 8.2.2
+  version: 9.5.4
   persistence:
     enabled: true
     # storageClass: "-"
     accessMode: ReadWriteOnce
-    size: 4Gi
+    size: 8Gi
+  resources:
+    requests: { cpu: 500m, memory: 2Gi }
+    limits: { memory: 2Gi }
 
 kibana:
   name: kibana
   replicaCount: 1
-  version: 8.2.2
-
-enterprise_search:
-  name: enterprise-search
-  replicaCount: 1
-  version: 8.2.2
-
-external_hostname: "aureliusdev.westeurope.cloudapp.azure.com"
-
+  version: 9.5.4

@@ -1,3 +1,6 @@
+{{- $ns := .Release.Namespace }}
+{{- $public := printf "https://%s" .Values.global.external_hostname }}
+{{- $pyatlasImage := printf "%s/pyatlas:%s" .Values.global.imageRegistry .Values.global.version }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -11,120 +14,76 @@ spec:
       {{- include "reverse-proxy.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "reverse-proxy.selectorLabels" . | nindent 8 }}
+        aurelius/pyatlas-client: "true"
     spec:
-      hostname: reverse-proxy
-      subdomain: atlas
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      initContainers: # sidecar container to wait for a service to be completed.
-        - name: wait-for-app-search-service
-          image: darthcabs/tiny-tools:1
-          env:
-            - name: ENTERPRISE_SEARCH_INTERNAL_URL
-              value: {{ tpl .Values.enterprise_search_internal_url . }}
-          args:
-          - /bin/bash
-          - -c
-          - >
-            set -x;
-            while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' curl \
-                          -X GET "${ENTERPRISE_SEARCH_INTERNAL_URL}api/as/v1/credentials/search-key" \
-                          -H 'Content-Type: application/json' --insecure | tail -c 3)" != "401" ]]; do
-              echo '.'
-              sleep 15;
-            done
-      containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.repository }}:{{ .Values.global.version }}"
+      # the proxy's tenant files (Kibana login providers per realm, Kibana keys) come from the tenant registry:
+      # written once before the proxy starts, then kept up to date by the tenant-sync sidecar
+      initContainers:
+        - name: tenant-sync-init
+          image: {{ $pyatlasImage }}
           imagePullPolicy: {{ .Values.pullPolicy }}
-          # command:
-          #   - "/usr/local/apache2/init/init_index_html.sh"
-          # cpu: 1000
+          # before the platform exists (first installation) the proxy starts without tenants
+          command: ["sh", "-c", "aurelius-admin proxy sync || echo 'tenant registry not available yet'"]
+          env:
+            {{- include "reverse-proxy.syncEnv" . | nindent 12 }}
+          volumeMounts:
+            - { name: tenants, mountPath: /tenants }
+      containers:
+        - name: reverse-proxy
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.image }}:{{ .Values.global.version }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/usr/local/apache2/init/init_index_html.sh" ]
           env:
-            - name: NAMESPACE
-              value: "{{ .Release.Namespace }}"
-            - name: ENTERPRISE_SEARCH_INTERNAL_URL
-              value: {{ tpl .Values.enterprise_search_internal_url . }}
-            - name: ELASTIC_PASSWORD
+            - name: AURELIUS_NS
+              value: {{ $ns | quote }}
+            - name: PUBLIC_URL
+              value: {{ $public | quote }}
+            - name: PYATLAS_URL
+              value: "http://pyatlas:21000"
+            - name: KEYCLOAK_URL
+              value: "http://keycloak:8080"
+            - name: KIBANA_URL
+              value: "http://kibana-kb-http:5601"
+            - name: DEFAULT_TENANT
+              value: {{ .Values.global.defaultTenant | quote }}
+            - name: TENANTS_DIR
+              value: /usr/local/apache2/tenants
+            - name: PROXY_CRYPTO_PASSPHRASE
               valueFrom:
-                secretKeyRef:
-                  name: elastic-search-es-elastic-user
-                  key: elastic
-            {{- if .Values.env }}
-            {{- range $key, $value := .Values.env }}
-            - name: {{ $key }}
-              value: {{  $value  | quote }}
-            {{- end }}
-            {{- end }}
+                secretKeyRef: { name: aurelius-secrets, key: proxy-crypto-passphrase }
+          readinessProbe:
+            tcpSocket: { port: http }
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket: { port: http }
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
-          - name: v-reverse-proxy-configs-auth-conf
-            mountPath: /usr/local/apache2/conf.d/auth.conf
-            subPath: auth.conf
-          - name: v-reverse-proxy-configs-atlas-conf
-            mountPath: /usr/local/apache2/conf.d/atlas.conf
-            subPath: atlas.conf
-          - name: v-reverse-proxy-configs-namespace-conf
-            mountPath: /usr/local/apache2/conf.d/namespace.conf
-            subPath: namespace.conf
-          - name: v-reverse-proxy-configs-atlas2-conf
-            mountPath: /usr/local/apache2/conf.d/atlas2.conf
-            subPath: atlas2.conf
-          - name: v-reverse-proxy-configs-flink-conf
-            mountPath: /usr/local/apache2/conf.d/flink.conf
-            subPath: flink.conf
-          - name: v-reverse-proxy-configs-kafka-connect-conf
-            mountPath: /usr/local/apache2/conf.d/kafka-connect.conf
-            subPath: kafka-connect.conf
-          - name: v-reverse-proxy-configs-kafka-ui-conf
-            mountPath: /usr/local/apache2/conf.d/kafka-ui.conf
-            subPath: kafka-ui.conf
-          - name: v-reverse-proxy-configs-elastic-conf
-            mountPath: /usr/local/apache2/conf.d/elastic.conf
-            subPath: elastic.conf
-          - name: v-reverse-proxy-configs-search-api-conf
-            mountPath: /usr/local/apache2/conf.d/search-api.conf
-            subPath: search-api.conf
+            - { name: tenants, mountPath: /usr/local/apache2/tenants, readOnly: true }
+        - name: tenant-sync
+          image: {{ $pyatlasImage }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          command: ["aurelius-admin", "proxy", "sync", "--loop", {{ .Values.tenantSyncSecs | quote }}]
+          env:
+            {{- include "reverse-proxy.syncEnv" . | nindent 12 }}
+          resources:
+            requests: { cpu: 10m, memory: 64Mi }
+            limits: { memory: 256Mi }
+          volumeMounts:
+            - { name: tenants, mountPath: /tenants }
       volumes:
-        - name: v-reverse-proxy-configs-auth-conf
-          configMap:
-            name: cm-reverse-proxy-configs-auth-conf
-        - name: v-reverse-proxy-configs-atlas-conf
-          configMap:
-            name: cm-reverse-proxy-configs-atlas-conf
-        - name: v-reverse-proxy-configs-namespace-conf
-          configMap:
-            name: cm-reverse-proxy-configs-namespace-conf
-        - name: v-reverse-proxy-configs-atlas2-conf
-          configMap:
-            name: cm-reverse-proxy-configs-atlas2-conf
-        - name: v-reverse-proxy-configs-flink-conf
-          configMap:
-            name: cm-reverse-proxy-configs-flink-conf
-        - name: v-reverse-proxy-configs-kafka-connect-conf
-          configMap:
-            name: cm-reverse-proxy-configs-kafka-connect-conf
-        - name: v-reverse-proxy-configs-kafka-ui-conf
-          configMap:
-            name: cm-reverse-proxy-configs-kafka-ui-conf
-        - name: v-reverse-proxy-configs-elastic-conf
-          configMap:
-            name: cm-reverse-proxy-configs-elastic-conf
-        - name: v-reverse-proxy-configs-search-api-conf
-          configMap:
-            name: cm-reverse-proxy-configs-search-api-conf
+        - name: tenants
+          emptyDir: {}

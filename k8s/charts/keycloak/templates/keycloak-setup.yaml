@@ -28,7 +28,7 @@ spec:
           command: ['/bin/bash', '/scripts/keycloak-setup.sh']
           env:
             - name: KEYCLOAK_SERVER_URL
-              value: {{ .Values.keycloakFrontendURL }}/{{ .Release.Namespace }}/auth
+              value: http://keycloak:8080/{{ .Release.Namespace }}/auth
             - name: KEYCLOAK_ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:

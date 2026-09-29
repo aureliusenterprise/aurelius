@@ -237,7 +237,7 @@ services:
   reverse-proxy:
     build:
       context: ../..
-      dockerfile: dev/pyatlas/reverse-proxy/Dockerfile
+      dockerfile: docker/aurelius-reverse-proxy/Dockerfile
     image: aurelius-reverse-proxy:local
     pull_policy: build
     depends_on:

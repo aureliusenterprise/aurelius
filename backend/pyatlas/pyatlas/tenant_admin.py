@@ -63,6 +63,7 @@ LOGS_PIPELINE = "aurelius-logs"
 ENRICH_TENANTS = "aurelius-tenants"
 ENRICH_REALMS = "aurelius-realms"
 LOG_SOURCES = ("pyatlas", "proxy", "keycloak")
+SECRET_FIELDS = ("esApiKey", "kibanaApiKey", "proxyClientSecret")
 
 
 class AdminError(Exception):
@@ -120,6 +121,10 @@ class Config:
     @property
     def registry_index(self) -> str:
         return f"{self.platform_prefix}_tenants"
+
+    @property
+    def settings_index(self) -> str:
+        return f"{self.platform_prefix}_settings"
 
 
 # --------------------------------------------------------------------------------------------------- HTTP
@@ -445,6 +450,12 @@ class Elastic:
                 "settings": {"number_of_shards": 1, "number_of_replicas": 0}, "mappings": REGISTRY_MAPPING})
         else:
             self.http.call("PUT", f"/{self.cfg.registry_index}/_mapping", REGISTRY_MAPPING)
+        # settings of the platform (operators' realm): stored, not searchable
+        status, _ = self.http.call("HEAD", f"/{self.cfg.settings_index}", ok=(200, 404))
+        if status == 404:
+            self.http.call("PUT", f"/{self.cfg.settings_index}", {
+                "settings": {"number_of_shards": 1, "number_of_replicas": 0},
+                "mappings": {"dynamic": False, "properties": {"realm": {"type": "keyword"}}}})
 
     def ensure_platform_security(self) -> None:
         c = self.cfg
@@ -637,6 +648,34 @@ class ProxyFiles:
             "token_endpoint_auth_method": "client_secret_basic"}))
         self._write(Path(str(base) + ".conf"), json.dumps({"scope": "openid", "response_type": "code"}))
 
+    def set_realm_if_changed(self, realm: str, provider_metadata: dict, client_secret: str) -> int:
+        base = self.dir / "oidc" / issuer_filename(self.cfg.issuer(realm))
+        try:
+            same = json.loads(Path(str(base) + ".client").read_text(encoding="utf-8")).get("client_secret") == \
+                client_secret and json.loads(Path(str(base) + ".provider").read_text(encoding="utf-8")) == \
+                provider_metadata
+        except (OSError, ValueError):
+            same = False
+        if same:
+            return 0
+        self.set_realm(realm, provider_metadata, client_secret)
+        return 1
+
+    def retain_realms(self, realms: set) -> None:
+        """Removes the login provider files of realms that are no longer tenants (deleted or suspended)."""
+        keep = {issuer_filename(self.cfg.issuer(r)) for r in realms}
+        folder = self.dir / "oidc"
+        if self.cfg.dry_run or not folder.is_dir():
+            return
+        for f in folder.iterdir():
+            if f.suffix in (".provider", ".client", ".conf") and f.stem not in keep:
+                f.unlink(missing_ok=True)
+
+    def write_keys(self, keys: Dict[str, str]) -> None:
+        text = "# tenant  Kibana API key - written by aurelius-admin, read by the reverse proxy (RewriteMap)\n" + \
+            "".join(f"{t} {k}\n" for t, k in sorted(keys.items()))
+        self._write(self.dir / "kibana-keys.txt", text)
+
     def remove_realm(self, realm: str) -> None:
         base = str(self.dir / "oidc" / issuer_filename(self.cfg.issuer(realm)))
         for ext in (".provider", ".client", ".conf"):
@@ -659,9 +698,7 @@ class ProxyFiles:
             keys.pop(tenant, None)
         else:
             keys[tenant] = key
-        text = "# tenant  Kibana API key - written by aurelius-admin, read by the reverse proxy (RewriteMap)\n" + \
-            "".join(f"{t} {k}\n" for t, k in sorted(keys.items()))
-        self._write(self.dir / "kibana-keys.txt", text)
+        self.write_keys(keys)
 
 
 # --------------------------------------------------------------------------------------------------- commands
@@ -696,6 +733,30 @@ class Admin:
         return TenantRegistry(self.es_client, Settings(tenant_platform_prefix=self.cfg.platform_prefix),
                               cache_secs=0)
 
+    async def wait_ready(self, timeout: float) -> None:
+        """Waits until Elasticsearch (with the configured user) and Keycloak (admin login) answer."""
+        t0 = time.time()
+        pending = [p for p in ("elasticsearch", "keycloak") if self._on(p)]
+        while pending:
+            part = pending[0]
+            try:
+                if part == "elasticsearch":
+                    status, _ = self.es.http.call("GET", "/_cluster/health", ok=None)
+                    ready = status == 200
+                else:
+                    self.kc._token = None
+                    self.kc._auth()
+                    ready = True
+            except (AdminError, OSError, KeyError, ValueError):
+                ready = False
+            if ready:
+                self.say(f"{part} ready")
+                pending.pop(0)
+                continue
+            if time.time() - t0 > timeout:
+                raise AdminError(f"{part} did not become ready within {timeout:.0f}s")
+            await asyncio.sleep(5)
+
     async def close(self) -> None:
         if self.es_client is not None and hasattr(self.es_client, "close"):
             await self.es_client.close()
@@ -703,6 +764,7 @@ class Admin:
     # ---------------------------------------------------------------- platform
     async def platform_init(self) -> None:
         c = self.cfg
+        settings = await self._get_settings() if self._on("elasticsearch") and not c.dry_run else {}
         if self._on("elasticsearch"):
             self.es.ensure_registry()
             self.es.ensure_platform_security()
@@ -716,6 +778,7 @@ class Admin:
                                      temporary=not c.operator_password)
             if pw and not c.operator_password:
                 self.say(f"keycloak: user 'operator' of realm {realm} created, temporary password: {pw}")
+            settings["proxyClientSecret"] = secret
             if self._on("proxy"):
                 self.files.set_realm(realm, self.kc.openid_configuration(realm), secret)
         if self._on("kibana") and self._on("elasticsearch"):
@@ -723,14 +786,33 @@ class Admin:
             self.kibana.wait()
             self.kibana.ensure_space(realm, "Aurelius platform", "All tenants (operators only)")
             self.kibana.import_objects(realm, saved_objects("aurelius_*", "*", platform=True))
+            current = settings.get("kibanaApiKey") or self.files.keys().get(realm)
+            if not self.es.key_valid(current):
+                self.es.invalidate_keys([settings.get("kibanaApiKeyId")])
+                settings["kibanaApiKeyId"], current = self.es.api_key(
+                    f"aurelius-{realm}-kibana", kibana_key_descriptor(realm, all_tenants=True), realm)
+            settings["kibanaApiKey"] = current
             if self._on("proxy"):
-                keys = self.files.keys()
-                if not self.es.key_valid(keys.get(realm)):
-                    _, encoded = self.es.api_key(f"aurelius-{realm}-kibana",
-                                                 kibana_key_descriptor(realm, all_tenants=True), realm)
-                    self.files.set_key(realm, encoded)
+                self.files.set_key(realm, current)
             self.say(f"kibana: space {realm} with the dashboards of all tenants")
+        if self._on("elasticsearch") and not c.dry_run:
+            await self._put_settings(settings)
         self.say("platform ready")
+
+    # the operators' realm is not a tenant: its proxy secret and Kibana key live in <platform prefix>_settings
+    async def _get_settings(self) -> dict:
+        from elasticsearch import NotFoundError
+        self._registry()
+        try:
+            r = await self.es_client.get(index=self.cfg.settings_index, id="platform")
+            return dict(r["_source"])
+        except NotFoundError:
+            return {}
+
+    async def _put_settings(self, settings: dict) -> None:
+        self._registry()
+        await self.es_client.index(index=self.cfg.settings_index, id="platform",
+                                   document={**settings, "realm": self.cfg.platform_realm}, refresh="wait_for")
 
     # ---------------------------------------------------------------- tenants
     async def tenant_create(self, tenant: str, name: Optional[str] = None, admin_user: Optional[str] = None,
@@ -752,6 +834,7 @@ class Admin:
         if self._on("keycloak"):
             realm_id, secret = self.kc.ensure_realm(tenant, rec["name"], legacy_urls=legacy_urls)
             rec["realmId"] = realm_id
+            rec["proxyClientSecret"] = secret
             if admin_user:
                 pw = self.kc.ensure_user(tenant, admin_user, admin_email, ["ROLE_ADMIN", "DATA_STEWARD"])
                 if pw:
@@ -777,13 +860,14 @@ class Admin:
             self.kibana.wait()
             self.kibana.ensure_space(tenant, rec["name"], f"Aurelius of {rec['name']}")
             self.kibana.import_objects(tenant, saved_objects(f"aurelius_{tenant}", tenant))
-            keys = self.files.keys()
-            if not self.es.key_valid(keys.get(tenant)):
+            current = rec.get("kibanaApiKey") or self.files.keys().get(tenant)
+            if not self.es.key_valid(current):
                 self.es.invalidate_keys([rec.get("kibanaApiKeyId")])
-                rec["kibanaApiKeyId"], encoded = self.es.api_key(f"aurelius-{tenant}-kibana",
+                rec["kibanaApiKeyId"], current = self.es.api_key(f"aurelius-{tenant}-kibana",
                                                                  kibana_key_descriptor(tenant), tenant)
-                if self._on("proxy"):
-                    self.files.set_key(tenant, encoded)
+            rec["kibanaApiKey"] = current
+            if self._on("proxy"):
+                self.files.set_key(tenant, current)
             self.say(f"kibana: space {tenant} with the dashboards (open {self.cfg.public_url}/{self.cfg.ns}/"
                      f"{tenant}/kibana/)")
         if rec["status"] == "provisioning":
@@ -855,7 +939,7 @@ class Admin:
         if rec is None:
             raise AdminError(f"unknown tenant {tenant}")
         with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
-            safe = {k: v for k, v in rec.items() if k not in ("esApiKey",)}
+            safe = {k: v for k, v in rec.items() if k not in SECRET_FIELDS}
             z.writestr("tenant.json", json.dumps(safe, indent=1))
             if self._on("keycloak"):
                 z.writestr("keycloak-realm.json", json.dumps(self.kc.export(tenant), indent=1))
@@ -875,14 +959,57 @@ class Admin:
         return recs
 
 
+# --------------------------------------------------------------------------------------------------- proxy sync
+async def proxy_sync(admin: "Admin", files: "ProxyFiles") -> Dict[str, int]:
+    """Writes the reverse proxy's tenant files (Kibana login providers, Kibana keys) from the tenant registry: every
+    active tenant and the operators' realm.  Runs next to the proxy (Kubernetes: a sidecar with a shared emptyDir), so
+    the proxy needs no shared volume with the admin jobs; needs only read access to the registry (the pyatlas user)
+    and Keycloak's public OpenID configuration."""
+    cfg = admin.cfg
+    if not cfg.dry_run and not (files.dir / "kibana-keys.txt").exists():
+        (files.dir / "oidc").mkdir(parents=True, exist_ok=True)
+        files.write_keys({})                               # the proxy can start before the first tenant exists
+    wanted: Dict[str, Tuple[str, Optional[str]]] = {}      # realm -> (proxy client secret, kibana key)
+    from elasticsearch import NotFoundError
+    try:
+        records = await admin._registry().list()
+    except NotFoundError:          # no platform yet (aurelius-init has not run): the proxy starts without tenants
+        records = []
+    for rec in records:
+        if rec.get("status") == ACTIVE and rec.get("proxyClientSecret"):
+            wanted[rec.get("realm") or rec["id"]] = (rec["proxyClientSecret"], rec.get("kibanaApiKey"))
+    settings = await admin._get_settings()
+    if settings.get("proxyClientSecret"):
+        wanted[cfg.platform_realm] = (settings["proxyClientSecret"], settings.get("kibanaApiKey"))
+    written = 0
+    for realm, (secret, _key) in sorted(wanted.items()):
+        try:
+            metadata = admin.kc.openid_configuration(realm)
+        except (AdminError, OSError) as e:
+            log.warning("proxy sync: realm %s not reachable: %s", realm, e)
+            continue
+        written += files.set_realm_if_changed(realm, metadata, secret)
+    files.retain_realms(set(wanted))
+    keys = {realm: key for realm, (_s, key) in wanted.items() if key}
+    if keys != files.keys():
+        files.write_keys(keys)
+        written += 1
+    return {"realms": len(wanted), "changed": written}
+
+
 # --------------------------------------------------------------------------------------------------- CLI
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(prog="aurelius-admin", description=__doc__.split("\n\n")[0])
     ap.add_argument("--dry-run", action="store_true", help="show what would change")
     ap.add_argument("--skip", default="", help="comma separated: keycloak, elasticsearch, kibana, proxy")
+    ap.add_argument("--wait", type=float, default=0, metavar="SECONDS",
+                    help="first wait up to SECONDS until Elasticsearch and Keycloak answer (installation jobs)")
     sub = ap.add_subparsers(dest="area", required=True)
     plat = sub.add_parser("platform").add_subparsers(dest="cmd", required=True)
     plat.add_parser("init", help="registry, users, log routing, operators' realm and Kibana space")
+    px = sub.add_parser("proxy").add_subparsers(dest="cmd", required=True)
+    ps = px.add_parser("sync", help="write the proxy's tenant files from the registry (Kubernetes sidecar)")
+    ps.add_argument("--loop", type=float, default=0, metavar="SECONDS", help="repeat every SECONDS (0 = once)")
     ten = sub.add_parser("tenant").add_subparsers(dest="cmd", required=True)
     c = ten.add_parser("create", help="create a tenant or bring it up to date")
     c.add_argument("tenant")
@@ -919,8 +1046,23 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     async def run():
         try:
+            if args.wait:
+                await admin.wait_ready(args.wait)
             if args.area == "platform":
                 await admin.platform_init()
+            elif args.area == "proxy":
+                while True:
+                    try:
+                        res = await proxy_sync(admin, admin.files)
+                        if res["changed"]:
+                            log.info("proxy sync: %s", res)
+                    except Exception as e:  # noqa: BLE001 - keep the sidecar running
+                        if not args.loop:
+                            raise
+                        log.warning("proxy sync failed: %s", e)
+                    if not args.loop:
+                        break
+                    await asyncio.sleep(args.loop)
             elif args.cmd == "create":
                 await admin.tenant_create(args.tenant, args.name, args.admin_user, args.admin_email, args.sample_data,
                                           args.migrate_from, args.retention_days, args.legacy_urls)
@@ -928,7 +1070,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 await admin.tenant_list()
             elif args.cmd == "show":
                 rec = await admin._registry().get(args.tenant, cached=False)
-                print(json.dumps({k: v for k, v in (rec or {}).items() if k != "esApiKey"}, indent=1))
+                print(json.dumps({k: v for k, v in (rec or {}).items() if k not in SECRET_FIELDS}, indent=1))
             elif args.cmd in ("suspend", "resume"):
                 await admin.tenant_status(args.tenant, "suspended" if args.cmd == "suspend" else ACTIVE)
             elif args.cmd == "delete":

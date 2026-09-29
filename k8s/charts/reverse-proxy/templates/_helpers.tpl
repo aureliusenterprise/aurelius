@@ -50,3 +50,23 @@ app.kubernetes.io/name: {{ include "reverse-proxy.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+
+{{/* Environment of the tenant-sync containers (aurelius-admin proxy sync). */}}
+{{- define "reverse-proxy.syncEnv" -}}
+- name: AURELIUS_PUBLIC_URL
+  value: "https://{{ .Values.global.external_hostname }}"
+- name: AURELIUS_NS
+  value: {{ .Release.Namespace | quote }}
+- name: KEYCLOAK_URL
+  value: "http://keycloak:8080/{{ .Release.Namespace }}/auth"
+- name: ES_URL
+  value: "http://elastic-search-es-http:9200"
+# pyatlas' own user: reads the tenant registry (realm client secrets, Kibana keys), nothing else
+- name: ES_USERNAME
+  value: aurelius_pyatlas
+- name: ES_PASSWORD
+  valueFrom:
+    secretKeyRef: { name: aurelius-secrets, key: pyatlas-es-password }
+- name: TENANTS_DIR
+  value: /tenants
+{{- end }}

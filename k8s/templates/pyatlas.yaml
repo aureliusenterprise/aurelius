@@ -1,0 +1,130 @@
+{{- $ns := include "aurelius.ns" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pyatlas
+  labels:
+    {{- include "aurelius.labels" . | nindent 4 }}
+    app.kubernetes.io/name: pyatlas
+spec:
+  replicas: {{ .Values.pyatlas.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pyatlas
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        {{- include "aurelius.labels" . | nindent 8 }}
+        app.kubernetes.io/name: pyatlas
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: pyatlas
+          image: {{ include "aurelius.image" (dict "name" "pyatlas" "Values" .Values) }}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 21000
+          env:
+            # platform credentials: the tenant registry only; every tenant context uses its own API key
+            - name: PYATLAS_ES_HOSTS
+              value: "http://elastic-search-es-http:9200"
+            - name: PYATLAS_ES_USERNAME
+              value: aurelius_pyatlas
+            - name: PYATLAS_ES_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: aurelius-secrets, key: pyatlas-es-password }
+            - name: PYATLAS_TENANCY_ENABLED
+              value: "true"
+            - name: PYATLAS_TENANT_REQUIRE_ES_KEY
+              value: "true"
+            - name: PYATLAS_TENANT_DEFAULT
+              value: {{ .Values.global.defaultTenant | quote }}
+            - name: PYATLAS_TENANT_IDLE_SECS
+              value: {{ .Values.pyatlas.tenantIdleSecs | quote }}
+            - name: PYATLAS_SESSION_SECRET
+              valueFrom:
+                secretKeyRef: { name: aurelius-secrets, key: pyatlas-session-secret }
+            - name: PYATLAS_SESSION_COOKIE_SECURE
+              value: "true"
+            - name: PYATLAS_OIDC_CLIENTS
+              value: m4i_atlas
+            # the tenant header and X-Forwarded-For are believed from pods only; the network policy lets only the
+            # reverse proxy and the Aurelius jobs reach pyatlas
+            - name: PYATLAS_TRUSTED_PROXIES
+              value: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,100.64.0.0/10"
+            - name: PYATLAS_OIDC_ENABLED
+              value: "true"
+            - name: PYATLAS_TENANT_OIDC_ISSUERS
+              value: "{{ include "aurelius.publicUrl" . }}/{{ $ns }}/auth/realms/{tenant}"
+            - name: PYATLAS_TENANT_OIDC_JWKS_URL
+              value: "http://keycloak:8080/{{ $ns }}/auth/realms/{tenant}/protocol/openid-connect/certs"
+            - name: PYATLAS_OIDC_PASSWORD_LOGIN
+              value: "true"
+            - name: PYATLAS_FRONTEND_KEYCLOAK_URL
+              value: "/{{ $ns }}/auth"
+            - name: PYATLAS_LOG_FORMAT
+              value: json
+            {{- if .Values.sampleData }}
+            - name: PYATLAS_IMPORT_ON_START
+              value: /app/sample-data/sample_data.zip
+            - name: PYATLAS_AURELIUS_QUALITY_SEED
+              value: /app/sample-data/atlas-dev-quality.json
+            {{- end }}
+          readinessProbe:
+            httpGet: { path: /api/atlas/admin/liveness, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /api/atlas/admin/liveness, port: http }
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 6
+          {{- with .Values.pyatlas.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pyatlas
+  labels:
+    {{- include "aurelius.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 21000
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: pyatlas
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- if .Values.networkPolicy.enabled }}
+---
+# pyatlas believes the tenant header of its callers: only the reverse proxy and the Aurelius jobs may call it
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: pyatlas-callers
+  labels:
+    {{- include "aurelius.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: pyatlas
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: reverse-proxy
+        - podSelector:
+            matchLabels:
+              aurelius/pyatlas-client: "true"
+      ports:
+        - port: 21000
+{{- end }}

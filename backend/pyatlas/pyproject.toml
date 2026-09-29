@@ -29,6 +29,7 @@ dev = ["pytest>=8", "pytest-asyncio>=0.23", "httpx>=0.26"]
 
 [project.scripts]
 pyatlas = "pyatlas.__main__:main"
+aurelius-admin = "pyatlas.tenant_admin:main"
 
 [tool.setuptools.packages.find]
 include = ["pyatlas*", "parity*"]

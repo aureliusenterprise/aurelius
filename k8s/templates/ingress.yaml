@@ -1,30 +1,33 @@
+# everything under /<namespace>/ goes to the reverse proxy (tenants, Keycloak, Kibana); a customer's own host name
+# can be added as another rule that rewrites to /<namespace>/<tenant>/
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name:  reverse-proxy-ingress
+  name: reverse-proxy-ingress
+  labels:
+    {{- include "aurelius.labels" . | nindent 4 }}
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /{{ .Release.Namespace }}$1$2
-    cert-manager.io/cluster-issuer: letsencrypt-clusterissuer-aureliusdev
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.clusterIssuer }}
     cert-manager-io/http01-edit-in-place: "true"
     nginx.ingress.kubernetes.io/proxy-connect-timeout: '3600'
     nginx.ingress.kubernetes.io/proxy-read-timeout: '3600'
     nginx.ingress.kubernetes.io/proxy-send-timeout: '3600'
-    #nginx.ingress.kubernetes.io/server-snippet: 'keepalive_timeout 3600s;client_body_timeout 3600s;client_header_timeout 3600s;'
+    # import ZIPs up to pyatlas' limit
+    nginx.ingress.kubernetes.io/proxy-body-size: 512m
 spec:
-  ingressClassName: nginx
+  ingressClassName: {{ .Values.ingress.className }}
   rules:
     - host: {{ .Values.global.external_hostname }}
       http:
         paths:
-          - pathType: ImplementationSpecific
+          - pathType: Prefix
+            path: /{{ .Release.Namespace }}
             backend:
               service:
                 name: reverse-proxy
                 port:
                   number: 80
-            path: /{{ .Release.Namespace }}(/|$)(.*)
-  # This section is only required if TLS is to be enabled for the Ingress
   tls:
-  - hosts:
-      - {{ .Values.global.external_hostname }}
-    secretName: letsencrypt-secret-aureliusdev
+    - hosts:
+        - {{ .Values.global.external_hostname }}
+      secretName: {{ .Values.ingress.tlsSecretName }}

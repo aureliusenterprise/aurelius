@@ -1,3 +1,5 @@
+# One Kibana, a space per tenant.  Browsers reach it only through the reverse proxy, which logs the user in at the
+# tenant's Keycloak realm and forwards the request with the tenant's Kibana API key.
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
@@ -7,9 +9,12 @@ spec:
   count: {{ .Values.kibana.replicaCount }}
   elasticsearchRef:
     name: {{ .Values.elastic_search.name }}
-  enterpriseSearchRef:
-    name: {{ .Values.enterprise_search.name }}
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
   config:
-     server.publicBaseUrl: https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/kibana
-     server.basePath: /{{ .Release.Namespace }}/kibana
-     
+    server.publicBaseUrl: https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/kibana
+    server.basePath: /{{ .Release.Namespace }}/kibana
+    server.rewriteBasePath: true
+    telemetry.optIn: false

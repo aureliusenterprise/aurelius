@@ -3,7 +3,7 @@
 Getting started
 -------------------------
 
-Welcome to the Aurelius Atlas solution powered by Apache Atlas! Aurelius Atlas is an open-source Data Governance solution, based on a selection of open-source tools to facilitate business users to access governance information in an easy consumable way and meet the data governance demands of the distributed data world.
+Welcome to the Aurelius Atlas solution! Aurelius Atlas is an open-source Data Governance solution, based on a selection of open-source tools to facilitate business users to access governance information in an easy consumable way and meet the data governance demands of the distributed data world.
 
 
 Here you will find the instillation instructions and the required setup of the kubernetes instructions, followed by how to deploy the chart in different namespaces.
@@ -74,21 +74,16 @@ helm install nginx-ingress ingress-nginx/ingress-nginx --set controller.publishS
 - It is also possible to set a DNS label to the ingress controller if you do not have a DNS by adding ``--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=<label>``
 
 ##### 3. Install Elastic
+Elasticsearch and Kibana 9 need ECK 3.x:
 ```bash
-kubectl create -f https://download.elastic.co/downloads/eck/2.3.0/crds.yaml
-kubectl apply -f https://download.elastic.co/downloads/eck/2.3.0/operator.yaml
+kubectl create -f https://download.elastic.co/downloads/eck/3.1.0/crds.yaml
+kubectl apply -f https://download.elastic.co/downloads/eck/3.1.0/operator.yaml
 ```
 ##### 4. Install Reflector
 ```bash
 helm repo add emberstack https://emberstack.github.io/helm-charts
 helm repo update
 helm upgrade --install reflector emberstack/reflector
-```
-##### 5. Update Zookeeper Dependencies
-- Move to the directory of Aurelius-Atlas-helm-chart
-```bash
-cd charts/zookeeper/
-helm dependency update
 ```
 
 ## Get Ingress Controller External IP to link to DNS
@@ -159,10 +154,27 @@ This is needed if you installed cert-manager from the required packages.
 Deploy Aurelius Atlas
 -------------------------
 
+What the chart installs (one set of containers for several tenants, see `docs/migration/README.md`):
+
+| Component | What | Notes |
+| --- | --- | --- |
+| `reverse-proxy` | Apache with the Angular frontend (`docker/aurelius-reverse-proxy`) | routes `/<namespace>/<tenant>/...`; sidecar `tenant-sync` keeps its tenant files (Kibana logins) in step with the tenant registry |
+| `pyatlas` | metadata server for all tenants (`backend/pyatlas`) | a tenant context per tenant, own Elasticsearch API key per tenant; only the proxy and the Aurelius jobs may call it (NetworkPolicy) |
+| `keycloak` | Keycloak 22 in production mode on PostgreSQL | a realm per tenant; database in the pod `<release>-keycloak-postgresql` (volume kept on uninstall) or an external PostgreSQL |
+| `elastic` | Elasticsearch 9 and Kibana 9 (ECK) | security on; a Kibana space per tenant |
+| `aurelius-filebeat` | log shipper (DaemonSet) | routes the log lines of pyatlas, proxy and Keycloak to `logs-aurelius.<source>-<tenant>` |
+| `aurelius-init` | job after every install / upgrade | platform (registry, users, log routing, operators' realm and Kibana space) and the default tenant `m4i` |
+| `aurelius-admin` | pod for the tenant administration | `kubectl exec deploy/aurelius-admin -- aurelius-admin ...` |
+
+Images: `ghcr.io/aureliusenterprise/pyatlas`, `aurelius-reverse-proxy` and `aurelius-docker-keycloak`, tag
+`global.version` (published by the publish workflow for a release tag `v*.*.*`).
+
 1. Update the values.yaml file
-   - ``{{ .Values.keycloak.keycloakFrontendURL }}`` replace it to your DNS name
-   - ``{{ .Values.post_install.upload_data }}`` set to `"true"` if you want to upload sample data after installation, otherwise set to `"false"`
-2. Create the namespace
+   - `global.external_hostname`: your DNS name
+   - `global.version`: the release of the images
+   - `sampleData`: `true` loads the Aurelius sample data into the default tenant
+   - `keycloak.postgresql`: size of the database volume, or `enabled: false` with `external` for a managed PostgreSQL
+2. Create the namespace (it is also the first path segment of every URL)
 
     ```bash
     kubectl create namespace <namespace>
@@ -172,60 +184,79 @@ Deploy Aurelius Atlas
 
     ```bash
     cd aurelius/k8s
-    helm dependency update
-    helm install --generate-name -n <namespace>  -f values.yaml --wait --timeout 15m0s .
+    helm install aurelius -n <namespace> -f values.yaml --timeout 20m0s .
     ```
 
-Please note that it can take 5-10 minutes to deploy all services.
+The job `aurelius-init` waits for Elasticsearch and Keycloak and then sets up the platform and the default tenant
+(5-10 minutes on a new cluster): `kubectl -n <namespace> logs -f job/aurelius-init-1`.
+
+Once it has finished:
+
+| What | URL |
+| --- | --- |
+| Frontend of the default tenant | `https://<DNS>/<namespace>/m4i/atlas/` (the old `https://<DNS>/<namespace>/atlas/` redirects) |
+| Kibana of the default tenant | `https://<DNS>/<namespace>/m4i/kibana/` (realm users with `ROLE_ADMIN`) |
+| Kibana over all tenants | `https://<DNS>/<namespace>/platform/kibana/` (user `operator`) |
+| Keycloak admin console | `https://<DNS>/<namespace>/auth/admin/` |
+| Lineage API of a tenant | `https://<DNS>/<namespace>/<tenant>/lin_api/` |
 
 #### Check that all pods are running
 
-You can observe if all pods are ready with
 ```bash
 watch -n 0.5 kubectl get pods -n <namespace>
 ```
 
-Once all pods are ready, Atlas is accessible via reverse proxy at ``<DNS-url>/<namespace>/atlas/``
+### Tenants
+
+```bash
+A="kubectl -n <namespace> exec deploy/aurelius-admin -- aurelius-admin"
+$A tenant create acme --name "ACME" --admin-user anna --admin-email anna@acme.example   # prints anna's temporary password
+$A tenant create acme --sample-data /app/sample-data/sample_data.zip                     # optional demo content
+$A tenant list
+$A tenant entra acme --directory-id <Entra tenant id> --client-id <app id> --client-secret <secret> [--only-entra]
+$A tenant suspend acme          # resume acme
+$A tenant delete acme --yes
+```
+
+A new tenant is reachable at `https://<DNS>/<namespace>/acme/atlas/` at once; its Kibana login works after the
+`tenant-sync` sidecar of the proxy has picked it up (30 seconds). A customer's own host name is an ingress rule
+that rewrites `https://data.acme.com/` to `/<namespace>/acme/`.
+
+### Keycloak database
+
+Keycloak runs in production mode (`kc.sh start`) on PostgreSQL 15 (`<release>-keycloak-postgresql`, volume of
+`keycloak.postgresql.persistence.size`, password generated into the secret `<release>-keycloak-postgresql-secret`).
+The volume and the secret are kept by `helm uninstall` (`helm.sh/resource-policy: keep`): they hold the realms and
+users of all tenants. Back up the database with
+
+```bash
+kubectl -n <namespace> exec deploy/<release>-keycloak-postgresql -- pg_dump -U keycloak keycloak > keycloak.sql
+```
+
+For a managed PostgreSQL set `keycloak.postgresql.enabled: false` and `keycloak.postgresql.external` (host, port,
+database, a secret with `username` and `password`, optional `jdbcParams` such as `sslmode=require`).
+
+### Upgrading from the Apache Atlas chart
+
+The chart no longer contains Apache Atlas, Kafka, Zookeeper, Flink, Enterprise Search, the search API and the REST
+services; `helm upgrade` removes them. Keycloak keeps its database (the realm `m4i` becomes the default tenant).
+The old Elasticsearch 8.2 held only search copies (App Search engines) that pyatlas does
+not use; Elasticsearch cannot jump from 8.2 to 9, so remove the old cluster before the upgrade
+(`kubectl -n <namespace> delete elasticsearch elastic-search` and its volumes) and let the chart create a new one.
+The old Atlas data lived in Atlas' own store and is not migrated by the chart - export it with the old installation (`backup/`) and import the ZIP into the
+default tenant (`https://<DNS>/<namespace>/m4i/atlas2/`, Atlas UI import) or with
+`aurelius-admin tenant create m4i --sample-data <zip>`.
 
 ### Users with Randomized Passwords
-In the helm chart 5 base users are created with randomized passwords stored as secrets on kubernetes.
+The chart creates these users with random passwords, stored as Kubernetes secrets:
 
-
-The 5 base users are:
-1. Keycloak Admin User
-2. Atlas Admin User
-3. Atlas Data Steward User
-4. Atlas Data User
-5. Elastic User
-
-To get the randomized passwords out of kubernetes there is a bash script get_passwords.
+1. Keycloak admin (realm master)
+2. Atlas admin, data steward and data scientist of the default tenant (`atlas`, `steward`, `scientist`)
+3. `operator` of the realm `platform` (Kibana over all tenants)
+4. Elastic user `elastic`
 
 ```bash
 ./get_passwords.sh <namespace>
-```
-
-The above command scans the given ``<namespace>`` and prints the usernames and randomized passwords as follows:
-```
-keycloak admin user pwd:
-username: admin
-vntoLefBekn3L767
-----
-keycloak Atlas admin user pwd:
-username: atlas
-QUVTj1QDKQWZpy27
-----
-keycloak Atlas data steward user pwd:
-username: steward
-XFlsi25Nz9h1VwQj
-----
-keycloak Atlas data user pwd:
-username: scientist
-PPv57ZvKHwxCUZOG
-==========
-elasticsearch elastic user pwd:
-username: elastic
-446PL2F2UF55a19haZtihRm5
-----
 ```
 
 ### Enable social login
@@ -248,39 +279,11 @@ If your deployment is already running, you can enable the identity provider thro
 
 ## Loading Sample Demo Data (Optional)
 
-A sample dataset can be automatically loaded. Ensure that the ``post_install.upload_data`` variable is set to true in the values file.
-
-For more details about this look at:
-- Atlas Post Install: [link](https://github.com/aureliusenterprise/atlas-post-install)
-- Aurelius Atlas - Flink: [link](https://github.com/aureliusenterprise/flink-ci)
+With `sampleData: true` the default tenant gets the Aurelius sample data on its first start; other tenants with
+`aurelius-admin tenant create <tenant> --sample-data /app/sample-data/sample_data.zip`.
 
 ## Aurelius Atlas backup
 See [backup README](./backup/README.md).
-
-## Data Quality
-There is a daily job `data-quality-propagation` which propagates the data quality results from Data Fields to the whole system. It can be run manually:
-```
-kubectl create job --from=cronjob/data-quality-propagation data-quality-propagation -n <namespace>
-```
-
-## Onboard Kafka sources
-
-To run onboard Kafka sources, youn need to config k8s/values.yaml and provide kafka and schema-registry ulrs (update release if it was alredy deployed)
-
-```yaml
-onboard_sources:
-  source: kafka
-  bootstrap_servers: "kafka:9092"
-  schema_registry_url: "http://schema-registry:8081"
-```
-
-then you need to apply `k8s/templates/onboard-sources.yaml`
-
-```bash
-helm template -s templates/onboard-sources.yaml . --namespace <namespace> | kubectl apply -f - -n <namespace>
-```
-
-In this case you will see Kafka metadata in Aurelius Atlas.
 
 ## Add user registration option
 

@@ -34,7 +34,8 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.repository }}:{{ .Values.global.version }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
-          command: ["/opt/keycloak/bin/kc.sh", "start-dev", "--import-realm"]
+          # production mode with the PostgreSQL database (the realm file is imported once, when the realm is missing)
+          command: ["/opt/keycloak/bin/kc.sh", "start", "--import-realm"]
           ports:
             - name: http
               containerPort: 8080
@@ -54,6 +55,7 @@ spec:
               value: "8080"
             - name: KC_DB
               value: postgres
+            {{- if .Values.postgresql.enabled }}
             - name: KC_DB_URL
               value: jdbc:postgresql://{{ include "keycloak.fullname" . }}-postgresql:5432/{{ .Values.postgresql.globalVariables.POSTGRES_DB }}
             - name: KC_DB_USERNAME
@@ -66,14 +68,40 @@ spec:
                 secretKeyRef:
                   name: {{ include "keycloak.fullname" . }}-postgresql-secret
                   key: postgres-password
+            {{- else }}
+            {{- with .Values.postgresql.external }}
+            - name: KC_DB_URL
+              value: jdbc:postgresql://{{ .host }}:{{ .port | default 5432 }}/{{ .database | default "keycloak" }}{{ if .jdbcParams }}?{{ .jdbcParams }}{{ end }}
+            - name: KC_DB_USERNAME
+              valueFrom:
+                secretKeyRef: { name: {{ .existingSecret }}, key: username }
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: {{ .existingSecret }}, key: password }
+            {{- end }}
+            {{- end }}
             - name: KC_LOG_LEVEL
               value: INFO
+            # JSON log lines; login events (also successful ones) go to the tenant's Kibana through the log shipper
+            - name: KC_LOG_CONSOLE_OUTPUT
+              value: json
+            - name: KC_SPI_EVENTS_LISTENER_JBOSS_LOGGING_SUCCESS_LEVEL
+              value: info
+            # one node: local caches (more replicas need KC_CACHE=ispn with KC_CACHE_STACK=kubernetes)
+            - name: KC_CACHE
+              value: {{ .Values.cache | default "local" | quote }}
             - name: KC_METRICS_ENABLED
               value: "true"
             - name: KC_HEALTH_ENABLED
               value: "true"
-            - name: KC_HOSTNAME
-              value: {{ .Values.global.external_hostname }}
+            # the URL browsers use; token issuers are https://<host>/<namespace>/auth/realms/<tenant> also for tokens
+            # fetched inside the cluster, back-channel endpoints stay internal
+            - name: KC_HOSTNAME_URL
+              value: https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth
+            - name: KC_HOSTNAME_ADMIN_URL
+              value: https://{{ .Values.global.external_hostname }}/{{ .Release.Namespace }}/auth
+            - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+              value: "false"
             - name: KC_HTTP_RELATIVE_PATH
               value: /{{ .Release.Namespace }}/auth
             - name: KC_HTTP_ENABLED
@@ -105,6 +133,10 @@ spec:
                 name: keycloak-secret-user-steward
             - secretRef:
                 name: keycloak-secret-user-data
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: realm-single-file-volume
               mountPath: /opt/keycloak/data/import/realm.json

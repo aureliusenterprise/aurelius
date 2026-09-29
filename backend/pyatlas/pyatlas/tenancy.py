@@ -50,6 +50,9 @@ REGISTRY_MAPPING = {
         "esApiKey": {"type": "keyword", "index": False, "doc_values": False},
         "esApiKeyId": {"type": "keyword"},
         "kibanaApiKeyId": {"type": "keyword"},
+        # what the reverse proxy needs for the tenant's Kibana (aurelius-admin proxy sync); not indexed
+        "kibanaApiKey": {"type": "keyword", "index": False, "doc_values": False},
+        "proxyClientSecret": {"type": "keyword", "index": False, "doc_values": False},
     },
 }
 

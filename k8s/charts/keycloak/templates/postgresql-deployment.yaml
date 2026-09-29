@@ -8,6 +8,9 @@ metadata:
     app.kubernetes.io/component: postgresql
 spec:
   replicas: 1
+  # one pod on the ReadWriteOnce volume: stop the old one before the new one starts
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "keycloak.selectorLabels" . | nindent 6 }}
@@ -41,6 +44,7 @@ spec:
               value: {{ .Values.postgresql.globalVariables.POSTGRES_DB | quote }}
           volumeMounts:
             - name: postgresql-data
+              # the database lives in data/ of the volume (PGDATA default /var/lib/postgresql/data)
               mountPath: /var/lib/postgresql
           livenessProbe:
             exec:
@@ -58,6 +62,10 @@ spec:
                 - pg_isready -U {{ .Values.postgresql.globalVariables.POSTGRES_USER }} -d {{ .Values.postgresql.globalVariables.POSTGRES_DB }}
             initialDelaySeconds: 5
             periodSeconds: 5
+          {{- with .Values.postgresql.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       volumes:
         - name: postgresql-data
           persistentVolumeClaim:
@@ -84,6 +92,9 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ include "keycloak.fullname" . }}-postgresql-pvc
+  annotations:
+    # the realms of all tenants: never removed by helm uninstall
+    helm.sh/resource-policy: keep
   labels:
     {{- include "keycloak.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgresql

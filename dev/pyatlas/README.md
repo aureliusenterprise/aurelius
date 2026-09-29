@@ -50,7 +50,7 @@ the login page goes straight to Entra ID.
 
 ## How the pieces fit
 
-- The browser only talks to the reverse proxy (`reverse-proxy/aurelius.conf`). The tenant comes from the URL path
+- The browser only talks to the reverse proxy (`docker/aurelius-reverse-proxy/aurelius.conf`). The tenant comes from the URL path
   `/aurelius/<tenant>/...` only: the proxy removes any `X-Aurelius-Tenant` header of the client and sets its own;
   pyatlas believes it only from the proxy (`PYATLAS_TRUSTED_PROXIES`).
 - The frontend is one build for all tenants: it takes its base path from the URL and its realm from
@@ -60,7 +60,7 @@ the login page goes straight to Entra ID.
   stopped when idle. A token is accepted only if it was issued by the realm of the tenant in the URL; UI sessions
   have a cookie per tenant.
 - Kibana: one Kibana, a space per tenant. The proxy logs the user in at the tenant's realm (mod_auth_openidc,
-  `reverse-proxy/kibana-tenants.conf`), requires `ROLE_ADMIN` and forwards the request with the tenant's Kibana API
+  `docker/aurelius-reverse-proxy/kibana-tenants.conf`), requires `ROLE_ADMIN` and forwards the request with the tenant's Kibana API
   key (read access to the tenant's indices and log data streams, its space only). Opening another tenant's space
   ends the login and asks for a login at that tenant.
 - Logs: pyatlas (JSON, with tenant), the proxy (JSON, with tenant) and Keycloak (JSON, login events with the realm)

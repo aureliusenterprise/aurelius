@@ -1,0 +1,76 @@
+{{- /*
+Platform and default tenant, after every install and upgrade (idempotent): tenant registry, Elasticsearch users
+(pyatlas, log shipper), log routing, the operators' realm and Kibana space "platform", and the default tenant (its
+realm - imported by the keycloak chart - gets the tenant's clients, its API keys, Kibana space and dashboards).
+The reverse proxy reads what it needs from the registry (tenant-sync sidecar), so this job writes no files.
+*/}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: aurelius-init-{{ .Release.Revision }}
+  labels:
+    {{- include "aurelius.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 10
+  ttlSecondsAfterFinished: 86400
+  template:
+    metadata:
+      labels:
+        {{- include "aurelius.labels" . | nindent 8 }}
+        aurelius/pyatlas-client: "true"
+    spec:
+      restartPolicy: OnFailure
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: aurelius-init
+          image: {{ include "aurelius.image" (dict "name" "pyatlas" "Values" .Values) }}
+          imagePullPolicy: Always
+          command: ["sh", "-c"]
+          args:
+            - >-
+              aurelius-admin --wait 900 --skip proxy platform init &&
+              aurelius-admin --skip proxy tenant create {{ .Values.global.defaultTenant }}
+              --name {{ .Values.global.defaultTenantName | quote }} --legacy-urls
+          env:
+            {{- include "aurelius.adminEnv" . | nindent 12 }}
+{{- if .Values.admin.enabled }}
+---
+# tenant administration:  kubectl -n {{ .Release.Namespace }} exec deploy/aurelius-admin -- aurelius-admin tenant list
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aurelius-admin
+  labels:
+    {{- include "aurelius.labels" . | nindent 4 }}
+    app.kubernetes.io/name: aurelius-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: aurelius-admin
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        {{- include "aurelius.labels" . | nindent 8 }}
+        app.kubernetes.io/name: aurelius-admin
+        aurelius/pyatlas-client: "true"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: aurelius-admin
+          image: {{ include "aurelius.image" (dict "name" "pyatlas" "Values" .Values) }}
+          imagePullPolicy: Always
+          command: ["sh", "-c", "trap 'exit 0' TERM; while true; do sleep 3600 & wait $!; done"]
+          env:
+            {{- include "aurelius.adminEnv" . | nindent 12 }}
+          resources:
+            requests: { cpu: 10m, memory: 64Mi }
+            limits: { memory: 1Gi }
+{{- end }}
