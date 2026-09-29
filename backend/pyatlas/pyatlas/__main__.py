@@ -27,8 +27,10 @@ def main() -> None:
     if args.import_zip:
         existing = [p for p in os.environ.get("PYATLAS_IMPORT_ON_START", "").split(",") if p.strip()]
         os.environ["PYATLAS_IMPORT_ON_START"] = ",".join(existing + [os.path.abspath(p) for p in args.import_zip])
+    # proxy_headers off: uvicorn would take the client address from X-Forwarded-For of any local peer; pyatlas
+    # evaluates X-Forwarded-For itself, only from PYATLAS_TRUSTED_PROXIES (pyatlas/auth.py client_ip)
     uvicorn.run("pyatlas.main:app_factory", factory=True, host=args.host, port=args.port, reload=args.reload,
-                log_level=args.log_level)
+                log_level=args.log_level, proxy_headers=False)
 
 
 if __name__ == "__main__":

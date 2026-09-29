@@ -42,9 +42,11 @@ CSRF_SESSION_KEY = "csrf"
 
 
 class User:
-    def __init__(self, name: str, groups: Set[str]):
+    def __init__(self, name: str, groups: Set[str], source: str = "file"):
         self.name = name
         self.groups = groups
+        # "file" = users file (its per-user roles apply), "oidc" = Keycloak (only the token's roles count)
+        self.source = source
 
 
 class Authenticator:
@@ -174,9 +176,10 @@ class AuthMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, authenticators: List[Authenticator], enabled: bool = True, csrf_enabled: bool = True,
                  csrf_header: str = "X-XSRF-HEADER", csrf_methods_to_ignore: str = "GET,OPTIONS,HEAD,TRACE",
                  csrf_browser_useragents: str = "^Mozilla.*,^Opera.*,^Chrome.*",
-                 throttle: Optional[LoginThrottle] = None, oidc=None):
+                 throttle: Optional[LoginThrottle] = None, oidc=None, trusted_proxies: str = ""):
         super().__init__(app)
         self.oidc = oidc
+        self.trusted_proxies = _networks(trusted_proxies)
         self.authenticators = authenticators
         self.enabled = enabled
         self.csrf_enabled = csrf_enabled
@@ -197,7 +200,16 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if ":" not in raw:
             return None, None
         u, p = raw.split(":", 1)
-        return self.check(u, p, _client(request)), u
+        return self.check(u, p, self.client_ip(request)), u
+
+    def client_ip(self, request: Request) -> str:
+        """The client's address; behind a trusted proxy the last X-Forwarded-For entry (the address the proxy
+        saw - earlier entries are sent by the client and cannot be trusted)."""
+        peer = _client(request)
+        fwd = request.headers.get("x-forwarded-for", "")
+        if fwd and _in_networks(peer, self.trusted_proxies):
+            return fwd.split(",")[-1].strip() or peer
+        return peer
 
     def check(self, username: str, password: str, client: str = "") -> Optional[User]:
         key = f"{username}|{client}"
@@ -211,8 +223,10 @@ class AuthMiddleware(BaseHTTPMiddleware):
         self.throttle.failed(key)
         return None
 
-    def _lookup(self, username: str) -> Optional[User]:
+    def _lookup(self, username: str, source: Optional[str] = None) -> Optional[User]:
         for a in self.authenticators:
+            if source is not None and getattr(a, "source", "file") != source:
+                continue
             try:
                 u = a.lookup(username)
             except NotImplementedError:  # pragma: no cover
@@ -246,33 +260,38 @@ class AuthMiddleware(BaseHTTPMiddleware):
         sess = request.session if "session" in request.scope else {}
         user = None
         if sess.get("user"):
-            user = self._lookup(sess["user"])       # user removed from the users file -> session is dead
+            # user removed from the users file -> session is dead; a Keycloak login is looked up in Keycloak's cache
+            user = self._lookup(sess["user"], sess.get("src", "file"))
             if user is None:
                 sess.clear()
         if user is None:
-            user, basic_name = self._basic(request)
+            import asyncio
+            # password checks may call Keycloak (blocking HTTP): never on the event loop
+            user, basic_name = await asyncio.to_thread(self._basic, request)
             if user is not None and _access_log(request) is not None:
-                await _access_log(request).record(user.name, "basic", ip=_remote_ip(request), groups=user.groups)
+                await _access_log(request).record(user.name, "basic", ip=self.client_ip(request), groups=user.groups)
             if user is None and basic_name is not None and path.startswith("/api/"):
                 msg = "Too many failed logins, try again later" \
-                    if self.throttle.locked(f"{basic_name}|{_client(request)}") \
+                    if self.throttle.locked(f"{basic_name}|{self.client_ip(request)}") \
                     else "Authentication required"
                 return JSONResponse({"errorCode": "ATLAS-401-00-001", "errorMessage": msg}, status_code=401,
                                     headers={"WWW-Authenticate": 'Basic realm="atlas"'})
         if path == "/j_spring_security_check" and request.method == "POST":
             form = await request.form()
             name = str(form.get("j_username", ""))
-            if self.throttle.locked(f"{name}|{_client(request)}"):
+            if self.throttle.locked(f"{name}|{self.client_ip(request)}"):
                 return JSONResponse({"msgDesc": "Too many failed logins, try again later"}, status_code=401)
-            user = self.check(name, str(form.get("j_password", "")), _client(request))
+            import asyncio
+            user = await asyncio.to_thread(self.check, name, str(form.get("j_password", "")), self.client_ip(request))
             if user is None:
                 return JSONResponse({"msgDesc": "Invalid User credentials"}, status_code=401)
             sess.clear()                             # no session fixation: a fresh session per login
             request.session["user"] = user.name
+            request.session["src"] = user.source
             request.session["login"] = int(time.time())
             request.session[CSRF_SESSION_KEY] = secrets.token_urlsafe(32)
             if _access_log(request) is not None:
-                await _access_log(request).record(user.name, "form", ip=_remote_ip(request), groups=user.groups)
+                await _access_log(request).record(user.name, "form", ip=self.client_ip(request), groups=user.groups)
             return JSONResponse({"msgDesc": "Login Successful"})
         if path == "/logout.html":
             if "session" in request.scope:
@@ -309,7 +328,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         access = _access_log(request)
         if access is not None:
             await access.record(user.name, "keycloak", access.key_for_token(claims, user.name),
-                                client=claims.get("azp"), ip=_remote_ip(request), groups=user.groups)
+                                client=claims.get("azp"), ip=self.client_ip(request), groups=user.groups)
         request.state.user = user
         request.state.auth_method = "oidc"
         set_current_user(user)
@@ -321,10 +340,26 @@ def _bearer_error(message: str) -> JSONResponse:
                         status_code=401, headers={"WWW-Authenticate": 'Bearer realm="atlas", error="invalid_token"'})
 
 
-def _remote_ip(request: Request) -> str:
-    """The browser's address: behind the reverse proxy the first X-Forwarded-For entry."""
-    fwd = request.headers.get("x-forwarded-for", "")
-    return fwd.split(",")[0].strip() if fwd else _client(request)
+def _networks(spec: str):
+    import ipaddress
+    out = []
+    for part in (spec or "").split(","):
+        part = part.strip()
+        if part:
+            try:
+                out.append(ipaddress.ip_network(part, strict=False))
+            except ValueError:
+                log.warning("ignoring invalid trusted proxy %r", part)
+    return out
+
+
+def _in_networks(address: str, networks) -> bool:
+    import ipaddress
+    try:
+        ip = ipaddress.ip_address(address)
+    except ValueError:
+        return False
+    return any(ip in n for n in networks)
 
 
 def _access_log(request: Request):

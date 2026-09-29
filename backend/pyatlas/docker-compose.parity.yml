@@ -6,10 +6,10 @@
 services:
   elasticsearch:
     ports: !override
-      - "9201:9200"
+      - "127.0.0.1:9201:9200"
   kibana:
     ports: !override
-      - "5602:5601"
+      - "127.0.0.1:5602:5601"
   pyatlas:
     environment:
       - PYATLAS_ES_HOSTS=http://elasticsearch:9200
@@ -19,4 +19,4 @@ services:
     volumes:
       - ../m4i-atlas-post-install/data:/aurelius-data:ro
     ports: !override
-      - "21100:21000"
+      - "127.0.0.1:21100:21000"

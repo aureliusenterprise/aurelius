@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import datetime as _dt
+import re
 from typing import Any, Dict, List
 
 from fastapi import APIRouter, Request, Response, UploadFile
@@ -58,6 +59,8 @@ async def _create_export(request: Request):
     params = s.glossary.export_parameters(await json_body(request, default={}))
     user = user_of(request)
     ts = params.get("exportTimestamp") or _dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    # the client's value becomes part of a file name: no path separators or dots (path traversal)
+    ts = re.sub(r"[^A-Za-z0-9_\-]", "_", str(ts))[:40]
     file_name = f"{user}_GLOSSARY_EXPORT_{ts}.{'xlsx' if params['format'] == 'XLSX' else 'csv'}"
 
     async def writer(path):

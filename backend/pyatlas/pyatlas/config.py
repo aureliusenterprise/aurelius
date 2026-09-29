@@ -51,6 +51,8 @@ class Settings(BaseSettings):
     auth_enabled: bool = True
     # Atlas-compatible file: user=ROLE::sha256(password)
     users_file: Path = PROJECT_ROOT / "conf" / "users-credentials.properties"
+    # false = the users file is not used at all (only Keycloak users), e.g. behind the Aurelius reverse proxy
+    file_users_enabled: bool = True
     # key that signs the session cookie; MUST be set (same value on all nodes) in production.  When unset a
     # random key is generated at start-up (sessions end with a restart and do not work across nodes).
     session_secret: Optional[str] = None
@@ -63,6 +65,9 @@ class Settings(BaseSettings):
     # Atlas' CSRF filter: data-changing API calls from browsers need the X-XSRF-HEADER session token
     csrf_enabled: bool = True
     csrf_browser_useragents: str = "^Mozilla.*,^Opera.*,^Chrome.*"
+    # reverse proxies whose X-Forwarded-For is trusted (comma separated addresses or networks, e.g. 172.16.0.0/12);
+    # the client address (login lock-out, access log) is then the last address the proxy added
+    trusted_proxies: str = ""
     # failed logins per user name and client address before a temporary lock-out
     login_max_failures: int = 5
     login_lockout_secs: int = 300
@@ -99,6 +104,8 @@ class Settings(BaseSettings):
     import_dir: Path = PROJECT_ROOT / "data" / "import"
     # maximum size of a request body (uploads such as import ZIPs, CSV/XLSX files) in MB
     max_upload_mb: int = 512
+    # maximum size of a JSON request body in MB (entity and type definition payloads)
+    max_json_mb: int = 32
     # maximum total uncompressed size of an import ZIP in MB (zip-bomb protection)
     max_import_uncompressed_mb: int = 4096
 
@@ -134,6 +141,12 @@ class Settings(BaseSettings):
     # entity/relationship changes through the API wait up to this long for the rebuild, so the UI sees its own
     # change on the next page (0 = answer at once, documents follow after the debounce)
     aurelius_sync_write_timeout_secs: float = 5.0
+    # personal data retention: logins (user, address) and frontend page views are deleted after these many days
+    # (0 = keep); checked every few hours
+    access_log_retention_days: int = 180
+    clickstream_retention_days: int = 180
+    # page views stored per user and minute at most (the frontend sends one per navigation)
+    clickstream_max_per_minute: int = 120
 
     # --- Behaviour -----------------------------------------------------------
     search_max_limit: int = 10000

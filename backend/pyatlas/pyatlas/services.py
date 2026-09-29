@@ -72,6 +72,34 @@ class Services:
             if not self.aurelius.last_rebuild:
                 await self.aurelius.rebuild()
         self.metrics_stats.start_scheduler()
+        import asyncio
+        self._retention_task = asyncio.get_running_loop().create_task(self._retention_loop())
+
+    async def apply_retention(self) -> dict:
+        """Delete logins and page views older than their retention period (personal data)."""
+        now = int(time.time() * 1000)
+        out = {}
+        for index, days in ((self.store.access, self.settings.access_log_retention_days),
+                            (self.store.index("clickstream"), self.settings.clickstream_retention_days)):
+            if days and days > 0:
+                out[index] = await self.store.delete_by_query(
+                    index, {"range": {"timestamp": {"lt": now - int(days) * 86400 * 1000}}})
+        return out
+
+    async def _retention_loop(self) -> None:
+        import asyncio
+        import logging
+        log = logging.getLogger("pyatlas.retention")
+        while True:
+            try:
+                deleted = await self.apply_retention()
+                if any(deleted.values()):
+                    log.info("retention: deleted %s", deleted)
+            except asyncio.CancelledError:
+                raise
+            except Exception:  # noqa: BLE001 - try again later
+                log.exception("retention clean-up failed")
+            await asyncio.sleep(6 * 3600)
 
     async def import_on_start(self) -> None:
         """Import the ZIPs of ``PYATLAS_IMPORT_ON_START`` / ``--import-zip`` that were not imported before."""
@@ -104,6 +132,9 @@ class Services:
 
     async def stop(self) -> None:
         self.metrics_stats.stop()
+        task = getattr(self, "_retention_task", None)
+        if task is not None:
+            task.cancel()
         if self.aurelius is not None:
             await self.aurelius.close()
         await self.downloads.wait_all()

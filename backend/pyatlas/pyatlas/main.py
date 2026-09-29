@@ -214,7 +214,9 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
               aurelius_api.router, aurelius_api.lineage_router):
         app.include_router(r)
 
-    authenticators = [FileAuthenticator(settings.users_file)]
+    authenticators = [FileAuthenticator(settings.users_file)] if settings.file_users_enabled else []
+    if not settings.file_users_enabled:
+        log.info("users file disabled (PYATLAS_FILE_USERS_ENABLED=false): only Keycloak users can log in")
     oidc = oidc_from_settings(settings)
     keycloak_login = password_authenticator_from_settings(settings, oidc)
     if keycloak_login is not None:
@@ -224,7 +226,7 @@ def create_app(settings: Optional[Settings] = None, es_client=None) -> FastAPI:
     app.add_middleware(AuthMiddleware, authenticators=authenticators, enabled=settings.auth_enabled,
                        csrf_enabled=settings.csrf_enabled, csrf_browser_useragents=settings.csrf_browser_useragents,
                        throttle=LoginThrottle(settings.login_max_failures, settings.login_lockout_secs),
-                       oidc=oidc)
+                       oidc=oidc, trusted_proxies=settings.trusted_proxies)
     secret = settings.session_secret
     if not secret or secret in KNOWN_DEFAULT_SECRETS or len(secret) < 16:
         if secret:

@@ -3,7 +3,10 @@
 # Frontend: http://localhost:9090/aurelius/atlas/   users atlas / steward / scientist (password = user name,
 #           change with AURELIUS_ATLAS_PASSWORD, AURELIUS_STEWARD_PASSWORD, AURELIUS_SCIENTIST_PASSWORD on first start)
 # Keycloak admin console: http://localhost:9090/aurelius/auth/admin/   (KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD)
-# pyatlas directly (Atlas UIs, Swagger): http://localhost:9090/aurelius/atlas2/   (same Keycloak users, or admin/admin)
+# pyatlas directly (Atlas UIs, Swagger): http://localhost:9090/aurelius/atlas2/   (the same Keycloak users)
+# Secrets: start.bat / init-env.sh write random ones to .env on the first start (KEYCLOAK_ADMIN_PASSWORD,
+# PYATLAS_SESSION_SECRET, AURELIUS_PROXY_CLIENT_SECRET, AURELIUS_PROXY_CRYPTO_PASSPHRASE); compose refuses to
+# start without them.
 # Kibana: http://localhost:9090/aurelius/kibana/   (Keycloak login, ROLE_ADMIN only - user atlas; data views for the
 #         Atlas and Aurelius indices are created at start)
 # Everything is reached through http://localhost:9090; to use another host name set AURELIUS_PUBLIC_URL
@@ -11,6 +14,12 @@
 name: aurelius-pyatlas
 
 x-public-url: &public ${AURELIUS_PUBLIC_URL:-http://localhost:9090}
+# container logs are rotated (default json-file driver grows without limit)
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
 
 services:
   elasticsearch:
@@ -21,8 +30,11 @@ services:
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
     volumes:
       - esdata9:/usr/share/elasticsearch/data
+    # without security: reachable from this machine only (Kibana and pyatlas use the internal network)
     ports:
-      - "9200:9200"
+      - "127.0.0.1:9200:9200"
+    restart: unless-stopped
+    logging: *logging
     healthcheck:
       test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -qE '\"status\":\"(green|yellow)\"'"]
       interval: 10s
@@ -40,6 +52,8 @@ services:
       - SERVER_BASEPATH=/aurelius/kibana
       - SERVER_REWRITEBASEPATH=true
       - SERVER_PUBLICBASEURL=${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/kibana
+    restart: unless-stopped
+    logging: *logging
 
   # one-off job: Kibana data views for the pyatlas and Aurelius indices (backend/pyatlas/docker/kibana-setup.sh)
   kibana-setup:
@@ -64,7 +78,7 @@ services:
     command: ["start-dev", "--import-realm"]
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?run start.bat or init-env.sh to create .env}
       KC_HTTP_PORT: "8080"
       KC_HTTP_RELATIVE_PATH: /aurelius/auth
       KC_HOSTNAME_URL: ${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/auth
@@ -83,6 +97,8 @@ services:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080 && printf 'GET /aurelius/auth/health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q '200 OK' <&3"]
       interval: 10s
       retries: 30
+    restart: unless-stopped
+    logging: *logging
 
   # one-off job: the confidential client the reverse proxy uses for the Kibana login (idempotent)
   keycloak-init:
@@ -98,8 +114,8 @@ services:
     environment:
       KEYCLOAK_URL: http://keycloak:8080/aurelius/auth
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
-      PROXY_CLIENT_SECRET: ${AURELIUS_PROXY_CLIENT_SECRET:-aurelius-proxy-dev-secret}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?run start.bat or init-env.sh to create .env}
+      PROXY_CLIENT_SECRET: ${AURELIUS_PROXY_CLIENT_SECRET:?run start.bat or init-env.sh to create .env}
       PUBLIC_URL: *public
     volumes:
       - ./keycloak/ensure-proxy-client.sh:/ensure-proxy-client.sh:ro
@@ -116,7 +132,14 @@ services:
         condition: service_healthy
     environment:
       - PYATLAS_ES_HOSTS=http://elasticsearch:9200
-      - PYATLAS_SESSION_SECRET=${PYATLAS_SESSION_SECRET:-}
+      - PYATLAS_SESSION_SECRET=${PYATLAS_SESSION_SECRET:?run start.bat or init-env.sh to create .env}
+      # only Keycloak users (the image's users file with admin/admin is not used); scripts log in with a Keycloak
+      # user (Basic auth, checked by Keycloak) or a Keycloak token
+      - PYATLAS_FILE_USERS_ENABLED=false
+      # tokens of the frontend's client only (add the clients of service accounts, comma separated)
+      - PYATLAS_OIDC_CLIENTS=${PYATLAS_OIDC_CLIENTS:-m4i_atlas}
+      # the reverse proxy in the compose network: its X-Forwarded-For gives the browser's address
+      - PYATLAS_TRUSTED_PROXIES=172.16.0.0/12,10.0.0.0/8,192.168.0.0/16
       # Keycloak tokens of the frontend: the issuer is the public URL, the keys are fetched inside the network
       - PYATLAS_OIDC_ENABLED=true
       - PYATLAS_OIDC_ISSUERS=${AURELIUS_PUBLIC_URL:-http://localhost:9090}/aurelius/auth/realms/m4i
@@ -131,6 +154,12 @@ services:
       - PYATLAS_AURELIUS_QUALITY_SEED=${PYATLAS_AURELIUS_QUALITY_SEED-/aurelius-data/atlas-dev-quality.json}
     volumes:
       - ../../backend/m4i-atlas-post-install/data:/aurelius-data:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:21000/api/atlas/admin/liveness', timeout=5)"]
+      interval: 15s
+      retries: 20
+    restart: unless-stopped
+    logging: *logging
 
   reverse-proxy:
     build:
@@ -147,10 +176,12 @@ services:
       - KEYCLOAK_URL=http://keycloak:8080
       - KIBANA_URL=http://kibana:5601
       - PUBLIC_URL=${AURELIUS_PUBLIC_URL:-http://localhost:9090}
-      - PROXY_CLIENT_SECRET=${AURELIUS_PROXY_CLIENT_SECRET:-aurelius-proxy-dev-secret}
-      - PROXY_CRYPTO_PASSPHRASE=${AURELIUS_PROXY_CRYPTO_PASSPHRASE:-aurelius-proxy-dev-passphrase}
+      - PROXY_CLIENT_SECRET=${AURELIUS_PROXY_CLIENT_SECRET:?run start.bat or init-env.sh to create .env}
+      - PROXY_CRYPTO_PASSPHRASE=${AURELIUS_PROXY_CRYPTO_PASSPHRASE:?run start.bat or init-env.sh to create .env}
     ports:
       - "9090:8080"            # browser port 9090 -> proxy port 8080 in the container
+    restart: unless-stopped
+    logging: *logging
 
 volumes:
   esdata9:

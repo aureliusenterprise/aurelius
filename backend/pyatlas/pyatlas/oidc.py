@@ -137,7 +137,7 @@ class OidcAuthenticator:
         name = claims.get(self.username_claim) or claims.get("sub")
         if not name:
             raise InvalidToken(f"token has no {self.username_claim}")
-        return User(str(name), set(self.groups(claims)))
+        return User(str(name), set(self.groups(claims)), source="oidc")
 
     def groups(self, claims: dict) -> List[str]:
         out = list((claims.get("realm_access") or {}).get("roles") or [])
@@ -163,6 +163,7 @@ class KeycloakPasswordAuthenticator:
         self.client_secret = client_secret
         self.timeout = timeout
         self._users: Dict[str, object] = {}
+        self._recent: Dict[tuple, tuple] = {}
 
     def _token(self, username: str, password: str) -> Optional[str]:
         import urllib.error
@@ -184,9 +185,17 @@ class KeycloakPasswordAuthenticator:
             log.warning("Keycloak password login: %s not reachable: %s", self.token_url, e)
             return None
 
+    source = "oidc"
+    CACHE_SECS = 60
+
     def authenticate(self, username: str, password: str):
         if not username or not password:
             return None
+        import hashlib
+        key = (username, hashlib.sha256(password.encode("utf-8")).hexdigest())
+        hit = self._recent.get(key)
+        if hit is not None and hit[1] > time.time():   # scripts with Basic auth: not a Keycloak login per request
+            return hit[0]
         token = self._token(username, password)
         if not token:
             return None
@@ -196,6 +205,9 @@ class KeycloakPasswordAuthenticator:
             log.warning("Keycloak password login: token rejected: %s", e)
             return None
         self._users[user.name] = user
+        if len(self._recent) > 10000:
+            self._recent.clear()
+        self._recent[key] = (user, time.time() + self.CACHE_SECS)
         return user
 
     def lookup(self, username: str):

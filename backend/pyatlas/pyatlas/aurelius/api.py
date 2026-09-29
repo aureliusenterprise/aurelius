@@ -37,7 +37,7 @@ async def log_clickstream(request: Request):
     Logged with the authenticated user; the ``userid`` sent by the browser is not trusted."""
     body = await json_body(request, default={}) or {}
     event = {"type": "clickstream", "user": user_of(request), "app": _clip(body.get("app")),
-             "url": _clip(body.get("url")), "timestamp": body.get("timestamp") or int(time.time() * 1000)}
+             "url": _clip(body.get("url")), "timestamp": _clip(body.get("timestamp")) or int(time.time() * 1000)}
     clickstream_log.info(json.dumps(event))
     a = _aurelius(request)
     if a is not None and isinstance(event["url"], str):
@@ -69,6 +69,13 @@ def _aurelius(request: Request):
     return a
 
 
+def _require_read(request: Request, what: str) -> None:
+    """Aurelius read endpoints (search documents, dashboard, lineage listing) need entity-read, like the Atlas
+    entity API: a Keycloak user without an Aurelius role gets 403."""
+    svc(request).authz.verify_entity(Privilege.ENTITY_READ, {"typeName": "m4i_referenceable", "attributes": {}},
+                                     what)
+
+
 def _engine_error(engine: str) -> JSONResponse:
     return JSONResponse({"errors": [f"Could not find engine {engine}"]}, status_code=404)
 
@@ -83,6 +90,7 @@ async def app_search(engine: str, request: Request):
     a = _aurelius(request)
     if a is None or engine not in ENGINES:
         return _engine_error(engine)
+    _require_read(request, "search the Aurelius documents")
     body = await json_body(request, default={}) or {}
     try:
         return await appsearch.search(a.store, a.index(engine), engine, body)
@@ -98,6 +106,7 @@ async def app_search_documents(engine: str, request: Request):
     a = _aurelius(request)
     if a is None or engine not in ENGINES:
         return _engine_error(engine)
+    _require_read(request, "read the Aurelius documents")
     ids = request.query_params.getlist("ids[]") or request.query_params.getlist("ids")
     if request.method == "POST":
         ids = list(await json_body(request, default=[]) or [])
@@ -120,6 +129,7 @@ async def search_status(request: Request):
     a = _aurelius(request)
     if a is None:
         return JSONResponse({"errors": ["Aurelius is disabled"]}, status_code=404)
+    svc(request).authz.verify_admin(Privilege.ADMIN_AUDITS, "read the Aurelius index status")
     counts = {e: await a.store.count(a.index(e), {"match_all": {}}) for e in ENGINES}
     return {"documents": counts, "lastRebuild": a.last_rebuild}
 
@@ -215,6 +225,7 @@ async def data_governance_dashboard(request: Request):
     a = _aurelius(request)
     if a is None:
         return JSONResponse({"errors": ["Aurelius is disabled"]}, status_code=404)
+    _require_read(request, "read the governance dashboard")
     domains = {}
     async for _id, d in a.store.scan(a.index(SEARCH_DOCUMENTS), {"term": {"typename": "m4i_data_domain"}},
                                      sort_field="id"):
@@ -248,6 +259,7 @@ async def lineage_api_get(namespace: str, request: Request):
     if ns is None:
         return _unknown_namespace(namespace)
     type_name = NAMESPACES[ns][0]
+    _require_read(request, "list registered entities")
     s = svc(request)
     names, offset = [], 0
     while True:

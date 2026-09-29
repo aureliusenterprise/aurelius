@@ -5,13 +5,17 @@
   "loginTheme": "m4i",
   "accountTheme": "m4i",
   "emailTheme": "m4i",
-  "sslRequired": "none",
+  "sslRequired": "external",
   "registrationAllowed": false,
   "loginWithEmailAllowed": true,
   "accessTokenLifespan": 900,
   "ssoSessionIdleTimeout": 1800,
   "ssoSessionMaxLifespan": 36000,
   "bruteForceProtected": true,
+  "failureFactor": 10,
+  "waitIncrementSeconds": 60,
+  "maxFailureWaitSeconds": 900,
+  "passwordPolicy": "length(8) and notUsername",
   "roles": {
     "realm": [
       {

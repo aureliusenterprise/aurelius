@@ -31,6 +31,6 @@ COPY dev/pyatlas/reverse-proxy/httpd.conf /usr/local/apache2/conf/httpd.conf
 COPY dev/pyatlas/reverse-proxy/aurelius.conf /usr/local/apache2/conf.d/aurelius.conf
 RUN sed -i "s#^Define NS .*#Define NS ${NAMESPACE}#" /usr/local/apache2/conf.d/aurelius.conf
 ENV PYATLAS_URL=http://pyatlas:21000 KEYCLOAK_URL=http://keycloak:8080 KIBANA_URL=http://kibana:5601 \
-    PUBLIC_URL=http://localhost:9090 REALM=m4i PROXY_CLIENT_ID=aurelius_proxy \
-    PROXY_CLIENT_SECRET=change-me PROXY_CRYPTO_PASSPHRASE=change-me
+    PUBLIC_URL=http://localhost:9090 REALM=m4i PROXY_CLIENT_ID=aurelius_proxy
+# PROXY_CLIENT_SECRET and PROXY_CRYPTO_PASSPHRASE have no defaults: they must be passed (docker-compose, .env)
 EXPOSE 8080

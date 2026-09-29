@@ -41,7 +41,7 @@ class AureliusService:
         self.s = services
         self.gov_rules = load_rules(gov_rules_dir)
         from .clickstream import Clickstream
-        self.clickstream = Clickstream(services.store)
+        self.clickstream = Clickstream(services.store, services.settings.clickstream_max_per_minute)
         self.store = services.store
         self.debounce = debounce_secs
         self.max_delay = max_delay_secs

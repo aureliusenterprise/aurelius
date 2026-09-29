@@ -45,7 +45,13 @@ def bulk_unique_attrs_from_query(request: Request) -> List[Dict[str, Any]]:
 
 
 async def json_body(request: Request, default: Any = None) -> Any:
+    limit = getattr(getattr(request.app.state, "settings", None), "max_json_mb", 32) * 1024 * 1024
+    declared = request.headers.get("content-length")
+    if declared and declared.isdigit() and int(declared) > limit:
+        raise AtlasBaseException(AtlasErrorCode.BAD_REQUEST, f"JSON body larger than {limit // (1024 * 1024)} MB")
     raw = await request.body()
+    if len(raw) > limit:
+        raise AtlasBaseException(AtlasErrorCode.BAD_REQUEST, f"JSON body larger than {limit // (1024 * 1024)} MB")
     if not raw:
         if default is not None:
             return default

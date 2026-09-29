@@ -291,6 +291,12 @@ def _header_classification_names(h: Optional[dict]) -> Set[str]:
     return {n for n in names if n}
 
 
+def _policy_name(user) -> Optional[str]:
+    """The user name the policy's ``userRoles`` apply to: only users of the users file.  A Keycloak user named
+    like a file user (e.g. ``admin``) gets only the roles of its token."""
+    return None if getattr(user, "source", "file") == "oidc" else user.name
+
+
 class AuthzService:
     """Atlas' ``AtlasAuthorizationUtils`` bound to a type registry."""
 
@@ -347,7 +353,7 @@ class AuthzService:
         u = self._user()
         if u is None:
             return True
-        return self.authorizer.admin(u.name, u.groups, action)
+        return self.authorizer.admin(_policy_name(u), u.groups, action)
 
     def verify_admin(self, action: str, message: str = "") -> None:
         if not self.is_admin_allowed(action):
@@ -360,7 +366,7 @@ class AuthzService:
             return True
         cat = typedef.get("category") if typedef else None
         name = typedef.get("name") if typedef else None
-        return self.authorizer.type(u.name, u.groups, action, cat, name)
+        return self.authorizer.type(_policy_name(u), u.groups, action, cat, name)
 
     def verify_type(self, action: str, typedef: Optional[dict], message: str = "") -> None:
         if not self.is_type_allowed(action, typedef):
@@ -386,7 +392,7 @@ class AuthzService:
         u = self._user()
         if u is None or _import_in_progress.get():
             return True
-        return self.authorizer.entity(u.name, u.groups,
+        return self.authorizer.entity(_policy_name(u), u.groups,
                                       self._entity_request(action, header, classification, label, bm, attribute))
 
     def verify_entity(self, action: str, header: Optional[dict], message: str = "", **kw) -> None:
@@ -400,7 +406,7 @@ class AuthzService:
             return True
         req = RelationshipRequest(action, rel_type, self._entity_request(action, end1),
                                   self._entity_request(action, end2))
-        return self.authorizer.relationship(u.name, u.groups, req)
+        return self.authorizer.relationship(_policy_name(u), u.groups, req)
 
     def verify_relationship(self, action: str, rel_type: str, end1: Optional[dict], end2: Optional[dict],
                             message: str = "") -> None:

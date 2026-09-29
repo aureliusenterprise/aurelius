@@ -49,9 +49,22 @@ def parse_url(url: str) -> Tuple[str, str, Optional[str], Optional[str]]:
 
 
 class Clickstream:
-    def __init__(self, store):
+    def __init__(self, store, max_per_minute: int = 120):
         self.store = store
+        self.max_per_minute = max_per_minute
         self._visits: "OrderedDict[str, dict]" = OrderedDict()
+        self._minute: Dict[str, Tuple[int, int]] = {}
+
+    def _allowed(self, user: str, now: float) -> bool:
+        """At most ``max_per_minute`` events per user and minute (a browser navigates far less often)."""
+        minute = int(now // 60)
+        m, n = self._minute.get(user, (minute, 0))
+        if m != minute:
+            m, n = minute, 0
+        if len(self._minute) > _MAX_USERS:
+            self._minute.clear()
+        self._minute[user] = (m, n + 1)
+        return self.max_per_minute <= 0 or n < self.max_per_minute
 
     @property
     def index(self) -> str:
@@ -67,8 +80,10 @@ class Clickstream:
             self._visits.popitem(last=False)
         return v, new
 
-    async def record(self, user: str, app: Optional[str], url: str, client_ts: Optional[int] = None) -> dict:
+    async def record(self, user: str, app: Optional[str], url: str, client_ts: Optional[int] = None) -> Optional[dict]:
         now = time.time()
+        if not self._allowed(user, now):
+            return None
         page, path, query, guid = parse_url(url)
         v, new = self._visit(user, now)
         doc: Dict[str, object] = {

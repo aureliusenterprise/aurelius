@@ -30,7 +30,8 @@ def test_one_login_per_keycloak_session(monkeypatch):
         keycloak = [d for d in docs if d["method"] == "keycloak"]
         assert sorted(d["session"].split(":")[1] for d in keycloak if d["user"] == "steward1") == ["s-1", "s-2"]
         first = next(d for d in keycloak if d["session"] == "keycloak:s-1")
-        assert first["ip"] == "10.0.0.7" and first["client"] == "m4i_atlas" and "DATA_STEWARD" in first["groups"]
+        # X-Forwarded-For is only believed from a trusted proxy (none configured here)
+        assert first["ip"] == "testclient" and first["client"] == "m4i_atlas" and "DATA_STEWARD" in first["groups"]
         # a service account token without session: once per client, user and day
         assert len([d for d in keycloak if d["user"] == "svc"]) == 1
     finally:
@@ -69,3 +70,17 @@ def test_audit_events_name_the_entity():
         assert "typeName" not in api[0] and api[0]["user"] == "admin"
     finally:
         c.__exit__(None, None, None)
+
+
+def test_client_address_behind_a_trusted_proxy():
+    from types import SimpleNamespace
+    from pyatlas.auth import AuthMiddleware
+
+    def req(peer, fwd=None):
+        return SimpleNamespace(client=SimpleNamespace(host=peer), headers={"x-forwarded-for": fwd} if fwd else {})
+    mw = AuthMiddleware(lambda *a: None, [], trusted_proxies="172.16.0.0/12, 10.1.2.3")
+    # the proxy appends the address it saw; what the client sent before is ignored
+    assert mw.client_ip(req("172.18.0.5", "6.6.6.6, 203.0.113.9")) == "203.0.113.9"
+    assert mw.client_ip(req("10.1.2.3", "203.0.113.9")) == "203.0.113.9"
+    assert mw.client_ip(req("198.51.100.1", "6.6.6.6")) == "198.51.100.1"        # not a trusted proxy
+    assert mw.client_ip(req("172.18.0.5")) == "172.18.0.5"

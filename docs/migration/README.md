@@ -85,6 +85,19 @@ Where the old lineage API failed, pyatlas works instead of copying the failure: 
 value schema (the old code raised a TypeError for most schemas), Avro types outside its enum (`boolean`,
 `bytes`, ...), missing required values (400 instead of 500), Atlas errors passed on with their status. The listing (`GET`) leaves out deleted entities.
 
+## Hardening round (29 Sep 2026)
+
+An independent review of the stack found 3 high, 9 medium and 7 low issues; this round fixes the ones that do
+not need the production packaging of phase 6 (details: `dev/pyatlas/README.md`, "Security settings"):
+Elasticsearch no longer reachable from other machines, generated secrets instead of defaults (with rotation of
+a default Keycloak admin password), the image's `admin`/`admin` file user off, Keycloak users never get file
+users' roles by name, tokens only from the frontend client, Aurelius read endpoints need a role, Keycloak
+password checks off the event loop and cached, trusted-proxy client addresses, JSON body and clickstream
+limits, 180-day retention of logins and page views, realm brute-force and password policy, proxy security
+headers, blocked Keycloak metrics, container restart/log rotation/health checks, a file name sanitised in the
+glossary export. Left for phase 6: Keycloak production mode with a database and TLS (and Keycloak 26),
+Elasticsearch security, TLS and secure cookies, removing the demo users, pinned image digests, resource limits.
+
 ## Elasticsearch 9
 
 The stacks run Elasticsearch and Kibana 9.5.4; pyatlas uses the Python client 9. Enterprise Search, which
