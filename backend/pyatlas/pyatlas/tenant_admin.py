@@ -589,9 +589,15 @@ class Kibana:
                               content_type=f"multipart/form-data; boundary={boundary}")
         if not self.cfg.dry_run and not (r or {}).get("success"):
             raise AdminError(f"kibana: import into space {space} failed: {str(r)[:500]}")
-        self.http.call("POST", f"/s/{space}/api/kibana/settings", {"changes": {
-            "defaultIndex": "pyatlas-entities", "defaultRoute": "/app/dashboards",
-            "timepicker:timeDefaults": json.dumps({"from": "now-30d", "to": "now"})}})
+        # default data view through the public data views API; the advanced settings API is internal in Kibana 9
+        # (the dashboards bring their own time range), so it is tried but not required
+        self.http.call("POST", f"/s/{space}/api/data_views/default",
+                       {"data_view_id": "pyatlas-entities", "force": True}, ok=(200, 404))
+        status, _ = self.http.call("POST", f"/s/{space}/api/kibana/settings", {"changes": {
+            "defaultRoute": "/app/dashboards",
+            "timepicker:timeDefaults": json.dumps({"from": "now-30d", "to": "now"})}}, ok=None)
+        if status != 200:
+            log.info("kibana: advanced settings of space %s not set (HTTP %s); defaults stay", space, status)
 
     def delete_space(self, space: str) -> None:
         self.http.call("DELETE", f"/api/spaces/space/{space}", ok=(204, 404))
