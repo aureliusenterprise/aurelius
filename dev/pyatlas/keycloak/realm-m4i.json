@@ -15,7 +15,6 @@
   "failureFactor": 10,
   "waitIncrementSeconds": 60,
   "maxFailureWaitSeconds": 900,
-  "passwordPolicy": "length(8) and notUsername",
   "roles": {
     "realm": [
       {
