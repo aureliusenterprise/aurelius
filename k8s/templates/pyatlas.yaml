@@ -18,12 +18,18 @@ spec:
         {{- include "aurelius.labels" . | nindent 8 }}
         app.kubernetes.io/name: pyatlas
     spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range . }}
+        - name: {{ . | quote }}
+        {{- end }}
+      {{- end }}
       securityContext:
         runAsNonRoot: true
       containers:
         - name: pyatlas
           image: {{ include "aurelius.image" (dict "name" "pyatlas" "Values" .Values) }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default "IfNotPresent" }}
           ports:
             - name: http
               containerPort: 21000

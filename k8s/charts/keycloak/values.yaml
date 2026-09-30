@@ -5,8 +5,7 @@
 replicaCount: 1
 # image; the tag is global.version
 repository: ghcr.io/aureliusenterprise/aurelius-docker-keycloak
-pullPolicy: Always
-# imagePullSecrets: [{ name: my-registry }]
+pullPolicy: IfNotPresent
 
 service:
     name: keycloak

@@ -26,14 +26,16 @@ spec:
         fsGroup: 1000
       hostname: keycloak
       subdomain: atlas
-      {{- with .Values.imagePullSecrets }}
+      {{- with (.Values.global.imagePullSecrets | default .Values.imagePullSecrets) }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+        {{- range . }}
+        - name: {{ . | quote }}
+        {{- end }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.repository }}:{{ .Values.global.version }}"
-          imagePullPolicy: {{ .Values.pullPolicy }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default .Values.pullPolicy }}
           # production mode with the PostgreSQL database (the realm file is imported once, when the realm is missing)
           command: ["/opt/keycloak/bin/kc.sh", "start", "--import-realm"]
           ports:
