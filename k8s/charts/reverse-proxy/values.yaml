@@ -2,7 +2,7 @@
 # Reverse proxy of Aurelius with the Angular frontend (image built from docker/aurelius-reverse-proxy)
 replicaCount: 1
 image: aurelius-reverse-proxy
-pullPolicy: IfNotPresent
+pullPolicy: Always
 service:
   name: reverse-proxy
   type: ClusterIP
