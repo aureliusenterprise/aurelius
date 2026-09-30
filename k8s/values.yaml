@@ -12,15 +12,17 @@
 
 global:
     # host name of the ingress (the URL the browser uses)
-    external_hostname: 'uatest.aureliusenterprise.dev'
+    external_hostname: 'azure.aurelius-atlas.com'
     # tag of the Aurelius images (ghcr.io/aureliusenterprise/pyatlas, aurelius-reverse-proxy,
     # aurelius-docker-keycloak)
-    version: v3.0.0
+    version: v4.0.0-alpha
     imageRegistry: ghcr.io/aureliusenterprise
     # tenant of the old single-tenant URLs (/<namespace>/atlas/, /<namespace>/lin_api/, ...) and of requests
     # without a tenant; created at installation with the realm m4i of the keycloak chart
     defaultTenant: m4i
     defaultTenantName: M4I
+    imagePullSecrets:
+      - ghcr
 
 # the default tenant gets the Aurelius sample data (entities, quality results) on its first start
 sampleData: true
@@ -87,7 +89,7 @@ admin:
 
 ingress:
     # only used by the (commented) templates/prod_issuer.yaml
-    email_address: lorand.vatamany@aureliusenterprise.com
+    email_address: andreas.wombacher@aureliusenterprise.com
     className: nginx
     clusterIssuer: letsencrypt-clusterissuer-aureliusdev
     tlsSecretName: letsencrypt-secret-aureliusdev
