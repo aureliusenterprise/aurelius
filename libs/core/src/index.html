@@ -5,9 +5,10 @@
     <title>Models4Insight</title>
     <base href="/"/>
     <script>
-      // Aurelius: one build for every tenant - the app lives at /<namespace>/<tenant>/atlas/ (or /<namespace>/atlas/)
+      // Aurelius: one build for every namespace and tenant - the app lives at /<namespace>/<tenant>/atlas/ (or at
+      // /<namespace>/atlas/); the namespace may itself be called "atlas" (/atlas/m4i/atlas/)
       (function () {
-        var m = window.location.pathname.match(/^(\/(?:[^/]+\/)*?atlas\/)/);
+        var m = window.location.pathname.match(/^(\/[^/]+\/(?:[a-z][a-z0-9-]{1,30}[a-z0-9]\/)?atlas\/)/);
         if (m) {
           document.getElementsByTagName('base')[0].setAttribute('href', m[1]);
         }
