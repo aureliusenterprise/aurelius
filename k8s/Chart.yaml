@@ -22,13 +22,13 @@ version: 0.2.0
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "3.0.0"
+appVersion: "4.0.0-alpha"
 
 # the subcharts in charts/ (no repository: they are part of this chart)
-dependencies:
-  - name: keycloak
-    version: 0.1.0
-  - name: elastic
-    version: 1.0.0
-  - name: reverse-proxy
-    version: 0.2.0
+# dependencies:
+#   - name: keycloak
+#     version: 0.1.0
+#   - name: elastic
+#     version: 1.0.0
+#   - name: reverse-proxy
+#     version: 0.2.0
