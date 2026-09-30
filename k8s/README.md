@@ -236,6 +236,27 @@ kubectl -n <namespace> exec deploy/<release>-keycloak-postgresql -- pg_dump -U k
 For a managed PostgreSQL set `keycloak.postgresql.enabled: false` and `keycloak.postgresql.external` (host, port,
 database, a secret with `username` and `password`, optional `jdbcParams` such as `sslmode=require`).
 
+The Keycloak admin (realm `master`) is created with the password of the secret `keycloak-secret` when Keycloak
+creates its database; later changes of the secret do not reach Keycloak.  The secret is therefore generated once and
+kept (also by `helm uninstall`).  If the two ever differ (charts before 4.0.0-alpha generated a new password on
+every upgrade; "invalid username or password" at `/<namespace>/auth/admin/`, `aurelius-init` fails at Keycloak),
+set the admin's password in the database to the one of the secret and restart Keycloak:
+
+```bash
+NS=<namespace>; REL=<release>
+PW=$(kubectl -n $NS get secret keycloak-secret -o jsonpath='{.data.admin-password}' | base64 -d)
+read HASH SALT < <(python3 -c 'import sys,os,hashlib,base64; s=os.urandom(16)
+print(base64.b64encode(hashlib.pbkdf2_hmac("sha256", sys.argv[1].encode(), s, 27500, 64)).decode(), base64.b64encode(s).decode())' "$PW")
+kubectl -n $NS exec -i deploy/$REL-keycloak-postgresql -- psql -U keycloak -d keycloak <<SQL
+UPDATE credential SET
+  secret_data = '{"value":"$HASH","salt":"$SALT","additionalParameters":{}}',
+  credential_data = '{"hashIterations":27500,"algorithm":"pbkdf2-sha256","additionalParameters":{}}'
+WHERE type = 'password' AND user_id = (SELECT u.id FROM user_entity u JOIN realm r ON r.id = u.realm_id
+                                       WHERE r.name = 'master' AND u.username = 'admin');
+SQL
+kubectl -n $NS delete pod $REL-keycloak-0
+```
+
 ### Upgrading from the Apache Atlas chart
 
 The chart no longer contains Apache Atlas, Kafka, Zookeeper, Flink, Enterprise Search, the search API and the REST
