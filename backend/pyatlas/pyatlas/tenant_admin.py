@@ -59,6 +59,9 @@ ROLES = {"ROLE_ADMIN": "Aurelius administrator (also Kibana)", "DATA_STEWARD": "
          "DATA_SCIENTIST": "Reads the data governance model"}
 FRONTEND_CLIENT = "m4i_atlas"
 PROXY_CLIENT = "aurelius_proxy"
+# Keycloak's own rights a tenant's administrator gets in the tenant's realm (client realm-management): users and their
+# roles in the admin console at /<ns>/auth/admin/<tenant>/console/ - not the realm's settings, clients or login setup
+REALM_USER_ADMIN_ROLES = ("manage-users", "view-users", "query-users", "query-groups", "view-realm")
 LOGS_PIPELINE = "aurelius-logs"
 ENRICH_TENANTS = "aurelius-tenants"
 ENRICH_REALMS = "aurelius-realms"
@@ -311,6 +314,26 @@ class Keycloak:
         if reps:
             self.http.call("POST", f"/admin/realms/{realm}/users/{uid}/role-mappings/realm", reps)
         return created_pw
+
+    def grant_user_admin(self, realm: str, username: str) -> List[str]:
+        """Lets the user manage the realm's users (create, reset passwords, assign the Aurelius roles) in the
+        Keycloak admin console of the realm; returns the Keycloak roles granted."""
+        _, found = self.http.call("GET", f"/admin/realms/{realm}/users?exact=true&username="
+                                         f"{urllib.parse.quote(username)}")
+        if not found:
+            if self.cfg.dry_run:
+                return list(REALM_USER_ADMIN_ROLES)
+            raise AdminError(f"keycloak: no user {username} in realm {realm}")
+        mgmt = self.client(realm, "realm-management")
+        if mgmt is None:
+            raise AdminError(f"keycloak: realm {realm} has no client realm-management")
+        reps = []
+        for name in REALM_USER_ADMIN_ROLES:
+            _, rep = self.http.call("GET", f"/admin/realms/{realm}/clients/{mgmt['id']}/roles/{name}")
+            reps.append({"id": rep["id"], "name": rep["name"]})
+        self.http.call("POST", f"/admin/realms/{realm}/users/{found[0]['id']}/role-mappings/clients/{mgmt['id']}",
+                       reps)
+        return [r["name"] for r in reps]
 
     def set_enabled(self, realm: str, enabled: bool) -> None:
         self.http.call("PUT", f"/admin/realms/{realm}", {"enabled": enabled})
@@ -815,6 +838,27 @@ class Admin:
                                    document={**settings, "realm": self.cfg.platform_realm}, refresh="wait_for")
 
     # ---------------------------------------------------------------- tenants
+    async def tenant_grant_admin(self, tenant: str, username: str) -> List[str]:
+        """An existing user of the tenant becomes its administrator: Aurelius role ROLE_ADMIN (Aurelius, the tenant's
+        Kibana) and the rights to manage the realm's users in Keycloak's admin console."""
+        check_tenant_id(tenant)
+        if tenant != self.cfg.platform_realm and await self._registry().get(tenant, cached=False) is None:
+            raise AdminError(f"no tenant {tenant}")
+        if self._user_exists(tenant, username):
+            self.kc.ensure_user(tenant, username, None, ["ROLE_ADMIN"])     # grants the role, creates nothing
+        granted = self.kc.grant_user_admin(tenant, username)
+        self.say(f"keycloak: {username} is administrator of {tenant} ({', '.join(granted)}); users are managed at "
+                 f"{self.cfg.public_url}/{self.cfg.ns}/auth/admin/{tenant}/console/")
+        return granted
+
+    def _user_exists(self, realm: str, username: str) -> bool:
+        _, found = self.kc.http.call("GET", f"/admin/realms/{realm}/users?exact=true&username="
+                                            f"{urllib.parse.quote(username)}")
+        if not found and not self.cfg.dry_run:
+            raise AdminError(f"keycloak: no user {username} in realm {realm} (create it first, or use "
+                             f"tenant create {realm} --admin-user {username})")
+        return bool(found)
+
     async def tenant_create(self, tenant: str, name: Optional[str] = None, admin_user: Optional[str] = None,
                             admin_email: Optional[str] = None, sample_data: Optional[str] = None,
                             migrate_from: Optional[str] = None, retention_days: Optional[int] = None,
@@ -839,6 +883,9 @@ class Admin:
                 pw = self.kc.ensure_user(tenant, admin_user, admin_email, ["ROLE_ADMIN", "DATA_STEWARD"])
                 if pw:
                     self.say(f"keycloak: user {admin_user} created in realm {tenant}, temporary password: {pw}")
+                self.kc.grant_user_admin(tenant, admin_user)
+                self.say(f"keycloak: {admin_user} manages the users of {tenant} at "
+                         f"{self.cfg.public_url}/{self.cfg.ns}/auth/admin/{tenant}/console/")
             if self._on("proxy"):
                 self.files.set_realm(tenant, self.kc.openid_configuration(tenant), secret)
             self.say(f"keycloak: realm {tenant} ready (login at {self.cfg.public_url}/{self.cfg.ns}/{tenant}/atlas/)")
@@ -1020,6 +1067,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     c.add_argument("--migrate-from", metavar="PREFIX", help="copy the indices of a single-tenant installation")
     c.add_argument("--retention-days", type=int)
     c.add_argument("--legacy-urls", action="store_true", help="keep /<ns>/atlas/ as redirect URL (default tenant)")
+    g = ten.add_parser("grant-admin", help="make an existing user administrator of the tenant (Aurelius, Kibana "
+                                           "and the users of the tenant's Keycloak realm)")
+    g.add_argument("tenant")
+    g.add_argument("user")
     ten.add_parser("list")
     for name in ("show", "suspend", "resume"):
         ten.add_parser(name).add_argument("tenant")
@@ -1066,6 +1117,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             elif args.cmd == "create":
                 await admin.tenant_create(args.tenant, args.name, args.admin_user, args.admin_email, args.sample_data,
                                           args.migrate_from, args.retention_days, args.legacy_urls)
+            elif args.cmd == "grant-admin":
+                await admin.tenant_grant_admin(args.tenant, args.user)
             elif args.cmd == "list":
                 await admin.tenant_list()
             elif args.cmd == "show":

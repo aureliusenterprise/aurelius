@@ -19,6 +19,7 @@ class FakeHttp:
         self.calls = []
         self.realms, self.clients, self.users, self.spaces, self.keys = {}, {}, {}, set(), {}
         self.imports = {}
+        self.mappings = {}          # (realm, user id, "realm" | "clients/<id>") -> role names
 
     def __call__(self, method, url, headers, body):
         data = json.loads(body) if body and headers.get("Content-Type") == "application/json" else body
@@ -42,6 +43,9 @@ class FakeHttp:
             self.realms[data["realm"]] = data
             self.clients[data["realm"]] = {c["clientId"]: {**c, "id": c["clientId"] + "-id"}
                                            for c in data.get("clients", [])}
+            # Keycloak adds the client of its own admin rights to every realm
+            self.clients[data["realm"]]["realm-management"] = {"id": "realm-management-id",
+                                                               "clientId": "realm-management"}
             return 201, b""
         if realm not in self.realms:
             return 404, b"{}"
@@ -65,6 +69,13 @@ class FakeHttp:
             return 200, json.dumps({"value": self.clients[realm][cid].get("secret")}).encode()
         if rest.startswith("/clients/") and method == "PUT":
             self.clients[realm][data["clientId"]].update(data)
+            return 204, b""
+        m = re.match(r"^/clients/([^/]+)/roles/([^/]+)$", rest)
+        if m and method == "GET":
+            return 200, json.dumps({"id": f"{m.group(1)}:{m.group(2)}", "name": m.group(2)}).encode()
+        m = re.match(r"^/users/([^/]+)/role-mappings/(realm|clients/[^/]+)$", rest)
+        if m and method == "POST":
+            self.mappings.setdefault((realm, m.group(1), m.group(2)), set()).update(r["name"] for r in data)
             return 204, b""
         if rest.startswith("/roles/"):
             return 200, json.dumps({"id": "r-" + rest.split("/")[2], "name": rest.split("/")[2]}).encode()
@@ -197,6 +208,30 @@ def test_create_a_tenant(admin):
     assert h.keys[keys["acme"]]["name"] == "aurelius-acme-kibana"
     # the tenant's log retention
     assert ("PUT", "/_index_template/logs-aurelius-acme") in h.calls
+
+
+def test_tenant_admin_manages_the_realms_users(admin):
+    run(admin.tenant_create("acme", "ACME", admin_user="anna"))
+    h = admin.http
+    assert h.mappings[("acme", "u-anna", "realm")] == {"ROLE_ADMIN", "DATA_STEWARD"}
+    assert h.mappings[("acme", "u-anna", "clients/realm-management-id")] == {
+        "manage-users", "view-users", "query-users", "query-groups", "view-realm"}
+    # nothing beyond users: no realm settings, clients or identity providers
+    assert not {"manage-realm", "manage-clients", "manage-identity-providers", "realm-admin"} & \
+        h.mappings[("acme", "u-anna", "clients/realm-management-id")]
+
+
+def test_grant_admin_to_an_existing_user(admin):
+    run(admin.tenant_create("acme", "ACME"))
+    h = admin.http
+    h.users[("acme", "bob")] = {"id": "u-bob", "username": "bob"}
+    run(admin.tenant_grant_admin("acme", "bob"))
+    assert "ROLE_ADMIN" in h.mappings[("acme", "u-bob", "realm")]
+    assert "manage-users" in h.mappings[("acme", "u-bob", "clients/realm-management-id")]
+    with pytest.raises(AdminError, match="no user carol"):
+        run(admin.tenant_grant_admin("acme", "carol"))
+    with pytest.raises(AdminError, match="no tenant beta"):
+        run(admin.tenant_grant_admin("beta", "bob"))
 
 
 def test_create_again_keeps_keys_and_users(admin):

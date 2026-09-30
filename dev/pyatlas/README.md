@@ -31,6 +31,7 @@ a copy of an existing installation's indices `atlas_*` to `aurelius_m4i_*`. It i
 ```bash
 C="docker compose -f dev/pyatlas/docker-compose.yml run --rm aurelius-admin"
 $C tenant create acme --name "ACME" --admin-user anna --admin-email anna@acme.example   # prints anna's temporary password
+$C tenant grant-admin acme bob     # an existing user of acme becomes its administrator too
 $C tenant create acme --sample-data /aurelius-data/sample_data.zip                      # optional demo content
 $C tenant list
 $C tenant entra acme --directory-id <Entra tenant id> --client-id <app id> --client-secret <secret> [--only-entra]

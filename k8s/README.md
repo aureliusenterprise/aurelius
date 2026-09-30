@@ -211,6 +211,7 @@ watch -n 0.5 kubectl get pods -n <namespace>
 ```bash
 A="kubectl -n <namespace> exec deploy/aurelius-admin -- aurelius-admin"
 $A tenant create acme --name "ACME" --admin-user anna --admin-email anna@acme.example   # prints anna's temporary password
+$A tenant grant-admin acme bob     # an existing user of acme becomes its administrator too
 $A tenant create acme --sample-data /app/sample-data/sample_data.zip                     # optional demo content
 $A tenant list
 $A tenant entra acme --directory-id <Entra tenant id> --client-id <app id> --client-secret <secret> [--only-entra]
@@ -221,6 +222,12 @@ $A tenant delete acme --yes
 A new tenant is reachable at `https://<DNS>/<namespace>/acme/atlas/` at once; its Kibana login works after the
 `tenant-sync` sidecar of the proxy has picked it up (30 seconds). A customer's own host name is an ingress rule
 that rewrites `https://data.acme.com/` to `/<namespace>/acme/`.
+
+The tenant's administrator (`--admin-user`, `tenant grant-admin`) has role `ROLE_ADMIN` (Aurelius, the tenant's
+Kibana) and manages the tenant's users in Keycloak at `https://<DNS>/<namespace>/auth/admin/acme/console/`: create
+users, reset passwords, assign the roles `ROLE_ADMIN`, `DATA_STEWARD`, `DATA_SCIENTIST` (Keycloak roles
+`manage-users`, `view-users`, `query-users`, `query-groups`, `view-realm` of client `realm-management`). The realm's
+settings, clients and login setup and the other tenants' realms stay with the operators.
 
 ### Keycloak database
 
