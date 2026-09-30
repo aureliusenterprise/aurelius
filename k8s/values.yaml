@@ -21,10 +21,9 @@ global:
     # ghcr packages:
     #   kubectl -n <namespace> create secret docker-registry ghcr --docker-server=ghcr.io \
     #       --docker-username=<github user> --docker-password=<classic PAT with read:packages>
-    imagePullSecrets: []
-    #   - ghcr
     # Always: pull the tag again on every pod start (useful while re-pushing the same tag)
-    imagePullPolicy: IfNotPresent
+    #imagePullPolicy: IfNotPresent
+    imagePullPolicy: Always
     # tenant of the old single-tenant URLs (/<namespace>/atlas/, /<namespace>/lin_api/, ...) and of requests
     # without a tenant; created at installation with the realm m4i of the keycloak chart
     defaultTenant: m4i
@@ -98,7 +97,7 @@ admin:
 ingress:
     # only used by the (commented) templates/prod_issuer.yaml
     email_address: andreas.wombacher@aureliusenterprise.com
-    className: nginx
+    className: webapprouting.kubernetes.azure.com
     clusterIssuer: letsencrypt-clusterissuer-aureliusdev
     tlsSecretName: letsencrypt-secret-aureliusdev
 
