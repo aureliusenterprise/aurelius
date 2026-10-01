@@ -25,6 +25,8 @@ spec:
           ports:
             - name: rpc
               containerPort: {{ .Values.flinkJobManagerRpcPort }}
+          resources:
+            {{- toYaml .Values.resources.taskmanager | nindent 12 }}
           env:
             - name: ATLAS_SERVER_URL
               value: {{ .Values.atlasServerUrl | quote }}

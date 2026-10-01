@@ -29,6 +29,8 @@ spec:
               containerPort: {{ .Values.flinkJobManagerBlobServerPort }}
             - name: webui
               containerPort: {{ .Values.flinkJobManagerPort }}
+          resources:
+            {{- toYaml .Values.resources.jobmanager | nindent 12 }}
           env:
             - name: ATLAS_SERVER_URL
               value: {{ .Values.atlasServerUrl | quote }}

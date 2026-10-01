@@ -3,6 +3,18 @@
 image: ghcr.io/aureliusenterprise/m4i-publish-state
 imagePullPolicy: Always
 
+resources:
+    jobmanager:
+        requests:
+            memory: 1Gi
+        limits:
+            memory: 2Gi
+    taskmanager:
+        requests:
+            memory: 8Gi
+        limits:
+            memory: 9Gi
+
 jobName: publish-state
 
 flinkJobManagerPort: 8081
