@@ -12,7 +12,9 @@ docs/migration).  Here an expression is parsed into a syntax tree and only this 
 The quality functions work on a table (a list of rows; a row is a dict of column -> value) and return a score
 (1 or 0) per row, with the semantics of the m4i-data-management functions of the same name: a missing column
 scores 0 for every row, "empty" means ``None`` or NaN, the ``conditional_*`` functions only score the rows that
-match their condition.  ``a | b`` scores 1 where any operand scores 1 (only operands that scored the row count),
+match their condition.  One deliberate difference: for ``completeness`` (and ``conditional_completeness``) an empty or
+blank text and an empty list are missing as well (m4i-data-management, i.e. pandas ``notnull``, counted them as
+present, so a definition cleared in the editor - saved as ``""`` - still "had a definition").  ``a | b`` scores 1 where any operand scores 1 (only operands that scored the row count),
 ``a & b`` where all do.  Governance quality evaluates one entity at a time: a one-row table of its attributes or
 relationship attributes.
 """
@@ -156,8 +158,19 @@ def _safe(check, *values) -> int:
         return 0
 
 
+def is_blank(v) -> bool:
+    """Missing for completeness: None/NaN, an empty or whitespace-only text, an empty list, set or dict."""
+    if isna(v):
+        return True
+    if isinstance(v, str):
+        return not v.strip()
+    if isinstance(v, (list, tuple, set, dict)):
+        return len(v) == 0
+    return False
+
+
 def completeness(t: Table, column_name: str) -> Scores:
-    return _per_value(t, column_name, lambda v: not isna(v))
+    return _per_value(t, column_name, lambda v: not is_blank(v))
 
 
 def length(t: Table, column_name: str, required_length: int) -> Scores:

@@ -49,7 +49,12 @@ def test_rule_functions_follow_m4i_data_management():
             {"id": None, "name": None}, {"id": None, "name": "NL.xxx"}, {"id": "NL.xxx", "name": None}]
     assert list(qr.run("compare_first_characters_starting_without('id', 'name', 2, 'BE')", rows).values()) == \
         [1, 0, 0, 0, 0, 0]
-    assert qr.run("completeness('name')", [{"name": "x"}, {"name": None}, {"name": ""}, {}]) == {0: 1, 1: 0, 2: 1, 3: 0}
+    assert qr.run("completeness('name')", [{"name": "x"}, {"name": None}, {"name": ""}, {}]) == {0: 1, 1: 0, 2: 0, 3: 0}
+    # a cleared field (the editor sends "") or only blanks is missing, as is an empty list; 0 and False are values
+    assert qr.run("completeness('v')", [{"v": "  \n"}, {"v": []}, {"v": ["a"]}, {"v": 0}, {"v": False}]) == \
+        {0: 0, 1: 0, 2: 1, 3: 1, 4: 1}
+    assert qr.run("conditional_completeness('k', 'v', ['x'])", [{"k": "x", "v": ""}, {"k": "x", "v": "d"}]) == \
+        {0: 0, 1: 1}
     assert qr.run("completeness('nope')", [{"name": "x"}]) == {0: 0}                  # missing column: 0
     assert qr.run("length('refs', 1)", [{"refs": []}, {"refs": [{"guid": "g"}]}, {"refs": None}]) == \
         {0: 0, 1: 1, 2: 0}
@@ -183,6 +188,11 @@ def test_validate_entity_answers_per_attribute():
                                            "parentEntity": [], "steward": []}}
         res = c.post("/api/aurelius/validate_entity", json=form).json()
         assert res["definition"]["isNonCompliant"] is False and res["dataDomain"]["isNonCompliant"] is False
+        # the editor's value after the user cleared the definition: "" is no definition
+        cleared = {**form, "attributes": {**form["attributes"], "definition": ""}}
+        res = c.post("/api/aurelius/validate_entity", json=cleared).json()
+        assert res["definition"]["isNonCompliant"] is True
+        assert res["definition"]["items"][0]["result"]["raw"] == "This data entity should have a definition"
         assert res["steward"]["isNonCompliant"] is True
         person = {"attributes": {"email": None, "name": "P", "qualifiedName": None, "typeAlias": None},
                   "relationshipAttributes": {"businessOwnerAttribute": [], "businessOwnerEntity": [],
