@@ -1,9 +1,9 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { faAngleDoubleRight, faHashtag } from '@fortawesome/free-solid-svg-icons';
-import { Classification, ClassificationDef } from '@models4insight/atlas/api';
-import { combineLatest, Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Classification, ClassificationDef, getEntityById } from '@models4insight/atlas/api';
+import { combineLatest, forkJoin, Observable, of } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { EntityDetailsService } from '../../../../services/entity-details/entity-details.service';
 import { TypeDefsService } from '../../../../services/type-defs/type-defs.service';
 
@@ -34,6 +34,12 @@ function filterClassifications(
   return defsMatchingQuery;
 }
 
+/** A classification the entity got by propagation from another entity: shown, but changed only at its source */
+export interface InheritedClassification {
+  readonly typeName: string;
+  readonly sources: { readonly guid: string; readonly name: string }[];
+}
+
 @Component({
   selector: 'models4insight-classifications-input',
   templateUrl: 'classifications-input.component.html',
@@ -45,6 +51,7 @@ export class ClassificationsInputComponent implements OnInit {
   readonly faAngleDoubleRight = faAngleDoubleRight;
 
   options$: Observable<ClassificationDef[]>;
+  inherited$: Observable<InheritedClassification[]>;
 
   hasFocus = false;
   @Input() tags: UntypedFormArray;
@@ -72,6 +79,45 @@ export class ClassificationsInputComponent implements OnInit {
         filterClassifications(defs, selected, typeName, query)
       )
     );
+
+    this.inherited$ = this.entityDetailsService.entityDetails$.pipe(
+      switchMap((entity) => {
+        const inherited = (entity?.classifications ?? []).filter(
+          (classification) =>
+            classification.entityGuid &&
+            !classification.entityGuid.startsWith('-') &&
+            classification.entityGuid !== entity.guid
+        );
+        const sourceGuids = [...new Set(inherited.map((c) => c.entityGuid))];
+        if (!sourceGuids.length) return of([] as InheritedClassification[]);
+        // the names of the source entities (for the tooltip and the link)
+        return forkJoin(
+          sourceGuids.map((guid) =>
+            getEntityById(guid).pipe(
+              map((source) => [guid, source?.entity?.attributes?.name ?? guid] as const),
+              catchError(() => of([guid, guid] as const))
+            )
+          )
+        ).pipe(
+          map((names) => {
+            const nameOf = new Map<string, string>(names);
+            const byType = new Map<string, Set<string>>();
+            inherited.forEach((c) =>
+              byType.set(c.typeName, (byType.get(c.typeName) ?? new Set()).add(c.entityGuid))
+            );
+            return [...byType.entries()].map(([typeName, guids]) => ({
+              typeName,
+              sources: [...guids].map((guid) => ({ guid, name: nameOf.get(guid) })),
+            }));
+          })
+        );
+      })
+    );
+  }
+
+  /** The names of the entities a classification was inherited from, for the tooltip */
+  sourceNames(inherited: InheritedClassification): string {
+    return inherited.sources.map((source) => source.name).join(', ');
   }
 
   async addTag(typeName: string) {

@@ -223,7 +223,11 @@
                         "addPlaceholder": "Classificatie toevoegen...",
                         "noClassificationsAvailable": "Geen classificaties beschikbaar",
                         "propagates": "Wordt doorgegeven langs de lineage en het datamodel (klik om uit te zetten)",
-                        "doesNotPropagate": "Wordt niet doorgegeven (klik om aan te zetten)"
+                        "doesNotPropagate": "Wordt niet doorgegeven (klik om aan te zetten)",
+                        "inherited": "Overgenomen:",
+                        "inheritedFrom": "Overgenomen door doorgifte van {{sources}}",
+                        "openSource": "Open de entiteit waar deze classificatie vandaan komt",
+                        "inheritedHelp": "Overgenomen classificaties komen van gerelateerde entiteiten (lineage en datamodel). Wijzig of verwijder ze bij de entiteit waar ze vandaan komen."
                     },
                     "relationshipsInput": {
                         "addPlaceholder": "Relatie toevoegen...",

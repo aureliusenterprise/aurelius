@@ -80,3 +80,31 @@
         search.components.editor.components.classificationsInput.noClassificationsAvailable
     </p>
 </ng-template>
+
+<!-- classifications the entity got by propagation: not editable here, only at the entity they come from -->
+<div *ngIf="(inherited$ | async)?.length" class="inherited mt-2">
+    <span class="is-size-7 has-text-grey mr-2" translate>
+        search.components.editor.components.classificationsInput.inherited
+    </span>
+    <span *ngFor="let inherited of inherited$ | async" class="tags has-addons inherited-tag">
+        <span
+            class="tag is-light"
+            [title]="
+                'search.components.editor.components.classificationsInput.inheritedFrom'
+                    | translate: { sources: sourceNames(inherited) }
+            "
+        >
+            <span class="icon is-small"><fa-icon [icon]="faHashtag"></fa-icon></span>
+            <span class="truncate">{{ inherited.typeName | classificationLabel }}</span>
+        </span>
+        <a
+            *ngFor="let source of inherited.sources"
+            class="tag is-white source-link"
+            [routerLink]="['/search/details', source.guid]"
+            [title]="'search.components.editor.components.classificationsInput.openSource' | translate"
+        >
+            <span class="truncate">{{ source.name }}</span>
+        </a>
+    </span>
+    <p class="help" translate>search.components.editor.components.classificationsInput.inheritedHelp</p>
+</div>

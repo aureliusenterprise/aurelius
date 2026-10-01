@@ -74,3 +74,15 @@
     }
   }
 }
+
+// classifications got by propagation (read-only)
+.inherited {
+  .inherited-tag {
+    display: inline-flex;
+    margin: 0 0.5rem 0.25rem 0;
+  }
+
+  .source-link {
+    text-decoration: underline;
+  }
+}

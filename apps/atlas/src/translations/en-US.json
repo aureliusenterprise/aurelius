@@ -223,7 +223,11 @@
                         "addPlaceholder": "Add a classification...",
                         "noClassificationsAvailable": "No classifications available",
                         "propagates": "Propagates along the lineage and the data model (click to switch off)",
-                        "doesNotPropagate": "Does not propagate (click to switch on)"
+                        "doesNotPropagate": "Does not propagate (click to switch on)",
+                        "inherited": "Inherited:",
+                        "inheritedFrom": "Inherited by propagation from {{sources}}",
+                        "openSource": "Open the entity this classification comes from",
+                        "inheritedHelp": "Inherited classifications come from related entities (lineage and data model). Change or remove them on the entity they come from."
                     },
                     "relationshipsInput": {
                         "addPlaceholder": "Add a relationship...",
