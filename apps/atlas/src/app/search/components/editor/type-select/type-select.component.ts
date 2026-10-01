@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { EntityDetailsService } from '../../../services/entity-details/entity-details.service';
 import { TypeDefsService } from '../../../services/type-defs/type-defs.service';
+import { EDITABLE_TYPES } from '../editors-by-type';
 
 const BLACKLISTED_TYPES = new Set(['m4i_referenceable', 'm4i_source']);
 
@@ -27,7 +28,9 @@ function filterReferenceableTypes(entityDefs: AtlasEntityDef[]) {
 
     const referenceableTypes = new Set(generateInheritanceTree('m4i_referenceable'));
 
+    // only the types the frontend has an editor for (editors-by-type): the others would open an empty form
     return Array.from(referenceableTypes)
+        .filter((typeName) => EDITABLE_TYPES.has(typeName) && !!defsByName[typeName])
         .sort()
         .map((typeName) => defsByName[typeName]);
 }

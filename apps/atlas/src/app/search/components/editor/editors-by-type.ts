@@ -34,3 +34,6 @@ export const editorsByType = {
   m4i_person: PersonEditorComponent,
   m4i_system: SystemEditorComponent,
 };
+
+/** The entity types the frontend has an editor for: only these can be created (type selection of a new entity). */
+export const EDITABLE_TYPES: ReadonlySet<string> = new Set(Object.keys(editorsByType));
