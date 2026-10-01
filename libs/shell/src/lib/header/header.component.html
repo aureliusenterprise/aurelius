@@ -136,6 +136,24 @@
                 <span translate>shell.header.documentation</span>
               </a>
             </div>
+            <!-- Admin: links to the tools of the tenant (administrators only) -->
+            <ng-container *ngIf="isAdmin$ | async">
+              <a
+                id="admin-button"
+                class="button is-outlined is-dark is-hidden-touch"
+                (click)="openAdminDialog()"
+              >
+                <span class="icon"> <fa-icon [icon]="faUserShield"></fa-icon> </span>
+                <span translate>shell.header.admin</span>
+              </a>
+              <a
+                class="button is-outlined is-dark is-fullwidth is-hidden-desktop"
+                (click)="openAdminDialog()"
+              >
+                <span class="icon"> <fa-icon [icon]="faUserShield"></fa-icon> </span>
+                <span translate>shell.header.admin</span>
+              </a>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -250,3 +268,35 @@
     </a>
   </div>
 </ng-template>
+
+<!-- Admin dialog -->
+<div *ngIf="adminDialogOpen" class="modal is-active" id="admin-dialog">
+  <div class="modal-background" (click)="closeAdminDialog()"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title" translate>shell.header.adminTitle</p>
+      <button class="delete" aria-label="close" (click)="closeAdminDialog()"></button>
+    </header>
+    <section class="modal-card-body">
+      <p class="mb-4" translate>shell.header.adminIntro</p>
+      <div *ngFor="let link of adminLinks" class="columns is-vcentered is-mobile admin-link">
+        <div class="column is-5">
+          <a
+            class="button is-link is-fullwidth"
+            [href]="link.url"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ link.title | translate }}
+          </a>
+        </div>
+        <div class="column">
+          <p class="is-size-7">{{ link.description | translate }}</p>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button" (click)="closeAdminDialog()" translate>shell.header.adminClose</button>
+    </footer>
+  </div>
+</div>

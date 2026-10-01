@@ -687,5 +687,19 @@
     "updatedAt": "Bijgewerkt op",
     "usedBy": "Gebruikt door",
     "uses": "Gebruikt",
-    "version": "Versie"
+    "version": "Versie",
+    "admin": {
+        "keycloak": {
+            "title": "Gebruikersbeheer (Keycloak)",
+            "description": "Maak de gebruikers van uw organisatie aan, stel hun wachtwoorden opnieuw in en geef ze rollen (beheerder, data steward, data scientist)."
+        },
+        "kibana": {
+            "title": "Dashboards en logs (Kibana)",
+            "description": "Gebruiks-, activiteits- en statusdashboards van Aurelius voor uw organisatie, en de loggegevens daarachter."
+        },
+        "atlas": {
+            "title": "Apache Atlas",
+            "description": "De gebruikersinterface van Apache Atlas: alle entiteiten met hun eigenschappen, typedefinities, lineage, audits, en import en export."
+        }
+    }
 }

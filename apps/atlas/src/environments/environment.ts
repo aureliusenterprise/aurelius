@@ -2,6 +2,9 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import type { ShellAdminLink } from '@models4insight/shell';
+import { aureliusAdminLinks } from './admin-links';
+
 export const environment = {
     name: 'm4i_atlas',
     googleAnalyticsMeasurementID: 'UA-138345924-1',
@@ -24,6 +27,8 @@ export const environment = {
         appLogoPath: 'assets/aurelius-atlas-logo.png',
         appName: 'Aurelius Atlas Data Governance',
         standalone: true,
+        // the Admin button of the header (role ROLE_ADMIN): Keycloak, Kibana and Atlas of the tenant
+        adminLinks: (): ShellAdminLink[] => aureliusAdminLinks(environment.keycloak),
     },
     telemetry: false,
 };

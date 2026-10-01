@@ -687,5 +687,19 @@
     "updatedAt": "Updated at",
     "usedBy": "Used by",
     "uses": "Uses",
-    "version": "Version"
+    "version": "Version",
+    "admin": {
+        "keycloak": {
+            "title": "User management (Keycloak)",
+            "description": "Create the users of your organisation, reset their passwords and give them roles (administrator, data steward, data scientist)."
+        },
+        "kibana": {
+            "title": "Dashboards and logs (Kibana)",
+            "description": "Usage, activity and health dashboards of Aurelius for your organisation, and the log data behind them."
+        },
+        "atlas": {
+            "title": "Apache Atlas",
+            "description": "The Apache Atlas user interface: all entities with their properties, type definitions, lineage, audits, and import and export."
+        }
+    }
 }

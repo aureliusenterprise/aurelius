@@ -9,7 +9,11 @@
       "logout": "Logout",
       "login": "Login",
       "services": "Models4Insight services",
-      "update": "Update available"
+      "update": "Update available",
+      "admin": "Admin",
+      "adminTitle": "Administration",
+      "adminIntro": "The tools for administering your organisation in Aurelius. Each opens in a new tab.",
+      "adminClose": "Close"
     },
     "footer": {
       "copyright": "Copyright"

@@ -12,7 +12,11 @@
             "security": "Accountbeveiliging",
             "services": "Models4Insight diensten",
             "update": "Update beschikbaar",
-            "welcome": "Ingelogd als"
+            "welcome": "Ingelogd als",
+            "admin": "Beheer",
+            "adminTitle": "Beheer",
+            "adminIntro": "De hulpmiddelen voor het beheer van uw organisatie in Aurelius. Elk opent in een nieuw tabblad.",
+            "adminClose": "Sluiten"
         },
         "pipeline": {
             "error": "Er is iets misgegaan tijden",
