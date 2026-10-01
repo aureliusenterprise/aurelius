@@ -1,4 +1,6 @@
 <Location /{{ .Release.Namespace }}/atlas/atlas/>
+RequestHeader unset Cookie
+Header always unset Set-Cookie
 ProxyPass "http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/api/atlas/"
 ProxyPassReverse "http://atlas.{{ .Release.Namespace }}.svc.cluster.local:21000/api/atlas/"
 </Location>
