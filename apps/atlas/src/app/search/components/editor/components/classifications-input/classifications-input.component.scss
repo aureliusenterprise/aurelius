@@ -54,3 +54,23 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+// the switch "propagate along the lineage and the data model" of an assigned classification
+.propagate-toggle {
+  cursor: pointer;
+
+  .icon.is-crossed {
+    opacity: 0.6;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      border-top: 2px solid currentColor;
+      transform: rotate(-35deg);
+    }
+  }
+}

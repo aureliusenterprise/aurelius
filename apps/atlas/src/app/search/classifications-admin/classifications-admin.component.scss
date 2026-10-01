@@ -1,0 +1,21 @@
+.table {
+    td {
+        vertical-align: middle;
+    }
+
+    .description {
+        max-width: 24rem;
+    }
+
+    .actions {
+        white-space: nowrap;
+
+        .button + .button {
+            margin-left: 0.25rem;
+        }
+    }
+
+    &.is-loading {
+        opacity: 0.6;
+    }
+}

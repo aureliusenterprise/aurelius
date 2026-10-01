@@ -63,7 +63,9 @@ function createDatasetEditorForm(): UntypedFormGroup {
     parentDataset,
   });
 
-  return new UntypedFormGroup({ attributes, relationshipAttributes });
+  const classifications = new UntypedFormArray([]);
+
+  return new UntypedFormGroup({ attributes, classifications, relationshipAttributes });
 }
 
 function mergeDatasetEditorForm(
@@ -71,9 +73,10 @@ function mergeDatasetEditorForm(
   form: UntypedFormGroup
 ): AtlasEntityWithEXTInformation {
   const entity = entityDetails.entity,
-    { attributes, relationshipAttributes } = form.value;
+    { attributes, classifications, relationshipAttributes } = form.value;
 
   merge(entity.attributes, attributes);
+  entity.classifications = classifications;
   Object.assign(entity.relationshipAttributes, relationshipAttributes);
 
   return entityDetails;
@@ -116,6 +119,13 @@ function updateDatasetEditorForm(
   ) as UntypedFormArray;
 
   attributes.patchValue(entityDetails.entity.attributes);
+
+  // the entity's own classifications (propagated ones are shown on the details page, not edited here)
+  const classifications = form.get('classifications') as UntypedFormArray;
+  classifications.clear();
+  (entityDetails.entity.classifications ?? [])
+    .filter((classification) => classification.entityGuid === entityDetails.entity.guid)
+    .forEach((classification) => classifications.push(new UntypedFormControl(classification)));
 
   fields.clear();
   entityDetails.entity.relationshipAttributes.fields?.forEach((field) =>
@@ -196,6 +206,10 @@ export class DatasetEditorComponent {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+
+  get classifications() {
+    return this.editorFormService.form.get('classifications') as UntypedFormArray;
   }
 
   get attributes() {

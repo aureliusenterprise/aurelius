@@ -1,0 +1,226 @@
+<div class="box">
+    <div class="is-flex is-justify-content-space-between is-align-items-flex-start">
+        <h2 class="title is-2" translate>search.classificationsAdmin.title</h2>
+        <button id="new-classification" class="button is-info" (click)="openCreate()">
+            <span class="icon"><fa-icon [icon]="faPlus"></fa-icon></span>
+            <span translate>search.classificationsAdmin.new</span>
+        </button>
+    </div>
+    <div class="content">
+        <p translate>search.classificationsAdmin.intro</p>
+    </div>
+</div>
+
+<div class="box">
+    <div *ngIf="loadError" class="notification is-danger is-light">{{ loadError }}</div>
+
+    <div class="table-container">
+        <table class="table is-fullwidth is-hoverable" [class.is-loading]="isLoading">
+            <thead>
+                <tr>
+                    <th translate>search.classificationsAdmin.displayName</th>
+                    <th translate>search.classificationsAdmin.name</th>
+                    <th translate>search.classificationsAdmin.description</th>
+                    <th translate>search.classificationsAdmin.entityTypes</th>
+                    <th class="has-text-right" translate>search.classificationsAdmin.direct</th>
+                    <th class="has-text-right" translate>search.classificationsAdmin.propagated</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let classification of classifications" [attr.data-name]="classification.name">
+                    <td>
+                        <span class="tag is-medium">{{ classification | classificationLabel }}</span>
+                    </td>
+                    <td>
+                        <code>{{ classification.name }}</code>
+                    </td>
+                    <td class="description">{{ classification.description }}</td>
+                    <td>
+                        <span *ngIf="classification.entityTypes.length === 0" class="is-italic" translate>
+                            search.classificationsAdmin.allTypes
+                        </span>
+                        <span *ngFor="let type of classification.entityTypes" class="tag is-light mr-1 mb-1">
+                            {{ type | translate }}
+                        </span>
+                    </td>
+                    <td class="has-text-right">{{ classification.usage.direct }}</td>
+                    <td class="has-text-right">{{ classification.usage.propagated }}</td>
+                    <td class="has-text-right actions">
+                        <button
+                            class="button is-small is-light edit"
+                            [title]="'search.classificationsAdmin.edit' | translate"
+                            (click)="openEdit(classification)"
+                        >
+                            <span class="icon"><fa-icon [icon]="faEdit"></fa-icon></span>
+                        </button>
+                        <button
+                            class="button is-small is-light is-danger delete-button"
+                            [disabled]="inUse(classification)"
+                            [title]="
+                                (inUse(classification)
+                                    ? 'search.classificationsAdmin.inUse'
+                                    : 'search.classificationsAdmin.delete'
+                                ) | translate
+                            "
+                            (click)="askDelete(classification)"
+                        >
+                            <span class="icon"><fa-icon [icon]="faTrash"></fa-icon></span>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="!isLoading && classifications.length === 0">
+                    <td colspan="7" class="is-italic" translate>search.classificationsAdmin.empty</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p class="help" translate>search.classificationsAdmin.usageHelp</p>
+</div>
+
+<!-- Create / edit -->
+<div *ngIf="formMode" class="modal is-active" id="classification-form">
+    <div class="modal-background" (click)="closeForm()"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">
+                {{
+                    (formMode === 'create'
+                        ? 'search.classificationsAdmin.createTitle'
+                        : 'search.classificationsAdmin.editTitle'
+                    ) | translate
+                }}
+            </p>
+            <button class="delete" aria-label="close" (click)="closeForm()"></button>
+        </header>
+        <section class="modal-card-body" [formGroup]="form">
+            <div class="field">
+                <label class="label" translate>search.classificationsAdmin.name</label>
+                <div class="control">
+                    <input
+                        id="classification-name"
+                        class="input"
+                        type="text"
+                        formControlName="name"
+                        [class.is-danger]="showError('name') || fieldErrors['name']"
+                        placeholder="e.g. confidential"
+                    />
+                </div>
+                <p class="help" *ngIf="formMode === 'create'" translate>search.classificationsAdmin.nameHelp</p>
+                <p class="help" *ngIf="formMode === 'edit'" translate>search.classificationsAdmin.nameFixed</p>
+                <p class="help is-danger" *ngIf="showError('name')" translate>
+                    search.classificationsAdmin.nameInvalid
+                </p>
+                <p class="help is-danger" *ngIf="fieldErrors['name']">{{ fieldErrors['name'] }}</p>
+            </div>
+
+            <div class="columns">
+                <div class="column field">
+                    <label class="label" translate>search.classificationsAdmin.displayNameEn</label>
+                    <div class="control">
+                        <input
+                            id="classification-display-name"
+                            class="input"
+                            type="text"
+                            formControlName="displayName"
+                            [class.is-danger]="showError('displayName') || fieldErrors['displayName']"
+                        />
+                    </div>
+                    <p class="help is-danger" *ngIf="showError('displayName')" translate>
+                        search.classificationsAdmin.displayNameRequired
+                    </p>
+                    <p class="help is-danger" *ngIf="fieldErrors['displayName']">{{ fieldErrors['displayName'] }}</p>
+                </div>
+                <div class="column field">
+                    <label class="label" translate>search.classificationsAdmin.displayNameNl</label>
+                    <div class="control">
+                        <input
+                            id="classification-display-name-nl"
+                            class="input"
+                            type="text"
+                            formControlName="displayNameNl"
+                            [class.is-danger]="fieldErrors['displayNameNl']"
+                        />
+                    </div>
+                    <p class="help is-danger" *ngIf="fieldErrors['displayNameNl']">
+                        {{ fieldErrors['displayNameNl'] }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label" translate>search.classificationsAdmin.description</label>
+                <div class="control">
+                    <textarea
+                        id="classification-description"
+                        class="textarea"
+                        rows="2"
+                        formControlName="description"
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label" translate>search.classificationsAdmin.entityTypes</label>
+                <div class="control">
+                    <label *ngFor="let type of typeOptions" class="checkbox mr-4">
+                        <input
+                            type="checkbox"
+                            [attr.data-type]="type"
+                            [checked]="isTypeSelected(type)"
+                            (change)="toggleType(type)"
+                        />
+                        {{ type | translate }}
+                    </label>
+                </div>
+                <p class="help is-danger" *ngIf="showError('entityTypes')" translate>
+                    search.classificationsAdmin.entityTypesRequired
+                </p>
+                <p class="help" *ngIf="formMode === 'edit'" translate>search.classificationsAdmin.entityTypesHelp</p>
+                <p class="help is-danger" *ngIf="fieldErrors['entityTypes']">{{ fieldErrors['entityTypes'] }}</p>
+            </div>
+
+            <div *ngIf="formError" class="notification is-danger is-light">{{ formError }}</div>
+        </section>
+        <footer class="modal-card-foot">
+            <button id="save-classification" class="button is-success" [class.is-loading]="isSaving" (click)="save()">
+                {{
+                    (formMode === 'create' ? 'search.classificationsAdmin.create' : 'search.classificationsAdmin.save')
+                        | translate
+                }}
+            </button>
+            <button class="button" (click)="closeForm()" translate>search.classificationsAdmin.cancel</button>
+        </footer>
+    </div>
+</div>
+
+<!-- Delete confirmation -->
+<div *ngIf="deleteCandidate" class="modal is-active" id="classification-delete">
+    <div class="modal-background" (click)="cancelDelete()"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title" translate>search.classificationsAdmin.deleteTitle</p>
+            <button class="delete" aria-label="close" (click)="cancelDelete()"></button>
+        </header>
+        <section class="modal-card-body">
+            <p>
+                <span translate>search.classificationsAdmin.deleteQuestion</span>
+                <strong> {{ deleteCandidate | classificationLabel }}</strong> (<code>{{ deleteCandidate.name }}</code
+                >)?
+            </p>
+            <div *ngIf="deleteError" class="notification is-danger is-light mt-4">{{ deleteError }}</div>
+        </section>
+        <footer class="modal-card-foot">
+            <button
+                id="confirm-delete"
+                class="button is-danger"
+                [class.is-loading]="isDeleting"
+                (click)="confirmDelete()"
+                translate
+            >
+                search.classificationsAdmin.delete
+            </button>
+            <button class="button" (click)="cancelDelete()" translate>search.classificationsAdmin.cancel</button>
+        </footer>
+    </div>
+</div>

@@ -26,10 +26,16 @@ export class TypeDefsService extends BasicStore<TypeDefsStoreContext> {
             .subscribe((typeDefs) => this.handleIndexEntityTypes(typeDefs));
     }
 
+    /** Loads the type definitions again (after classifications were created, changed or deleted) */
+    refresh(): Promise<void> {
+        return this.handleRetrieveTypeDefs(true);
+    }
+
     @ManagedTask('search.services.typeDefs.retrieve', { isQuiet: true })
     @MonitorAsync('isRetrievingTypeDefs')
-    private async handleRetrieveTypeDefs() {
-        const typeDefs = await this.typeDefApiService.getTypeDefs().toPromise();
+    private async handleRetrieveTypeDefs(forceUpdate = false) {
+        // the response is cached: a refresh after a change of the type definitions must bypass the cache
+        const typeDefs = await this.typeDefApiService.getTypeDefs({ forceUpdate }).toPromise();
         this.update({
             description: 'New type defs available',
             payload: { typeDefs },

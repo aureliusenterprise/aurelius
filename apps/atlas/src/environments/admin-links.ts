@@ -11,6 +11,11 @@ export function aureliusAdminLinks(keycloak: { readonly url: string; readonly re
     const keycloakBase = new URL(keycloak.url.replace(/\/?$/, '/'), document.baseURI).href;
     return [
         {
+            route: '/search/classifications',
+            title: 'admin.classifications.title',
+            description: 'admin.classifications.description',
+        },
+        {
             url: `${keycloakBase}admin/${encodeURIComponent(keycloak.realm)}/console/`,
             title: 'admin.keycloak.title',
             description: 'admin.keycloak.description',

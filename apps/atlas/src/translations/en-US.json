@@ -221,7 +221,9 @@
                 "components": {
                     "classificationsInput": {
                         "addPlaceholder": "Add a classification...",
-                        "noClassificationsAvailable": "No classifications available"
+                        "noClassificationsAvailable": "No classifications available",
+                        "propagates": "Propagates along the lineage and the data model (click to switch off)",
+                        "doesNotPropagate": "Does not propagate (click to switch on)"
                     },
                     "relationshipsInput": {
                         "addPlaceholder": "Add a relationship...",
@@ -676,6 +678,38 @@
             "typeDefs": {
                 "retrieve": "Retrieving the type definitions"
             }
+        },
+        "classificationsAdmin": {
+            "title": "Classifications",
+            "intro": "The classifications that can be attached to data in your organisation. A classification attached with propagation is copied along the lineage and the data model.",
+            "new": "New classification",
+            "displayName": "Display name",
+            "name": "Technical name",
+            "description": "Description",
+            "entityTypes": "Allowed for",
+            "direct": "Attached",
+            "propagated": "Propagated",
+            "allTypes": "all types",
+            "edit": "Edit",
+            "delete": "Delete",
+            "inUse": "In use: remove it from all entities before deleting",
+            "empty": "No classifications yet.",
+            "usageHelp": "Attached: entities the classification is attached to. Propagated: entities that received it along the lineage or the data model.",
+            "createTitle": "New classification",
+            "editTitle": "Edit classification",
+            "nameHelp": "Unique; starts with a letter, then letters, digits or _. Cannot be changed later.",
+            "nameFixed": "The technical name cannot be changed.",
+            "nameInvalid": "Start with a letter, then only letters, digits or _ (at most 64 characters).",
+            "displayNameEn": "Display name (English)",
+            "displayNameNl": "Display name (Dutch)",
+            "displayNameRequired": "A display name is required.",
+            "entityTypesRequired": "Select at least one type.",
+            "entityTypesHelp": "Entities that already carry the classification keep it when you remove their type here.",
+            "create": "Create",
+            "save": "Save",
+            "cancel": "Cancel",
+            "deleteTitle": "Delete classification",
+            "deleteQuestion": "Delete the classification"
         }
     },
     "sourcetype": "Source",
@@ -700,6 +734,10 @@
         "atlas": {
             "title": "Apache Atlas",
             "description": "The Apache Atlas user interface: all entities with their properties, type definitions, lineage, audits, and import and export."
+        },
+        "classifications": {
+            "title": "Classifications",
+            "description": "Create and change the classifications your organisation attaches to data, and see where they are used."
         }
     }
 }

@@ -170,6 +170,9 @@ def index_typedefs(td: dict) -> Dict[Tuple[str, str], dict]:
 def compare_typedefs(source_td: dict, target_td: dict, report: Report, rules: Optional[Rules] = None,
                      names: Optional[Iterable[str]] = None) -> None:
     rules = rules or Rules(unordered=["*.constraints", "*.attributeDefs.*.constraints"])
+    # classifications are managed by each tenant's administrators in Aurelius: display names (options),
+    # description and version are theirs; name, allowed entity types, attributes and super types are compared
+    classification_rules = rules.merged(Rules(ignore=["options", "options.*", "description", "typeVersion"]))
     src, tgt = index_typedefs(source_td), index_typedefs(target_td)
     wanted = set(names) if names is not None else None
     for key, d in sorted(src.items()):
@@ -179,7 +182,8 @@ def compare_typedefs(source_td: dict, target_td: dict, report: Report, rules: Op
         if other is None:
             report.missing(f"typedef {key[0]}:{key[1]}")
             continue
-        report.different(f"typedef {key[0]}:{key[1]}", diff(d, other, rules))
+        report.different(f"typedef {key[0]}:{key[1]}",
+                         diff(d, other, classification_rules if key[0] == "classificationDefs" else rules))
 
 
 def bundled_atlas_type_names() -> set:

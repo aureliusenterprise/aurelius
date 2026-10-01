@@ -205,6 +205,52 @@ async def lineage_model(request: Request, guid: str, depth: int = 3, direction: 
     return body
 
 
+# ------------------------------------------------------------------ classifications (administrators)
+def _classification_error(e) -> JSONResponse:
+    return JSONResponse({"errorMessage": e.message, "field": e.field}, status_code=e.status)
+
+
+@router.get("/classifications")
+async def list_classifications(request: Request):
+    """The tenant's classifications with their display names and how many entities carry them (directly and by
+    propagation) - the frontend's classification management page."""
+    from . import classifications
+    s = svc(request)
+    return await classifications.list_all(s)
+
+
+@router.post("/classifications")
+async def create_classification(request: Request):
+    """``{name, displayName, displayNames: {"nl-NL": ...}, description, entityTypes}`` (administrators)."""
+    from . import classifications
+    try:
+        return await classifications.create(svc(request), await json_body(request, default={}), user_of(request))
+    except classifications.ClassificationError as e:
+        return _classification_error(e)
+
+
+@router.put("/classifications/{name}")
+async def update_classification(name: str, request: Request):
+    """Display names, description and allowed entity types of a classification (the name is fixed)."""
+    from . import classifications
+    try:
+        return await classifications.update(svc(request), name, await json_body(request, default={}),
+                                            user_of(request))
+    except classifications.ClassificationError as e:
+        return _classification_error(e)
+
+
+@router.delete("/classifications/{name}")
+async def delete_classification(name: str, request: Request):
+    """Deletes a classification that no entity carries any more."""
+    from . import classifications
+    try:
+        await classifications.delete(svc(request), name)
+    except classifications.ClassificationError as e:
+        return _classification_error(e)
+    return Response(status_code=204)
+
+
 # ------------------------------------------------------------------ quality (phase 3)
 @router.post("/validate_entity")
 @router.post("/validate_entity/")

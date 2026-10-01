@@ -282,13 +282,23 @@
       <div *ngFor="let link of adminLinks" class="columns is-vcentered is-mobile admin-link">
         <div class="column is-5">
           <a
+            *ngIf="link.route; else externalLink"
             class="button is-link is-fullwidth"
-            [href]="link.url"
-            target="_blank"
-            rel="noopener noreferrer"
+            [routerLink]="link.route"
+            (click)="closeAdminDialog()"
           >
             {{ link.title | translate }}
           </a>
+          <ng-template #externalLink>
+            <a
+              class="button is-link is-fullwidth"
+              [href]="link.url"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ link.title | translate }}
+            </a>
+          </ng-template>
         </div>
         <div class="column">
           <p class="is-size-7">{{ link.description | translate }}</p>

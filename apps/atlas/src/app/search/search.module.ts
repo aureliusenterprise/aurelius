@@ -11,6 +11,7 @@ import {
 } from '@models4insight/components';
 import { KeycloakRolePermissionModule } from '@models4insight/permissions';
 import { BrowseModule } from './browse/browse.module';
+import { ClassificationsAdminModule } from './classifications-admin/classifications-admin.module';
 import { CreateEntityModule } from './create-entity/create-entity.module';
 import { EditEntityModule } from './edit-entity/edit-entity.module';
 import { ResultsModule } from './results/results.module';
@@ -28,6 +29,7 @@ import { SearchService } from './services/search/search.service';
     HeroModule,
     ResultsModule,
     BrowseModule,
+    ClassificationsAdminModule,
     KeycloakRolePermissionModule,
     SearchRoutingModule,
     CreateEntityModule,

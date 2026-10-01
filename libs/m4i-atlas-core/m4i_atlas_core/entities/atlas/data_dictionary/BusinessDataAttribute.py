@@ -160,28 +160,43 @@ m4i_steward_attribute_rel_def = RelationshipDef(
 
 m4i_classification_pii = ClassificationDef(
     name="PII",
+    description="Personally identifiable information: data that identifies a person directly or indirectly.",
+    type_version="1.1",
+    options={"displayName": "Has PII", "displayName.nl-NL": "Bevat PII"},
     entity_types=["m4i_data_entity", "m4i_data_attribute",
                   "m4i_field", "m4i_dataset", "m4i_collection"],
     category=TypeCategory.CLASSIFICATION
 )
 m4i_classification_key_data = ClassificationDef(
     name="key_data",
+    description="Key data: data that is essential for the business.",
+    type_version="1.1",
+    options={"displayName": "Is key", "displayName.nl-NL": "Is sleutel"},
     entity_types=["m4i_data_attribute", "m4i_field"],
     category=TypeCategory.CLASSIFICATION
 )
 m4i_classification_high_risk = ClassificationDef(
     name="high_risk",
+    description="High risk data.",
+    type_version="1.1",
+    options={"displayName": "High risk", "displayName.nl-NL": "Hoog risico"},
     entity_types=["m4i_data_entity",
                   "m4i_data_attribute", "m4i_field", "m4i_dataset"],
     category=TypeCategory.CLASSIFICATION
 )
 m4i_classification_medium_risk = ClassificationDef(
     name="medium_risk",
+    description="Medium risk data.",
+    type_version="1.1",
+    options={"displayName": "Medium risk", "displayName.nl-NL": "Gemiddeld risico"},
     entity_types=["m4i_data_attribute", "m4i_field"],
     category=TypeCategory.CLASSIFICATION
 )
 m4i_classification_low_risk = ClassificationDef(
     name="low_risk",
+    description="Low risk data.",
+    type_version="1.1",
+    options={"displayName": "Low risk", "displayName.nl-NL": "Laag risico"},
     entity_types=["m4i_data_attribute", "m4i_field"],
     category=TypeCategory.CLASSIFICATION
 )

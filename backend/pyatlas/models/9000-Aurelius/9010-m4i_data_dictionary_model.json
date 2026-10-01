@@ -3,6 +3,12 @@
         {
             "category": "CLASSIFICATION",
             "name": "PII",
+            "description": "Personally identifiable information: data that identifies a person directly or indirectly.",
+            "options": {
+                "displayName": "Has PII",
+                "displayName.nl-NL": "Bevat PII"
+            },
+            "typeVersion": "1.1",
             "attributeDefs": [],
             "entityTypes": [
                 "m4i_data_entity",
@@ -16,6 +22,12 @@
         {
             "category": "CLASSIFICATION",
             "name": "key_data",
+            "description": "Key data: data that is essential for the business.",
+            "options": {
+                "displayName": "Is key",
+                "displayName.nl-NL": "Is sleutel"
+            },
+            "typeVersion": "1.1",
             "attributeDefs": [],
             "entityTypes": [
                 "m4i_data_attribute",
@@ -26,6 +38,12 @@
         {
             "category": "CLASSIFICATION",
             "name": "low_risk",
+            "description": "Low risk data.",
+            "options": {
+                "displayName": "Low risk",
+                "displayName.nl-NL": "Laag risico"
+            },
+            "typeVersion": "1.1",
             "attributeDefs": [],
             "entityTypes": [
                 "m4i_data_attribute",
@@ -36,6 +54,12 @@
         {
             "category": "CLASSIFICATION",
             "name": "medium_risk",
+            "description": "Medium risk data.",
+            "options": {
+                "displayName": "Medium risk",
+                "displayName.nl-NL": "Gemiddeld risico"
+            },
+            "typeVersion": "1.1",
             "attributeDefs": [],
             "entityTypes": [
                 "m4i_data_attribute",
@@ -46,6 +70,12 @@
         {
             "category": "CLASSIFICATION",
             "name": "high_risk",
+            "description": "High risk data.",
+            "options": {
+                "displayName": "High risk",
+                "displayName.nl-NL": "Hoog risico"
+            },
+            "typeVersion": "1.1",
             "attributeDefs": [],
             "entityTypes": [
                 "m4i_data_entity",

@@ -147,6 +147,25 @@ attribute `uses` (the entities this entity uses) and, on the other side, `usedBy
 and added to existing installations (every tenant) at the next start of pyatlas. The frontend's entity editor has the
 fields "Uses" and "Used by"; the entity details page shows both counts and cards of the related entities.
 
+## Classifications managed in Aurelius (1 Oct 2026)
+
+Administrators (`ROLE_ADMIN`) manage the tenant's classifications at `/<ns>/<tenant>/atlas/search/classifications`
+(Admin button → Classifications): a table with display name, technical name, description, allowed entity types and
+how many entities carry each classification (attached / propagated), and a form to create and change them.
+
+* A classification is an Atlas classification type definition in the tenant's `aurelius_<tenant>_typedefs` index;
+  the model files only seed the five standard ones (`PII`, `key_data`, `low_risk`, `medium_risk`, `high_risk`,
+  now with display names and descriptions, `typeVersion` 1.1). Created ones are never touched by the model loader.
+* Technical names are unique among all type names (ignoring case) and fixed once created (Atlas cannot rename a
+  type); display names (English, Dutch) are unique among the classifications, stored in the definition's `options`
+  (`displayName`, `displayName.nl-NL`) and shown everywhere a classification appears.
+* A classification still attached to an entity (directly or propagated) cannot be deleted.
+* API (pyatlas): `GET/POST /api/aurelius/classifications`, `PUT/DELETE /api/aurelius/classifications/{name}`;
+  the proxy serves them at `/<ns>/<tenant>/atlas/classifications`.
+* Editors: each attached classification has a propagation switch (»: copied along the lineage and the data model,
+  Atlas `propagate`); classifications without allowed entity types are offered for every type; the field, dataset
+  and collection editors have a classification field, the domain editor no longer.
+
 ## Elasticsearch 9
 
 The stacks run Elasticsearch and Kibana 9.5.4; pyatlas uses the Python client 9. Enterprise Search, which

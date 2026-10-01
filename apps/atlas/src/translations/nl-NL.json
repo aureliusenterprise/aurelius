@@ -221,7 +221,9 @@
                 "components": {
                     "classificationsInput": {
                         "addPlaceholder": "Classificatie toevoegen...",
-                        "noClassificationsAvailable": "Geen classificaties beschikbaar"
+                        "noClassificationsAvailable": "Geen classificaties beschikbaar",
+                        "propagates": "Wordt doorgegeven langs de lineage en het datamodel (klik om uit te zetten)",
+                        "doesNotPropagate": "Wordt niet doorgegeven (klik om aan te zetten)"
                     },
                     "relationshipsInput": {
                         "addPlaceholder": "Relatie toevoegen...",
@@ -676,6 +678,38 @@
             "typeDefs": {
                 "retrieve": "Typedefinities worden opgehaald"
             }
+        },
+        "classificationsAdmin": {
+            "title": "Classificaties",
+            "intro": "De classificaties die in uw organisatie aan data gekoppeld kunnen worden. Een classificatie met propagatie wordt langs de lineage en het datamodel doorgegeven.",
+            "new": "Nieuwe classificatie",
+            "displayName": "Weergavenaam",
+            "name": "Technische naam",
+            "description": "Beschrijving",
+            "entityTypes": "Toegestaan voor",
+            "direct": "Gekoppeld",
+            "propagated": "Doorgegeven",
+            "allTypes": "alle typen",
+            "edit": "Bewerken",
+            "delete": "Verwijderen",
+            "inUse": "In gebruik: verwijder de classificatie eerst bij alle entiteiten",
+            "empty": "Nog geen classificaties.",
+            "usageHelp": "Gekoppeld: entiteiten waaraan de classificatie gekoppeld is. Doorgegeven: entiteiten die haar via de lineage of het datamodel kregen.",
+            "createTitle": "Nieuwe classificatie",
+            "editTitle": "Classificatie bewerken",
+            "nameHelp": "Uniek; begint met een letter, daarna letters, cijfers of _. Kan later niet worden gewijzigd.",
+            "nameFixed": "De technische naam kan niet worden gewijzigd.",
+            "nameInvalid": "Begin met een letter, daarna alleen letters, cijfers of _ (maximaal 64 tekens).",
+            "displayNameEn": "Weergavenaam (Engels)",
+            "displayNameNl": "Weergavenaam (Nederlands)",
+            "displayNameRequired": "Een weergavenaam is verplicht.",
+            "entityTypesRequired": "Kies minstens één type.",
+            "entityTypesHelp": "Entiteiten die de classificatie al hebben, houden haar als u hun type hier weghaalt.",
+            "create": "Aanmaken",
+            "save": "Opslaan",
+            "cancel": "Annuleren",
+            "deleteTitle": "Classificatie verwijderen",
+            "deleteQuestion": "De classificatie verwijderen"
         }
     },
     "sourcetype": "Bron",
@@ -700,6 +734,10 @@
         "atlas": {
             "title": "Apache Atlas",
             "description": "De gebruikersinterface van Apache Atlas: alle entiteiten met hun eigenschappen, typedefinities, lineage, audits, en import en export."
+        },
+        "classifications": {
+            "title": "Classificaties",
+            "description": "Maak en wijzig de classificaties die uw organisatie aan data koppelt, en zie waar ze gebruikt worden."
         }
     }
 }

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Shell } from '@models4insight/shell';
 import { BrowseComponent } from './browse/browse.component';
+import { adminRoleGuard } from './classifications-admin/admin-role.guard';
+import { ClassificationsAdminComponent } from './classifications-admin/classifications-admin.component';
 import { CreateEntityComponent } from './create-entity/create-entity.component';
 import { QueryResolver } from './query.resolver';
 import { ResultsComponent } from './results/results.component';
@@ -31,6 +33,11 @@ const childRoutes: Routes = [
   {
     path: 'create-entity',
     component: CreateEntityComponent
+  },
+  {
+    path: 'classifications',
+    component: ClassificationsAdminComponent,
+    canActivate: [adminRoleGuard]
   },
   {
     path: 'edit-entity',

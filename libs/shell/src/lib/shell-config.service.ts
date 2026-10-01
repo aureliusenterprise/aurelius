@@ -2,7 +2,10 @@ import { InjectionToken } from '@angular/core';
 
 /** A link of the header's Admin dialog (titles and descriptions are translation keys) */
 export interface ShellAdminLink {
-  readonly url: string;
+  /** Address of another tool (opens in a new tab) */
+  readonly url?: string;
+  /** Route of a page of the app itself (opens in the same tab), instead of url */
+  readonly route?: string;
   readonly title: string;
   readonly description: string;
 }

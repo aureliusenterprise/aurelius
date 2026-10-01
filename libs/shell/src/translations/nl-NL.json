@@ -15,7 +15,7 @@
             "welcome": "Ingelogd als",
             "admin": "Beheer",
             "adminTitle": "Beheer",
-            "adminIntro": "De hulpmiddelen voor het beheer van uw organisatie in Aurelius. Elk opent in een nieuw tabblad.",
+            "adminIntro": "De hulpmiddelen voor het beheer van uw organisatie in Aurelius. Keycloak, Kibana en Apache Atlas openen in een nieuw tabblad.",
             "adminClose": "Sluiten"
         },
         "pipeline": {

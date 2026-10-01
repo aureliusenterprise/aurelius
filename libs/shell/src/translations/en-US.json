@@ -12,7 +12,7 @@
       "update": "Update available",
       "admin": "Admin",
       "adminTitle": "Administration",
-      "adminIntro": "The tools for administering your organisation in Aurelius. Each opens in a new tab.",
+      "adminIntro": "The tools for administering your organisation in Aurelius. Keycloak, Kibana and Apache Atlas open in a new tab.",
       "adminClose": "Close"
     },
     "footer": {

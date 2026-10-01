@@ -10,7 +10,7 @@
                 class="tag"
                 [models4insight-tooltip]="classificationType.description || 'No description available'"
                 tooltipDirection="bottom"
-                >{{ classificationType.name | translate }}
+                >{{ classificationType | classificationLabel }}
             </span>
             <div
                 *ngIf="isPropagated$ | async"
@@ -25,7 +25,7 @@
                 <div class="dropdown-menu" role="menu">
                     <div class="dropdown-content">
                         <div class="dropdown-item">
-                            <strong>{{ classificationType.name | translate }}</strong>
+                            <strong>{{ classificationType | classificationLabel }}</strong>
                             <span translate> search.components.classification.originates </span>
                         </div>
                         <ng-container *ngFor="let source of sources$ | async">

@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormArray, UntypedFormControl } from '@angular/forms';
-import { faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleRight, faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { Classification, ClassificationDef } from '@models4insight/atlas/api';
 import { combineLatest, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -13,8 +13,9 @@ function filterClassifications(
   typeName: string,
   query?: string
 ) {
-  const applicableDefs = defs.filter((def) =>
-    def.entityTypes?.find((entityType) => entityType === typeName)
+  // no entity types: the classification may be attached to any type (as in Atlas)
+  const applicableDefs = defs.filter(
+    (def) => !def.entityTypes?.length || def.entityTypes.includes(typeName)
   );
 
   const defsNotSelected = applicableDefs.filter(
@@ -41,6 +42,7 @@ function filterClassifications(
 export class ClassificationsInputComponent implements OnInit {
   readonly input = new UntypedFormControl(null);
   readonly faHashtag = faHashtag;
+  readonly faAngleDoubleRight = faAngleDoubleRight;
 
   options$: Observable<ClassificationDef[]>;
 
@@ -89,6 +91,13 @@ export class ClassificationsInputComponent implements OnInit {
       })
     );
     this.input.reset();
+  }
+
+  /** Whether the classification is copied along the lineage and the data model to related entities */
+  togglePropagate(index: number) {
+    const control = this.tags.at(index);
+    control.setValue({ ...control.value, propagate: control.value?.propagate === false });
+    control.markAsDirty();
   }
 
   deleteTag(index: number) {

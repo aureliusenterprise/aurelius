@@ -13,11 +13,27 @@
                             <fa-icon [icon]="faHashtag"></fa-icon>
                         </span>
                     </span>
-                    <span class="tag" [title]="control.value?.typeName | translate">
+                    <span class="tag" [title]="control.value?.typeName | classificationLabel">
                         <span class="truncate">
-                            {{ control.value?.typeName | translate }}
+                            {{ control.value?.typeName | classificationLabel }}
                         </span>
                     </span>
+                    <a
+                        class="tag propagate-toggle"
+                        [class.is-primary]="control.value?.propagate !== false"
+                        [class.is-light]="control.value?.propagate === false"
+                        [title]="
+                            (control.value?.propagate !== false
+                                ? 'search.components.editor.components.classificationsInput.propagates'
+                                : 'search.components.editor.components.classificationsInput.doesNotPropagate'
+                            ) | translate
+                        "
+                        (click)="togglePropagate(i); $event.stopPropagation()"
+                    >
+                        <span class="icon is-small" [class.is-crossed]="control.value?.propagate === false">
+                            <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+                        </span>
+                    </a>
                     <a class="tag is-delete" (click)="deleteTag(i)"></a>
                 </span>
             </span>
@@ -48,7 +64,10 @@
                         (click)="addTag(option.name)"
                         (mousedown)="preventBlur($event)"
                     >
-                        <span class="has-text-link"> {{ option.name | translate }}</span>
+                        <span class="has-text-link"> {{ option | classificationLabel }}</span>
+                        <span *ngIf="option.description && option.description !== option.name" class="is-size-7 has-text-grey">
+                            &nbsp;{{ option.description }}
+                        </span>
                     </a>
                 </ng-container>
             </ng-container>
