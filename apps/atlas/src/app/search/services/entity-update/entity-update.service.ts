@@ -6,6 +6,7 @@ import {
     getEntityById,
     removeEntityClassification,
     saveEntityClassification,
+    updateEntityClassification,
 } from '@models4insight/atlas/api';
 import { BasicStore, MonitorAsync } from '@models4insight/redux';
 import { ManagedTask } from '@models4insight/task-manager';
@@ -54,61 +55,68 @@ export class EntityUpdateService extends BasicStore<EntityUpdateStoreContext> {
     private async handleUpdateEntity(entityDetails: AtlasEntityWithEXTInformation) {
         const [guid, _] = await this.handleSaveEntity(entityDetails);
 
-        await this.handleUpdateClassifications(guid, entityDetails);
+        const saved = await getEntityById(guid, { forceUpdate: true }).toPromise();
+        const changed = await this.handleUpdateClassifications(guid, entityDetails, saved);
 
-        this.entityDetailsService.entityDetails = await getEntityById(guid, {
-            forceUpdate: true,
-        }).toPromise();
+        this.entityDetailsService.entityDetails = changed
+            ? await getEntityById(guid, { forceUpdate: true }).toPromise()
+            : saved;
 
         return guid;
     }
 
-    private async handleUpdateClassifications(guid: string, entityDetails: AtlasEntityWithEXTInformation) {
-        const classifications = entityDetails.entity.classifications ?? [],
-            currentClassifications = await this.entityDetailsService.get(
-                ['entityDetails', 'entity', 'classifications'],
-                { includeFalsy: true },
-            );
-        // filter out classifications that are not owned by the entity (being propagated from a relationship)
-        // thouse types of classifications are not editable
-        const ownedCurrentClassifications =
-            guid === undefined
-                ? (currentClassifications ?? [])
-                : (currentClassifications ?? []).filter(
-                      (classification: Classification) => classification.entityGuid === guid,
-                  );
+    /**
+     * Brings the classifications the entity carries itself in line with the editor. Compared with the entity as it
+     * was saved: a new entity already got its classifications with the save, an existing one keeps its old ones
+     * (Atlas ignores classifications when updating an entity). Propagated classifications are not editable.
+     * Returns whether anything changed.
+     */
+    private async handleUpdateClassifications(
+        guid: string,
+        entityDetails: AtlasEntityWithEXTInformation,
+        saved: AtlasEntityWithEXTInformation,
+    ): Promise<boolean> {
+        const editorGuid = entityDetails.entity.guid;
+        const isOwn = (classification: Classification) =>
+            !classification.entityGuid ||
+            classification.entityGuid === guid ||
+            classification.entityGuid === editorGuid ||
+            classification.entityGuid.startsWith('-');
 
-        function difference(a: Classification[], b: Classification[]): Classification[] {
-            return a.filter((aa) => !b.find((bb) => aa.typeName === bb.typeName));
-        }
-
-        const classificationsToAdd = ownedCurrentClassifications
-            ? difference(classifications, ownedCurrentClassifications)
-            : classifications;
-
-        const classificationsToRemove = ownedCurrentClassifications
-            ? difference(ownedCurrentClassifications, classifications)
-            : [];
-
-        // When creating a new entity, any classifications direclty assigned to this entity will have a placeholder entityGuid.
-        // Override the placeholder entityGuid with the given guid
-        const classificationsWithoutPlaceholderGuid = classificationsToAdd.map((classification) =>
-            classification.entityGuid.startsWith('-') ? { ...classification, entityGuid: guid } : classification,
+        const wanted = (entityDetails.entity.classifications ?? [])
+            .filter(isOwn)
+            .map((classification) => ({ ...classification, entityGuid: guid }));
+        const current = (saved?.entity?.classifications ?? []).filter(
+            (classification: Classification) => classification.entityGuid === guid,
         );
 
-        const additions = classificationsToAdd.length
-            ? saveEntityClassification(guid, classificationsWithoutPlaceholderGuid).toPromise()
-            : Promise.resolve();
+        const find = (list: Classification[], typeName: string) => list.find((c) => c.typeName === typeName);
+        const propagates = (classification: Classification) => classification.propagate !== false;
 
-        const removals = classificationsToRemove.length
-            ? Promise.all(
-                  classificationsToRemove.map((classification) =>
-                      removeEntityClassification(guid, classification.typeName).toPromise(),
-                  ),
-              )
-            : Promise.resolve();
+        const toAdd = wanted.filter((classification) => !find(current, classification.typeName));
+        const toRemove = current.filter((classification) => !find(wanted, classification.typeName));
+        const toChange = wanted.filter((classification) => {
+            const existing = find(current, classification.typeName);
+            return existing && propagates(existing) !== propagates(classification);
+        });
 
-        return Promise.all([additions, removals as Promise<void>]);
+        await Promise.all([
+            toAdd.length ? saveEntityClassification(guid, toAdd).toPromise() : Promise.resolve(),
+            toChange.length
+                ? updateEntityClassification(
+                      guid,
+                      toChange.map((classification) => ({
+                          ...find(current, classification.typeName),
+                          propagate: propagates(classification),
+                      })),
+                  ).toPromise()
+                : Promise.resolve(),
+            ...toRemove.map((classification) =>
+                removeEntityClassification(guid, classification.typeName).toPromise(),
+            ),
+        ]);
+
+        return toAdd.length + toChange.length + toRemove.length > 0;
     }
 
     private async handleSaveEntity(entityDetails: AtlasEntityWithEXTInformation) {
