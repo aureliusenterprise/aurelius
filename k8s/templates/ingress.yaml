@@ -14,6 +14,10 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: '3600'
     # import ZIPs up to pyatlas' limit
     nginx.ingress.kubernetes.io/proxy-body-size: 512m
+    # Keycloak's redirects carry several large session cookies (plus legacy copies): more than nginx's default
+    # 4k response header buffer, which nginx answers with 502 Bad Gateway
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:
