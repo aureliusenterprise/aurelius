@@ -231,4 +231,3 @@ licenses.json
 vulnerabilities.json
 *sbom.json
 .trivy-cache/
-.keycloak-recovery/
