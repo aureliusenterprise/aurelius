@@ -11,7 +11,12 @@ resources:
             memory: 2Gi
     taskmanager:
         requests:
-            memory: 8Gi
+            # Steady-state usage is ~1.6Gi per TM. Requesting the full process
+            # size (8Gi) makes the pods unschedulable on fixed-size node pools
+            # (6x8Gi does not fit, with no autoscaling). Keep the limit at 9Gi
+            # so Flink can still grow into taskmanager.memory.process.size
+            # (8000m) without being OOMKilled.
+            memory: 2Gi
         limits:
             memory: 9Gi
 
