@@ -65,7 +65,7 @@ services:
         ports:
             - 5432
         volumes:
-            - keycloak-data:/var/lib/postgresql
+            - keycloak-data:/var/lib/postgresql/data
 
     keycloak-setup:
         image: ghcr.io/aureliusenterprise/aurelius-docker-keycloak:local
