@@ -16,7 +16,7 @@ import { I18nService } from '@models4insight/i18n';
 import { Feature } from '@models4insight/permissions';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ShellAdminLink, ShellConfig, ShellConfigService } from '../shell-config.service';
+import { ShellAdminLink, ShellConfig, ShellConfigService, ShellRoleRequirement } from '../shell-config.service';
 import { ShellService } from '../shell.service';
 
 @Component({
@@ -105,12 +105,24 @@ export class HeaderComponent implements OnInit {
   }
 
   openAdminDialog() {
-    this.adminLinks = this.adminLinksFactory?.() ?? [];
+    this.adminLinks = (this.adminLinksFactory?.() ?? []).filter((link) => this.hasRoles(link.requires));
     this.adminDialogOpen = true;
   }
 
   closeAdminDialog() {
     this.adminDialogOpen = false;
+  }
+
+  /** Whether the user has at least one of the required roles (realm or client roles of the access token) */
+  private hasRoles(requires?: ShellRoleRequirement): boolean {
+    if (!requires) return true;
+    const token = this.keycloakService?.tokenParsed;
+    const realmRoles: string[] = token?.realm_access?.roles ?? [];
+    if ((requires.realmRoles ?? []).some((role) => realmRoles.includes(role))) return true;
+    return Object.entries(requires.clientRoles ?? {}).some(([clientId, roles]) => {
+      const clientRoles: string[] = token?.resource_access?.[clientId]?.roles ?? [];
+      return roles.some((role) => clientRoles.includes(role));
+    });
   }
 
   private hasAdminRole(): boolean {

@@ -28,11 +28,15 @@ export function aureliusAdminLinks(keycloak: { readonly url: string; readonly re
             url: `${keycloakUrl.href}admin/${encodeURIComponent(keycloak.realm)}/console/`,
             title: 'admin.keycloak.title',
             description: 'admin.keycloak.description',
+            // the user management of the realm (aurelius-admin tenant grant-admin)
+            requires: { clientRoles: { 'realm-management': ['manage-users', 'view-users'] } },
         },
         {
             url: `${tenantBase}kibana/`,
             title: 'admin.kibana.title',
             description: 'admin.kibana.description',
+            // as the proxy requires it for the tenant's Kibana (kibana-tenants.conf)
+            requires: { realmRoles: ['ROLE_ADMIN'] },
         },
         {
             url: `${tenantBase}atlas2/`,

@@ -90,8 +90,24 @@ data:
       fi
     }
 
-    # Create admin user with ROLE_ADMIN and DATA_STEWARD roles
+    # The tenant administrator may manage the users of its realm in the Keycloak admin console
+    # (/<namespace>/auth/admin/<realm>/console/): the roles of the realm's client realm-management, as
+    # "aurelius-admin tenant create --admin-user" and "tenant grant-admin" give them. Assigning a role twice is harmless.
+    grant_user_admin() {
+      local username=$1
+      for role in manage-users view-users query-users query-groups view-realm; do
+        echo "Adding realm-management role $role to user: $username"
+        retry_cmd /opt/keycloak/bin/kcadm.sh add-roles \
+          -r "${KEYCLOAK_REALM_NAME}" \
+          --uusername "$username" \
+          --cclientid realm-management \
+          --rolename "$role"
+      done
+    }
+
+    # Create admin user with ROLE_ADMIN and DATA_STEWARD roles, and the user management of its realm
     create_user_with_roles "${ATLAS_ADMIN_USERNAME}" "${ATLAS_ADMIN_PASSWORD}" "ROLE_ADMIN DATA_STEWARD"
+    grant_user_admin "${ATLAS_ADMIN_USERNAME}"
 
     # Create steward user with DATA_STEWARD role
     create_user_with_roles "${ATLAS_STEWARD_USERNAME}" "${ATLAS_STEWARD_PASSWORD}" "DATA_STEWARD"

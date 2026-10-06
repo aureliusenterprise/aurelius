@@ -8,6 +8,16 @@ export interface ShellAdminLink {
   readonly route?: string;
   readonly title: string;
   readonly description: string;
+  /**
+   * Shown only to users with at least one of these roles (of the access token): realm roles, and roles of clients
+   * (resource_access), e.g. { 'realm-management': ['manage-users'] }. Without it every administrator sees the link.
+   */
+  readonly requires?: ShellRoleRequirement;
+}
+
+export interface ShellRoleRequirement {
+  readonly realmRoles?: readonly string[];
+  readonly clientRoles?: { readonly [clientId: string]: readonly string[] };
 }
 
 export interface ShellConfig {

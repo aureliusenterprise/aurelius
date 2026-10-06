@@ -1,6 +1,6 @@
 export * from './lib/route-reusable-strategy';
 export * from './lib/shell';
-export { ShellAdminLink, ShellConfig } from './lib/shell-config.service';
+export { ShellAdminLink, ShellConfig, ShellRoleRequirement } from './lib/shell-config.service';
 export * from './lib/shell.module';
 export { ShellService, ShellStoreContext } from './lib/shell.service';
 
