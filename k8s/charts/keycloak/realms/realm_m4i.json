@@ -3281,7 +3281,6 @@
   },
   "loginTheme": "m4i",
   "accountTheme": "m4i",
-  "adminTheme": "m4i",
   "emailTheme": "m4i",
   "eventsEnabled": true,
   "eventsExpiration": 1209600,

@@ -3018,7 +3018,6 @@
   },
   "loginTheme": "m4i",
   "accountTheme": "m4i",
-  "adminTheme": "m4i",
   "emailTheme": "m4i",
   "eventsEnabled": true,
   "eventsExpiration": 1209600,
@@ -3107,7 +3106,7 @@
       "firstBrokerLoginFlowAlias": "first broker login",
       "config": {
         "syncMode": "IMPORT",
-        "clientSecret": "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",
+        "clientSecret": "**********",
         "clientId": "1081193494366-l7abf2oslptk4irr8trvjpd7r6hvt4h2.apps.googleusercontent.com",
         "useJwksUrl": "true"
       }
