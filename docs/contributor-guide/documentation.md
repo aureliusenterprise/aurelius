@@ -37,6 +37,16 @@ structure of the documentation and the order in which the pages are displayed in
 
 Please ensure that the folder structure in the `docs` directory matches the structure defined in the `nav` section.
 
+## Architecture Decisions
+
+Significant technical and organisational decisions are recorded as
+[Architecture Decision Records](../architecture/adr/index.md) under
+`docs/architecture/adr/`. When a change you are making establishes, alters, or
+reverses a decision that constrains the project, propose an ADR as part of the
+pull request using the [ADR Template](../architecture/adr/template.md). Keep
+records business-focused: the reasoning belongs in the ADR, the implementation
+in the code and project documentation.
+
 ## Linting
 
 This project is configured to use [markdownlint](https://github.com/DavidAnson/markdownlint) to ensure consistent

@@ -116,6 +116,51 @@ nav:
                       - aurelius-brand: api-reference/libs/styles/aurelius-brand.md
     - Architecture:
           - architecture/index.md
+          - Architecture Decisions:
+                - architecture/adr/index.md
+                - ADR Template: architecture/adr/template.md
+                - 001. Keep one monorepo for every stack: architecture/adr/001-single-monorepo.md
+                - 002. Modules are removable as whole slices: architecture/adr/002-modules-are-removable-slices.md
+                - 003. Every project documents itself: architecture/adr/003-every-project-documents-itself.md
+                - 004. One shared domain model serves streaming and storage: architecture/adr/004-one-shared-domain-model.md
+                - 005. Development infrastructure starts with the app that needs it: architecture/adr/005-dev-infra-starts-with-the-app.md
+                - 006. The whole system runs on one machine: architecture/adr/006-the-whole-system-runs-on-one-machine.md
+                - 007. One shared identity provider serves every authenticated surface: architecture/adr/007-one-shared-identity-provider.md
+                - 008. Real secrets are encrypted; only dev defaults are committed: architecture/adr/008-secrets-never-in-plaintext.md
+                - 009. Every example runs and is tested, or it is removed: architecture/adr/009-examples-must-run-and-be-tested.md
+                - 010. The unit validated is the unit that ships: architecture/adr/010-the-unit-validated-is-the-unit-that-ships.md
+                - 011. The development environment is a versioned artifact: architecture/adr/011-the-development-environment-is-a-versioned-artifact.md
+                - 012. Validation runs against real services, not substitutes: architecture/adr/012-validation-runs-against-real-services.md
+                - 013. Services prove who they are at every boundary: architecture/adr/013-services-prove-who-they-are-at-every-boundary.md
+                - 014. The gate that refuses a change is defined once: architecture/adr/014-the-gate-is-defined-once-and-runs-everywhere.md
+                - 015. A change answers for what it caused; the state of the world is reviewed on a cadence: architecture/adr/015-a-change-answers-for-what-it-caused.md
+                - 016. The system observes itself; its operational data never leaves it: architecture/adr/016-the-system-observes-itself-internally.md
+                - 017. Shared concepts change only in ways that keep readers working: architecture/adr/017-shared-concepts-change-only-compatibly.md
+                - 018. Settings arrive at startup through one channel and fail loudly: architecture/adr/018-settings-arrive-at-startup-through-one-channel.md
+                - 019. The system releases as one versioned whole: architecture/adr/019-the-system-releases-as-one-versioned-whole.md
+                - 020. Dependencies stay current by default; majors move by decision: architecture/adr/020-dependencies-stay-current-by-default.md
+                - 021. A new technology joins the system by recipe: architecture/adr/021-a-new-technology-joins-by-recipe.md
+                - 022. The codebase explains itself to the agents that change it: architecture/adr/022-the-codebase-explains-itself-to-its-agents.md
+                - 023. A storage schema changes only by recorded migration: architecture/adr/023-storage-schema-changes-by-recorded-migration.md
+                - 024. A validated release is promoted by a declared path: architecture/adr/024-a-validated-release-is-promoted-by-a-declared-path.md
+                - 025. Data has a stated lifetime that the system enforces: architecture/adr/025-data-has-a-stated-lifetime.md
+                - 026. The system can be brought back from a named snapshot: architecture/adr/026-the-system-can-be-brought-back-from-a-named-snapshot.md
+                - 027. Every stream carries a stated delivery guarantee: architecture/adr/027-every-stream-carries-a-stated-delivery-guarantee.md
+                - 028. Operational secret handling has a named owner and a rehearsed path: architecture/adr/028-operational-secret-handling-has-a-named-owner.md
+                - 029. What ships is signed, and its origin can be proven: architecture/adr/029-shipped-artifacts-are-signed-and-their-origin-is-provable.md
+                - 030. Interfaces between parts are verified, not assumed: architecture/adr/030-interfaces-between-parts-are-verified-not-assumed.md
+                - 031. Language and runtime versions have a declared support window: architecture/adr/031-runtime-versions-have-a-declared-support-window.md
+                - 032. Shared streams are named by a declared convention: architecture/adr/032-shared-streams-are-named-by-a-declared-convention.md
+                - 033. Shipped artifacts carry a contents inventory: architecture/adr/033-shipped-artifacts-carry-a-contents-inventory.md
+                - 034. Signals meet at one replaceable collection point: architecture/adr/034-signals-meet-at-one-replaceable-collection-point.md
+                - 035. Parts hand work to each other through a durable event log: architecture/adr/035-parts-hand-work-through-a-durable-event-log.md
+                - 036. The delivery plane is a named exception to the data boundary: architecture/adr/036-the-delivery-plane-is-a-named-exception-to-the-data-boundary.md
+                - 037. The system itself promises nothing about staying up: architecture/adr/037-the-system-itself-promises-nothing-about-staying-up.md
+                - 038. What a person may do is decided in one place, apart from who they are: architecture/adr/038-what-a-person-may-do-is-decided-in-one-place-apart-from-who-they-are.md
+                - 039. Data is protected where it travels and where it rests: architecture/adr/039-data-is-protected-where-it-travels-and-where-it-rests.md
+                - 040. The system raises its hand when it is broken: architecture/adr/040-the-system-raises-its-hand-when-it-is-broken.md
+                - 041. A failure of the running system has an owner and a rehearsed path: architecture/adr/041-a-failure-of-the-running-system-has-an-owner-and-a-rehearsed-path.md
+                - 042. Every dataset has an owner who answers for it: architecture/adr/042-every-dataset-has-an-owner-who-answers-for-it.md
           - Vision & Strategy:
                 - architecture/vision-and-strategy/index.md
                 - Mission Statement: architecture/vision-and-strategy/mission-statement.md

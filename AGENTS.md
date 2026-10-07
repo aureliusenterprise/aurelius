@@ -2,27 +2,55 @@
 
 This is the **Aurelius Project Template** — a polyglot monorepo for bootstrapping enterprise microservice projects.
 
+This file covers **workspace-wide** rules only. Every project has its own
+colocated `AGENTS.md` (wiring, conventions, removal) and `README.md` (what it
+is). Before editing a project, read its `AGENTS.md` and `README.md` first —
+there is no central index.
+
 ## Quick Start
 
 1. **Install dependencies**: `npm ci` (root) + `uv sync` + `./gradlew dependencies` (Java)
-2. **Start infrastructure**: `docker compose -f dev/docker-compose.yml up -d`
-3. **Activate Python venv**: `source .venv/bin/activate`
-4. **Run pre-commit**: `pre-commit run --all-files` (fix any issues)
-5. **Verify**: `nx run-many --target=test e2e` (or target a specific app)
+2. **Run an app**: `npx nx serve <project>` — required dev infrastructure (Keycloak, Postgres,
+   Kafka, observability) starts automatically via target `dependsOn`; there is no root compose file.
+3. **Run pre-commit**: `pre-commit run --all-files` (fix any issues)
+4. **Verify**: `nx run-many --target=test -c ci` (or target a specific project)
 
 > [!NOTE]
 > This is a **template** — apps/libs are starting points, not production-ready as-is.
+> Modules are designed to be removable; see the [Module Map](#module-map).
 
 ## Tech Stack
 
-- **Monorepo tool**: Nx (v22.7.1) + Gradle (Java)
-- **Languages**: TypeScript/JavaScript (Angular 21), Python (3.14+), Java
-- **Frontend**: Angular 21, SCSS, Storybook, Vitest
-- **Backend**: FastAPI, AWS Lambda, Kafka (Confluent), SQLAlchemy
+- **Monorepo tool**: Nx (v23.2.x) + Gradle (Java) + uv (Python workspace)
+- **Languages**: TypeScript (Angular 22), Python (3.14+), Java
+- **Frontend**: Angular, SCSS, Storybook, Vitest
+- **Backend**: FastAPI, AWS Lambda, Kafka (Confluent), SQLAlchemy/SQLModel
 - **Infra**: Docker, Postgres, Keycloak, observability stack (Prometheus/Grafana/Tempo)
 - **Quality**: ESLint, Ruff, Prettier, SonarQube, pre-commit hooks
 - **Docs**: MkDocs Material with mkdocstrings
-- **Security**: CycloneDX SBOM, SOPS encryption
+- **Security**: CycloneDX SBOM, SOPS encryption (per-user age key at `secrets/keys.txt`, never committed)
+
+## Module Map
+
+This is a **removal map**, not a project catalogue: what each project is and
+how it is wired lives in its own `AGENTS.md`. It exists because slice
+boundaries are a workspace-wide rule — which projects may leave together, and
+what to unwire when they do.
+
+The **spine** (keep this): `aurelius-frontend-example`, `aurelius-fastapi-example`,
+`libs/python/aurelius-sdk`, `libs/angular/*`, `dev/postgres`, `dev/keycloak`, `dev/observability`,
+plus the workflow (CI, pre-commit, SBOM, docs, release).
+
+**Optional slices** (each owns its infra project and env keys; removable together with it):
+
+| Slice           | Projects                                                                                                                                           | Infra                                          |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Kafka streaming | `aurelius-java-producer-example`, `aurelius-node-red-example`, `libs/python/aurelius-kafka`, `connectors/aurelius-kafka-connect-jdbc-sink-example` | `dev/kafka`                                    |
+| AWS Lambda      | `aurelius-aws-lambda-example`, `libs/python/aurelius-aws-lambda`                                                                                   | `dev/kafka`, `docker/aurelius-aws-lambda-base` |
+
+When removing a slice, update all of: root `pyproject.toml` (uv members, dev groups, uv.sources),
+`settings.gradle.kts`, `implicitDependencies`/`dependsOn` in `project.json` files, `.env` keys,
+and the `mkdocs.yaml` nav.
 
 ## Key Conventions
 
@@ -32,8 +60,10 @@ This is the **Aurelius Project Template** — a polyglot monorepo for bootstrapp
 - **TypeScript**: ESLint + Prettier. Angular libraries use ng-packagr for publishing.
 - **Pre-commit**: Runs Prettier, ESLint, Ruff on all files. Always commit through pre-commit.
 - **Schemas**: Avro schemas in `schemas/avro/`. Pydantic-avro for serialization.
-- **Release**: Nx release with changelog generation.
+- **Release**: Nx release with changelog generation (conventional commits).
 - **SonarQube**: Analysis configured per app via `sonar-project.properties`.
+- **Secrets**: Real secrets live in per-project `.env.enc` (SOPS). Plaintext `.env` files hold
+  dev defaults only. The age key is generated per developer on first devcontainer start.
 
 ## Common Commands
 
@@ -51,13 +81,22 @@ npx nx test <project>    # TypeScript
 nx run <project>:lint
 pre-commit run --all-files
 
-# Dev server
+# Dev server (starts its own infra dependencies)
 npx nx serve <project>
 mkdocs serve
 
-# Docker
-docker compose -f dev/docker-compose.yml up -d
+# Docker (per-project compose, e.g.)
+docker compose -f dev/kafka/docker-compose.yaml up -d
 ```
+
+## Project Instructions
+
+Every project directory contains a colocated `AGENTS.md` with its wiring,
+commands, and removal notes, plus a `README.md` describing what it does.
+Read the pair closest to the files you are editing; directory-level
+`AGENTS.md` files (e.g. `libs/python/AGENTS.md`, `libs/angular/AGENTS.md`)
+hold recipes for adding new projects there. Each project documents itself —
+do not add central lists of projects or libraries to this file.
 
 ## Code Quality & Testing
 
@@ -106,11 +145,6 @@ docker compose -f dev/docker-compose.yml up -d
     - **Never** run `nx run <project>:test` without the `ci` configuration — it will hang in watch mode.
 - For Python tests, use `pytest` directly.
 - For Java tests, use `./gradlew test`.
-- Add tests for new logic — do not leave untested code paths.
-- For Python async tests, use `pytest-asyncio` with `@pytest.mark.asyncio`.
-- For backend E2E, prefer `testcontainers` over mocking infrastructure.
-- For frontend E2E, use Playwright's page object model and fixtures.
-- Test files should be co-located with source files (analog pattern) where possible.
 - Add tests for new logic — do not leave untested code paths.
 - For Python async tests, use `pytest-asyncio` with `@pytest.mark.asyncio`.
 - For backend E2E, prefer `testcontainers` over mocking infrastructure.
