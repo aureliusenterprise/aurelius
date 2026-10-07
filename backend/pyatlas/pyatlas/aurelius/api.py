@@ -251,6 +251,21 @@ async def delete_classification(name: str, request: Request):
     return Response(status_code=204)
 
 
+# ------------------------------------------------------------------ dataset overview (lineage + fields table)
+@router.get("/datasets/{guid}/fields")
+async def dataset_fields(guid: str, request: Request):
+    """The fields of a dataset with the attributes behind them, their descriptions and data entities."""
+    from .dataset_overview import fields
+    return await fields(svc(request), guid)
+
+
+@router.get("/datasets/{guid}/lineage")
+async def dataset_lineage(guid: str, request: Request, depth: int = 3):
+    """The lineage of a dataset (both directions) as nodes and edges; datasets with their number of fields."""
+    from .dataset_overview import lineage
+    return await lineage(svc(request), guid, depth)
+
+
 # ------------------------------------------------------------------ quality (phase 3)
 @router.post("/validate_entity")
 @router.post("/validate_entity/")

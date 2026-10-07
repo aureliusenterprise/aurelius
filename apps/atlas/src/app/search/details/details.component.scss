@@ -1,3 +1,19 @@
 .block:not(:last-child) {
   margin-bottom: 1rem;
 }
+
+.details-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+
+  .view-switch {
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+
+    .button {
+      margin-bottom: 0;
+    }
+  }
+}

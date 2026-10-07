@@ -6,8 +6,8 @@ import {
   EntityElementWithEXTInfo
 } from '@models4insight/atlas/api';
 import { untilDestroyed } from '@models4insight/utils';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { AppSearchResultsService } from '../services/app-search-results/app-search-results.service';
 import { EntitySearchResultsService } from '../services/app-search-results/entity-search-results.service';
 import { $APP_SEARCH_DOCUMENT_PROVIDER } from '../services/element-search/app-search-document-provider';
@@ -19,6 +19,7 @@ import { EntitySearchService } from '../services/search/entity-search.service';
 import { SearchService } from '../services/search/search.service';
 import { AttributeDetailsComponent } from './attribute/attribute-details.component';
 import { CollectionDetailsComponent } from './collection/collection-details.component';
+import { DatasetOverviewComponent } from './dataset-overview/dataset-overview.component';
 import { DatasetDetailsComponent } from './dataset/dataset-details.component';
 import { DefaultDetailsComponent } from './default/default-details.component';
 import { DomainDetailsComponent } from './domain/domain-details.component';
@@ -41,6 +42,19 @@ const componentsByType = {
   m4i_generic_process: ProcessDetailsComponent,
   m4i_gov_data_quality: GovQualityDetailsComponent,
 };
+
+/** Types with the Overview (lineage + fields table) next to the details page */
+const OVERVIEW_TYPES = ['m4i_dataset'];
+export type DetailsView = 'overview' | 'details';
+const VIEW_KEY = 'aurelius.datasetView';
+
+function rememberedView(): DetailsView {
+  try {
+    return localStorage.getItem(VIEW_KEY) === 'details' ? 'details' : 'overview';
+  } catch {
+    return 'overview';
+  }
+}
 
 @Component({
   selector: 'models4insight-details',
@@ -65,6 +79,8 @@ export class DetailsComponent implements OnDestroy {
   readonly detailsComponent$: Observable<typeof Component>;
   readonly entityDetails$: Observable<EntityElementWithEXTInfo>;
   readonly isRetrievingDetails$: Observable<boolean>;
+  /** Overview or details page of a dataset (?view=, else the last choice in this browser); null for other types */
+  readonly view$: Observable<DetailsView | null>;
 
   constructor(
     private readonly router: Router,
@@ -82,10 +98,30 @@ export class DetailsComponent implements OnDestroy {
         this.elementSearchService.guid = entityId;
       });
 
-    this.detailsComponent$ = this.entityDetailsService.entityDetails$.pipe(
-      map(
-        (entity) => componentsByType[entity.typeName] ?? DefaultDetailsComponent
-      )
+    this.view$ = combineLatest([
+      this.entityDetailsService.entityDetails$,
+      this.activatedRoute.queryParamMap,
+    ]).pipe(
+      map(([entity, params]) => {
+        if (!OVERVIEW_TYPES.includes(entity.typeName)) {
+          return null;
+        }
+        const view = params.get('view');
+        return view === 'overview' || view === 'details' ? view : rememberedView();
+      }),
+      distinctUntilChanged()
+    );
+
+    this.detailsComponent$ = combineLatest([
+      this.entityDetailsService.entityDetails$,
+      this.view$,
+    ]).pipe(
+      map(([entity, view]) =>
+        view === 'overview'
+          ? DatasetOverviewComponent
+          : componentsByType[entity.typeName] ?? DefaultDetailsComponent
+      ),
+      distinctUntilChanged()
     );
 
     this.entityDetails$ = this.entityDetailsService.entityDetails$;
@@ -96,6 +132,20 @@ export class DetailsComponent implements OnDestroy {
   }
 
   ngOnDestroy() {}
+
+  /** Switches between the overview and the details page of a dataset, and remembers the choice */
+  setView(view: DetailsView) {
+    try {
+      localStorage.setItem(VIEW_KEY, view);
+    } catch {
+      /* private mode: only this page */
+    }
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { view },
+      queryParamsHandling: 'merge',
+    });
+  }
 
   navigateToEditEntity(guid: string) {
     this.router.navigate(['/search/edit-entity', guid]);

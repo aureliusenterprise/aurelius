@@ -18,16 +18,47 @@
               </div>
             </div>
           </div>
-          <div
-            *models4insight-keycloak-role-permission="'DATA_STEWARD'"
-            class="media-right"
-          >
+          <div class="media-right details-actions">
             <a
+              *models4insight-keycloak-role-permission="'DATA_STEWARD'"
               class="icon is-large has-text-link"
               (click)="navigateToEditEntity(details.guid)"
             >
               <fa-icon [icon]="faEdit" size="2x"></fa-icon>
             </a>
+            <div
+              *ngIf="view$ | async as view"
+              class="buttons has-addons view-switch"
+              role="tablist"
+              [attr.aria-label]="'search.details.view.label' | translate"
+            >
+              <button
+                type="button"
+                role="tab"
+                id="view-overview"
+                class="button is-small"
+                [class.is-link]="view === 'overview'"
+                [class.is-selected]="view === 'overview'"
+                [attr.aria-selected]="view === 'overview'"
+                (click)="setView('overview')"
+                translate
+              >
+                search.details.view.overview
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="view-details"
+                class="button is-small"
+                [class.is-link]="view === 'details'"
+                [class.is-selected]="view === 'details'"
+                [attr.aria-selected]="view === 'details'"
+                (click)="setView('details')"
+                translate
+              >
+                search.details.view.details
+              </button>
+            </div>
           </div>
         </article>
       </div>

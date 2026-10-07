@@ -500,6 +500,53 @@
                 "properties": "Properties",
                 "unavailable": "Unavailable"
             },
+            "datasetOverview": {
+                "addFields": "Add fields in the editor",
+                "all": "All ({{count}})",
+                "attribute": "Attribute",
+                "attributeOfEntity": "Attribute {{attribute}} of data entity {{entity}}",
+                "backTo": "Back to {{name}}",
+                "classifications": "Classifications",
+                "collection": "Collection",
+                "dataEntities": "Data entities",
+                "dataset": "Dataset",
+                "depth": "Depth",
+                "description": "Description",
+                "field": "Field",
+                "fieldCount": "{{count}} fields",
+                "fields": "Fields",
+                "fieldsOf": "Fields of {{name}}",
+                "fromAttribute": "Classification of the attribute",
+                "hasPii": "Has PII ({{count}})",
+                "lineage": "Lineage",
+                "lineageHelp": "Click a dataset or process to show it below",
+                "linkAttribute": "Link an attribute",
+                "noAttribute": "No attribute",
+                "noDescription": "No description available.",
+                "noFields": "No fields available for {{name}}.",
+                "noMatch": "No fields match this filter.",
+                "none": "None",
+                "onField": "Classification of the field",
+                "openDataset": "Open dataset",
+                "openProcess": "Open process",
+                "otherDatasetType": "This is a {{type}}; fields are only available for Aurelius datasets.",
+                "process": "Process",
+                "readsFrom": "Reads from",
+                "resultCount": "{{shown}} of {{total}} field(s)",
+                "searchLabel": "Filter the fields",
+                "searchPlaceholder": "Search for keywords",
+                "show": "Show",
+                "showLess": "Show less",
+                "showMore": "Show more",
+                "shownBelow": "Shown below",
+                "steps": "{{count}} steps",
+                "summaryWithAttribute": "With attribute",
+                "summaryWithoutAttribute": "Without attribute",
+                "thisDataset": "This dataset",
+                "type": "Type",
+                "withoutAttribute": "Without attribute ({{count}})",
+                "writesTo": "Writes to"
+            },
             "default": {
                 "description": "Description",
                 "properties": "Properties"
@@ -650,6 +697,11 @@
                     "description": "The name of the entity type",
                     "displayName": "Type name"
                 }
+            },
+            "view": {
+                "label": "View of the dataset",
+                "overview": "Overview",
+                "details": "Details"
             }
         },
         "editEntity": {

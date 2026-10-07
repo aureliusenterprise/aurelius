@@ -1,0 +1,275 @@
+<!-- lineage -->
+<section class="box" id="overview-lineage" aria-labelledby="overview-lineage-title">
+    <div class="level is-mobile lineage-head">
+        <div class="level-left">
+            <div>
+                <h3 id="overview-lineage-title" class="title is-4" translate>search.details.datasetOverview.lineage</h3>
+                <p class="help" translate>search.details.datasetOverview.lineageHelp</p>
+            </div>
+        </div>
+        <div class="level-right legend">
+            <span class="legend-item"><span class="swatch dataset"></span>{{ 'search.details.datasetOverview.dataset' | translate }}</span>
+            <span class="legend-item"><span class="swatch process"></span>{{ 'search.details.datasetOverview.process' | translate }}</span>
+            <span class="legend-item"><span class="swatch selected"></span>{{ 'search.details.datasetOverview.shownBelow' | translate }}</span>
+            <label class="legend-item">
+                {{ 'search.details.datasetOverview.depth' | translate }}
+                <span class="select is-small">
+                    <select id="overview-depth" [ngModel]="depth" (ngModelChange)="changeDepth($event)">
+                        <option *ngFor="let d of depthOptions" [ngValue]="d">
+                            {{ 'search.details.datasetOverview.steps' | translate: { count: d } }}
+                        </option>
+                    </select>
+                </span>
+            </label>
+        </div>
+    </div>
+
+    <div *ngIf="lineageError" class="notification is-danger is-light">{{ lineageError }}</div>
+    <div *ngIf="isLoadingLineage && !layout" class="lineage-loading"><div class="loader"></div></div>
+
+    <div *ngIf="layout" #lineageScroll class="lineage-scroll" [class.is-loading-again]="isLoadingLineage">
+        <div class="lineage-canvas" [style.width.px]="layout.width" [style.height.px]="layout.height">
+            <svg class="lineage-edges" [attr.width]="layout.width" [attr.height]="layout.height" aria-hidden="true">
+                <defs>
+                    <marker id="overview-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                        <path d="M 0 0 L 10 5 L 0 10 z"></path>
+                    </marker>
+                </defs>
+                <path *ngFor="let edge of layout.edges" [attr.d]="edge.path" marker-end="url(#overview-arrow)"></path>
+            </svg>
+            <span *ngIf="baseNode as base" class="base-label" [style.left.px]="base.x" [style.top.px]="base.y - 20" translate>
+                search.details.datasetOverview.thisDataset
+            </span>
+            <button
+                *ngFor="let node of layout.nodes; trackBy: trackByGuid"
+                type="button"
+                class="lineage-node"
+                [attr.data-guid]="node.guid"
+                [class.is-process]="node.kind === 'process'"
+                [class.is-base]="node.guid === baseGuid"
+                [class.is-selected]="node.guid === selected?.guid"
+                [attr.aria-pressed]="node.guid === selected?.guid"
+                [title]="node.name"
+                [style.left.px]="node.x"
+                [style.top.px]="node.y"
+                [style.width.px]="node.width"
+                [style.height.px]="node.height"
+                (click)="select(node)"
+            >
+                <span class="node-name">{{ node.name }}</span>
+                <span *ngIf="node.kind === 'dataset'" class="node-sub">
+                    <ng-container *ngIf="node.fieldCount !== null; else otherType">
+                        {{ 'search.details.datasetOverview.fieldCount' | translate: { count: node.fieldCount } }}
+                    </ng-container>
+                    <ng-template #otherType>{{ node.typeName | translate }}</ng-template>
+                </span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- the selected dataset: its fields -->
+<section *ngIf="!isProcessSelected" class="box fields-box" id="overview-fields" aria-labelledby="overview-fields-title">
+    <div class="fields-head">
+        <div>
+            <div class="title-line">
+                <h3 id="overview-fields-title" class="title is-4">
+                    {{ 'search.details.datasetOverview.fieldsOf' | translate: { name: selected?.name ?? baseName } }}
+                </h3>
+                <button *ngIf="selected && !selectedIsBase" type="button" class="button is-small" id="overview-back" (click)="backToBase()">
+                    {{ 'search.details.datasetOverview.backTo' | translate: { name: baseName } }}
+                </button>
+            </div>
+            <p class="help">
+                <ng-container *ngIf="table?.dataset.collections.length">
+                    {{ 'search.details.datasetOverview.collection' | translate }}
+                    <ng-container *ngFor="let c of table.dataset.collections; let last = last">
+                        <a [routerLink]="['/search/details', c.guid]">{{ c.name }}</a><span *ngIf="!last">, </span>
+                    </ng-container>
+                    <ng-container *ngIf="selected && !selectedIsBase">&nbsp;·&nbsp;</ng-container>
+                </ng-container>
+                <a *ngIf="selected && !selectedIsBase" [routerLink]="['/search/details', selected.guid]" class="open-link" translate>
+                    search.details.datasetOverview.openDataset
+                </a>
+            </p>
+        </div>
+        <div *ngIf="table?.fields.length" class="fields-tools">
+            <button type="button" role="switch" class="switch-button" id="overview-classifications-switch"
+                [attr.aria-checked]="showClassifications" (click)="toggleClassifications()">
+                <span class="switch-track" [class.is-on]="showClassifications" aria-hidden="true"><span class="switch-knob"></span></span>
+                {{ 'search.details.datasetOverview.classifications' | translate }}
+            </button>
+            <div class="buttons has-addons" role="group" [attr.aria-label]="'search.details.datasetOverview.show' | translate">
+                <button type="button" class="button is-small" [class.is-info]="rowFilter === 'all'" [class.is-selected]="rowFilter === 'all'"
+                    [attr.aria-pressed]="rowFilter === 'all'" (click)="setFilter('all')" id="overview-filter-all">
+                    {{ 'search.details.datasetOverview.all' | translate: { count: rows.length } }}
+                </button>
+                <button type="button" class="button is-small" [class.is-info]="rowFilter === 'missing'" [class.is-selected]="rowFilter === 'missing'"
+                    [attr.aria-pressed]="rowFilter === 'missing'" (click)="setFilter('missing')" id="overview-filter-missing">
+                    {{ 'search.details.datasetOverview.withoutAttribute' | translate: { count: table.summary.withoutAttribute } }}
+                </button>
+                <button type="button" class="button is-small" [class.is-info]="rowFilter === 'pii'" [class.is-selected]="rowFilter === 'pii'"
+                    [attr.aria-pressed]="rowFilter === 'pii'" (click)="setFilter('pii')" id="overview-filter-pii">
+                    {{ 'search.details.datasetOverview.hasPii' | translate: { count: piiCount } }}
+                </button>
+            </div>
+            <div class="field has-addons">
+                <div class="control">
+                    <input class="input is-small" type="search" id="overview-search" [(ngModel)]="query"
+                        [attr.aria-label]="'search.details.datasetOverview.searchLabel' | translate"
+                        [placeholder]="'search.details.datasetOverview.searchPlaceholder' | translate" />
+                </div>
+                <div class="control">
+                    <span class="button is-small is-success is-static-search" aria-hidden="true"><fa-icon [icon]="faSearch"></fa-icon></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav *ngIf="table" class="level summary" aria-label="Summary">
+        <div class="level-item has-text-centered">
+            <div><p class="heading" translate>search.details.datasetOverview.fields</p><p class="title is-5">{{ table.summary.fields }}</p></div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div><p class="heading" translate>search.details.datasetOverview.summaryWithAttribute</p><p class="title is-5">{{ table.summary.withAttribute }}</p></div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div><p class="heading" translate>search.details.datasetOverview.summaryWithoutAttribute</p>
+                <p class="title is-5" [class.has-text-warning-dark]="table.summary.withoutAttribute > 0">{{ table.summary.withoutAttribute }}</p></div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div><p class="heading" translate>search.details.datasetOverview.dataEntities</p><p class="title is-5">{{ table.summary.dataEntities }}</p></div>
+        </div>
+    </nav>
+
+    <div *ngIf="tableError" class="notification is-danger is-light">{{ tableError }}</div>
+    <div *ngIf="isLoadingTable && !table" class="table-loading"><div class="loader"></div></div>
+
+    <p *ngIf="selectedHasNoTable" class="has-text-centered empty-text">
+        {{ 'search.details.datasetOverview.otherDatasetType' | translate: { type: (selected.typeName | translate) } }}
+        <a [routerLink]="['/search/details', selected.guid]" translate>search.details.datasetOverview.openDataset</a>
+    </p>
+
+    <div *ngIf="table && !table.fields.length && !selectedHasNoTable" class="has-text-centered empty-text" id="overview-no-fields">
+        <p>{{ 'search.details.datasetOverview.noFields' | translate: { name: table.dataset.name } }}</p>
+        <a [routerLink]="['/search/edit-entity', table.dataset.guid]" translate>search.details.datasetOverview.addFields</a>
+    </div>
+
+    <div *ngIf="table?.fields.length" class="table-container" [class.is-loading-again]="isLoadingTable">
+        <table class="table is-fullwidth is-hoverable fields-table" id="overview-table">
+            <thead>
+                <tr>
+                    <th class="col-field" translate>search.details.datasetOverview.field</th>
+                    <th class="col-type" translate>search.details.datasetOverview.type</th>
+                    <th class="col-attribute" translate>search.details.datasetOverview.attribute</th>
+                    <th translate>search.details.datasetOverview.description</th>
+                    <th *ngIf="showClassifications" class="col-classifications" translate>search.details.datasetOverview.classifications</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of visibleRows; trackBy: trackByGuid" [attr.data-field]="row.field.name">
+                    <td>
+                        <a class="field-link" [routerLink]="['/search/details', row.field.guid]">
+                            <fa-icon [icon]="faTag" class="field-icon"></fa-icon>{{ row.field.name }}
+                        </a>
+                    </td>
+                    <td class="has-text-grey">{{ row.field.fieldType }}</td>
+                    <td>
+                        <ng-container *ngIf="row.groups.length; else noAttribute">
+                            <div *ngFor="let group of row.groups" class="attribute">
+                                <a class="attribute-link" [routerLink]="['/search/details', group.guid]">{{ group.name }}</a>
+                                <div class="entities">
+                                    <a *ngFor="let entity of group.entities" class="entity-label"
+                                        [routerLink]="['/search/details', entity.attributeGuid]"
+                                        [title]="'search.details.datasetOverview.attributeOfEntity' | translate: { attribute: group.name, entity: entity.name }">
+                                        <fa-icon [icon]="faTable" class="entity-icon"></fa-icon>{{ entity.name }}
+                                    </a>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-template #noAttribute>
+                            <span class="no-attribute" translate>search.details.datasetOverview.noAttribute</span>
+                            <a class="link-attribute" [routerLink]="['/search/edit-entity', row.field.guid]" translate>
+                                search.details.datasetOverview.linkAttribute
+                            </a>
+                        </ng-template>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="row.groups.length; else noDescription">
+                            <div *ngFor="let group of row.groups" class="description">
+                                <span *ngIf="row.groups.length > 1" class="description-label">{{ group.name }} · {{ group.entityNames }}</span>
+                                <span class="description-text" [class.is-clamped]="!expanded.has(row.field.guid)">
+                                    {{ group.definition || ('search.details.datasetOverview.noDescription' | translate) }}
+                                </span>
+                            </div>
+                            <button *ngIf="row.longDescription" type="button" class="show-more"
+                                [attr.aria-expanded]="expanded.has(row.field.guid)" (click)="toggleRow(row.field.guid)">
+                                {{ (expanded.has(row.field.guid) ? 'search.details.datasetOverview.showLess' : 'search.details.datasetOverview.showMore') | translate }}
+                            </button>
+                        </ng-container>
+                        <ng-template #noDescription>
+                            <span class="has-text-grey is-italic" translate>search.details.datasetOverview.noDescription</span>
+                        </ng-template>
+                    </td>
+                    <td *ngIf="showClassifications">
+                        <div class="field is-grouped is-grouped-multiline">
+                            <div *ngFor="let c of row.classifications" class="control">
+                                <span class="tags has-addons"
+                                    [title]="(c.fromAttribute ? 'search.details.datasetOverview.fromAttribute' : 'search.details.datasetOverview.onField') | translate">
+                                    <span class="tag is-primary"><fa-icon [icon]="faHashtag"></fa-icon></span>
+                                    <span class="tag" [class.is-danger]="c.typeName === 'PII' || c.typeName === 'high_risk'" [class.is-light]="c.typeName === 'PII' || c.typeName === 'high_risk'">
+                                        {{ c.typeName | classificationLabel }}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr *ngIf="!visibleRows.length">
+                    <td [attr.colspan]="showClassifications ? 5 : 4" class="has-text-centered has-text-grey is-italic" translate>
+                        search.details.datasetOverview.noMatch
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p *ngIf="table?.fields.length" class="help result-count">
+        {{ 'search.details.datasetOverview.resultCount' | translate: { shown: visibleRows.length, total: rows.length } }}
+    </p>
+</section>
+
+<!-- the selected process: what it reads and writes -->
+<section *ngIf="isProcessSelected" class="box" id="overview-process" aria-labelledby="overview-process-title">
+    <div class="title-line">
+        <h3 id="overview-process-title" class="title is-4">{{ selected.name }}</h3>
+        <button type="button" class="button is-small" id="overview-back" (click)="backToBase()">
+            {{ 'search.details.datasetOverview.backTo' | translate: { name: baseName } }}
+        </button>
+    </div>
+    <p class="help">
+        <fa-icon [icon]="faProjectDiagram"></fa-icon> {{ selected.typeName | translate }} ·
+        <a [routerLink]="['/search/details', selected.guid]" translate>search.details.datasetOverview.openProcess</a>
+    </p>
+    <div class="columns process-io">
+        <div class="column">
+            <p class="heading" translate>search.details.datasetOverview.readsFrom</p>
+            <button *ngFor="let node of inputsOf(selected)" type="button" class="io-card" (click)="select(node)">
+                <span class="has-text-weight-semibold">{{ node.name }}</span>
+                <span class="has-text-grey is-size-7">
+                    {{ node.fieldCount !== null ? ('search.details.datasetOverview.fieldCount' | translate: { count: node.fieldCount }) : (node.typeName | translate) }}
+                </span>
+            </button>
+            <p *ngIf="!inputsOf(selected).length" class="has-text-grey is-italic" translate>search.details.datasetOverview.none</p>
+        </div>
+        <div class="column">
+            <p class="heading" translate>search.details.datasetOverview.writesTo</p>
+            <button *ngFor="let node of outputsOf(selected)" type="button" class="io-card" (click)="select(node)">
+                <span class="has-text-weight-semibold">{{ node.name }}</span>
+                <span class="has-text-grey is-size-7">
+                    {{ node.fieldCount !== null ? ('search.details.datasetOverview.fieldCount' | translate: { count: node.fieldCount }) : (node.typeName | translate) }}
+                </span>
+            </button>
+            <p *ngIf="!outputsOf(selected).length" class="has-text-grey is-italic" translate>search.details.datasetOverview.none</p>
+        </div>
+    </div>
+</section>

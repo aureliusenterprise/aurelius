@@ -11,6 +11,7 @@ import { EntityTypeNameModule } from '../components/entity-type-name/entity-type
 import { TermModule } from '../components/term/term.module';
 import { AttributeDetailsModule } from './attribute/attribute-details.module';
 import { CollectionDetailsModule } from './collection/collection-details.module';
+import { DatasetOverviewModule } from './dataset-overview/dataset-overview.module';
 import { DatasetDetailsModule } from './dataset/dataset-details.module';
 import { DefaultDetailsModule } from './default/default-details.module';
 import { DetailsRoutingModule } from './details-routing.module';
@@ -33,6 +34,7 @@ import { SystemDetailsModule } from './system/system-details.module';
     AttributeDetailsModule,
     FieldDetailsModule,
     DatasetDetailsModule,
+    DatasetOverviewModule,
     CollectionDetailsModule,
     SystemDetailsModule,
     PersonDetailsModule,

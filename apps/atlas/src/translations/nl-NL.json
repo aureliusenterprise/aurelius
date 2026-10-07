@@ -500,6 +500,53 @@
                 "properties": "Eigenschappen",
                 "unavailable": "Niet van toepassing"
             },
+            "datasetOverview": {
+                "addFields": "Velden toevoegen in de editor",
+                "all": "Alle ({{count}})",
+                "attribute": "Attribuut",
+                "attributeOfEntity": "Attribuut {{attribute}} van data-entiteit {{entity}}",
+                "backTo": "Terug naar {{name}}",
+                "classifications": "Classificaties",
+                "collection": "Collectie",
+                "dataEntities": "Data-entiteiten",
+                "dataset": "Dataset",
+                "depth": "Diepte",
+                "description": "Beschrijving",
+                "field": "Veld",
+                "fieldCount": "{{count}} velden",
+                "fields": "Velden",
+                "fieldsOf": "Velden van {{name}}",
+                "fromAttribute": "Classificatie van het attribuut",
+                "hasPii": "Bevat PII ({{count}})",
+                "lineage": "Lineage",
+                "lineageHelp": "Klik op een dataset of proces om het hieronder te tonen",
+                "linkAttribute": "Een attribuut koppelen",
+                "noAttribute": "Geen attribuut",
+                "noDescription": "Geen beschrijving beschikbaar.",
+                "noFields": "Geen velden beschikbaar voor {{name}}.",
+                "noMatch": "Geen velden voldoen aan dit filter.",
+                "none": "Geen",
+                "onField": "Classificatie van het veld",
+                "openDataset": "Dataset openen",
+                "openProcess": "Proces openen",
+                "otherDatasetType": "Dit is een {{type}}; velden zijn alleen beschikbaar voor Aurelius-datasets.",
+                "process": "Proces",
+                "readsFrom": "Leest uit",
+                "resultCount": "{{shown}} van {{total}} veld(en)",
+                "searchLabel": "De velden filteren",
+                "searchPlaceholder": "Zoeken op trefwoorden",
+                "show": "Tonen",
+                "showLess": "Minder tonen",
+                "showMore": "Meer tonen",
+                "shownBelow": "Hieronder getoond",
+                "steps": "{{count}} stappen",
+                "summaryWithAttribute": "Met attribuut",
+                "summaryWithoutAttribute": "Zonder attribuut",
+                "thisDataset": "Deze dataset",
+                "type": "Type",
+                "withoutAttribute": "Zonder attribuut ({{count}})",
+                "writesTo": "Schrijft naar"
+            },
             "default": {
                 "description": "Beschrijving",
                 "properties": "Eigenschappen"
@@ -650,6 +697,11 @@
                     "description": "De naam van het entiteittype",
                     "displayName": "Typenaam"
                 }
+            },
+            "view": {
+                "label": "Weergave van de dataset",
+                "overview": "Overzicht",
+                "details": "Details"
             }
         },
         "editEntity": {
