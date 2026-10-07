@@ -192,6 +192,16 @@ export class DatasetOverviewComponent implements OnInit, OnDestroy {
     }
 
     // ------------------------------------------------------------------ selection
+    /** The lineage has connections to show (otherwise a short note instead of the graph) */
+    get hasLineage(): boolean {
+        return !!this.layout?.edges.length;
+    }
+
+    /** Loaded (or failed) without connections: "no lineage available" */
+    get showNoLineage(): boolean {
+        return !this.isLoadingLineage && !this.hasLineage && (!!this.layout || !!this.lineageError);
+    }
+
     get isDatasetSelected() {
         return this.selected?.kind === 'dataset';
     }

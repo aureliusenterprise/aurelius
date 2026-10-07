@@ -524,6 +524,7 @@
                 "noAttribute": "No attribute",
                 "noDescription": "No description available.",
                 "noFields": "No fields available for {{name}}.",
+                "noLineage": "No lineage available for {{name}}: no process reads from or writes to this dataset.",
                 "noMatch": "No fields match this filter.",
                 "none": "None",
                 "onField": "Classification of the field",

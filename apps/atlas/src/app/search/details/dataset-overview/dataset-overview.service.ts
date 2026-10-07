@@ -72,6 +72,8 @@ export interface DatasetLineage {
     readonly depth: number;
     readonly nodes: LineageNode[];
     readonly edges: { readonly from: string; readonly to: string }[];
+    /** false when the dataset has no lineage (the answer then holds only the dataset itself) */
+    readonly available?: boolean;
 }
 
 /**

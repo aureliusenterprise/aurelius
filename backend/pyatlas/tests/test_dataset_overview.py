@@ -95,14 +95,29 @@ def test_lineage_graph_with_field_counts(c, model):
     assert nodes[model["src"]]["kind"] == "dataset" and nodes[model["src"]]["fieldCount"] == 2
     assert nodes[model["dst"]]["fieldCount"] == 0
     assert {(e["from"], e["to"]) for e in body["edges"]} == {(model["src"], model["load"]), (model["load"], model["dst"])}
-    assert body["baseEntityGuid"] == model["dst"]
+    assert body["baseEntityGuid"] == model["dst"] and body["available"] is True
 
 
 def test_lineage_of_a_dataset_without_lineage(c):
     alone = _create(c, "m4i_dataset", "alone")
     body = c.get(f"{A}/{alone}/lineage").json()
     assert [(n["name"], n["kind"], n["fieldCount"]) for n in body["nodes"]] == [("alone", "dataset", 0)]
-    assert body["edges"] == []
+    assert body["edges"] == [] and body["available"] is False
+
+
+def test_lineage_that_cannot_be_determined_is_no_error(c, model, monkeypatch):
+    async def broken(*args, **kwargs):
+        raise RuntimeError("lineage store unavailable")
+
+    from pyatlas.discovery.lineage import LineageService
+    monkeypatch.setattr(LineageService, "lineage", broken)
+    r = c.get(f"{A}/{model['src']}/lineage")
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert [(n["name"], n["fieldCount"]) for n in body["nodes"]] == [("src", 2)]
+    assert body["edges"] == [] and body["available"] is False
+    # the base entity itself must exist
+    assert c.get(f"{A}/no-such-guid/lineage").status_code == 404
 
 
 def test_errors(c, model):

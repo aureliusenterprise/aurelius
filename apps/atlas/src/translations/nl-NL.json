@@ -524,6 +524,7 @@
                 "noAttribute": "Geen attribuut",
                 "noDescription": "Geen beschrijving beschikbaar.",
                 "noFields": "Geen velden beschikbaar voor {{name}}.",
+                "noLineage": "Geen lineage beschikbaar voor {{name}}: geen proces leest uit of schrijft naar deze dataset.",
                 "noMatch": "Geen velden voldoen aan dit filter.",
                 "none": "Geen",
                 "onField": "Classificatie van het veld",

@@ -4,10 +4,10 @@
         <div class="level-left">
             <div>
                 <h3 id="overview-lineage-title" class="title is-4" translate>search.details.datasetOverview.lineage</h3>
-                <p class="help" translate>search.details.datasetOverview.lineageHelp</p>
+                <p *ngIf="hasLineage" class="help" translate>search.details.datasetOverview.lineageHelp</p>
             </div>
         </div>
-        <div class="level-right legend">
+        <div *ngIf="hasLineage" class="level-right legend">
             <span class="legend-item"><span class="swatch dataset"></span>{{ 'search.details.datasetOverview.dataset' | translate }}</span>
             <span class="legend-item"><span class="swatch process"></span>{{ 'search.details.datasetOverview.process' | translate }}</span>
             <span class="legend-item"><span class="swatch selected"></span>{{ 'search.details.datasetOverview.shownBelow' | translate }}</span>
@@ -24,10 +24,13 @@
         </div>
     </div>
 
-    <div *ngIf="lineageError" class="notification is-danger is-light">{{ lineageError }}</div>
+    <p *ngIf="showNoLineage" class="no-lineage" id="overview-no-lineage" [title]="lineageError || ''">
+        <fa-icon [icon]="faProjectDiagram"></fa-icon>
+        {{ 'search.details.datasetOverview.noLineage' | translate: { name: baseName } }}
+    </p>
     <div *ngIf="isLoadingLineage && !layout" class="lineage-loading"><div class="loader"></div></div>
 
-    <div *ngIf="layout" #lineageScroll class="lineage-scroll" [class.is-loading-again]="isLoadingLineage">
+    <div *ngIf="hasLineage" #lineageScroll class="lineage-scroll" [class.is-loading-again]="isLoadingLineage">
         <div class="lineage-canvas" [style.width.px]="layout.width" [style.height.px]="layout.height">
             <svg class="lineage-edges" [attr.width]="layout.width" [attr.height]="layout.height" aria-hidden="true">
                 <defs>

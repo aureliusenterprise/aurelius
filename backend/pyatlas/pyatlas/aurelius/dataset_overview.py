@@ -8,9 +8,12 @@ bulk reads instead.  All reads go through the entity store, so the usual entity-
 """
 from __future__ import annotations
 
+import logging
 from typing import Any, Dict, Iterable, List, Optional
 
 from ..errors import AtlasBaseException, AtlasErrorCode
+
+log = logging.getLogger("pyatlas.aurelius.dataset_overview")
 
 DATASET_TYPE = "m4i_dataset"
 _BATCH = 200
@@ -103,9 +106,14 @@ async def fields(services, guid: str) -> dict:
 
 async def lineage(services, guid: str, depth: int = 3) -> dict:
     """The lineage of ``guid`` in both directions as nodes (datasets and processes, datasets with their number of
-    fields) and edges in the direction of the data flow."""
+    fields) and edges in the direction of the data flow.  Without lineage (or when it cannot be determined) the
+    answer holds only the entity itself and ``available`` is false."""
     depth = max(1, min(int(depth), MAX_DEPTH))
-    lin = await services.lineage.lineage(guid, "BOTH", depth)
+    try:
+        lin = await services.lineage.lineage(guid, "BOTH", depth)
+    except Exception:  # noqa: BLE001 - the overview shows "no lineage" instead of failing; the reason goes to the log
+        log.warning("no lineage for %s", guid, exc_info=True)
+        lin = {}
     reg = services.typedefs.registry
     headers: Dict[str, Any] = dict(lin.get("guidEntityMap") or {})
     if guid not in headers:                       # no lineage: the entity on its own
@@ -131,7 +139,7 @@ async def lineage(services, guid: str, depth: int = 3) -> dict:
             n["fieldCount"] = len(_active((d.get("relationshipAttributes") or {}).get("fields")))
     edges = [{"from": r["fromEntityId"], "to": r["toEntityId"]} for r in lin.get("relations") or []
              if r.get("fromEntityId") in headers and r.get("toEntityId") in headers]
-    return {"baseEntityGuid": guid, "depth": depth, "nodes": nodes, "edges": edges}
+    return {"baseEntityGuid": guid, "depth": depth, "nodes": nodes, "edges": edges, "available": bool(edges)}
 
 
 __all__ = ["fields", "lineage"]
