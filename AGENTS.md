@@ -38,17 +38,22 @@ declares only one or two targets; `build`, `test`, `lint`, `typecheck`, `e2e`, `
 npx nx show project <project-name> --json
 ```
 
-## Verification Tiers
+## Verification Levels (WIP reporting only)
 
-Pick the cheapest tier that covers your change; state which you ran.
+The acceptance gate is uniform: CI runs commit checks, unit tests, and e2e on
+every PR and all must pass — no level here substitutes for the gate. Use these
+levels to report what you have verified **so far** (while iterating, or when
+asking a question): pick the cheapest level that covers your change and state
+which you ran.
 
-| Tier | Requirement                 | Commands                                                                                  |
-| ---- | --------------------------- | ----------------------------------------------------------------------------------------- |
-| 0    | Offline (no key, no Docker) | `nx lint <project>`, `nx typecheck <project>` (Python), `uv run pytest <app>/tests`       |
-| 1    | SOPS key registered         | `nx test <project> -c ci` (unit tests; `dependsOn` decrypt)                               |
-| 2    | Docker runtime              | `nx e2e <project>` (builds image, starts real services), `nx serve <project>` (dev infra) |
+| Level | Requirement                 | Commands                                                                                  |
+| ----- | --------------------------- | ----------------------------------------------------------------------------------------- |
+| 0     | Offline (no key, no Docker) | `nx lint <project>`, `nx typecheck <project>` (Python), `uv run pytest <app>/tests`       |
+| 1     | SOPS key registered         | `nx test <project> -c ci` (unit tests; `dependsOn` decrypt)                               |
+| 2     | Docker runtime              | `nx e2e <project>` (builds image, starts real services), `nx serve <project>` (dev infra) |
 
-CI runs `nx affected -t test e2e -c ci`, which mixes tiers 1 and 2.
+CI runs `nx affected -t test e2e -c ci`, which covers levels 1 and 2 for every
+change.
 
 ## Tech Stack
 

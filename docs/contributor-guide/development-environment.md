@@ -82,7 +82,7 @@ guide.
 
 When the development container starts for the first time, it:
 
-1. Installs the pinned toolchain (Node, Python, Java, `uv`, SOPS, Trivy, cosign) from the container features.
+1. Installs the toolchain from the container features.
 2. Installs JavaScript dependencies (`npm install`) and Python dependencies (`uv sync`) into the workspace.
 3. Generates a personal SOPS/age key pair into `secrets/keys.txt`, unless one already exists.
 

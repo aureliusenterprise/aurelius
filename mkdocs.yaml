@@ -79,6 +79,7 @@ nav:
     - Contributor Guide:
           - contributor-guide/index.md
           - Development Environment: contributor-guide/development-environment.md
+          - AI-Assisted Development: contributor-guide/ai-assisted-development.md
           - Adopting the Template: contributor-guide/adopting-the-template.md
           - Documentation: contributor-guide/documentation.md
           - Secrets Management: contributor-guide/secrets-management.md
@@ -163,6 +164,9 @@ nav:
                 - 040. The system raises its hand when it is broken: architecture/adr/040-the-system-raises-its-hand-when-it-is-broken.md
                 - 041. A failure of the running system has an owner and a rehearsed path: architecture/adr/041-a-failure-of-the-running-system-has-an-owner-and-a-rehearsed-path.md
                 - 042. Every dataset has an owner who answers for it: architecture/adr/042-every-dataset-has-an-owner-who-answers-for-it.md
+                - 043. AI-assisted review informs the two signatures: architecture/adr/043-ai-assisted-review-informs-the-signatures-it-does-not-replace-them.md
+                - 044. Every change carries two human signatures: architecture/adr/044-every-change-carries-two-human-signatures.md
+                - 045. Conventions are borrowed before they are invented: architecture/adr/045-conventions-are-borrowed-before-they-are-invented.md
           - Vision & Strategy:
                 - architecture/vision-and-strategy/index.md
                 - Mission Statement: architecture/vision-and-strategy/mission-statement.md
@@ -223,12 +227,16 @@ plugins:
     - llmstxt:
           sections:
               User Guide:
+                  - user-guide/*.md
                   - user-guide/**/*.md
               Contributor Guide:
+                  - contributor-guide/*.md
                   - contributor-guide/**/*.md
               API Reference:
+                  - api-reference/*.md
                   - api-reference/**/*.md
               Architecture:
+                  - architecture/*.md
                   - architecture/**/*.md
               Changelog:
                   - CHANGELOG.md

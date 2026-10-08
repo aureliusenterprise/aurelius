@@ -54,6 +54,9 @@ area you are about to work in; the rest can wait.
 | [040](./040-the-system-raises-its-hand-when-it-is-broken.md)                         | The system raises its hand when it is broken — named triggers, named destinations; silence is a condition.                             | Proposed |
 | [041](./041-a-failure-of-the-running-system-has-an-owner-and-a-rehearsed-path.md)    | A failure of the running system has an owner and a rehearsed path — response owned, written, practised.                                | Proposed |
 | [042](./042-every-dataset-has-an-owner-who-answers-for-it.md)                        | Every dataset has an owner who answers for it — sharing is a stated answer, never an absence.                                          | Proposed |
+| [043](./043-ai-assisted-review-informs-the-signatures-it-does-not-replace-them.md)   | AI-assisted review informs the two signatures — it does not replace them, and its findings follow the blocking rule.                   | Accepted |
+| [044](./044-every-change-carries-two-human-signatures.md)                            | Every change carries two human signatures — the task owner who answers for it and a reviewer who confirms understanding.               | Accepted |
+| [045](./045-conventions-are-borrowed-before-they-are-invented.md)                    | Conventions are borrowed before they are invented — framework, then community, then invention; the preference outlives the brands.     | Accepted |
 
 ## Why record decisions
 
