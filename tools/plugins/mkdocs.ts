@@ -33,10 +33,10 @@ async function createNodesInternal(
                         continuous: true,
                         executor: "@nxlv/python:run-commands",
                         metadata: {
-                            description: "Serve the Mkdocs documentation locally",
+                            description: "Serve the documentation locally with Zensical",
                         },
                         options: {
-                            command: "uv run mkdocs serve",
+                            command: "uv run zensical serve",
                         },
                     },
                 },

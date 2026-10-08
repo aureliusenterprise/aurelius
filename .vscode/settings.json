@@ -1,0 +1,36 @@
+{
+    "eslint.validate": ["json"],
+    "files.exclude": {
+        "**/.pytest_cache": true,
+        "**/.ruff_cache": true,
+        "**/.trivy-cache": true,
+        "**/__pycache__": true,
+        ".angular": true,
+        ".gradle": true,
+        ".nx": true,
+        ".pnpm-store": true,
+        ".scannerwork": true,
+        ".tmp": true,
+        ".venv": true,
+        "build": true,
+        "node_modules": true
+    },
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "python.analysis.typeCheckingMode": "standard",
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "search.exclude": {
+        "**/coverage.xml": true,
+        "**/licenses.json": true,
+        "**/sbom.json": true,
+        "**/vulnerabilities.html": true,
+        "**/vulnerabilities.json": true,
+        "**/vulnerabilities.sarif": true,
+        "build/": true,
+        "coverage/": true,
+        "node_modules/": true,
+        "site/": true,
+        "tmp/": true
+    }
+}

@@ -1,10 +1,15 @@
 # aurelius-data-access
 
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-data-access&metric=sqale_rating&token=2306953150224489c87c316844cb4b3241de973b)](https://sonarcloud.io/summary/new_code?id=aurelius-data-access)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-data-access&metric=reliability_rating&token=2306953150224489c87c316844cb4b3241de973b)](https://sonarcloud.io/summary/new_code?id=aurelius-data-access)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-data-access&metric=security_rating&token=2306953150224489c87c316844cb4b3241de973b)](https://sonarcloud.io/summary/new_code?id=aurelius-data-access)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=aurelius-data-access)
 
 This library provides common utilities for API data access in Angular projects.
+
+## API Documentation
+
+This library is written in TypeScript, which is not covered by the generated
+API reference (mkdocstrings covers Python only here). The source code with its
+TSDoc comments is the API reference:
+[`libs/angular/aurelius-data-access/src`](https://github.com/aureliusenterprise/project-template/tree/main/libs/angular/aurelius-data-access/src).
 
 ## Installation
 

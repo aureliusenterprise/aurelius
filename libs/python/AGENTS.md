@@ -13,7 +13,7 @@ This file is the recipe for adding or modifying a library here.
     - `tests/test__*.py` — pytest tests, `conftest.py` for fixtures
     - `pyproject.toml` — hatchling build backend,
       `[tool.hatch.build.targets.wheel] packages = ["<package_name>"]`,
-      `requires-python = ">=3.14"`, pytest asyncio `auto` mode config
+      `requires-python` (match the other libs), pytest asyncio `auto` mode config
     - `project.json` — `projectType: "library"`, `sourceRoot` pointing at the package
     - `sonar-project.properties` — copy from a sibling lib
 2. **Register in root `pyproject.toml`** (all three, or `uv sync` won't resolve it):

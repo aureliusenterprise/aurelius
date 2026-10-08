@@ -1,8 +1,6 @@
 # aurelius-brand
 
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-brand&metric=sqale_rating&token=7a547436f2892554c971e2f91b0a92f98187065f)](https://sonarcloud.io/summary/new_code?id=aurelius-brand)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-brand&metric=reliability_rating&token=7a547436f2892554c971e2f91b0a92f98187065f)](https://sonarcloud.io/summary/new_code?id=aurelius-brand)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-brand&metric=security_rating&token=7a547436f2892554c971e2f91b0a92f98187065f)](https://sonarcloud.io/summary/new_code?id=aurelius-brand)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=aurelius-brand)
 
 This library provides the Aurelius brand styles and assets for use in Aurelius projects.
 

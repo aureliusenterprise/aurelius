@@ -9,7 +9,7 @@ covers wiring specific to this lib; workspace-wide rules live in the root
 - `src/main/java/com/aureliusenterprise/example/` — **generated** Avro code,
   committed on purpose (IDEs and SonarQube need to see it)
 - `build.gradle.kts` — Avro plugin config, `nx{}` metadata (sonar target),
-  Java 21 toolchain
+  Java toolchain (version in `gradle/libs.versions.toml`)
 - `sonar-project.properties` — SonarQube module config
 
 ## Wiring Checklist

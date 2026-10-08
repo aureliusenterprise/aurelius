@@ -78,6 +78,22 @@ Once your development environment is set up, you need to configure your SOPS key
 decrypt the secrets in the repository. Please follow the steps in the [Secrets Management](./secrets-management.md)
 guide.
 
+## What Happens on First Start
+
+When the development container starts for the first time, it:
+
+1. Installs the pinned toolchain (Node, Python, Java, `uv`, SOPS, Trivy, cosign) from the container features.
+2. Installs JavaScript dependencies (`npm install`) and Python dependencies (`uv sync`) into the workspace.
+3. Generates a personal SOPS/age key pair into `secrets/keys.txt`, unless one already exists.
+
+??? WARNING "Your first tests may fail until your key is registered"
+
+    Almost every `serve`, `test`, and `e2e` target first runs a `decrypt` step to turn the committed `.env.enc`
+    secret files into plaintext `.env` files. Decryption only succeeds once your public key is listed in
+    `.sops.yaml` and the files have been re-encrypted for you (see
+    [Registering a new key pair](./secrets-management.md#registering-a-new-key-pair)). Until then, commands fail
+    with a SOPS/age decryption error — this is expected, not a broken setup.
+
 ## Explore the Workspace
 
 The workspace is organized as a monorepo, which means that all the projects are stored in a single repository.
@@ -88,12 +104,14 @@ The workspace is organized as a monorepo, which means that all the projects are 
 
     - `apps`: Contains the main applications and services that make up the workspace.
     - `connectors`: Provides Kafka connectors and other integration modules for external systems.
+    - `dev`: Compose files and configuration for the supporting development infrastructure (Postgres,
+      Keycloak, Kafka, observability stack).
     - `docker`: Includes Dockerfiles and resources for building base images used across the workspace.
     - `docs`: Central location for all project documentation, guides, and reference materials.
     - `libs`: Shared libraries and utilities used by multiple applications within the monorepo.
-    - `secrets`: Placeholder for secrets management; this folder is excluded from version control.
-    - `services`: Deployment manifests and configuration for supporting infrastructure and services.
-    - `tools`: Scripts and utilities to assist with development, testing, and deployment workflows.
+    - `schemas`: Shared Avro event schemas exchanged between producers and consumers.
+    - `secrets`: Your personal SOPS/age key; this folder is excluded from version control.
+    - `tools`: Custom automation (Nx plugins) that wires builds, containers, secrets, and docs into `Nx`.
 
 Workspace automation is managed using [`Nx`](https://nx.dev/). Each project in the workspace has its own set of
 configurations and dependencies, allowing for modular development.

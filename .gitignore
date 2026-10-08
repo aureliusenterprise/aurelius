@@ -162,7 +162,10 @@ cython_debug/
 .idea/
 
 # vscode
-.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/mcp.json
 
 # Nx
 .nx/

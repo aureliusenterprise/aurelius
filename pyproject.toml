@@ -20,10 +20,7 @@ dev = [
     "alembic>=1.18",
     "boto3>=1.43",
     "confluent-kafka[avro,schema-registry]>=2.14",
-    "mike>=2.1.3",
-    "mkdocs>=1.6",
-    "mkdocs-material>=9.7",
-    "mkdocs-print-site-plugin>=2.7.3",
+    "mike",
     "mkdocstrings>=1.0",
     "mkdocstrings-python>=2.0",
     "playwright>=1.56.0",
@@ -49,7 +46,13 @@ dev = [
     "testcontainers>=4.14",
     "timeout-decorator>=0.5.0",
     "types-boto3[full]>=1.43",
+    "zensical>=0.0.68",
+    "griffe-pydantic>=1.3.2",
 ]
+
+[tool.uv.sources]
+# Zensical-compatible mike fork; not published on PyPI, must be installed from GitHub.
+mike = { git = "https://github.com/squidfunk/mike.git" }
 
 [tool.pyright]
 exclude = [".venv"]
@@ -96,6 +99,7 @@ runtime-evaluated-decorators = ["pydantic.validate_call", "attrs.define"]
 [tool.ruff.lint.per-file-ignores]
 "**/conftest.py" = ["INP001"]
 "**/test__*.py" = ["INP001", "S101", "PLR0913", "PLR2004"]
+"tools/griffe/*.py" = ["INP001", "ANN401", "SLF001"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

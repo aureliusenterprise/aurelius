@@ -15,19 +15,53 @@ there is no central index.
 3. **Run pre-commit**: `pre-commit run --all-files` (fix any issues)
 4. **Verify**: `nx run-many --target=test -c ci` (or target a specific project)
 
+> [!WARNING]
+> Fresh clones fail tests until a SOPS age key exists (`secrets/keys.txt`, generated on first
+> devcontainer start) AND the key is registered in `.sops.yaml`. Nearly every `test`/`serve`/`e2e`
+> target `dependsOn` `decrypt`, which fails with a SOPS/age error otherwise — that is a setup gap,
+> not a code bug.
+>
 > [!NOTE]
 > This is a **template** — apps/libs are starting points, not production-ready as-is.
 > Modules are designed to be removable; see the [Module Map](#module-map).
 
+## Target Discovery
+
+Most Nx targets are **inferred** by the custom plugins in `tools/plugins/*.ts` from file globs
+(`pyproject.toml`, `Dockerfile`, `.env`, `.env.enc`, `mkdocs.yaml`, …). A `project.json` usually
+declares only one or two targets; `build`, `test`, `lint`, `typecheck`, `e2e`, `docker-*`,
+`decrypt`/`encrypt`/`keygen`/`update-keys`, `sonar`, and `docs` are mostly invisible in it.
+
+**Never infer the runnable target set from `project.json` alone.** Query the graph:
+
+```bash
+npx nx show project <project-name> --json
+```
+
+## Verification Tiers
+
+Pick the cheapest tier that covers your change; state which you ran.
+
+| Tier | Requirement                 | Commands                                                                                  |
+| ---- | --------------------------- | ----------------------------------------------------------------------------------------- |
+| 0    | Offline (no key, no Docker) | `nx lint <project>`, `nx typecheck <project>` (Python), `uv run pytest <app>/tests`       |
+| 1    | SOPS key registered         | `nx test <project> -c ci` (unit tests; `dependsOn` decrypt)                               |
+| 2    | Docker runtime              | `nx e2e <project>` (builds image, starts real services), `nx serve <project>` (dev infra) |
+
+CI runs `nx affected -t test e2e -c ci`, which mixes tiers 1 and 2.
+
 ## Tech Stack
 
-- **Monorepo tool**: Nx (v23.2.x) + Gradle (Java) + uv (Python workspace)
-- **Languages**: TypeScript (Angular 22), Python (3.14+), Java
+Versions live in `package.json`, `pyproject.toml`, `gradle/libs.versions.toml`, and
+`.devcontainer/devcontainer.json` — don't copy them into docs.
+
+- **Monorepo tool**: Nx + Gradle (Java) + uv (Python workspace)
+- **Languages**: TypeScript (Angular), Python, Java
 - **Frontend**: Angular, SCSS, Storybook, Vitest
 - **Backend**: FastAPI, AWS Lambda, Kafka (Confluent), SQLAlchemy/SQLModel
 - **Infra**: Docker, Postgres, Keycloak, observability stack (Prometheus/Grafana/Tempo)
 - **Quality**: ESLint, Ruff, Prettier, SonarQube, pre-commit hooks
-- **Docs**: MkDocs Material with mkdocstrings
+- **Docs**: Zensical (Material design) with mkdocstrings
 - **Security**: CycloneDX SBOM, SOPS encryption (per-user age key at `secrets/keys.txt`, never committed)
 
 ## Module Map
@@ -83,7 +117,7 @@ pre-commit run --all-files
 
 # Dev server (starts its own infra dependencies)
 npx nx serve <project>
-mkdocs serve
+uv run zensical serve
 
 # Docker (per-project compose, e.g.)
 docker compose -f dev/kafka/docker-compose.yaml up -d

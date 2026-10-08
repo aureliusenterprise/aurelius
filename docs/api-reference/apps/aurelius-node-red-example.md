@@ -1,8 +1,6 @@
 # aurelius-node-red-example
 
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-node-red-example&metric=sqale_rating&token=de0c64bfaffdca2b097e7387ea92be1728501a07)](https://sonarcloud.io/summary/new_code?id=aurelius-node-red-example)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-node-red-example&metric=reliability_rating&token=de0c64bfaffdca2b097e7387ea92be1728501a07)](https://sonarcloud.io/summary/new_code?id=aurelius-node-red-example)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-node-red-example&metric=security_rating&token=de0c64bfaffdca2b097e7387ea92be1728501a07)](https://sonarcloud.io/summary/new_code?id=aurelius-node-red-example)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=aurelius-node-red-example)
 
 This is an example Node-RED application that demonstrates how to set up a simple Kafka producer.
 

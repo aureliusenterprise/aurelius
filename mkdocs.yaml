@@ -9,6 +9,7 @@ theme:
     logo: assets/favicon.ico
     name: material
     search: true
+    variant: classic
 
     features:
         - content.code.copy
@@ -78,6 +79,7 @@ nav:
     - Contributor Guide:
           - contributor-guide/index.md
           - Development Environment: contributor-guide/development-environment.md
+          - Adopting the Template: contributor-guide/adopting-the-template.md
           - Documentation: contributor-guide/documentation.md
           - Secrets Management: contributor-guide/secrets-management.md
           - Version Control: contributor-guide/version-control.md
@@ -218,25 +220,51 @@ nav:
 
 plugins:
     - autorefs
+    - llmstxt:
+          sections:
+              User Guide:
+                  - user-guide/**/*.md
+              Contributor Guide:
+                  - contributor-guide/**/*.md
+              API Reference:
+                  - api-reference/**/*.md
+              Architecture:
+                  - architecture/**/*.md
+              Changelog:
+                  - CHANGELOG.md
     - mike
     - mkdocstrings:
           handlers:
               python:
                   options:
-                      show_root_heading: true
+                      docstring_options:
+                          ignore_init_summary: true
+                      docstring_section_style: list
+                      extensions:
+                          - tools/griffe/aurelius_pydantic.py:AureliusPydanticExtension:
+                                schema: true
+                      heading_level: 2
+                      inherited_members: true
+                      inventories:
+                          - https://docs.python.org/3/objects.inv
+                      line_length: 120
+                      merge_init_into_class: true
+                      parameter_headings: true
+                      separate_signature: true
+                      show_docstring_examples: true
+                      show_if_no_docstring: true
                       show_object_full_path: false
+                      show_root_heading: true
+                      show_signature: true
+                      show_signature_annotations: true
+                      show_source: false
                       show_symbol_type_heading: true
                       show_symbol_type_toc: true
-                      show_signature: true
-                      separate_signature: true
-                      show_signature_annotations: true
                       signature_crossrefs: true
-                      show_source: false
-                      show_if_no_docstring: true
-                      show_docstring_examples: true
+                      summary: true
+                      unwrap_annotated: true
     - search
     - tags
-    - print-site
 
 extra:
     generator: false

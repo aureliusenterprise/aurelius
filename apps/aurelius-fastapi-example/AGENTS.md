@@ -44,6 +44,9 @@ nx e2e aurelius-fastapi-example          # builds docker image, runs testcontain
 nx lint aurelius-fastapi-example
 ```
 
+Offline-safe: `uv run pytest`, `nx lint`, `nx typecheck`. Needs SOPS key: `nx test -c ci` (decrypt).
+Needs Docker: `serve` (Keycloak/Postgres/observability), `e2e`.
+
 ## Conventions
 
 - Routers stay thin; logic goes in `providers/`. Raise `HTTPException` in routes only.

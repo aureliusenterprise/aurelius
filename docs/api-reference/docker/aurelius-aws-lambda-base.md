@@ -1,8 +1,6 @@
 # aurelius-aws-lambda-base
 
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-aws-lambda-base&metric=sqale_rating&token=f38950953ddb43deb4bcc5f14f852172931113a3)](https://sonarcloud.io/summary/new_code?id=aurelius-aws-lambda-base)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-aws-lambda-base&metric=reliability_rating&token=f38950953ddb43deb4bcc5f14f852172931113a3)](https://sonarcloud.io/summary/new_code?id=aurelius-aws-lambda-base)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-aws-lambda-base&metric=security_rating&token=f38950953ddb43deb4bcc5f14f852172931113a3)](https://sonarcloud.io/summary/new_code?id=aurelius-aws-lambda-base)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=aurelius-aws-lambda-base)
 
 This Docker image provides a base for all AWS Lambda functions. It provides all necessary dependencies to run
 Lambda functions based on Python.
@@ -15,7 +13,8 @@ Lambda functions based on Python.
 
 This Docker image provides the following key dependencies for Lambda functions based on Python:
 
-- **Python 3.14**: This is the Python runtime used for executing your Lambda functions.
+- **Python**: This is the Python runtime used for executing your Lambda functions. Its version is pinned in
+  the image's `Dockerfile`.
 - [**AWS Lambda Runtime Interface Client**](https://github.com/aws/aws-lambda-python-runtime-interface-client):
   This is used to communicate with the AWS Lambda service.
 - [**AWS Lambda Insights Extension**](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights.html):

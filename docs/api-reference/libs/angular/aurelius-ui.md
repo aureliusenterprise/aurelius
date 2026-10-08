@@ -1,10 +1,15 @@
 # aurelius-ui
 
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-ui&metric=sqale_rating&token=3ec6b3aab1748c077bbe786c64db740cc62ab68a)](https://sonarcloud.io/summary/new_code?id=aurelius-ui)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-ui&metric=reliability_rating&token=3ec6b3aab1748c077bbe786c64db740cc62ab68a)](https://sonarcloud.io/summary/new_code?id=aurelius-ui)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-ui&metric=security_rating&token=3ec6b3aab1748c077bbe786c64db740cc62ab68a)](https://sonarcloud.io/summary/new_code?id=aurelius-ui)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=aurelius-ui)
 
 This library provides common UI components for Angular projects.
+
+## API Documentation
+
+This library is written in TypeScript, which is not covered by the generated
+API reference (mkdocstrings covers Python only here). Storybook, described
+below, is the component API reference; for the raw signatures, see the
+[source](https://github.com/aureliusenterprise/project-template/tree/main/libs/angular/aurelius-ui/src).
 
 ## Installation
 

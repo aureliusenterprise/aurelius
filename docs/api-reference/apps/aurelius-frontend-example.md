@@ -1,8 +1,6 @@
 # aurelius-frontend-example
 
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-frontend-example&metric=sqale_rating&token=81cdfca44977faa29718f4be1d46a9efa05efda0)](https://sonarcloud.io/summary/new_code?id=aurelius-frontend-example)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-frontend-example&metric=reliability_rating&token=81cdfca44977faa29718f4be1d46a9efa05efda0)](https://sonarcloud.io/summary/new_code?id=aurelius-frontend-example)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-frontend-example&metric=security_rating&token=81cdfca44977faa29718f4be1d46a9efa05efda0)](https://sonarcloud.io/summary/new_code?id=aurelius-frontend-example)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=aurelius-frontend-example)
 
 This is an example frontend application built with Angular.
 

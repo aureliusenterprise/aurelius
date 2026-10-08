@@ -4,14 +4,15 @@ This page provides guidelines for contributing to the documentation.
 
 ## Tools
 
-The documentation is built using [MkDocs](https://www.mkdocs.org/), a static site generator that converts Markdown
-files into a website.
+The documentation is built using [Zensical](https://zensical.org/), a static site generator built by the
+creators of Material for MkDocs. It converts Markdown files into a website and reads the existing
+`mkdocs.yaml` configuration.
 
 Markdown is a lightweight markup language with plain-text formatting syntax. Refer to the [Markdown Guide](https://www.markdownguide.org)
 for more information on how to use Markdown.
 
-This project uses the [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) theme to generate the
-documentation. Please review the theme documentation for guidance on how to use its various features.
+The documentation uses the Material design, which is built into Zensical. Please review the
+[Zensical documentation](https://zensical.org/docs/) for guidance on how to use its various features.
 
 ## Running the Documentation
 
@@ -82,6 +83,7 @@ merging the pull request. When the pull request is merged, this documentation is
 
 ### Versioning
 
-This project uses [mike](https://github.com/jimporter/mike) to manage the documentation versions. Versions are
+This project uses [mike](https://github.com/squidfunk/mike) (the Zensical-compatible fork) to manage the
+documentation versions. Versions are
 defined by tags in the repository, and the documentation for each version is published to a separate directory.
 The `main` branch is aliased to the `latest` directory, which is the default version displayed on the website.

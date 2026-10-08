@@ -40,6 +40,8 @@ nx extract-i18n aurelius-frontend-example # refresh translation bundles
 nx lint aurelius-frontend-example
 ```
 
+Offline-safe: `nx test -c ci`, `nx lint`, `extract-i18n`. Needs Docker: `serve`, `e2e`.
+
 ## Conventions
 
 - Components stay presentational; data access goes through `aurelius-data-access`,

@@ -38,6 +38,8 @@ nx e2e aurelius-node-red-example      # pytest E2E
 nx lint aurelius-node-red-example
 ```
 
+Offline-safe: `nx lint`. Needs Docker: `serve` (Kafka), `e2e`.
+
 ## Conventions
 
 - Flow changes go through the editor and get committed as `flows.json` diffs —

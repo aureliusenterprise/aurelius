@@ -86,7 +86,7 @@ framework is pinned — belongs in code and project documentation, not here.
 | Modules must be removable as whole slices                               | Nx plugin configuration               |
 | Real secrets are encrypted per project; only dev defaults are committed | SOPS command-line flags               |
 | Development infrastructure starts with the app that needs it            | Docker Compose syntax                 |
-| Every project documents itself; no central catalogues                   | MkDocs navigation entries             |
+| Every project documents itself; no central catalogues                   | Zensical navigation entries           |
 
 Write the **Context** as a business situation (cost, risk, time-to-market,
 team autonomy, compliance), not as a technology comparison. Technologies may

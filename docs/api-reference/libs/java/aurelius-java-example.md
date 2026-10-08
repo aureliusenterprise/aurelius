@@ -1,10 +1,19 @@
 # aurelius-java-example
 
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-java-example&metric=sqale_rating&token=c01e9faa418c7a9382bf5235cc7f91c663c81ca4)](https://sonarcloud.io/summary/new_code?id=aurelius-java-example)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-java-example&metric=reliability_rating&token=c01e9faa418c7a9382bf5235cc7f91c663c81ca4)](https://sonarcloud.io/summary/new_code?id=aurelius-java-example)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aurelius-java-example&metric=security_rating&token=c01e9faa418c7a9382bf5235cc7f91c663c81ca4)](https://sonarcloud.io/summary/new_code?id=aurelius-java-example)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=aurelius-java-example)
 
 This is a library that provides common utilities for Java example projects.
+
+## API Documentation
+
+Java is not covered by the generated API reference (mkdocstrings covers Python
+only here). Generate the Javadoc for this library with:
+
+```bash
+./gradlew :aurelius-java-example:javadoc
+```
+
+The output is written to `libs/java/aurelius-java-example/build/docs/javadoc/`.
 
 ## Installation
 

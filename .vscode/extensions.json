@@ -1,0 +1,17 @@
+{
+    "recommendations": [
+        "Angular.ng-template",
+        "bierner.markdown-mermaid",
+        "charliermarsh.ruff",
+        "DavidAnson.vscode-markdownlint",
+        "esbenp.prettier-vscode",
+        "KnisterPeter.vscode-commitizen",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        "nrwl.angular-console",
+        "PKief.material-icon-theme",
+        "SonarSource.sonarlint-vscode",
+        "tamasfe.even-better-toml",
+        "vitest.explorer"
+    ]
+}

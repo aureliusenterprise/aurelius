@@ -42,6 +42,8 @@ nx e2e aurelius-java-producer-example           # pytest E2E
 nx sonar aurelius-java-producer-example
 ```
 
+Offline-safe: `./gradlew test`, `nx sonar`. Needs Docker: `run` (Kafka), `e2e`.
+
 ## Conventions
 
 - The `Entity` class is generated — change `schemas/avro/` (and the Python model in
