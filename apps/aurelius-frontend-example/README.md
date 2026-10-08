@@ -11,9 +11,11 @@ Part of the template **spine**.
 - The whole app sits behind one Keycloak-guarded root route (`createAuthGuard` with
   login redirect)
 - Entity search with debounced queries and pagination, plus an entity editor
-- Runtime config: `/config.json` (Keycloak client/realm) is fetched at bootstrap and
-  only bundled in the development build (`dev/config.json`)
-- `provideAureliusOpenTelemetry()` traces exported via `/otel/v1/traces`;
+- Runtime config: `/config.json` (Keycloak client/realm, `apiBaseUrl`, `otelExporterUrl`)
+  is fetched and validated at bootstrap and only bundled in the development build
+  (`dev/config.json`); a missing or malformed file fails loudly instead of blank-screening
+- `provideAureliusOpenTelemetry()` traces exported via the configured `otelExporterUrl`
+  (`/otel/v1/traces` in dev); API calls use the configured `apiBaseUrl` (`/api`) with a
   bearer-token interceptor attached to `/api/*` calls
 
 ## Workspace dependencies

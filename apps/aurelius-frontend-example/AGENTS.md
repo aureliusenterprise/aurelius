@@ -15,8 +15,11 @@ rules live in the root `AGENTS.md`.
 
 ## Configuration
 
-- Keycloak client/realm come from `/config.json`, fetched at bootstrap — never
-  hard-code them. Production deployments must serve their own `config.json`.
+- Runtime config comes from `/config.json`, fetched and validated at bootstrap
+  (`src/app/config.ts` defines the typed `AppConfig` shape). It carries the Keycloak
+  client/realm, `apiBaseUrl` (provided to `aurelius-data-access` via `provideApiBaseUrl`),
+  and `otelExporterUrl` — never hard-code them. Production deployments must serve their
+  own `config.json`; a missing or malformed file throws at bootstrap (fail loudly).
 - The bearer token is attached to `/api/*` requests via `includeBearerTokenInterceptor`.
 
 ## Wiring Checklist

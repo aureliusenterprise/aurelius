@@ -8,6 +8,8 @@ Angular lib recipe in `libs/angular/AGENTS.md`.
 
 - `src/lib/entities/` — `EntitiesService` (HTTP + SSE) and the API types;
   `src/index.ts` is the public API
+- `src/lib/api-config.ts` — `API_BASE_URL` injection token (root default `/api`) and
+  `provideApiBaseUrl()`; `EntitiesService` builds all URLs from it
 - `.spec.ts` files colocated with source
 
 ## Wiring Checklist

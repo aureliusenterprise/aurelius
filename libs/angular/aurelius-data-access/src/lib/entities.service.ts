@@ -3,6 +3,7 @@ import { inject, Injectable, OnDestroy } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { SseClient } from "ngx-sse-client";
 import { catchError, EMPTY, filter, map, Observable, Subject } from "rxjs";
+import { API_BASE_URL } from "./api-config";
 
 export type Envelope<T> = {
     /**
@@ -133,11 +134,16 @@ export class EntitiesService implements OnDestroy {
     private readonly sseClient = inject(SseClient);
 
     /**
+     * The base URL the API is reachable under (e.g. `/api`).
+     */
+    private readonly apiUrl = inject(API_BASE_URL);
+
+    /**
      * Initialize the service by setting up the SSE stream for entity updates.
      */
     constructor() {
         this.sseClient
-            .stream("/api/entities/sse")
+            .stream(`${this.apiUrl}/entities/sse`)
             .pipe(
                 filter(isEntityEvent),
                 map(parseEntityEvent),
@@ -161,7 +167,7 @@ export class EntitiesService implements OnDestroy {
      * @returns An observable that emits the created or updated entity.
      */
     createOrUpdate(entity: Entity): Observable<Entity> {
-        return this.httpClient.put<Entity>(`/api/entities/`, entity);
+        return this.httpClient.put<Entity>(`${this.apiUrl}/entities/`, entity);
     }
 
     /**
@@ -171,7 +177,7 @@ export class EntitiesService implements OnDestroy {
      * @returns An observable that completes when the entity is deleted.
      */
     delete(guid: string): Observable<void> {
-        return this.httpClient.delete<void>(`/api/entities/${guid}`);
+        return this.httpClient.delete<void>(`${this.apiUrl}/entities/${guid}`);
     }
 
     /**
@@ -181,7 +187,7 @@ export class EntitiesService implements OnDestroy {
      * @returns An observable that emits the list of entities.
      */
     findAll(params: FindAllQueryParams = {}): Observable<PaginatedResponse<Entity>> {
-        return this.httpClient.get<PaginatedResponse<Entity>>("/api/entities/", {
+        return this.httpClient.get<PaginatedResponse<Entity>>(`${this.apiUrl}/entities/`, {
             params: filterParams(params),
         });
     }
@@ -193,6 +199,6 @@ export class EntitiesService implements OnDestroy {
      * @returns An observable that emits the entity data.
      */
     findOne(guid: string): Observable<Entity> {
-        return this.httpClient.get<Entity>(`/api/entities/${guid}`);
+        return this.httpClient.get<Entity>(`${this.apiUrl}/entities/${guid}`);
     }
 }
