@@ -196,29 +196,3 @@ jobs:
 
             - name: Run SonarQube analysis
               run: npx nx affected -t sonar
-
-    chromatic:
-        runs-on: ubuntu-latest
-        needs: test
-
-        permissions:
-            contents: read
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
-              with:
-                  fetch-depth: 0
-
-            - name: Setup toolchain
-              uses: ./.github/actions/setup-toolchain
-              with:
-                  sops: "true"
-                  node: "true"
-
-            - name: Run Chromatic
-              uses: chromaui/action@v17
-              with:
-                  buildCommand: "npx nx build-storybook aurelius-ui"
-                  outputDir: "dist/storybook/aurelius-ui"
-                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

@@ -10,15 +10,13 @@ name = "Aurelius Enterprise"
 [dependency-groups]
 dev = [
     "aurelius-atlas-parity",
+    "aurelius-atlas-server",
     "aurelius-atlas-store-es[testing]",
     "aurelius-atlas-test-report",
     "aurelius-atlas-testing",
-    "aurelius-example",
-    "aurelius-fastapi-example",
     "aurelius-license-report",
     "aurelius-sdk[full]",
     "aurelius-vulnerability-report",
-    "alembic>=1.18",
     "mike",
     "mkdocstrings>=1.0",
     "mkdocstrings-python>=2.0",
@@ -26,7 +24,6 @@ dev = [
     "pre-commit>=4.2.0",
     "psycopg[binary]>=3.3.4",
     "pydantic>=2.11.7",
-    "pydantic-avro>=0.9.0",
     "pydantic-settings>=2.10.1",
     "pymdown-extensions>=10.21.3",
     "pyright>=1.1.403",
@@ -39,8 +36,6 @@ dev = [
     "python-dotenv>=1.2.2",
     "python-keycloak>=7.1",
     "ruff>=0.15.16",
-    "sqlalchemy>=2.0.41",
-    "sqlmodel>=0.0.24",
     "tenacity>=9.1.2",
     "testcontainers>=4.14",
     "timeout-decorator>=0.5.0",
@@ -110,6 +105,9 @@ convention = "google"
 [tool.uv.sources.aurelius-atlas-parity]
 workspace = true
 
+[tool.uv.sources.aurelius-atlas-server]
+workspace = true
+
 [tool.uv.sources.aurelius-atlas-store-es]
 workspace = true
 
@@ -117,12 +115,6 @@ workspace = true
 workspace = true
 
 [tool.uv.sources.aurelius-atlas-testing]
-workspace = true
-
-[tool.uv.sources.aurelius-example]
-workspace = true
-
-[tool.uv.sources.aurelius-fastapi-example]
 workspace = true
 
 [tool.uv.sources.aurelius-license-report]
@@ -139,8 +131,7 @@ members = [
     "libs/python/aurelius-atlas-parity",
     "libs/python/aurelius-atlas-store-es",
     "libs/python/aurelius-atlas-testing",
-    "apps/aurelius-fastapi-example",
-    "libs/python/aurelius-example",
+    "apps/aurelius-atlas-server",
     "libs/python/aurelius-sdk",
     "reports/aurelius-atlas-test-report",
     "reports/aurelius-license-report",

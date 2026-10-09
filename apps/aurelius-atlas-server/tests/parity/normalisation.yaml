@@ -1,0 +1,6 @@
+# Normalisation applied to every recorded and compared answer (DD-008).
+# Each rule hides a class of differences: add one only with a design-log entry.
+ignore: []
+timestamps:
+    - createTime
+    - updateTime

@@ -1,0 +1,9 @@
+name: admin-status
+description: Status, liveness and readiness of a healthy server.
+steps:
+    - name: status
+      request: { method: GET, path: /api/atlas/admin/status }
+    - name: liveness
+      request: { method: GET, path: /api/atlas/admin/liveness }
+    - name: readiness
+      request: { method: GET, path: /api/atlas/admin/readiness }

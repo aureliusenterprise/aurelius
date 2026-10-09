@@ -113,7 +113,7 @@
             "version": "0.71.0"
         }
     },
-    "forwardPorts": [4200, 4400, 8000, 8080, 9200],
+    "forwardPorts": [8080, 8081, 9200, 21000],
     "image": "mcr.microsoft.com/devcontainers/base:resolute",
     "name": "Aurelius Atlas",
     "onCreateCommand": {
@@ -121,19 +121,15 @@
         "uv": "bash .devcontainer/uv.sh"
     },
     "portsAttributes": {
-        "4200": {
-            "label": "Angular",
-            "onAutoForward": "openBrowserOnce"
-        },
-        "4400": {
-            "label": "Storybook",
-            "onAutoForward": "openBrowser"
-        },
-        "8000": {
-            "label": "FastAPI"
+        "21000": {
+            "label": "Atlas API"
         },
         "8080": {
             "label": "Keycloak"
+        },
+        "8081": {
+            "label": "Atlas dashboard",
+            "onAutoForward": "openBrowserOnce"
         },
         "9200": {
             "label": "Elasticsearch"

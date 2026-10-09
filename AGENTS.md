@@ -15,8 +15,8 @@ there is no central index.
 ## Quick Start
 
 1. **Install dependencies**: `npm ci` (root) + `uv sync`
-2. **Run an app**: `npx nx serve <project>` — required dev infrastructure (Keycloak, Postgres,
-   observability) starts automatically via target `dependsOn`; there is no root compose file.
+2. **Run an app**: `npx nx serve aurelius-atlas-server` — required dev infrastructure (Elasticsearch)
+   starts automatically via target `dependsOn`; there is no root compose file.
 3. **Run pre-commit**: `pre-commit run --all-files` (fix any issues)
 4. **Verify**: `nx run-many --target=test -c ci` (or target a specific project)
 
@@ -67,10 +67,10 @@ Versions live in `package.json`, `pyproject.toml`, and
 `.devcontainer/devcontainer.json` — don't copy them into docs.
 
 - **Monorepo tool**: Nx + uv (Python workspace)
-- **Languages**: Python, TypeScript (Angular)
-- **Frontend**: Angular, SCSS, Storybook, Vitest
-- **Backend**: FastAPI, SQLAlchemy/SQLModel (template examples)
-- **Infra**: Docker, Postgres, Keycloak, observability stack (Prometheus/Grafana/Tempo)
+- **Languages**: Python (TypeScript only for the Nx plugins in `tools/`)
+- **Frontend**: the Apache Atlas dashboards, built unchanged and served by nginx
+- **Backend**: FastAPI, Elasticsearch 9
+- **Infra**: Docker, Elasticsearch, Keycloak, observability stack (Prometheus/Grafana/Tempo)
 - **Quality**: ESLint, Ruff, Prettier, SonarQube, pre-commit hooks
 - **Docs**: Zensical (Material design) with mkdocstrings
 - **Security**: CycloneDX SBOM, SOPS encryption (per-user age key at `secrets/keys.txt`, never committed)
@@ -82,9 +82,11 @@ how it is wired lives in its own `AGENTS.md`. It exists because slice
 boundaries are a workspace-wide rule — which projects may leave together, and
 what to unwire when they do.
 
-The **spine** (keep this): `aurelius-frontend-example`, `aurelius-fastapi-example`,
-`libs/python/aurelius-sdk`, `libs/angular/*`, `dev/postgres`, `dev/keycloak`, `dev/observability`,
-plus the workflow (CI, pre-commit, SBOM, docs, release).
+The **spine** (keep this): `aurelius-atlas-server`, `aurelius-atlas-dashboard`,
+`libs/python/aurelius-atlas-*`, `libs/python/aurelius-sdk`, `dev/elasticsearch`, `dev/keycloak`,
+`dev/observability`, plus the workflow (CI, pre-commit, SBOM, docs, release, the test report and
+`dev/atlas-reference` for parity). This deviates from the template's spine on purpose (ADR 050): the
+template's example apps, Angular libraries and Postgres were removed in increment 0.5.
 
 **Optional slices**: none at the moment. The template's Kafka streaming and AWS Lambda
 slices and its Java tooling were removed when the template was adopted (ADR 050).
@@ -133,7 +135,7 @@ docker compose -f dev/keycloak/docker-compose.yaml up -d
 Every project directory contains a colocated `AGENTS.md` with its wiring,
 commands, and removal notes, plus a `README.md` describing what it does.
 Read the pair closest to the files you are editing; directory-level
-`AGENTS.md` files (e.g. `libs/python/AGENTS.md`, `libs/angular/AGENTS.md`)
+`AGENTS.md` files (e.g. `libs/python/AGENTS.md`)
 hold recipes for adding new projects there. Each project documents itself —
 do not add central lists of projects or libraries to this file.
 

@@ -1,0 +1,8 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["aurelius-atlas-server"],
+    "name": "aurelius-atlas-dashboard",
+    "projectType": "application",
+    "tags": [],
+    "targets": {}
+}

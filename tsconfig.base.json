@@ -1,8 +1,4 @@
 {
-    "angularCompilerOptions": {
-        "strictInjectionParameters": true,
-        "strictTemplates": true
-    },
     "compileOnSave": false,
     "compilerOptions": {
         "declaration": false,
@@ -14,11 +10,6 @@
         "module": "esnext",
         "moduleResolution": "bundler",
         "noUncheckedSideEffectImports": false,
-        "paths": {
-            "aurelius-data-access": ["./libs/angular/aurelius-data-access/src/index.ts"],
-            "aurelius-observability": ["./libs/angular/aurelius-observability/src/index.ts"],
-            "aurelius-ui": ["./libs/angular/aurelius-ui/src/index.ts"]
-        },
         "rootDir": ".",
         "skipDefaultLibCheck": true,
         "skipLibCheck": true,

@@ -40,6 +40,7 @@ class Totals(BaseModel):
         branch_rate: Branch coverage over all projects, if measured.
         parity_matches: Parity steps that match or deviate as recorded.
         parity_steps: All parity steps.
+        parity_unrecorded: Parity steps without a recorded reference answer yet.
     """
 
     model_config = ConfigDict(frozen=True)
@@ -55,6 +56,7 @@ class Totals(BaseModel):
     branch_rate: float | None
     parity_matches: int
     parity_steps: int
+    parity_unrecorded: int = 0
 
     @property
     def ok(self) -> bool:
@@ -208,6 +210,7 @@ def build_report(root: Path, analysis: Analysis | None = None) -> Report:
         branch_rate=rate(sum(m.branches_covered for m in modules), sum(m.branches_valid for m in modules)),
         parity_matches=sum(step.status in {"match", "deviation"} for step in steps),
         parity_steps=len(steps),
+        parity_unrecorded=sum(step.status == "not recorded" for step in steps),
     )
     return Report(
         generated=datetime.now(UTC).strftime("%Y-%m-%d %H:%M"),

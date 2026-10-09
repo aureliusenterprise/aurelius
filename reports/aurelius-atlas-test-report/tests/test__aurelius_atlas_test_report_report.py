@@ -129,11 +129,26 @@ def test__render_shows_problems(workspace: Path) -> None:
     assert "1 untested function." in html
     assert "XYZ-02" in html
     assert "$.name differs" in html
+    assert "1 parity difference." in html
     assert "<script" not in html
     assert environment().autoescape
     assert "| 1 passed, 2 failed, 1 skipped | 1 / 2 | 1 / 2 |" in markdown
     assert "uncovered function: pkg.mod.g" in markdown
     assert "test__a::test_bad[x]" in markdown
+
+
+@pytest.mark.covers("aurelius_atlas_test_report.report.render_html", rules=["TRC-10"])
+def test__render_tells_unrecorded_from_different(workspace: Path) -> None:
+    """Steps never recorded are reported as such, not as differences."""
+    path = workspace / "libs/aurelius-atlas-x/parity-results.json"
+    path.write_text(path.read_text().replace('"status": "mismatch"', '"status": "not recorded"'))
+
+    report = build_report(workspace)
+    html = render_html(report)
+
+    assert report.totals.parity_unrecorded == 1
+    assert "1 parity step not recorded from the reference yet." in html
+    assert "parity difference" not in html
 
 
 @pytest.mark.covers("aurelius_atlas_test_report.report.render_html", rules=["TRC-10"])

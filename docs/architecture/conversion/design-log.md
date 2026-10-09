@@ -34,17 +34,18 @@ decisions are ADRs in [Architecture Decisions](../adr/index.md).
 
 ## Log
 
-| #                                                                              | Decision                                                                  | Increment | Status   |
-| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------- | --------- | -------- |
-| [DD-001](#dd-001-reference-is-apache-atlas-240-and-both-dashboards-are-served) | The reference is Apache Atlas 2.4.0; both dashboards are served unchanged | 0.1       | Accepted |
-| [DD-002](#dd-002-atlas-code-lives-in-aurelius-atlas-projects-split-by-layer)   | Atlas code lives in `aurelius-atlas-*` projects split by layer            | 0.1       | Accepted |
-| [DD-003](#dd-003-development-nodes-run-with-security-on-and-tls-off)           | Development and test nodes run with security on and TLS off               | 0.2       | Accepted |
-| [DD-004](#dd-004-every-index-is-named-prefix-kind)                             | Every index is named `<prefix>-<kind>`                                    | 0.2       | Accepted |
-| [DD-005](#dd-005-the-store-uses-the-asynchronous-client)                       | The store uses the asynchronous Elasticsearch client                      | 0.2       | Accepted |
-| [DD-006](#dd-006-what-must-be-named-by-a-test)                                 | What must be named by a test, and how a test names it                     | 0.3       | Accepted |
-| [DD-007](#dd-007-the-test-report-is-a-ci-artifact-with-a-job-summary)          | The test report is a CI artifact with a job summary                       | 0.3       | Accepted |
-| [DD-008](#dd-008-answers-are-normalised-and-recorded-not-compared-live)        | Answers are normalised and recorded, not compared live                    | 0.4       | Accepted |
-| [DD-009](#dd-009-the-reference-is-built-with-atlass-own-docker-set-up)         | The reference is built with Atlas's own Docker set-up                     | 0.4       | Accepted |
+| #                                                                                 | Decision                                                                  | Increment | Status   |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | --------- | -------- |
+| [DD-001](#dd-001-reference-is-apache-atlas-240-and-both-dashboards-are-served)    | The reference is Apache Atlas 2.4.0; both dashboards are served unchanged | 0.1       | Accepted |
+| [DD-002](#dd-002-atlas-code-lives-in-aurelius-atlas-projects-split-by-layer)      | Atlas code lives in `aurelius-atlas-*` projects split by layer            | 0.1       | Accepted |
+| [DD-003](#dd-003-development-nodes-run-with-security-on-and-tls-off)              | Development and test nodes run with security on and TLS off               | 0.2       | Accepted |
+| [DD-004](#dd-004-every-index-is-named-prefix-kind)                                | Every index is named `<prefix>-<kind>`                                    | 0.2       | Accepted |
+| [DD-005](#dd-005-the-store-uses-the-asynchronous-client)                          | The store uses the asynchronous Elasticsearch client                      | 0.2       | Accepted |
+| [DD-006](#dd-006-what-must-be-named-by-a-test)                                    | What must be named by a test, and how a test names it                     | 0.3       | Accepted |
+| [DD-007](#dd-007-the-test-report-is-a-ci-artifact-with-a-job-summary)             | The test report is a CI artifact with a job summary                       | 0.3       | Accepted |
+| [DD-008](#dd-008-answers-are-normalised-and-recorded-not-compared-live)           | Answers are normalised and recorded, not compared live                    | 0.4       | Accepted |
+| [DD-009](#dd-009-the-reference-is-built-with-atlass-own-docker-set-up)            | The reference is built with Atlas's own Docker set-up                     | 0.4       | Accepted |
+| [DD-010](#dd-010-the-dashboards-are-built-from-the-atlas-tag-and-served-by-nginx) | The dashboards are built from the Atlas tag and served by nginx           | 0.5       | Accepted |
 
 ### DD-001. Reference is Apache Atlas 2.4.0, and both dashboards are served
 
@@ -254,3 +255,26 @@ undermines the reference's authority. Our own Dockerfile: duplicates Atlas's wor
 **Consequences.** The first build takes up to an hour and needs about 6 GB of memory; it is run by hand
 when recording, never in CI. The set-up was written but not yet run in the environment that produced
 increment 0.4; PAR-11 is verified by the first recording.
+
+### DD-010. The dashboards are built from the Atlas tag and served by nginx
+
+- **Status:** Accepted
+- **Increment:** 0.5
+- **Date:** 2026-10-09
+
+**Decision.** `apps/aurelius-atlas-dashboard` is a two-stage image: Node 12.16.0 clones the
+`release-2.4.0` tag, checks the commit, and runs the dashboards' own `npm install` and
+`grunt build-minify`; nginx then serves `dashboardv2` at `/`, `dashboardv3` at `/n/`, and forwards `/api/`
+to `aurelius-atlas-server:21000`. The server listens on Atlas's port 21000.
+
+**Reason.** Building from the tagged source with the dashboards' own build reproduces exactly what Atlas
+ships (ADR 046) without copying thousands of files into this repository. Same paths and port as Atlas
+keep bookmarks, links between the two dashboards, and client configuration valid.
+
+**Alternatives.** Vendoring the built dashboards into the repository: no network at build time, but a
+large binary diff and no visible link to the source. Serving the static files from FastAPI: one process
+fewer, but mixes static serving into the API and departs from the template's nginx pattern.
+
+**Consequences.** Building the image needs GitHub, the npm registry and nodejs.org (node-sass compiles
+for Node 12). The dashboards first call `/api/atlas/admin/session`, which arrives with authentication
+in 6.1; until then they load but stop there.

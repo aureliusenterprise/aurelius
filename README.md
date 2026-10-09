@@ -31,18 +31,20 @@ nothing to install by hand beyond Docker and VS Code.
    a while; it also generates your personal secrets key into `secrets/keys.txt`.
 3. Register your secrets key (see [Secrets Management](docs/contributor-guide/secrets-management.md)) —
    until you do, test and serve commands fail at the decryption step.
-4. Run an example:
+4. Run the server:
 
     ```bash
-    npx nx serve aurelius-fastapi-example
+    npx nx serve aurelius-atlas-server
+    curl http://localhost:21000/api/atlas/admin/version
     ```
 
-    Development infrastructure (Keycloak, Postgres, observability) starts automatically.
+    Elasticsearch starts automatically. For the dashboards, see `apps/aurelius-atlas-dashboard/README.md`.
 
 5. Verify your setup:
 
     ```bash
-    nx test aurelius-fastapi-example -c ci
+    nx run-many -t test -c ci
+    nx check aurelius-atlas-test-report
     ```
 
 ??? WARNING "First-run expectations"
@@ -55,11 +57,18 @@ nothing to install by hand beyond Docker and VS Code.
 
 ## What is in the box
 
-Today the repository still carries the template's spine examples (an Angular frontend, a FastAPI backend,
-Postgres) next to the Atlas projects as they are added; the examples leave once the Atlas server and
-dashboard replace them (increment 0.5). The
-[Development Environment](docs/contributor-guide/development-environment.md) guide walks through the
-directory layout, and `npx nx graph` visualizes how the projects fit together.
+| Project                                                                         | What it is                                                      |
+| ------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `apps/aurelius-atlas-server`                                                    | The Atlas REST API (FastAPI)                                    |
+| `apps/aurelius-atlas-dashboard`                                                 | The Atlas dashboards, built unchanged from the Atlas source tag |
+| `libs/python/aurelius-atlas-store-es`                                           | Elasticsearch access                                            |
+| `libs/python/aurelius-atlas-parity`                                             | Parity testing against the reference Atlas                      |
+| `libs/python/aurelius-atlas-testing`                                            | The `covers` marker and the traceability check                  |
+| `reports/aurelius-atlas-test-report`                                            | One HTML page per run: results, traceability, parity, coverage  |
+| `dev/elasticsearch`, `dev/keycloak`, `dev/observability`, `dev/atlas-reference` | Development infrastructure                                      |
+
+Each project documents itself in its `README.md` and `AGENTS.md`; `npx nx graph` shows how they fit
+together.
 
 ## Following the template
 

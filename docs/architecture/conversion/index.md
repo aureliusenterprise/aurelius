@@ -36,7 +36,7 @@ Status values: _planned_, _in progress_, _in review_, _done_.
 | 0.2 | Elasticsearch infrastructure    | `dev/elasticsearch`, store library skeleton, health check                           | –                                              | in review |
 | 0.3 | Test report and traceability    | `covers` marker, function-to-test checker, HTML test report in CI                   | –                                              | in review |
 | 0.4 | Parity harness                  | Reference Atlas container, scenario format, recorder, normaliser, replay            | –                                              | in review |
-| 0.5 | Server and dashboard skeleton   | Admin version/session/status endpoints, dashboard served; template examples removed | `AdminResource` (part)                         | planned   |
+| 0.5 | Server and dashboard skeleton   | Admin version/session/status endpoints, dashboard served; template examples removed | `AdminResource` (part)                         | in review |
 | 1.1 | Typedef models                  | Enum, struct, classification, entity, relationship, business-metadata definitions   | `intg/.../model/typedef`                       | planned   |
 | 1.2 | Type registry                   | Attribute types, supertypes, constraints, validation errors                         | `AtlasTypeRegistry`, `AtlasStructType`, …      | planned   |
 | 1.3 | Typedef storage and bootstrap   | Typedef index, built-in models at start-up, typedef versions                        | `AtlasTypeDefGraphStore`, model patches        | planned   |

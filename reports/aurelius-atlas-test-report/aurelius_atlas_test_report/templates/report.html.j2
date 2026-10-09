@@ -69,7 +69,9 @@ pre { white-space: pre-wrap; margin: 4px 0 0; color: var(--muted); }
   {% if t.failed %}{{ t.failed }} failing test{{ "s" if t.failed != 1 }}. {% endif %}
   {% if t.functions_covered < t.functions %}{{ t.functions - t.functions_covered }} untested function{{ "s" if t.functions - t.functions_covered != 1 }}. {% endif %}
   {% if t.rules_covered < t.rules %}{{ t.rules - t.rules_covered }} untested rule{{ "s" if t.rules - t.rules_covered != 1 }}. {% endif %}
-  {% if t.parity_matches < t.parity_steps %}{{ t.parity_steps - t.parity_matches }} parity difference{{ "s" if t.parity_steps - t.parity_matches != 1 }}.{% endif %}
+  {% set differing = t.parity_steps - t.parity_matches - t.parity_unrecorded %}
+  {% if differing %}{{ differing }} parity difference{{ "s" if differing != 1 }}. {% endif %}
+  {% if t.parity_unrecorded %}{{ t.parity_unrecorded }} parity step{{ "s" if t.parity_unrecorded != 1 }} not recorded from the reference yet.{% endif %}
 </div>
 {% endif %}
 

@@ -1,0 +1,28 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "implicitDependencies": ["aurelius-atlas-parity", "aurelius-atlas-store-es", "aurelius-dev-elasticsearch"],
+    "name": "aurelius-atlas-server",
+    "projectType": "application",
+    "sourceRoot": "{projectRoot}/aurelius_atlas_server",
+    "tags": [],
+    "targets": {
+        "record-parity": {
+            "cache": false,
+            "executor": "nx:run-commands",
+            "metadata": {
+                "description": "Record parity fixtures from the reference Atlas (nx up aurelius-dev-atlas-reference first)"
+            },
+            "options": {
+                "command": "uv run python -m aurelius_atlas_parity record --scenarios tests/parity/scenarios --fixtures tests/parity/fixtures --rules tests/parity/normalisation.yaml",
+                "cwd": "{projectRoot}"
+            }
+        },
+        "serve": {
+            "continuous": true,
+            "dependsOn": [{ "target": "decrypt" }, { "projects": ["aurelius-dev-elasticsearch"], "target": "up" }],
+            "executor": "@nxlv/python:run-commands",
+            "metadata": { "description": "Serve the Atlas API on http://localhost:21000" },
+            "options": { "command": "uv run python -m aurelius_atlas_server", "cwd": "{projectRoot}" }
+        }
+    }
+}

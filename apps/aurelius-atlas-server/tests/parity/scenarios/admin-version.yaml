@@ -1,0 +1,7 @@
+name: admin-version
+description: The version endpoint names the Atlas release whose API is served.
+steps:
+    - name: version
+      request: { method: GET, path: /api/atlas/admin/version }
+      deviations:
+          - { path: "$.Revision", id: DV-03 }

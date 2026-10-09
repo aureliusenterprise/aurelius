@@ -1,0 +1,10 @@
+name: aurelius-atlas-dashboard
+
+# Runs the dashboard image against a server running on the host (nx serve aurelius-atlas-server).
+services:
+    dashboard:
+        image: ghcr.io/aureliusenterprise/aurelius-atlas-dashboard:local
+        ports:
+            - "8081:8080"
+        extra_hosts:
+            - "aurelius-atlas-server:host-gateway"

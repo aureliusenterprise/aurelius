@@ -82,24 +82,15 @@ nav:
           - api-reference/index.md
           - Apps:
                 - api-reference/apps/index.md
-                - aurelius-fastapi-example: api-reference/apps/aurelius-fastapi-example.md
-                - aurelius-frontend-example: api-reference/apps/aurelius-frontend-example.md
+                - aurelius-atlas-server: api-reference/apps/aurelius-atlas-server.md
           - Libs:
                 - api-reference/libs/index.md
-                - Angular:
-                      - api-reference/libs/angular/index.md
-                      - aurelius-data-access: api-reference/libs/angular/aurelius-data-access.md
-                      - aurelius-ui: api-reference/libs/angular/aurelius-ui.md
                 - Python:
                       - api-reference/libs/python/index.md
                       - aurelius-atlas-parity: api-reference/libs/python/aurelius-atlas-parity.md
                       - aurelius-atlas-store-es: api-reference/libs/python/aurelius-atlas-store-es.md
                       - aurelius-atlas-testing: api-reference/libs/python/aurelius-atlas-testing.md
-                      - aurelius-example: api-reference/libs/python/aurelius-example.md
                       - aurelius-sdk: api-reference/libs/python/aurelius-sdk.md
-                - Styles:
-                      - api-reference/libs/styles/index.md
-                      - aurelius-brand: api-reference/libs/styles/aurelius-brand.md
     - Architecture:
           - architecture/index.md
           - Architecture Decisions:
@@ -168,6 +159,7 @@ nav:
                       - 0.2 Elasticsearch infrastructure: architecture/conversion/increments/0-2-elasticsearch.md
                       - 0.3 Test report and traceability: architecture/conversion/increments/0-3-test-report.md
                       - 0.4 Parity harness: architecture/conversion/increments/0-4-parity-harness.md
+                      - 0.5 Server and dashboard skeleton: architecture/conversion/increments/0-5-server-dashboard.md
           - Vision & Strategy:
                 - architecture/vision-and-strategy/index.md
                 - Mission Statement: architecture/vision-and-strategy/mission-statement.md

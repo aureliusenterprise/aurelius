@@ -2,20 +2,6 @@
     "$schema": "./node_modules/nx/schemas/nx-schema.json",
     "analytics": false,
     "defaultBase": "main",
-    "generators": {
-        "@nx/angular:application": {
-            "linter": "eslint",
-            "style": "scss",
-            "unitTestRunner": "vitest-analog"
-        },
-        "@nx/angular:component": {
-            "style": "scss"
-        },
-        "@nx/angular:library": {
-            "linter": "eslint",
-            "unitTestRunner": "vitest-analog"
-        }
-    },
     "namedInputs": {
         "default": ["{projectRoot}/**/*"],
         "production": ["default", "!{projectRoot}/src/test/**/*"]
@@ -55,31 +41,9 @@
         }
     },
     "targetDefaults": {
-        "@angular/build:application": {
-            "cache": true,
-            "dependsOn": ["^build"],
-            "inputs": ["default", "^default"]
-        },
-        "@nx/angular:ng-packagr-lite": {
-            "cache": true,
-            "dependsOn": ["^build"],
-            "inputs": ["default", "^default"]
-        },
-        "@nx/angular:unit-test": {
-            "cache": true,
-            "inputs": ["default", "^default"]
-        },
         "@nx/eslint:lint": {
             "cache": true,
             "inputs": ["default", "{workspaceRoot}/eslint.config.mjs"]
-        },
-        "@nx/vitest:test": {
-            "cache": true,
-            "inputs": ["default", "^default"]
-        },
-        "build-storybook": {
-            "cache": true,
-            "inputs": ["default", "^default", "{projectRoot}/.storybook/**/*", "{projectRoot}/tsconfig.storybook.json"]
         }
     }
 }

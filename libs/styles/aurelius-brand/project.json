@@ -1,9 +1,0 @@
-{
-    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-    "name": "aurelius-styles",
-    "prefix": "aurelius-styles",
-    "projectType": "library",
-    "sourceRoot": "libs/styles/src",
-    "tags": [],
-    "targets": {}
-}
