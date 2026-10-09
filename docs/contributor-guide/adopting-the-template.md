@@ -1,5 +1,15 @@
 # Adopting This Template
 
+!!! NOTE "How this repository adopted the template"
+
+    Aurelius Atlas was created from the template on 2026-10-09 by increment 0.1 of the conversion
+    (see [Conversion](../architecture/conversion/index.md)). It stays inside the Aurelius Enterprise
+    organisation, so the `aurelius` identity and the secrets trust root (Case A below) were kept.
+    The Kafka streaming and AWS Lambda slices, the Java libraries and the Gradle build were removed
+    ([ADR 050](../architecture/adr/050-the-system-carries-only-what-the-catalogue-needs.md)); the
+    repository and docs site were renamed to `aurelius-atlas`. Sections below that name removed
+    projects describe the template, not this repository.
+
 This repository is a template: a working reference architecture meant to be forked and renamed for your own
 project. This guide is the checklist for that transition — what to rename, how to re-found the secrets trust,
 and what to expect on the first run.

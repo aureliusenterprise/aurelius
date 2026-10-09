@@ -15,8 +15,6 @@
         "build": true,
         "node_modules": true
     },
-    "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "automatic",
     "python.analysis.typeCheckingMode": "standard",
     "python.testing.pytestEnabled": true,
     "python.testing.unittestEnabled": false,

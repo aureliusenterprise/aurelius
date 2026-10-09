@@ -1,6 +1,11 @@
 # Workspace Context
 
-This is the **Aurelius Project Template** — a polyglot monorepo for bootstrapping enterprise microservice projects.
+This is **Aurelius Atlas** — a Python re-implementation of Apache Atlas that keeps the
+Atlas REST API and the original Atlas dashboard, and stores everything in Elasticsearch 9.
+It was adopted from the Aurelius Project Template; the template's rules below still apply.
+
+The conversion from Java proceeds in **increments**. Before writing Atlas code, read
+[Conversion Workflow](#conversion-workflow) and the ledger in `docs/architecture/conversion/`.
 
 This file covers **workspace-wide** rules only. Every project has its own
 colocated `AGENTS.md` (wiring, conventions, removal) and `README.md` (what it
@@ -9,9 +14,9 @@ there is no central index.
 
 ## Quick Start
 
-1. **Install dependencies**: `npm ci` (root) + `uv sync` + `./gradlew dependencies` (Java)
+1. **Install dependencies**: `npm ci` (root) + `uv sync`
 2. **Run an app**: `npx nx serve <project>` — required dev infrastructure (Keycloak, Postgres,
-   Kafka, observability) starts automatically via target `dependsOn`; there is no root compose file.
+   observability) starts automatically via target `dependsOn`; there is no root compose file.
 3. **Run pre-commit**: `pre-commit run --all-files` (fix any issues)
 4. **Verify**: `nx run-many --target=test -c ci` (or target a specific project)
 
@@ -57,13 +62,13 @@ change.
 
 ## Tech Stack
 
-Versions live in `package.json`, `pyproject.toml`, `gradle/libs.versions.toml`, and
+Versions live in `package.json`, `pyproject.toml`, and
 `.devcontainer/devcontainer.json` — don't copy them into docs.
 
-- **Monorepo tool**: Nx + Gradle (Java) + uv (Python workspace)
-- **Languages**: TypeScript (Angular), Python, Java
+- **Monorepo tool**: Nx + uv (Python workspace)
+- **Languages**: Python, TypeScript (Angular)
 - **Frontend**: Angular, SCSS, Storybook, Vitest
-- **Backend**: FastAPI, AWS Lambda, Kafka (Confluent), SQLAlchemy/SQLModel
+- **Backend**: FastAPI, SQLAlchemy/SQLModel (template examples)
 - **Infra**: Docker, Postgres, Keycloak, observability stack (Prometheus/Grafana/Tempo)
 - **Quality**: ESLint, Ruff, Prettier, SonarQube, pre-commit hooks
 - **Docs**: Zensical (Material design) with mkdocstrings
@@ -80,22 +85,17 @@ The **spine** (keep this): `aurelius-frontend-example`, `aurelius-fastapi-exampl
 `libs/python/aurelius-sdk`, `libs/angular/*`, `dev/postgres`, `dev/keycloak`, `dev/observability`,
 plus the workflow (CI, pre-commit, SBOM, docs, release).
 
-**Optional slices** (each owns its infra project and env keys; removable together with it):
-
-| Slice           | Projects                                                                                                                                           | Infra                                          |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| Kafka streaming | `aurelius-java-producer-example`, `aurelius-node-red-example`, `libs/python/aurelius-kafka`, `connectors/aurelius-kafka-connect-jdbc-sink-example` | `dev/kafka`                                    |
-| AWS Lambda      | `aurelius-aws-lambda-example`, `libs/python/aurelius-aws-lambda`                                                                                   | `dev/kafka`, `docker/aurelius-aws-lambda-base` |
+**Optional slices**: none at the moment. The template's Kafka streaming and AWS Lambda
+slices and its Java tooling were removed when the template was adopted (ADR 050).
 
 When removing a slice, update all of: root `pyproject.toml` (uv members, dev groups, uv.sources),
-`settings.gradle.kts`, `implicitDependencies`/`dependsOn` in `project.json` files, `.env` keys,
+`implicitDependencies`/`dependsOn` in `project.json` files, `.env` keys,
 and the `mkdocs.yaml` nav.
 
 ## Key Conventions
 
 - **Nx projects**: Each app/lib has a `project.json`. Use `nx <target> <project>` for builds, tests, lint.
 - **Python**: Uses `pyproject.toml` per package. venv at root `.venv/`. Ruff for lint/format, pytest for tests.
-- **Java**: Gradle with `settings.gradle.kts`. JDK via foojay-resolver.
 - **TypeScript**: ESLint + Prettier. Angular libraries use ng-packagr for publishing.
 - **Pre-commit**: Runs Prettier, ESLint, Ruff on all files. Always commit through pre-commit.
 - **Schemas**: Avro schemas in `schemas/avro/`. Pydantic-avro for serialization.
@@ -109,7 +109,6 @@ and the `mkdocs.yaml` nav.
 ```bash
 # Build
 nx run <project>:build
-./gradlew build          # Java
 
 # Test
 nx run <project>:test
@@ -125,7 +124,7 @@ npx nx serve <project>
 uv run zensical serve
 
 # Docker (per-project compose, e.g.)
-docker compose -f dev/kafka/docker-compose.yaml up -d
+docker compose -f dev/keycloak/docker-compose.yaml up -d
 ```
 
 ## Project Instructions
@@ -144,7 +143,6 @@ do not add central lists of projects or libraries to this file.
 - **Always run linters and type checkers** after making changes — do not assume they pass.
     - TypeScript/JavaScript: `nx run <project>:lint` (ESLint)
     - Python: `ruff check` / `ruff format`
-    - Java: Gradle check tasks
     - Markdown: markdownlint
     - SonarQube: code quality and security analysis
 - **Never commit code that fails lint or tests** — pre-commit hooks will block it anyway.
@@ -164,15 +162,13 @@ do not add central lists of projects or libraries to this file.
 - **Python**: pytest with `pytest-asyncio` for async tests. Test
   files use `test__*.py` convention. Run with `pytest` or
   `nx run <project>:test`.
-- **Java**: JUnit 5 via Gradle. Run with `./gradlew test` or
-  `nx run <project>:test`.
 
 ### End-to-End Tests
 
 - **Frontend**: Playwright (configured via `@nx/playwright`).
   Tests live in `e2e/` directory. Run with `nx run <project>:e2e`.
 - **Backend**: pytest-based E2E tests using `testcontainers` for
-  spinning up Postgres, Kafka, Keycloak, etc. Run with
+  spinning up Elasticsearch, Keycloak, etc. Run with
   `nx run <project>:e2e`.
 
 ### Test Conventions
@@ -183,12 +179,32 @@ do not add central lists of projects or libraries to this file.
     - Correct: `npx nx test <project> -c ci`
     - **Never** run `nx run <project>:test` without the `ci` configuration — it will hang in watch mode.
 - For Python tests, use `pytest` directly.
-- For Java tests, use `./gradlew test`.
 - Add tests for new logic — do not leave untested code paths.
 - For Python async tests, use `pytest-asyncio` with `@pytest.mark.asyncio`.
 - For backend E2E, prefer `testcontainers` over mocking infrastructure.
 - For frontend E2E, use Playwright's page object model and fixtures.
 - Test files should be co-located with source files (analog pattern) where possible.
+
+## Conversion Workflow
+
+Aurelius Atlas is built one **increment** at a time; the roadmap of increments is in
+`docs/architecture/conversion/index.md`. These rules apply to every change that ports
+Atlas behaviour (ADR 051):
+
+1. **Spec first.** An increment starts with a semantics spec in
+   `docs/architecture/conversion/increments/NN-<slug>.md` (copy `template.md` there). It names
+   the endpoints in scope, states each rule with an id (`ENT-07`), the Java classes being ported,
+   and any deliberate deviation from Java Atlas.
+2. **One increment per pull request**, roughly 1,500 changed lines of production code at most.
+   Split before coding when a slice is larger.
+3. **Every public function has a test that names it**, and every rule id has a test that names it,
+   via `@pytest.mark.covers("<dotted.path>", rules=["ENT-07"])` (ADR 049). CI fails otherwise.
+4. **Parity before acceptance.** REST behaviour is compared against recorded responses of the
+   reference Java Atlas (ADR 048). Fixtures are only re-recorded on purpose and reviewed as code.
+5. **Decisions are recorded where they are made.** Business-level decisions become ADRs;
+   technical ones become `DD-NNN` entries in `docs/architecture/conversion/design-log.md`.
+   Update `java-map.md` and `deviations.md` in the same PR. Never edit an accepted decision;
+   supersede it.
 
 <!-- nx configuration start-->
 <!-- markdownlint-disable -->

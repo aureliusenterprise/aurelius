@@ -1,8 +1,8 @@
-copyright: © 2025 Aurelius Enterprise
-repo_name: project-template
-repo_url: https://github.com/aureliusenterprise/project-template
-site_name: Aurelius Project Template
-site_url: https://aureliusenterprise.github.io/project-template
+copyright: © 2026 Aurelius Enterprise
+repo_name: aurelius-atlas
+repo_url: https://github.com/aureliusenterprise/aurelius-atlas
+site_name: Aurelius Atlas
+site_url: https://aureliusenterprise.github.io/aurelius-atlas
 
 theme:
     favicon: assets/favicon.ico
@@ -70,12 +70,6 @@ markdown_extensions:
 nav:
     - User Guide:
           - user-guide/index.md
-          - Design Guide:
-                - user-guide/design-guide/index.md
-                - Consumers: user-guide/design-guide/consumers.md
-                - Producers: user-guide/design-guide/producers.md
-                - Kafka Topics: user-guide/design-guide/kafka-topics.md
-                - Schemas: user-guide/design-guide/schemas.md
     - Contributor Guide:
           - contributor-guide/index.md
           - Development Environment: contributor-guide/development-environment.md
@@ -88,31 +82,17 @@ nav:
           - api-reference/index.md
           - Apps:
                 - api-reference/apps/index.md
-                - aurelius-aws-lambda-example: api-reference/apps/aurelius-aws-lambda-example.md
                 - aurelius-fastapi-example: api-reference/apps/aurelius-fastapi-example.md
                 - aurelius-frontend-example: api-reference/apps/aurelius-frontend-example.md
-                - aurelius-java-producer-example: api-reference/apps/aurelius-java-producer-example.md
-                - aurelius-node-red-example: api-reference/apps/aurelius-node-red-example.md
-          - Connectors:
-                - api-reference/connectors/index.md
-                - aurelius-kafka-connect-jdbc-sink-example: api-reference/connectors/aurelius-kafka-connect-jdbc-sink-example.md
-          - Docker:
-                - api-reference/docker/index.md
-                - aurelius-aws-lambda-base: api-reference/docker/aurelius-aws-lambda-base.md
           - Libs:
                 - api-reference/libs/index.md
                 - Angular:
                       - api-reference/libs/angular/index.md
                       - aurelius-data-access: api-reference/libs/angular/aurelius-data-access.md
                       - aurelius-ui: api-reference/libs/angular/aurelius-ui.md
-                - Java:
-                      - api-reference/libs/java/index.md
-                      - aurelius-java-example: api-reference/libs/java/aurelius-java-example.md
                 - Python:
                       - api-reference/libs/python/index.md
-                      - aurelius-aws-lambda: api-reference/libs/python/aurelius-aws-lambda.md
                       - aurelius-example: api-reference/libs/python/aurelius-example.md
-                      - aurelius-kafka: api-reference/libs/python/aurelius-kafka.md
                       - aurelius-sdk: api-reference/libs/python/aurelius-sdk.md
                 - Styles:
                       - api-reference/libs/styles/index.md
@@ -167,6 +147,21 @@ nav:
                 - 043. AI-assisted review informs the two signatures: architecture/adr/043-ai-assisted-review-informs-the-signatures-it-does-not-replace-them.md
                 - 044. Every change carries two human signatures: architecture/adr/044-every-change-carries-two-human-signatures.md
                 - 045. Conventions are borrowed before they are invented: architecture/adr/045-conventions-are-borrowed-before-they-are-invented.md
+                - 046. The catalogue keeps its public contract: architecture/adr/046-the-catalogue-keeps-its-public-contract.md
+                - 047. One search store is the system of record: architecture/adr/047-one-search-store-is-the-system-of-record.md
+                - 048. Behaviour is proven against the reference: architecture/adr/048-behaviour-is-proven-against-the-reference-before-it-is-accepted.md
+                - 049. Every function and rule is traceable to a test: architecture/adr/049-every-function-and-rule-is-traceable-to-a-test.md
+                - 050. The system carries only what the catalogue needs: architecture/adr/050-the-system-carries-only-what-the-catalogue-needs.md
+                - 051. The conversion proceeds in specified increments: architecture/adr/051-the-conversion-proceeds-in-specified-increments.md
+          - Conversion:
+                - architecture/conversion/index.md
+                - Design Log: architecture/conversion/design-log.md
+                - Java to Python Map: architecture/conversion/java-map.md
+                - Deviations from Apache Atlas: architecture/conversion/deviations.md
+                - Increments:
+                      - architecture/conversion/increments/index.md
+                      - Specification Template: architecture/conversion/increments/template.md
+                      - 0.1 Adopt the template: architecture/conversion/increments/0-1-adopt-template.md
           - Vision & Strategy:
                 - architecture/vision-and-strategy/index.md
                 - Mission Statement: architecture/vision-and-strategy/mission-statement.md
@@ -278,7 +273,7 @@ extra:
     generator: false
     social:
         - icon: fontawesome/brands/github
-          link: https://github.com/aureliusenterprise/project-template
+          link: https://github.com/aureliusenterprise/aurelius-atlas
     version:
         alias: true
         provider: mike

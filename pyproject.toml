@@ -1,5 +1,5 @@
 [project]
-name = "aurelius-project-template"
+name = "aurelius-atlas"
 readme = "docs/README.md"
 requires-python = ">=3.14"
 version = "0.6.0"
@@ -9,17 +9,12 @@ name = "Aurelius Enterprise"
 
 [dependency-groups]
 dev = [
-    "aurelius-aws-lambda",
-    "aurelius-aws-lambda-example",
     "aurelius-example",
     "aurelius-fastapi-example",
-    "aurelius-kafka",
     "aurelius-license-report",
     "aurelius-sdk[full]",
     "aurelius-vulnerability-report",
     "alembic>=1.18",
-    "boto3>=1.43",
-    "confluent-kafka[avro,schema-registry]>=2.14",
     "mike",
     "mkdocstrings>=1.0",
     "mkdocstrings-python>=2.0",
@@ -45,7 +40,6 @@ dev = [
     "tenacity>=9.1.2",
     "testcontainers>=4.14",
     "timeout-decorator>=0.5.0",
-    "types-boto3[full]>=1.43",
     "zensical>=0.0.68",
     "griffe-pydantic>=1.3.2",
 ]
@@ -104,19 +98,10 @@ runtime-evaluated-decorators = ["pydantic.validate_call", "attrs.define"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
-[tool.uv.sources.aurelius-aws-lambda]
-workspace = true
-
-[tool.uv.sources.aurelius-aws-lambda-example]
-workspace = true
-
 [tool.uv.sources.aurelius-example]
 workspace = true
 
 [tool.uv.sources.aurelius-fastapi-example]
-workspace = true
-
-[tool.uv.sources.aurelius-kafka]
 workspace = true
 
 [tool.uv.sources.aurelius-license-report]
@@ -130,13 +115,8 @@ workspace = true
 
 [tool.uv.workspace]
 members = [
-    "apps/aurelius-aws-lambda-example",
     "apps/aurelius-fastapi-example",
-    "connectors/aurelius-kafka-connect-jdbc-sink-example",
-    "docker/aurelius-aws-lambda-base",
-    "libs/python/aurelius-aws-lambda",
     "libs/python/aurelius-example",
-    "libs/python/aurelius-kafka",
     "libs/python/aurelius-sdk",
     "reports/aurelius-license-report",
     "reports/aurelius-vulnerability-report",

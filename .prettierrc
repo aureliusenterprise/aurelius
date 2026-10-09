@@ -8,7 +8,7 @@
             }
         }
     ],
-    "plugins": ["prettier-plugin-java", "prettier-plugin-sort-json", "prettier-plugin-toml"],
+    "plugins": ["prettier-plugin-sort-json", "prettier-plugin-toml"],
     "printWidth": 120,
     "proseWrap": "preserve",
     "reorderKeys": true,

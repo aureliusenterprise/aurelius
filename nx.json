@@ -36,14 +36,6 @@
                 "targetName": "eslint:lint"
             },
             "plugin": "@nx/eslint/plugin"
-        },
-        {
-            "options": {
-                "buildTargetName": "build",
-                "classesTargetName": "classes",
-                "testTargetName": "test"
-            },
-            "plugin": "@nx/gradle"
         }
     ],
     "release": {

@@ -24,7 +24,6 @@ repos:
             name: Format code with Prettier
             additional_dependencies:
                 - prettier@3.8.3
-                - prettier-plugin-java@2.8.1
                 - prettier-plugin-sort-json@4.1.1
                 - prettier-plugin-toml@2.0.6
 

@@ -53,7 +53,6 @@ jobs:
               uses: ./.github/actions/setup-toolchain
               with:
                   sops: "true"
-                  java: "true"
                   python: "true"
                   node: "true"
                   playwright: "true"
@@ -116,7 +115,6 @@ jobs:
               uses: ./.github/actions/setup-toolchain
               with:
                   sops: "true"
-                  java: "true"
                   python: "true"
                   node: "true"
                   cosign: "true"
@@ -160,7 +158,6 @@ jobs:
               uses: ./.github/actions/setup-toolchain
               with:
                   sops: "true"
-                  java: "true"
                   node: "true"
                   sonarqube: "true"
 
@@ -202,7 +199,6 @@ jobs:
               uses: ./.github/actions/setup-toolchain
               with:
                   sops: "true"
-                  java: "true"
                   node: "true"
 
             - name: Run Chromatic

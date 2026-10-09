@@ -1,19 +1,23 @@
-# Aurelius Project Template
+# Aurelius Atlas
 
-A polyglot monorepo template for enterprise microservice projects: a working reference architecture,
-running examples, and the delivery workflow (CI, quality gates, SBOM, docs, release) that surrounds them.
-It is designed to be forked, renamed, and stripped down to the slices your project actually needs.
+A Python re-implementation of [Apache Atlas](https://atlas.apache.org): the same REST API and the same
+dashboard, with Elasticsearch 9 as the only backend instead of JanusGraph, HBase and Solr. The Java
+code base is converted in small, reviewed increments, each proven against the reference Java Atlas.
 
-| Layer    | Technology                                                    |
-| -------- | ------------------------------------------------------------- |
-| Monorepo | Nx, uv (Python workspace), Gradle (Java)                      |
-| Frontend | Angular, SCSS, Storybook, Vitest                              |
-| Backend  | Python (FastAPI, AWS Lambda), Java (Kafka producer)           |
-| Data     | Kafka + Schema Registry (Avro), Postgres, SQLAlchemy/SQLModel |
-| Infra    | Docker Compose, Keycloak, Prometheus/Grafana/Tempo/Loki       |
-| Quality  | ESLint, Ruff, pyright, Prettier, SonarQube, pre-commit        |
-| Security | SOPS-encrypted secrets, CycloneDX SBOM, cosign signing        |
-| Docs     | Zensical with per-project API references                      |
+| Layer    | Technology                                                         |
+| -------- | ------------------------------------------------------------------ |
+| Monorepo | Nx, uv (Python workspace)                                          |
+| Frontend | The original Apache Atlas dashboard, served unchanged              |
+| Backend  | Python (FastAPI)                                                   |
+| Data     | Elasticsearch 9                                                    |
+| Infra    | Docker Compose, Keycloak, Prometheus/Grafana/Tempo/Loki            |
+| Quality  | Ruff, pyright, Prettier, SonarQube, pre-commit, traceability check |
+| Security | SOPS-encrypted secrets, CycloneDX SBOM, cosign signing             |
+| Docs     | Zensical with per-project API references                           |
+
+The conversion plan, its increments and every design decision live in
+[`docs/architecture/conversion/`](docs/architecture/conversion/index.md). This repository was adopted
+from the Aurelius Project Template and keeps its history, so template updates can still be merged.
 
 All toolchain versions are pinned in the development container and the dependency manifests — there is
 nothing to install by hand beyond Docker and VS Code.
@@ -46,24 +50,22 @@ nothing to install by hand beyond Docker and VS Code.
     - Every `serve`/`test`/`e2e` target first decrypts the project's `.env.enc` secrets; without a
       registered key you get a SOPS/age decryption error, not a code failure.
     - Unit tests need only that decryption; `e2e` targets additionally build Docker images and start real
-      services (Postgres, Kafka, Keycloak), so they need the container runtime.
+      services (Elasticsearch, Keycloak), so they need the container runtime.
     - Always pass `-c ci` to test targets — without it they run in watch mode and never exit.
 
 ## What is in the box
 
-The repository is a monorepo of small, removable slices: an Angular frontend, a FastAPI backend, an AWS
-Lambda consumer, a Java Kafka producer, a Node-RED flow, and a Kafka Connect sink — all exchanging one
-shared Avro event, backed by local development infrastructure (Postgres, Keycloak, Kafka, observability).
-The [Development Environment](docs/contributor-guide/development-environment.md) guide walks through the
+Today the repository still carries the template's spine examples (an Angular frontend, a FastAPI backend,
+Postgres) next to the Atlas projects as they are added; the examples leave once the Atlas server and
+dashboard replace them (increment 0.5). The
+[Development Environment](docs/contributor-guide/development-environment.md) guide walks through the
 directory layout, and `npx nx graph` visualizes how the projects fit together.
 
-## Adopting this template for your project
+## Following the template
 
-Fork, then work through the
-[Adopting the Template](docs/contributor-guide/adopting-the-template.md) guide: it is the rename checklist
-for every hardcoded identity in the repository and the runbook for re-founding the secrets trust with your
-own team's keys. Example slices you do not need can be removed as whole units — each project directory
-documents its own removal steps.
+Template updates are merged from the `template` remote. The
+[Adopting the Template](docs/contributor-guide/adopting-the-template.md) guide records what was renamed
+and removed when this repository was created.
 
 ## Documentation
 
