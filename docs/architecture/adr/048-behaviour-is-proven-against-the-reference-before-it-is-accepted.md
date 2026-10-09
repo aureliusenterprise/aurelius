@@ -1,6 +1,7 @@
 # 048. Behaviour is proven against the reference implementation before it is accepted
 
-- **Status:** Proposed (becomes Accepted when increment 0.4 provides the parity harness)
+- **Status:** Proposed (the harness exists since increment 0.4; becomes Accepted when the first fixture
+  recorded from the reference is replayed in CI)
 - **Date:** 2026-10-09
 - **Deciders:** Aurelius Enterprise
 

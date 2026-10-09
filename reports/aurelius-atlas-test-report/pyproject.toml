@@ -1,5 +1,5 @@
 [project]
-dependencies = ["aurelius-atlas-testing", "jinja2>=3.1.6", "pydantic>=2.13.5"]
+dependencies = ["aurelius-atlas-parity", "aurelius-atlas-testing", "jinja2>=3.1.6", "pydantic>=2.13.5"]
 description = "The workspace test report of Aurelius Atlas: results, traceability, parity and coverage in one page."
 name = "aurelius-atlas-test-report"
 requires-python = ">=3.14"
@@ -15,6 +15,9 @@ packages = ["aurelius_atlas_test_report"]
 asyncio_default_fixture_loop_scope = "module"
 asyncio_mode = "auto"
 required_plugins = ["pytest-asyncio"]
+
+[tool.uv.sources.aurelius-atlas-parity]
+workspace = true
 
 [tool.uv.sources.aurelius-atlas-testing]
 workspace = true

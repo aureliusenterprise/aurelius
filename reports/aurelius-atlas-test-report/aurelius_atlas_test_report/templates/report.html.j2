@@ -56,7 +56,7 @@ pre { white-space: pre-wrap; margin: 4px 0 0; color: var(--muted); }
 {% macro status(value) %}
 {% if value in ("covered", "passed", "match") %}<span class="badge good">{{ value }}</span>
 {% elif value in ("failing", "failed", "mismatch", "error", "uncovered") %}<span class="badge bad">{{ value }}</span>
-{% elif value in ("skipped", "deviation", "not run") %}<span class="badge warn">{{ value }}</span>
+{% elif value in ("skipped", "deviation", "not run", "not recorded") %}<span class="badge warn">{{ value }}</span>
 {% else %}<span class="badge info">{{ value }}</span>{% endif %}
 {% endmacro %}
 <h1>Aurelius Atlas test report</h1>

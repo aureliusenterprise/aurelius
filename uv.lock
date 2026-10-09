@@ -5,6 +5,7 @@ requires-python = ">=3.14"
 [manifest]
 members = [
     "aurelius-atlas",
+    "aurelius-atlas-parity",
     "aurelius-atlas-store-es",
     "aurelius-atlas-test-report",
     "aurelius-atlas-testing",
@@ -216,6 +217,7 @@ source = { virtual = "." }
 [package.dev-dependencies]
 dev = [
     { name = "alembic" },
+    { name = "aurelius-atlas-parity" },
     { name = "aurelius-atlas-store-es", extra = ["testing"] },
     { name = "aurelius-atlas-test-report" },
     { name = "aurelius-atlas-testing" },
@@ -258,6 +260,7 @@ dev = [
 [package.metadata.requires-dev]
 dev = [
     { name = "alembic", specifier = ">=1.18" },
+    { name = "aurelius-atlas-parity", editable = "libs/python/aurelius-atlas-parity" },
     { name = "aurelius-atlas-store-es", extras = ["testing"], editable = "libs/python/aurelius-atlas-store-es" },
     { name = "aurelius-atlas-test-report", editable = "reports/aurelius-atlas-test-report" },
     { name = "aurelius-atlas-testing", editable = "libs/python/aurelius-atlas-testing" },
@@ -296,6 +299,25 @@ dev = [
 ]
 
 [[package]]
+name = "aurelius-atlas-parity"
+version = "0.6.0"
+source = { editable = "libs/python/aurelius-atlas-parity" }
+dependencies = [
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "pytest" },
+    { name = "pyyaml" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pydantic", specifier = ">=2.13.5" },
+    { name = "pytest", specifier = ">=8.4.1" },
+    { name = "pyyaml", specifier = ">=6.0.2" },
+]
+
+[[package]]
 name = "aurelius-atlas-store-es"
 version = "0.6.0"
 source = { editable = "libs/python/aurelius-atlas-store-es" }
@@ -324,6 +346,7 @@ name = "aurelius-atlas-test-report"
 version = "0.6.0"
 source = { editable = "reports/aurelius-atlas-test-report" }
 dependencies = [
+    { name = "aurelius-atlas-parity" },
     { name = "aurelius-atlas-testing" },
     { name = "jinja2" },
     { name = "pydantic" },
@@ -331,6 +354,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "aurelius-atlas-parity", editable = "libs/python/aurelius-atlas-parity" },
     { name = "aurelius-atlas-testing", editable = "libs/python/aurelius-atlas-testing" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "pydantic", specifier = ">=2.13.5" },

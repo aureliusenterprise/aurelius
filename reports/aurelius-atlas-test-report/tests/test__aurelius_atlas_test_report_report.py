@@ -22,7 +22,7 @@ from aurelius_atlas_testing.inventory import ApiItem
 from aurelius_atlas_testing.specs import Rule
 
 
-@pytest.mark.covers("aurelius_atlas_test_report.parity.read_parity", rules=["TRC-10"])
+@pytest.mark.covers("aurelius_atlas_parity.results.read_parity", rules=["TRC-10"])
 def test__read_parity(workspace: Path) -> None:
     """Parity files are read with their per-step status."""
     (run,) = read_parity([workspace / "libs/aurelius-atlas-x/parity-results.json"])

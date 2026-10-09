@@ -1,0 +1,33 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "name": "aurelius-dev-atlas-reference",
+    "projectType": "application",
+    "tags": [],
+    "targets": {
+        "build-atlas": {
+            "cache": false,
+            "command": "./reference.sh build",
+            "dependsOn": ["prepare"],
+            "metadata": { "description": "Build Apache Atlas 2.4.0 from source in Docker (takes up to an hour)" },
+            "options": { "cwd": "{projectRoot}" }
+        },
+        "down": {
+            "cache": false,
+            "command": "./reference.sh down",
+            "metadata": { "description": "Stop the reference Atlas" },
+            "options": { "cwd": "{projectRoot}" }
+        },
+        "prepare": {
+            "cache": false,
+            "command": "./reference.sh prepare",
+            "metadata": { "description": "Clone Apache Atlas 2.4.0 and download the archives its Docker set-up needs" },
+            "options": { "cwd": "{projectRoot}" }
+        },
+        "up": {
+            "cache": false,
+            "command": "./reference.sh up",
+            "metadata": { "description": "Start the reference Atlas and its services; waits until it answers" },
+            "options": { "cwd": "{projectRoot}" }
+        }
+    }
+}

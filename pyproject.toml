@@ -9,6 +9,7 @@ name = "Aurelius Enterprise"
 
 [dependency-groups]
 dev = [
+    "aurelius-atlas-parity",
     "aurelius-atlas-store-es[testing]",
     "aurelius-atlas-test-report",
     "aurelius-atlas-testing",
@@ -106,6 +107,9 @@ runtime-evaluated-decorators = ["pydantic.validate_call", "attrs.define"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.uv.sources.aurelius-atlas-parity]
+workspace = true
+
 [tool.uv.sources.aurelius-atlas-store-es]
 workspace = true
 
@@ -132,6 +136,7 @@ workspace = true
 
 [tool.uv.workspace]
 members = [
+    "libs/python/aurelius-atlas-parity",
     "libs/python/aurelius-atlas-store-es",
     "libs/python/aurelius-atlas-testing",
     "apps/aurelius-fastapi-example",

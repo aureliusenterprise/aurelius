@@ -43,6 +43,8 @@ decisions are ADRs in [Architecture Decisions](../adr/index.md).
 | [DD-005](#dd-005-the-store-uses-the-asynchronous-client)                       | The store uses the asynchronous Elasticsearch client                      | 0.2       | Accepted |
 | [DD-006](#dd-006-what-must-be-named-by-a-test)                                 | What must be named by a test, and how a test names it                     | 0.3       | Accepted |
 | [DD-007](#dd-007-the-test-report-is-a-ci-artifact-with-a-job-summary)          | The test report is a CI artifact with a job summary                       | 0.3       | Accepted |
+| [DD-008](#dd-008-answers-are-normalised-and-recorded-not-compared-live)        | Answers are normalised and recorded, not compared live                    | 0.4       | Accepted |
+| [DD-009](#dd-009-the-reference-is-built-with-atlass-own-docker-set-up)         | The reference is built with Atlas's own Docker set-up                     | 0.4       | Accepted |
 
 ### DD-001. Reference is Apache Atlas 2.4.0, and both dashboards are served
 
@@ -205,3 +207,50 @@ needs write permissions.
 **Consequences.** The report covers the projects the run tested (`nx affected`); traceability always
 covers all projects because the check collects them. Comparison with `main` over time and docs-site
 publishing remain open; revisit when the parity suite makes runs long enough for trends to matter.
+
+### DD-008. Answers are normalised and recorded, not compared live
+
+- **Status:** Accepted
+- **Increment:** 0.4
+- **Date:** 2026-10-09
+
+**Decision.** A parity scenario is a YAML list of HTTP steps. The reference's answers are recorded once
+into a key-sorted JSON fixture per scenario, after normalisation; tests send the same steps to Aurelius
+Atlas, normalise its answers the same way and compare. Normalisation removes ignored paths, masks
+timestamp values (`createTime`, `updateTime` by default), sorts lists declared unordered, and replaces
+every GUID — in values and object keys — by `<guid-N>`, numbered by first appearance across the
+scenario. Differences are allowed only at paths a step ties to a deviation id from `deviations.md`.
+
+**Reason.** Recorded fixtures make everyday runs independent of a heavy Java stack (ADR 048, R2) and
+show changes to expectations in review (R3). GUIDs and times necessarily differ between two servers;
+numbering GUIDs keeps the links between entities checkable instead of ignoring them. Tying allowances
+to deviation ids keeps every tolerated difference documented (ADR 046).
+
+**Alternatives.** Comparing live against a running reference on every run: exact but needs the reference
+everywhere. Storing raw answers and normalising at comparison time: fixtures would contain volatile
+values that change on every re-recording and drown real diffs in review. Ignoring GUIDs: hides wrong
+references, the most likely class of defects in a graph-free store.
+
+**Consequences.** Lists whose order is not guaranteed must be declared `unordered` per step; a list of
+entities with GUIDs inside is sorted with GUIDs masked first. A change of the reference version means
+re-recording every fixture.
+
+### DD-009. The reference is built with Atlas's own Docker set-up
+
+- **Status:** Accepted
+- **Increment:** 0.4
+- **Date:** 2026-10-09
+
+**Decision.** `dev/atlas-reference` clones the `release-2.4.0` tag and drives Atlas's own
+`dev-support/atlas-docker` (build in a container, then HBase, Solr, ZooKeeper, Kafka, HDFS and Atlas in
+containers) through `reference.sh`.
+
+**Reason.** Apache publishes Atlas only as source; there is no official image. Atlas's own set-up is
+maintained with the release, so it is the most faithful reference (ADR 045: borrow before inventing).
+
+**Alternatives.** A community image from Docker Hub: fast, but of unknown build and configuration, which
+undermines the reference's authority. Our own Dockerfile: duplicates Atlas's work and drifts.
+
+**Consequences.** The first build takes up to an hour and needs about 6 GB of memory; it is run by hand
+when recording, never in CI. The set-up was written but not yet run in the environment that produced
+increment 0.4; PAR-11 is verified by the first recording.
