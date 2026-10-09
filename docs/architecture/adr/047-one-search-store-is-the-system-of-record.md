@@ -1,6 +1,6 @@
 # 047. One search store is the only system of record for metadata
 
-- **Status:** Proposed (becomes Accepted when increment 0.2 provides the store in the spine)
+- **Status:** Accepted
 - **Date:** 2026-10-09
 - **Deciders:** Aurelius Enterprise
 

@@ -113,7 +113,7 @@
             "version": "0.71.0"
         }
     },
-    "forwardPorts": [4200, 4400, 8000, 8080],
+    "forwardPorts": [4200, 4400, 8000, 8080, 9200],
     "image": "mcr.microsoft.com/devcontainers/base:resolute",
     "name": "Aurelius Atlas",
     "onCreateCommand": {
@@ -134,6 +134,9 @@
         },
         "8080": {
             "label": "Keycloak"
+        },
+        "9200": {
+            "label": "Elasticsearch"
         }
     },
     "postCreateCommand": {

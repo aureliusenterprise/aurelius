@@ -38,6 +38,9 @@ decisions are ADRs in [Architecture Decisions](../adr/index.md).
 | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------- | --------- | -------- |
 | [DD-001](#dd-001-reference-is-apache-atlas-240-and-both-dashboards-are-served) | The reference is Apache Atlas 2.4.0; both dashboards are served unchanged | 0.1       | Accepted |
 | [DD-002](#dd-002-atlas-code-lives-in-aurelius-atlas-projects-split-by-layer)   | Atlas code lives in `aurelius-atlas-*` projects split by layer            | 0.1       | Accepted |
+| [DD-003](#dd-003-development-nodes-run-with-security-on-and-tls-off)           | Development and test nodes run with security on and TLS off               | 0.2       | Accepted |
+| [DD-004](#dd-004-every-index-is-named-prefix-kind)                             | Every index is named `<prefix>-<kind>`                                    | 0.2       | Accepted |
+| [DD-005](#dd-005-the-store-uses-the-asynchronous-client)                       | The store uses the asynchronous Elasticsearch client                      | 0.2       | Accepted |
 
 ### DD-001. Reference is Apache Atlas 2.4.0, and both dashboards are served
 
@@ -84,3 +87,68 @@ touches the same project and nothing can be tested in isolation. A package per J
 `repository`, `webapp`): mirrors history rather than the dependency structure we want.
 
 **Consequences.** Projects are created by the increment that first needs them, not up front.
+
+### DD-003. Development nodes run with security on and TLS off
+
+- **Status:** Accepted
+- **Increment:** 0.2
+- **Date:** 2026-10-09
+
+**Decision.** The dev node (`dev/elasticsearch`) and the component-test node run single-node with
+`xpack.security.enabled=true` (basic auth as `elastic`), HTTP and transport TLS off, and the disk
+allocation threshold off. Test start-up waits for a green cluster and three consecutive successful
+authentications.
+
+**Reason.** Security on keeps authentication paths (credentials, HTTP 401 handling) exercised from day
+one, as in production. TLS on a single local node adds certificate handling to every developer setup
+without testing anything we ship. Developer machines are often above Elasticsearch's 90% disk watermark,
+which silently leaves the security index unallocated so every login fails. Right after start-up the
+`elastic` user switches from the bootstrap password to the security index; requests in that window can
+fail with HTTP 401, which made component tests flaky until the readiness wait covered it.
+
+**Alternatives.** Security off in development: simpler, but authentication bugs would first appear in
+deployment. Full TLS with generated certificates: realistic but heavy for every developer and CI run.
+
+**Consequences.** These settings must never reach a deployment configuration; the deployment settings
+are decided with increment 6.4. Settings in `aurelius_atlas_store_es.testing.container_environment`
+and `dev/elasticsearch/docker-compose.yaml` must stay identical.
+
+### DD-004. Every index is named prefix-kind
+
+- **Status:** Accepted
+- **Increment:** 0.2
+- **Date:** 2026-10-09
+
+**Decision.** Every index this system creates is named `<index_prefix>-<kind>` through
+`aurelius_atlas_store_es.indices.index_name`; the prefix defaults to `atlas`, kinds are lower-case
+snake case.
+
+**Reason.** A configurable prefix lets several installations or test runs share one cluster and lets
+operators grant privileges by pattern (`atlas-*`). One function owning the rule means no module
+invents its own names.
+
+**Alternatives.** Fixed names: simplest, but test isolation and shared clusters become impossible.
+Data streams: designed for append-only time series, a fit for audit events only; can be adopted for
+that kind later without changing the rule for the others.
+
+**Consequences.** Index kinds are introduced by the increments that need them, each with its mapping
+recorded in a design-log entry.
+
+### DD-005. The store uses the asynchronous client
+
+- **Status:** Accepted
+- **Increment:** 0.2
+- **Date:** 2026-10-09
+
+**Decision.** All Elasticsearch access uses `AsyncElasticsearch` (with its aiohttp transport); store
+functions are `async`.
+
+**Reason.** The server is FastAPI, which serves requests on an event loop; synchronous I/O there blocks
+every concurrent request. Lineage and propagation (increments 3.4, 5.1) issue many queries per request
+and benefit from concurrency.
+
+**Alternatives.** The synchronous client in a thread pool: works, but hides blocking behind threads
+and makes concurrency limits harder to reason about.
+
+**Consequences.** Store and service code is async end to end; command-line tools call it with
+`asyncio.run`.

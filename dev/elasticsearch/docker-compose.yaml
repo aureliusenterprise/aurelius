@@ -1,0 +1,37 @@
+name: aurelius-dev-elasticsearch
+
+services:
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}
+        environment:
+            discovery.type: single-node
+            ELASTIC_PASSWORD: ${ELASTICSEARCH_PASSWORD}
+            xpack.security.enabled: "true"
+            # Development only: TLS is terminated nowhere on a single local node (DD-003).
+            xpack.security.http.ssl.enabled: "false"
+            xpack.security.transport.ssl.enabled: "false"
+            # Development machines are often above the 90% disk watermark; without this the
+            # security index is never allocated and every login fails (DD-003).
+            cluster.routing.allocation.disk.threshold_enabled: "false"
+            ES_JAVA_OPTS: -Xms${ELASTICSEARCH_HEAP} -Xmx${ELASTICSEARCH_HEAP}
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "curl -fs -u elastic:$${ELASTIC_PASSWORD} 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s' || exit 1",
+                ]
+            interval: 10s
+            timeout: 10s
+            retries: 30
+            start_period: 30s
+        ports:
+            - ${ELASTICSEARCH_PORT}:9200
+        volumes:
+            - data:/usr/share/elasticsearch/data
+
+networks:
+    default:
+        name: aurelius-dev-elasticsearch-network
+
+volumes:
+    data:

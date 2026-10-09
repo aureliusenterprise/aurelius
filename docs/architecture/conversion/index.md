@@ -33,7 +33,7 @@ Status values: _planned_, _in progress_, _in review_, _done_.
 | #   | Increment                       | Semantics in scope                                                                  | Java origin                                    | Status    |
 | --- | ------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------- | --------- |
 | 0.1 | Adopt the template              | Remove unused slices, rename, ADRs 046–051, this ledger                             | –                                              | in review |
-| 0.2 | Elasticsearch infrastructure    | `dev/elasticsearch`, store library skeleton, health check                           | –                                              | planned   |
+| 0.2 | Elasticsearch infrastructure    | `dev/elasticsearch`, store library skeleton, health check                           | –                                              | in review |
 | 0.3 | Test report and traceability    | `covers` marker, function-to-test checker, HTML test report in CI                   | –                                              | planned   |
 | 0.4 | Parity harness                  | Reference Atlas container, scenario format, recorder, normaliser, replay            | –                                              | planned   |
 | 0.5 | Server and dashboard skeleton   | Admin version/session/status endpoints, dashboard served; template examples removed | `AdminResource` (part)                         | planned   |

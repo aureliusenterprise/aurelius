@@ -9,6 +9,7 @@ name = "Aurelius Enterprise"
 
 [dependency-groups]
 dev = [
+    "aurelius-atlas-store-es[testing]",
     "aurelius-example",
     "aurelius-fastapi-example",
     "aurelius-license-report",
@@ -98,6 +99,9 @@ runtime-evaluated-decorators = ["pydantic.validate_call", "attrs.define"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.uv.sources.aurelius-atlas-store-es]
+workspace = true
+
 [tool.uv.sources.aurelius-example]
 workspace = true
 
@@ -115,6 +119,7 @@ workspace = true
 
 [tool.uv.workspace]
 members = [
+    "libs/python/aurelius-atlas-store-es",
     "apps/aurelius-fastapi-example",
     "libs/python/aurelius-example",
     "libs/python/aurelius-sdk",
