@@ -1,0 +1,194 @@
+{% set t = report.totals %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aurelius Atlas test report</title>
+<style>
+:root {
+  --bg: #f7f8fa; --card: #ffffff; --text: #1d2330; --muted: #5d6677; --line: #e3e6ec;
+  --good: #1a7f4b; --good-bg: #e3f4ea; --bad: #b42318; --bad-bg: #fde8e6;
+  --warn: #8a5a00; --warn-bg: #fff3d6; --info: #2f5bd3; --info-bg: #e7edfc;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151b; --card: #1a1e26; --text: #e6e9ef; --muted: #9aa3b2; --line: #2a303b;
+    --good: #5bd08f; --good-bg: #173326; --bad: #ff8a80; --bad-bg: #3a1c1a;
+    --warn: #f5c35b; --warn-bg: #3a2e14; --info: #8fb0ff; --info-bg: #1c2742;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); }
+main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 22px; margin: 0 0 4px; }
+h2 { font-size: 17px; margin: 32px 0 8px; }
+h3 { font-size: 15px; margin: 16px 0 6px; }
+.meta { color: var(--muted); margin: 0 0 20px; }
+code { font: 12.5px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.card .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.card .value { font-size: 24px; font-weight: 650; margin-top: 2px; }
+.card .sub { color: var(--muted); font-size: 12.5px; }
+.verdict { padding: 10px 14px; border-radius: 8px; font-weight: 600; margin-bottom: 16px; }
+table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+tr:last-child td { border-bottom: none; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.badge { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.good { color: var(--good); background: var(--good-bg); }
+.bad { color: var(--bad); background: var(--bad-bg); }
+.warn { color: var(--warn); background: var(--warn-bg); }
+.info { color: var(--info); background: var(--info-bg); }
+.muted { color: var(--muted); }
+details { background: var(--card); border: 1px solid var(--line); border-radius: 10px; margin: 8px 0; }
+details > summary { cursor: pointer; padding: 10px 14px; font-weight: 600; }
+details > table { border: none; border-top: 1px solid var(--line); border-radius: 0; }
+.tests { margin: 0; padding-left: 18px; }
+pre { white-space: pre-wrap; margin: 4px 0 0; color: var(--muted); }
+.wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<main>
+{% macro status(value) %}
+{% if value in ("covered", "passed", "match") %}<span class="badge good">{{ value }}</span>
+{% elif value in ("failing", "failed", "mismatch", "error", "uncovered") %}<span class="badge bad">{{ value }}</span>
+{% elif value in ("skipped", "deviation", "not run") %}<span class="badge warn">{{ value }}</span>
+{% else %}<span class="badge info">{{ value }}</span>{% endif %}
+{% endmacro %}
+<h1>Aurelius Atlas test report</h1>
+<p class="meta">Commit <code>{{ report.commit[:12] }}</code> · generated {{ report.generated }} UTC</p>
+
+{% if t.ok %}
+<div class="verdict good">Every test passed, every public function and rule is traced{% if t.parity_steps %}, and every parity step matches{% endif %}.</div>
+{% else %}
+<div class="verdict bad">
+  {% if t.failed %}{{ t.failed }} failing test{{ "s" if t.failed != 1 }}. {% endif %}
+  {% if t.functions_covered < t.functions %}{{ t.functions - t.functions_covered }} untested function{{ "s" if t.functions - t.functions_covered != 1 }}. {% endif %}
+  {% if t.rules_covered < t.rules %}{{ t.rules - t.rules_covered }} untested rule{{ "s" if t.rules - t.rules_covered != 1 }}. {% endif %}
+  {% if t.parity_matches < t.parity_steps %}{{ t.parity_steps - t.parity_matches }} parity difference{{ "s" if t.parity_steps - t.parity_matches != 1 }}.{% endif %}
+</div>
+{% endif %}
+
+<section class="cards">
+  <div class="card"><div class="label">Tests</div><div class="value">{{ t.passed }} passed</div>
+    <div class="sub">{{ t.failed }} failed · {{ t.skipped }} skipped</div></div>
+  <div class="card"><div class="label">Functions traced</div><div class="value">{{ t.functions_covered }} / {{ t.functions }}</div>
+    <div class="sub">named by a <code>covers</code> test</div></div>
+  <div class="card"><div class="label">Rules traced</div><div class="value">{{ t.rules_covered }} / {{ t.rules }}</div>
+    <div class="sub">from {{ report.analysis.increments | length }} increment specs</div></div>
+  <div class="card"><div class="label">Coverage</div><div class="value">{{ t.line_rate | percent }}</div>
+    <div class="sub">lines · branches {{ t.branch_rate | percent }}</div></div>
+  <div class="card"><div class="label">Parity</div><div class="value">{% if t.parity_steps %}{{ t.parity_matches }} / {{ t.parity_steps }}{% else %}–{% endif %}</div>
+    <div class="sub">steps equal to the reference</div></div>
+</section>
+
+<h2>Test results by project</h2>
+{% if report.suites %}
+<table>
+  <tr><th>Project</th><th>Suite</th><th class="num">Passed</th><th class="num">Failed</th><th class="num">Skipped</th><th class="num">Seconds</th></tr>
+  {% for suite in report.suites %}
+  <tr><td><code>{{ suite.project }}</code></td><td>{{ suite.file }}</td>
+    <td class="num">{{ suite.count("passed") }}</td><td class="num">{{ suite.count("failed") }}</td>
+    <td class="num">{{ suite.count("skipped") }}</td><td class="num">{{ "%.1f" | format(suite.seconds) }}</td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="muted">No JUnit results found. Run the tests with <code>-c ci</code> first; this report then shows traceability only.</p>
+{% endif %}
+
+{% set failures = [] %}
+{% for suite in report.suites %}{% for case in suite.cases if case.outcome == "failed" %}{% set _ = failures.append((suite, case)) %}{% endfor %}{% endfor %}
+{% if failures %}
+<h2>Failing tests</h2>
+<table>
+  <tr><th>Project</th><th>Test</th></tr>
+  {% for suite, case in failures %}
+  <tr><td><code>{{ suite.project }}</code></td><td><code>{{ case.classname }}::{{ case.name }}</code><pre>{{ case.message }}</pre></td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% if report.analysis.problems %}
+<h2>Declarations pointing at nothing</h2>
+<table>
+  <tr><th>Project</th><th>Test</th><th>Problem</th></tr>
+  {% for problem in report.analysis.problems %}
+  <tr><td><code>{{ problem.project }}</code></td><td><code>{{ problem.nodeid }}</code></td><td>{{ problem.message }}</td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<h2>Rules by increment</h2>
+{% for increment in report.analysis.increments %}
+{% set traces = report.analysis.rules | selectattr("rule.increment", "equalto", increment.number) | list %}
+<details{% if traces | rejectattr("status", "in", ["covered", "gate"]) | list %} open{% endif %}>
+  <summary>{{ increment.number }} {{ increment.title }} <span class="muted">· {{ increment.status }} · {{ traces | length }} rules</span></summary>
+  {% if traces %}
+  <table>
+    <tr><th>Rule</th><th>Statement</th><th>Status</th><th>Tests</th></tr>
+    {% for trace in traces %}
+    <tr><td><code>{{ trace.rule.id }}</code></td><td>{{ trace.rule.text }}</td><td>{{ status(trace.status) }}</td>
+      <td>{% if trace.tests %}<ul class="tests">{% for test in trace.tests %}<li><code>{{ test.nodeid }}</code> {{ status(test.outcome) }}</li>{% endfor %}</ul>{% elif trace.status == "gate" %}<span class="muted">verified by the lint, type-check and test gate</span>{% endif %}</td></tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+</details>
+{% endfor %}
+
+<h2>Functions by project</h2>
+{% for project in report.analysis.items | map(attribute="project") | unique %}
+{% set traces = report.analysis.items | selectattr("project", "equalto", project) | list %}
+{% set covered = traces | selectattr("status", "equalto", "covered") | list | length %}
+<details{% if covered < traces | length %} open{% endif %}>
+  <summary><code>{{ project }}</code> <span class="muted">· {{ covered }} / {{ traces | length }} covered</span></summary>
+  <table>
+    <tr><th>Function</th><th>Kind</th><th>Status</th><th>Tests</th></tr>
+    {% for trace in traces %}
+    <tr><td><code>{{ trace.item.target }}</code><div class="muted">{{ trace.item.path }}:{{ trace.item.line }}</div></td>
+      <td>{{ trace.item.kind }}</td><td>{{ status(trace.status) }}</td>
+      <td>{% if trace.tests %}<ul class="tests">{% for test in trace.tests[:8] %}<li><code>{{ test.nodeid }}</code></li>{% endfor %}{% if trace.tests | length > 8 %}<li class="muted">and {{ trace.tests | length - 8 }} more</li>{% endif %}</ul>{% endif %}</td></tr>
+    {% endfor %}
+  </table>
+</details>
+{% endfor %}
+
+<h2>Parity with the reference</h2>
+{% if report.parity %}
+{% for run in report.parity %}
+<h3><code>{{ run.project }}</code> against {{ run.reference }}</h3>
+<table>
+  <tr><th>Scenario</th><th>Step</th><th>Endpoint</th><th>Status</th><th>Detail</th></tr>
+  {% for result in run.results %}
+  <tr><td>{{ result.scenario }}</td><td>{{ result.step }}</td><td><code>{{ result.endpoint }}</code></td>
+    <td>{{ status(result.status) }}{% if result.deviation %} <code>{{ result.deviation }}</code>{% endif %}</td><td>{{ result.detail }}</td></tr>
+  {% endfor %}
+</table>
+{% endfor %}
+{% else %}
+<p class="muted">No parity results in this run.</p>
+{% endif %}
+
+<h2>Coverage by module</h2>
+{% if report.coverage %}
+{% for project in report.coverage %}
+<details>
+  <summary><code>{{ project.project }}</code> <span class="muted">· lines {{ project.line_rate | percent }} · branches {{ project.branch_rate | percent }}</span></summary>
+  <table>
+    <tr><th>File</th><th class="num">Lines</th><th class="num">Covered</th><th class="num">Branches</th><th class="num">Covered</th></tr>
+    {% for module in project.modules %}
+    <tr><td><code>{{ module.filename }}</code></td><td class="num">{{ module.lines_valid }}</td><td class="num">{{ module.lines_covered }}</td>
+      <td class="num">{{ module.branches_valid }}</td><td class="num">{{ module.branches_covered }}</td></tr>
+    {% endfor %}
+  </table>
+</details>
+{% endfor %}
+{% else %}
+<p class="muted">No coverage results found.</p>
+{% endif %}
+</main>
+</body>
+</html>

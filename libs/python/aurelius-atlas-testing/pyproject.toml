@@ -1,0 +1,29 @@
+[project]
+dependencies = ["pydantic>=2.13.5", "pytest>=8.4.1"]
+description = "Traceability for Aurelius Atlas: the covers marker, the API inventory and the gap check."
+name = "aurelius-atlas-testing"
+requires-python = ">=3.14"
+version = "0.6.0"
+
+[project.entry-points.pytest11]
+aurelius_atlas_testing = "aurelius_atlas_testing.plugin"
+
+[[project.authors]]
+name = "Aurelius Enterprise"
+
+[tool.hatch.build.targets.wheel]
+packages = ["aurelius_atlas_testing"]
+
+[tool.pytest.ini_options]
+# Load the plugin from conftest instead of its entry point, so coverage measures its import (see AGENTS.md).
+addopts = ["-p", "no:aurelius_atlas_testing"]
+asyncio_default_fixture_loop_scope = "module"
+asyncio_mode = "auto"
+required_plugins = ["pytest-asyncio"]
+
+[tool.coverage.run]
+branch = true
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]

@@ -6,6 +6,8 @@ requires-python = ">=3.14"
 members = [
     "aurelius-atlas",
     "aurelius-atlas-store-es",
+    "aurelius-atlas-test-report",
+    "aurelius-atlas-testing",
     "aurelius-example",
     "aurelius-fastapi-example",
     "aurelius-license-report",
@@ -215,6 +217,8 @@ source = { virtual = "." }
 dev = [
     { name = "alembic" },
     { name = "aurelius-atlas-store-es", extra = ["testing"] },
+    { name = "aurelius-atlas-test-report" },
+    { name = "aurelius-atlas-testing" },
     { name = "aurelius-example" },
     { name = "aurelius-fastapi-example" },
     { name = "aurelius-license-report" },
@@ -255,6 +259,8 @@ dev = [
 dev = [
     { name = "alembic", specifier = ">=1.18" },
     { name = "aurelius-atlas-store-es", extras = ["testing"], editable = "libs/python/aurelius-atlas-store-es" },
+    { name = "aurelius-atlas-test-report", editable = "reports/aurelius-atlas-test-report" },
+    { name = "aurelius-atlas-testing", editable = "libs/python/aurelius-atlas-testing" },
     { name = "aurelius-example", editable = "libs/python/aurelius-example" },
     { name = "aurelius-fastapi-example", editable = "apps/aurelius-fastapi-example" },
     { name = "aurelius-license-report", editable = "reports/aurelius-license-report" },
@@ -312,6 +318,38 @@ requires-dist = [
     { name = "testcontainers", marker = "extra == 'testing'", specifier = ">=4.15.0" },
 ]
 provides-extras = ["testing"]
+
+[[package]]
+name = "aurelius-atlas-test-report"
+version = "0.6.0"
+source = { editable = "reports/aurelius-atlas-test-report" }
+dependencies = [
+    { name = "aurelius-atlas-testing" },
+    { name = "jinja2" },
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "aurelius-atlas-testing", editable = "libs/python/aurelius-atlas-testing" },
+    { name = "jinja2", specifier = ">=3.1.6" },
+    { name = "pydantic", specifier = ">=2.13.5" },
+]
+
+[[package]]
+name = "aurelius-atlas-testing"
+version = "0.6.0"
+source = { editable = "libs/python/aurelius-atlas-testing" }
+dependencies = [
+    { name = "pydantic" },
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pydantic", specifier = ">=2.13.5" },
+    { name = "pytest", specifier = ">=8.4.1" },
+]
 
 [[package]]
 name = "aurelius-example"

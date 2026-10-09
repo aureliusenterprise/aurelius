@@ -1,0 +1,29 @@
+{% set t = report.totals %}
+## Aurelius Atlas test report {{ "✅" if t.ok else "❌" }}
+
+| Tests | Functions traced | Rules traced | Line coverage | Branch coverage | Parity |
+| ----- | ---------------- | ------------ | ------------- | --------------- | ------ |
+| {{ t.passed }} passed, {{ t.failed }} failed, {{ t.skipped }} skipped | {{ t.functions_covered }} / {{ t.functions }} | {{ t.rules_covered }} / {{ t.rules }} | {{ t.line_rate | percent }} | {{ t.branch_rate | percent }} | {% if t.parity_steps %}{{ t.parity_matches }} / {{ t.parity_steps }}{% else %}–{% endif %} |
+
+{% set gaps = report.analysis.gaps %}
+{% if gaps %}
+### Traceability gaps
+
+{% for line in gaps[:50] %}
+- `{{ line }}`
+{% endfor %}
+{% if gaps | length > 50 %}
+- … and {{ gaps | length - 50 }} more (see the full report artifact)
+{% endif %}
+{% endif %}
+{% set failures = [] %}
+{% for suite in report.suites %}{% for case in suite.cases if case.outcome == "failed" %}{% set _ = failures.append(suite.project ~ ": " ~ case.classname ~ "::" ~ case.name) %}{% endfor %}{% endfor %}
+{% if failures %}
+### Failing tests
+
+{% for line in failures[:50] %}
+- `{{ line }}`
+{% endfor %}
+{% endif %}
+
+The full report is attached to this run as the `test-report` artifact.

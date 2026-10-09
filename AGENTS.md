@@ -54,6 +54,7 @@ which you ran.
 | Level | Requirement                 | Commands                                                                                  |
 | ----- | --------------------------- | ----------------------------------------------------------------------------------------- |
 | 0     | Offline (no key, no Docker) | `nx lint <project>`, `nx typecheck <project>` (Python), `uv run pytest <app>/tests`       |
+| 0     | Offline (no key, no Docker) | `nx check aurelius-atlas-test-report` (every function and rule named by a test, ADR 049)  |
 | 1     | SOPS key registered         | `nx test <project> -c ci` (unit tests; `dependsOn` decrypt)                               |
 | 2     | Docker runtime              | `nx e2e <project>` (builds image, starts real services), `nx serve <project>` (dev infra) |
 

@@ -23,6 +23,9 @@ markers = [
 ]
 required_plugins = ["pytest-asyncio"]
 
+[tool.coverage.run]
+branch = true
+
 [build-system]
 build-backend = "hatchling.build"
 requires = ["hatchling"]

@@ -41,6 +41,8 @@ decisions are ADRs in [Architecture Decisions](../adr/index.md).
 | [DD-003](#dd-003-development-nodes-run-with-security-on-and-tls-off)           | Development and test nodes run with security on and TLS off               | 0.2       | Accepted |
 | [DD-004](#dd-004-every-index-is-named-prefix-kind)                             | Every index is named `<prefix>-<kind>`                                    | 0.2       | Accepted |
 | [DD-005](#dd-005-the-store-uses-the-asynchronous-client)                       | The store uses the asynchronous Elasticsearch client                      | 0.2       | Accepted |
+| [DD-006](#dd-006-what-must-be-named-by-a-test)                                 | What must be named by a test, and how a test names it                     | 0.3       | Accepted |
+| [DD-007](#dd-007-the-test-report-is-a-ci-artifact-with-a-job-summary)          | The test report is a CI artifact with a job summary                       | 0.3       | Accepted |
 
 ### DD-001. Reference is Apache Atlas 2.4.0, and both dashboards are served
 
@@ -152,3 +154,54 @@ and makes concurrency limits harder to reason about.
 
 **Consequences.** Store and service code is async end to end; command-line tools call it with
 `asyncio.run`.
+
+### DD-006. What must be named by a test
+
+- **Status:** Accepted
+- **Increment:** 0.3
+- **Date:** 2026-10-09
+
+**Decision.** In every project matched by `[tool.aurelius-atlas.traceability] projects`, these must be
+named by a `@pytest.mark.covers("<dotted path>")` test: public module-level functions, public methods
+and properties of public classes, and classes whose only behaviour is private (for example a model
+with private validators). Pure data classes and exceptions without methods, private names, private
+modules and `__main__` are not listed. A target names an item when it equals the item's path; a class
+item is also named by targets inside it. The inventory is read from source with `ast`, never by
+importing. The covers declarations are read by collecting the tests (`pytest --collect-only`), so the
+check sees every project, not only the ones a CI run touched.
+
+**Reason.** ADR 049 asks for every function; data-only classes have no behaviour of their own, and
+requiring a test for each would create tests that only construct objects. Reading source with `ast`
+avoids import side effects and works for projects whose dependencies are not importable together.
+Collecting instead of running makes the check complete and takes seconds.
+
+**Alternatives.** Static parsing of test files for markers: no pytest needed, but cannot resolve
+targets held in constants or f-strings, which tests use to stay readable. Coverage-based (any line of
+the function executed): counts incidental execution, which is what ADR 049 rejects.
+
+**Consequences.** Adding a public function without a naming test fails CI. A test may name several
+functions with several markers. The plugin is loaded through the `pytest11` entry point; the
+`aurelius-atlas-testing` project itself loads it from its `conftest.py` instead so coverage measures
+the plugin's own import.
+
+### DD-007. The test report is a CI artifact with a job summary
+
+- **Status:** Accepted
+- **Increment:** 0.3
+- **Date:** 2026-10-09
+
+**Decision.** CI renders the report after the tests on every run (also when they fail), uploads
+`reports/aurelius-atlas-test-report/dist/` as the `test-report` artifact, and appends the Markdown
+summary to the job summary, which GitHub shows on the run and the pull request checks.
+
+**Reason.** The report must exist for every change, including failing ones, and must be one click
+from the pull request. The docs site is published by a separate workflow that does not run tests;
+coupling it to test results would either rerun all tests or pass artifacts between workflows.
+
+**Alternatives.** Publishing the report on the per-PR docs site: nicer URL, but needs a cross-workflow
+artifact hand-over or a second full test run. A PR comment bot: visible, but posts on every push and
+needs write permissions.
+
+**Consequences.** The report covers the projects the run tested (`nx affected`); traceability always
+covers all projects because the check collects them. Comparison with `main` over time and docs-site
+publishing remain open; revisit when the parity suite makes runs long enough for trends to matter.

@@ -82,6 +82,12 @@ function buildTargets(
                 },
             ],
             executor: "@nxlv/python:run-commands",
+            configurations: {
+                ci: {
+                    junitxml: "e2e-junit.xml",
+                    "traceability-out": "e2e-traceability.json",
+                },
+            },
             metadata: {
                 description: "Run the end-to-end tests for this application",
             },
@@ -147,6 +153,8 @@ function buildTargets(
                 ci: {
                     "cov-report": "xml:coverage.xml",
                     cov: moduleName,
+                    junitxml: "junit.xml",
+                    "traceability-out": "traceability.json",
                 },
             },
             metadata: {

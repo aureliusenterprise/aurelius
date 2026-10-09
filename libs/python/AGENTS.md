@@ -29,6 +29,11 @@ This file is the recipe for adding or modifying a library here.
 
 ## Conventions
 
+- **Aurelius Atlas libraries** (`aurelius-atlas-*`) are traced (ADR 049): every public function needs a
+  test marked `@pytest.mark.covers("<dotted path>", rules=[...])`, the pyproject sets
+  `[tool.coverage.run] branch = true`, and tests that need Docker are marked `component`. Run
+  `uv run python -m aurelius_atlas_testing.check` before pushing.
+
 - Dependencies are declared per-package; the root venv at `.venv/` resolves the
   whole workspace. Never add a path dependency — use `workspace = true` sources.
 - Type hints everywhere; pyright `standard` mode must pass. Ruff `select = ["ALL"]`

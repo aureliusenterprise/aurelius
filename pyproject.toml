@@ -10,6 +10,8 @@ name = "Aurelius Enterprise"
 [dependency-groups]
 dev = [
     "aurelius-atlas-store-es[testing]",
+    "aurelius-atlas-test-report",
+    "aurelius-atlas-testing",
     "aurelius-example",
     "aurelius-fastapi-example",
     "aurelius-license-report",
@@ -48,6 +50,11 @@ dev = [
 [tool.uv.sources]
 # Zensical-compatible mike fork; not published on PyPI, must be installed from GitHub.
 mike = { git = "https://github.com/squidfunk/mike.git" }
+
+[tool.aurelius-atlas.traceability]
+# Projects whose public API must be named by tests, and where increment rules live (ADR 049).
+projects = ["apps/aurelius-atlas-*", "libs/python/aurelius-atlas-*", "reports/aurelius-atlas-*"]
+specifications = "docs/architecture/conversion/increments"
 
 [tool.pyright]
 exclude = [".venv"]
@@ -102,6 +109,12 @@ convention = "google"
 [tool.uv.sources.aurelius-atlas-store-es]
 workspace = true
 
+[tool.uv.sources.aurelius-atlas-test-report]
+workspace = true
+
+[tool.uv.sources.aurelius-atlas-testing]
+workspace = true
+
 [tool.uv.sources.aurelius-example]
 workspace = true
 
@@ -120,9 +133,11 @@ workspace = true
 [tool.uv.workspace]
 members = [
     "libs/python/aurelius-atlas-store-es",
+    "libs/python/aurelius-atlas-testing",
     "apps/aurelius-fastapi-example",
     "libs/python/aurelius-example",
     "libs/python/aurelius-sdk",
+    "reports/aurelius-atlas-test-report",
     "reports/aurelius-license-report",
     "reports/aurelius-vulnerability-report",
 ]

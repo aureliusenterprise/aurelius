@@ -1,6 +1,6 @@
 # 049. Every function and every specified rule is traceable to a test, and the trace is published
 
-- **Status:** Proposed (becomes Accepted when increment 0.3 provides the check and the report)
+- **Status:** Accepted
 - **Date:** 2026-10-09
 - **Deciders:** Aurelius Enterprise
 

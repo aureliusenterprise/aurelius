@@ -60,7 +60,7 @@ area you are about to work in; the rest can wait.
 | [046](./046-the-catalogue-keeps-its-public-contract.md)                              | The catalogue keeps its public contract while its implementation is replaced; every visible difference is a recorded deviation.        | Accepted |
 | [047](./047-one-search-store-is-the-system-of-record.md)                             | One search store is the only system of record for metadata — no separate graph, relational store or index.                             | Accepted |
 | [048](./048-behaviour-is-proven-against-the-reference-before-it-is-accepted.md)      | Behaviour is proven against recorded responses of the reference implementation before it is accepted.                                  | Proposed |
-| [049](./049-every-function-and-rule-is-traceable-to-a-test.md)                       | Every function and every specified rule is traceable to a test, and the trace is published per change.                                 | Proposed |
+| [049](./049-every-function-and-rule-is-traceable-to-a-test.md)                       | Every function and every specified rule is traceable to a test, and the trace is published per change.                                 | Accepted |
 | [050](./050-the-system-carries-only-what-the-catalogue-needs.md)                     | The system carries only the capabilities the catalogue needs — a named deviation from the template spine.                              | Accepted |
 | [051](./051-the-conversion-proceeds-in-specified-increments.md)                      | The conversion proceeds in increments, each defined by a written specification before it is built.                                     | Accepted |
 

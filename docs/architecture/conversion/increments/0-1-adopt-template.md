@@ -20,11 +20,11 @@ Postgres) stay until increment 0.5 replaces them.
 
 ## Semantics
 
-| Id     | Rule                                                                         |
-| ------ | ---------------------------------------------------------------------------- |
-| ADO-01 | No project, workspace member, Nx plugin or CI step refers to a removed slice |
-| ADO-02 | Every remaining project still lints, type-checks and passes its unit tests   |
-| ADO-03 | Every new record is reachable from the docs navigation                       |
+| Id     | Rule                                                                         | Verified by |
+| ------ | ---------------------------------------------------------------------------- | ----------- |
+| ADO-01 | No project, workspace member, Nx plugin or CI step refers to a removed slice |             |
+| ADO-02 | Every remaining project still lints, type-checks and passes its unit tests   | gate        |
+| ADO-03 | Every new record is reachable from the docs navigation                       |             |
 
 ## Java origin
 
@@ -37,5 +37,7 @@ DV-01 (no notifications), DV-02 (simple authorizer only).
 ## Acceptance
 
 `uv sync`, `npx nx show projects` without graph errors, `nx run-many -t lint typecheck`, the unit
-tests of the remaining Python projects, and `zensical build` for the documentation. The ADO rules are
-checked by these commands rather than by dedicated tests; the traceability tooling arrives in 0.3.
+tests of the remaining Python projects, and `zensical build` for the documentation. ADO-02 is the gate
+itself. ADO-01 and ADO-03 gained guard tests in increment 0.3
+(`libs/python/aurelius-atlas-testing/tests/test__aurelius_atlas_testing_workspace.py`), when the
+traceability tooling arrived.

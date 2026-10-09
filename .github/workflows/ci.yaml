@@ -66,6 +66,21 @@ jobs:
             - name: Test affected projects
               run: npx nx affected -t test e2e -c ci
 
+            - name: Check that every function and rule is named by a test (ADR 049)
+              run: npx nx check aurelius-atlas-test-report
+
+            - name: Render the test report
+              if: always()
+              run: npx nx render aurelius-atlas-test-report
+
+            - name: Upload the test report
+              if: always()
+              uses: actions/upload-artifact@v7
+              with:
+                  name: test-report
+                  path: reports/aurelius-atlas-test-report/dist/
+                  if-no-files-found: warn
+
             - name: Upload coverage reports
               uses: actions/upload-artifact@v7
               with:

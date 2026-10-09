@@ -1,0 +1,27 @@
+[project]
+dependencies = ["aurelius-atlas-testing", "jinja2>=3.1.6", "pydantic>=2.13.5"]
+description = "The workspace test report of Aurelius Atlas: results, traceability, parity and coverage in one page."
+name = "aurelius-atlas-test-report"
+requires-python = ">=3.14"
+version = "0.6.0"
+
+[[project.authors]]
+name = "Aurelius Enterprise"
+
+[tool.hatch.build.targets.wheel]
+packages = ["aurelius_atlas_test_report"]
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "module"
+asyncio_mode = "auto"
+required_plugins = ["pytest-asyncio"]
+
+[tool.uv.sources.aurelius-atlas-testing]
+workspace = true
+
+[tool.coverage.run]
+branch = true
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]

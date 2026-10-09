@@ -218,3 +218,10 @@ licenses.json
 vulnerabilities.json
 vulnerabilities.html
 .trivy-cache/
+
+# Test results read by reports/aurelius-atlas-test-report
+junit.xml
+e2e-junit.xml
+traceability.json
+e2e-traceability.json
+parity-results.json
