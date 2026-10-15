@@ -8,6 +8,10 @@ metadata:
     app.kubernetes.io/component: postgresql
 spec:
   replicas: 1
+  # The data PVC is ReadWriteOnce: a RollingUpdate can never attach the volume
+  # while the old pod still holds it, so replace the pod instead.
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "keycloak.selectorLabels" . | nindent 6 }}
@@ -18,6 +22,10 @@ spec:
         {{- include "keycloak.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: postgresql
     spec:
+      # The postgres image runs as uid 999; fsGroup makes the (initially
+      # root-owned) PVC writable so initdb can create PGDATA.
+      securityContext:
+        fsGroup: 999
       containers:
         - name: postgresql
           image: {{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
@@ -41,7 +49,15 @@ spec:
               value: {{ .Values.postgresql.globalVariables.POSTGRES_DB | quote }}
           volumeMounts:
             - name: postgresql-data
-              mountPath: /var/lib/postgresql
+              # Must be the PGDATA path (/var/lib/postgresql/data), NOT the parent
+              # /var/lib/postgresql. The postgres image declares VOLUME
+              # /var/lib/postgresql/data, so mounting the parent lets the runtime
+              # shadow the data subdir with an anonymous volume on the node's boot
+              # disk, which is wiped on every node replacement/upgrade.
+              # subPath pgdata: the PVC root contains lost+found, which makes
+              # initdb refuse to initialize PGDATA in place.
+              mountPath: /var/lib/postgresql/data
+              subPath: pgdata
           livenessProbe:
             exec:
               command:

@@ -30,6 +30,22 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.postgresql.enabled }}
+      initContainers:
+        # Do not start Keycloak until Postgres accepts connections. Without this,
+        # Keycloak can boot first after a node replacement, skip Liquibase
+        # migrations and --import-realm against an unreachable DB, and serve
+        # 403/500s from an empty schema.
+        - name: wait-for-postgresql
+          image: {{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
+          command:
+            - /bin/sh
+            - -c
+            # -U is required: this init container runs as the Keycloak uid (not
+            # present in the postgres image's /etc/passwd), so libpq cannot
+            # derive a username and pg_isready fails with rc=3 "no attempt".
+            - until pg_isready -h {{ include "keycloak.fullname" . }}-postgresql -p 5432 -U {{ .Values.postgresql.globalVariables.POSTGRES_USER }}; do echo waiting for postgresql; sleep 2; done
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.repository }}:{{ .Values.global.version }}"
