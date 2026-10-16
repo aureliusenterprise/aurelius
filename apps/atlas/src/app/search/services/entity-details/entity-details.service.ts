@@ -16,6 +16,13 @@ export interface EntityDetailsStoreContext {
 export class EntityDetailsService extends BasicStore<EntityDetailsStoreContext> {
     readonly entityDetails$: Observable<EntityElementWithEXTInfo>;
 
+    /**
+     * The most recently requested entity id, tracked outside of the store state so that stale
+     * in-flight fetches can be detected even after this store has been destroyed. Reading the
+     * store instead would throw an EmptyError once the state subject is completed on destroy.
+     */
+    private latestEntityId: string;
+
     constructor(
         private readonly entityApiService: EntityAPIService,
         @Optional() @SkipSelf() readonly parent: EntityDetailsService,
@@ -33,6 +40,8 @@ export class EntityDetailsService extends BasicStore<EntityDetailsStoreContext> 
     }
 
     set entityId(entityId: string) {
+        this.latestEntityId = entityId;
+
         this.delete({
             description: 'Clear previous entity details',
             path: ['entityDetails'],
@@ -70,7 +79,9 @@ export class EntityDetailsService extends BasicStore<EntityDetailsStoreContext> 
         const entityDetails = await this.entityApiService.getEntityById(entityId).toPromise();
 
         // Ignore stale fetches from a previous edit/details route if the GUID has already changed.
-        if ((await this.get('entityId')) !== entityId) return;
+        // Compare against the in-memory id rather than the store: after a route change the store
+        // state is completed, and reading from it would throw an EmptyError.
+        if (this.latestEntityId !== entityId) return;
 
         this.entityDetails = entityDetails;
     }
