@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "m4i-update-breadcrumbs"
+version = "1.0.0"
+description = "CLI tool to update breadcrumbs in Elasticsearch for Aurelius Atlas"
+authors = ["Aurelius Enterprise <info@aureliusenterprise.com>"]
+license = 'UNLICENSED'
+readme = 'README.md'
+
+[[tool.poetry.packages]]
+include = "m4i_update_breadcrumbs"
+
+[tool.poetry.dependencies]
+python = "~3.8"
+elasticsearch = "~8.9"
+elastic-transport = "8.13.1"
+urllib3 = "1.26.2"
+click = "~8.1"
+
+[tool.poetry.dependencies.m4i-atlas-core]
+path = "../../libs/m4i-atlas-core"
+develop = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
